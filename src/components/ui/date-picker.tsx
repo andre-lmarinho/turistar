@@ -1,8 +1,6 @@
-// src/components/ui/date-picker.tsx
-"use client";
-
 import * as React from "react";
 import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Calendar } from "./calendar";
@@ -10,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   className?: string;
-  value: DateRange | undefined;                           
+  value: DateRange | undefined;
   onChange: (range: DateRange | undefined) => void;
 }
 
@@ -29,17 +27,18 @@ export function DateRangePicker({ className, value, onChange }: Props) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "w-full justify-start text-left rounded-md border px-4 py-2 text-sm",
-            !value?.from && "text-muted-foreground",
+            "w-full flex items-center justify-between rounded-md border px-4 py-2 text-sm bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary transition",
+            !value?.from && "text-muted-foreground italic",
             className
           )}
           aria-label="Pick a date range"
         >
-          {label}
+          <span>{label}</span>
+          <CalendarIcon className="h-4 w-4 text-gray-400" />
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0" align="start">
+      <PopoverContent className="p-0 mt-2 shadow-lg min-w-[500px]" align="start" side="bottom">
         <Calendar
           mode="range"
           selected={value}

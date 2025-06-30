@@ -1,50 +1,49 @@
+// src/components/WelcomeForm.tsx
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { addDays } from "date-fns";
-
-interface DateRange {
-  from: Date | undefined;
-  to: Date | undefined;
-}
 
 export default function WelcomeForm() {
   const router = useRouter();
 
-  const [destination, setDestination] = useState("");
-  // Optional: start today and default to 7-day trip
-  const [range, setRange] = useState<DateRange>({
+  /* state ---------------------------------------------------------------- */
+  const destination = "salvador";                      // fix destination MVP
+  const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7),
   });
 
+  /* handlers ------------------------------------------------------------- */
   const handleSubmit = () => {
-    const { from, to } = range;
-    if (!destination || !from || !to) return; // require all fields
-
+    if (!destination || !range?.from || !range?.to) return;
     const query = new URLSearchParams({
       dest: destination,
-      start: from.toISOString(),
-      end: to.toISOString(),
+      start: range.from.toISOString(),
+      end: range.to.toISOString(),
     }).toString();
-
     router.push(`/planner?${query}`);
   };
 
-  return (
-    <div className="max-w-md space-y-4">
-      <Input
-        placeholder="Destination (e.g., Salvador)"
-        value={destination}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setDestination(e.target.value)
-        }
-      />
+  
+  
 
+  /* render --------------------------------------------------------------- */
+  return (
+    <div className="max-w-md space-y-4 text-center">
+      <div className="text-center mb-12">
+        <h1 className="text-6xl font-bold">
+          Travel Planner
+        </h1>
+        <p className="font-italic">Salvador Only (MVP)</p>
+      </div>
+
+      {/* accept undefined directly */}
       <DateRangePicker value={range} onChange={setRange} />
 
       <Button className="w-full" onClick={handleSubmit}>

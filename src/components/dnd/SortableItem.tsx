@@ -1,3 +1,4 @@
+// src/components/dnd/SortableItem.tsx
 "use client";
 
 import { CSS } from "@dnd-kit/utilities";
@@ -9,18 +10,22 @@ import {
 import { HTMLAttributes, PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 
-/*  Types */
-type Props = PropsWithChildren<
-  {
-    id: string;
-    className?: string;
-  } & HTMLAttributes<HTMLLIElement>
->;
+/* ------------------------------------------------------------------ */
+/*  Types                                                             */
+/* ------------------------------------------------------------------ */
+type Props = PropsWithChildren<{
+  id: string;
+  dragOverlay?: boolean; // true when rendered inside <DragOverlay>
+  className?: string;
+}> &
+  HTMLAttributes<HTMLLIElement>;
 
-
-/*  Sortable item */
+/* ------------------------------------------------------------------ */
+/*  Sortable item                                                     */
+/* ------------------------------------------------------------------ */
 export function SortableItem({
   id,
+  dragOverlay = false,
   className,
   children,
   ...rest
@@ -34,10 +39,9 @@ export function SortableItem({
     isDragging,
   } = useSortable({ id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  const style = dragOverlay
+    ? { transform: undefined, transition: undefined } // overlay follows cursor
+    : { transform: CSS.Transform.toString(transform), transition };
 
   return (
     <li
@@ -45,7 +49,8 @@ export function SortableItem({
       style={style}
       className={cn(
         "rounded-md border p-3 shadow-sm bg-card select-none",
-        isDragging ? "cursor-grabbing opacity-50" : "cursor-grab",
+        isDragging && !dragOverlay ? "opacity-50 cursor-grabbing" : "cursor-grab",
+        dragOverlay && "shadow-lg cursor-grabbing",
         className
       )}
       {...attributes}
@@ -57,8 +62,9 @@ export function SortableItem({
   );
 }
 
-
-/*  Wrapper for a vertical sortable list */
+/* ------------------------------------------------------------------ */
+/*  Wrapper for a vertical sortable list                              */
+/* ------------------------------------------------------------------ */
 export const SortableColumn = ({
   ids,
   children,
