@@ -1,68 +1,44 @@
 "use client";
 
+import { useEffect } from "react"; 
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import { useItinerary } from "@/hooks/useItinerary";
+import { useDnDPlanner } from "@/hooks/useDnDPlanner";
+import DayColumn from "@/components/dnd/DayColumn";
 
-/* ---------- types -------------------------------------------------------- */
-interface Activity {
-  id: string;
-  title: string;
-  duration: number;
-  description: string;
-}
-interface ItineraryResponse {
-  activities: Activity[];
-}
-
-/* ---------- type-guard --------------------------------------------------- */
-const hasActivities = (d: unknown): d is ItineraryResponse =>
-  !!d && typeof d === "object" && Array.isArray((d as any).activities);
-
-/* ---------- component ---------------------------------------------------- */
 export default function PlannerPage() {
-  /* read ?dest= from the URL and normalise */
-  const params    = useSearchParams();
-  const destParam = params.get("dest")?.trim().toLowerCase();
+  const params = useSearchParams();
+  const dest = params.get("dest")?.trim().toLowerCase() ?? "";
 
-  /* show early message if user hit /planner with no query */
-  if (!destParam) {
-    return <p className="p-4">Destination missing in URL.</p>;
-  }
+  const { days: fetchedDays, isLoading, error } = useItinerary(dest);
+  const { days, sensors, moveCard, setDays } = useDnDPlanner(fetchedDays);
 
-  /* fetch the itinerary */
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["itinerary", destParam],
-    queryFn: async () => {
-      const res = await fetch(`/api/itinerary?dest=${destParam}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
-    },
-  });
+  // When fetch finishes, load into DnD hook once
+  useEffect(() => {
+    if (fetchedDays) setDays(fetchedDays);
+  }, [fetchedDays, setDays]);
 
-  /* loading / error boundaries */
-  if (isLoading) return <p className="p-4">Loading itinerary…</p>;
-  if (error)     return <p className="p-4">Failed to load itinerary.</p>;
-  if (!hasActivities(data))
-    return <p className="p-4">No itinerary available for this destination.</p>;
-
-  /* safe – data is ItineraryResponse */
-  const { activities } = data;
+  if (!dest)        return <p className="p-4">Destination missing in URL.</p>;
+  if (isLoading)    return <p className="p-4">Loading itinerary…</p>;
+  if (error)        return <p className="p-4">Failed to load.</p>;
+  if (!days?.length) return <p className="p-4">No itinerary found.</p>;
 
   return (
     <main className="p-4">
-      <h2 className="text-xl font-semibold mb-4 capitalize">
-        {destParam} itinerary (MVP static)
-      </h2>
+      <h2 className="text-xl font-semibold mb-4 capitalize">{dest} itinerary</h2>
 
-      <ul className="space-y-2">
-        {activities.map((a) => (
-          <li key={a.id} className="rounded-md border p-3 shadow-sm bg-card">
-            <h3 className="font-medium">{a.title}</h3>
-            <p className="text-sm text-muted-foreground">{a.description}</p>
-            <span className="text-xs">≈ {a.duration} min</span>
-          </li>
-        ))}
-      </ul>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={moveCard}
+      >
+        <div className="flex gap-4 overflow-x-auto">
+          {days.map((d) => (
+            <DayColumn key={d.id} day={d} />
+          ))}
+        </div>
+      </DndContext>
     </main>
   );
 }
