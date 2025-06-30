@@ -1,0 +1,32 @@
+{
+  "destination": "Salvador",
+  "activities": [
+    {
+      "id": "pelourinho",
+      "title": "Pelourinho Historic Center",
+      "category": "culture",
+      "duration": 120,
+      "lat": -12.9711,
+      "lng": -38.5108,
+      "description": "Colourful colonial streets and live music."
+    },
+    {
+      "id": "mercado-modelo",
+      "title": "Mercado Modelo",
+      "category": "shopping",
+      "duration": 90,
+      "lat": -12.9718,
+      "lng": -38.5124,
+      "description": "Craft market with local food stalls."
+    },
+    {
+      "id": "farol-da-barra",
+      "title": "Farol da Barra Lighthouse",
+      "category": "outdoor",
+      "duration": 60,
+      "lat": -13.0102,
+      "lng": -38.5326,
+      "description": "Iconic lighthouse and ocean views."
+    }
+  ]
+}
