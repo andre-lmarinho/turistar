@@ -7,106 +7,105 @@ import {
   useSensors,
   DragStartEvent,
   DragEndEvent,
+  DragOverEvent,
 } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { formatISO } from "date-fns";
 import { useState } from "react";
 
 import { DayPlan } from "@/types/itinerary";
-import { MAX_ACTIVITIES_PER_DAY } from "@/constants/planner";
 
 export function useDnDPlanner(initial: DayPlan[] = []) {
-  // State: list of days and the id of the item currently being dragged
-  const [days, setDays] = useState<DayPlan[]>(initial);
+  /* ------------------------------------------------------------------ */
+  /*  State                                                             */
+  /* ------------------------------------------------------------------ */
+  const [days, setDays]   = useState<DayPlan[]>(initial);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  // Configure pointer sensor (drag distance > 8px to activate)
+  /* ------------------------------------------------------------------ */
+  /*  Sensors                                                           */
+  /* ------------------------------------------------------------------ */
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
 
-  /** Remember which item was picked up */
+  /* ------------------------------------------------------------------ */
+  /*  Handlers                                                          */
+  /* ------------------------------------------------------------------ */
   function handleDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string);
   }
 
-  /**
-   * On drop:
-   * 1. Find source day and destination day (column or card)
-   * 2. Enforce soft cap per day
-   * 3. Remove activity from source and insert into destination at correct index
-   */
-  function handleDragEnd(e: DragEndEvent) {
-    setActiveId(null);
+  /** Real-time list re-ordering */
+  function handleDragOver(e: DragOverEvent) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
 
-    // 1) Find the day containing the dragged activity
-    const srcDay = days.find((d) =>
-      d.activities.some((a) => a.id === active.id)
+    /* locate source & destination columns */
+    const srcIdx = days.findIndex(d => d.activities.some(a => a.id === active.id));
+    const dstIdx = days.findIndex(
+      d => d.id === over.id || d.activities.some(a => a.id === over.id)
     );
-    if (!srcDay) return;
+    if (srcIdx === -1 || dstIdx === -1) return;
 
-    // 2) Determine destination day:
-    //    a) If over.id matches a column id → drop into that day
-    //    b) Else if over.id matches an activity id → drop relative to that card
-    let dstDay = days.find((d) => d.id === over.id);
-    let insertIndex: number;
+    const srcDay = days[srcIdx];
+    const dstDay = days[dstIdx];
 
-    if (dstDay) {
-      // dropped onto empty area of column → append
-      insertIndex = dstDay.activities.length;
+    /* indexes inside their respective arrays */
+    const oldIdx = srcDay.activities.findIndex(a => a.id === active.id);
+    const overIdx =
+      dstDay.id === over.id              // dropped on column body
+        ? dstDay.activities.length
+        : dstDay.activities.findIndex(a => a.id === over.id);
+
+    if (srcIdx === dstIdx) {
+      // move within same column
+      srcDay.activities = arrayMove(srcDay.activities, oldIdx, overIdx);
     } else {
-      // dropped onto a specific card
-      dstDay = days.find((d) =>
-        d.activities.some((a) => a.id === over.id)
-      );
-      if (!dstDay) return;
-      insertIndex = dstDay.activities.findIndex((a) => a.id === over.id);
+      // move across columns
+      const [moved] = srcDay.activities.splice(oldIdx, 1);
+      dstDay.activities.splice(overIdx, 0, moved);
     }
 
-    // 3) Soft‐cap check
-    if (dstDay.activities.length >= MAX_ACTIVITIES_PER_DAY) return;
-
-    // 4) Remove from source day
-    const oldIndex = srcDay.activities.findIndex((a) => a.id === active.id);
-    if (oldIndex === -1) return;
-    const [moved] = srcDay.activities.splice(oldIndex, 1);
-
-    // 5) Insert into destination at computed index
-    dstDay.activities.splice(insertIndex, 0, moved);
-
-    // 6) Commit state update
     setDays([...days]);
   }
 
-  /** Add a new empty day at the end */
+  /** Finalise drag (all moves already done in dragOver) */
+  function handleDragEnd(_: DragEndEvent) {
+    setActiveId(null);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Day helpers                                                       */
+  /* ------------------------------------------------------------------ */
   function addDay(date: Date) {
     const iso = formatISO(date, { representation: "date" });
-    if (days.some((d) => d.id === iso)) return;
+    if (days.some(d => d.id === iso)) return;
+
     setDays([
       ...days,
       {
         id: iso,
-        label: date.toLocaleDateString("en-US", {
-          weekday: "short",
-          day: "2-digit",
-        }),
+        label: date.toLocaleDateString("en-US", { weekday: "short", day: "2-digit" }),
         activities: [],
       },
     ]);
   }
 
-  /** Remove a day by id */
   function removeDay(id: string) {
-    setDays(days.filter((d) => d.id !== id));
+    setDays(days.filter(d => d.id !== id));
   }
 
+  /* ------------------------------------------------------------------ */
+  /*  Exposed API                                                       */
+  /* ------------------------------------------------------------------ */
   return {
     days,
     setDays,
     sensors,
     activeId,
     handleDragStart,
+    handleDragOver,   // expose for <DndContext onDragOver={...} />
     handleDragEnd,
     addDay,
     removeDay,
