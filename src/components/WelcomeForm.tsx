@@ -4,7 +4,6 @@
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-picker";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { addDays } from "date-fns";
@@ -40,7 +39,7 @@ export default function WelcomeForm() {
         <h1 className="text-6xl font-bold">
           Travel Planner
         </h1>
-        <p className="font-italic">Salvador Only (MVP)</p>
+        <p className="italic">Salvador Only (MVP)</p>
       </div>
 
       {/* accept undefined directly */}

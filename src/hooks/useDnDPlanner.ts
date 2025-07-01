@@ -5,109 +5,95 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragStartEvent,
-  DragEndEvent,
-  DragOverEvent,
+  type DragStartEvent,
+  type DragOverEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { formatISO } from "date-fns";
 import { useState } from "react";
+import type { DayPlan } from "@/types/itinerary";
 
-import { DayPlan } from "@/types/itinerary";
-
+/**
+ * Encapsulates drag-and-drop state and handlers for DayPlan columns.
+ */
 export function useDnDPlanner(initial: DayPlan[] = []) {
-  /* ------------------------------------------------------------------ */
-  /*  State                                                             */
-  /* ------------------------------------------------------------------ */
-  const [days, setDays]   = useState<DayPlan[]>(initial);
+  const [days, setDays] = useState<DayPlan[]>(initial);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  /* ------------------------------------------------------------------ */
-  /*  Sensors                                                           */
-  /* ------------------------------------------------------------------ */
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
 
-  /* ------------------------------------------------------------------ */
-  /*  Handlers                                                          */
-  /* ------------------------------------------------------------------ */
+  /** Remember which card was picked up */
   function handleDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string);
   }
 
-  /** Real-time list re-ordering */
+  /**
+   * Live reorder on drag over:
+   * - same column → use arrayMove
+   * - cross-column → splice out + insert
+   */
   function handleDragOver(e: DragOverEvent) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
 
-    /* locate source & destination columns */
-    const srcIdx = days.findIndex(d => d.activities.some(a => a.id === active.id));
-    const dstIdx = days.findIndex(
-      d => d.id === over.id || d.activities.some(a => a.id === over.id)
+    const src = days.find((d) =>
+      d.activities.some((a) => a.id === active.id)
     );
-    if (srcIdx === -1 || dstIdx === -1) return;
+    const dst = days.find(
+      (d) =>
+        d.id === over.id ||
+        d.activities.some((a) => a.id === over.id)
+    );
+    if (!src || !dst) return;
 
-    const srcDay = days[srcIdx];
-    const dstDay = days[dstIdx];
-
-    /* indexes inside their respective arrays */
-    const oldIdx = srcDay.activities.findIndex(a => a.id === active.id);
+    const oldIdx = src.activities.findIndex((a) => a.id === active.id);
     const overIdx =
-      dstDay.id === over.id              // dropped on column body
-        ? dstDay.activities.length
-        : dstDay.activities.findIndex(a => a.id === over.id);
+      dst.id === over.id
+        ? dst.activities.length
+        : dst.activities.findIndex((a) => a.id === over.id);
 
-    if (srcIdx === dstIdx) {
-      // move within same column
-      srcDay.activities = arrayMove(srcDay.activities, oldIdx, overIdx);
+    if (src === dst) {
+      src.activities = arrayMove(src.activities, oldIdx, overIdx);
     } else {
-      // move across columns
-      const [moved] = srcDay.activities.splice(oldIdx, 1);
-      dstDay.activities.splice(overIdx, 0, moved);
+      const [moved] = src.activities.splice(oldIdx, 1);
+      dst.activities.splice(overIdx, 0, moved);
     }
 
     setDays([...days]);
   }
 
-  /** Finalise drag (all moves already done in dragOver) */
-  function handleDragEnd(_: DragEndEvent) {
-    setActiveId(null);
-  }
-
-  /* ------------------------------------------------------------------ */
-  /*  Day helpers                                                       */
-  /* ------------------------------------------------------------------ */
+  /** Add an empty DayPlan at the end */
   function addDay(date: Date) {
     const iso = formatISO(date, { representation: "date" });
-    if (days.some(d => d.id === iso)) return;
-
+    if (days.some((d) => d.id === iso)) return;
     setDays([
       ...days,
       {
         id: iso,
-        label: date.toLocaleDateString("en-US", { weekday: "short", day: "2-digit" }),
+        label: date.toLocaleDateString("en-US", {
+          weekday: "short",
+          day: "2-digit",
+        }),
         activities: [],
       },
     ]);
   }
 
+  /** Remove a DayPlan by id */
   function removeDay(id: string) {
-    setDays(days.filter(d => d.id !== id));
+    setDays(days.filter((d) => d.id !== id));
   }
 
-  /* ------------------------------------------------------------------ */
-  /*  Exposed API                                                       */
-  /* ------------------------------------------------------------------ */
   return {
     days,
-    setDays,
     sensors,
     activeId,
     handleDragStart,
-    handleDragOver,   // expose for <DndContext onDragOver={...} />
-    handleDragEnd,
+    handleDragOver,
     addDay,
     removeDay,
+    setDays,
   };
 }

@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Turistar – AI-Powered Travel Planner
+
+A personalized travel itinerary generator built with Next.js, React, and drag-and-drop. Enter your dates and interests, and get a smart daily plan you can tweak on the fly.
+
+🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
+*or* deploy easily to Vercel or Netlify with the same settings.
+
+---
+
+## Features
+
+- **Dynamic Itineraries**
+  Generate optimized day-by-day plans based on your destination and date range.
+- **Interactive Drag-and-Drop**
+  Rearrange activities across days or within the same day for fine-tuning.
+- **Date Range Picker**
+  Quickly adjust start/end dates with a responsive calendar widget.
+- **Client-Side Rendering**
+  Full interactivity via React hooks and DnD Kit, no server reloads needed.
+- **Easy Deployment**
+  Hosted on Vercel with zero-config build and deploy.
+
+---
+
+## Tech Stack
+
+- **Next.js 15** (App Router)
+- **React** & **TypeScript**
+- **@dnd-kit/core** & **@dnd-kit/sortable** for drag-and-drop
+- **date-fns** for date manipulation
+- **react-day-picker** for calendar UI
+- **Vercel** for hosting
+
+---
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/andre-lmarinho/travel-planner.git
+   cd travel-planner
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn
+   # or
+   pnpm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. **Configure environment**
+   - Create a `.env.local` at project root if you add any API keys (e.g. Google Maps).
+   - For now, no API keys are required for the static MVP.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` — start development server  
+- `npm run build` — compile for production  
+- `npm run start` — run production build locally  
+- `npm run lint` — run ESLint  
+- `npm run format` — run Prettier
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+This project is ready for Vercel:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push your code to GitHub.  
+2. Import the repository at https://vercel.com/new.  
+3. Set up any required environment variables.  
+4. Click “Deploy” — Vercel will handle builds and previews automatically.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_For detailed guides, see:_  
+- Next.js Deployment Docs: https://nextjs.org/docs/app/building-your-application/deploying  
+- Vercel Getting Started: https://vercel.com/docs
+
+---
+
+Built with 💙 by André Marinho  
+Feel free to ⭐ this repo if you find it useful!
