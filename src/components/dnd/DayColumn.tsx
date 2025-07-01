@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useDroppable } from "@dnd-kit/core";
 import { DayPlan } from "@/types/itinerary";
 import { SortableItem } from "./SortableItem";
-import ActivityCard from "@/app/planner/ActivityCard";
+import ActivityCard from "@/components/planner/ActivityCard";
 
 interface Props {
   day: DayPlan;

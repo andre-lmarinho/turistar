@@ -1,3 +1,4 @@
+// src/components/planner/ActivityCard.tsx
 "use client";
 
 import React from "react";

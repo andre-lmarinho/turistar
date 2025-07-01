@@ -1,10 +1,10 @@
-// src/components/planner/SortableItem.tsx
+// src/app/planner/SortableItem.tsx
 "use client";
 
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ActivityCard from "./ActivityCard";
+import ActivityCard from "../../components/planner/ActivityCard";
 import type { Activity } from "@/types/itinerary";
 
 interface SortableItemProps {

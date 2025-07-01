@@ -1,4 +1,4 @@
-// src/app/planner/SortSelector.tsx
+// src/components/planner/SortSelector.tsx
 "use client";
 
 import React from "react";

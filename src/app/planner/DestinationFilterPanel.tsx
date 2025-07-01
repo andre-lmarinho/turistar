@@ -2,16 +2,13 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import DestinationCard from "./DestinationCard";
-import CloseButton from "./CloseButton";
-import CitySwitcher from "./CitySwitcher";
-import CategoryFilterBar from "./CategoryFilterBar";
-import SortSelector, { sortModes, SortMode } from "./SortSelector";
-import ConfigSidebar from "./ConfigSidebar";
-import { FaSlidersH } from "react-icons/fa";
+import DestinationHeader from "@/components/planner/DestinationHeader";
+import DestinationCardGrid from "@/components/planner/DestinationCardGrid";
+import ConfigSidebar from "@/components/planner/ConfigSidebar";
+import { SortMode } from "@/components/planner/SortSelector";
 import type { Activity } from "@/types/itinerary";
 
-/* Raw JSON shape */
+/* --- Raw JSON shape ------------------------------------------------------- */
 interface RawActivity {
   id: string;
   name: string;
@@ -29,10 +26,11 @@ interface RawActivity {
 interface DestinationFilterPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (item: Activity) => void;
+  onAdd: (a: Activity) => void;
   addedIds?: Set<string>;
 }
 
+/* ------------------------------------------------------------------------- */
 export default function DestinationFilterPanel({
   isOpen,
   onClose,
@@ -56,7 +54,7 @@ export default function DestinationFilterPanel({
       .catch(console.error);
   }, [isOpen, city, items.length]);
 
-  /*──────── derived data (always call hooks!) ────────*/
+  /*──────── derived lists (always call hooks) ────────*/
   const categories = useMemo(
     () => [...new Set(items.map((i) => i.category))],
     [items]
@@ -92,74 +90,42 @@ export default function DestinationFilterPanel({
   if (!isOpen) return null;
 
   /*──────── UI ────────*/
-return (
-  <>
-    {/* Backdrop */}
-    <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
+  return (
+    <>
+      {/* backdrop */}
+      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
 
-    {/* Popup panel */}
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Outer shell */}
-      <div className="relative w-[95vw] h-[95vh] max-w-[1350px] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
-        {/* Row 1 — city switcher + close */}
-        <div className="flex items-center justify-between px-4 py-2 border-b">
-          <CitySwitcher city={city} onChangeCity={setCity} />
-          <CloseButton onClick={onClose} />
-        </div>
+      {/* popup container */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="relative w-[95vw] h-[95vh] max-w-[1350px] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
+          {/* header rows 1 & 2 */}
+          <DestinationHeader
+            city={city}
+            onChangeCity={setCity}
+            categories={categories}
+            activeCats={activeCats}
+            toggleCat={toggleCat}
+            sortMode={sortMode}
+            setSortMode={setSortMode}
+            onToggleSidebar={() => setSidebarOpen((o) => !o)}
+            onClose={onClose}
+          />
 
-        {/* Row 2 — settings btn | categories | sorter */}
-        <div className="flex items-center justify-between px-4 py-2 border-b gap-2">
-          <button
-            title="Toggle config"
-            onClick={() => setSidebarOpen((o) => !o)}
-            className="text-xl text-gray-600 hover:text-gray-800 transition-transform duration-300 transform hover:scale-110 hover:-rotate-90"
-          >
-            <FaSlidersH />
-          </button>
+          {/* row 3: sidebar + card grid */}
+          <div className="flex-1 flex overflow-auto">
+            <ConfigSidebar open={sidebarOpen} />
 
-          <div className="flex-1 overflow-x-auto">
-            <CategoryFilterBar
-              categories={categories}
-              active={activeCats}
-              onToggle={toggleCat}
-            />
-          </div>
-
-          <SortSelector value={sortMode} onChange={setSortMode} />
-        </div>
-
-        {/* Row 3 — sidebar (if open) + cards */}
-        <div className="flex-1 flex overflow-auto">
-          {/* collapsible sidebar now lives ONLY in row 3 */}
-          <ConfigSidebar open={sidebarOpen} />
-
-          {/* card grid */}
-          <div className="flex-1 p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {visibleItems.map((item) => {
-                const isAdded = addedIds.has(item.id);
-                return (
-                  <DestinationCard
-                    key={item.id}
-                    id={item.id}
-                    title={item.name}
-                    duration={item.duration}
-                    price={item.price}
-                    description={item.description}
-                    added={isAdded}
-                    onAdd={() => {
-                      if (isAdded) return;
-                      const { price: _omit, name, ...rest } = item;
-                      onAdd({ ...rest, title: name });
-                    }}
-                  />
-                );
-              })}
+            {/* cards */}
+            <div className="flex-1 p-6">
+              <DestinationCardGrid
+                items={visibleItems}
+                addedIds={addedIds}
+                onAdd={onAdd}
+              />
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 }

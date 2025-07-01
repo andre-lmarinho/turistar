@@ -1,4 +1,4 @@
-// src/app/planner/DestinationCard.tsx
+// src/components/planner/DestinationCard.tsx
 "use client";
 
 import React from "react";

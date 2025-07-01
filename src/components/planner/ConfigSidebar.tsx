@@ -1,4 +1,4 @@
-// src/app/planner/ConfigSidebar.tsx
+// src/components/planner/ConfigSidebar.tsx
 "use client";
 
 import React from "react";

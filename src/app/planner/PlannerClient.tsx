@@ -3,8 +3,8 @@
 
 import { useState, useMemo } from "react";
 import { DateRangePicker } from "@/components/ui/date-picker";
-import PlannerBoard from "./PlannerBoard";
-import DestinationFilterPanel from "./DestinationFilterPanel";    // ← caminho relativo
+import PlannerBoard from "@/app/planner/PlannerBoard";
+import DestinationFilterPanel from "./DestinationFilterPanel";
 import { usePlanner } from "@/hooks/usePlanner";
 
 export default function PlannerClient() {
