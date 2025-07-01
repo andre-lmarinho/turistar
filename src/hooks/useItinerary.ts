@@ -1,3 +1,5 @@
+// src/hooks/useItinerary.ts
+
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { Activity, DayPlan } from "@/types/itinerary";
@@ -5,38 +7,55 @@ import { Activity, DayPlan } from "@/types/itinerary";
 interface ItineraryResponse {
   activities: Activity[];
 }
-const hasActivities = (d: unknown): d is ItineraryResponse =>
-  !!d &&
-  typeof d === "object" &&
-  Array.isArray((d as ItineraryResponse).activities);
 
+// Type guard to check that the data has an activities array
+const hasActivities = (data: unknown): data is ItineraryResponse =>
+  !!data &&
+  typeof data === "object" &&
+  Array.isArray((data as ItineraryResponse).activities);
+
+/**
+ * Hook to fetch and format itinerary by destination.
+ * - Fetches /api/itinerary?dest=… when `dest` is truthy
+ * - Splits activities into days, 3 per day
+ * - Returns both React Query props and `days` as DayPlan[]
+ */
 export function useItinerary(dest: string | null) {
+  // 1) Run the query only if we have a dest
   const query = useQuery({
     queryKey: ["itinerary", dest],
     enabled: !!dest,
     queryFn: async () => {
       const res = await fetch(`/api/itinerary?dest=${dest}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch itinerary: HTTP ${res.status}`);
+      }
       return res.json();
     },
   });
 
+  // 2) Memoize transforming raw activities into day-based buckets
   const days: DayPlan[] | undefined = useMemo(() => {
     if (!query.data || !hasActivities(query.data)) return;
-    const chunk = 3;
-    const tmp: DayPlan[] = [];
-    query.data.activities.forEach((act, idx) => {
-      const dIdx = Math.floor(idx / chunk);
-      if (!tmp[dIdx])
-        tmp[dIdx] = {
-          id: `day-${dIdx + 1}`,
-          label: `Day ${dIdx + 1}`,
+
+    const chunkSize = 3;
+    const dayPlans: DayPlan[] = [];
+
+    query.data.activities.forEach((activity, i) => {
+      const dayIndex = Math.floor(i / chunkSize);
+      if (!dayPlans[dayIndex]) {
+        dayPlans[dayIndex] = {
+          id: `day-${dayIndex + 1}`,
+          label: `Day ${dayIndex + 1}`,
           activities: [],
         };
-      tmp[dIdx].activities.push(act);
+      }
+      dayPlans[dayIndex].activities.push(activity);
     });
-    return tmp;
+
+    return dayPlans;
   }, [query.data]);
 
+  // 3) Expose both the formatted days and all React Query state
   return { days, ...query };
 }

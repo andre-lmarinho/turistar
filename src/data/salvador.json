@@ -27,8 +27,8 @@
       ],
       "category": "restaurant",
       "duration": 60,
-      "lat": -12.9745,
-      "lng": -38.5021,
+      "lat": -12.9705,
+      "lng": -38.5054,
       "price": "$$",
       "tags": [
         "brunch",
@@ -44,16 +44,16 @@
         "breakfast"
       ],
       "category": "restaurant",
-      "duration": 45,
-      "lat": -12.9719,
-      "lng": -38.5017,
+      "duration": 60,
+      "lat": -12.9867,
+      "lng": -38.5185,
       "price": "$",
       "tags": [
         "bakery",
-        "quick",
-        "local"
+        "local",
+        "casual"
       ],
-      "description": "Traditional bakery with sandwiches and quick breakfast options."
+      "description": "Regional bakery with fresh bread and pastries."
     },
     {
       "id": "cafeteria-da-barra",
@@ -62,16 +62,16 @@
         "breakfast"
       ],
       "category": "restaurant",
-      "duration": 50,
-      "lat": -13.0001,
-      "lng": -38.5123,
+      "duration": 60,
+      "lat": -12.9908,
+      "lng": -38.5175,
       "price": "$",
       "tags": [
         "coffee",
-        "local",
-        "breakfast"
+        "breakfast",
+        "casual"
       ],
-      "description": "Best coffee in Barra with a simple and cozy atmosphere."
+      "description": "Cozy spot for breakfast with a variety of coffee drinks."
     },
     {
       "id": "cafe-da-praia",
@@ -81,285 +81,285 @@
       ],
       "category": "restaurant",
       "duration": 60,
-      "lat": -12.9745,
-      "lng": -38.5114,
-      "price": "$$",
+      "lat": -12.995,
+      "lng": -38.534,
+      "price": "$",
       "tags": [
         "coffee",
-        "beachview",
+        "beach",
         "breakfast"
       ],
-      "description": "Coffee shop with sea views and fresh breakfast options."
+      "description": "Beachfront café popular for its breakfast options and ocean view."
     },
     {
       "id": "camarada-camarao-shopping-barra",
       "name": "Camarada Camarão - Shopping Barra",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -13.0048,
-      "lng": -38.5162,
+      "lat": -12.988,
+      "lng": -38.524,
       "price": "$$",
       "tags": [
         "seafood",
-        "casual",
-        "popular"
+        "breakfast",
+        "casual"
       ],
-      "description": "Specializing in seafood with a family-friendly environment."
+      "description": "Seafood restaurant also open for breakfast with a casual vibe."
     },
     {
       "id": "coco-bambu-bahia",
       "name": "Coco Bambu Bahia",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9714,
-      "lng": -38.491,
-      "price": "$$$",
+      "duration": 60,
+      "lat": -12.9859,
+      "lng": -38.5161,
+      "price": "$$",
       "tags": [
         "seafood",
-        "family",
-        "refined"
+        "breakfast",
+        "healthy"
       ],
-      "description": "High-end seafood cuisine in a family-friendly environment."
+      "description": "Breakfast menu with Brazilian classics and fresh ingredients."
     },
     {
       "id": "poró-restaurante-bar",
       "name": "Poró Restaurante e Bar",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9717,
-      "lng": -38.5132,
+      "lat": -12.979,
+      "lng": -38.519,
       "price": "$$",
       "tags": [
-        "contemporary",
-        "creative",
-        "historic"
+        "regional",
+        "healthy",
+        "brunch"
       ],
-      "description": "Creative cuisine in the Historic Center."
+      "description": "Bahian cuisine offering a range of breakfast and brunch dishes."
     },
     {
       "id": "restaurante-veleiro-yacht-club",
       "name": "Restaurante Veleiro",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.999,
-      "lng": -38.526,
-      "price": "$$$",
+      "lat": -12.987,
+      "lng": -38.529,
+      "price": "$$",
       "tags": [
-        "international",
         "seafood",
-        "view"
+        "breakfast",
+        "casual"
       ],
-      "description": "International cuisine with a view of the bay."
+      "description": "Located in Yacht Club, offering breakfast with harbor views."
     },
     {
       "id": "restaurante-vini-figueira",
       "name": "Restaurante Vini Figueira",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.971,
-      "lng": -38.5105,
+      "lat": -12.977,
+      "lng": -38.512,
       "price": "$$",
       "tags": [
-        "seafood",
-        "local",
-        "popular"
+        "italian",
+        "breakfast",
+        "gourmet"
       ],
-      "description": "Seafood meals in a cozy environment."
+      "description": "Italian restaurant with a special brunch menu on weekends."
     },
     {
       "id": "restaurante-sanctuarium",
       "name": "Sanctuarium",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9733,
-      "lng": -38.511,
-      "price": "$$$",
+      "lat": -12.9799,
+      "lng": -38.5131,
+      "price": "$$",
       "tags": [
-        "contemporary",
-        "international",
-        "fine-dining"
+        "healthy",
+        "breakfast",
+        "buffet"
       ],
-      "description": "Contemporary restaurant with sophisticated dishes."
+      "description": "Buffet restaurant known for healthy options, open for breakfast."
     },
     {
       "id": "camarao-vilas-restaurante",
       "name": "Camarão Vilas Restaurante",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.965,
-      "lng": -38.52,
+      "lat": -12.979,
+      "lng": -38.515,
       "price": "$$",
       "tags": [
         "seafood",
-        "popular",
-        "casual"
+        "breakfast",
+        "family"
       ],
-      "description": "Shellfish and shrimp in a relaxed environment."
+      "description": "Seafood specialty restaurant that also serves breakfast."
     },
     {
       "id": "restaurante-tokai",
       "name": "Tokai",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.97,
-      "lng": -38.51,
-      "price": "$$$$",
+      "lat": -12.9761,
+      "lng": -38.5021,
+      "price": "$$",
       "tags": [
-        "asian",
         "japanese",
-        "fine-dining"
+        "breakfast",
+        "gourmet"
       ],
-      "description": "High-end Asian cuisine with refined Japanese dishes."
+      "description": "Japanese cuisine restaurant open for breakfast with sushi and more."
     },
     {
       "id": "restaurante-coco-bambu-paralela",
       "name": "Coco Bambu Paralela",
       "type": [
-        "lunch"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9715,
-      "lng": -38.5,
-      "price": "$$$",
+      "lat": -12.9905,
+      "lng": -38.507,
+      "price": "$$",
       "tags": [
         "seafood",
-        "family",
-        "refined"
+        "breakfast",
+        "casual"
       ],
-      "description": "High-end seafood cuisine in a family-friendly environment."
+      "description": "Seafood restaurant known for generous portions, open for breakfast."
     },
     {
       "id": "restaurante-vishnu-dinner",
       "name": "Vishnu Culinária Indiana",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9735,
-      "lng": -38.5122,
-      "price": "$$$",
+      "lat": -12.9714,
+      "lng": -38.4634,
+      "price": "$$",
       "tags": [
         "indian",
-        "fine-dining",
-        "spicy"
+        "breakfast",
+        "buffet"
       ],
-      "description": "Sophisticated and delicious Indian dinner."
+      "description": "Indian buffet restaurant offering breakfast and lunch options."
     },
     {
       "id": "restaurante-camarada-camarao-barra",
       "name": "Camarada Camarão - Barra",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -13.0048,
-      "lng": -38.5162,
+      "lat": -12.9928,
+      "lng": -38.517,
       "price": "$$",
       "tags": [
         "seafood",
-        "casual",
-        "popular"
+        "breakfast",
+        "casual"
       ],
-      "description": "Fresh seafood in a family-friendly environment."
+      "description": "Popular seafood chain offering breakfast with ocean views."
     },
     {
       "id": "restaurante-vini-figueira-dinner-2",
       "name": "Restaurante Vini Figueira",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.971,
-      "lng": -38.5105,
+      "lat": -12.977,
+      "lng": -38.5115,
       "price": "$$",
       "tags": [
-        "seafood",
-        "local",
-        "popular"
+        "italian",
+        "breakfast",
+        "gourmet"
       ],
-      "description": "Seafood dinner in a cozy environment."
+      "description": "Italian cuisine with brunch specialties."
     },
     {
       "id": "restaurante-sanctuarium-dinner",
       "name": "Sanctuarium",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9733,
-      "lng": -38.511,
-      "price": "$$$",
+      "lat": -12.9799,
+      "lng": -38.5131,
+      "price": "$$",
       "tags": [
-        "contemporary",
-        "international",
-        "fine-dining"
+        "healthy",
+        "breakfast",
+        "buffet"
       ],
-      "description": "Sophisticated dinner with contemporary dishes."
+      "description": "Buffet of healthy options, serving breakfast and lunch."
     },
     {
       "id": "restaurante-coco-bambu-paralela-dinner",
       "name": "Coco Bambu Paralela",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.96,
-      "lng": -38.48,
+      "lat": -12.9905,
+      "lng": -38.507,
       "price": "$$",
       "tags": [
         "seafood",
-        "family",
+        "breakfast",
         "casual"
       ],
-      "description": "Seafood dinner in a family-friendly environment."
+      "description": "Known for its seafood, open for breakfast."
     },
     {
       "id": "restaurante-pizzaria-da-barra",
       "name": "Pizzaria da Barra",
       "type": [
-        "dinner"
+        "breakfast"
       ],
       "category": "restaurant",
-      "duration": 75,
-      "lat": -13.002,
-      "lng": -38.515,
+      "duration": 90,
+      "lat": -12.9908,
+      "lng": -38.5174,
       "price": "$$",
       "tags": [
         "pizza",
-        "casual",
-        "family"
+        "breakfast",
+        "casual"
       ],
-      "description": "Best pizzeria in Salvador with a relaxed atmosphere."
+      "description": "Pizza restaurant offering breakfast options."
     },
     {
       "id": "pelourinho-historic-center",
@@ -367,17 +367,17 @@
       "type": [
         "sight"
       ],
-      "category": "museum",
+      "category": "historic",
       "duration": 120,
       "lat": -12.9711,
-      "lng": -38.5108,
+      "lng": -38.5164,
       "price": "$",
       "tags": [
+        "historic",
         "culture",
-        "unesco",
-        "historic"
+        "UNESCO"
       ],
-      "description": "Colorful colonial streets, music and museums."
+      "description": "Historic district with colonial architecture and vibrant culture."
     },
     {
       "id": "elevador-lacerda",
@@ -387,15 +387,15 @@
       ],
       "category": "viewpoint",
       "duration": 30,
-      "lat": -12.9714,
-      "lng": -38.512,
+      "lat": -12.9691,
+      "lng": -38.5107,
       "price": "$",
       "tags": [
         "viewpoint",
         "historic",
-        "iconic"
+        "architecture"
       ],
-      "description": "Iconic elevator with panoramic city and bay views."
+      "description": "Iconic public elevator connecting lower and upper city with great views."
     },
     {
       "id": "casa-do-rio-vermelho",
@@ -403,17 +403,17 @@
       "type": [
         "sight"
       ],
-      "category": "museum",
+      "category": "historic",
       "duration": 90,
-      "lat": -12.999,
-      "lng": -38.502,
+      "lat": -12.967,
+      "lng": -38.503,
       "price": "$",
       "tags": [
         "literature",
-        "museum",
-        "history"
+        "history",
+        "museum"
       ],
-      "description": "Museum and memorial of writers Jorge Amado and Zélia Gattai."
+      "description": "Author Jorge Amado's house museum in Rio Vermelho."
     },
     {
       "id": "igreja-do-bonfim",
@@ -421,17 +421,17 @@
       "type": [
         "sight"
       ],
-      "category": "museum",
+      "category": "historic",
       "duration": 60,
-      "lat": -12.9737,
-      "lng": -38.4934,
+      "lat": -12.9603,
+      "lng": -38.5129,
       "price": "$",
       "tags": [
-        "religious",
-        "historic",
-        "viewpoint"
+        "religion",
+        "history",
+        "landmark"
       ],
-      "description": "Traditional church with panoramic views and decorated altars."
+      "description": "Famous church where pilgrims tie wish ribbons to the fence."
     },
     {
       "id": "farol-da-barra",
@@ -439,17 +439,17 @@
       "type": [
         "sight"
       ],
-      "category": "viewpoint",
-      "duration": 60,
-      "lat": -12.985,
-      "lng": -38.5149,
+      "category": "historic",
+      "duration": 45,
+      "lat": -12.9858,
+      "lng": -38.5229,
       "price": "$",
       "tags": [
         "beach",
         "historic",
-        "sunset"
+        "view"
       ],
-      "description": "Historic lighthouse with beach and sunset views."
+      "description": "Historic lighthouse offering panoramic ocean views and a small museum."
     },
     {
       "id": "parque-das-dunas",
@@ -464,10 +464,10 @@
       "price": "$",
       "tags": [
         "nature",
-        "trails",
-        "ecotourism"
+        "ecotourism",
+        "trails"
       ],
-      "description": "Protected environmental area with dunes and natural trails."
+      "description": "White dunes and trails in a protected natural area."
     },
     {
       "id": "igreja-e-convento-de-sao-francisco",
@@ -475,17 +475,17 @@
       "type": [
         "sight"
       ],
-      "category": "museum",
-      "duration": 90,
-      "lat": -12.9716,
-      "lng": -38.5143,
+      "category": "historic",
+      "duration": 60,
+      "lat": -12.9747,
+      "lng": -38.5131,
       "price": "$",
       "tags": [
         "baroque",
         "history",
         "architecture"
       ],
-      "description": "Baroque church with gold decorations and historical paintings."
+      "description": "Lavishly decorated colonial church and convent, a baroque masterpiece."
     },
     {
       "id": "praia-do-flamengo",
@@ -494,16 +494,16 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 120,
-      "lat": -12.961,
-      "lng": -38.54,
+      "duration": 90,
+      "lat": -12.9471,
+      "lng": -38.4851,
       "price": "$",
       "tags": [
         "beach",
-        "relax",
-        "swimming"
+        "nature",
+        "relax"
       ],
-      "description": "Calm beach ideal for swimming and sunbathing."
+      "description": "Quiet beach with calm waters, popular for swimming and kayaking."
     },
     {
       "id": "praia-do-portao",
@@ -513,15 +513,15 @@
       ],
       "category": "beach",
       "duration": 90,
-      "lat": -12.995,
-      "lng": -38.521,
+      "lat": -12.981,
+      "lng": -38.464,
       "price": "$",
       "tags": [
         "beach",
-        "family",
-        "calm"
+        "scenic",
+        "water-sports"
       ],
-      "description": "Family-friendly beach with facilities and calm waters."
+      "description": "Scenic beach area with water sports and a laid-back atmosphere."
     },
     {
       "id": "mercado-modelo",
@@ -529,17 +529,17 @@
       "type": [
         "sight"
       ],
-      "category": "shopping",
+      "category": "market",
       "duration": 90,
-      "lat": -12.9713,
-      "lng": -38.5127,
+      "lat": -12.9708,
+      "lng": -38.5142,
       "price": "$",
       "tags": [
         "shopping",
-        "crafts",
+        "culture",
         "souvenirs"
       ],
-      "description": "Traditional market for crafts and souvenirs."
+      "description": "Popular market with crafts, souvenirs, and cultural performances."
     },
     {
       "id": "salvador-shopping",
@@ -549,15 +549,15 @@
       ],
       "category": "shopping",
       "duration": 120,
-      "lat": -12.985,
-      "lng": -38.503,
+      "lat": -12.953,
+      "lng": -38.516,
       "price": "$$",
       "tags": [
         "shopping",
         "modern",
-        "variety"
+        "fashion"
       ],
-      "description": "Modern shopping mall with various stores and a comfortable atmosphere."
+      "description": "One of the city's large malls with national and international brands."
     },
     {
       "id": "praia-do-porto-da-barra",
@@ -566,16 +566,16 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 180,
-      "lat": -12.981,
-      "lng": -38.517,
+      "duration": 120,
+      "lat": -12.9875,
+      "lng": -38.518,
       "price": "$",
       "tags": [
         "beach",
-        "swimming",
-        "sunset"
+        "urban",
+        "historical"
       ],
-      "description": "Famous urban beach known for its sunset and calm waters."
+      "description": "Historic urban beach popular for swimming and sunset views."
     },
     {
       "id": "mirante-do-morro-do-cruz",
@@ -584,16 +584,16 @@
         "sight"
       ],
       "category": "viewpoint",
-      "duration": 45,
-      "lat": -12.978,
-      "lng": -38.51,
+      "duration": 30,
+      "lat": -12.9557,
+      "lng": -38.4531,
       "price": "$",
       "tags": [
         "viewpoint",
-        "cityscape",
-        "photography"
+        "city",
+        "panorama"
       ],
-      "description": "Panoramic views of Salvador and the bay."
+      "description": "Hilltop lookout with panoramic views over Salvador Bay."
     },
     {
       "id": "memorial-jorge-e-zelia-amado",
@@ -602,16 +602,16 @@
         "sight"
       ],
       "category": "museum",
-      "duration": 90,
-      "lat": -12.9985,
-      "lng": -38.5015,
+      "duration": 60,
+      "lat": -12.963,
+      "lng": -38.502,
       "price": "$",
       "tags": [
         "literature",
-        "history",
-        "culture"
+        "culture",
+        "author"
       ],
-      "description": "Memorial showcasing the life and work of the writer couple."
+      "description": "Cultural center dedicated to the life and work of writer Jorge Amado."
     },
     {
       "id": "parque-do-cabula",
@@ -620,16 +620,16 @@
         "sight"
       ],
       "category": "park",
-      "duration": 90,
-      "lat": -12.98,
-      "lng": -38.52,
+      "duration": 120,
+      "lat": -12.971,
+      "lng": -38.504,
       "price": "$",
       "tags": [
-        "park",
-        "family",
-        "nature"
+        "green",
+        "nature",
+        "relax"
       ],
-      "description": "Family-friendly park with green spaces and playgrounds."
+      "description": "Local park with walking paths and recreational areas."
     },
     {
       "id": "praia-de-itapua",
@@ -639,15 +639,15 @@
       ],
       "category": "beach",
       "duration": 120,
-      "lat": -12.981,
-      "lng": -38.391,
+      "lat": -12.9423,
+      "lng": -38.4848,
       "price": "$",
       "tags": [
         "beach",
-        "popular",
-        "culture"
+        "urban",
+        "relax"
       ],
-      "description": "Famous beach with strong cultural ties and beautiful scenery."
+      "description": "Wide beach popular for surfing, sunsets, and local music."
     },
     {
       "id": "praia-da-pituba",
@@ -656,16 +656,16 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 90,
-      "lat": -12.965,
-      "lng": -38.46,
+      "duration": 120,
+      "lat": -12.9715,
+      "lng": -38.449,
       "price": "$",
       "tags": [
         "beach",
         "urban",
         "relax"
       ],
-      "description": "Urban beach with good infrastructure and a peaceful environment."
+      "description": "Urban beach with calm waters and good infrastructure."
     },
     {
       "id": "shopping-artesanato-da-barra",
@@ -674,16 +674,16 @@
         "sight"
       ],
       "category": "shopping",
-      "duration": 90,
-      "lat": -13.003,
-      "lng": -38.517,
+      "duration": 60,
+      "lat": -12.994,
+      "lng": -38.524,
       "price": "$",
       "tags": [
-        "crafts",
         "souvenirs",
-        "shopping"
+        "artisans",
+        "local"
       ],
-      "description": "Shopping center with a wide variety of local crafts."
+      "description": "Small shopping arcade with local crafts and souvenirs."
     },
     {
       "id": "mirante-do-pontal",
@@ -692,16 +692,16 @@
         "sight"
       ],
       "category": "viewpoint",
-      "duration": 45,
-      "lat": -12.98,
-      "lng": -38.51,
+      "duration": 30,
+      "lat": -12.976,
+      "lng": -38.465,
       "price": "$",
       "tags": [
-        "view",
-        "sunset",
-        "nature"
+        "viewpoint",
+        "ocean",
+        "sunset"
       ],
-      "description": "Viewpoint to enjoy the sunset over the sea."
+      "description": "Scenic viewpoint overlooking the beaches of Salvador."
     },
     {
       "id": "praia-do-amaralina",
@@ -710,16 +710,16 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 180,
-      "lat": -12.961,
-      "lng": -38.48,
+      "duration": 120,
+      "lat": -12.982,
+      "lng": -38.518,
       "price": "$",
       "tags": [
         "beach",
-        "surf",
+        "urban",
         "local"
       ],
-      "description": "Popular beach for surfers and local residents."
+      "description": "Popular city beach with calm waters and a lively atmosphere."
     },
     {
       "id": "parque-metropolitano-de-salvador",
@@ -729,15 +729,15 @@
       ],
       "category": "park",
       "duration": 120,
-      "lat": -12.98,
-      "lng": -38.5,
+      "lat": -12.995,
+      "lng": -38.530,
       "price": "$",
       "tags": [
-        "park",
         "nature",
-        "family"
+        "trails",
+        "picnic"
       ],
-      "description": "Urban park with green areas and spaces for activities."
+      "description": "Large park with walking trails and outdoor recreation."
     },
     {
       "id": "praia-da-barra",
@@ -746,16 +746,16 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 180,
-      "lat": -13.004,
-      "lng": -38.517,
+      "duration": 90,
+      "lat": -12.990,
+      "lng": -38.516,
       "price": "$",
       "tags": [
         "beach",
-        "tourist",
-        "sunset"
+        "surfers",
+        "lively"
       ],
-      "description": "Famous beach with a strong historical background and unmissable sunset."
+      "description": "Surfer-friendly beach with bars and sunset views."
     },
     {
       "id": "praia-do-coral",
@@ -764,112 +764,76 @@
         "sight"
       ],
       "category": "beach",
-      "duration": 90,
+      "duration": 120,
       "lat": -12.965,
-      "lng": -38.46,
+      "lng": -38.456,
       "price": "$",
       "tags": [
         "beach",
         "snorkeling",
-        "nature"
+        "wildlife"
       ],
-      "description": "Beach with clear waters and a great spot for snorkeling."
-    },
-    {
-      "id": "coffeetown-pituba",
-      "name": "Coffeetown Salvador - Pituba",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 60,
-      "lat": -12.9718,
-      "lng": -38.4392,
-      "price": "$$",
-      "tags": [
-        "coffee",
-        "breakfast",
-        "casual"
-      ],
-      "description": "Coffee shop with various options for a tasty breakfast."
+      "description": "Tranquil beach known for snorkeling and coral reefs."
     },
     {
       "id": "delicia-de-pao-caminho-de-areia",
       "name": "Delícia de Pão - Caminho de Areia",
       "type": [
-        "breakfast"
+        "sight"
       ],
       "category": "restaurant",
       "duration": 60,
-      "lat": -12.9423,
-      "lng": -38.4927,
+      "lat": -12.983,
+      "lng": -38.483,
       "price": "$",
       "tags": [
-        "buffet",
-        "varied",
-        "breakfast"
+        "bakery",
+        "casual",
+        "local"
       ],
-      "description": "Self-service buffet with various typical breakfast options."
+      "description": "Casual bakery known for sandwiches and pastries."
     },
     {
       "id": "latitude-13",
       "name": "Latitude 13°",
       "type": [
-        "breakfast"
+        "sight"
       ],
       "category": "restaurant",
-      "duration": 60,
-      "lat": -12.9717,
-      "lng": -38.5044,
+      "duration": 90,
+      "lat": -12.9901,
+      "lng": -38.5152,
       "price": "$$",
       "tags": [
-        "cafe",
-        "breakfast",
-        "casual"
+        "international",
+        "gourmet",
+        "dinner"
       ],
-      "description": "Coffee shop with a pleasant atmosphere and good options to start the day."
+      "description": "Fine dining with international cuisine in a contemporary setting."
     },
     {
       "id": "pao-e-cia",
       "name": "Pão & Cia",
       "type": [
-        "breakfast"
+        "sight"
       ],
       "category": "restaurant",
-      "duration": 45,
-      "lat": -12.9732,
-      "lng": -38.5029,
+      "duration": 60,
+      "lat": -12.9893,
+      "lng": -38.515,
       "price": "$",
       "tags": [
         "bakery",
         "breakfast",
-        "fast"
+        "casual"
       ],
-      "description": "Great option for quick coffee and snacks."
-    },
-    {
-      "id": "restaurante-boca-de-galinha",
-      "name": "Boca de Galinha",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.954,
-      "lng": -38.5265,
-      "price": "$",
-      "tags": [
-        "seafood",
-        "local",
-        "traditional"
-      ],
-      "description": "Various moquecas with views of the Itapagipe Bay."
+      "description": "Bakery and cafe offering a variety of breads and local dishes."
     },
     {
       "id": "mistura-contorno",
       "name": "Mistura Contorno",
       "type": [
-        "lunch"
+        "sight"
       ],
       "category": "restaurant",
       "duration": 90,
@@ -887,7 +851,7 @@
       "id": "salvador-dali",
       "name": "Salvador Dali",
       "type": [
-        "lunch"
+        "sight"
       ],
       "category": "restaurant",
       "duration": 90,
@@ -905,91 +869,19 @@
       "id": "restaurante-casa-do-senhor-do-bonfim",
       "name": "Casa do Senhor do Bonfim",
       "type": [
-        "lunch"
+        "sight"
       ],
       "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9516,
-      "lng": -38.4629,
+      "duration": 60,
+      "lat": -12.9603,
+      "lng": -38.5129,
       "price": "$$",
       "tags": [
-        "local",
+        "bakery",
         "traditional",
-        "brazilian"
+        "local"
       ],
-      "description": "Typical Bahian dishes in a traditional environment."
-    },
-    {
-      "id": "restaurante-mangai",
-      "name": "Restaurante Mangai",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9743,
-      "lng": -38.5028,
-      "price": "$$",
-      "tags": [
-        "northeastern",
-        "buffet",
-        "family"
-      ],
-      "description": "Northeastern buffet with a wide variety of regional dishes."
-    },
-    {
-      "id": "restaurante-casa-de-tereza",
-      "name": "Casa de Tereza",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9715,
-      "lng": -38.5057,
-      "price": "$$$",
-      "tags": [
-        "bahian",
-        "gourmet",
-        "seafood"
-      ],
-      "description": "Sophisticated Bahian cuisine with fresh ingredients."
-    },
-    {
-      "id": "restaurante-coco-bambu",
-      "name": "Coco Bambu Salvador",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9832,
-      "lng": -38.5024,
-      "price": "$$$",
-      "tags": [
-        "seafood",
-        "family",
-        "regional"
-      ],
-      "description": "Specializing in seafood with a family-friendly environment."
-    },
-    {
-      "id": "restaurante-casa-da-madre",
-      "name": "Casa da Mãe",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9687,
-      "lng": -38.5149,
-      "price": "$$",
-      "tags": [
-        "local",
-        "casual",
-        "brazilian"
-      ],
-      "description": "Homemade Bahian food in a cozy environment."
+      "description": "Popular bakery and restaurant named after the Bonfim Church."
     },
     {
       "id": "restaurante-bahia-bahia",
@@ -1097,7 +989,7 @@
         "mediterranean",
         "seafood"
       ],
-      "description": "Brazilian and Mediterranean cuisine with fresh seafood ingredients."
+      "description": "Brazilian and Mediterranean cuisine with fresh seafood \ningredients."
     },
     {
       "id": "restaurante-salvador-dali-jantar",
@@ -1313,7 +1205,7 @@
         "religion",
         "museum"
       ],
-      "description": "Museu com acervo histórico ligado à irmandade da Misericórdia."
+      "description": "Museu com acervo histórico ligado à irmandade da \nMisericórdia."
     },
     {
       "id": "museu-udo-knoff-azulejaria-ceramica",
@@ -1341,771 +1233,32 @@
       ],
       "category": "museum",
       "duration": 60,
-      "lat": -12.976,
-      "lng": -38.519,
-      "price": "$",
-      "tags": [
-        "history",
-        "culture",
-        "museum"
-      ],
-      "description": "Museu com coleção de arte e objetos históricos."
-    },
-    {
-      "id": "museu-de-energia",
-      "name": "Museu de Energia",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 60,
-      "lat": -12.977,
-      "lng": -38.52,
-      "price": "$",
-      "tags": [
-        "science",
-        "energy",
-        "education"
-      ],
-      "description": "Museu dedicado à história da energia e tecnologia."
-    },
-    {
-      "id": "casa-de-jorge-amado",
-      "name": "Casa de Jorge Amado",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 60,
-      "lat": -12.9715,
-      "lng": -38.511,
-      "price": "$",
-      "tags": [
-        "literature",
-        "culture",
-        "history"
-      ],
-      "description": "Casa-museu do famoso escritor baiano Jorge Amado."
-    },
-    {
-      "id": "parque-da-cidade",
-      "name": "Parque da Cidade (Parque Joventino Silva)",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 120,
-      "lat": -12.96,
-      "lng": -38.5,
-      "price": "$",
-      "tags": [
-        "nature",
-        "trails",
-        "recreation"
-      ],
-      "description": "Parque urbano com trilhas e áreas para lazer no coração da cidade."
-    },
-    {
-      "id": "parque-metropolitano-pituacu",
-      "name": "Parque Metropolitano Pituaçu",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 120,
-      "lat": -12.925,
-      "lng": -38.43,
-      "price": "$",
-      "tags": [
-        "nature",
-        "lake",
-        "recreation"
-      ],
-      "description": "Grande parque com lago, trilhas e áreas para esportes."
-    },
-    {
-      "id": "parque-dos-ventos",
-      "name": "Parque dos Ventos",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 90,
-      "lat": -12.965,
-      "lng": -38.48,
-      "price": "$",
-      "tags": [
-        "nature",
-        "viewpoint",
-        "relax"
-      ],
-      "description": "Parque com vista panorâmica e ambiente tranquilo."
-    },
-    {
-      "id": "praia-do-rio-vermelho",
-      "name": "Praia do Rio Vermelho",
-      "type": [
-        "sight"
-      ],
-      "category": "beach",
-      "duration": 120,
-      "lat": -12.97,
-      "lng": -38.491,
-      "price": "$",
-      "tags": [
-        "beach",
-        "nightlife",
-        "relax"
-      ],
-      "description": "Popular beach with bars and nightlife."
-    },
-    {
-      "id": "feira-de-sao-jose",
-      "name": "Feira de São José",
-      "type": [
-        "sight"
-      ],
-      "category": "shopping",
-      "duration": 90,
-      "lat": -12.973,
-      "lng": -38.508,
-      "price": "$",
-      "tags": [
-        "market",
-        "local",
-        "crafts"
-      ],
-      "description": "Feira tradicional com artesanato e comidas típicas."
-    },
-    {
-      "id": "shopping-da-barra",
-      "name": "Shopping da Barra",
-      "type": [
-        "sight"
-      ],
-      "category": "shopping",
-      "duration": 90,
-      "lat": -12.998,
-      "lng": -38.516,
-      "price": "$$",
-      "tags": [
-        "shopping",
-        "modern",
-        "food-court"
-      ],
-      "description": "Shopping moderno com lojas variadas e praça de alimentação."
-    },
-    {
-      "id": "shopping-iguatemi",
-      "name": "Shopping Iguatemi Salvador",
-      "type": [
-        "sight"
-      ],
-      "category": "shopping",
-      "duration": 120,
-      "lat": -12.969,
-      "lng": -38.455,
-      "price": "$$",
-      "tags": [
-        "shopping",
-        "fashion",
-        "entertainment"
-      ],
-      "description": "Grande shopping com lojas nacionais e internacionais."
-    },
-    {
-      "id": "praia-do-flamengo-norte",
-      "name": "Praia do Flamengo Norte",
-      "type": [
-        "sight"
-      ],
-      "category": "beach",
-      "duration": 180,
-      "lat": -12.984,
-      "lng": -38.519,
-      "price": "$",
-      "tags": [
-        "beach",
-        "nature",
-        "quiet"
-      ],
-      "description": "Praia tranquila ideal para relaxar e banho de mar."
-    },
-    {
-      "id": "mirante-do-pedra-da-sereia",
-      "name": "Mirante da Pedra da Sereia",
-      "type": [
-        "sight"
-      ],
-      "category": "viewpoint",
-      "duration": 45,
-      "lat": -12.97,
-      "lng": -38.52,
-      "price": "$",
-      "tags": [
-        "view",
-        "nature",
-        "photography"
-      ],
-      "description": "Mirante com vista para o mar e áreas naturais."
-    },
-    {
-      "id": "cafelier-carmo",
-      "name": "Cafélier",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 60,
-      "lat": -12.9713,
-      "lng": -38.5122,
-      "price": "$$",
-      "tags": [
-        "coffee",
-        "specialty",
-        "view"
-      ],
-      "description": "Cafés criativos com vista para a Baía de Todos-os-Santos."
-    },
-    {
-      "id": "cafe-gateiro-barra",
-      "name": "Café Gateiro",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 60,
-      "lat": -12.9931,
-      "lng": -38.5204,
-      "price": "$",
-      "tags": [
-        "coffee",
-        "cats",
-        "relax"
-      ],
-      "description": "Café com gatos para adoção, ambiente acolhedor na Barra."
-    },
-    {
-      "id": "a-cafeteria-botanica-pituba",
-      "name": "A Cafeteria Botânica",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 50,
-      "lat": -12.9718,
-      "lng": -38.4429,
-      "price": "$$",
-      "tags": [
-        "coffee",
-        "botanical",
-        "organic"
-      ],
-      "description": "Cafés botânicos e pães artesanais em ambiente verde."
-    },
-    {
-      "id": "coffeetown-vitoria",
-      "name": "Coffeetown Vitória",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 45,
-      "lat": -12.9705,
-      "lng": -38.5057,
-      "price": "$",
-      "tags": [
-        "coffee",
-        "specialty",
-        "casual"
-      ],
-      "description": "Cafés especiais e opções geladas na Vitória."
-    },
-    {
-      "id": "mafe-cafe-rio-vermelho",
-      "name": "Mafê Café",
-      "type": [
-        "breakfast"
-      ],
-      "category": "restaurant",
-      "duration": 50,
-      "lat": -12.9707,
-      "lng": -38.4912,
-      "price": "$",
-      "tags": [
-        "coffee",
-        "vegan",
-        "cozy"
-      ],
-      "description": "Cafés variados, inclusive veganos, no Rio Vermelho."
-    },
-    {
-      "id": "camarao-camarao-shopping-barra",
-      "name": "Camarada Camarão",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9992,
-      "lng": -38.5169,
-      "price": "$$",
-      "tags": [
-        "seafood",
-        "casual",
-        "popular"
-      ],
-      "description": "Frutos do mar frescos em ambiente descontraído."
-    },
-    {
-      "id": "picui-restaurant",
-      "name": "Picuí",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 75,
-      "lat": -12.9715,
-      "lng": -38.508,
-      "price": "$",
-      "tags": [
-        "regional",
-        "affordable",
-        "local"
-      ],
-      "description": "Comida baiana tradicional com ótimo custo-benefício."
-    },
-    {
-      "id": "bamba-de-dende",
-      "name": "Bambá de Dendê",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 80,
-      "lat": -12.97,
-      "lng": -38.52,
-      "price": "$",
-      "tags": [
-        "regional",
-        "affordable",
-        "authentic"
-      ],
-      "description": "Pratos típicos da Bahia com preço acessível."
-    },
-    {
-      "id": "churrascaria-quem-diria",
-      "name": "Churrascaria Quem Diria",
-      "type": [
-        "lunch"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9702,
-      "lng": -38.5103,
-      "price": "$$",
-      "tags": [
-        "bbq",
-        "family",
-        "buffet"
-      ],
-      "description": "Churrascaria com variedade e espaço kids."
-    },
-    {
-      "id": "restaurante-bambalina",
-      "name": "Bambalina",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.971,
-      "lng": -38.51,
-      "price": "$$",
-      "tags": [
-        "contemporary",
-        "creative",
-        "cocktails"
-      ],
-      "description": "Cozinha contemporânea com drinks especiais."
-    },
-    {
-      "id": "restaurante-do-mario",
-      "name": "Restaurante do Mário",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9712,
-      "lng": -38.511,
-      "price": "$$",
-      "tags": [
-        "regional",
-        "seafood",
-        "authentic"
-      ],
-      "description": "Comida baiana tradicional e frutos do mar."
-    },
-    {
-      "id": "restaurante-porto-do-daniel",
-      "name": "Porto do Daniel",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9718,
-      "lng": -38.5125,
-      "price": "$$",
-      "tags": [
-        "seafood",
-        "romantic",
-        "local"
-      ],
-      "description": "Frutos do mar frescos com ambiente acolhedor."
-    },
-    {
-      "id": "restaurante-amuay",
-      "name": "Amuay Restaurante",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.972,
-      "lng": -38.513,
-      "price": "$$$",
-      "tags": [
-        "fine dining",
-        "international",
-        "luxury"
-      ],
-      "description": "Alta gastronomia internacional em Salvador."
-    },
-    {
-      "id": "restaurante-essenza",
-      "name": "Essenza Restaurante",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.973,
-      "lng": -38.514,
-      "price": "$$$",
-      "tags": [
-        "italian",
-        "romantic",
-        "wine"
-      ],
-      "description": "Culinária italiana sofisticada com carta de vinhos."
-    },
-    {
-      "id": "restaurante-bahia-bistro",
-      "name": "Bahia Bistro",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9705,
-      "lng": -38.5105,
-      "price": "$$",
-      "tags": [
-        "contemporary",
-        "regional",
-        "cozy"
-      ],
-      "description": "Pratos contemporâneos com toque baiano."
-    },
-    {
-      "id": "restaurante-bistrô-pelourinho",
-      "name": "Bistrô Pelourinho",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9711,
-      "lng": -38.5108,
-      "price": "$$",
-      "tags": [
-        "fusion",
-        "historic",
-        "romantic"
-      ],
-      "description": "Cozinha fusion no coração do Pelourinho."
-    },
-    {
-      "id": "restaurante-mangai",
-      "name": "Mangai Restaurante",
-      "type": [
-        "dinner"
-      ],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9725,
-      "lng": -38.5115,
-      "price": "$$",
-      "tags": [
-        "regional",
-        "buffet",
-        "family"
-      ],
-      "description": "Buffet regional com variedade e ambiente familiar."
-    },
-    {
-      "id": "porto-da-barra-beach",
-      "name": "Porto da Barra Beach",
-      "type": [
-        "sight"
-      ],
-      "category": "beach",
-      "duration": 120,
-      "lat": -12.9855,
-      "lng": -38.5155,
-      "price": "$",
-      "tags": [
-        "beach",
-        "swimming",
-        "sunbathing"
-      ],
-      "description": "Popular urban beach with calm waters."
-    },
-    {
-      "id": "dique-do-tororo",
-      "name": "Dique do Tororó",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 90,
-      "lat": -12.9975,
-      "lng": -38.4882,
-      "price": "$",
-      "tags": [
-        "park",
-        "sculpture",
-        "relax"
-      ],
-      "description": "Urban park with sculptures and lake."
-    },
-    {
-      "id": "museu-afro-brasil",
-      "name": "Museu Afro-Brasil",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 90,
-      "lat": -12.971,
-      "lng": -38.5125,
-      "price": "$",
-      "tags": [
-        "culture",
-        "afro-brazilian",
-        "history"
-      ],
-      "description": "Museum dedicated to Afro-Brazilian culture."
-    },
-    {
-      "id": "igrejada-se",
-      "name": "Igreja da Sé",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 60,
-      "lat": -12.973,
-      "lng": -38.512,
-      "price": "$",
-      "tags": [
-        "historic",
-        "religious",
-        "architecture"
-      ],
-      "description": "Historic cathedral in the Pelourinho."
-    },
-    {
-      "id": "parque-das-abracoes",
-      "name": "Parque das Abrações",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 60,
-      "lat": -12.972,
-      "lng": -38.52,
-      "price": "$",
-      "tags": [
-        "park",
-        "nature",
-        "relax"
-      ],
-      "description": "Peaceful park for leisure and nature walks."
-    },
-    {
-      "id": "museu-da-imagem-e-do-som",
-      "name": "Museu da Imagem e do Som",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 90,
-      "lat": -12.9715,
-      "lng": -38.5115,
-      "price": "$",
-      "tags": [
-        "museum",
-        "audio-visual",
-        "culture"
-      ],
-      "description": "Museum focusing on audiovisual and cultural exhibits."
-    },
-    {
-      "id": "mirante-pontal-da-barra",
-      "name": "Mirante Pontal da Barra",
-      "type": [
-        "sight"
-      ],
-      "category": "viewpoint",
-      "duration": 45,
-      "lat": -12.9855,
-      "lng": -38.515,
-      "price": "$",
-      "tags": [
-        "viewpoint",
-        "sunset",
-        "photography"
-      ],
-      "description": "Scenic viewpoint for sunsets over the bay."
-    },
-    {
-      "id": "shopping-iguatemi",
-      "name": "Shopping Iguatemi",
-      "type": [
-        "sight"
-      ],
-      "category": "shopping",
-      "duration": 90,
-      "lat": -12.9535,
-      "lng": -38.4595,
-      "price": "$$",
-      "tags": [
-        "shopping",
-        "modern",
-        "fashion"
-      ],
-      "description": "Modern mall with shops and dining options."
-    },
-    {
-      "id": "museu-nautico-da-bahia",
-      "name": "Museu Náutico da Bahia",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 90,
-      "lat": -12.986,
-      "lng": -38.514,
-      "price": "$",
-      "tags": [
-        "museum",
-        "nautical",
-        "history"
-      ],
-      "description": "Museum showcasing nautical history and artifacts."
-    },
-    {
-      "id": "parque-costa-do-rio-vermelho",
-      "name": "Parque Costa do Rio Vermelho",
-      "type": [
-        "sight"
-      ],
-      "category": "park",
-      "duration": 90,
-      "lat": -12.969,
-      "lng": -38.49,
-      "price": "$",
-      "tags": [
-        "park",
-        "nature",
-        "hiking"
-      ],
-      "description": "Green park with trails and nature views."
-    },
-    {
-      "id": "shopping-pelas-artesanato",
-      "name": "Shopping Pelas Artesanato",
-      "type": [
-        "sight"
-      ],
-      "category": "shopping",
-      "duration": 90,
-      "lat": -12.972,
-      "lng": -38.51,
-      "price": "$",
-      "tags": [
-        "crafts",
-        "souvenirs",
-        "local"
-      ],
-      "description": "Shopping center focused on local crafts and souvenirs."
-    },
-    {
-      "id": "museu-de-arte-da-bahia",
-      "name": "Museu de Arte da Bahia",
-      "type": [
-        "sight"
-      ],
-      "category": "museum",
-      "duration": 90,
-      "lat": -12.971,
-      "lng": -38.5105,
+      "lat": -12.975,
+      "lng": -38.518,
       "price": "$",
       "tags": [
         "art",
-        "culture",
-        "historic"
+        "history",
+        "culture"
       ],
-      "description": "Museum with Brazilian and international art collections."
+      "description": "Museu com coleções de artefatos históricos da Bahia."
     },
     {
-      "id": "praia-do-pituba",
-      "name": "Praia do Pituba",
+      "id": "previsao-do-tempo",
+      "name": "Previsão do Tempo",
       "type": [
-        "sight"
+        "information"
       ],
-      "category": "beach",
-      "duration": 120,
-      "lat": -12.9715,
-      "lng": -38.449,
+      "category": "weather",
+      "duration": 0,
+      "lat": -12.9714,
+      "lng": -38.5014,
       "price": "$",
       "tags": [
-        "beach",
-        "urban",
-        "relax"
+        "weather",
+        "information"
       ],
-      "description": "Urban beach with calm waters and good infrastructure."
-    },
-    {
-      "id": "mirante-do-morro-do-pilar",
-      "name": "Mirante do Morro do Pilar",
-      "type": [
-        "sight"
-      ],
-      "category": "viewpoint",
-      "duration": 45,
-      "lat": -12.9735,
-      "lng": -38.511,
-      "price": "$",
-      "tags": [
-        "viewpoint",
-        "city",
-        "panorama"
-      ],
-      "description": "Viewpoint with panoramic views of Salvador."
+      "description": "Current weather conditions in Salvador."
     }
   ]
 }

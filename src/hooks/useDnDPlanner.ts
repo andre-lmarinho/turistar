@@ -11,7 +11,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { formatISO } from "date-fns";
 import { useState } from "react";
-import type { DayPlan } from "@/types/itinerary";
+import type { DayPlan, Activity } from "@/types/itinerary";
 
 /**
  * Encapsulates drag-and-drop state and handlers for DayPlan columns.
@@ -86,14 +86,28 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     setDays(days.filter((d) => d.id !== id));
   }
 
+  function addActivity(act: Activity, dayIndex = 0) {
+    setDays(prev => {
+      const copy = [...prev];
+      // fallback guard: if the requested column does not exist create one
+      if (!copy[dayIndex]) copy[dayIndex] = {
+        id: `temp-${Date.now()}`,
+        label: `Day ${dayIndex + 1}`,
+        activities: [],
+      };
+      copy[dayIndex].activities.push(act);
+      return copy;
+    });
+  }
+
+
   return {
     days,
     sensors,
     activeId,
     handleDragStart,
     handleDragOver,
-    addDay,
-    removeDay,
     setDays,
+    addActivity,
   };
 }

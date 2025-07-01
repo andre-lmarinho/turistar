@@ -1,47 +1,22 @@
-// src/hooks/usePlanner.ts
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { formatISO } from "date-fns";
 import { closestCenter } from "@dnd-kit/core";
 
+import { useTripRange } from "./useTripRange";
 import { useItinerary } from "./useItinerary";
 import { useDnDPlanner } from "./useDnDPlanner";
-import { useTripRange } from "./useTripRange";
-import { distributeRoundRobin } from "@/utils/distributeRoundRobin";
+import { buildInitialDays } from "@/utils/initialDays";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
-/**
- * Encapsulates all planner logic: URL params, data fetching,
- * date‐range handling, and drag-and-drop state.
- */
 export function usePlanner() {
-  // Read the destination from query string
   const params = useSearchParams();
-  const dest   = params.get("dest")?.trim().toLowerCase() ?? "";
+  const dest = params.get("dest")?.trim().toLowerCase() ?? "";
 
-  // Manage start/end dates and date picker state
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest);
+  const { isLoading, error } = useItinerary(dest);
 
-  // Build an array of empty DayPlan objects for each trip day
-  const baseDays: DayPlan[] = useMemo(
-    () =>
-      tripDays.map((d) => ({
-        id: formatISO(d, { representation: "date" }),
-        label: d.toLocaleDateString("en-US", {
-          weekday: "short",
-          day: "2-digit",
-        }),
-        activities: [],
-      })),
-    [tripDays]
-  );
-
-  // Fetch raw itinerary from API
-  const { days: fetched, isLoading, error } = useItinerary(dest);
-
-  // Set up DnD planner state and handlers
   const {
     days,
     setDays,
@@ -49,17 +24,23 @@ export function usePlanner() {
     activeId,
     handleDragStart,
     handleDragOver,
-  } = useDnDPlanner(baseDays);
+  } = useDnDPlanner(buildInitialDays(tripDays));
 
-  // Distribute fetched activities into the empty days once data arrives
   useEffect(() => {
-    if (!fetched) return;
-    const acts: Activity[] = fetched.flatMap((d) => d.activities);
-    setDays(distributeRoundRobin(baseDays, acts));
-  }, [fetched, baseDays, setDays]);
+    setDays(buildInitialDays(tripDays));
+  }, [tripDays, setDays]);
+
+  /** MVP: push new activity to the first day */
+  const addActivity = (activity: Activity) => {
+    setDays((prev) => {
+      if (prev.length === 0) return prev;
+      const clone: DayPlan[] = structuredClone(prev);
+      clone[0].activities.push(activity);
+      return clone;
+    });
+  };
 
   return {
-    // Data + state
     dest,
     days,
     tripDays,
@@ -67,14 +48,11 @@ export function usePlanner() {
     isLoading,
     error,
     activeId,
-
-    // DnD configuration
     sensors,
     collisionDetection: closestCenter,
     handleDragStart,
     handleDragOver,
-
-    // Actions
     handleRangeChange,
+    addActivity,
   };
 }

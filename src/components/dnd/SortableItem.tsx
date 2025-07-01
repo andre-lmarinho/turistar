@@ -50,7 +50,7 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-md border p-3 shadow-sm bg-card select-none",
+        "bg-card select-none",
         isDragging
           ? dragOverlay
             ? "shadow-lg cursor-grabbing"
