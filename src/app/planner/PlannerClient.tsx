@@ -1,9 +1,10 @@
+// src/app/planner/PlannerClient.tsx
 "use client";
 
 import { useState, useMemo } from "react";
 import { DateRangePicker } from "@/components/ui/date-picker";
 import PlannerBoard from "./PlannerBoard";
-import DestinationFilterPanel from "@/app/planner/DestinationFilterPanel";
+import DestinationFilterPanel from "./DestinationFilterPanel";    // ← caminho relativo
 import { usePlanner } from "@/hooks/usePlanner";
 
 export default function PlannerClient() {
@@ -19,19 +20,19 @@ export default function PlannerClient() {
     handleDragStart,
     handleDragOver,
     activeId,
-    addActivity,          // ← new
+    addActivity,
   } = usePlanner();
 
-  // Build a Set of IDs already placed on the board
-  const addedIds = useMemo<Set<string>>(
+  // Conjunto de IDs já presentes no board
+  const addedIds = useMemo(
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
     [days]
   );
 
-  // Filter-panel visibility
+  // Estado de visibilidade do painel
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // Guard clauses
+  /* Guard clauses */
   if (!dest)         return <p className="p-4">Destination missing in URL.</p>;
   if (isLoading)     return <p className="p-4">Loading itinerary…</p>;
   if (error)         return <p className="p-4">Failed to load.</p>;
@@ -58,7 +59,7 @@ export default function PlannerClient() {
         addedIds={addedIds}
       />
 
-      {/* DnD board */}
+      {/* Drag-and-Drop board */}
       <PlannerBoard
         days={days}
         activeId={activeId}
