@@ -35,7 +35,12 @@ export default function PlannerClient() {
     addActivity,
     removeActivity,
     updateActivity,
+    addBlankActivity, 
   } = usePlanner();
+
+
+   /* state for which activity is being edited... */
+  const [editing, setEditing] = useState<string | null>(null);
 
   /* Build a Set of activity IDs already placed on the board */
   const addedIds = useMemo(
@@ -43,7 +48,7 @@ export default function PlannerClient() {
     [days]
   );
 
-  // Build list of POI names for autocomplete
+  /* Build list of POI names for autocomplete */
   const poiOptions = useMemo(
     () => salvador.activities.map((a) => a.name),
     []
@@ -91,7 +96,10 @@ export default function PlannerClient() {
         collisionDetection={collisionDetection}
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
-        onSelectActivity={(activity) => setSelectedActivity(activity)}  // ← click handler
+        onSelectActivity={(activity) => setSelectedActivity(activity)}
+        onAddNew={(dayId) => {
+          const newAct = addBlankActivity(days.findIndex((d) => d.id === dayId));
+          setEditing(newAct.id);}}
       />
 
       {/* Activity editing modal */}

@@ -38,6 +38,7 @@ export function usePlanner() {
     addActivity,  
     removeActivity,
     updateActivity, 
+    addBlankActivity,   
   } = useDnDPlanner(buildInitialDays(tripDays));
 
   /* Reset the board whenever date range changes */
@@ -67,6 +68,7 @@ export function usePlanner() {
     /* Add / remove helpers for the filter panel */
     addActivity,
     removeActivity,
-    updateActivity, 
+    updateActivity,
+    addBlankActivity,
   };
 }

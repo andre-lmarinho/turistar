@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { DEFAULT_COLORS } from "@/constants/colors";
 
 /**
  * Click-a-colour control.
@@ -34,15 +35,3 @@ export default function ColorSwatchPicker({
     </div>
   );
 }
-
-/* fallback palette */
-const DEFAULT_COLORS = [
-  "bg-red-100",
-  "bg-orange-100",
-  "bg-amber-100",
-  "bg-emerald-100",
-  "bg-sky-100",
-  "bg-indigo-100",
-  "bg-purple-100",
-  "bg-pink-100",
-];

@@ -100,7 +100,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     );
   }
 
-/* ------------------------------ update -------------------------------- */
+  /* ------------------------------ update -------------------------------- */
   /**
    * Patch an existing activity (title, description, color, …).
    * Returns silently if the id is not found.
@@ -124,6 +124,37 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       })
     );
   }
+  /* ------------------------- blank activity  --------------------------- */
+
+  /**
+   * Pushes a completely blank activity onto the given day (by index).
+   * Returns the newly created Activity so the caller can e.g. open an editor.
+   */
+  function addBlankActivity(dayIndex = 0): Activity {
+    const blank: Activity = {
+      id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      title: "",
+      description: "",
+      duration: 0,
+    };
+
+    console.log("Adding blank activity:", blank);
+
+    setDays((prev) => {
+      const copy = [...prev];
+      if (!copy[dayIndex]) {
+        copy[dayIndex] = {
+          id: `temp-${Date.now()}`,
+          label: `Day ${dayIndex + 1}`,
+          activities: [],
+        };
+      }
+      copy[dayIndex].activities.push(blank);
+      return copy;
+    });
+    return blank;
+  }
+
 
   /* --------------------------------------------------------------------- */
   return {
@@ -137,6 +168,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     setDays,
     addActivity,
     removeActivity,
-    updateActivity,   // ← NEW
+    updateActivity,
+    addBlankActivity,
   };
 }

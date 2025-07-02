@@ -31,7 +31,9 @@ export interface PlannerBoardProps {
   /** Drag-over handler to reorder */
   handleDragOver(e: DragOverEvent): void;
   /** Called when user clicks a card to edit */
-  onSelectActivity: (activity: Activity) => void;   // ← NEW
+  onSelectActivity: (activity: Activity) => void;
+  /** Called when user clicks + New Card Button */
+  onAddNew?(dayId: string): void;     
 }
 
 export default function PlannerBoard({
@@ -41,7 +43,8 @@ export default function PlannerBoard({
   collisionDetection,
   handleDragStart,
   handleDragOver,
-  onSelectActivity,           // ← NEW
+  onSelectActivity,
+  onAddNew,
 }: PlannerBoardProps) {
   // find the active activity for the DragOverlay preview
   const activeActivity = days
@@ -62,7 +65,8 @@ export default function PlannerBoard({
             {/* Pass click handler down to each column */}
             <DayColumn
               day={day}
-              onSelectActivity={onSelectActivity}    // ← NEW
+              onSelectActivity={onSelectActivity}
+              onAddNew={onAddNew}
             />
             {index !== days.length - 1 && (
               <div className="w-px bg-gray-300 mx-4" />

@@ -22,30 +22,32 @@ interface ActivityCardProps {
 export default function ActivityCard({ activity, onSelect }: ActivityCardProps) {
   const { title, startTime = "– –", duration, color } = activity;
 
-  /* Tailwind class (bg-sky-500) OR hex (#3b82f6) */
+  /* Tailwind class (e.g. "bg-sky-500") OR inline hex style */
   const twBg = color && !color.startsWith("#") ? color : undefined;
   const hexBg = color?.startsWith("#") ? { backgroundColor: color } : undefined;
 
-  /* root is a <button> for keyboard-accessible click */
   return (
     <button
       type="button"
       onClick={onSelect}
-      className={`
-        group w-full text-left flex rounded-lg border shadow-sm bg-white overflow-hidden
-        hover:shadow-md transition cursor-pointer
-      `}
+      className="
+        group
+        w-full
+        text-left
+        flex
+        items-stretch
+        rounded-lg
+        border
+        shadow-sm
+        bg-white
+        overflow-hidden
+        hover:shadow-md
+        transition
+        cursor-pointer
+      "
     >
-      {/* colour strip */}
-      {color && (
-        <div
-          className={`w-1 ${twBg ?? ""}`}
-          style={hexBg}
-        />
-      )}
-
-      {/* main panel */}
-      <div className="flex-1 flex flex-col">
+      {/* main content */}
+      <div className={`flex-1 flex flex-col ${twBg ?? ""}`}>
         {/* image */}
         <Image
           src="https://placehold.co/600x300"
