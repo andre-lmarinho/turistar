@@ -39,9 +39,7 @@ export default function ActivityModal({
   onDelete,
   onSave,
 }: ActivityModalProps) {
-  if (!open) return null;
-
-  // Build initial LocalPoi from JSON or fallback to board's activity
+  // 1) Build initial LocalPoi from JSON or fallback to board's activity
   const initialPoi: LocalPoi = (() => {
     const found = salvadorData.activities.find((p) => p.id === activity.id);
     if (found) {
@@ -62,7 +60,7 @@ export default function ActivityModal({
     };
   })();
 
-  // Separate JSON-backed selection vs. user edits
+  // 2) Hooks must always run unconditionally
   const [selectedPoi, setSelectedPoi] = useState<LocalPoi>(initialPoi);
   const [editedTitle, setEditedTitle] = useState(selectedPoi.name);
   const [editedDescription, setEditedDescription] = useState(
@@ -73,6 +71,10 @@ export default function ActivityModal({
   const [duration, setDuration] = useState(String(activity.duration));
   const [search, setSearch] = useState("");
 
+  // 3) Now we can bail out early if not open
+  if (!open) return null;
+
+  // 4) Render the modal
   return ReactDOM.createPortal(
     <>
       {/* Backdrop */}
@@ -107,7 +109,9 @@ export default function ActivityModal({
               options={poiOptions}
               onSelect={(name) => {
                 setSearch(name);
-                const poi = salvadorData.activities.find((p) => p.name === name)!;
+                const poi = salvadorData.activities.find(
+                  (p) => p.name === name
+                )!;
                 setSelectedPoi({
                   id: poi.id,
                   name: poi.name,

@@ -3,7 +3,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaClock, FaCheck, FaTrashAlt } from "react-icons/fa";
+import { FaClock, FaCheck } from "react-icons/fa";
 import RemoveCardButton from "@/components/planner/RemoveCardButton";
 
 /**

@@ -14,7 +14,6 @@ import {
 
 import DayColumn from "@/components/dnd/DayColumn";
 import { SortableItem } from "@/components/dnd/SortableItem";
-import ActivityCard from "@/components/planner/ActivityCard";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
 export interface PlannerBoardProps {

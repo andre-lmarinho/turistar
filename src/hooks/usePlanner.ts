@@ -1,7 +1,6 @@
 // src/hooks/usePlanner.ts
 "use client";
 
-import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { closestCenter } from "@dnd-kit/core";
 
@@ -9,7 +8,6 @@ import { useTripRange } from "@/hooks/useTripRange";
 import { useItinerary } from "@/hooks/useItinerary";
 import { useDnDPlanner } from "@/hooks/useDnDPlanner";
 import { buildInitialDays } from "@/utils/initialDays";
-import type { Activity } from "@/types/itinerary";
 
 /**
  * High-level planner hook
@@ -30,7 +28,6 @@ export function usePlanner() {
   /* -------------------------- DnD state --------------------------- */
   const {
     days,
-    setDays,
     sensors,
     activeId,
     handleDragStart,
@@ -40,11 +37,6 @@ export function usePlanner() {
     updateActivity, 
     addBlankActivity,   
   } = useDnDPlanner(buildInitialDays(tripDays));
-
-  /* Reset the board whenever date range changes */
-  useEffect(() => {
-    setDays(buildInitialDays(tripDays));
-  }, [tripDays, setDays]);
 
   /* --------------------------- export ----------------------------- */
   return {
