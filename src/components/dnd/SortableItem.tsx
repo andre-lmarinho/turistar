@@ -1,33 +1,33 @@
 // src/components/dnd/SortableItem.tsx
 "use client";
 
-import { PropsWithChildren } from "react";
+import React from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
+import ActivityCard from "@/components/planner/ActivityCard";
+import type { Activity } from "@/types/itinerary";
 
 /**
- * Props for a draggable SortableItem:
- * - id: unique identifier
- * - dragOverlay: render as <div> in overlay (no list bullets)
- * - className: extra CSS classes
+ * A draggable wrapper around an ActivityCard:
+ * - Renders as <li> in the day columns
+ * - Renders as <div> in the drag overlay
+ * - Handles dnd-kit attributes, listeners, and styles
  */
-export type SortableItemProps = PropsWithChildren<{
-  id: string;
-  dragOverlay?: boolean;
-  className?: string;
-}>;
+export interface SortableItemProps {
+  id: string;                   // unique identifier for dnd-kit
+  activity: Activity;           // data to display in the card
+  onSelect?: () => void;        // click handler to open edit modal
+  dragOverlay?: boolean;        // true → use <div> for overlay
+  className?: string;           // additional CSS classes
+}
 
-/**
- * A draggable card:
- * - <li> in normal lists
- * - <div> in the DragOverlay (avoids default list markers)
- */
 export function SortableItem({
   id,
+  activity,
+  onSelect,
   dragOverlay = false,
   className,
-  children,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -38,11 +38,12 @@ export function SortableItem({
     isDragging,
   } = useSortable({ id });
 
-  // Overlay follows pointer; normal uses CSS transform
+  // Apply transform/transition unless we're in the overlay
   const style = dragOverlay
     ? {}
     : { transform: CSS.Transform.toString(transform), transition };
 
+  // Use <div> for overlay so no list bullets; otherwise <li>
   const Tag = dragOverlay ? "div" : "li";
 
   return (
@@ -50,7 +51,7 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "bg-card select-none",
+        // dragging styles
         isDragging
           ? dragOverlay
             ? "shadow-lg cursor-grabbing"
@@ -61,7 +62,8 @@ export function SortableItem({
       {...attributes}
       {...listeners}
     >
-      {children}
+      {/* Render the activity card; clicking it opens the edit modal */}
+      <ActivityCard activity={activity} onSelect={onSelect} />
     </Tag>
   );
 }

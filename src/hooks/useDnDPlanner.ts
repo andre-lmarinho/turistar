@@ -13,7 +13,10 @@ import { useState } from "react";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
 /**
- * Encapsulates drag-and-drop state and handlers for DayPlan columns.
+ * Encapsulates:
+ *   • full DayPlan state
+ *   • drag-and-drop handlers
+ *   • CRUD helpers   (add / remove / **update**)
  */
 export function useDnDPlanner(initial: DayPlan[] = []) {
   const [days, setDays] = useState<DayPlan[]>(initial);
@@ -69,13 +72,20 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
   function addActivity(act: Activity, dayIndex = 0) {
     setDays((prev) => {
       const copy = [...prev];
+      /* ensure target column exists */
       if (!copy[dayIndex])
         copy[dayIndex] = {
           id: `temp-${Date.now()}`,
           label: `Day ${dayIndex + 1}`,
           activities: [],
         };
-      copy[dayIndex].activities.push(act);
+      /* allow same place on another day, but never twice in this day */
+      const alreadyInDay = copy[dayIndex].activities.some(
+        (a) => a.id === act.id
+      );
+      if (!alreadyInDay) {
+        copy[dayIndex].activities.push(act);
+      }
       return copy;
     });
   }
@@ -90,15 +100,43 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     );
   }
 
+/* ------------------------------ update -------------------------------- */
+  /**
+   * Patch an existing activity (title, description, color, …).
+   * Returns silently if the id is not found.
+   *
+   * @param id     activity id to update
+   * @param patch  partial Activity with the fields you want to change
+   */
+  function updateActivity(id: string, patch: Partial<Activity>) {
+    setDays((prev) =>
+      prev.map((day) => {
+        const has = day.activities.some((a) => a.id === id);
+        if (!has) return day; // nothing in this column
+
+        /* create NEW objects to keep state immutable */
+        return {
+          ...day,
+          activities: day.activities.map((a) =>
+            a.id === id ? { ...a, ...patch } : a
+          ),
+        };
+      })
+    );
+  }
+
   /* --------------------------------------------------------------------- */
   return {
     days,
     sensors,
     activeId,
+    /* dnd */
     handleDragStart,
     handleDragOver,
+    /* external mutators */
     setDays,
     addActivity,
     removeActivity,
+    updateActivity,   // ← NEW
   };
 }

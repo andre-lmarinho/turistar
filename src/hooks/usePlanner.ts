@@ -13,7 +13,11 @@ import type { Activity } from "@/types/itinerary";
 
 /**
  * High-level planner hook
- * - Manages URL params, date range, data fetch, and DnD state.
+ * - URL params      (dest, ?start, ?end)
+ * - Date-range      (tripDays)
+ * - Data fetch      (itinerary)
+ * - Drag-and-drop   (days board)
+ * - Helpers         (add / remove / update)
  */
 export function usePlanner() {
   /* ----------------------- URL + date range ----------------------- */
@@ -33,6 +37,7 @@ export function usePlanner() {
     handleDragOver,
     addActivity,  
     removeActivity,
+    updateActivity, 
   } = useDnDPlanner(buildInitialDays(tripDays));
 
   /* Reset the board whenever date range changes */
@@ -62,5 +67,6 @@ export function usePlanner() {
     /* Add / remove helpers for the filter panel */
     addActivity,
     removeActivity,
+    updateActivity, 
   };
 }

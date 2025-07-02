@@ -1,16 +1,23 @@
 // src/app/planner/PlannerClient.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { DateRangePicker } from "@/components/ui/date-picker";
 import PlannerBoard from "@/app/planner/PlannerBoard";
 import DestinationFilterPanel from "@/app/planner/DestinationFilterPanel";
+import ActivityModal from "@/components/planner/ActivityModal";
 import { usePlanner } from "@/hooks/usePlanner";
+import type { Activity } from "@/types/itinerary";
+
+// TODO: replace with real list from your data source
+import salvador from "@/data/salvador.json";
+
 
 /**
  * Top-level client component for the /planner route.
  * - Shows the date-range picker, the “Open Panel” button, the filter panel,
  *   and the drag-and-drop board.
+ * - Handles selecting a card to open the ActivityModal.
  */
 export default function PlannerClient() {
   const {
@@ -27,6 +34,7 @@ export default function PlannerClient() {
     activeId,
     addActivity,
     removeActivity,
+    updateActivity,
   } = usePlanner();
 
   /* Build a Set of activity IDs already placed on the board */
@@ -35,14 +43,23 @@ export default function PlannerClient() {
     [days]
   );
 
+  // Build list of POI names for autocomplete
+  const poiOptions = useMemo(
+    () => salvador.activities.map((a) => a.name),
+    []
+  );
+
   /* Filter-panel visibility */
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  /* Selected activity for editing in the modal */
+  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
   /* Guard clauses */
   if (!dest)         return <p className="p-4">Destination missing in URL.</p>;
   if (isLoading)     return <p className="p-4">Loading itinerary…</p>;
   if (error)         return <p className="p-4">Failed to load.</p>;
-  if (!days?.length) return <p className="p-4">No itinerary found.</p>;
+  if (!days.length)  return <p className="p-4">No itinerary found.</p>;
 
   return (
     <>
@@ -62,11 +79,11 @@ export default function PlannerClient() {
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         onAdd={addActivity}
-        onRemove={removeActivity}   /* NEW */
+        onRemove={removeActivity}
         addedIds={addedIds}
       />
 
-      {/* Drag-and-Drop board */}
+      {/* Drag-and-Drop board with click-to-edit */}
       <PlannerBoard
         days={days}
         activeId={activeId}
@@ -74,7 +91,27 @@ export default function PlannerClient() {
         collisionDetection={collisionDetection}
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
+        onSelectActivity={(activity) => setSelectedActivity(activity)}  // ← click handler
       />
+
+      {/* Activity editing modal */}
+      {selectedActivity && (
+        <ActivityModal
+          open={true}
+          activity={selectedActivity}
+          // list of all POI names for the autocomplete input:
+          poiOptions={poiOptions}
+          onClose={() => setSelectedActivity(null)}
+          onSave={(patch) => {
+            updateActivity(selectedActivity.id, patch);
+            setSelectedActivity(null);
+          }}
+          onDelete={() => {
+            removeActivity(selectedActivity.id);
+            setSelectedActivity(null);
+          }}
+        />
+      )}
     </>
   );
 }

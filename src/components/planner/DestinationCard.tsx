@@ -4,6 +4,7 @@
 import React from "react";
 import Image from "next/image";
 import { FaClock, FaCheck, FaTrashAlt } from "react-icons/fa";
+import RemoveCardButton from "@/components/planner/RemoveCardButton";
 
 /**
  * Card inside DestinationFilterPanel.
@@ -35,16 +36,10 @@ export default function DestinationCard({
     <div className="relative flex flex-col bg-white rounded-lg shadow p-4 transition-transform duration-200 hover:-translate-y-1">
       {/* quick-remove icon (only when added) */}
       {added && (
-        <button
+        <RemoveCardButton
           onClick={onRemove}
-          title="Remove from planner"
-          className="
-            absolute -left-2 -top-2 p-2 rounded-full bg-red-600 text-white
-            hover:bg-red-700 transition
-          "
-        >
-          <FaTrashAlt size={12} />
-        </button>
+          className="absolute -left-2 -top-2"
+        />
       )}
 
       {/* placeholder image */}

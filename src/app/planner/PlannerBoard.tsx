@@ -1,6 +1,7 @@
 // src/app/planner/PlannerBoard.tsx
 "use client";
 
+import React from "react";
 import {
   DndContext,
   DragOverlay,
@@ -17,47 +18,36 @@ import ActivityCard from "@/components/planner/ActivityCard";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
 export interface PlannerBoardProps {
-  /** May be undefined on the very first render, normalize below */
+  /** Board columns of activities */
   days?: DayPlan[];
-  /** ID of the dragged card, or null if none */
+  /** Currently dragged card ID */
   activeId: string | null;
-  /** Sensors configured in the hook */
+  /** DnD-kit sensors */
   sensors: SensorDescriptor<SensorOptions>[];
-  /** Collision detection strategy from the hook */
+  /** Collision detection strategy */
   collisionDetection: CollisionDetection;
-  /** Called when dragging starts */
+  /** Start dragging handler */
   handleDragStart(e: DragStartEvent): void;
-  /** Called continuously during drag to reorder in real time */
+  /** Drag-over handler to reorder */
   handleDragOver(e: DragOverEvent): void;
+  /** Called when user clicks a card to edit */
+  onSelectActivity: (activity: Activity) => void;   // ← NEW
 }
 
-export default function PlannerBoard(props: PlannerBoardProps) {
-  // ───────────────────────────────────────────────────────────────
-  // 1) Normalize `days` immediately so it's never undefined below
-  // ───────────────────────────────────────────────────────────────
-  const days = props.days ?? [];
-
-  // ───────────────────────────────────────────────────────────────
-  // 2) Destructure the remaining props after the guard
-  // ───────────────────────────────────────────────────────────────
-  const {
-    activeId,
-    sensors,
-    collisionDetection,
-    handleDragStart,
-    handleDragOver,
-  } = props;
-
-  // ───────────────────────────────────────────────────────────────
-  // 3) Compute the currently active activity for the DragOverlay
-  // ───────────────────────────────────────────────────────────────
-  const activeActivity: Activity | undefined = days
+export default function PlannerBoard({
+  days = [],                  // normalize undefined
+  activeId,
+  sensors,
+  collisionDetection,
+  handleDragStart,
+  handleDragOver,
+  onSelectActivity,           // ← NEW
+}: PlannerBoardProps) {
+  // find the active activity for the DragOverlay preview
+  const activeActivity = days
     .flatMap((d) => d.activities)
     .find((a) => a.id === activeId);
 
-  // ───────────────────────────────────────────────────────────────
-  // 4) Render the DnD context, columns, and floating overlay
-  // ───────────────────────────────────────────────────────────────
   return (
     <DndContext
       sensors={sensors}
@@ -69,7 +59,11 @@ export default function PlannerBoard(props: PlannerBoardProps) {
       <div className="p-4 flex gap-4 overflow-x-auto h-full min-h-64 rounded-md border">
         {days.map((day, index) => (
           <div key={day.id} className="flex items-stretch">
-            <DayColumn day={day} />
+            {/* Pass click handler down to each column */}
+            <DayColumn
+              day={day}
+              onSelectActivity={onSelectActivity}    // ← NEW
+            />
             {index !== days.length - 1 && (
               <div className="w-px bg-gray-300 mx-4" />
             )}
@@ -80,9 +74,11 @@ export default function PlannerBoard(props: PlannerBoardProps) {
       {/* Floating preview of the dragged card */}
       <DragOverlay>
         {activeActivity && (
-          <SortableItem id={activeActivity.id} dragOverlay>
-            <ActivityCard activity={activeActivity} />
-          </SortableItem>
+          <SortableItem
+            id={activeActivity.id}
+            dragOverlay={true}
+            activity={activeActivity}
+          />
         )}
       </DragOverlay>
     </DndContext>
