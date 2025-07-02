@@ -1,9 +1,9 @@
 // src/components/dnd/SortableItem.tsx
 "use client";
 
+import { PropsWithChildren } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
-import { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 
 /**

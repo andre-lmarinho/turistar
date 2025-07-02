@@ -1,18 +1,21 @@
 // src/app/planner/page.tsx
-"use client";                             // this page must be client-only
+"use client"; 
 
-import PlannerClient from "./PlannerClient"; // <-- must point to PlannerClient
+import { Suspense } from "react";
+import PlannerClient from "@/app/planner/PlannerClient";
 
-export const dynamic = "force-dynamic";   // skip SSG
+export const dynamic = "force-dynamic";
 
 export default function PlannerPage() {
   return (
-    <main className="p-4 min-h-screen">
-      <h2 className="text-xl font-semibold mb-4 capitalize">
-        Itinerary
-      </h2>
-      {/* only render the client wrapper here */}
-      <PlannerClient />
-    </main>
+    <Suspense fallback={<p className="p-4">Loading planner…</p>}>
+      <main className="p-4 min-h-screen">
+        <h2 className="text-xl font-semibold mb-4 capitalize">
+          Itinerary
+        </h2>
+        {/* only render the client wrapper here */}
+        <PlannerClient />
+      </main>
+    </Suspense>
   );
 }

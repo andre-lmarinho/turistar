@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { FaRegClock, FaHourglassHalf } from "react-icons/fa";
 import type { Activity } from "@/types/itinerary";
 
@@ -24,9 +25,12 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
   return (
     <div className="flex flex-col rounded-lg border shadow-sm bg-white overflow-hidden">
       {/* image placeholder */}
-      <img
+      <Image
         src="https://placehold.co/600x300"
         alt={title}
+        width={400}
+        height={200}
+        unoptimized           /* keep while using placeholder */
         className="h-32 p-2 w-full rounded-lg object-cover"
       />
 

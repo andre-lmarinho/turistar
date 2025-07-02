@@ -2,11 +2,11 @@
 "use client";
 
 import React from "react";
-import CitySwitcher from "./CitySwitcher";
-import CloseButton from "./CloseButton";
-import SettingsToggleButton from "./SettingsToggleButton";
-import CategoryFilterBar from "./CategoryFilterBar";
-import SortSelector, { SortMode } from "./SortSelector";
+import CitySwitcher from "@/components/planner/CitySwitcher";
+import CloseButton from "@/components/planner/CloseButton";
+import SettingsToggleButton from "@/components/planner/SettingsToggleButton";
+import CategoryFilterBar from "@/components/planner/CategoryFilterBar";
+import SortSelector, { SortMode } from "@/components/planner/SortSelector";
 
 interface DestinationHeaderProps {
   city: string;

@@ -3,7 +3,7 @@
 
 import { createContext, useContext } from "react";
 import { useDnDPlanner } from "@/hooks/useDnDPlanner";
-import type { DayPlan } from "@/types/itinerary";   // ← add this import
+import type { DayPlan } from "@/types/itinerary";
 
 /* ------------------------------------------------------------------ */
 /*  Context boilerplate                                               */
@@ -17,7 +17,7 @@ export function DnDPlannerProvider({
   initialDays,
 }: {
   children: React.ReactNode;
-  initialDays: DayPlan[];          // now the type is in scope
+  initialDays: DayPlan[];
 }) {
   const value = useDnDPlanner(initialDays);
   return <PlannerCtx.Provider value={value}>{children}</PlannerCtx.Provider>;

@@ -2,22 +2,26 @@
 "use client";
 
 import React from "react";
-import { FaClock, FaCheck } from "react-icons/fa";
+import Image from "next/image";
+import { FaClock, FaCheck, FaTrashAlt } from "react-icons/fa";
 
+/**
+ * Card inside DestinationFilterPanel.
+ * - When not added  → primary button “Add to Planner”.
+ * - When already added  → green “Added” button **and** a trash icon in
+ *   the top-left corner so the user can remove quickly.
+ */
 interface DestinationCardProps {
   id: string;
   title: string;
-  duration: number;   // minutes
+  duration: number;
   price: string;
   description: string;
-  added: boolean;     // true → already on the board
-  onAdd: () => void;  // callback to add
+  added: boolean;
+  onAdd: () => void;
+  onRemove: () => void;
 }
 
-/**
- * A searchable / selectable activity card shown in DestinationFilterPanel.
- * Shows placeholder image, title, chips, description, and conditional button.
- */
 export default function DestinationCard({
   title,
   duration,
@@ -25,29 +29,41 @@ export default function DestinationCard({
   description,
   added,
   onAdd,
+  onRemove,
 }: DestinationCardProps) {
   return (
-    <div
-      className="
-        flex flex-col bg-white rounded-lg shadow p-4
-        transition-transform duration-200 hover:-translate-y-1
-      "
-    >
-      {/* placeholder image (swap later with real imageUrl) */}
-      <img
+    <div className="relative flex flex-col bg-white rounded-lg shadow p-4 transition-transform duration-200 hover:-translate-y-1">
+      {/* quick-remove icon (only when added) */}
+      {added && (
+        <button
+          onClick={onRemove}
+          title="Remove from planner"
+          className="
+            absolute -left-2 -top-2 p-2 rounded-full bg-red-600 text-white
+            hover:bg-red-700 transition
+          "
+        >
+          <FaTrashAlt size={12} />
+        </button>
+      )}
+
+      {/* placeholder image */}
+      <Image
         src="https://placehold.co/400x200"
         alt={title}
+        width={400}
+        height={200}
+        unoptimized
         className="w-full h-40 object-cover rounded-md mb-4"
       />
 
       {/* title */}
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
 
-      {/* chips: duration | price */}
+      {/* duration | price chips */}
       <div className="flex items-center text-sm text-gray-600 mb-2 space-x-2">
         <span className="flex items-center gap-1">
-          <FaClock />
-          {duration} min
+          <FaClock /> {duration} min
         </span>
         <span>|</span>
         <span>{price}</span>
@@ -58,16 +74,14 @@ export default function DestinationCard({
 
       {/* action button */}
       {added ? (
-        /* Already on planner → disabled green state */
         <button
-          disabled
-          className="mt-auto px-4 py-2 bg-green-100 text-green-700 rounded flex items-center justify-center gap-1 cursor-default"
+          onClick={onRemove}
+          className="mt-auto px-4 py-2 bg-green-100 text-green-700 rounded flex items-center justify-center gap-1 hover:bg-green-200"
         >
           <FaCheck />
           Added
         </button>
       ) : (
-        /* Add to planner */
         <button
           onClick={onAdd}
           className="mt-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

@@ -9,7 +9,6 @@ import {
   type DragOverEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { formatISO } from "date-fns";
 import { useState } from "react";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
@@ -20,10 +19,12 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
   const [days, setDays] = useState<DayPlan[]>(initial);
   const [activeId, setActiveId] = useState<string | null>(null);
 
+  /* ------------------------------- sensors ------------------------------ */
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
 
+  /* ----------------------------- dnd events ----------------------------- */
   /** Remember which card was picked up */
   function handleDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string);
@@ -31,7 +32,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
 
   /**
    * Live reorder on drag over:
-   * - same column → use arrayMove
+   * - same column → arrayMove
    * - cross-column → splice out + insert
    */
   function handleDragOver(e: DragOverEvent) {
@@ -64,43 +65,32 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     setDays([...days]);
   }
 
-  /** Add an empty DayPlan at the end */
-  function addDay(date: Date) {
-    const iso = formatISO(date, { representation: "date" });
-    if (days.some((d) => d.id === iso)) return;
-    setDays([
-      ...days,
-      {
-        id: iso,
-        label: date.toLocaleDateString("en-US", {
-          weekday: "short",
-          day: "2-digit",
-        }),
-        activities: [],
-      },
-    ]);
-  }
-
-  /** Remove a DayPlan by id */
-  function removeDay(id: string) {
-    setDays(days.filter((d) => d.id !== id));
-  }
-
+  /* --------------------------- add / remove ----------------------------- */
   function addActivity(act: Activity, dayIndex = 0) {
-    setDays(prev => {
+    setDays((prev) => {
       const copy = [...prev];
-      // fallback guard: if the requested column does not exist create one
-      if (!copy[dayIndex]) copy[dayIndex] = {
-        id: `temp-${Date.now()}`,
-        label: `Day ${dayIndex + 1}`,
-        activities: [],
-      };
+      if (!copy[dayIndex])
+        copy[dayIndex] = {
+          id: `temp-${Date.now()}`,
+          label: `Day ${dayIndex + 1}`,
+          activities: [],
+        };
       copy[dayIndex].activities.push(act);
       return copy;
     });
   }
 
+  /** Removes activity by id from whichever day contains it. */
+  function removeActivity(id: string) {
+    setDays((prev) =>
+      prev.map((day) => ({
+        ...day,
+        activities: day.activities.filter((a) => a.id !== id),
+      }))
+    );
+  }
 
+  /* --------------------------------------------------------------------- */
   return {
     days,
     sensors,
@@ -109,5 +99,6 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     handleDragOver,
     setDays,
     addActivity,
+    removeActivity,
   };
 }

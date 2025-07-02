@@ -4,9 +4,14 @@
 import { useState, useMemo } from "react";
 import { DateRangePicker } from "@/components/ui/date-picker";
 import PlannerBoard from "@/app/planner/PlannerBoard";
-import DestinationFilterPanel from "./DestinationFilterPanel";
+import DestinationFilterPanel from "@/app/planner/DestinationFilterPanel";
 import { usePlanner } from "@/hooks/usePlanner";
 
+/**
+ * Top-level client component for the /planner route.
+ * - Shows the date-range picker, the “Open Panel” button, the filter panel,
+ *   and the drag-and-drop board.
+ */
 export default function PlannerClient() {
   const {
     dest,
@@ -21,15 +26,16 @@ export default function PlannerClient() {
     handleDragOver,
     activeId,
     addActivity,
+    removeActivity,
   } = usePlanner();
 
-  // Conjunto de IDs já presentes no board
+  /* Build a Set of activity IDs already placed on the board */
   const addedIds = useMemo(
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
     [days]
   );
 
-  // Estado de visibilidade do painel
+  /* Filter-panel visibility */
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   /* Guard clauses */
@@ -56,6 +62,7 @@ export default function PlannerClient() {
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
         onAdd={addActivity}
+        onRemove={removeActivity}   /* NEW */
         addedIds={addedIds}
       />
 

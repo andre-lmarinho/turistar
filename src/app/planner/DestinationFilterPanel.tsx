@@ -8,7 +8,7 @@ import ConfigSidebar from "@/components/planner/ConfigSidebar";
 import { SortMode } from "@/components/planner/SortSelector";
 import type { Activity } from "@/types/itinerary";
 
-/* --- Raw JSON shape ------------------------------------------------------- */
+/* ----- Raw JSON shape --------------------------------------------------- */
 interface RawActivity {
   id: string;
   name: string;
@@ -27,14 +27,16 @@ interface DestinationFilterPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (a: Activity) => void;
+  onRemove: (id: string) => void;   // ← NEW
   addedIds?: Set<string>;
 }
 
-/* ------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
 export default function DestinationFilterPanel({
   isOpen,
   onClose,
   onAdd,
+  onRemove,                 /* NEW */
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
   /*──────── state ────────*/
@@ -54,7 +56,7 @@ export default function DestinationFilterPanel({
       .catch(console.error);
   }, [isOpen, city, items.length]);
 
-  /*──────── derived lists (always call hooks) ────────*/
+  /*──────── derived lists ────────*/
   const categories = useMemo(
     () => [...new Set(items.map((i) => i.category))],
     [items]
@@ -82,11 +84,12 @@ export default function DestinationFilterPanel({
   const toggleCat = (cat: string) =>
     setActiveCats((prev) => {
       const next = new Set(prev);
-      next.has(cat) ? next.delete(cat) : next.add(cat);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
       return next;
     });
 
-  /*──────── early return AFTER hooks ────────*/
+  /*──────── early exit ────────*/
   if (!isOpen) return null;
 
   /*──────── UI ────────*/
@@ -95,10 +98,10 @@ export default function DestinationFilterPanel({
       {/* backdrop */}
       <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
 
-      {/* popup container */}
+      {/* popup */}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <div className="relative w-[95vw] h-[95vh] max-w-[1350px] bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
-          {/* header rows 1 & 2 */}
+          {/* header rows */}
           <DestinationHeader
             city={city}
             onChangeCity={setCity}
@@ -111,16 +114,16 @@ export default function DestinationFilterPanel({
             onClose={onClose}
           />
 
-          {/* row 3: sidebar + card grid */}
+          {/* sidebar + cards */}
           <div className="flex-1 flex overflow-auto">
             <ConfigSidebar open={sidebarOpen} />
 
-            {/* cards */}
             <div className="flex-1 p-6">
               <DestinationCardGrid
                 items={visibleItems}
                 addedIds={addedIds}
                 onAdd={onAdd}
+                onRemove={onRemove}
               />
             </div>
           </div>

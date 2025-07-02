@@ -1242,23 +1242,6 @@
         "culture"
       ],
       "description": "Museu com coleções de artefatos históricos da Bahia."
-    },
-    {
-      "id": "previsao-do-tempo",
-      "name": "Previsão do Tempo",
-      "type": [
-        "information"
-      ],
-      "category": "weather",
-      "duration": 0,
-      "lat": -12.9714,
-      "lng": -38.5014,
-      "price": "$",
-      "tags": [
-        "weather",
-        "information"
-      ],
-      "description": "Current weather conditions in Salvador."
     }
   ]
 }

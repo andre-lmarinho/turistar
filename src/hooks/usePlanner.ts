@@ -1,22 +1,29 @@
+// src/hooks/usePlanner.ts
 "use client";
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { closestCenter } from "@dnd-kit/core";
 
-import { useTripRange } from "./useTripRange";
-import { useItinerary } from "./useItinerary";
-import { useDnDPlanner } from "./useDnDPlanner";
+import { useTripRange } from "@/hooks/useTripRange";
+import { useItinerary } from "@/hooks/useItinerary";
+import { useDnDPlanner } from "@/hooks/useDnDPlanner";
 import { buildInitialDays } from "@/utils/initialDays";
-import type { DayPlan, Activity } from "@/types/itinerary";
+import type { Activity } from "@/types/itinerary";
 
+/**
+ * High-level planner hook
+ * - Manages URL params, date range, data fetch, and DnD state.
+ */
 export function usePlanner() {
+  /* ----------------------- URL + date range ----------------------- */
   const params = useSearchParams();
-  const dest = params.get("dest")?.trim().toLowerCase() ?? "";
+  const dest   = params.get("dest")?.trim().toLowerCase() ?? "";
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest);
   const { isLoading, error } = useItinerary(dest);
 
+  /* -------------------------- DnD state --------------------------- */
   const {
     days,
     setDays,
@@ -24,22 +31,16 @@ export function usePlanner() {
     activeId,
     handleDragStart,
     handleDragOver,
+    addActivity,  
+    removeActivity,
   } = useDnDPlanner(buildInitialDays(tripDays));
 
+  /* Reset the board whenever date range changes */
   useEffect(() => {
     setDays(buildInitialDays(tripDays));
   }, [tripDays, setDays]);
 
-  /** MVP: push new activity to the first day */
-  const addActivity = (activity: Activity) => {
-    setDays((prev) => {
-      if (prev.length === 0) return prev;
-      const clone: DayPlan[] = structuredClone(prev);
-      clone[0].activities.push(activity);
-      return clone;
-    });
-  };
-
+  /* --------------------------- export ----------------------------- */
   return {
     dest,
     days,
@@ -48,11 +49,18 @@ export function usePlanner() {
     isLoading,
     error,
     activeId,
+
+    /* DnD configuration */
     sensors,
     collisionDetection: closestCenter,
     handleDragStart,
     handleDragOver,
+
+    /* Date-picker */
     handleRangeChange,
+
+    /* Add / remove helpers for the filter panel */
     addActivity,
+    removeActivity,
   };
 }

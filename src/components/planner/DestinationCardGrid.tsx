@@ -1,30 +1,42 @@
+// src/components/planner/DestinationCardGrid.tsx
 "use client";
 
 import React from "react";
-import DestinationCard from "./DestinationCard";
+import DestinationCard from "@/components/planner/DestinationCard";
+import { omit } from "@/utils/omit";
 import type { Activity } from "@/types/itinerary";
 
-/* Raw shape used in the filter panel */
+/* Raw JSON shape coming from the filter panel */
 export interface RawActivity {
   id: string;
   name: string;
   duration: number;
   price: string;
   description: string;
-  /* the rest of the JSON fields are ignored here */
 }
 
 interface Props {
   items: RawActivity[];
   addedIds: Set<string>;
   onAdd: (a: Activity) => void;
+  onRemove: (id: string) => void;
 }
 
-export default function DestinationCardGrid({ items, addedIds, onAdd }: Props) {
+/**
+ * Renders a responsive grid of DestinationCard components.
+ * Decides per-card whether we call onAdd or onRemove based on `addedIds`.
+ */
+export default function DestinationCardGrid({
+  items,
+  addedIds,
+  onAdd,
+  onRemove,
+}: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((item) => {
         const isAdded = addedIds.has(item.id);
+
         return (
           <DestinationCard
             key={item.id}
@@ -34,12 +46,13 @@ export default function DestinationCardGrid({ items, addedIds, onAdd }: Props) {
             price={item.price}
             description={item.description}
             added={isAdded}
-            onAdd={() => {
-              if (isAdded) return;
-              /* convert on click → Activity */
-              const { price: _omit, name, ...rest } = item;
-              onAdd({ ...rest, title: name } as Activity);
-            }}
+            onAdd={() =>
+              onAdd({
+                ...omit(item, "price", "name"),
+                title: item.name,
+              } as Activity)
+            }
+            onRemove={() => onRemove(item.id)}
           />
         );
       })}
