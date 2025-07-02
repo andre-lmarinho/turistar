@@ -65,7 +65,6 @@ export default function DayColumn({
         <AddNewCard
           colorClass={DEFAULT_COLORS[2]}
           onClick={() => {
-            console.log("Clicked AddNewCard for day:", day.id);
             onAddNew?.(day.id);
           }}
         />

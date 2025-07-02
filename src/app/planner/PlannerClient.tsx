@@ -38,10 +38,6 @@ export default function PlannerClient() {
     addBlankActivity, 
   } = usePlanner();
 
-
-   /* state for which activity is being edited... */
-  const [editing, setEditing] = useState<string | null>(null);
-
   /* Build a Set of activity IDs already placed on the board */
   const addedIds = useMemo(
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
@@ -98,8 +94,8 @@ export default function PlannerClient() {
         handleDragOver={handleDragOver}
         onSelectActivity={(activity) => setSelectedActivity(activity)}
         onAddNew={(dayId) => {
-          const newAct = addBlankActivity(days.findIndex((d) => d.id === dayId));
-          setEditing(newAct.id);}}
+          addBlankActivity(days.findIndex((d) => d.id === dayId));
+        }}
       />
 
       {/* Activity editing modal */}

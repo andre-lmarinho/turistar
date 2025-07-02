@@ -9,7 +9,7 @@ import {
   type DragOverEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { DayPlan, Activity } from "@/types/itinerary";
 
 /**
@@ -124,22 +124,34 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       })
     );
   }
-  /* ------------------------- blank activity  --------------------------- */
 
+  /* ------------------------- blank activity  --------------------------- */
+  // Prevents accidental duplicate cards by tracking recently added IDs
+  const recentlyAdded = useRef<Set<string>>(new Set());
   /**
    * Pushes a completely blank activity onto the given day (by index).
    * Returns the newly created Activity so the caller can e.g. open an editor.
    */
   function addBlankActivity(dayIndex = 0): Activity {
+    // Generate unique ID
+    const id = `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+
+    // If this ID was just added, skip to prevent duplicates
+    if (recentlyAdded.current.has(id)) {
+      return { id, title: '', description: '', duration: 0 };
+    }
+
+    // Mark this ID as recently added
+    recentlyAdded.current.add(id);
+
     const blank: Activity = {
-      id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      title: "",
-      description: "",
+      id,
+      title: '',
+      description: '',
       duration: 0,
     };
 
-    console.log("Adding blank activity:", blank);
-
+    // Push into the correct day
     setDays((prev) => {
       const copy = [...prev];
       if (!copy[dayIndex]) {
@@ -152,6 +164,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       copy[dayIndex].activities.push(blank);
       return copy;
     });
+
     return blank;
   }
 
