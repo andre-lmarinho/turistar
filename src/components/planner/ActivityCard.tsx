@@ -1,7 +1,7 @@
 // src/components/planner/ActivityCard.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
 import type { Activity } from '@/types/itinerary';
@@ -26,6 +26,17 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
 
   /* Tailwind class (e.g. "bg-sky-500") OR inline hex style */
   const twBg = color && !color.startsWith('#') ? color : undefined;
+
+  /*
+   * Prevents hydration mismatch by ensuring this section only renders on the client side.
+   * Next.js can render inconsistent initial markup between server and client for dynamic values.
+   * This guard ensures the conditional content is only rendered after the component is mounted in the browser.
+   */
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  /* ========================================================================================================== */
 
   return (
     <button
@@ -55,7 +66,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
         </h4>
 
         {/* Conditionally render schedule and duration only if at least one exists */}
-        {(startTime || (duration && duration > 0)) && (
+        {isMounted && (startTime?.trim() || duration > 0) && (
           <div className="flex justify-between items-center gap-2 px-3 py-2 text-sm">
             {/* Conditionally render start time */}
             {startTime?.trim() && (
@@ -71,7 +82,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
             )}
 
             {/* Conditionally render duration */}
-            {Number(duration) > 0 && (
+            {duration > 0 && (
               <span className="inline-flex items-center gap-1 px-2 py-1">
                 <FaHourglassHalf />~{duration} min
               </span>
