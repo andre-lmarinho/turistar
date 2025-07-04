@@ -1,10 +1,10 @@
-// src/components/planner/ActivityModal.tsx
+// src/components/planner/modal/ActivityModal.tsx
 'use client';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ActivityModalHeader from '@/components/planner/ActivityModalHeader';
-import ActivityModalForm from '@/components/planner/ActivityModalForm';
+import ActivityModalHeader from '@/components/planner/modal/ActivityModalHeader';
+import ActivityModalForm from '@/components/planner/modal/ActivityModalForm';
 import type { Activity } from '@/types/itinerary';
 
 interface ActivityModalProps {

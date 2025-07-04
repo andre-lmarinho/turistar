@@ -1,8 +1,8 @@
-// src/components/planner/ActivityModalForm.tsx
+// src/components/planner/modal/ActivityModalForm.tsx
 'use client';
 
-import React, { useState } from 'react';
-import ActivityHeaderCard from '@/components/planner/ActivityHeaderCard';
+import React, { useEffect, useState, useRef } from 'react';
+import ActivityHeaderCard from '@/components/planner/card/ActivityHeaderCard';
 import AutocompleteInput from '@/components/ui/AutocompleteInput';
 import ColorSwatchPicker from '@/components/ui/ColorSwatchPicker';
 import salvadorData from '@/data/salvador.json';
@@ -23,7 +23,6 @@ interface ActivityModalFormProps {
 export default function ActivityModalForm({
   activity,
   poiOptions,
-  onClose,
   onSave,
   color,
   onColorChange,
@@ -36,6 +35,17 @@ export default function ActivityModalForm({
   const [when, setWhen] = useState(activity.startTime ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [search, setSearch] = useState('');
+
+  /**
+   * Automatically focus the title input only when the activity title is empty.
+   */
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (titleInputRef.current && !editedTitle.trim()) {
+      titleInputRef.current.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -70,6 +80,7 @@ export default function ActivityModalForm({
       {/* 3) Editable title, description, when & duration */}
       <div className="px-4 space-y-3 overflow-y-auto">
         <input
+          ref={titleInputRef}
           value={editedTitle}
           onChange={(e) => setEditedTitle(e.target.value)}
           placeholder={EMPTY_ACTIVITY_TITLE}
@@ -107,21 +118,23 @@ export default function ActivityModalForm({
 
       {/* 5) Footer: Cancel & Update */}
       <div className="px-4 py-3 border-t flex justify-end gap-2">
-        <button onClick={onClose} className="px-4 py-2 rounded border text-sm">
-          Cancel
-        </button>
         <button
           onClick={() =>
             onSave({
-              title: editedTitle,
+              title: editedTitle.trim(),
               description: editedDescription,
               color,
               startTime: when,
-              duration,
+              duration: Number(duration),
               imageUrl: selectedPoi.imageUrl,
             })
           }
-          className="px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+          className={`px-4 py-2 rounded text-sm ${
+            editedTitle.trim()
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          disabled={!editedTitle.trim()}
         >
           Update
         </button>

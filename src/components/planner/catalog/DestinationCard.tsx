@@ -1,10 +1,10 @@
-// src/components/planner/DestinationCard.tsx
+// src/components/planner/catalog/DestinationCard.tsx
 'use client';
 
 import React from 'react';
 import Image from 'next/image';
 import { FaClock, FaCheck } from 'react-icons/fa';
-import RemoveCardButton from '@/components/planner/RemoveCardButton';
+import RemoveCardButton from '@/components/ui/RemoveCardButton';
 
 /**
  * Card inside DestinationFilterPanel.

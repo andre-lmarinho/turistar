@@ -3,8 +3,8 @@
 
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { DateRangePicker } from '@/components/ui/date-picker';
-import { Button } from '@/components/ui/button';
+import { DateRangePicker } from '@/components/ui/DatePicker';
+import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 

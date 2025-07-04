@@ -1,8 +1,8 @@
-// src/components/planner/DestinationCardGrid.tsx
+// src/components/planner/catalog/DestinationCardGrid.tsx
 'use client';
 
 import React from 'react';
-import DestinationCard from '@/components/planner/DestinationCard';
+import DestinationCard from '@/components/planner/catalog/DestinationCard';
 import { omit } from '@/utils/omit';
 import type { Activity } from '@/types/itinerary';
 

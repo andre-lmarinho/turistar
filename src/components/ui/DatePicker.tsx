@@ -2,8 +2,8 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Calendar } from './calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './PopOver';
+import { Calendar } from './Calendar';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -26,7 +26,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            'w-full flex items-center justify-between rounded-md border px-4 py-2 text-sm bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary transition',
+            'w-full flex items-center justify-between rounded border px-4 py-2 text-sm bg-background hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary transition',
             !value?.from && 'text-muted-foreground italic',
             className
           )}

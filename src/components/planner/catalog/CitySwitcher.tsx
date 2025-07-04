@@ -1,4 +1,4 @@
-// src/components/planner/CitySwitcher.tsx
+// src/components/planner/catalog/CitySwitcher.tsx
 'use client';
 
 import React, { useState } from 'react';

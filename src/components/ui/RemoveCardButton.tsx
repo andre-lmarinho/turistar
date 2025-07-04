@@ -1,4 +1,4 @@
-// src/components/planner/RemoveCardButton.tsx
+// src/components/ui/RemoveCardButton.tsx
 'use client';
 
 import React from 'react';
@@ -11,7 +11,6 @@ import { FaTrashAlt } from 'react-icons/fa';
 export default function RemoveCardButton({
   onClick,
   title = 'Remove from planner',
-  className = '',
 }: {
   onClick: () => void;
   title?: string;
@@ -20,14 +19,13 @@ export default function RemoveCardButton({
   return (
     <button
       onClick={onClick}
-      title={title}
       aria-label={title}
-      className={`
-        p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition
-        ${className}
-      `}
+      className="cursor-pointer relative w-8 h-8 backdrop-blur-sm rounded
+          border border-bg-gray-200 hover:bg-gray-200
+          flex items-center justify-center focus:outline-none focus:ring-2
+          transition-transform duration-300"
     >
-      <FaTrashAlt size={12} />
+      <FaTrashAlt size={18} className="transform transition duration-300" />
     </button>
   );
 }

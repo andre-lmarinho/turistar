@@ -12,8 +12,8 @@ import {
   type DragOverEvent,
 } from '@dnd-kit/core';
 
-import DayColumn from '@/components/dnd/DayColumn';
-import { SortableItem } from '@/components/dnd/SortableItem';
+import DayColumn from '@/components/planner/dnd/DayColumn';
+import { SortableItem } from '@/components/planner/dnd/SortableItem';
 import type { DayPlan, Activity } from '@/types/itinerary';
 
 export interface PlannerBoardProps {
@@ -32,7 +32,7 @@ export interface PlannerBoardProps {
   /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
-  onAddNew?(dayId: string): void;
+  onAddNew(dayId: string): void;
 }
 
 export default function PlannerBoard({

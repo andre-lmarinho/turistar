@@ -1,4 +1,4 @@
-// src/components/planner/ActivityCard.tsx
+// src/components/planner/card/ActivityCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -43,8 +43,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
       type="button"
       onClick={onSelect}
       className="group w-full text-left flex items-stretch rounded-lg border
-        shadow-sm bg-white overflow-hidden hover:shadow-md transition
-        cursor-pointer"
+        shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab"
     >
       {/* main content */}
       <div className={`flex-1 flex flex-col ${twBg ?? ''}`}>

@@ -2,10 +2,11 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { DateRangePicker } from '@/components/ui/date-picker';
+import { DateRangePicker } from '@/components/ui/DatePicker';
+import OpenPanelButton from '@/components/ui/OpenPanelButton';
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import DestinationFilterPanel from '@/app/planner/DestinationFilterPanel';
-import ActivityModal from '@/components/planner/ActivityModal';
+import DestinationFilterPanel from '@/components/planner/catalog/DestinationFilterPanel';
+import ActivityModal from '@/components/planner/modal/ActivityModal';
 import { usePlanner } from '@/hooks/usePlanner';
 import type { Activity } from '@/types/itinerary';
 import { DEFAULT_COLORS } from '@/constants/colors';
@@ -35,7 +36,6 @@ export default function PlannerClient() {
     addActivity,
     removeActivity,
     updateActivity,
-    addBlankActivity,
   } = usePlanner();
 
   /* Build a Set of activity IDs already placed on the board */
@@ -51,7 +51,9 @@ export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   /* Selected activity for editing in the modal */
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
+    null
+  );
 
   /*  local color state for modal */
   const [modalColor, setModalColor] = useState<string>(DEFAULT_COLORS[0]);
@@ -67,12 +69,7 @@ export default function PlannerClient() {
       {/* Date picker + “Open Panel” button */}
       <div className="mb-4 max-w-sm flex items-center space-x-2">
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
-        <button
-          onClick={() => setIsPanelOpen(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Open Panel
-        </button>
+        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
       </div>
 
       {/* Popup filter panel */}
@@ -98,8 +95,20 @@ export default function PlannerClient() {
             DEFAULT_COLORS.includes(activity.color ?? '') ? activity.color! : DEFAULT_COLORS[0]
           );
         }}
+        /* Create a blank activity and immediately open the modal */
         onAddNew={(dayId) => {
-          addBlankActivity(days.findIndex((d) => d.id === dayId));
+          const newActivity: Activity = {
+            id: `temp-${Date.now()}`,
+            title: '',
+            description: '',
+            duration: 0,
+            color: DEFAULT_COLORS[0],
+            startTime: '',
+            imageUrl: undefined,
+          };
+          // Temporarily store this card just for the modal
+          setSelectedActivity({ ...newActivity, dayId });
+          setModalColor(DEFAULT_COLORS[0]);
         }}
       />
 
@@ -112,17 +121,32 @@ export default function PlannerClient() {
           poiOptions={poiOptions}
           // Save color when closing by X or by clicking the backdrop
           onClose={() => {
-            if (selectedActivity) {
+            // Only update the color if the card is NOT temporary
+            if (selectedActivity && !selectedActivity.id.startsWith('temp-')) {
               updateActivity(selectedActivity.id, { color: modalColor });
             }
             setSelectedActivity(null);
           }}
           onSave={(patch) => {
-            updateActivity(selectedActivity.id, {
-              ...patch,
-              color: modalColor,
-              duration: Number(patch.duration),
-            });
+            // If it's a temporary card → add it
+            if (selectedActivity.id.startsWith('temp-')) {
+              addActivity(
+                {
+                  ...selectedActivity,
+                  ...patch,
+                  color: modalColor,
+                  duration: Number(patch.duration),
+                },
+                days.findIndex((d) => d.id === selectedActivity.dayId)
+              );
+            } else {
+              // Existing card → update
+              updateActivity(selectedActivity.id, {
+                ...patch,
+                color: modalColor,
+                duration: Number(patch.duration),
+              });
+            }
             setSelectedActivity(null);
           }}
           onDelete={() => {

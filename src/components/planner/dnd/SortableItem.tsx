@@ -1,11 +1,11 @@
-// src/components/dnd/SortableItem.tsx
+// src/components/dnd/planer/SortableItem.tsx
 'use client';
 
 import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import { cn } from '@/lib/utils';
-import ActivityCard from '@/components/planner/ActivityCard';
+import ActivityCard from '@/components/planner/card/ActivityCard';
 import type { Activity } from '@/types/itinerary';
 
 /**

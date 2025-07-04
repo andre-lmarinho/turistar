@@ -1,12 +1,12 @@
-// src/components/planner/DestinationHeader.tsx
+// src/components/planner/catalog/DestinationHeader.tsx
 'use client';
 
 import React from 'react';
-import CitySwitcher from '@/components/planner/CitySwitcher';
-import CloseButton from '@/components/planner/CloseButton';
-import SettingsToggleButton from '@/components/planner/SettingsToggleButton';
-import CategoryFilterBar from '@/components/planner/CategoryFilterBar';
-import SortSelector, { SortMode } from '@/components/planner/SortSelector';
+import CitySwitcher from '@/components/planner/catalog/CitySwitcher';
+import CloseButton from '@/components/ui/CloseButton';
+import SettingsToggleButton from '@/components/ui/SettingsToggleButton';
+import CategoryFilterBar from '@/components/planner/catalog/CategoryFilterBar';
+import SortSelector, { SortMode } from '@/components/planner/catalog/SortSelector';
 
 interface DestinationHeaderProps {
   city: string;

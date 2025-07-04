@@ -12,7 +12,7 @@
       "price": "$$",
       "tags": ["coffee", "breakfast", "casual"],
       "description": "Modern coffee shop with great coffee and a pleasant atmosphere.",
-      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2022/08/coffeetown--villa-san-luigi--pituba--salvador-bahia--foto-divulgacao--500x500.jpg"
+      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2018/01/coffeetown-salvador-foto-saulo-brandao_09-500x500.jpeg"
     },
     {
       "id": "semola-cafe-brunch",
@@ -25,7 +25,7 @@
       "price": "$$",
       "tags": ["brunch", "healthy", "italian"],
       "description": "Tasty and healthy food, ideal to start the day.",
-      "image_url": "https://midias.correio24horas.com.br/2024/12/13/terere-e-cilbir-ovos-turcos-semola-cafe--brunch--2537253-article.jpeg"
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "padaria-vitoria",
@@ -38,7 +38,7 @@
       "price": "$",
       "tags": ["bakery", "local", "casual"],
       "description": "Regional bakery with fresh bread and pastries.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "cafeteria-da-barra",
@@ -51,7 +51,7 @@
       "price": "$",
       "tags": ["coffee", "breakfast", "casual"],
       "description": "Cozy spot for breakfast with a variety of coffee drinks.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "cafe-da-praia",
@@ -64,7 +64,7 @@
       "price": "$",
       "tags": ["coffee", "beach", "breakfast"],
       "description": "Beachfront café popular for its breakfast options and ocean view.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "camarada-camarao-shopping-barra",
@@ -77,7 +77,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "casual"],
       "description": "Seafood restaurant also open for breakfast with a casual vibe.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "coco-bambu-bahia",
@@ -90,7 +90,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "healthy"],
       "description": "Breakfast menu with Brazilian classics and fresh ingredients.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "poró-restaurante-bar",
@@ -103,7 +103,7 @@
       "price": "$$",
       "tags": ["regional", "healthy", "brunch"],
       "description": "Bahian cuisine offering a range of breakfast and brunch dishes.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-veleiro-yacht-club",
@@ -116,7 +116,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "casual"],
       "description": "Located in Yacht Club, offering breakfast with harbor views.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-vini-figueira",
@@ -129,7 +129,7 @@
       "price": "$$",
       "tags": ["italian", "breakfast", "gourmet"],
       "description": "Italian restaurant with a special brunch menu on weekends.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-sanctuarium",
@@ -142,7 +142,7 @@
       "price": "$$",
       "tags": ["healthy", "breakfast", "buffet"],
       "description": "Buffet restaurant known for healthy options, open for breakfast.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "camarao-vilas-restaurante",
@@ -155,7 +155,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "family"],
       "description": "Seafood specialty restaurant that also serves breakfast.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-tokai",
@@ -168,7 +168,7 @@
       "price": "$$",
       "tags": ["japanese", "breakfast", "gourmet"],
       "description": "Japanese cuisine restaurant open for breakfast with sushi and more.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-coco-bambu-paralela",
@@ -181,7 +181,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "casual"],
       "description": "Seafood restaurant known for generous portions, open for breakfast.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-vishnu-dinner",
@@ -194,7 +194,7 @@
       "price": "$$",
       "tags": ["indian", "breakfast", "buffet"],
       "description": "Indian buffet restaurant offering breakfast and lunch options.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-camarada-camarao-barra",
@@ -207,7 +207,7 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "casual"],
       "description": "Popular seafood chain offering breakfast with ocean views.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-vini-figueira-dinner-2",
@@ -220,7 +220,7 @@
       "price": "$$",
       "tags": ["italian", "breakfast", "gourmet"],
       "description": "Italian cuisine with brunch specialties.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-sanctuarium-dinner",
@@ -233,7 +233,7 @@
       "price": "$$",
       "tags": ["healthy", "breakfast", "buffet"],
       "description": "Buffet of healthy options, serving breakfast and lunch.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-coco-bambu-paralela-dinner",
@@ -246,46 +246,280 @@
       "price": "$$",
       "tags": ["seafood", "breakfast", "casual"],
       "description": "Known for its seafood, open for breakfast.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
-      "id": "restaurante-mistura-contorno-jantar",
-      "name": "Mistura Contorno",
-      "type": ["dinner"],
+      "id": "restaurante-pizzaria-da-barra",
+      "name": "Pizzaria da Barra",
+      "type": ["breakfast"],
       "category": "restaurant",
       "duration": 90,
-      "lat": -12.9956,
-      "lng": -38.5187,
+      "lat": -12.9908,
+      "lng": -38.5174,
       "price": "$$",
-      "tags": ["brazilian", "mediterranean", "seafood"],
-      "description": "Brazilian and Mediterranean cuisine with fresh seafood ingredients.",
-      "image_url": ""
+      "tags": ["pizza", "breakfast", "casual"],
+      "description": "Pizza restaurant offering breakfast options.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
-      "id": "restaurante-salvador-dali-jantar",
-      "name": "Salvador Dali",
-      "type": ["dinner"],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9691,
-      "lng": -38.5021,
-      "price": "$$$",
-      "tags": ["contemporary", "seafood", "fine-dining"],
-      "description": "Contemporary cuisine with sea views in Rio Vermelho.",
-      "image_url": ""
-    },
-    {
-      "id": "restaurante-boca-de-galinha-jantar",
-      "name": "Boca de Galinha",
-      "type": ["dinner"],
-      "category": "restaurant",
-      "duration": 90,
-      "lat": -12.9679,
-      "lng": -38.5105,
+      "id": "pelourinho-historic-center",
+      "name": "Pelourinho Historic Center",
+      "type": ["sight"],
+      "category": "historic",
+      "duration": 120,
+      "lat": -12.9711,
+      "lng": -38.5164,
       "price": "$",
-      "tags": ["seafood", "traditional", "local"],
-      "description": "Comida típica baiana com vista para Baía de Itapagipe.",
-      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2018/12/Restaurante-Boca-de-Galinha-Plataforma-Salvador-Bahia-Foto-Amanda-Oliveira-16-500x500.jpg"
+      "tags": ["historic", "culture", "UNESCO"],
+      "description": "Historic district with colonial architecture and vibrant culture.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Salvador_Pelourinho.jpg"
+    },
+    {
+      "id": "elevador-lacerda",
+      "name": "Elevador Lacerda",
+      "type": ["sight"],
+      "category": "viewpoint",
+      "duration": 30,
+      "lat": -12.9691,
+      "lng": -38.5107,
+      "price": "$",
+      "tags": ["viewpoint", "historic", "architecture"],
+      "description": "Iconic public elevator connecting lower and upper city with great views.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Elevador_Lacerda,_2015.jpg"
+    },
+    {
+      "id": "casa-do-rio-vermelho",
+      "name": "Casa do Rio Vermelho",
+      "type": ["sight"],
+      "category": "historic",
+      "duration": 90,
+      "lat": -12.967,
+      "lng": -38.503,
+      "price": "$",
+      "tags": ["literature", "history", "museum"],
+      "description": "Author Jorge Amado's house museum in Rio Vermelho.",
+      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2017/11/cultural-casa-do-rio-vermelho-01-12-43-500x500.jpg"
+    },
+    {
+      "id": "igreja-do-bonfim",
+      "name": "Igreja do Bonfim",
+      "type": ["sight"],
+      "category": "historic",
+      "duration": 60,
+      "lat": -12.9603,
+      "lng": -38.5129,
+      "price": "$",
+      "tags": ["religion", "history", "landmark"],
+      "description": "Famous church where pilgrims tie wish ribbons to the fence.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Senhordobonfim.jpg"
+    },
+    {
+      "id": "farol-da-barra",
+      "name": "Farol da Barra",
+      "type": ["sight"],
+      "category": "historic",
+      "duration": 45,
+      "lat": -12.9858,
+      "lng": -38.5229,
+      "price": "$",
+      "tags": ["beach", "historic", "view"],
+      "description": "Historic lighthouse offering panoramic ocean views and a small museum.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/FAROL_DA_BARRA_-_panoramio.jpg"
+    },
+    {
+      "id": "parque-das-dunas",
+      "name": "Parque das Dunas",
+      "type": ["sight"],
+      "category": "park",
+      "duration": 120,
+      "lat": -12.993,
+      "lng": -38.462,
+      "price": "$",
+      "tags": ["nature", "ecotourism", "trails"],
+      "description": "White dunes and trails in a protected natural area.",
+      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2018/09/Parque-das-Dunas.-Foto-Amanda-Oliveira-22-500x500.jpg"
+    },
+    {
+      "id": "igreja-e-convento-de-sao-francisco",
+      "name": "Igreja e Convento de São Francisco",
+      "type": ["sight"],
+      "category": "historic",
+      "duration": 60,
+      "lat": -12.9747,
+      "lng": -38.5131,
+      "price": "$",
+      "tags": ["baroque", "history", "architecture"],
+      "description": "Lavishly decorated colonial church and convent, a baroque masterpiece.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Igreja_de_S%C3%A3o_Francisco_Salvador_2019-8585.jpg"
+    },
+    {
+      "id": "praia-do-flamengo",
+      "name": "Praia do Flamengo",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 90,
+      "lat": -12.9471,
+      "lng": -38.4851,
+      "price": "$",
+      "tags": ["beach", "nature", "relax"],
+      "description": "Quiet beach with calm waters, popular for swimming and kayaking.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "praia-do-portao",
+      "name": "Praia do Portão",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 90,
+      "lat": -12.981,
+      "lng": -38.464,
+      "price": "$",
+      "tags": ["beach", "scenic", "water-sports"],
+      "description": "Scenic beach area with water sports and a laid-back atmosphere.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "mercado-modelo",
+      "name": "Mercado Modelo",
+      "type": ["sight"],
+      "category": "market",
+      "duration": 90,
+      "lat": -12.9708,
+      "lng": -38.5142,
+      "price": "$",
+      "tags": ["shopping", "culture", "souvenirs"],
+      "description": "Popular market with crafts, souvenirs, and cultural performances.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Mercado_Modelo_-_Salvador_%28Brazil%29_-_Flickr_-_Suriani.jpg"
+    },
+    {
+      "id": "salvador-shopping",
+      "name": "Salvador Shopping",
+      "type": ["sight"],
+      "category": "shopping",
+      "duration": 120,
+      "lat": -12.953,
+      "lng": -38.516,
+      "price": "$$",
+      "tags": ["shopping", "modern", "fashion"],
+      "description": "One of the city's large malls with national and international brands.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "praia-do-porto-da-barra",
+      "name": "Praia do Porto da Barra",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 120,
+      "lat": -12.9875,
+      "lng": -38.518,
+      "price": "$",
+      "tags": ["beach", "urban", "historical"],
+      "description": "Historic urban beach popular for swimming and sunset views.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "mirante-do-morro-do-cruz",
+      "name": "Mirante do Morro do Cruz",
+      "type": ["sight"],
+      "category": "viewpoint",
+      "duration": 30,
+      "lat": -12.9557,
+      "lng": -38.4531,
+      "price": "$",
+      "tags": ["viewpoint", "city", "panorama"],
+      "description": "Hilltop lookout with panoramic views over Salvador Bay.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "memorial-jorge-e-zelia-amado",
+      "name": "Memorial Jorge e Zélia Amado",
+      "type": ["sight"],
+      "category": "museum",
+      "duration": 60,
+      "lat": -12.963,
+      "lng": -38.502,
+      "price": "$",
+      "tags": ["literature", "culture", "author"],
+      "description": "Cultural center dedicated to the life and work of writer Jorge Amado.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "parque-do-cabula",
+      "name": "Parque do Cabula",
+      "type": ["sight"],
+      "category": "park",
+      "duration": 120,
+      "lat": -12.971,
+      "lng": -38.504,
+      "price": "$",
+      "tags": ["green", "nature", "relax"],
+      "description": "Local park with walking paths and recreational areas.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "praia-de-itapua",
+      "name": "Praia de Itapuã",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 120,
+      "lat": -12.9423,
+      "lng": -38.4848,
+      "price": "$",
+      "tags": ["beach", "urban", "relax"],
+      "description": "Wide beach popular for surfing, sunsets, and local music.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "praia-da-pituba",
+      "name": "Praia da Pituba",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 120,
+      "lat": -12.9715,
+      "lng": -38.449,
+      "price": "$",
+      "tags": ["beach", "urban", "relax"],
+      "description": "Urban beach with calm waters and good infrastructure.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "shopping-artesanato-da-barra",
+      "name": "Shopping Artesanato da Barra",
+      "type": ["sight"],
+      "category": "shopping",
+      "duration": 60,
+      "lat": -12.994,
+      "lng": -38.524,
+      "price": "$",
+      "tags": ["souvenirs", "artisans", "local"],
+      "description": "Small shopping arcade with local crafts and souvenirs.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "mirante-do-pontal",
+      "name": "Mirante do Pontal",
+      "type": ["sight"],
+      "category": "viewpoint",
+      "duration": 30,
+      "lat": -12.976,
+      "lng": -38.465,
+      "price": "$",
+      "tags": ["viewpoint", "ocean", "sunset"],
+      "description": "Scenic viewpoint overlooking the beaches of Salvador.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "praia-do-amaralina",
+      "name": "Praia do Amaralina",
+      "type": ["sight"],
+      "category": "beach",
+      "duration": 120,
+      "lat": -12.982,
+      "lng": -38.518,
+      "price": "$",
+      "tags": ["beach", "urban", "local"],
+      "description": "Popular city beach with calm waters and a lively atmosphere.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "parque-metropolitano-de-salvador",
@@ -298,7 +532,7 @@
       "price": "$",
       "tags": ["nature", "trails", "picnic"],
       "description": "Large park with walking trails and outdoor recreation.",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Lago_no_Parque_Metropolitano_de_Pitua%C3%A7u%2C_Salvador-BA.jpg"
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "praia-da-barra",
@@ -311,7 +545,7 @@
       "price": "$",
       "tags": ["beach", "surfers", "lively"],
       "description": "Surfer-friendly beach with bars and sunset views.",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Praia_do_Porto_da_Barra_%28Salvador%29.jpg"
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "praia-do-coral",
@@ -324,7 +558,7 @@
       "price": "$",
       "tags": ["beach", "snorkeling", "wildlife"],
       "description": "Tranquil beach known for snorkeling and coral reefs.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "delicia-de-pao-caminho-de-areia",
@@ -337,7 +571,7 @@
       "price": "$",
       "tags": ["bakery", "casual", "local"],
       "description": "Casual bakery known for sandwiches and pastries.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "latitude-13",
@@ -350,7 +584,7 @@
       "price": "$$",
       "tags": ["international", "gourmet", "dinner"],
       "description": "Fine dining with international cuisine in a contemporary setting.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "pao-e-cia",
@@ -363,7 +597,7 @@
       "price": "$",
       "tags": ["bakery", "breakfast", "casual"],
       "description": "Bakery and cafe offering a variety of breads and local dishes.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "mistura-contorno",
@@ -376,7 +610,7 @@
       "price": "$$",
       "tags": ["brazilian", "mediterranean", "seafood"],
       "description": "Brazilian and Mediterranean cuisine with fresh seafood ingredients.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "salvador-dali",
@@ -389,7 +623,7 @@
       "price": "$$$",
       "tags": ["contemporary", "seafood", "fine-dining"],
       "description": "Contemporary cuisine with sea views in Rio Vermelho.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-casa-do-senhor-do-bonfim",
@@ -402,7 +636,7 @@
       "price": "$$",
       "tags": ["bakery", "traditional", "local"],
       "description": "Popular bakery and restaurant named after the Bonfim Church.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-bahia-bahia",
@@ -415,7 +649,7 @@
       "price": "$$$",
       "tags": ["gourmet", "bahian", "seafood"],
       "description": "Alta gastronomia baiana com pratos contemporâneos.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-casa-da-memoria",
@@ -428,7 +662,7 @@
       "price": "$$",
       "tags": ["traditional", "local", "cozy"],
       "description": "Ambiente tradicional com pratos típicos da Bahia.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-solar-do-unhao",
@@ -441,7 +675,7 @@
       "price": "$$",
       "tags": ["regional", "historic", "view"],
       "description": "Comida típica com vista para o mar e museu.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-rio-vermelho",
@@ -454,7 +688,7 @@
       "price": "$$",
       "tags": ["seafood", "casual", "local"],
       "description": "Especialidades em frutos do mar no bairro Rio Vermelho.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "restaurante-casa-da-madre-jantar",
@@ -467,7 +701,46 @@
       "price": "$$",
       "tags": ["local", "casual", "brazilian"],
       "description": "Homemade Bahian food in a cozy environment.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "restaurante-mistura-contorno-jantar",
+      "name": "Mistura Contorno",
+      "type": ["dinner"],
+      "category": "restaurant",
+      "duration": 90,
+      "lat": -12.9956,
+      "lng": -38.5187,
+      "price": "$$",
+      "tags": ["brazilian", "mediterranean", "seafood"],
+      "description": "Brazilian and Mediterranean cuisine with fresh seafood ingredients.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "restaurante-salvador-dali-jantar",
+      "name": "Salvador Dali",
+      "type": ["dinner"],
+      "category": "restaurant",
+      "duration": 90,
+      "lat": -12.9691,
+      "lng": -38.5021,
+      "price": "$$$",
+      "tags": ["contemporary", "seafood", "fine-dining"],
+      "description": "Contemporary cuisine with sea views in Rio Vermelho.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
+    },
+    {
+      "id": "restaurante-boca-de-galinha-jantar",
+      "name": "Boca de Galinha",
+      "type": ["dinner"],
+      "category": "restaurant",
+      "duration": 90,
+      "lat": -12.9679,
+      "lng": -38.5105,
+      "price": "$",
+      "tags": ["seafood", "traditional", "local"],
+      "description": "Comida típica baiana com vista para Baía de Itapagipe.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "parque-natural-das-dunas",
@@ -493,7 +766,7 @@
       "price": "$",
       "tags": ["afro-brazilian", "culture", "history"],
       "description": "Museu dedicado à cultura afro-brasileira.",
-      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2018/11/Muncab.-Pelourinho.-Foto-Amanda-Oliveira-32-500x500.jpg"
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-de-arte-sacra",
@@ -506,7 +779,7 @@
       "price": "$",
       "tags": ["art", "religion", "history"],
       "description": "Acervo de arte sacra com peças históricas.",
-      "image_url": "https://www.salvadordabahia.com/wp-content/uploads/2018/03/museu-de-artes-sacras-6-500x500.jpg"
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-afro-brasileiro",
@@ -519,7 +792,7 @@
       "price": "$",
       "tags": ["afro-brazilian", "art", "culture"],
       "description": "Museu com foco na arte e cultura afro-brasileira.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-tempostal",
@@ -532,7 +805,7 @@
       "price": "$",
       "tags": ["history", "postal", "museum"],
       "description": "Museu dedicado à história postal e comunicação.",
-      "image_url": ""
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-da-gastronomia-baiana",
@@ -540,12 +813,12 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -12.9714,
-      "lng": -38.5136,
+      "lat": -12.9699,
+      "lng": -38.513,
       "price": "$",
-      "tags": ["culinary", "culture", "history"],
-      "description": "Museu dedicado à culinária baiana, com exposição de ingredientes e pratos típicos.",
-      "image_url": ""
+      "tags": ["gastronomy", "culture", "history"],
+      "description": "Museu que celebra a culinária típica da Bahia.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-de-arte-da-bahia",
@@ -553,12 +826,12 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 90,
-      "lat": -12.9795,
-      "lng": -38.5162,
+      "lat": -12.9713,
+      "lng": -38.5145,
       "price": "$",
-      "tags": ["art", "painting", "sculpture"],
-      "description": "Museu de arte com coleções de pinturas, mobiliário e peças decorativas.",
-      "image_url": ""
+      "tags": ["art", "history", "culture"],
+      "description": "Museu com coleção de arte regional e nacional.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-geologico-da-bahia",
@@ -566,12 +839,12 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -13.0003,
-      "lng": -38.5169,
+      "lat": -12.972,
+      "lng": -38.515,
       "price": "$",
-      "tags": ["science", "geology", "education"],
-      "description": "Museu exibindo rochas, minerais e fósseis, contando a história geológica da Bahia.",
-      "image_url": ""
+      "tags": ["geology", "science", "education"],
+      "description": "Exposições sobre a geologia da região da Bahia.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-do-mar-aleixo-belov",
@@ -579,12 +852,12 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -12.9625,
-      "lng": -38.5107,
+      "lat": -12.973,
+      "lng": -38.516,
       "price": "$",
-      "tags": ["maritime", "history", "sailing"],
-      "description": "Museu dedicado às viagens marítimas do navegador Aleixo Belov, com objetos e fotos.",
-      "image_url": ""
+      "tags": ["marine", "history", "museum"],
+      "description": "Museu dedicado à história marítima e cultura do mar.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-da-misericordia",
@@ -592,25 +865,25 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -12.9691,
-      "lng": -38.5096,
+      "lat": -12.974,
+      "lng": -38.517,
       "price": "$",
-      "tags": ["history", "art", "colonial"],
-      "description": "Museu instalado em um antigo hospital, preservando a história da misericórdia na Bahia.",
-      "image_url": ""
+      "tags": ["history", "religion", "museum"],
+      "description": "Museu com acervo histórico ligado à irmandade da Misericórdia.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
-      "id": "museu-udo-knoff-de-azulejaria-e-ceramica",
+      "id": "museu-udo-knoff-azulejaria-ceramica",
       "name": "Museu Udo Knoff de Azulejaria e Cerâmica",
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -12.9697,
-      "lng": -38.5123,
+      "lat": -12.975,
+      "lng": -38.518,
       "price": "$",
-      "tags": ["art", "ceramics", "tiles"],
-      "description": "Museu que exibe coleção de azulejos e cerâmicas, destacando a arte decorativa.",
-      "image_url": ""
+      "tags": ["ceramics", "art", "museum"],
+      "description": "Museu especializado em azulejaria e cerâmica.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     },
     {
       "id": "museu-carlos-costa-pinto",
@@ -618,12 +891,12 @@
       "type": ["sight"],
       "category": "museum",
       "duration": 60,
-      "lat": -13.0052,
-      "lng": -38.5168,
+      "lat": -12.975,
+      "lng": -38.518,
       "price": "$",
-      "tags": ["art", "decorative", "jewelry"],
-      "description": "Museu de arte decorativa, com destaque para joias e objetos de prata dos séculos XVIII e XIX.",
-      "image_url": ""
+      "tags": ["art", "history", "culture"],
+      "description": "Museu com coleções de artefatos históricos da Bahia.",
+      "image_url": "https://via.placeholder.com/500?text=Imagem+indispon%C3%ADvel"
     }
   ]
 }
