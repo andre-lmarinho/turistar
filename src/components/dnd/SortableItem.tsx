@@ -1,12 +1,12 @@
 // src/components/dnd/SortableItem.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { CSS } from "@dnd-kit/utilities";
-import { useSortable } from "@dnd-kit/sortable";
-import { cn } from "@/lib/utils";
-import ActivityCard from "@/components/planner/ActivityCard";
-import type { Activity } from "@/types/itinerary";
+import React from 'react';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
+import { cn } from '@/lib/utils';
+import ActivityCard from '@/components/planner/ActivityCard';
+import type { Activity } from '@/types/itinerary';
 
 /**
  * A draggable wrapper around an ActivityCard:
@@ -15,11 +15,11 @@ import type { Activity } from "@/types/itinerary";
  * - Handles dnd-kit attributes, listeners, and styles
  */
 export interface SortableItemProps {
-  id: string;                   // unique identifier for dnd-kit
-  activity: Activity;           // data to display in the card
-  onSelect?: () => void;        // click handler to open edit modal
-  dragOverlay?: boolean;        // true → use <div> for overlay
-  className?: string;           // additional CSS classes
+  id: string; // unique identifier for dnd-kit
+  activity: Activity; // data to display in the card
+  onSelect?: () => void; // click handler to open edit modal
+  dragOverlay?: boolean; // true → use <div> for overlay
+  className?: string; // additional CSS classes
 }
 
 export function SortableItem({
@@ -29,22 +29,15 @@ export function SortableItem({
   dragOverlay = false,
   className,
 }: SortableItemProps) {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   // Apply transform/transition unless we're in the overlay
-  const style = dragOverlay
-    ? {}
-    : { transform: CSS.Transform.toString(transform), transition };
+  const style = dragOverlay ? {} : { transform: CSS.Transform.toString(transform), transition };
 
   // Use <div> for overlay so no list bullets; otherwise <li>
-  const Tag = dragOverlay ? "div" : "li";
+  const Tag = dragOverlay ? 'div' : 'li';
 
   return (
     <Tag
@@ -54,9 +47,9 @@ export function SortableItem({
         // dragging styles
         isDragging
           ? dragOverlay
-            ? "shadow-lg cursor-grabbing"
-            : "opacity-50 cursor-grabbing"
-          : "cursor-grab",
+            ? 'shadow-lg cursor-grabbing'
+            : 'opacity-50 cursor-grabbing'
+          : 'cursor-grab',
         className
       )}
       {...attributes}

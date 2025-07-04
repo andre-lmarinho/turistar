@@ -1,7 +1,7 @@
 // src/components/planner/ConfigSidebar.tsx
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 /**
  * Collapsible sidebar that only consumes width when open.
@@ -21,7 +21,7 @@ export default function ConfigSidebar({
       className={`
         overflow-hidden border-r bg-gray-50
         transition-[width] duration-300
-        ${open ? "w-64 p-4" : "w-0 p-0"}
+        ${open ? 'w-64 p-4' : 'w-0 p-0'}
       `}
     >
       {/* Render content only when open to avoid focus/tab stops */}

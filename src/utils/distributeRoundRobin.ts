@@ -1,10 +1,7 @@
-import { DayPlan, Activity } from "@/types/itinerary";
-import { MAX_ACTIVITIES_PER_DAY } from "@/constants/planner";
+import { DayPlan, Activity } from '@/types/itinerary';
+import { MAX_ACTIVITIES_PER_DAY } from '@/constants/planner';
 
-export function distributeRoundRobin(
-  baseDays: DayPlan[],
-  activities: Activity[]
-): DayPlan[] {
+export function distributeRoundRobin(baseDays: DayPlan[], activities: Activity[]): DayPlan[] {
   const copy = baseDays.map((d) => ({ ...d, activities: [] as Activity[] }));
 
   activities.forEach((act, idx) => {

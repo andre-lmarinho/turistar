@@ -1,9 +1,9 @@
 // src/context/DnDPlannerContext.tsx
-"use client";
+'use client';
 
-import { createContext, useContext } from "react";
-import { useDnDPlanner } from "@/hooks/useDnDPlanner";
-import type { DayPlan } from "@/types/itinerary";
+import { createContext, useContext } from 'react';
+import { useDnDPlanner } from '@/hooks/useDnDPlanner';
+import type { DayPlan } from '@/types/itinerary';
 
 /* ------------------------------------------------------------------ */
 /*  Context boilerplate                                               */
@@ -25,6 +25,6 @@ export function DnDPlannerProvider({
 
 export function useDnDPlannerContext() {
   const ctx = useContext(PlannerCtx);
-  if (!ctx) throw new Error("DnDPlannerProvider missing");
+  if (!ctx) throw new Error('DnDPlannerProvider missing');
   return ctx;
 }

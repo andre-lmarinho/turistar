@@ -4,12 +4,12 @@
  * Fallback palette of Tailwind background color classes
  */
 export const DEFAULT_COLORS = [
-  "bg-red-100",
-  "bg-orange-100",
-  "bg-amber-100",
-  "bg-emerald-100",
-  "bg-sky-100",
-  "bg-indigo-100",
-  "bg-purple-100",
-  "bg-pink-100",
+  'bg-white',
+  'bg-orange-50',
+  'bg-amber-50',
+  'bg-emerald-50',
+  'bg-sky-50',
+  'bg-indigo-50',
+  'bg-purple-50',
+  'bg-pink-50',
 ];

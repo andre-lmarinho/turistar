@@ -1,8 +1,8 @@
 // src/hooks/useItinerary.ts
 
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { Activity, DayPlan } from "@/types/itinerary";
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { Activity, DayPlan } from '@/types/itinerary';
 
 interface ItineraryResponse {
   activities: Activity[];
@@ -10,9 +10,7 @@ interface ItineraryResponse {
 
 // Type guard to check that the data has an activities array
 const hasActivities = (data: unknown): data is ItineraryResponse =>
-  !!data &&
-  typeof data === "object" &&
-  Array.isArray((data as ItineraryResponse).activities);
+  !!data && typeof data === 'object' && Array.isArray((data as ItineraryResponse).activities);
 
 /**
  * Hook to fetch and format itinerary by destination.
@@ -23,7 +21,7 @@ const hasActivities = (data: unknown): data is ItineraryResponse =>
 export function useItinerary(dest: string | null) {
   // 1) Run the query only if we have a dest
   const query = useQuery({
-    queryKey: ["itinerary", dest],
+    queryKey: ['itinerary', dest],
     enabled: !!dest,
     queryFn: async () => {
       const res = await fetch(`/api/itinerary?dest=${dest}`);

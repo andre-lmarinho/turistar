@@ -1,10 +1,10 @@
 // src/components/planner/DestinationCard.tsx
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { FaClock, FaCheck } from "react-icons/fa";
-import RemoveCardButton from "@/components/planner/RemoveCardButton";
+import React from 'react';
+import Image from 'next/image';
+import { FaClock, FaCheck } from 'react-icons/fa';
+import RemoveCardButton from '@/components/planner/RemoveCardButton';
 
 /**
  * Card inside DestinationFilterPanel.
@@ -35,12 +35,7 @@ export default function DestinationCard({
   return (
     <div className="relative flex flex-col bg-white rounded-lg shadow p-4 transition-transform duration-200 hover:-translate-y-1">
       {/* quick-remove icon (only when added) */}
-      {added && (
-        <RemoveCardButton
-          onClick={onRemove}
-          className="absolute -left-2 -top-2"
-        />
-      )}
+      {added && <RemoveCardButton onClick={onRemove} className="absolute -left-2 -top-2" />}
 
       {/* placeholder image */}
       <Image

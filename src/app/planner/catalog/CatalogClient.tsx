@@ -1,16 +1,16 @@
 // src/app/planner/catalog/CatalogClient.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useActivityCatalog } from "@/hooks/useActivityCatalog";
-import { useDnDPlannerContext } from "@/context/DnDPlannerContext";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useActivityCatalog } from '@/hooks/useActivityCatalog';
+import { useDnDPlannerContext } from '@/context/DnDPlannerContext';
+import { Input } from '@/components/ui/input';
 
 export default function CatalogClient() {
   // Access query params from URL
   const searchParams = useSearchParams();
-  const dest = searchParams.get("dest") ?? "salvador";
+  const dest = searchParams.get('dest') ?? 'salvador';
   const router = useRouter();
 
   // Fetch catalog data for destination
@@ -20,15 +20,13 @@ export default function CatalogClient() {
   const { addActivity } = useDnDPlannerContext();
 
   // Local search state
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   if (isLoading) return <p className="p-4">Loading…</p>;
   if (error || !data) return <p className="p-4">Failed to load catalog.</p>;
 
   // Search filter
-  const filtered = data.filter((a) =>
-    a.title.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = data.filter((a) => a.title.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <main className="p-4 space-y-4">
@@ -46,14 +44,9 @@ export default function CatalogClient() {
         {filtered.map((act) => (
           <li key={act.id} className="border rounded-md p-4">
             <h3 className="font-semibold">{act.title}</h3>
-            <p className="text-sm text-muted-foreground mb-2">
-              {act.description}
-            </p>
+            <p className="text-sm text-muted-foreground mb-2">{act.description}</p>
 
-            <button
-              className="text-xs underline"
-              onClick={() => addActivity(act)}
-            >
+            <button className="text-xs underline" onClick={() => addActivity(act)}>
               + Add to planner
             </button>
           </li>

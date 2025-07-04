@@ -1,17 +1,17 @@
 // src/components/planner/SortSelector.tsx
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
-export const sortModes = ["A-Z", "Price", "Duration"] as const;
-export type SortMode = typeof sortModes[number]; // <- union type
+export const sortModes = ['A-Z', 'Price', 'Duration'] as const;
+export type SortMode = (typeof sortModes)[number]; // <- union type
 
 /** Tiny select used in DestinationFilterPanel */
 export default function SortSelector({
   value,
   onChange,
 }: {
-  value: SortMode;               // ← use union
+  value: SortMode; // ← use union
   onChange: (mode: SortMode) => void; // ← use union
 }) {
   return (

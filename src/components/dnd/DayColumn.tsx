@@ -1,31 +1,26 @@
 // src/components/dnd/DayColumn.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
-import type { DayPlan, Activity } from "@/types/itinerary";
-import { SortableItem } from "@/components/dnd/SortableItem";
-import AddNewCard from "@/components/planner/AddNewCard";
-import { DEFAULT_COLORS } from "@/constants/colors";
+import React from 'react';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
+import type { DayPlan, Activity } from '@/types/itinerary';
+import { SortableItem } from '@/components/dnd/SortableItem';
+import AddNewCard from '@/components/planner/AddNewCard';
+import { DEFAULT_COLORS } from '@/constants/colors';
 
 interface DayColumnProps {
   day: DayPlan;
   onRemove?: () => void;
   onSelectActivity?: (activity: Activity) => void;
-  onAddNew?: (dayId: string) => void;  // add a blank activity to this day
+  onAddNew?: (dayId: string) => void; // add a blank activity to this day
 }
 
 /**
  * Renders one day's column of activities as a droppable list.
  * Supports click-to-edit and adding new blank cards.
  */
-export default function DayColumn({
-  day,
-  onRemove,
-  onSelectActivity,
-  onAddNew,
-}: DayColumnProps) {
+export default function DayColumn({ day, onRemove, onSelectActivity, onAddNew }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (
@@ -45,9 +40,7 @@ export default function DayColumn({
       >
         <ul
           ref={setNodeRef}
-          className={`space-y-2 min-h-[24px] p-1 ${
-            isOver ? "ring-2 ring-primary/40" : ""
-          }`}
+          className={`space-y-2 min-h-[24px] p-1 ${isOver ? 'ring-2 ring-primary/40' : ''}`}
         >
           {day.activities.map((activity) => (
             <SortableItem

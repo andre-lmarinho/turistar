@@ -1,8 +1,8 @@
 // src/app/planner/catalog/page.tsx
-import { Suspense } from "react";
-import CatalogClient from "./CatalogClient";
+import { Suspense } from 'react';
+import CatalogClient from './CatalogClient';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export default function CatalogPage() {
   return (

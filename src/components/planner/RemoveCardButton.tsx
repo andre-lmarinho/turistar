@@ -1,8 +1,8 @@
 // src/components/planner/RemoveCardButton.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import React from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 /**
  * Floating round-red button used by cards that are already in the planner.
@@ -10,8 +10,8 @@ import { FaTrashAlt } from "react-icons/fa";
  */
 export default function RemoveCardButton({
   onClick,
-  title = "Remove from planner",
-  className = "",
+  title = 'Remove from planner',
+  className = '',
 }: {
   onClick: () => void;
   title?: string;

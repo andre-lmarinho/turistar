@@ -1,12 +1,12 @@
 // src/components/planner/DestinationHeader.tsx
-"use client";
+'use client';
 
-import React from "react";
-import CitySwitcher from "@/components/planner/CitySwitcher";
-import CloseButton from "@/components/planner/CloseButton";
-import SettingsToggleButton from "@/components/planner/SettingsToggleButton";
-import CategoryFilterBar from "@/components/planner/CategoryFilterBar";
-import SortSelector, { SortMode } from "@/components/planner/SortSelector";
+import React from 'react';
+import CitySwitcher from '@/components/planner/CitySwitcher';
+import CloseButton from '@/components/planner/CloseButton';
+import SettingsToggleButton from '@/components/planner/SettingsToggleButton';
+import CategoryFilterBar from '@/components/planner/CategoryFilterBar';
+import SortSelector, { SortMode } from '@/components/planner/SortSelector';
 
 interface DestinationHeaderProps {
   city: string;
@@ -44,11 +44,7 @@ export default function DestinationHeader({
         <SettingsToggleButton onClick={onToggleSidebar} />
 
         <div className="flex-1 overflow-x-auto">
-          <CategoryFilterBar
-            categories={categories}
-            active={activeCats}
-            onToggle={toggleCat}
-          />
+          <CategoryFilterBar categories={categories} active={activeCats} onToggle={toggleCat} />
         </div>
 
         <SortSelector value={sortMode} onChange={setSortMode} />

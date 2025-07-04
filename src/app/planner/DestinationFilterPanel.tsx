@@ -1,12 +1,12 @@
 // src/app/planner/DestinationFilterPanel.tsx
-"use client";
+'use client';
 
-import React, { useState, useEffect, useMemo } from "react";
-import DestinationHeader from "@/components/planner/DestinationHeader";
-import DestinationCardGrid from "@/components/planner/DestinationCardGrid";
-import ConfigSidebar from "@/components/planner/ConfigSidebar";
-import { SortMode } from "@/components/planner/SortSelector";
-import type { Activity } from "@/types/itinerary";
+import React, { useState, useEffect, useMemo } from 'react';
+import DestinationHeader from '@/components/planner/DestinationHeader';
+import DestinationCardGrid from '@/components/planner/DestinationCardGrid';
+import ConfigSidebar from '@/components/planner/ConfigSidebar';
+import { SortMode } from '@/components/planner/SortSelector';
+import type { Activity } from '@/types/itinerary';
 
 /* ----- Raw JSON shape --------------------------------------------------- */
 interface RawActivity {
@@ -27,7 +27,7 @@ interface DestinationFilterPanelProps {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (a: Activity) => void;
-  onRemove: (id: string) => void;   // ← NEW
+  onRemove: (id: string) => void; // ← NEW
   addedIds?: Set<string>;
 }
 
@@ -36,15 +36,15 @@ export default function DestinationFilterPanel({
   isOpen,
   onClose,
   onAdd,
-  onRemove,                 /* NEW */
+  onRemove /* NEW */,
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
   /*──────── state ────────*/
   const [items, setItems] = useState<RawActivity[]>([]);
-  const [city, setCity] = useState("salvador");
+  const [city, setCity] = useState('salvador');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeCats, setActiveCats] = useState<Set<string>>(new Set());
-  const [sortMode, setSortMode] = useState<SortMode>("A-Z");
+  const [sortMode, setSortMode] = useState<SortMode>('A-Z');
 
   /*──────── fetch ────────*/
   useEffect(() => {
@@ -57,22 +57,17 @@ export default function DestinationFilterPanel({
   }, [isOpen, city, items.length]);
 
   /*──────── derived lists ────────*/
-  const categories = useMemo(
-    () => [...new Set(items.map((i) => i.category))],
-    [items]
-  );
+  const categories = useMemo(() => [...new Set(items.map((i) => i.category))], [items]);
 
   const visibleItems = useMemo(() => {
     const filtered =
-      activeCats.size === 0
-        ? items
-        : items.filter((it) => activeCats.has(it.category));
+      activeCats.size === 0 ? items : items.filter((it) => activeCats.has(it.category));
 
     return [...filtered].sort((a, b) => {
       switch (sortMode) {
-        case "Price":
+        case 'Price':
           return a.price.localeCompare(b.price);
-        case "Duration":
+        case 'Duration':
           return a.duration - b.duration;
         default:
           return a.name.localeCompare(b.name);

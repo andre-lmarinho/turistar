@@ -1,11 +1,11 @@
 // src/components/planner/ActivityModal.tsx
-"use client";
+'use client';
 
-import React from "react";
-import ReactDOM from "react-dom";
-import ActivityModalHeader from "@/components/planner/ActivityModalHeader";
-import ActivityModalForm from "@/components/planner/ActivityModalForm";
-import type { Activity } from "@/types/itinerary";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ActivityModalHeader from '@/components/planner/ActivityModalHeader';
+import ActivityModalForm from '@/components/planner/ActivityModalForm';
+import type { Activity } from '@/types/itinerary';
 
 interface ActivityModalProps {
   open: boolean;
@@ -14,6 +14,8 @@ interface ActivityModalProps {
   onClose: () => void;
   onDelete: () => void;
   onSave: (draft: Partial<Activity>) => void;
+  color: string;
+  onColorChange: (color: string) => void;
 }
 
 export default function ActivityModal({
@@ -23,26 +25,24 @@ export default function ActivityModal({
   onClose,
   onDelete,
   onSave,
+  color,
+  onColorChange,
 }: ActivityModalProps) {
   if (!open) return null;
 
   return ReactDOM.createPortal(
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose} />
 
       {/* Modal container */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="w-[95vw] max-w-[800px] max-h-[95vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden">
+      <div className="fixed inset-0 z-50 top-50 left-50 items-center justify-center w-[95%] max-w-[650px] max-h-[95dvh]">
+        <div
+          className="bg-white rounded-lg shadow-xl flex flex-col overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Header */}
-          <ActivityModalHeader
-            bgColor={activity.color ?? "bg-gray-700"}
-            onDelete={onDelete}
-            onClose={onClose}
-          />
+          <ActivityModalHeader bgColor={color} onDelete={onDelete} onClose={onClose} />
 
           {/* Form */}
           <ActivityModalForm
@@ -50,6 +50,8 @@ export default function ActivityModal({
             poiOptions={poiOptions}
             onClose={onClose}
             onSave={onSave}
+            color={color}
+            onColorChange={onColorChange}
           />
         </div>
       </div>

@@ -1,10 +1,10 @@
 // src/components/planner/DestinationCardGrid.tsx
-"use client";
+'use client';
 
-import React from "react";
-import DestinationCard from "@/components/planner/DestinationCard";
-import { omit } from "@/utils/omit";
-import type { Activity } from "@/types/itinerary";
+import React from 'react';
+import DestinationCard from '@/components/planner/DestinationCard';
+import { omit } from '@/utils/omit';
+import type { Activity } from '@/types/itinerary';
 
 /* Raw JSON shape coming from the filter panel */
 export interface RawActivity {
@@ -26,12 +26,7 @@ interface Props {
  * Renders a responsive grid of DestinationCard components.
  * Decides per-card whether we call onAdd or onRemove based on `addedIds`.
  */
-export default function DestinationCardGrid({
-  items,
-  addedIds,
-  onAdd,
-  onRemove,
-}: Props) {
+export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((item) => {
@@ -48,7 +43,7 @@ export default function DestinationCardGrid({
             added={isAdded}
             onAdd={() =>
               onAdd({
-                ...omit(item, "price", "name"),
+                ...omit(item, 'price', 'name'),
                 title: item.name,
               } as Activity)
             }

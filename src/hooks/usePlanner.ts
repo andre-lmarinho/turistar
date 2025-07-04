@@ -1,13 +1,13 @@
 // src/hooks/usePlanner.ts
-"use client";
+'use client';
 
-import { useSearchParams } from "next/navigation";
-import { closestCenter } from "@dnd-kit/core";
+import { useSearchParams } from 'next/navigation';
+import { closestCenter } from '@dnd-kit/core';
 
-import { useTripRange } from "@/hooks/useTripRange";
-import { useItinerary } from "@/hooks/useItinerary";
-import { useDnDPlanner } from "@/hooks/useDnDPlanner";
-import { buildInitialDays } from "@/utils/initialDays";
+import { useTripRange } from '@/hooks/useTripRange';
+import { useItinerary } from '@/hooks/useItinerary';
+import { useDnDPlanner } from '@/hooks/useDnDPlanner';
+import { buildInitialDays } from '@/utils/initialDays';
 
 /**
  * High-level planner hook
@@ -20,7 +20,7 @@ import { buildInitialDays } from "@/utils/initialDays";
 export function usePlanner() {
   /* ----------------------- URL + date range ----------------------- */
   const params = useSearchParams();
-  const dest   = params.get("dest")?.trim().toLowerCase() ?? "";
+  const dest = params.get('dest')?.trim().toLowerCase() ?? '';
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest);
   const { isLoading, error } = useItinerary(dest);
@@ -32,10 +32,10 @@ export function usePlanner() {
     activeId,
     handleDragStart,
     handleDragOver,
-    addActivity,  
+    addActivity,
     removeActivity,
-    updateActivity, 
-    addBlankActivity,   
+    updateActivity,
+    addBlankActivity,
   } = useDnDPlanner(buildInitialDays(tripDays));
 
   /* --------------------------- export ----------------------------- */

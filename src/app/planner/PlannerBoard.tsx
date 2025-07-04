@@ -1,7 +1,7 @@
 // src/app/planner/PlannerBoard.tsx
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -10,11 +10,11 @@ import {
   type CollisionDetection,
   type DragStartEvent,
   type DragOverEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 
-import DayColumn from "@/components/dnd/DayColumn";
-import { SortableItem } from "@/components/dnd/SortableItem";
-import type { DayPlan, Activity } from "@/types/itinerary";
+import DayColumn from '@/components/dnd/DayColumn';
+import { SortableItem } from '@/components/dnd/SortableItem';
+import type { DayPlan, Activity } from '@/types/itinerary';
 
 export interface PlannerBoardProps {
   /** Board columns of activities */
@@ -32,11 +32,11 @@ export interface PlannerBoardProps {
   /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
-  onAddNew?(dayId: string): void;     
+  onAddNew?(dayId: string): void;
 }
 
 export default function PlannerBoard({
-  days = [],                  // normalize undefined
+  days = [], // normalize undefined
   activeId,
   sensors,
   collisionDetection,
@@ -46,9 +46,7 @@ export default function PlannerBoard({
   onAddNew,
 }: PlannerBoardProps) {
   // find the active activity for the DragOverlay preview
-  const activeActivity = days
-    .flatMap((d) => d.activities)
-    .find((a) => a.id === activeId);
+  const activeActivity = days.flatMap((d) => d.activities).find((a) => a.id === activeId);
 
   return (
     <DndContext
@@ -62,14 +60,8 @@ export default function PlannerBoard({
         {days.map((day, index) => (
           <div key={day.id} className="flex items-stretch">
             {/* Pass click handler down to each column */}
-            <DayColumn
-              day={day}
-              onSelectActivity={onSelectActivity}
-              onAddNew={onAddNew}
-            />
-            {index !== days.length - 1 && (
-              <div className="w-px bg-gray-300 mx-4" />
-            )}
+            <DayColumn day={day} onSelectActivity={onSelectActivity} onAddNew={onAddNew} />
+            {index !== days.length - 1 && <div className="w-px bg-gray-300 mx-4" />}
           </div>
         ))}
       </div>
@@ -77,11 +69,7 @@ export default function PlannerBoard({
       {/* Floating preview of the dragged card */}
       <DragOverlay>
         {activeActivity && (
-          <SortableItem
-            id={activeActivity.id}
-            dragOverlay={true}
-            activity={activeActivity}
-          />
+          <SortableItem id={activeActivity.id} dragOverlay={true} activity={activeActivity} />
         )}
       </DragOverlay>
     </DndContext>

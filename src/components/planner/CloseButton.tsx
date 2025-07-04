@@ -1,7 +1,7 @@
 // src/components/planner/CloseButton.tsx
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 /**
  * Animated “X” close button.
@@ -9,7 +9,7 @@ import React from "react";
  */
 export default function CloseButton({
   onClick,
-  title = "Close",
+  title = 'Close',
 }: {
   onClick: () => void;
   title?: string;

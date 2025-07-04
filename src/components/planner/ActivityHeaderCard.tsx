@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
 
 /**
  * Mini-card used in ActivityModal to visualise the POI that
@@ -9,7 +9,7 @@ import Image from "next/image";
  */
 export default function ActivityHeaderCard({
   name,
-  imageUrl = "https://placehold.co/600x300", // fallback placeholder
+  imageUrl = 'https://placehold.co/600x300', // fallback placeholder
 }: {
   name: string;
   imageUrl?: string;
@@ -22,14 +22,12 @@ export default function ActivityHeaderCard({
         alt={name}
         width={96}
         height={64}
-        unoptimized     /* using remote placeholder for now */
+        unoptimized /* using remote placeholder for now */
         className="rounded object-cover w-24 h-16"
       />
 
       {/* title */}
-      <h4 className="font-medium text-sm sm:text-base line-clamp-2">
-        {name}
-      </h4>
+      <h4 className="font-medium text-sm sm:text-base line-clamp-2">{name}</h4>
     </div>
   );
 }

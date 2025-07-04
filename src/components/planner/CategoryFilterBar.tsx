@@ -1,7 +1,7 @@
 // src/components/planner/CategoryFilterBar.tsx
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 /**
  * Horizontal scrollable pill list.
@@ -25,7 +25,7 @@ export default function CategoryFilterBar({
             key={cat}
             onClick={() => onToggle(cat)}
             className={`whitespace-nowrap px-3 py-1 rounded-full text-sm border transition
-              ${isOn ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}
+              ${isOn ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
             `}
           >
             {cat}

@@ -1,7 +1,8 @@
-"use client";
+// src/components/ui/ActivityModalHaeder
+'use client';
 
-import React from "react";
-import { DEFAULT_COLORS } from "@/constants/colors";
+import React from 'react';
+import { DEFAULT_COLORS } from '@/constants/colors';
 
 /**
  * Click-a-colour control.
@@ -13,9 +14,9 @@ export default function ColorSwatchPicker({
   onChange,
   colors = DEFAULT_COLORS,
 }: {
-  value: string;                   // currently selected colour
-  onChange: (c: string) => void;   // callback with the colour chosen
-  colors?: string[];               // tailwind bg-classes OR hexes
+  value: string; // currently selected colour
+  onChange: (c: string) => void; // callback with the colour chosen
+  colors?: string[]; // tailwind bg-classes OR hexes
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -25,10 +26,10 @@ export default function ColorSwatchPicker({
           onClick={() => onChange(c)}
           className={`
             w-6 h-6 rounded-full border-2
-            ${c.startsWith("#") ? "" : c}          /* tailwind class */
-            ${value === c ? "ring-2 ring-black" : "border-white"}
+            ${c.startsWith('#') ? '' : c}          /* tailwind class */
+            ${value === c ? 'ring-2 ring-black' : 'border-white'}
           `}
-          style={c.startsWith("#") ? { backgroundColor: c } : undefined}
+          style={c.startsWith('#') ? { backgroundColor: c } : undefined}
           aria-label={c}
         />
       ))}

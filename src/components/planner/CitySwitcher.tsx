@@ -1,7 +1,7 @@
 // src/components/planner/CitySwitcher.tsx
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 /**
  * Simple text input + confirm button to change destination.

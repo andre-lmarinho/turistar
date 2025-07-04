@@ -1,6 +1,6 @@
 // src/utils/initialDays.ts
-import { formatISO } from "date-fns";
-import type { DayPlan } from "@/types/itinerary";
+import { formatISO } from 'date-fns';
+import type { DayPlan } from '@/types/itinerary';
 
 /**
  * Builds an empty DayPlan array.
@@ -8,10 +8,10 @@ import type { DayPlan } from "@/types/itinerary";
  */
 export function buildInitialDays(tripDays: Date[] = []): DayPlan[] {
   return tripDays.map((d) => ({
-    id: formatISO(d, { representation: "date" }),
-    label: d.toLocaleDateString("en-US", {
-      weekday: "short",
-      day: "2-digit",
+    id: formatISO(d, { representation: 'date' }),
+    label: d.toLocaleDateString('en-US', {
+      weekday: 'short',
+      day: '2-digit',
     }),
     activities: [],
   }));

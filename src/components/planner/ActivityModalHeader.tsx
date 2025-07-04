@@ -1,8 +1,9 @@
-"use client";
+// src/components/planner/ActivityModalHaeder
+'use client';
 
-import React from "react";
-import RemoveCardButton from "@/components/planner/RemoveCardButton";
-import CloseButton from "@/components/planner/CloseButton";
+import React from 'react';
+import RemoveCardButton from '@/components/planner/RemoveCardButton';
+import CloseButton from '@/components/planner/CloseButton';
 
 /**
  * Color strip shown at the very top of ActivityModal.
@@ -15,17 +16,17 @@ export default function ActivityModalHeader({
   onDelete,
   onClose,
 }: {
-  bgColor: string;          // tailwind "bg-*" OR hex "#xxxxxx"
+  bgColor: string; // tailwind "bg-*" OR hex "#xxxxxx"
   onDelete: () => void;
   onClose: () => void;
 }) {
-  const style =
-    bgColor.startsWith("#") ? { backgroundColor: bgColor } : undefined;
+  // Inline style se for hex, senão usa a classe Tailwind diretamente
+  const style = bgColor.startsWith('#') ? { backgroundColor: bgColor } : undefined;
 
   return (
     <div
       className={`flex items-center justify-between px-4 py-2 ${
-        bgColor.startsWith("#") ? "" : bgColor
+        bgColor.startsWith('#') ? '' : bgColor
       }`}
       style={style}
     >

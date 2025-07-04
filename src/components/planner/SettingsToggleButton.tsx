@@ -1,15 +1,11 @@
 // src/components/planner/SettingsToggleButton.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { FaSlidersH } from "react-icons/fa";
+import React from 'react';
+import { FaSlidersH } from 'react-icons/fa';
 
 /** Reusable animated button that toggles the config sidebar */
-export default function SettingsToggleButton({
-  onClick,
-}: {
-  onClick: () => void;
-}) {
+export default function SettingsToggleButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       title="Toggle config"

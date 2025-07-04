@@ -1,5 +1,5 @@
 // src/hooks/useDnDPlanner.ts
-"use client";
+'use client';
 
 import {
   PointerSensor,
@@ -7,10 +7,10 @@ import {
   useSensors,
   type DragStartEvent,
   type DragOverEvent,
-} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { useState } from "react";
-import type { DayPlan, Activity } from "@/types/itinerary";
+} from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
+import { useState } from 'react';
+import type { DayPlan, Activity } from '@/types/itinerary';
 
 /**
  * Encapsulates:
@@ -23,9 +23,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   /* ------------------------------- sensors ------------------------------ */
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   /* ----------------------------- dnd events ----------------------------- */
   /** Remember which card was picked up */
@@ -42,14 +40,8 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
 
-    const src = days.find((d) =>
-      d.activities.some((a) => a.id === active.id)
-    );
-    const dst = days.find(
-      (d) =>
-        d.id === over.id ||
-        d.activities.some((a) => a.id === over.id)
-    );
+    const src = days.find((d) => d.activities.some((a) => a.id === active.id));
+    const dst = days.find((d) => d.id === over.id || d.activities.some((a) => a.id === over.id));
     if (!src || !dst) return;
 
     const oldIdx = src.activities.findIndex((a) => a.id === active.id);
@@ -80,9 +72,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
           activities: [],
         };
       /* allow same place on another day, but never twice in this day */
-      const alreadyInDay = copy[dayIndex].activities.some(
-        (a) => a.id === act.id
-      );
+      const alreadyInDay = copy[dayIndex].activities.some((a) => a.id === act.id);
       if (!alreadyInDay) {
         copy[dayIndex].activities.push(act);
       }
@@ -117,9 +107,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
         /* create NEW objects to keep state immutable */
         return {
           ...day,
-          activities: day.activities.map((a) =>
-            a.id === id ? { ...a, ...patch } : a
-          ),
+          activities: day.activities.map((a) => (a.id === id ? { ...a, ...patch } : a)),
         };
       })
     );
@@ -133,8 +121,8 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
   function addBlankActivity(dayIndex = 0): Activity {
     const blank: Activity = {
       id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       duration: 0,
     };
     setDays((prev) => {
@@ -151,7 +139,6 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     });
     return blank;
   }
-
 
   /* --------------------------------------------------------------------- */
   return {

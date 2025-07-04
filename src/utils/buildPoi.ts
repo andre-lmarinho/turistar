@@ -1,6 +1,6 @@
 // src/utils/buildPoi.ts
-import salvadorData from "@/data/salvador.json";
-import type { Activity } from "@/types/itinerary";
+import salvadorData from '@/data/salvador.json';
+import type { Activity } from '@/types/itinerary';
 
 export interface LocalPoi {
   id: string;
@@ -18,7 +18,7 @@ export function buildPoi(activity: Activity): LocalPoi {
       id: found.id,
       name: found.name,
       description: found.description,
-      imageUrl: undefined,
+      imageUrl: found.image_url,
       duration: found.duration,
     };
   }
@@ -26,8 +26,8 @@ export function buildPoi(activity: Activity): LocalPoi {
   return {
     id: activity.id,
     name: activity.title,
-    description: activity.description ?? "",
-    imageUrl: undefined,
+    description: activity.description ?? '',
+    imageUrl: activity.imageUrl,
     duration: activity.duration,
   };
 }

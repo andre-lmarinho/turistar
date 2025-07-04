@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 /**
  * Very small autocomplete component.
@@ -13,7 +13,7 @@ export default function AutocompleteInput({
   onChange,
   options,
   onSelect,
-  placeholder = "Search…",
+  placeholder = 'Search…',
   leftIcon = <FaMapMarkerAlt className="text-gray-400" />,
 }: {
   value: string;
@@ -25,9 +25,7 @@ export default function AutocompleteInput({
 }) {
   const [focused, setFocused] = useState(false);
 
-  const filtered = options.filter((o) =>
-    o.toLowerCase().includes(value.toLowerCase())
-  );
+  const filtered = options.filter((o) => o.toLowerCase().includes(value.toLowerCase()));
 
   return (
     <div className="relative w-full">

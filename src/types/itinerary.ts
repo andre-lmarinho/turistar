@@ -6,9 +6,10 @@ export interface Activity {
   title: string;
   duration: number;
   description: string;
-  color?: string;           // Tailwind class ou hex (“bg-red-500”, “#ff0000”)
-  startTime?: string;       // “HH:MM” – horário planejado
-  poiName?: string;         // nome do POI original (para header do modal)
+  color?: string; // Tailwind class ou hex (“bg-red-500”, “#ff0000”)
+  startTime?: string; // “HH:MM” – horário planejado
+  poiName?: string; // nome do POI original (para header do modal)
+  imageUrl?: string;
 }
 
 /** Plan for a single day: a flat list of activities. */

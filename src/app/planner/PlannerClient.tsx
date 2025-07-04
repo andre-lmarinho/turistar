@@ -1,17 +1,17 @@
 // src/app/planner/PlannerClient.tsx
-"use client";
+'use client';
 
-import React, { useState, useMemo } from "react";
-import { DateRangePicker } from "@/components/ui/date-picker";
-import PlannerBoard from "@/app/planner/PlannerBoard";
-import DestinationFilterPanel from "@/app/planner/DestinationFilterPanel";
-import ActivityModal from "@/components/planner/ActivityModal";
-import { usePlanner } from "@/hooks/usePlanner";
-import type { Activity } from "@/types/itinerary";
+import React, { useState, useMemo } from 'react';
+import { DateRangePicker } from '@/components/ui/date-picker';
+import PlannerBoard from '@/app/planner/PlannerBoard';
+import DestinationFilterPanel from '@/app/planner/DestinationFilterPanel';
+import ActivityModal from '@/components/planner/ActivityModal';
+import { usePlanner } from '@/hooks/usePlanner';
+import type { Activity } from '@/types/itinerary';
+import { DEFAULT_COLORS } from '@/constants/colors';
 
 // TODO: replace with real list from your data source
-import salvador from "@/data/salvador.json";
-
+import salvador from '@/data/salvador.json';
 
 /**
  * Top-level client component for the /planner route.
@@ -35,7 +35,7 @@ export default function PlannerClient() {
     addActivity,
     removeActivity,
     updateActivity,
-    addBlankActivity, 
+    addBlankActivity,
   } = usePlanner();
 
   /* Build a Set of activity IDs already placed on the board */
@@ -45,10 +45,7 @@ export default function PlannerClient() {
   );
 
   /* Build list of POI names for autocomplete */
-  const poiOptions = useMemo(
-    () => salvador.activities.map((a) => a.name),
-    []
-  );
+  const poiOptions = useMemo(() => salvador.activities.map((a) => a.name), []);
 
   /* Filter-panel visibility */
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -56,11 +53,14 @@ export default function PlannerClient() {
   /* Selected activity for editing in the modal */
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
 
+  /*  local color state for modal */
+  const [modalColor, setModalColor] = useState<string>(DEFAULT_COLORS[0]);
+
   /* Guard clauses */
-  if (!dest)         return <p className="p-4">Destination missing in URL.</p>;
-  if (isLoading)     return <p className="p-4">Loading itinerary…</p>;
-  if (error)         return <p className="p-4">Failed to load.</p>;
-  if (!days.length)  return <p className="p-4">No itinerary found.</p>;
+  if (!dest) return <p className="p-4">Destination missing in URL.</p>;
+  if (isLoading) return <p className="p-4">Loading itinerary…</p>;
+  if (error) return <p className="p-4">Failed to load.</p>;
+  if (!days.length) return <p className="p-4">No itinerary found.</p>;
 
   return (
     <>
@@ -92,7 +92,12 @@ export default function PlannerClient() {
         collisionDetection={collisionDetection}
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
-        onSelectActivity={(activity) => setSelectedActivity(activity)}
+        onSelectActivity={(activity) => {
+          setSelectedActivity(activity);
+          setModalColor(
+            DEFAULT_COLORS.includes(activity.color ?? '') ? activity.color! : DEFAULT_COLORS[0]
+          );
+        }}
         onAddNew={(dayId) => {
           addBlankActivity(days.findIndex((d) => d.id === dayId));
         }}
@@ -105,15 +110,27 @@ export default function PlannerClient() {
           activity={selectedActivity}
           // list of all POI names for the autocomplete input:
           poiOptions={poiOptions}
-          onClose={() => setSelectedActivity(null)}
+          // Save color when closing by X or by clicking the backdrop
+          onClose={() => {
+            if (selectedActivity) {
+              updateActivity(selectedActivity.id, { color: modalColor });
+            }
+            setSelectedActivity(null);
+          }}
           onSave={(patch) => {
-            updateActivity(selectedActivity.id, patch);
+            updateActivity(selectedActivity.id, {
+              ...patch,
+              color: modalColor,
+              duration: Number(patch.duration),
+            });
             setSelectedActivity(null);
           }}
           onDelete={() => {
             removeActivity(selectedActivity.id);
             setSelectedActivity(null);
           }}
+          color={modalColor}
+          onColorChange={setModalColor}
         />
       )}
     </>
