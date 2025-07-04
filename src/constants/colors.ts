@@ -7,6 +7,13 @@
 export const DEFAULT_NEW_CARD_COLOR_INDEX = 2;
 
 /**
+ * Index of the default add activity color (when adding an existing activity)
+ */
+export const DEFAULT_ADD_ACTIVITY_COLOR_INDEX = 4;
+
+// ===================== CALCULATIONS ONLY =====================================
+
+/**
  * Palette of background color variables from the design system
  */
 export const DEFAULT_COLORS = [

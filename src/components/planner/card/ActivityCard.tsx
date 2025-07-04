@@ -60,30 +60,23 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
         )}
 
         {/* title */}
-        <h4 className="px-3 pt-3 pb-2 font-medium border-b">
-          {title.trim() ? title : EMPTY_ACTIVITY_TITLE}
-        </h4>
+        <h4 className="px-4 pt-3 font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
 
         {/* Conditionally render schedule and duration only if at least one exists */}
         {isMounted && (startTime?.trim() || duration > 0) && (
-          <div className="flex justify-between items-center gap-2 px-3 py-2 text-sm">
+          <div className="flex px-4 p-2 text-sm">
             {/* Conditionally render start time */}
             {startTime?.trim() && (
-              <span className="inline-flex items-center gap-1 px-2 py-1">
+              <span className="inline-flex items-center gap-2">
                 <FaRegClock />
                 {startTime}
               </span>
             )}
-
-            {/* Separator only if both elements exist */}
-            {startTime?.trim() && duration && duration > 0 && (
-              <span className="w-px h-4 bg-gray-300 mx-1" />
-            )}
-
             {/* Conditionally render duration */}
             {duration > 0 && (
-              <span className="inline-flex items-center gap-1 px-2 py-1">
-                <FaHourglassHalf />~{duration} min
+              <span className="inline-flex items-center gap-2">
+                <FaHourglassHalf />
+                {duration}
               </span>
             )}
           </div>

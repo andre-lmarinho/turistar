@@ -11,6 +11,11 @@ import {
 import { arrayMove } from '@dnd-kit/sortable';
 import { useState } from 'react';
 import type { DayPlan, Activity } from '@/types/itinerary';
+import {
+  DEFAULT_NEW_CARD_COLOR_INDEX,
+  DEFAULT_ADD_ACTIVITY_COLOR_INDEX,
+  COLOR_CLASSES,
+} from '@/constants/colors';
 
 /**
  * Encapsulates:
@@ -40,24 +45,40 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
 
-    const src = days.find((d) => d.activities.some((a) => a.id === active.id));
-    const dst = days.find((d) => d.id === over.id || d.activities.some((a) => a.id === over.id));
-    if (!src || !dst) return;
+    setDays((prev) => {
+      // 1) clone days e cada activities
+      const daysCopy = prev.map((d) => ({
+        ...d,
+        activities: [...d.activities],
+      }));
 
-    const oldIdx = src.activities.findIndex((a) => a.id === active.id);
-    const overIdx =
-      dst.id === over.id
-        ? dst.activities.length
-        : dst.activities.findIndex((a) => a.id === over.id);
+      // 2) encontrar índices
+      const srcDayIdx = daysCopy.findIndex((d) => d.activities.some((a) => a.id === active.id));
+      const dstDayIdx = daysCopy.findIndex(
+        (d) => d.id === over.id || d.activities.some((a) => a.id === over.id)
+      );
+      if (srcDayIdx < 0 || dstDayIdx < 0) return prev;
 
-    if (src === dst) {
-      src.activities = arrayMove(src.activities, oldIdx, overIdx);
-    } else {
-      const [moved] = src.activities.splice(oldIdx, 1);
-      dst.activities.splice(overIdx, 0, moved);
-    }
+      const srcActivities = daysCopy[srcDayIdx].activities;
+      const dstActivities = daysCopy[dstDayIdx].activities;
 
-    setDays([...days]);
+      const oldIdx = srcActivities.findIndex((a) => a.id === active.id);
+      const overIdx =
+        daysCopy[dstDayIdx].id === over.id
+          ? dstActivities.length
+          : dstActivities.findIndex((a) => a.id === over.id);
+
+      // 3) faz o movimento sem mutar prev
+      let moved: Activity;
+      if (srcDayIdx === dstDayIdx) {
+        daysCopy[srcDayIdx].activities = arrayMove(srcActivities, oldIdx, overIdx);
+      } else {
+        [moved] = srcActivities.splice(oldIdx, 1);
+        dstActivities.splice(overIdx, 0, moved);
+      }
+
+      return daysCopy;
+    });
   }
 
   /* --------------------------- add / remove ----------------------------- */
@@ -74,7 +95,10 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       /* allow same place on another day, but never twice in this day */
       const alreadyInDay = copy[dayIndex].activities.some((a) => a.id === act.id);
       if (!alreadyInDay) {
-        copy[dayIndex].activities.push(act);
+        copy[dayIndex].activities.push({
+          ...act,
+          color: COLOR_CLASSES[DEFAULT_ADD_ACTIVITY_COLOR_INDEX], // Apply default color for addActivity
+        });
       }
       return copy;
     });
@@ -124,6 +148,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       title: '',
       description: '',
       duration: 0,
+      color: COLOR_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX],
     };
     setDays((prev) => {
       const copy = [...prev];

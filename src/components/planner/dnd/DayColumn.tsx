@@ -7,7 +7,6 @@ import { useDroppable } from '@dnd-kit/core';
 import type { DayPlan, Activity } from '@/types/itinerary';
 import { SortableItem } from '@/components/planner/dnd/SortableItem';
 import AddNewCard from '@/components/ui/BtnAddNewCard';
-import { DEFAULT_COLORS } from '@/constants/colors';
 
 interface DayColumnProps {
   day: DayPlan;
@@ -24,14 +23,9 @@ export default function DayColumn({ day, onRemove, onSelectActivity, onAddNew }:
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (
-    <section className="flex-1 min-w-[250px]">
+    <section className="flex-1 min-w-[200px] max-w-[340px]">
       <header className="m-2 flex items-center justify-between">
         <h4 className="font-semibold">{day.label}</h4>
-        {onRemove && (
-          <button onClick={onRemove} className="text-xs text-red-500 hover:underline">
-            ✕
-          </button>
-        )}
       </header>
 
       <SortableContext
@@ -52,7 +46,7 @@ export default function DayColumn({ day, onRemove, onSelectActivity, onAddNew }:
 
       {/* Add a “New card” button at the bottom */}
       <div className="flex justify-center">
-        <AddNewCard colorClass={DEFAULT_COLORS[2]} dayId={day.id} onAddNew={onAddNew} />
+        <AddNewCard dayId={day.id} onAddNew={onAddNew} />
       </div>
     </section>
   );

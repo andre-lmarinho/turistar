@@ -2,8 +2,8 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
-import { Popover, PopoverContent, PopoverTrigger } from './PopOver';
-import { Calendar } from './Calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/PopOver';
+import { Calendar } from '@/components/ui/Calendar';
 import { cn } from '@/lib/utils';
 
 interface Props {
