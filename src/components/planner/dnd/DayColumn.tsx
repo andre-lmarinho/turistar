@@ -19,7 +19,7 @@ interface DayColumnProps {
  * Renders one day's column of activities as a droppable list.
  * Supports click-to-edit and adding new blank cards.
  */
-export default function DayColumn({ day, onRemove, onSelectActivity, onAddNew }: DayColumnProps) {
+export default function DayColumn({ day, onSelectActivity, onAddNew }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (

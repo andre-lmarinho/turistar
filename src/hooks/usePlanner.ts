@@ -1,6 +1,7 @@
 // src/hooks/usePlanner.ts
 'use client';
 
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
@@ -8,6 +9,7 @@ import { useTripRange } from '@/hooks/useTripRange';
 import { useItinerary } from '@/hooks/useItinerary';
 import { useDnDPlanner } from '@/hooks/useDnDPlanner';
 import { buildInitialDays } from '@/utils/initialDays';
+import { syncDaysWithTripRange } from '@/utils/syncDaysWithTripRange';
 
 /**
  * High-level planner hook
@@ -28,6 +30,7 @@ export function usePlanner() {
   /* -------------------------- DnD state --------------------------- */
   const {
     days,
+    setDays,
     sensors,
     activeId,
     handleDragStart,
@@ -37,6 +40,11 @@ export function usePlanner() {
     updateActivity,
     addBlankActivity,
   } = useDnDPlanner(buildInitialDays(tripDays));
+
+  /* ------------------ Sync days on trip range change ------------------ */
+  useEffect(() => {
+    setDays((prevDays) => syncDaysWithTripRange(prevDays, tripDays));
+  }, [tripDays, setDays]);
 
   /* --------------------------- export ----------------------------- */
   return {

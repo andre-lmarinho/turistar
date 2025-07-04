@@ -9,7 +9,7 @@ import DestinationFilterPanel from '@/components/planner/catalog/DestinationFilt
 import ActivityModal from '@/components/planner/modal/ActivityModal';
 import { usePlanner } from '@/hooks/usePlanner';
 import type { Activity } from '@/types/itinerary';
-import { DEFAULT_COLORS } from '@/constants/colors';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants/colors';
 
 // TODO: replace with real list from your data source
 import salvador from '@/data/salvador.json';
@@ -55,9 +55,6 @@ export default function PlannerClient() {
     null
   );
 
-  /*  local color state for modal */
-  const [modalColor, setModalColor] = useState<string>(DEFAULT_COLORS[0]);
-
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
   if (isLoading) return <p className="p-4">Loading itinerary…</p>;
@@ -91,9 +88,6 @@ export default function PlannerClient() {
         handleDragOver={handleDragOver}
         onSelectActivity={(activity) => {
           setSelectedActivity(activity);
-          setModalColor(
-            DEFAULT_COLORS.includes(activity.color ?? '') ? activity.color! : DEFAULT_COLORS[0]
-          );
         }}
         /* Create a blank activity and immediately open the modal */
         onAddNew={(dayId) => {
@@ -102,13 +96,11 @@ export default function PlannerClient() {
             title: '',
             description: '',
             duration: 0,
-            color: DEFAULT_COLORS[0],
+            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
             startTime: '',
             imageUrl: undefined,
           };
-          // Temporarily store this card just for the modal
           setSelectedActivity({ ...newActivity, dayId });
-          setModalColor(DEFAULT_COLORS[0]);
         }}
       />
 
@@ -121,20 +113,16 @@ export default function PlannerClient() {
           poiOptions={poiOptions}
           // Save color when closing by X or by clicking the backdrop
           onClose={() => {
-            // Only update the color if the card is NOT temporary
-            if (selectedActivity && !selectedActivity.id.startsWith('temp-')) {
-              updateActivity(selectedActivity.id, { color: modalColor });
-            }
             setSelectedActivity(null);
           }}
           onSave={(patch) => {
+            if (!patch.title || !patch.title.trim()) return;
             // If it's a temporary card → add it
             if (selectedActivity.id.startsWith('temp-')) {
               addActivity(
                 {
                   ...selectedActivity,
                   ...patch,
-                  color: modalColor,
                   duration: Number(patch.duration),
                 },
                 days.findIndex((d) => d.id === selectedActivity.dayId)
@@ -143,7 +131,6 @@ export default function PlannerClient() {
               // Existing card → update
               updateActivity(selectedActivity.id, {
                 ...patch,
-                color: modalColor,
                 duration: Number(patch.duration),
               });
             }
@@ -153,8 +140,12 @@ export default function PlannerClient() {
             removeActivity(selectedActivity.id);
             setSelectedActivity(null);
           }}
-          color={modalColor}
-          onColorChange={setModalColor}
+          color={selectedActivity.color ?? ''}
+          onColorChange={(newColor) => {
+            if (selectedActivity.title.trim()) {
+              updateActivity(selectedActivity.id, { color: newColor });
+            }
+          }}
         />
       )}
     </>

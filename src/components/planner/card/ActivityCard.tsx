@@ -46,7 +46,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
         shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab"
     >
       {/* main content */}
-      <div className={`flex-1 flex flex-col ${twBg ?? ''}`}>
+      <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
         {/* image */}
         {imageUrl && (
           <Image
@@ -55,16 +55,16 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
             width={400}
             height={200}
             unoptimized
-            className="h-32 p-2 w-full object-cover"
+            className="h-30 mb-2 rounded-lg w-full object-cover"
           />
         )}
 
         {/* title */}
-        <h4 className="px-4 pt-3 font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+        <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
 
         {/* Conditionally render schedule and duration only if at least one exists */}
         {isMounted && (startTime?.trim() || duration > 0) && (
-          <div className="flex px-4 p-2 text-sm">
+          <div className="flex gap-6 text-sm">
             {/* Conditionally render start time */}
             {startTime?.trim() && (
               <span className="inline-flex items-center gap-2">
