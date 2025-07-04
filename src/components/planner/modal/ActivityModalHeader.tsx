@@ -2,8 +2,8 @@
 'use client';
 
 import React from 'react';
-import RemoveCardButton from '@/components/ui/RemoveCardButton';
-import CloseButton from '@/components/ui/CloseButton';
+import RemoveCardButton from '@/components/ui/IcoRemoveCard';
+import CloseButton from '@/components/ui/IcoClose';
 
 /**
  * Color strip shown at the very top of ActivityModal.

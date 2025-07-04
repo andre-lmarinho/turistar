@@ -1,4 +1,4 @@
-// src/components/ui/RemoveCardButton.tsx
+// src/components/ui/IcoRemoveCard.tsx
 'use client';
 
 import React from 'react';
@@ -20,12 +20,12 @@ export default function RemoveCardButton({
     <button
       onClick={onClick}
       aria-label={title}
-      className="cursor-pointer relative w-8 h-8 backdrop-blur-sm rounded
+      className="cursor-pointer bg-background relative w-8 h-8 backdrop-blur-sm rounded
           border border-bg-gray-200 hover:bg-gray-200
           flex items-center justify-center focus:outline-none focus:ring-2
-          transition-transform duration-300"
+          transition-transform duration-300 hover:scale-110"
     >
-      <FaTrashAlt size={18} className="transform transition duration-300" />
+      <FaTrashAlt size={18} className="transform transition duration-300 group:hover:scale-105" />
     </button>
   );
 }

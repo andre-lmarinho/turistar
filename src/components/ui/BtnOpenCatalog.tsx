@@ -1,4 +1,4 @@
-// src/components/planner/OpenPanelButton.tsx
+// src/components/ui/BtnOpenCatalog.tsx
 'use client';
 
 import React from 'react';
@@ -17,11 +17,14 @@ export default function OpenPanelButton({
     <button
       onClick={onClick}
       aria-label={title}
-      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+      className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded hover:opacity-90 transition-colors"
+      style={{
+        backgroundColor: 'var(--primary)',
+        color: 'var(--primary-foreground)',
+      }}
     >
       <FiCompass size={18} className="transform transition duration-300" />
-      <span className="text-sm font-medium whitespace-nowrap">{title}</span>{' '}
-      {/* ✅ Prevents text wrap */}
+      <span className="text-sm font-medium whitespace-nowrap">{title}</span>
     </button>
   );
 }

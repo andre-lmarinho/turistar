@@ -6,7 +6,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core';
 import type { DayPlan, Activity } from '@/types/itinerary';
 import { SortableItem } from '@/components/planner/dnd/SortableItem';
-import AddNewCard from '@/components/ui/AddNewCard';
+import AddNewCard from '@/components/ui/BtnAddNewCard';
 import { DEFAULT_COLORS } from '@/constants/colors';
 
 interface DayColumnProps {

@@ -1,4 +1,4 @@
-// src/components/planner/SettingsToggleButton.tsx
+// src/components/planner/Icon - SettingsToggle.tsx
 'use client';
 
 import React from 'react';
@@ -11,7 +11,7 @@ export default function SettingsToggleButton({ onClick }: { onClick: () => void 
       title="Toggle config"
       onClick={onClick}
       className="
-        text-xl text-gray-600 hover:text-gray-800
+        text-xl bg-background text-gray-600 hover:text-gray-800
         transition-transform duration-300
         transform hover:scale-110 hover:-rotate-90
       "

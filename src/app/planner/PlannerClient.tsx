@@ -3,7 +3,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { DateRangePicker } from '@/components/ui/DatePicker';
-import OpenPanelButton from '@/components/ui/OpenPanelButton';
+import OpenPanelButton from '@/components/ui/BtnOpenCatalog';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import DestinationFilterPanel from '@/components/planner/catalog/DestinationFilterPanel';
 import ActivityModal from '@/components/planner/modal/ActivityModal';

@@ -3,8 +3,8 @@
 
 import React from 'react';
 import CitySwitcher from '@/components/planner/catalog/CitySwitcher';
-import CloseButton from '@/components/ui/CloseButton';
-import SettingsToggleButton from '@/components/ui/SettingsToggleButton';
+import CloseButton from '@/components/ui/IcoClose';
+import SettingsToggleButton from '@/components/ui/IcoSettingsToggle';
 import CategoryFilterBar from '@/components/planner/catalog/CategoryFilterBar';
 import SortSelector, { SortMode } from '@/components/planner/catalog/SortSelector';
 
