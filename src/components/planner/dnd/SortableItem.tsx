@@ -18,6 +18,7 @@ export interface SortableItemProps {
   id: string; // unique identifier for dnd-kit
   activity: Activity; // data to display in the card
   onSelect?: () => void; // click handler to open edit modal
+  onTitleSave?: (newTitle: string) => void; // inline title save
   dragOverlay?: boolean; // true → use <div> for overlay
   className?: string; // additional CSS classes
 }
@@ -26,6 +27,7 @@ export function SortableItem({
   id,
   activity,
   onSelect,
+  onTitleSave,
   dragOverlay = false,
   className,
 }: SortableItemProps) {
@@ -56,7 +58,7 @@ export function SortableItem({
       {...listeners}
     >
       {/* Render the activity card; clicking it opens the edit modal */}
-      <ActivityCard activity={activity} onSelect={onSelect} />
+      <ActivityCard activity={activity} onSelect={onSelect} onTitleSave={onTitleSave} />
     </Tag>
   );
 }

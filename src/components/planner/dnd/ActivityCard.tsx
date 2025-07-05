@@ -1,11 +1,12 @@
 // src/components/planner/dnd/ActivityCard.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
+import ReactDOM from 'react-dom';
 
 /**
  * Card shown inside DayColumn.
@@ -16,9 +17,14 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 interface ActivityCardProps {
   activity: Activity; // The core activity type used across the app
   onSelect?: () => void; // optional click handler
+  onTitleSave?: (newTitle: string) => void; // inline title update
 }
 
-export default function ActivityCard({ activity, onSelect }: ActivityCardProps) {
+export default function ActivityCard({
+  activity,
+  onSelect,
+  onTitleSave,
+}: ActivityCardProps) {
   const { title, startTime, duration, color, imageUrl } = activity;
 
   /* Tailwind class (e.g. "bg-sky-500") OR inline hex style */
@@ -33,17 +39,53 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  /* ------------------------- inline editing ------------------------- */
+  const [editing, setEditing] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(title);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
+  function save() {
+    const trimmed = draftTitle.trim();
+    if (trimmed && trimmed !== title) {
+      onTitleSave?.(trimmed);
+    }
+    setEditing(false);
+  }
+
+  function cancel() {
+    setDraftTitle(title);
+    setEditing(false);
+  }
   /* ========================================================================================================== */
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className="group w-full text-left flex items-stretch rounded-lg border
-        shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab"
-    >
-      {/* main content */}
-      <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
+    <>
+      {editing &&
+        ReactDOM.createPortal(
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+            onClick={cancel}
+          />,
+          document.body
+        )}
+      <div
+        role="button"
+        onClick={() => {
+          if (!editing) onSelect?.();
+        }}
+        className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab relative"
+        style={{ zIndex: editing ? 50 : undefined }}
+      >
+        {/* main content */}
+        <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
         {/* image */}
         {imageUrl && (
           <Image
@@ -56,8 +98,40 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
           />
         )}
 
-        {/* title */}
-        <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+        {/* title or inline editor */}
+        {editing ? (
+          <div className="space-y-2">
+            <input
+              ref={inputRef}
+              value={draftTitle}
+              onChange={(e) => setDraftTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  save();
+                }
+              }}
+              className="w-full border rounded px-2 py-1 text-sm"
+            />
+            <button
+              type="button"
+              onClick={save}
+              className="px-3 py-1 rounded text-sm bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Update
+            </button>
+          </div>
+        ) : (
+          <h4
+            className="font-medium"
+            onContextMenu={(e) => {
+              e.preventDefault();
+              setEditing(true);
+            }}
+          >
+            {title.trim() ? title : EMPTY_ACTIVITY_TITLE}
+          </h4>
+        )}
 
         {/* Conditionally render schedule and duration only if at least one exists */}
         {isMounted && (startTime?.trim() || duration! > 0) && (
@@ -79,6 +153,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
           </div>
         )}
       </div>
-    </button>
+      </div>
+    </>
   );
 }
