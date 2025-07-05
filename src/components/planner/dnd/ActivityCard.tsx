@@ -35,6 +35,31 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  /* ------------------------- inline editing ------------------------- */
+  const [editing, setEditing] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(title);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
+  function save() {
+    const trimmed = draftTitle.trim();
+    if (trimmed && trimmed !== title) {
+      onTitleSave?.(trimmed);
+    }
+    setEditing(false);
+  }
+
+  function cancel() {
+    setDraftTitle(title);
+    setEditing(false);
+  }
   /* ========================================================================================================== */
 
   return (
