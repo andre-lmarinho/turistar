@@ -12,7 +12,7 @@ interface DayColumnProps {
   day: DayPlan;
   onRemove?: () => void;
   onSelectActivity?: (activity: Activity) => void;
-  onAddNew: () => void; // add a blank activity to this day
+  onAddNew: (dayId: string) => void; // add a blank activity to this day
 }
 
 /**
