@@ -13,13 +13,19 @@ interface DayColumnProps {
   onRemove?: () => void;
   onSelectActivity?: (activity: Activity) => void;
   onAddNew: (dayId: string) => void; // add a blank activity to this day
+  onUpdateTitle?: (id: string, title: string) => void;
 }
 
 /**
  * Renders one day's column of activities as a droppable list.
  * Supports click-to-edit and adding new blank cards.
  */
-export default function DayColumn({ day, onSelectActivity, onAddNew }: DayColumnProps) {
+export default function DayColumn({
+  day,
+  onSelectActivity,
+  onAddNew,
+  onUpdateTitle,
+}: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (
@@ -34,12 +40,13 @@ export default function DayColumn({ day, onSelectActivity, onAddNew }: DayColumn
       >
         <ul ref={setNodeRef} className={`space-y-3 mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
           {day.activities.map((activity) => (
-            <SortableItem
-              key={activity.id}
-              id={activity.id}
-              activity={activity}
-              onSelect={() => onSelectActivity?.(activity)}
-            />
+          <SortableItem
+            key={activity.id}
+            id={activity.id}
+            activity={activity}
+            onSelect={() => onSelectActivity?.(activity)}
+            onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
+          />
           ))}
         </ul>
       </SortableContext>

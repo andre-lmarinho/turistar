@@ -33,6 +33,8 @@ export interface PlannerBoardProps {
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
   onAddNew: (dayId: string) => void;
+  /** Inline title update */
+  onUpdateTitle: (id: string, title: string) => void;
 }
 
 export default function PlannerBoard({
@@ -44,6 +46,7 @@ export default function PlannerBoard({
   handleDragOver,
   onSelectActivity,
   onAddNew,
+  onUpdateTitle,
 }: PlannerBoardProps) {
   // find the active activity for the DragOverlay preview
   const activeActivity = days.flatMap((d) => d.activities).find((a) => a.id === activeId);
@@ -60,7 +63,12 @@ export default function PlannerBoard({
         {days.map((day) => (
           <div key={day.id} className="flex flex-col flex-shrink-0 min-w-[250px]">
             {/* Pass click handler down to each column */}
-            <DayColumn day={day} onAddNew={onAddNew} onSelectActivity={onSelectActivity} />
+            <DayColumn
+              day={day}
+              onAddNew={onAddNew}
+              onSelectActivity={onSelectActivity}
+              onUpdateTitle={onUpdateTitle}
+            />
           </div>
         ))}
       </div>

@@ -1,11 +1,12 @@
 // src/components/planner/dnd/ActivityCard.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
+import ReactDOM from 'react-dom';
 
 /**
  * Card shown inside DayColumn.
@@ -16,9 +17,10 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 interface ActivityCardProps {
   activity: Activity; // The core activity type used across the app
   onSelect?: () => void; // optional click handler
+  onTitleSave?: (newTitle: string) => void; // inline title update
 }
 
-export default function ActivityCard({ activity, onSelect }: ActivityCardProps) {
+export default function ActivityCard({ activity, onSelect, onTitleSave }: ActivityCardProps) {
   const { title, startTime, duration, color, imageUrl } = activity;
 
   /* Tailwind class (e.g. "bg-sky-500") OR inline hex style */
@@ -33,52 +35,89 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  /* ======================================================================================== */
+  /* ========================================================================================================== */
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className="group w-full text-left flex items-stretch rounded-lg border
-        shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab"
-    >
-      {/* main content */}
-      <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
-        {/* image */}
-        {imageUrl && (
-          <Image
-            src={imageUrl}
-            alt={title}
-            width={400}
-            height={200}
-            unoptimized
-            className="h-30 mb-2 rounded-lg w-full object-cover"
-          />
+    <>
+      {editing &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={cancel} />,
+          document.body
         )}
+      <div
+        role="button"
+        onClick={() => {
+          if (!editing) onSelect?.();
+        }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          if (!editing) setEditing(true);
+        }}
+        className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab relative"
+        style={{ zIndex: editing ? 50 : undefined }}
+      >
+        {/* main content */}
+        <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
+          {/* image */}
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={title}
+              width={400}
+              height={200}
+              unoptimized
+              className="h-30 mb-2 rounded-lg w-full object-cover"
+            />
+          )}
 
-        {/* title */}
-        <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+          {/* title or inline editor */}
+          {editing ? (
+            <div className="space-y-2">
+              <input
+                ref={inputRef}
+                value={draftTitle}
+                onChange={(e) => setDraftTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    save();
+                  }
+                }}
+                className="w-full border rounded px-2 py-1 text-sm"
+              />
+              <button
+                type="button"
+                onClick={save}
+                className="px-3 py-1 rounded text-sm bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Update
+              </button>
+            </div>
+          ) : (
+            <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+          )}
 
-        {/* Conditionally render schedule and duration only if at least one exists */}
-        {isMounted && (startTime?.trim() || duration! > 0) && (
-          <div className="flex gap-6 text-sm">
-            {/* Conditionally render start time */}
-            {startTime?.trim() && (
-              <span className="inline-flex items-center gap-2">
-                <FaRegClock />
-                {startTime}
-              </span>
-            )}
-            {/* Conditionally render duration */}
-            {duration! > 0 && (
-              <span className="inline-flex items-center gap-2">
-                <FaHourglassHalf />
-                {duration}
-              </span>
-            )}
-          </div>
-        )}
+          {/* Conditionally render schedule and duration only if at least one exists */}
+          {isMounted && (startTime?.trim() || duration! > 0) && (
+            <div className="flex gap-6 text-sm">
+              {/* Conditionally render start time */}
+              {startTime?.trim() && (
+                <span className="inline-flex items-center gap-2">
+                  <FaRegClock />
+                  {startTime}
+                </span>
+              )}
+              {/* Conditionally render duration */}
+              {duration! > 0 && (
+                <span className="inline-flex items-center gap-2">
+                  <FaHourglassHalf />
+                  {duration}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </button>
+    </>
   );
 }
