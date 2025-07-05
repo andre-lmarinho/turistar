@@ -46,38 +46,43 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     if (!over || active.id === over.id) return;
 
     setDays((prev) => {
-      // 1) clone days e cada activities
-      const daysCopy = prev.map((d) => ({
-        ...d,
-        activities: [...d.activities],
-      }));
-
-      // 2) encontrar índices
-      const srcDayIdx = daysCopy.findIndex((d) => d.activities.some((a) => a.id === active.id));
-      const dstDayIdx = daysCopy.findIndex(
+      // 1) localizar índices no estado atual
+      const srcDayIdx = prev.findIndex((d) => d.activities.some((a) => a.id === active.id));
+      const dstDayIdx = prev.findIndex(
         (d) => d.id === over.id || d.activities.some((a) => a.id === over.id)
       );
       if (srcDayIdx < 0 || dstDayIdx < 0) return prev;
 
-      const srcActivities = daysCopy[srcDayIdx].activities;
-      const dstActivities = daysCopy[dstDayIdx].activities;
+      // 2) clonar apenas os dias afetados e suas atividades
+      const updated = [...prev];
+      const srcDay = { ...prev[srcDayIdx], activities: [...prev[srcDayIdx].activities] };
+      const dstDay =
+        srcDayIdx === dstDayIdx
+          ? srcDay
+          : { ...prev[dstDayIdx], activities: [...prev[dstDayIdx].activities] };
 
-      const oldIdx = srcActivities.findIndex((a) => a.id === active.id);
+      updated[srcDayIdx] = srcDay;
+      updated[dstDayIdx] = dstDay;
+
+      const srcActs = srcDay.activities;
+      const dstActs = dstDay.activities;
+
+      const oldIdx = srcActs.findIndex((a) => a.id === active.id);
       const overIdx =
-        daysCopy[dstDayIdx].id === over.id
-          ? dstActivities.length
-          : dstActivities.findIndex((a) => a.id === over.id);
+        prev[dstDayIdx].id === over.id
+          ? dstActs.length
+          : dstActs.findIndex((a) => a.id === over.id);
 
-      // 3) faz o movimento sem mutar prev
+      // 3) aplicar movimento sem mutar o estado original
       let moved: Activity;
       if (srcDayIdx === dstDayIdx) {
-        daysCopy[srcDayIdx].activities = arrayMove(srcActivities, oldIdx, overIdx);
+        srcDay.activities = arrayMove(srcActs, oldIdx, overIdx);
       } else {
-        [moved] = srcActivities.splice(oldIdx, 1);
-        dstActivities.splice(overIdx, 0, moved);
+        [moved] = srcActs.splice(oldIdx, 1);
+        dstActs.splice(overIdx, 0, moved);
       }
 
-      return daysCopy;
+      return updated;
     });
   }
 
