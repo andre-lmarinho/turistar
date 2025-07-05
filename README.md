@@ -18,7 +18,7 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 - **Client-Side Rendering**
   Full interactivity via React hooks and DnD Kit, no server reloads needed.
 - **Easy Deployment**
-  Hosted on Vercel with zero-config build and deploy.
+  Hosted on Vercel with zero-config builds and deploys.
 
 ---
 
@@ -78,7 +78,7 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 
 ## Deployment
 
-This project is ready for Vercel:
+Deploy easily to Vercel:
 
 1. Push your code to GitHub.  
 2. Import the repository at https://vercel.com/new.  
