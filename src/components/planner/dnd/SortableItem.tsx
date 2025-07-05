@@ -5,7 +5,7 @@ import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import { cn } from '@/lib/utils';
-import ActivityCard from '@/components/planner/card/ActivityCard';
+import ActivityCard from '@/components/planner/dnd/ActivityCard';
 import type { Activity } from '@/types/itinerary';
 
 /**

@@ -19,16 +19,16 @@ export default function ColorSwatchPicker({
   colors?: string[]; // tailwind bg-classes OR hexes
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 justify-center items-center">
       {colors.map((c) => (
         <button
           key={c}
           onClick={() => onChange(c)}
           className={`
-            w-6 h-6 rounded-full border-2
-            ${c.startsWith('#') ? '' : c}          /* tailwind class */
-            ${value === c ? 'ring-2 ring-black' : 'border-white'}
-          `}
+        w-12 h-12 rounded-full shadow border-2
+        ${c.startsWith('#') ? '' : c}          /* tailwind class */
+        ${value === c ? 'ring-2 ring-black' : 'border-white'}
+      `}
           style={c.startsWith('#') ? { backgroundColor: c } : undefined}
           aria-label={c}
         />

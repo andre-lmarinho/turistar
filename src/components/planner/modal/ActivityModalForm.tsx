@@ -2,18 +2,13 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import ActivityHeaderCard from '@/components/planner/card/ActivityHeaderCard';
-import AutocompleteInput from '@/components/ui/AutocompleteInput';
+import ActivityHeaderCard from '@/components/planner/modal/ActivityHeaderCard';
 import ColorSwatchPicker from '@/components/ui/ColorSwatchPicker';
-import salvadorData from '@/data/salvador.json';
 import type { Activity } from '@/types/itinerary';
-import type { LocalPoi } from '@/utils/buildPoi';
-import { buildPoi } from '@/utils/buildPoi';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 
 interface ActivityModalFormProps {
   activity: Activity;
-  poiOptions: string[];
   onClose: () => void;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
@@ -22,19 +17,14 @@ interface ActivityModalFormProps {
 
 export default function ActivityModalForm({
   activity,
-  poiOptions,
   onSave,
   color,
   onColorChange,
 }: ActivityModalFormProps) {
-  const initialPoi = buildPoi(activity);
-
-  const [selectedPoi, setSelectedPoi] = useState<LocalPoi>(initialPoi);
-  const [editedTitle, setEditedTitle] = useState(selectedPoi.name);
-  const [editedDescription, setEditedDescription] = useState(selectedPoi.description);
+  const [editedTitle, setEditedTitle] = useState(activity.title);
+  const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [when, setWhen] = useState(activity.startTime ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
-  const [search, setSearch] = useState('');
 
   /**
    * Automatically focus the title input only when the activity title is empty.
@@ -49,35 +39,18 @@ export default function ActivityModalForm({
 
   return (
     <>
-      {/* 1) Central POI card */}
+      {/* Central POI card */}
       <div className="p-4">
-        <ActivityHeaderCard name={selectedPoi.name} imageUrl={selectedPoi.imageUrl} />
-      </div>
-
-      {/* 2) Autocomplete: choose a new POI */}
-      <div className="px-4 pb-4">
-        <AutocompleteInput
-          value={search}
-          onChange={setSearch}
-          options={poiOptions}
-          onSelect={(name) => {
-            setSearch(name);
-            const poi = salvadorData.activities.find((p) => p.name === name)!;
-            setSelectedPoi({
-              id: poi.id,
-              name: poi.name,
-              description: poi.description,
-              imageUrl: poi.image_url,
-              duration: poi.duration,
-            });
-            setEditedTitle(poi.name);
-            setEditedDescription(poi.description);
-            setDuration(Number(poi.duration));
-          }}
+        <ActivityHeaderCard
+          name={editedTitle.trim() || EMPTY_ACTIVITY_TITLE}
+          imageUrl={activity.imageUrl}
         />
       </div>
 
-      {/* 3) Editable title, description, when & duration */}
+      {/* Autocomplete: choose a new POI */}
+      <div className="px-4 pb-4"></div>
+
+      {/* Editable title, description, when & duration */}
       <div className="px-4 space-y-3 overflow-y-auto">
         <input
           ref={titleInputRef}
@@ -111,13 +84,13 @@ export default function ActivityModalForm({
         </div>
       </div>
 
-      {/* 4) Color picker */}
-      <div className="px-4 py-4 border-t">
+      {/* Color picker */}
+      <div className="px-4 py-4 ">
         <ColorSwatchPicker value={color} onChange={onColorChange} />
       </div>
 
-      {/* 5) Footer: Cancel & Update */}
-      <div className="px-4 py-3 border-t flex justify-end gap-2">
+      {/* Footer: Cancel & Update */}
+      <div className="px-4 py-3 flex justify-center gap-2">
         <button
           onClick={() =>
             onSave({
@@ -126,7 +99,6 @@ export default function ActivityModalForm({
               color,
               startTime: when,
               duration: Number(duration),
-              imageUrl: selectedPoi.imageUrl,
             })
           }
           className={`px-4 py-2 rounded text-sm ${

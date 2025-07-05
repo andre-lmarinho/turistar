@@ -3,16 +3,21 @@ import DestinationHeader from '@/components/planner/catalog/DestinationHeader';
 import DestinationCardGrid from '@/components/planner/catalog/DestinationCardGrid';
 import ConfigSidebar from '@/components/planner/catalog/ConfigSidebar';
 import { useDestinationCatalog } from '@/hooks/useDestinationCatalog';
-import type { Activity } from '@/types/itinerary';
+import type { CatalogActivity } from '@/types/itinerary';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (a: Activity) => void;
+  onAdd: (a: CatalogActivity) => void; // Catalog items only
   onRemove: (id: string) => void;
   addedIds?: Set<string>;
 }
 
+/**
+ * Catalog popup with filtering and sorting.
+ * - Displays catalog items to add to the planner.
+ * - Works exclusively with CatalogActivity data.
+ */
 export default function DestinationFilterPanel({
   isOpen,
   onClose,
@@ -22,7 +27,7 @@ export default function DestinationFilterPanel({
 }: DestinationFilterPanelProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { visibleItems, categories, sortMode, setSortMode, toggleCat, loading, error } =
+  const { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error } =
     useDestinationCatalog(isOpen);
 
   if (!isOpen) return null;
@@ -40,7 +45,7 @@ export default function DestinationFilterPanel({
             city={'salvador'}
             onChangeCity={() => {}}
             categories={categories}
-            activeCats={new Set()}
+            activeCats={activeCats}
             toggleCat={toggleCat}
             sortMode={sortMode}
             setSortMode={setSortMode}

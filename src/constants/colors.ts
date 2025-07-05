@@ -25,18 +25,6 @@ export const DEFAULT_COLORS = [
   'bg-[var(--color-5)]',
 ];
 
-/**
- * Functions to generate the class and style based on the selected index
- */
-export const COLOR_CLASSES = [
-  'bg-[var(--color-0)]',
-  'bg-[var(--color-1)]',
-  'bg-[var(--color-2)]',
-  'bg-[var(--color-3)]',
-  'bg-[var(--color-4)]',
-  'bg-[var(--color-5)]',
-];
-
 export const COLOR_HOVER_CLASSES = [
   'hover:bg-[var(--color-0)]',
   'hover:bg-[var(--color-1)]',

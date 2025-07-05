@@ -1,64 +1,58 @@
 // src/utils/syncDaysWithTripRange.ts
 
 import type { DayPlan } from '@/types/itinerary';
-import { format } from 'date-fns';
+import { formatDayPlan } from '@/utils/formatDayPlan';
 
 /**
- * Sync the days array to match the new trip range.
- * - If reducing days → push extra activities to the last available day.
+ * Syncs the existing planner with the new trip range.
+ *
+ * Rules:
+ * - If reducing days → push overflow activities to the last remaining day.
  * - If increasing days → add empty days.
+ * - Always relabel days to match the current trip dates.
  *
  * @param currentDays Existing planner days.
- * @param tripDays Array of trip dates.
+ * @param tripDays Current trip dates.
+ * @returns Updated planner days with synced IDs and labels.
  */
 export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]): DayPlan[] {
   const newTripDays = tripDays.length;
 
-  const formatLabel = (date: Date) => format(date, 'EEE, dd MMM');
+  // Case 1: Same number of days → just relabel.
   if (currentDays.length === newTripDays) {
-    // Even if the length is the same, we must relabel days
     return currentDays.map((day, index) => ({
       ...day,
-      id: `day-${index + 1}`,
-      label: formatLabel(tripDays[index]),
+      ...formatDayPlan(tripDays[index]),
     }));
   }
 
   const copy = [...currentDays];
 
-  // If reducing days → move overflow activities to the last available day
+  // Case 2: Trip was shortened → move overflow activities to the last remaining day.
   if (newTripDays < currentDays.length) {
-    // Merge extra days into the last remaining day
     const keptDays = copy.slice(0, newTripDays);
     const overflowDays = copy.slice(newTripDays);
 
-    // Collect all overflow activities
     const overflowActivities = overflowDays.flatMap((day) => day.activities);
 
-    // Push to the last remaining day
     keptDays[keptDays.length - 1].activities.push(...overflowActivities);
 
-    // Relabel all kept days
     return keptDays.map((day, index) => ({
       ...day,
-      id: `day-${index + 1}`,
-      label: formatLabel(tripDays[index]),
+      ...formatDayPlan(tripDays[index]),
     }));
   } else {
-    // If increasing days → add extra empty days
+    // Case 3: Trip was extended → add extra empty days.
     for (let i = currentDays.length; i < newTripDays; i++) {
       copy.push({
-        id: `day-${i + 1}`,
-        label: formatLabel(tripDays[i]),
+        ...formatDayPlan(tripDays[i]),
         activities: [],
       });
     }
 
-    // Relabel all days (both original and new)
     return copy.map((day, index) => ({
       ...day,
-      id: `day-${index + 1}`,
-      label: formatLabel(tripDays[index]),
+      ...formatDayPlan(tripDays[index]),
     }));
   }
 }

@@ -4,12 +4,22 @@
 export interface Activity {
   id: string;
   title: string;
-  duration: number;
-  description: string;
-  color?: string; // Tailwind class ou hex (“bg-red-500”, “#ff0000”)
-  startTime?: string; // “HH:MM” – horário planejado
-  poiName?: string; // nome do POI original (para header do modal)
+  color: string;
+  description?: string;
+  duration?: number;
+  startTime?: string;
   imageUrl?: string;
+}
+
+/** Catalog item (as fetched from the API) */
+export interface CatalogActivity {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  image_url: string;
+  price: string;
+  category: string;
 }
 
 /** Plan for a single day: a flat list of activities. */

@@ -25,7 +25,7 @@ export default function CategoryFilterBar({
             key={cat}
             onClick={() => onToggle(cat)}
             className={`whitespace-nowrap px-3 py-1 rounded-full text-sm border transition
-              ${isOn ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}
+            ${isOn ? 'bg-[var(--muted)] text-[var(--muted-foreground)]' : 'bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:text-[var(--muted-foreground)]'}
             `}
           >
             {cat}

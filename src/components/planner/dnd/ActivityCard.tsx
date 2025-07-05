@@ -1,4 +1,4 @@
-// src/components/planner/card/ActivityCard.tsx
+// src/components/planner/dnd/ActivityCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -11,13 +11,10 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
  * Card shown inside DayColumn.
  * - Becomes **clickable** via `onSelect` (opens edit-modal).
  * - Renders a colour strip at the left if `activity.color` is set.
+ * - Now accepts the core Activity type as is.
  */
 interface ActivityCardProps {
-  activity: Activity & {
-    startTime?: string; // e.g. "09:30"
-    duration: number; // h
-    imageUrl?: string;
-  };
+  activity: Activity; // The core activity type used across the app
   onSelect?: () => void; // optional click handler
 }
 
@@ -63,7 +60,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
         <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
 
         {/* Conditionally render schedule and duration only if at least one exists */}
-        {isMounted && (startTime?.trim() || duration > 0) && (
+        {isMounted && (startTime?.trim() || duration! > 0) && (
           <div className="flex gap-6 text-sm">
             {/* Conditionally render start time */}
             {startTime?.trim() && (
@@ -73,7 +70,7 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
               </span>
             )}
             {/* Conditionally render duration */}
-            {duration > 0 && (
+            {duration! > 0 && (
               <span className="inline-flex items-center gap-2">
                 <FaHourglassHalf />
                 {duration}

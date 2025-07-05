@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 
 /**
  * Simple text input + confirm button to change destination.
@@ -24,12 +25,10 @@ export default function CitySwitcher({
         onChange={(e) => setValue(e.target.value)}
         className="border rounded px-2 py-1 text-sm w-28"
       />
-      <button
-        onClick={() => onChangeCity(value.trim())}
-        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
+
+      <Button size="sm" className="cursor-pointer" onClick={() => onChangeCity(value.trim())}>
         Go
-      </button>
+      </Button>
     </div>
   );
 }

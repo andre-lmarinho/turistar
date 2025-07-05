@@ -1,5 +1,4 @@
 // src/hooks/useTripRange.ts
-
 'use client';
 
 import { useMemo } from 'react';

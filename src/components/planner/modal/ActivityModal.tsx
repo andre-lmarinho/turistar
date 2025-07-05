@@ -10,7 +10,6 @@ import type { Activity } from '@/types/itinerary';
 interface ActivityModalProps {
   open: boolean;
   activity: Activity;
-  poiOptions: string[];
   onClose: () => void;
   onDelete: () => void;
   onSave: (draft: Partial<Activity>) => void;
@@ -21,7 +20,6 @@ interface ActivityModalProps {
 export default function ActivityModal({
   open,
   activity,
-  poiOptions,
   onClose,
   onDelete,
   onSave,
@@ -47,7 +45,6 @@ export default function ActivityModal({
           {/* Form */}
           <ActivityModalForm
             activity={activity}
-            poiOptions={poiOptions}
             onClose={onClose}
             onSave={onSave}
             color={color}

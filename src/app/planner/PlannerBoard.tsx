@@ -32,7 +32,7 @@ export interface PlannerBoardProps {
   /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
-  onAddNew(dayId: string): void;
+  onAddNew: () => void;
 }
 
 export default function PlannerBoard({
@@ -60,7 +60,7 @@ export default function PlannerBoard({
         {days.map((day) => (
           <div key={day.id} className="flex flex-col flex-shrink-0 min-w-[250px]">
             {/* Pass click handler down to each column */}
-            <DayColumn day={day} onSelectActivity={onSelectActivity} onAddNew={onAddNew} />
+            <DayColumn day={day} onAddNew={onAddNew} onSelectActivity={onSelectActivity} />
           </div>
         ))}
       </div>

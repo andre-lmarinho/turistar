@@ -1,18 +1,18 @@
 // src/utils/initialDays.ts
-import { formatISO } from 'date-fns';
+
+import { formatDayPlan } from '@/utils/formatDayPlan';
 import type { DayPlan } from '@/types/itinerary';
 
 /**
- * Builds an empty DayPlan array.
- * Pass a list of dates if you already have them; otherwise you’ll get an empty planner.
+ * Builds an initial empty DayPlan array.
+ * Each day has a unique ISO id and a readable label (e.g., "Mon 05").
+ *
+ * @param tripDays Array of Date objects representing each trip day.
+ * @returns DayPlan[] with empty activities per day.
  */
 export function buildInitialDays(tripDays: Date[] = []): DayPlan[] {
   return tripDays.map((d) => ({
-    id: formatISO(d, { representation: 'date' }),
-    label: d.toLocaleDateString('en-US', {
-      weekday: 'short',
-      day: '2-digit',
-    }),
+    ...formatDayPlan(d),
     activities: [],
   }));
 }

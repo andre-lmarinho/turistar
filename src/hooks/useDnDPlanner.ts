@@ -14,7 +14,7 @@ import type { DayPlan, Activity } from '@/types/itinerary';
 import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_ADD_ACTIVITY_COLOR_INDEX,
-  COLOR_CLASSES,
+  DEFAULT_COLORS,
 } from '@/constants/colors';
 
 /**
@@ -97,7 +97,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       if (!alreadyInDay) {
         copy[dayIndex].activities.push({
           ...act,
-          color: COLOR_CLASSES[DEFAULT_ADD_ACTIVITY_COLOR_INDEX], // Apply default color for addActivity
+          color: DEFAULT_COLORS[DEFAULT_ADD_ACTIVITY_COLOR_INDEX], // Apply default color for addActivity
         });
       }
       return copy;
@@ -148,7 +148,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       title: '',
       description: '',
       duration: 0,
-      color: COLOR_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX],
+      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
     };
     setDays((prev) => {
       const copy = [...prev];

@@ -8,11 +8,8 @@ import PlannerBoard from '@/app/planner/PlannerBoard';
 import DestinationFilterPanel from '@/components/planner/catalog/DestinationFilterPanel';
 import ActivityModal from '@/components/planner/modal/ActivityModal';
 import { usePlanner } from '@/hooks/usePlanner';
-import type { Activity } from '@/types/itinerary';
+import type { Activity, CatalogActivity } from '@/types/itinerary';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants/colors';
-
-// TODO: replace with real list from your data source
-import salvador from '@/data/salvador.json';
 
 /**
  * Top-level client component for the /planner route.
@@ -34,6 +31,7 @@ export default function PlannerClient() {
     handleDragOver,
     activeId,
     addActivity,
+    addBlankActivity,
     removeActivity,
     updateActivity,
   } = usePlanner();
@@ -43,9 +41,6 @@ export default function PlannerClient() {
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
     [days]
   );
-
-  /* Build list of POI names for autocomplete */
-  const poiOptions = useMemo(() => salvador.activities.map((a) => a.name), []);
 
   /* Filter-panel visibility */
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -73,7 +68,18 @@ export default function PlannerClient() {
       <DestinationFilterPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
-        onAdd={addActivity}
+        // When adding from catalog, transform CatalogActivity to Activity
+        onAdd={(catalogItem: CatalogActivity) => {
+          addActivity({
+            id: catalogItem.id,
+            title: catalogItem.name,
+            description: catalogItem.description,
+            duration: catalogItem.duration,
+            imageUrl: catalogItem.image_url,
+            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+            startTime: '', // default when adding from catalog
+          });
+        }}
         onRemove={removeActivity}
         addedIds={addedIds}
       />
@@ -90,17 +96,9 @@ export default function PlannerClient() {
           setSelectedActivity(activity);
         }}
         /* Create a blank activity and immediately open the modal */
-        onAddNew={(dayId) => {
-          const newActivity: Activity = {
-            id: `temp-${Date.now()}`,
-            title: '',
-            description: '',
-            duration: 0,
-            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
-            startTime: '',
-            imageUrl: undefined,
-          };
-          setSelectedActivity({ ...newActivity, dayId });
+        onAddNew={() => {
+          const blank = addBlankActivity();
+          setSelectedActivity(blank);
         }}
       />
 
@@ -109,8 +107,6 @@ export default function PlannerClient() {
         <ActivityModal
           open={true}
           activity={selectedActivity}
-          // list of all POI names for the autocomplete input:
-          poiOptions={poiOptions}
           // Save color when closing by X or by clicking the backdrop
           onClose={() => {
             setSelectedActivity(null);
@@ -142,7 +138,11 @@ export default function PlannerClient() {
           }}
           color={selectedActivity.color ?? ''}
           onColorChange={(newColor) => {
-            if (selectedActivity.title.trim()) {
+            // Always allow changing color in the modal
+            setSelectedActivity({ ...selectedActivity, color: newColor });
+
+            // Only update the board if the activity already has a valid title
+            if (selectedActivity.title.trim() && !selectedActivity.id.startsWith('temp-')) {
               updateActivity(selectedActivity.id, { color: newColor });
             }
           }}

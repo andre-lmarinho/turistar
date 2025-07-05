@@ -3,28 +3,19 @@
 
 import React from 'react';
 import DestinationCard from '@/components/planner/catalog/DestinationCard';
-import { omit } from '@/utils/omit';
-import type { Activity } from '@/types/itinerary';
-
-/* Raw JSON shape coming from the filter panel */
-export interface RawActivity {
-  id: string;
-  name: string;
-  duration: number;
-  price: string;
-  description: string;
-}
+import type { CatalogActivity } from '@/types/itinerary';
 
 interface Props {
-  items: RawActivity[];
+  items: CatalogActivity[]; // catalog data
   addedIds: Set<string>;
-  onAdd: (a: Activity) => void;
+  onAdd: (a: CatalogActivity) => void;
   onRemove: (id: string) => void;
 }
 
 /**
- * Renders a responsive grid of DestinationCard components.
- * Decides per-card whether we call onAdd or onRemove based on `addedIds`.
+ * Grid to display catalog items (CatalogActivity).
+ * - Receives catalog items.
+ * - Decides whether to show "Add" or "Remove" button based on addedIds.
  */
 export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }: Props) {
   return (
@@ -36,17 +27,14 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
           <DestinationCard
             key={item.id}
             id={item.id}
-            title={item.name}
+            name={item.name}
             duration={item.duration}
+            image_url={item.image_url}
             price={item.price}
             description={item.description}
+            category={item.category}
             added={isAdded}
-            onAdd={() =>
-              onAdd({
-                ...omit(item, 'price', 'name'),
-                title: item.name,
-              } as Activity)
-            }
+            onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item.id)}
           />
         );
