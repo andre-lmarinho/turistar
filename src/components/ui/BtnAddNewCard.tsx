@@ -12,10 +12,10 @@ import {
 
 interface AddNewCardProps {
   dayId: string;
-  onAddNew: () => void;
+  onAddNew: (dayId: string) => void;
 }
 
-export default function AddNewCard({ onAddNew }: AddNewCardProps) {
+export default function AddNewCard({ dayId, onAddNew }: AddNewCardProps) {
   const baseColor = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
   const hoverColor = COLOR_HOVER_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX];
   const foregroundColor = COLOR_FOREGROUND_VALUES[DEFAULT_NEW_CARD_COLOR_INDEX];
@@ -24,7 +24,7 @@ export default function AddNewCard({ onAddNew }: AddNewCardProps) {
   return (
     <button
       type="button"
-      onClick={onAddNew}
+      onClick={() => onAddNew(dayId)}
       className={`p-2 cursor-pointer ${borderColor} ${baseColor} bg-background ${hoverColor} flex items-center w-full h-10 rounded-lg transition`}
     >
       <FiPlus className="mr-2" style={{ color: foregroundColor }} />

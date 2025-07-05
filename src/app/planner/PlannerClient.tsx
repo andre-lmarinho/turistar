@@ -96,9 +96,10 @@ export default function PlannerClient() {
           setSelectedActivity(activity);
         }}
         /* Create a blank activity and immediately open the modal */
-        onAddNew={() => {
-          const blank = addBlankActivity();
-          setSelectedActivity(blank);
+        onAddNew={(dayId) => {
+          const idx = days.findIndex((d) => d.id === dayId);
+          const blank = addBlankActivity(idx);
+          setSelectedActivity({ ...blank, dayId });
         }}
       />
 
