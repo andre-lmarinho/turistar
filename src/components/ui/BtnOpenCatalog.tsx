@@ -2,7 +2,8 @@
 'use client';
 
 import React from 'react';
-import { FiCompass } from 'react-icons/fi';
+import { Compass } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface OpenPanelButtonProps {
   onClick: () => void;
@@ -14,17 +15,14 @@ export default function OpenPanelButton({
   title = 'Add Adventures',
 }: OpenPanelButtonProps) {
   return (
-    <button
+    <Button
       onClick={onClick}
       aria-label={title}
-      className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded hover:opacity-90 transition-colors"
-      style={{
-        backgroundColor: 'var(--primary)',
-        color: 'var(--primary-foreground)',
-      }}
+      className="flex cursor-pointer items-center gap-2"
+      style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}
     >
-      <FiCompass size={18} className="transform transition duration-300" />
+      <Compass size={18} className="transform transition duration-300" />
       <span className="text-sm font-medium whitespace-nowrap">{title}</span>
-    </button>
+    </Button>
   );
 }

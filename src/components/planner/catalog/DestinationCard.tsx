@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { FaClock } from 'react-icons/fa';
+import { Clock } from 'lucide-react';
 import RemoveCardButton from '@/components/ui/IcoRemoveCard';
 import BtnDestinationAction from '@/components/ui/BtnDestinationAction';
 import type { CatalogActivity } from '@/types/itinerary';
@@ -55,7 +55,7 @@ export default function DestinationCard({
       {/* Duration | Price chips */}
       <div className="flex items-center text-sm text-[var(--muted-foreground)] mb-2 space-x-2">
         <span className="flex items-center gap-1">
-          <FaClock /> {duration} min
+          <Clock className="w-4 h-4" /> {duration} min
         </span>
         <span>|</span>
         <span>{price}</span>

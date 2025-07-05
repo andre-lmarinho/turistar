@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash2 } from 'lucide-react';
 
 /**
  * Floating round-red button used by cards that are already in the planner.
@@ -25,7 +25,7 @@ export default function RemoveCardButton({
           flex items-center justify-center focus:outline-none focus:ring-2
           transition-transform duration-300 hover:scale-110"
     >
-      <FaTrashAlt size={18} className="transform transition duration-300 group:hover:scale-105" />
+      <Trash2 size={18} className="transform transition duration-300 group-hover:scale-105" />
     </button>
   );
 }

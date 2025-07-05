@@ -2,7 +2,8 @@
 'use client';
 
 import React from 'react';
-import { FaCheck } from 'react-icons/fa';
+import { Check } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface DestinationActionButtonProps {
   added: boolean;
@@ -17,33 +18,27 @@ export default function DestinationActionButton({
 }: DestinationActionButtonProps) {
   if (added) {
     return (
-      <button
+      <Button
         onClick={onRemove}
-        className="mt-auto px-4 py-2 rounded flex items-center justify-center gap-1 hover:opacity-90"
-        style={{
-          backgroundColor: 'var(--secondary)',
-          color: 'var(--secondary-foreground)',
-        }}
+        className="mt-auto flex items-center justify-center gap-1"
+        style={{ backgroundColor: 'var(--secondary)', color: 'var(--secondary-foreground)' }}
       >
-        <FaCheck />
+        <Check className="w-4 h-4" />
         Added
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
       onClick={(e) => {
         e.stopPropagation();
         onAdd();
       }}
-      className="mt-auto px-4 py-2 rounded hover:opacity-90"
-      style={{
-        backgroundColor: 'var(--primary)',
-        color: 'var(--primary-foreground)',
-      }}
+      className="mt-auto"
+      style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}
     >
       Add to Planner
-    </button>
+    </Button>
   );
 }

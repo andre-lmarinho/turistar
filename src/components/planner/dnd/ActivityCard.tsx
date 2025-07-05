@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
+import { Clock, Hourglass } from 'lucide-react';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 
@@ -65,14 +65,14 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
             {/* Conditionally render start time */}
             {startTime?.trim() && (
               <span className="inline-flex items-center gap-2">
-                <FaRegClock />
+                <Clock className="w-4 h-4" />
                 {startTime}
               </span>
             )}
             {/* Conditionally render duration */}
             {duration! > 0 && (
               <span className="inline-flex items-center gap-2">
-                <FaHourglassHalf />
+                <Hourglass className="w-4 h-4" />
                 {duration}
               </span>
             )}
