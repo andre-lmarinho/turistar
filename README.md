@@ -71,8 +71,13 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 - `npm run dev` — start development server  
 - `npm run build` — compile for production  
 - `npm run start` — run production build locally  
-- `npm run lint` — run ESLint  
+- `npm run lint` — run ESLint
 - `npm run format` — run Prettier
+
+### Testing
+
+- `npm run test` — run unit tests
+- `npm run test:watch` — run tests in watch mode
 
 ---
 
