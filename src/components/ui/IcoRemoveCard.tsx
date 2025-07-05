@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
+import { Button } from '@/components/ui/button';
 
 /**
  * Floating round-red button used by cards that are already in the planner.
@@ -17,15 +18,14 @@ export default function RemoveCardButton({
   className?: string;
 }) {
   return (
-    <button
+    <Button
       onClick={onClick}
       aria-label={title}
-      className="cursor-pointer bg-background relative w-8 h-8 backdrop-blur-sm rounded
-          border border-bg-gray-200 hover:bg-gray-200
-          flex items-center justify-center focus:outline-none focus:ring-2
-          transition-transform duration-300 hover:scale-110"
+      size="icon"
+      variant="ghost"
+      className="bg-background relative w-8 h-8 backdrop-blur-sm rounded border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 transition-transform duration-300 hover:scale-110"
     >
       <FaTrashAlt size={18} className="transform transition duration-300 group:hover:scale-105" />
-    </button>
+    </Button>
   );
 }

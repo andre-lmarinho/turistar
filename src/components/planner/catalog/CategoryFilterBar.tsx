@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+import { Button } from '@/components/ui/button';
 
 /**
  * Horizontal scrollable pill list.
@@ -21,15 +22,19 @@ export default function CategoryFilterBar({
       {categories.map((cat) => {
         const isOn = active.has(cat);
         return (
-          <button
+          <Button
             key={cat}
             onClick={() => onToggle(cat)}
-            className={`whitespace-nowrap px-3 py-1 rounded-full text-sm border transition
-            ${isOn ? 'bg-[var(--muted)] text-[var(--muted-foreground)]' : 'bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:text-[var(--muted-foreground)]'}
-            `}
+            size="sm"
+            variant="ghost"
+            className={`whitespace-nowrap px-3 py-1 rounded-full text-sm border transition ${
+              isOn
+                ? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
+                : 'bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:text-[var(--muted-foreground)]'
+            }`}
           >
             {cat}
-          </button>
+          </Button>
         );
       })}
     </div>

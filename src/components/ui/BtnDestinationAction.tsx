@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { FaCheck } from 'react-icons/fa';
+import { Button } from '@/components/ui/button';
 
 interface DestinationActionButtonProps {
   added: boolean;
@@ -17,33 +18,26 @@ export default function DestinationActionButton({
 }: DestinationActionButtonProps) {
   if (added) {
     return (
-      <button
+      <Button
         onClick={onRemove}
-        className="mt-auto px-4 py-2 rounded flex items-center justify-center gap-1 hover:opacity-90"
-        style={{
-          backgroundColor: 'var(--secondary)',
-          color: 'var(--secondary-foreground)',
-        }}
+        variant="secondary"
+        className="mt-auto flex items-center justify-center gap-1"
       >
         <FaCheck />
         Added
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
       onClick={(e) => {
         e.stopPropagation();
         onAdd();
       }}
-      className="mt-auto px-4 py-2 rounded hover:opacity-90"
-      style={{
-        backgroundColor: 'var(--primary)',
-        color: 'var(--primary-foreground)',
-      }}
+      className="mt-auto"
     >
       Add to Planner
-    </button>
+    </Button>
   );
 }

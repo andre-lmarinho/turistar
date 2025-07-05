@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
+import { Button } from '@/components/ui/button';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 
@@ -36,11 +37,11 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
   /* ======================================================================================== */
 
   return (
-    <button
+    <Button
       type="button"
       onClick={onSelect}
-      className="group w-full text-left flex items-stretch rounded-lg border
-        shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab"
+      variant="ghost"
+      className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab hover:bg-white"
     >
       {/* main content */}
       <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
@@ -79,6 +80,6 @@ export default function ActivityCard({ activity, onSelect }: ActivityCardProps) 
           </div>
         )}
       </div>
-    </button>
+    </Button>
   );
 }

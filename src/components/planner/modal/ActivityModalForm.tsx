@@ -6,6 +6,7 @@ import ActivityHeaderCard from '@/components/planner/modal/ActivityHeaderCard';
 import ColorSwatchPicker from '@/components/ui/ColorSwatchPicker';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
+import { Button } from '@/components/ui/button';
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -91,7 +92,7 @@ export default function ActivityModalForm({
 
       {/* Footer: Cancel & Update */}
       <div className="px-4 py-3 flex justify-center gap-2">
-        <button
+        <Button
           onClick={() =>
             onSave({
               title: editedTitle.trim(),
@@ -101,7 +102,7 @@ export default function ActivityModalForm({
               duration: Number(duration),
             })
           }
-          className={`px-4 py-2 rounded text-sm ${
+          className={`px-4 py-2 text-sm ${
             editedTitle.trim()
               ? 'bg-blue-600 text-white hover:bg-blue-700'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -109,7 +110,7 @@ export default function ActivityModalForm({
           disabled={!editedTitle.trim()}
         >
           Update
-        </button>
+        </Button>
       </div>
     </>
   );

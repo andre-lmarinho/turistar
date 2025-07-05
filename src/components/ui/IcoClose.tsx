@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 /**
  * Animated “X” close button.
@@ -16,18 +17,17 @@ export default function CloseButton({
   title?: string;
 }) {
   return (
-    <button
+    <Button
       onClick={onClick}
       aria-label={title}
-      className="cursor-pointer bg-background relative group w-8 h-8 backdrop-blur-sm rounded
-          border border-bg-gray-200 hover:bg-gray-200
-          flex items-center justify-center focus:outline-none focus:ring-2
-          transition-transform hover:scale-110"
+      size="icon"
+      variant="ghost"
+      className="bg-background relative group w-8 h-8 backdrop-blur-sm rounded border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 transition-transform hover:scale-110"
     >
       <X
         size={20}
         className="transform transition duration-300 group-hover:scale-105 group-hover:rotate-90"
       />
-    </button>
+    </Button>
   );
 }

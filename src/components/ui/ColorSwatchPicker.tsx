@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { DEFAULT_COLORS } from '@/constants/colors';
+import { Button } from '@/components/ui/button';
 
 /**
  * Click-a-colour control.
@@ -21,14 +22,14 @@ export default function ColorSwatchPicker({
   return (
     <div className="flex flex-wrap gap-2 justify-center items-center">
       {colors.map((c) => (
-        <button
+        <Button
           key={c}
+          size="icon"
+          variant="ghost"
           onClick={() => onChange(c)}
-          className={`
-        w-12 h-12 rounded-full shadow border-2
-        ${c.startsWith('#') ? '' : c}          /* tailwind class */
-        ${value === c ? 'ring-2 ring-black' : 'border-white'}
-      `}
+          className={`w-12 h-12 rounded-full shadow border-2 ${c.startsWith('#') ? '' : c} ${
+            value === c ? 'ring-2 ring-black' : 'border-white'
+          }`}
           style={c.startsWith('#') ? { backgroundColor: c } : undefined}
           aria-label={c}
         />
