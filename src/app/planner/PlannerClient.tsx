@@ -108,8 +108,11 @@ export default function PlannerClient() {
         <ActivityModal
           open={true}
           activity={selectedActivity}
-          // Save color when closing by X or by clicking the backdrop
+          // Discard temporary cards when closing without a title
           onClose={() => {
+            if (selectedActivity.id.startsWith('blank-') && !selectedActivity.title.trim()) {
+              removeActivity(selectedActivity.id);
+            }
             setSelectedActivity(null);
           }}
           onSave={(patch) => {

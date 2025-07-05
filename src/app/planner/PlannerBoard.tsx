@@ -56,7 +56,7 @@ export default function PlannerBoard({
       onDragOver={handleDragOver}
     >
       {/* Horizontal scroll of day columns */}
-      <div className="p-4 md:mb-10 bg-background flex w-full gap-4 overflow-x-auto h-full rounded-xl border">
+      <div className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
         {days.map((day) => (
           <div key={day.id} className="flex flex-col flex-shrink-0 min-w-[250px]">
             {/* Pass click handler down to each column */}
