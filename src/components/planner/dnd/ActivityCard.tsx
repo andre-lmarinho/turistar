@@ -81,6 +81,10 @@ export default function ActivityCard({
         onClick={() => {
           if (!editing) onSelect?.();
         }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          if (!editing) setEditing(true);
+        }}
         className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab relative"
         style={{ zIndex: editing ? 50 : undefined }}
       >
@@ -122,13 +126,7 @@ export default function ActivityCard({
             </button>
           </div>
         ) : (
-          <h4
-            className="font-medium"
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setEditing(true);
-            }}
-          >
+          <h4 className="font-medium">
             {title.trim() ? title : EMPTY_ACTIVITY_TITLE}
           </h4>
         )}
