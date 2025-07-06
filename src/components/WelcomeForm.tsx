@@ -62,8 +62,8 @@ export default function WelcomeForm() {
             className="p-4 rounded-xl space-y-4"
             style={{ backgroundColor: 'var(--background)' }}
           >
-            {/* Destination Field 
-            MVP ONLY Suport Salvador*/}
+            {/* Destination Field
+            MVP ONLY Support Salvador*/}
             <div className="flex flex-col hidden">
               <label className="text-sm font-medium mb-1">Destination</label>
               <DestinationAutoSuggest
@@ -76,7 +76,7 @@ export default function WelcomeForm() {
             <div>
               <p className="text-xs italic">(More Locations Soon)</p>
             </div>
-            {/*MVP ONLY Suport Salvador*/}
+            {/*MVP ONLY Support Salvador*/}
 
             <DateRangePicker value={range} onChange={setRange} />
           </div>
