@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { FaCheck } from 'react-icons/fa';
+import { Check } from 'lucide-react';
 
 interface DestinationActionButtonProps {
   added: boolean;
@@ -25,7 +25,7 @@ export default function DestinationActionButton({
           color: 'var(--secondary-foreground)',
         }}
       >
-        <FaCheck />
+        <Check />
         Added
       </button>
     );

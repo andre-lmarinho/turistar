@@ -4,7 +4,8 @@
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { DateRangePicker } from '@/components/ui/DatePicker';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
+import DestinationAutoSuggest, { Suggestion } from './DestinationAutoSuggest';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import Image from 'next/image';
@@ -12,15 +13,31 @@ import Image from 'next/image';
 export default function WelcomeForm() {
   const router = useRouter();
 
+  // State to handle user-typed destination
+  const [destination, setDestination] = useState<string>('');
+
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7),
   });
 
+  // Declare error state
+  const [error, setError] = useState<string>('');
+
   const handleSubmit = () => {
-    if (!range?.from || !range?.to) return;
+    // Block submission if dates are missing or destination is empty
+    if (!range?.from || !range?.to || !destination.trim()) {
+      setError('Please enter a destination.'); // Show error message
+      return;
+    }
+
+    setError('');
+
+    // Dynamic destination from user input, cleaned to lower case and trimmed
+    const destParam = destination.split(',')[0].trim().toLowerCase();
+
     const query = new URLSearchParams({
-      dest: 'salvador',
+      dest: destParam,
       start: range.from.toISOString(),
       end: range.to.toISOString(),
     }).toString();
@@ -51,15 +68,10 @@ export default function WelcomeForm() {
             {/* Destination Field */}
             <div className="flex flex-col">
               <label className="text-sm font-medium mb-1">Destination</label>
-              <input
-                type="text"
-                value="Salvador, Brazil"
-                readOnly
-                className="border rounded px-3 py-2 cursor-not-allowed"
-                style={{
-                  backgroundColor: 'var(--muted)',
-                  borderColor: 'var(--border)',
-                  color: 'var(--text-muted)',
+              <DestinationAutoSuggest
+                onSelect={(item: Suggestion) => {
+                  setDestination(item.name);
+                  setError('');
                 }}
               />
             </div>
@@ -68,7 +80,7 @@ export default function WelcomeForm() {
           </div>
 
           <div className="flex justify-end">
-            <Button className="cursor-pointer" onClick={handleSubmit}>
+            <Button type="button" className="cursor-pointer" onClick={handleSubmit}>
               Start Your Adventure
             </Button>
           </div>
@@ -84,6 +96,7 @@ export default function WelcomeForm() {
             className="object-contain md:absolute md:bottom-0 md:right-0"
           />
         </div>
+        {error && <p className="text-[var(--destructive)] text-sm mt-2">{error}</p>}
       </div>
     </div>
   );

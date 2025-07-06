@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { FiCompass } from 'react-icons/fi';
+import { Compass } from 'lucide-react';
 
 interface OpenPanelButtonProps {
   onClick: () => void;
@@ -23,7 +23,7 @@ export default function OpenPanelButton({
         color: 'var(--primary-foreground)',
       }}
     >
-      <FiCompass size={18} className="transform transition duration-300" />
+      <Compass size={18} className="transform transition duration-300" />
       <span className="text-sm font-medium whitespace-nowrap">{title}</span>
     </button>
   );

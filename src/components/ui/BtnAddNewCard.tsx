@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FiPlus } from 'react-icons/fi';
+import { Plus } from 'lucide-react';
 import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,
@@ -27,7 +27,7 @@ export default function AddNewCard({ dayId, onAddNew }: AddNewCardProps) {
       onClick={() => onAddNew(dayId)}
       className={`p-2 cursor-pointer ${borderColor} ${baseColor} bg-background ${hoverColor} flex items-center w-full h-10 rounded-lg transition`}
     >
-      <FiPlus className="mr-2" style={{ color: foregroundColor }} />
+      <Plus size={18} className="mr-2" style={{ color: foregroundColor }} />
 
       <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
         New Card

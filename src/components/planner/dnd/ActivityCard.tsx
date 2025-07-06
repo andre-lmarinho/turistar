@@ -3,7 +3,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import { FaRegClock, FaHourglassHalf } from 'react-icons/fa';
+import { Clock, Hourglass } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 import ReactDOM from 'react-dom';
@@ -108,15 +109,8 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
                     save();
                   }
                 }}
-                className="w-full border rounded px-2 py-1 text-sm"
+                className="w-full bg-background px-2 py-1 text-sm"
               />
-              <button
-                type="button"
-                onClick={save}
-                className="px-3 py-1 rounded text-sm bg-blue-600 text-white hover:bg-blue-700"
-              >
-                Update
-              </button>
             </div>
           ) : (
             <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
@@ -128,14 +122,14 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
               {/* Conditionally render start time */}
               {startTime?.trim() && (
                 <span className="inline-flex items-center gap-2">
-                  <FaRegClock />
+                  <Clock size={12} />
                   {startTime}
                 </span>
               )}
               {/* Conditionally render duration */}
               {duration! > 0 && (
                 <span className="inline-flex items-center gap-2">
-                  <FaHourglassHalf />
+                  <Hourglass size={12} />
                   {duration}
                 </span>
               )}
@@ -143,6 +137,14 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
           )}
         </div>
       </div>
+      {/* Update Button Outside */}
+      {editing && (
+        <div className="relative pt-4 z-50">
+          <Button type="button" size="sm" className="cursor-pointer" onClick={save}>
+            Update
+          </Button>
+        </div>
+      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useDnDPlanner } from './useDnDPlanner';
 import type { DayPlan, Activity } from '@/types/itinerary';
+import type { DragOverEvent } from '@dnd-kit/core';
 
 describe('handleDragOver', () => {
   function setup() {
@@ -19,11 +20,13 @@ describe('handleDragOver', () => {
   it('reorders within the same day', () => {
     const { result } = setup();
 
+    const mockEvent: DragOverEvent = {
+      active: { id: 'a1' },
+      over: { id: 'a2' },
+    } as unknown as DragOverEvent;
+
     act(() => {
-      result.current.handleDragOver({
-        active: { id: 'a1' },
-        over: { id: 'a2' },
-      } as any);
+      result.current.handleDragOver(mockEvent);
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
@@ -32,11 +35,13 @@ describe('handleDragOver', () => {
   it('moves activity across days', () => {
     const { result } = setup();
 
+    const mockEvent: DragOverEvent = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as unknown as DragOverEvent;
+
     act(() => {
-      result.current.handleDragOver({
-        active: { id: 'a1' },
-        over: { id: 'day2' },
-      } as any);
+      result.current.handleDragOver(mockEvent);
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);

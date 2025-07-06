@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { FaSlidersH } from 'react-icons/fa';
+import { Sliders } from 'lucide-react';
 
 /** Reusable animated button that toggles the config sidebar */
 export default function SettingsToggleButton({ onClick }: { onClick: () => void }) {
@@ -16,7 +16,7 @@ export default function SettingsToggleButton({ onClick }: { onClick: () => void 
         transform hover:scale-110 hover:-rotate-90
       "
     >
-      <FaSlidersH />
+      <Sliders />
     </button>
   );
 }

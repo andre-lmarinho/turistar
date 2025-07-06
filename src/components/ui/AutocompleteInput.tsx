@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { MapPin } from 'lucide-react';
 
 /**
  * Very small autocomplete component.
@@ -14,7 +14,7 @@ export default function AutocompleteInput({
   options,
   onSelect,
   placeholder = 'Search…',
-  leftIcon = <FaMapMarkerAlt className="text-gray-400" />,
+  leftIcon = <MapPin className="text-gray-400" />,
 }: {
   value: string;
   onChange: (v: string) => void;

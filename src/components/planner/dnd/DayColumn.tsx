@@ -40,13 +40,13 @@ export default function DayColumn({
       >
         <ul ref={setNodeRef} className={`space-y-3 mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
           {day.activities.map((activity) => (
-          <SortableItem
-            key={activity.id}
-            id={activity.id}
-            activity={activity}
-            onSelect={() => onSelectActivity?.(activity)}
-            onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
-          />
+            <SortableItem
+              key={activity.id}
+              id={activity.id}
+              activity={activity}
+              onSelect={() => onSelectActivity?.(activity)}
+              onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
+            />
           ))}
         </ul>
       </SortableContext>
