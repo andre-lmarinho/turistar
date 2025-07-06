@@ -1,5 +1,5 @@
 // src/services/opentripmap/xid.ts
-import { BASE_URL, API_KEY } from './config';
+import { BASE_URL, API_KEY_CLIENT } from './config.client';
 
 export interface PlaceDetails {
   xid: string;
@@ -16,7 +16,7 @@ export interface PlaceDetails {
  */
 export async function fetchPlaceDetails(xid: string): Promise<PlaceDetails> {
   const url = new URL(`${BASE_URL}/xid/${xid}`);
-  url.searchParams.set('apikey', API_KEY);
+  url.searchParams.set('apikey', API_KEY_CLIENT);
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`OpenTripMap xid error: ${res.status}`);

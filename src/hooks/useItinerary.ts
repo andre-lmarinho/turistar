@@ -24,7 +24,7 @@ export function useItinerary(dest: string | null) {
     queryKey: ['itinerary', dest],
     enabled: !!dest,
     queryFn: async () => {
-      const res = await fetch(`/api/itinerary?dest=${dest}`);
+      const res = await fetch(`/api/geoname?dest=${encodeURIComponent(dest || '')}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch itinerary: HTTP ${res.status}`);
       }

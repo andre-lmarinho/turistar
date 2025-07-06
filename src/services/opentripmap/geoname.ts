@@ -1,5 +1,5 @@
 // src/services/opentripmap/geoname.ts
-import { BASE_URL, API_KEY } from './config';
+import { BASE_URL, API_KEY_CLIENT } from './config.client';
 
 export interface GeonameResponse {
   name: string;
@@ -20,7 +20,7 @@ export async function fetchCityCoordinates(
   const url = new URL(`${BASE_URL}/geoname`);
   url.searchParams.set('name', city);
   url.searchParams.set('country', countryCode);
-  url.searchParams.set('apikey', API_KEY);
+  url.searchParams.set('apikey', API_KEY_CLIENT);
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`OpenTripMap geoname error: ${res.status}`);

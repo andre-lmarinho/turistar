@@ -1,5 +1,5 @@
 // src/services/opentripmap/radius.ts
-import { BASE_URL, API_KEY } from './config';
+import { BASE_URL, API_KEY_CLIENT } from './config.client';
 
 export interface RadiusResponseItem {
   xid: string;
@@ -28,7 +28,7 @@ export async function fetchPlacesByRadius(
   url.searchParams.set('kinds', kinds);
   url.searchParams.set('limit', limit.toString());
   url.searchParams.set('rate', rate);
-  url.searchParams.set('apikey', API_KEY);
+  url.searchParams.set('apikey', API_KEY_CLIENT);
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`OpenTripMap radius error: ${res.status}`);

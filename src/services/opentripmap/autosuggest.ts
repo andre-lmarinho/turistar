@@ -1,5 +1,5 @@
 // src/services/opentripmap/autosuggest.ts
-import { BASE_URL, API_KEY } from './config';
+import { BASE_URL, API_KEY_CLIENT } from '@/services/opentripmap/config.client';
 
 export interface Suggestion {
   xid: string;
@@ -20,7 +20,7 @@ export async function fetchAutosuggest(
   url.searchParams.set('lat', lat.toString());
   url.searchParams.set('lon', lon.toString());
   url.searchParams.set('radius', radius.toString());
-  url.searchParams.set('apikey', API_KEY);
+  url.searchParams.set('apikey', API_KEY_CLIENT);
 
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`OpenTripMap autosuggest error: ${res.status}`);
