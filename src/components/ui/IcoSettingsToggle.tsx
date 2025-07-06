@@ -1,4 +1,4 @@
-// src/components/planner/Icon - SettingsToggle.tsx
+// src/components/ui/IcoSettingsToggle.tsx
 'use client';
 
 import React from 'react';

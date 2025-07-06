@@ -1,4 +1,4 @@
-// src/components/ui/ActivityModalHaeder
+// src/components/ui/ColorSwatchPicker.tsx
 'use client';
 
 import React from 'react';
