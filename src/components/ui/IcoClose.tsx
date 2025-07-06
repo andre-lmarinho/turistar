@@ -1,4 +1,4 @@
-// src/components/ui/Icon - Close.tsx
+// src/components/ui/IcoClose.tsx
 'use client';
 
 import React from 'react';

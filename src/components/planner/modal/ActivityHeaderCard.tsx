@@ -1,4 +1,4 @@
-// src/components/planner/modal/ActivityHeaderCard
+// src/components/planner/modal/ActivityHeaderCard.tsx
 'use client';
 
 import React from 'react';
