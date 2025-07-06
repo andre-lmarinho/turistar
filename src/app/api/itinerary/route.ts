@@ -1,25 +1,23 @@
-//src/app/api/itinerary/route
-
+// src/app/api/itinerary/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { BASE_URL, API_KEY_SERVER } from '@/services/opentripmap/config.server';
+import salvador from '@/data/salvador.json';
 
+/**
+ * API route to return the mock itinerary for Salvador.
+ * This is a static, local file used while the external API integration is paused.
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const destination = searchParams.get('dest');
-  if (!destination) {
+  const dest = searchParams.get('dest');
+
+  if (!dest) {
     return NextResponse.json({ error: 'Destination is required.' }, { status: 400 });
   }
 
-  const encoded = encodeURIComponent(destination);
-  const url = `${BASE_URL}/geoname?name=${encoded}&apikey=${API_KEY_SERVER}`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Failed to fetch');
-
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to load destination.' }, { status: 500 });
+  if (dest.toLowerCase() !== 'salvador') {
+    return NextResponse.json({ error: 'Destination not supported in this mock.' }, { status: 404 });
   }
+
+  // Directly return the mock data from the local file
+  return NextResponse.json(salvador);
 }

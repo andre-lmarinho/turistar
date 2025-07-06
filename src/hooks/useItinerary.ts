@@ -14,22 +14,24 @@ const hasActivities = (data: unknown): data is ItineraryResponse =>
 
 /**
  * Hook to fetch and format itinerary by destination.
- * - Fetches /api/itinerary?dest=… when `dest` is truthy
+ * @param dest - destination string
+ * @param options.enabled - whether to enable the query
+ * - Fetches /api/itinerary?dest=… when enabled
  * - Splits activities into days, 3 per day
  * - Returns both React Query props and `days` as DayPlan[]
  */
-export function useItinerary(dest: string | null) {
-  // 1) Run the query only if we have a dest
+export function useItinerary(dest: string | null, options: { enabled: boolean }) {
+  // 1) Run the query only if we have a dest and enabled
   const query = useQuery({
     queryKey: ['itinerary', dest],
-    enabled: !!dest,
     queryFn: async () => {
-      const res = await fetch(`/api/geoname?dest=${encodeURIComponent(dest || '')}`);
+      const res = await fetch(`/api/itinerary?dest=${encodeURIComponent(dest || '')}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch itinerary: HTTP ${res.status}`);
       }
       return res.json();
     },
+    enabled: !!dest && options.enabled,
   });
 
   // 2) Memoize transforming raw activities into day-based buckets

@@ -19,13 +19,14 @@ import { syncDaysWithTripRange } from '@/utils/syncDaysWithTripRange';
  * - Drag-and-drop   (days board)
  * - Helpers         (add / remove / update)
  */
-export function usePlanner() {
+export function usePlanner(enabled: boolean) {
   /* ----------------------- URL + date range ----------------------- */
   const params = useSearchParams();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest);
-  const { isLoading, error } = useItinerary(dest);
+  // only fetch itinerary when `enabled` is true
+  const { isLoading, error } = useItinerary(dest, { enabled });
 
   /* -------------------------- DnD state --------------------------- */
   const {

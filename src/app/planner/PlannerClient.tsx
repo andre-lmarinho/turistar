@@ -18,6 +18,9 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants/colors
  * - Handles selecting a card to open the ActivityModal.
  */
 export default function PlannerClient() {
+  // Track whether filter panel is open
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  // Fetch immediately on mount
   const {
     dest,
     days,
@@ -34,16 +37,13 @@ export default function PlannerClient() {
     addBlankActivity,
     removeActivity,
     updateActivity,
-  } = usePlanner();
+  } = usePlanner(true);
 
   /* Build a Set of activity IDs already placed on the board */
   const addedIds = useMemo(
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
     [days]
   );
-
-  /* Filter-panel visibility */
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   /* Selected activity for editing in the modal */
   const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
