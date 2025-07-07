@@ -41,6 +41,12 @@ You can deploy the same app to Vercel or Netlify.
 
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/components`: React components that should follow the guidelines in this document
+  - `/context`: React context for shared state
+  - `/hooks`: Custom React hooks
+  - `/lib`: Internal utilities
+  - `/services`: External API wrappers
+  - `/types`: Shared TypeScript definitions
+  - `/utils`: Planner-specific helpers
 
 ---
 
