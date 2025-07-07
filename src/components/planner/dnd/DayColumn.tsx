@@ -7,6 +7,7 @@ import { useDroppable } from '@dnd-kit/core';
 import type { DayPlan, Activity } from '@/types/itinerary';
 import { SortableItem } from '@/components/planner/dnd/SortableItem';
 import AddNewCard from '@/components/ui/BtnAddNewCard';
+import InsertNewCard from '@/components/ui/BtnInsertNewCard';
 
 interface DayColumnProps {
   day: DayPlan;
@@ -38,7 +39,7 @@ export default function DayColumn({
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <ul ref={setNodeRef} className={`space-y-3 mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
+        <ul ref={setNodeRef} className={`mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem
@@ -48,11 +49,7 @@ export default function DayColumn({
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
               />
               {idx < day.activities.length - 1 && (
-                <AddNewCard
-                  dayId={day.id}
-                  index={idx + 1}
-                  onAddNew={onAddNew}
-                />
+                <InsertNewCard dayId={day.id} index={idx + 1} onAddNew={onAddNew} />
               )}
             </React.Fragment>
           ))}

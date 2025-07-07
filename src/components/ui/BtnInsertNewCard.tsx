@@ -1,4 +1,4 @@
-// src/components/ui/BtnAddNewCard.tsx
+// src/components/ui/BtnInsertNewCard.tsx
 
 'use client';
 
@@ -12,13 +12,13 @@ import {
   COLOR_BORDER_CLASSES,
 } from '@/constants/colors';
 
-interface AddNewCardProps {
+interface InsertNewCardProps {
   dayId: string;
   index?: number;
   onAddNew: (dayId: string, index?: number) => void;
 }
 
-export default function AddNewCard({ dayId, index, onAddNew }: AddNewCardProps) {
+export default function InsertNewCard({ dayId, index, onAddNew }: InsertNewCardProps) {
   const baseColor = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
   const hoverColor = COLOR_HOVER_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX];
   const foregroundColor = COLOR_FOREGROUND_VALUES[DEFAULT_NEW_CARD_COLOR_INDEX];
@@ -28,13 +28,14 @@ export default function AddNewCard({ dayId, index, onAddNew }: AddNewCardProps) 
     <button
       type="button"
       onClick={() => onAddNew(dayId, index)}
-      className={`p-2 cursor-pointer ${borderColor} ${baseColor} bg-background ${hoverColor} flex items-center w-full h-10 rounded-lg transition`}
+      className={`h-2 group cursor-pointer relative flex justify-center items-center w-full transition z-20`}
     >
-      <Plus size={18} className="mr-2" style={{ color: foregroundColor }} />
-
-      <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-        New Card
-      </span>
+      <Plus
+        size={24}
+        className={` bg-white rounded transition-opacity w-6 h-5 opacity-0 z-20 group-hover:opacity-100 shadow-md`}
+        style={{ color: foregroundColor }}
+      />
+      <span className="absolute border-t-2 border-dashed border-gray-300 opacity-0 group-hover:opacity-100 w-[90%] transition"></span>
     </button>
   );
 }
