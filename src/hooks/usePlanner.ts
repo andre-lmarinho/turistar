@@ -33,7 +33,7 @@ export function usePlanner(enabled: boolean) {
       search.set('plan', planId);
       router.replace(`/planner?${search.toString()}`, { scroll: false });
     }
-  }, [planId, params, router]);
+  }, [planId, router]);
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
   // only fetch itinerary when `enabled` is true
