@@ -32,7 +32,7 @@ export interface PlannerBoardProps {
   /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
-  onAddNew: (dayId: string) => void;
+  onAddNew: (dayId: string, index?: number) => void;
   /** Inline title update */
   onUpdateTitle: (id: string, title: string) => void;
 }

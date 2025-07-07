@@ -147,7 +147,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
    * Pushes a completely blank activity onto the given day (by index).
    * Returns the newly created Activity so the caller can e.g. open an editor.
    */
-  function addBlankActivity(dayIndex = 0): Activity {
+  function addBlankActivity(dayIndex = 0, insertIndex?: number): Activity {
     const blank: Activity = {
       id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       title: '',
@@ -164,7 +164,12 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
           activities: [],
         };
       }
-      copy[dayIndex].activities.push(blank);
+      const acts = copy[dayIndex].activities;
+      if (insertIndex === undefined || insertIndex < 0 || insertIndex > acts.length) {
+        acts.push(blank);
+      } else {
+        acts.splice(insertIndex, 0, blank);
+      }
       return copy;
     });
     return blank;

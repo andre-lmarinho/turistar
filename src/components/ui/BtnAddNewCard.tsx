@@ -12,10 +12,11 @@ import {
 
 interface AddNewCardProps {
   dayId: string;
-  onAddNew: (dayId: string) => void;
+  index?: number;
+  onAddNew: (dayId: string, index?: number) => void;
 }
 
-export default function AddNewCard({ dayId, onAddNew }: AddNewCardProps) {
+export default function AddNewCard({ dayId, index, onAddNew }: AddNewCardProps) {
   const baseColor = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
   const hoverColor = COLOR_HOVER_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX];
   const foregroundColor = COLOR_FOREGROUND_VALUES[DEFAULT_NEW_CARD_COLOR_INDEX];
@@ -24,7 +25,7 @@ export default function AddNewCard({ dayId, onAddNew }: AddNewCardProps) {
   return (
     <button
       type="button"
-      onClick={() => onAddNew(dayId)}
+      onClick={() => onAddNew(dayId, index)}
       className={`p-2 cursor-pointer ${borderColor} ${baseColor} bg-background ${hoverColor} flex items-center w-full h-10 rounded-lg transition`}
     >
       <Plus size={18} className="mr-2" style={{ color: foregroundColor }} />
