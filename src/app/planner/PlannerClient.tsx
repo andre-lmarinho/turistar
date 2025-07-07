@@ -99,9 +99,9 @@ export default function PlannerClient() {
           updateActivity(id, { title: newTitle });
         }}
         /* Create a blank activity and immediately open the modal */
-        onAddNew={(dayId) => {
+        onAddNew={(dayId, insertIdx) => {
           const idx = days.findIndex((d) => d.id === dayId);
-          const blank = addBlankActivity(idx);
+          const blank = addBlankActivity(idx, insertIdx);
           setSelectedActivity({ ...blank, dayId });
         }}
       />

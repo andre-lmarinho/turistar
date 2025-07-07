@@ -12,7 +12,7 @@ interface DayColumnProps {
   day: DayPlan;
   onRemove?: () => void;
   onSelectActivity?: (activity: Activity) => void;
-  onAddNew: (dayId: string) => void; // add a blank activity to this day
+  onAddNew: (dayId: string, index?: number) => void; // add a blank activity to this day
   onUpdateTitle?: (id: string, title: string) => void;
 }
 
@@ -39,21 +39,29 @@ export default function DayColumn({
         strategy={verticalListSortingStrategy}
       >
         <ul ref={setNodeRef} className={`space-y-3 mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
-          {day.activities.map((activity) => (
-            <SortableItem
-              key={activity.id}
-              id={activity.id}
-              activity={activity}
-              onSelect={() => onSelectActivity?.(activity)}
-              onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
-            />
+          {day.activities.map((activity, idx) => (
+            <React.Fragment key={activity.id}>
+              <SortableItem
+                id={activity.id}
+                activity={activity}
+                onSelect={() => onSelectActivity?.(activity)}
+                onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
+              />
+              {idx < day.activities.length - 1 && (
+                <AddNewCard
+                  dayId={day.id}
+                  index={idx + 1}
+                  onAddNew={onAddNew}
+                />
+              )}
+            </React.Fragment>
           ))}
         </ul>
       </SortableContext>
 
       {/* Add a “New card” button at the bottom */}
       <div className="flex justify-center">
-        <AddNewCard dayId={day.id} onAddNew={onAddNew} />
+        <AddNewCard dayId={day.id} index={day.activities.length} onAddNew={onAddNew} />
       </div>
     </section>
   );
