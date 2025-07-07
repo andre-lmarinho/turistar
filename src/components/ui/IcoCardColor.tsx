@@ -1,14 +1,10 @@
-// src/components/ui/IcoRemoveCard.tsx
+// src/components/ui/IcoCardColor.tsx
 'use client';
 
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Palette } from 'lucide-react';
 
-/**
- * Floating round-red button used by cards that are already in the planner.
- * Caller decides placement via `className`.
- */
-export default function RemoveCardButton({
+export default function CardColorButton({
   onClick,
   title = 'Remove from planner',
 }: {
@@ -27,11 +23,11 @@ export default function RemoveCardButton({
     >
       {/* Tooltip */}
       <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 text-nowrap group-hover:opacity-100 transition-opacity">
-        Delete
+        Card Color
       </div>
 
       {/* Icon */}
-      <Trash2 size={18} className="transform transition duration-300 group-hover:scale-105" />
+      <Palette size={18} className="transform transition duration-300 group-hover:scale-105" />
     </button>
   );
 }

@@ -3,24 +3,18 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import ActivityHeaderCard from '@/components/planner/modal/ActivityHeaderCard';
-import ColorSwatchPicker from '@/components/ui/ColorSwatchPicker';
 import type { Activity } from '@/types/itinerary';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
+import { AlignLeft } from 'lucide-react';
 
 interface ActivityModalFormProps {
   activity: Activity;
   onClose: () => void;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
-  onColorChange: (color: string) => void;
 }
 
-export default function ActivityModalForm({
-  activity,
-  onSave,
-  color,
-  onColorChange,
-}: ActivityModalFormProps) {
+export default function ActivityModalForm({ activity, onSave, color }: ActivityModalFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title);
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [when, setWhen] = useState(activity.startTime ?? '');
@@ -39,7 +33,7 @@ export default function ActivityModalForm({
 
   return (
     <>
-      {/* Central POI card */}
+      {/* Image if have it */}
       <div className="p-4">
         <ActivityHeaderCard
           name={editedTitle.trim() || EMPTY_ACTIVITY_TITLE}
@@ -47,46 +41,45 @@ export default function ActivityModalForm({
         />
       </div>
 
-      {/* Autocomplete: choose a new POI */}
-      <div className="px-4 pb-4"></div>
-
       {/* Editable title, description, when & duration */}
-      <div className="px-4 space-y-3 overflow-y-auto">
+
+      <input
+        ref={titleInputRef}
+        value={editedTitle}
+        onChange={(e) => setEditedTitle(e.target.value)}
+        placeholder={EMPTY_ACTIVITY_TITLE}
+        className="content-center font-bold rounded mx-4 px-2 py-2 text-2xl"
+      />
+
+      <div className="p-6">
         <input
-          ref={titleInputRef}
-          value={editedTitle}
-          onChange={(e) => setEditedTitle(e.target.value)}
-          placeholder={EMPTY_ACTIVITY_TITLE}
-          className="w-full border rounded px-3 py-2 text-sm"
+          type="time"
+          value={when}
+          onChange={(e) => setWhen(e.target.value)}
+          className="flex-1 border rounded p-2 text-sm mr-4"
         />
+        <input
+          type="number"
+          min={0}
+          value={duration}
+          onChange={(e) => setDuration(Number(e.target.value))}
+          placeholder="min"
+          className="w-24 border rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div className="px-4">
+        <label className="p-2 text-xs font-bold flex items-center gap-1 cursor-pointer">
+          <AlignLeft size={12} />
+          <span>Notes</span>
+        </label>
         <textarea
           value={editedDescription}
           onChange={(e) => setEditedDescription(e.target.value)}
           placeholder="Description"
           rows={3}
-          className="w-full border rounded px-3 py-2 text-sm resize-none"
+          className="w-full border rounded p-2 text-sm resize-none"
         />
-        <div className="flex gap-2">
-          <input
-            type="time"
-            value={when}
-            onChange={(e) => setWhen(e.target.value)}
-            className="flex-1 border rounded px-3 py-2 text-sm"
-          />
-          <input
-            type="number"
-            min={0}
-            value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-            placeholder="min"
-            className="w-24 border rounded px-3 py-2 text-sm"
-          />
-        </div>
-      </div>
-
-      {/* Color picker */}
-      <div className="px-4 py-4 ">
-        <ColorSwatchPicker value={color} onChange={onColorChange} />
       </div>
 
       {/* Footer: Cancel & Update */}

@@ -16,7 +16,7 @@ export default function ActivityHeaderCard({
   imageUrl?: string;
 }) {
   return (
-    <div className="flex items-center gap-4 border rounded-lg p-3 shadow-sm">
+    <div className="flex items-center rounded-lg">
       {/* thumbnail */}
       <Image
         src={imageUrl}
@@ -26,9 +26,6 @@ export default function ActivityHeaderCard({
         unoptimized /* using remote placeholder for now */
         className="rounded object-cover w-24 h-16"
       />
-
-      {/* title */}
-      <h4 className="font-medium text-sm sm:text-base line-clamp-2">{name}</h4>
     </div>
   );
 }

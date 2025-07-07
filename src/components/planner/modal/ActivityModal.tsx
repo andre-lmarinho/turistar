@@ -34,22 +34,21 @@ export default function ActivityModal({
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose} />
 
       {/* Modal container */}
-      <div className="fixed inset-0 z-50 top-50 left-50 items-center justify-center w-[95%] max-w-[650px] max-h-[95dvh]">
+      <div className="fixed rounded-lg inset-0 z-50 top-50 left-50 items-center justify-center w-[95%] max-w-[650px] max-h-[95dvh] ">
         <div
-          className="bg-white rounded-lg shadow-xl flex flex-col overflow-hidden"
+          className="bg-white rounded-lg shadow-xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <ActivityModalHeader bgColor={color} onDelete={onDelete} onClose={onClose} />
-
-          {/* Form */}
-          <ActivityModalForm
-            activity={activity}
+          <ActivityModalHeader
+            bgColor={color}
+            onDelete={onDelete}
             onClose={onClose}
-            onSave={onSave}
-            color={color}
             onColorChange={onColorChange}
           />
+
+          {/* Form */}
+          <ActivityModalForm activity={activity} onClose={onClose} onSave={onSave} color={color} />
         </div>
       </div>
     </>,
