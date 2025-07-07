@@ -117,7 +117,7 @@ export default function DestinationAutoSuggest({ onSelect }: Props) {
   //  Make "Salvador" as Initial Sugestion
   useEffect(() => {
     handleSelect({ xid: 'salvador-xid', name: 'Salvador, Brasil' });
-  });
+  }, []);
 
   // ================================== MVP END ========================================
 
