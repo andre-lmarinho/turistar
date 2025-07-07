@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { eachDayOfInterval, parseISO } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
-export function useTripRange(dest: string) {
+export function useTripRange(dest: string, planId?: string) {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -24,10 +24,13 @@ export function useTripRange(dest: string) {
 
   function handleRangeChange(r: DateRange | undefined) {
     if (r?.from && r?.to) {
-      router.replace(
-        `/planner?dest=${dest}&start=${r.from.toISOString()}&end=${r.to.toISOString()}`,
-        { scroll: false }
-      );
+      const search = new URLSearchParams({
+        dest,
+        start: r.from.toISOString(),
+        end: r.to.toISOString(),
+      });
+      if (planId) search.set('plan', planId);
+      router.replace(`/planner?${search.toString()}`, { scroll: false });
     }
   }
 
