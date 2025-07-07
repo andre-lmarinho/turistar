@@ -113,13 +113,13 @@ export default function DestinationAutoSuggest({ onSelect }: Props) {
     setShouldFetch(false); // Stop fetching until user types again
   };
 
-  // ================================ MVP START ========================================
+  // =================== MVP START =======================
   //  Make "Salvador" as Initial Sugestion
   useEffect(() => {
     handleSelect({ xid: 'salvador-xid', name: 'Salvador, Brasil' });
   }, []);
 
-  // ================================== MVP END ========================================
+  // ==================== MVP END ==================
 
   return (
     <div className="relative w-full">

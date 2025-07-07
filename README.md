@@ -3,11 +3,11 @@
 A simple itinerary planner built with Next.js, React and drag‑and‑drop. Select your travel dates and destination to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
-*or* deploy easily to Vercel or Netlify with the same settings.
+_or_ deploy easily to Vercel or Netlify with the same settings.
 
 ---
 
-## Features
+## 🚀 Key Features
 
 - **Welcome Form**
   Choose your destination and date range to start a new trip.
@@ -24,7 +24,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ---
 
-## Tech Stack
+## 🏗️ Tech Stack
 
 - **Next.js 15** (App Router)
 - **React** & **TypeScript**
@@ -37,7 +37,14 @@ You can deploy the same app to Vercel or Netlify.
 
 ---
 
-## How It Works
+## 📁 Project Structure
+
+- `/src`: Source code to be analyzed and maintained by AI agents
+  - `/components`: React components that should follow the guidelines in this document
+
+---
+
+## 📖 How It Works
 
 1. **Welcome Form** – Home page asks for your destination and trip dates.
 2. **Planner Board** – One column per day with drag‑and‑drop cards.
@@ -47,15 +54,19 @@ You can deploy the same app to Vercel or Netlify.
 
 ---
 
-## Getting Started
+## 💻 Getting Started
+
+**Prerequisites**: Node.js v16+, npm
 
 1. **Clone the repo**
+
    ```bash
    git clone https://github.com/andre-lmarinho/travel-planner.git
    cd travel-planner
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -65,6 +76,7 @@ You can deploy the same app to Vercel or Netlify.
    ```
 
 3. **Run the development server**
+
    ```bash
    npm run dev
    # or
@@ -72,6 +84,7 @@ You can deploy the same app to Vercel or Netlify.
    # or
    pnpm dev
    ```
+
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 4. **Configure environment**
@@ -80,22 +93,19 @@ You can deploy the same app to Vercel or Netlify.
 
 ---
 
-## Scripts
+## 📦 Scripts
 
-- `npm run dev` — start development server  
-- `npm run build` — compile for production  
-- `npm run start` — run production build locally  
+- `npm run dev` — start development server
+- `npm run build` — compile for production
+- `npm run start` — run production build locally
 - `npm run lint` — run ESLint
 - `npm run format` — run Prettier
-
-### Testing
-
 - `npm run test` — run unit tests
 - `npm run test:watch` — run tests in watch mode
 
 ---
 
-## Deployment
+## ☁️ Deployment
 
 Deploy easily to **Vercel** or **Netlify**:
 
@@ -105,9 +115,17 @@ Deploy easily to **Vercel** or **Netlify**:
 4. Click "Deploy" — the platform will build and preview automatically.
 
 _For detailed guides, see:_
+
 - Next.js Deployment Docs: https://nextjs.org/docs/app/building-your-application/deploying
 - Vercel Docs: https://vercel.com/docs
 - Netlify Docs: https://docs.netlify.com/
+
+---
+
+## 📜 License
+
+This project is open-source under the [MIT License](LICENSE).
+Feel free to reuse and adapt!
 
 ---
 
