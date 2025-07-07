@@ -1,6 +1,6 @@
-# Turistar – AI-Powered Travel Planner
+# Turistar – Drag-and-Drop Travel Planner
 
-A personalized travel itinerary generator built with Next.js, React, and drag-and-drop. Enter your dates and interests, and get a smart daily plan you can tweak on the fly.
+A simple itinerary planner built with Next.js, React and drag‑and‑drop. Select your travel dates and destination to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 *or* deploy easily to Vercel or Netlify with the same settings.
@@ -9,16 +9,18 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 
 ## Features
 
-- **Dynamic Itineraries**
-  Generate optimized day-by-day plans based on your destination and date range.
-- **Interactive Drag-and-Drop**
-  Rearrange activities across days or within the same day for fine-tuning.
-- **Date Range Picker**
-  Quickly adjust start/end dates with a responsive calendar widget.
-- **Client-Side Rendering**
-  Full interactivity via React hooks and DnD Kit, no server reloads needed.
-- **Easy Deployment**
-  Hosted on Vercel with zero-config builds and deploys.
+- **Welcome Form**
+  Choose your destination and date range to start a new trip.
+- **Planner Board**
+  Drag activities between days or add blank cards to build your schedule.
+- **Catalog Popup**
+  Browse suggested activities and insert them directly into the board.
+- **Local Data Mock**
+  Demo itinerary comes from `/api/itinerary`, which serves a static JSON file.
+- **Persistent Storage**
+  All changes are saved to `localStorage` so your plan stays when you refresh.
+
+You can deploy the same app to Vercel or Netlify.
 
 ---
 
@@ -26,10 +28,22 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 
 - **Next.js 15** (App Router)
 - **React** & **TypeScript**
+- **Tailwind CSS** for styling
 - **@dnd-kit/core** & **@dnd-kit/sortable** for drag-and-drop
-- **date-fns** for date manipulation
-- **react-day-picker** for calendar UI
-- **Vercel** for hosting
+- **Radix UI** components
+- **TanStack Query** for data fetching
+- **date-fns** and **react-day-picker** for date handling
+- **Vercel** or **Netlify** for hosting
+
+---
+
+## How It Works
+
+1. **Welcome Form** – Home page asks for your destination and trip dates.
+2. **Planner Board** – One column per day with drag‑and‑drop cards.
+3. **Catalog Popup** – Add activities from a local JSON mock using the “Open Panel” button.
+4. **Edit & Reorder** – Click a card to edit or drag between days.
+5. **Local Storage** – Your plan persists in the browser across refreshes.
 
 ---
 
@@ -83,16 +97,17 @@ A personalized travel itinerary generator built with Next.js, React, and drag-an
 
 ## Deployment
 
-Deploy easily to Vercel:
+Deploy easily to **Vercel** or **Netlify**:
 
-1. Push your code to GitHub.  
-2. Import the repository at https://vercel.com/new.  
-3. Set up any required environment variables.  
-4. Click “Deploy” — Vercel will handle builds and previews automatically.
+1. Push your code to GitHub.
+2. Import the repository in your hosting service (https://vercel.com/new or https://app.netlify.com/start).
+3. Set up any required environment variables.
+4. Click "Deploy" — the platform will build and preview automatically.
 
-_For detailed guides, see:_  
-- Next.js Deployment Docs: https://nextjs.org/docs/app/building-your-application/deploying  
-- Vercel Getting Started: https://vercel.com/docs
+_For detailed guides, see:_
+- Next.js Deployment Docs: https://nextjs.org/docs/app/building-your-application/deploying
+- Vercel Docs: https://vercel.com/docs
+- Netlify Docs: https://docs.netlify.com/
 
 ---
 
