@@ -27,7 +27,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Use functional components with hooks.
 - Keep components small and focused.
 - Always define prop types properly.
-- Use PascalCase for component filenames.~
+- Use PascalCase for custom component filenames. The `/src/components/ui` directory intentionally retains the lowercase naming style inherited from shadcn-ui.
 
 ## CSS/Styling Standards
 
