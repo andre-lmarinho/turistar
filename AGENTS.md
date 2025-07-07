@@ -6,6 +6,16 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/components`: React components that should follow the guidelines in this document
+  - `/app`: Next.js app directory with pages and API routes
+  - `/constants`: Shared configuration values
+  - `/context`: React context providers
+  - `/data`: Local JSON used for demo itineraries
+  - `/hooks`: Custom React hooks
+  - `/lib`: Shared helper functions
+  - `/services`: External API wrappers
+  - `/types`: TypeScript types
+  - `/utils`: Planner utilities
+- `/public`: Static assets served directly
 
 ## Coding Conventions
 
