@@ -73,6 +73,10 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
           ? dstActs.length
           : dstActs.findIndex((a) => a.id === over.id);
 
+      if (srcDayIdx === dstDayIdx && oldIdx === overIdx) {
+        return prev; // no movement → don’t update
+      }
+
       // 3) aplicar movimento sem mutar o estado original
       let moved: Activity;
       if (srcDayIdx === dstDayIdx) {

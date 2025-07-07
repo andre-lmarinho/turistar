@@ -26,13 +26,21 @@ export function usePlanner(enabled: boolean) {
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
-  /* Ensure the unique plan id is reflected in the URL */
+  /* Ensure the unique plan id is reflected in the URL
+   *
+   * We only want to run this effect:
+   * 1. On initial mount (or whenever planId changes),
+   * 2. Not on every params change (params object gets a new reference each render).
+   *
+   * That's why we omit `params` from the dependency list and disable the rule.
+   */
   useEffect(() => {
     if (!params.get('plan')) {
       const search = new URLSearchParams(params.toString());
       search.set('plan', planId);
       router.replace(`/planner?${search.toString()}`, { scroll: false });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, router]);
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
@@ -55,7 +63,15 @@ export function usePlanner(enabled: boolean) {
 
   const storageKey = `itinerary-${planId}`;
 
-  /* ---------------------- Load from localStorage ---------------------- */
+  /* Load initial state from localStorage
+   *
+   * We want to run this effect only when the storageKey changes —
+   * i.e. when switching to a new plan.
+   * Including `setDays` would cause the effect to re-run
+   * whenever days state updates, leading to unwanted loops.
+   *
+   * That's why we omit `setDays` and disable the rule.
+   */
   useEffect(() => {
     const stored = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
     if (stored) {

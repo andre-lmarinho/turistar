@@ -4,13 +4,7 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import {
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-  DEFAULT_COLORS,
-  COLOR_HOVER_CLASSES,
-  COLOR_FOREGROUND_VALUES,
-  COLOR_BORDER_CLASSES,
-} from '@/constants/colors';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, COLOR_FOREGROUND_VALUES } from '@/constants/colors';
 
 interface InsertNewCardProps {
   dayId: string;
@@ -19,10 +13,7 @@ interface InsertNewCardProps {
 }
 
 export default function InsertNewCard({ dayId, index, onAddNew }: InsertNewCardProps) {
-  const baseColor = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
-  const hoverColor = COLOR_HOVER_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX];
   const foregroundColor = COLOR_FOREGROUND_VALUES[DEFAULT_NEW_CARD_COLOR_INDEX];
-  const borderColor = COLOR_BORDER_CLASSES[DEFAULT_NEW_CARD_COLOR_INDEX];
 
   return (
     <button
