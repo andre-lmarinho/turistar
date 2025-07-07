@@ -1,8 +1,8 @@
 // src/hooks/usePlanner.ts
 'use client';
 
-import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
 import { useTripRange } from '@/hooks/useTripRange';
@@ -22,9 +22,20 @@ import { syncDaysWithTripRange } from '@/utils/syncDaysWithTripRange';
 export function usePlanner(enabled: boolean) {
   /* ----------------------- URL + date range ----------------------- */
   const params = useSearchParams();
+  const router = useRouter();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
+  const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
-  const { tripDays, currentRange, handleRangeChange } = useTripRange(dest);
+  /* Ensure the unique plan id is reflected in the URL */
+  useEffect(() => {
+    if (!params.get('plan')) {
+      const search = new URLSearchParams(params.toString());
+      search.set('plan', planId);
+      router.replace(`/planner?${search.toString()}`, { scroll: false });
+    }
+  }, [planId, params, router]);
+
+  const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
   // only fetch itinerary when `enabled` is true
   const { isLoading, error } = useItinerary(dest, { enabled });
 
@@ -42,10 +53,35 @@ export function usePlanner(enabled: boolean) {
     addBlankActivity,
   } = useDnDPlanner(buildInitialDays(tripDays));
 
+  const storageKey = `itinerary-${planId}`;
+
+  /* ---------------------- Load from localStorage ---------------------- */
+  useEffect(() => {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setDays(parsed);
+        }
+      } catch {
+        /* ignore invalid JSON */
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey]);
+
   /* ------------------ Sync days on trip range change ------------------ */
   useEffect(() => {
     setDays((prevDays) => syncDaysWithTripRange(prevDays, tripDays));
   }, [tripDays, setDays]);
+
+  /* ---------------------- Persist to localStorage --------------------- */
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(storageKey, JSON.stringify(days));
+    }
+  }, [storageKey, days]);
 
   /* --------------------------- export ----------------------------- */
   return {
