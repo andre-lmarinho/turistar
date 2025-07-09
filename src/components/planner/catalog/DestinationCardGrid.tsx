@@ -2,8 +2,8 @@
 'use client';
 
 import React from 'react';
-import DestinationCard from '@/components/planner/catalog/DestinationCard';
-import type { CatalogActivity } from '@/types/itinerary';
+import { DestinationCard } from '@/components';
+import type { CatalogActivity } from '@/types';
 
 interface Props {
   items: CatalogActivity[]; // catalog data
@@ -33,6 +33,8 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
             price={item.price}
             description={item.description}
             category={item.category}
+            rating={item.rating}
+            reviewcount={item.reviewcount}
             added={isAdded}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item.id)}

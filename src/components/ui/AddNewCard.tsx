@@ -1,4 +1,4 @@
-// src/components/ui/BtnAddNewCard.tsx
+// src/components/ui/AddNewCard.tsx
 
 'use client';
 
@@ -10,7 +10,7 @@ import {
   COLOR_HOVER_CLASSES,
   COLOR_FOREGROUND_VALUES,
   COLOR_BORDER_CLASSES,
-} from '@/constants/colors';
+} from '@/constants';
 
 interface AddNewCardProps {
   dayId: string;

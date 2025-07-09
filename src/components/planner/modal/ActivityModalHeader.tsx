@@ -2,10 +2,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import RemoveCardButton from '@/components/ui/IcoRemoveCard';
-import CloseButton from '@/components/ui/IcoClose';
-import CardColorButton from '@/components/ui/IcoCardColor';
-import ColorSwatchPicker from '@/components/ui/ColorSwatchPicker';
+
+import { RemoveCardButton, CloseButton, CardColorButton, ColorSwatchPicker } from '@/components';
 
 /**
  * Color strip shown at the very top of ActivityModal.

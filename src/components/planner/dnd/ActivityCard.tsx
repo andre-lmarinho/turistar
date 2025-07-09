@@ -4,9 +4,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { Clock, Hourglass } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import type { Activity } from '@/types/itinerary';
-import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
+import { Button } from '@/components';
+import type { Activity } from '@/types';
+import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 import ReactDOM from 'react-dom';
 
 /**
@@ -130,7 +130,7 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
               {duration! > 0 && (
                 <span className="inline-flex items-center gap-2">
                   <Hourglass size={12} />
-                  {duration}
+                  {duration} h
                 </span>
               )}
             </div>

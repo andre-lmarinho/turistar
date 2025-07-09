@@ -2,10 +2,11 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import ActivityHeaderCard from '@/components/planner/modal/ActivityHeaderCard';
-import type { Activity } from '@/types/itinerary';
-import { EMPTY_ACTIVITY_TITLE } from '@/constants/ui';
 import { AlignLeft } from 'lucide-react';
+
+import { ActivityHeaderCard } from '@/components';
+import type { Activity } from '@/types';
+import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 
 interface ActivityModalFormProps {
   activity: Activity;

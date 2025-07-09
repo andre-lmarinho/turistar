@@ -3,19 +3,14 @@
 
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { DateRangePicker } from '@/components/ui/DatePicker';
-import { Button } from '@/components/ui/button';
-import DestinationAutoSuggest, { Suggestion } from './DestinationAutoSuggest';
+import { Button, DateRangePicker } from '@/components';
+import { STARTER_PLANNER_TITLE } from '@/constants';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import Image from 'next/image';
 
 export default function WelcomeForm() {
   const router = useRouter();
-
-  // State to handle user-typed destination
-  const [destination, setDestination] = useState<string>('');
-
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7),
@@ -25,16 +20,14 @@ export default function WelcomeForm() {
   const [error, setError] = useState<string>('');
 
   const handleSubmit = () => {
-    // Block submission if dates are missing or destination is empty
-    if (!range?.from || !range?.to || !destination.trim()) {
-      setError('Please enter a destination.'); // Show error message
+    // Block submission if dates are missing
+    if (!range?.from || !range?.to) {
+      setError('Please select your travel dates.');
       return;
     }
 
     setError('');
-
-    // Dynamic destination from user input, cleaned to lower case and trimmed
-    const destParam = destination.split(',')[0].trim().toLowerCase();
+    const destParam = STARTER_PLANNER_TITLE;
 
     const query = new URLSearchParams({
       dest: destParam,
@@ -54,7 +47,7 @@ export default function WelcomeForm() {
         <div className="flex-1 space-y-6 text-left p-8">
           <div>
             <h1 className="text-4xl md:text-5xl md:min-w-100 font-bold mb-2">
-              Let&#39;s Start Your Adventure?
+              Let&#39;s Go to Bahia?
             </h1>
           </div>
 
@@ -62,22 +55,6 @@ export default function WelcomeForm() {
             className="p-4 rounded-xl space-y-4"
             style={{ backgroundColor: 'var(--background)' }}
           >
-            {/* Destination Field
-            MVP ONLY Support Salvador*/}
-            <div className="flex flex-col hidden">
-              <label className="text-sm font-medium mb-1">Destination</label>
-              <DestinationAutoSuggest
-                onSelect={(item: Suggestion) => {
-                  setDestination(item.name);
-                  setError('');
-                }}
-              />
-            </div>
-            <div>
-              <p className="text-xs italic">(More Locations Soon)</p>
-            </div>
-            {/*MVP ONLY Support Salvador*/}
-
             <DateRangePicker value={range} onChange={setRange} />
           </div>
           {error && <p className="text-[var(--destructive)] text-sm">{error}</p>}

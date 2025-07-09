@@ -1,4 +1,6 @@
-import WelcomeForm from '@/components/WelcomeForm';
+//src/app/page
+
+import { WelcomeForm } from '@/components';
 
 export default function Home() {
   return (

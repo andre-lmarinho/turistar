@@ -4,10 +4,9 @@
 import React from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
-import type { DayPlan, Activity } from '@/types/itinerary';
-import { SortableItem } from '@/components/planner/dnd/SortableItem';
-import AddNewCard from '@/components/ui/BtnAddNewCard';
-import InsertNewCard from '@/components/ui/BtnInsertNewCard';
+
+import { SortableItem, AddNewCard, InsertNewCard } from '@/components';
+import type { DayPlan, Activity } from '@/types';
 
 interface DayColumnProps {
   day: DayPlan;

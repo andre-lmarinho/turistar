@@ -3,9 +3,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ActivityModalHeader from '@/components/planner/modal/ActivityModalHeader';
-import ActivityModalForm from '@/components/planner/modal/ActivityModalForm';
-import type { Activity } from '@/types/itinerary';
+
+import { ActivityModalHeader, ActivityModalForm } from '@/components';
+import type { Activity } from '@/types';
 
 interface ActivityModalProps {
   open: boolean;

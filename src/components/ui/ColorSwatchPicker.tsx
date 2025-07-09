@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { DEFAULT_COLORS } from '@/constants/colors';
+import { DEFAULT_COLORS } from '@/constants';
 
 /**
  * Click-a-colour control.

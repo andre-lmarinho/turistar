@@ -1,9 +1,10 @@
+// src/components/planner/catalog/DestinationFilterPanel.tsx
+'use client';
+
 import React, { useState } from 'react';
-import DestinationHeader from '@/components/planner/catalog/DestinationHeader';
-import DestinationCardGrid from '@/components/planner/catalog/DestinationCardGrid';
-import ConfigSidebar from '@/components/planner/catalog/ConfigSidebar';
-import { useDestinationCatalog } from '@/hooks/useDestinationCatalog';
-import type { CatalogActivity } from '@/types/itinerary';
+import { DestinationHeader, DestinationCardGrid, ConfigSidebar } from '@/components';
+import type { CatalogActivity } from '@/types';
+import { useDestinationFilter } from '@/hooks';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
@@ -27,8 +28,9 @@ export default function DestinationFilterPanel({
 }: DestinationFilterPanelProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Extract filter logic into custom hook
   const { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error } =
-    useDestinationCatalog(isOpen);
+    useDestinationFilter(isOpen);
 
   if (!isOpen) return null;
 

@@ -4,9 +4,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
-import RemoveCardButton from '@/components/ui/IcoRemoveCard';
-import BtnDestinationAction from '@/components/ui/BtnDestinationAction';
-import type { CatalogActivity } from '@/types/itinerary';
+import { RemoveCardButton, DestinationActionButton } from '@/components';
+import type { CatalogActivity } from '@/types';
 
 /**
  * Card inside DestinationFilterPanel.
@@ -28,6 +27,8 @@ export default function DestinationCard({
   duration,
   price,
   description,
+  rating,
+  reviewcount,
   added,
   onAdd,
   onRemove,
@@ -55,17 +56,21 @@ export default function DestinationCard({
       {/* Duration | Price chips */}
       <div className="flex items-center text-sm text-[var(--muted-foreground)] mb-2 space-x-2">
         <span className="flex items-center gap-1">
-          <Clock /> {duration} min
+          <Clock size={12} /> {duration} h
         </span>
         <span>|</span>
         <span>{price}</span>
+        <span>|</span>
+        <p className="text-sm text-gray-600">
+          {rating?.toFixed(1) ?? 'N/A'} ⭐ ({reviewcount ?? 0} reviews)
+        </p>
       </div>
 
       {/* Description */}
       <p className="text-sm text-[var(--foreground)] flex-1 mb-4">{description}</p>
 
       {/* Action button */}
-      <BtnDestinationAction added={added} onAdd={onAdd} onRemove={onRemove} />
+      <DestinationActionButton added={added} onAdd={onAdd} onRemove={onRemove} />
     </div>
   );
 }

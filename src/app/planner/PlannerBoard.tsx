@@ -12,13 +12,12 @@ import {
   type DragOverEvent,
 } from '@dnd-kit/core';
 
-import DayColumn from '@/components/planner/dnd/DayColumn';
-import { SortableItem } from '@/components/planner/dnd/SortableItem';
-import type { DayPlan, Activity } from '@/types/itinerary';
+import { DayColumn, SortableItem } from '@/components';
+import type { Activity, DayPlan } from '@/types';
 
 export interface PlannerBoardProps {
   /** Board columns of activities */
-  days?: DayPlan[];
+  days: DayPlan[];
   /** Currently dragged card ID */
   activeId: string | null;
   /** DnD-kit sensors */
@@ -26,9 +25,9 @@ export interface PlannerBoardProps {
   /** Collision detection strategy */
   collisionDetection: CollisionDetection;
   /** Start dragging handler */
-  handleDragStart(e: DragStartEvent): void;
+  handleDragStart: (e: DragStartEvent) => void;
   /** Drag-over handler to reorder */
-  handleDragOver(e: DragOverEvent): void;
+  handleDragOver: (e: DragOverEvent) => void;
   /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
   /** Called when user clicks + New Card Button */
@@ -37,8 +36,12 @@ export interface PlannerBoardProps {
   onUpdateTitle: (id: string, title: string) => void;
 }
 
+/**
+ * Presentation component to render the DnD board.
+ * Receives state and handlers from parent via props.
+ */
 export default function PlannerBoard({
-  days = [], // normalize undefined
+  days,
   activeId,
   sensors,
   collisionDetection,
@@ -48,7 +51,6 @@ export default function PlannerBoard({
   onAddNew,
   onUpdateTitle,
 }: PlannerBoardProps) {
-  // find the active activity for the DragOverlay preview
   const activeActivity = days.flatMap((d) => d.activities).find((a) => a.id === activeId);
 
   return (
@@ -62,7 +64,6 @@ export default function PlannerBoard({
       <div className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
         {days.map((day) => (
           <div key={day.id} className="flex flex-col flex-shrink-0 min-w-[250px]">
-            {/* Pass click handler down to each column */}
             <DayColumn
               day={day}
               onAddNew={onAddNew}

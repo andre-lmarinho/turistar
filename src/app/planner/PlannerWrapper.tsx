@@ -1,3 +1,4 @@
+// src/app/planner/PlannerWrapper.tsx
 'use client';
 
 import { useSearchParams } from 'next/navigation';

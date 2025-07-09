@@ -1,6 +1,6 @@
 # Turistar – Drag-and-Drop Travel Planner
 
-A simple itinerary planner built with Next.js, React and drag‑and‑drop. Select your travel dates and destination to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
+A simple itinerary planner built with Next.js, React and drag‑and‑drop. Select your travel dates to Salvador/Brazil to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 _or_ deploy easily to Vercel or Netlify with the same settings.
@@ -10,7 +10,7 @@ _or_ deploy easily to Vercel or Netlify with the same settings.
 ## 🚀 Key Features
 
 - **Welcome Form**
-  Choose your destination and date range to start a new trip.
+  Enter your trip dates to start a new plan.
 - **Planner Board**
   Drag activities between days or add blank cards to build your schedule.
 - **Catalog Popup**
@@ -52,7 +52,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 📖 How It Works
 
-1. **Welcome Form** – Home page asks for your destination and trip dates.
+1. **Welcome Form** – Home page asks for your trip dates.
 2. **Planner Board** – One column per day with drag‑and‑drop cards.
 3. **Catalog Popup** – Add activities from a local JSON mock using the “Open Panel” button.
 4. **Edit & Reorder** – Click a card to edit or drag between days.

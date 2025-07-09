@@ -18,41 +18,49 @@ import { formatDayPlan } from '@/utils/formatDayPlan';
 export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]): DayPlan[] {
   const newTripDays = tripDays.length;
 
+  // Clone deeply so the original days remain untouched
+  const daysCopy = currentDays.map((day) => ({
+    ...day,
+    activities: [...day.activities],
+  }));
+
   // Case 1: Same number of days → just relabel.
-  if (currentDays.length === newTripDays) {
-    return currentDays.map((day, index) => ({
+  if (daysCopy.length === newTripDays) {
+    return daysCopy.map((day, index) => ({
       ...day,
       ...formatDayPlan(tripDays[index]),
     }));
   }
 
-  const copy = [...currentDays];
-
   // Case 2: Trip was shortened → move overflow activities to the last remaining day.
-  if (newTripDays < currentDays.length) {
-    const keptDays = copy.slice(0, newTripDays);
-    const overflowDays = copy.slice(newTripDays);
+  if (newTripDays < daysCopy.length) {
+    const keptDays = daysCopy.slice(0, newTripDays);
+    const overflowDays = daysCopy.slice(newTripDays);
 
     const overflowActivities = overflowDays.flatMap((day) => day.activities);
 
-    keptDays[keptDays.length - 1].activities.push(...overflowActivities);
+    const lastDay = keptDays[keptDays.length - 1];
+    keptDays[keptDays.length - 1] = {
+      ...lastDay,
+      activities: [...lastDay.activities, ...overflowActivities],
+    };
 
     return keptDays.map((day, index) => ({
       ...day,
       ...formatDayPlan(tripDays[index]),
     }));
-  } else {
-    // Case 3: Trip was extended → add extra empty days.
-    for (let i = currentDays.length; i < newTripDays; i++) {
-      copy.push({
-        ...formatDayPlan(tripDays[i]),
-        activities: [],
-      });
-    }
-
-    return copy.map((day, index) => ({
-      ...day,
-      ...formatDayPlan(tripDays[index]),
-    }));
   }
+
+  // Case 3: Trip was extended → add extra empty days.
+  for (let i = daysCopy.length; i < newTripDays; i++) {
+    daysCopy.push({
+      ...formatDayPlan(tripDays[i]),
+      activities: [],
+    });
+  }
+
+  return daysCopy.map((day, index) => ({
+    ...day,
+    ...formatDayPlan(tripDays[index]),
+  }));
 }

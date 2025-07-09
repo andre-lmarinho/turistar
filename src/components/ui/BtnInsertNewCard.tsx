@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { DEFAULT_NEW_CARD_COLOR_INDEX, COLOR_FOREGROUND_VALUES } from '@/constants/colors';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, COLOR_FOREGROUND_VALUES } from '@/constants';
 
 interface InsertNewCardProps {
   dayId: string;

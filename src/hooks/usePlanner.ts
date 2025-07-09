@@ -5,11 +5,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
-import { useTripRange } from '@/hooks/useTripRange';
-import { useItinerary } from '@/hooks/useItinerary';
-import { useDnDPlanner } from '@/hooks/useDnDPlanner';
-import { buildInitialDays } from '@/utils/initialDays';
-import { syncDaysWithTripRange } from '@/utils/syncDaysWithTripRange';
+import { useTripRange, useItinerary, usePlannerBoard } from '@/hooks';
+import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
 
 /**
  * High-level planner hook
@@ -51,15 +48,15 @@ export function usePlanner(enabled: boolean) {
   const {
     days,
     setDays,
-    sensors,
     activeId,
+    sensors,
     handleDragStart,
     handleDragOver,
     addActivity,
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = useDnDPlanner(buildInitialDays(tripDays));
+  } = usePlannerBoard(buildInitialDays(tripDays)); // useDnDPlanner → usePlannerBoard
 
   const storageKey = `itinerary-${planId}`;
 

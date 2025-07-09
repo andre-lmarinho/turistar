@@ -20,6 +20,8 @@ export interface CatalogActivity {
   image_url: string;
   price: string;
   category: string;
+  rating?: number;
+  reviewcount?: number;
 }
 
 /** Plan for a single day: a flat list of activities. */

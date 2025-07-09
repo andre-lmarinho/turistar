@@ -2,14 +2,19 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { DateRangePicker } from '@/components/ui/DatePicker';
-import OpenPanelButton from '@/components/ui/BtnOpenCatalog';
+
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import DestinationFilterPanel from '@/components/planner/catalog/DestinationFilterPanel';
-import ActivityModal from '@/components/planner/modal/ActivityModal';
-import { usePlanner } from '@/hooks/usePlanner';
-import type { Activity, CatalogActivity } from '@/types/itinerary';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants/colors';
+
+import {
+  ActivityModal,
+  DestinationFilterPanel,
+  DateRangePicker,
+  OpenPanelButton,
+} from '@/components';
+import { usePlanner, usePlannerBoard } from '@/hooks';
+import type { Activity, CatalogActivity } from '@/types';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
+import { buildInitialDays } from '@/utils';
 
 /**
  * Top-level client component for the /planner route.
@@ -18,34 +23,31 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants/colors
  * - Handles selecting a card to open the ActivityModal.
  */
 export default function PlannerClient() {
-  // Track whether filter panel is open
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  // Fetch immediately on mount
+
+  // Fetch URL + range + tripDays + base state
+  const { dest, tripDays, currentRange, handleRangeChange, isLoading, error } = usePlanner(true);
+
+  // Board state and DnD helpers (syncs with tripDays)
   const {
-    dest,
     days,
-    currentRange,
-    handleRangeChange,
-    isLoading,
-    error,
+    activeId,
     sensors,
     collisionDetection,
     handleDragStart,
     handleDragOver,
-    activeId,
     addActivity,
-    addBlankActivity,
     removeActivity,
     updateActivity,
-  } = usePlanner(true);
+    addBlankActivity,
+  } = usePlannerBoard(buildInitialDays(tripDays));
 
-  /* Build a Set of activity IDs already placed on the board */
+  // Build a Set of activity IDs already placed on the board
   const addedIds = useMemo(
     () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
     [days]
   );
 
-  /* Selected activity for editing in the modal */
   const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
     null
   );
@@ -92,13 +94,10 @@ export default function PlannerClient() {
         collisionDetection={collisionDetection}
         handleDragStart={handleDragStart}
         handleDragOver={handleDragOver}
-        onSelectActivity={(activity) => {
-          setSelectedActivity(activity);
-        }}
+        onSelectActivity={setSelectedActivity}
         onUpdateTitle={(id, newTitle) => {
           updateActivity(id, { title: newTitle });
         }}
-        /* Create a blank activity and immediately open the modal */
         onAddNew={(dayId, insertIdx) => {
           const idx = days.findIndex((d) => d.id === dayId);
           const blank = addBlankActivity(idx, insertIdx);
@@ -120,7 +119,6 @@ export default function PlannerClient() {
           }}
           onSave={(patch) => {
             if (!patch.title || !patch.title.trim()) return;
-            // If it's a temporary card → add it
             if (selectedActivity.id.startsWith('temp-')) {
               addActivity(
                 {
@@ -131,7 +129,6 @@ export default function PlannerClient() {
                 days.findIndex((d) => d.id === selectedActivity.dayId)
               );
             } else {
-              // Existing card → update
               updateActivity(selectedActivity.id, {
                 ...patch,
                 duration: Number(patch.duration),
@@ -145,10 +142,7 @@ export default function PlannerClient() {
           }}
           color={selectedActivity.color ?? ''}
           onColorChange={(newColor) => {
-            // Always allow changing color in the modal
             setSelectedActivity({ ...selectedActivity, color: newColor });
-
-            // Only update the board if the activity already has a valid title
             if (selectedActivity.title.trim() && !selectedActivity.id.startsWith('temp-')) {
               updateActivity(selectedActivity.id, { color: newColor });
             }
