@@ -9,6 +9,10 @@ export interface Activity {
   duration?: number;
   startTime?: string;
   imageUrl?: string;
+  /** Optional budget */
+  budget?: number;
+  /** Activity category, e.g. "museum" */
+  category?: string;
 }
 
 /** Catalog item (as fetched from the API) */

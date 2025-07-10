@@ -20,6 +20,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [when, setWhen] = useState(activity.startTime ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
+  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const [budget, setBudget] = useState<number>(activity.budget || 0);
+  const [category, setCategory] = useState(activity.category ?? '');
 
   /**
    * Automatically focus the title input only when the activity title is empty.
@@ -35,10 +38,40 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   return (
     <>
       {/* Image if have it */}
-      <div className="p-4">
+      <div className="p-4 space-y-2">
         <ActivityHeaderCard
           name={editedTitle.trim() || EMPTY_ACTIVITY_TITLE}
           imageUrl={activity.imageUrl}
+        />
+        {editedImageUrl && (
+          <button
+            type="button"
+            className="text-sm text-red-600 underline"
+            onClick={() => setEditedImageUrl('')}
+          >
+            Remove photo
+          </button>
+        )}
+        <input
+          type="text"
+          placeholder="Image URL"
+          value={editedImageUrl}
+          onChange={(e) => setEditedImageUrl(e.target.value)}
+          className="w-full border rounded p-2 text-sm"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              if (reader.result) setEditedImageUrl(String(reader.result));
+            };
+            reader.readAsDataURL(file);
+          }}
+          className="mt-2 text-sm"
         />
       </div>
 
@@ -69,6 +102,22 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         />
       </div>
 
+      <div>
+        <input
+          value={budget}
+          min={0}
+          onChange={(e) => setBudget(Number(e.target.value))}
+          placeholder="Budget"
+          className="flex-1 border rouded p-2 text-sm mr-4"
+        />
+        <input
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Category"
+          className="flex-1 border rouded p-2 text-sm"
+        />
+      </div>
+
       <div className="px-4">
         <label className="p-2 text-xs font-bold flex items-center gap-1 cursor-pointer">
           <AlignLeft size={12} />
@@ -93,6 +142,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               color,
               startTime: when,
               duration: Number(duration),
+              imageUrl: editedImageUrl.trim() || undefined,
+              budget,
+              category,
             })
           }
           className={`px-4 py-2 rounded text-sm ${

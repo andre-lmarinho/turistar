@@ -4,12 +4,15 @@
 import React, { useState, useMemo } from 'react';
 
 import PlannerBoard from '@/app/planner/PlannerBoard';
+import PlannerBoardVertical from '@/app/planner/PlannerBoardVertical';
+import BudgetPanel from '@/app/planner/BudgetPanel';
 
 import {
   ActivityModal,
   DestinationFilterPanel,
   DateRangePicker,
   OpenPanelButton,
+  ViewToggleButton,
 } from '@/components';
 import { usePlanner, usePlannerBoard } from '@/hooks';
 import type { Activity, CatalogActivity } from '@/types';
@@ -22,8 +25,17 @@ import { buildInitialDays } from '@/utils';
  *   and the drag-and-drop board.
  * - Handles selecting a card to open the ActivityModal.
  */
-export default function PlannerClient() {
+interface PlannerClientProps {
+  orientation?: 'horizontal' | 'vertical';
+  onToggleView: () => void;
+}
+
+export default function PlannerClient({
+  orientation = 'horizontal',
+  onToggleView,
+}: PlannerClientProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [showBudget, setShowBudget] = useState(false);
 
   // Fetch URL + range + tripDays + base state
   const { dest, tripDays, currentRange, handleRangeChange, isLoading, error } = usePlanner(true);
@@ -48,6 +60,8 @@ export default function PlannerClient() {
     [days]
   );
 
+  const BoardComponent = orientation === 'vertical' ? PlannerBoardVertical : PlannerBoard;
+
   const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
     null
   );
@@ -60,53 +74,71 @@ export default function PlannerClient() {
 
   return (
     <>
-      {/* Date picker + “Open Panel” button */}
-      <div className="mb-4 max-w-sm flex items-center space-x-2">
-        <DateRangePicker value={currentRange} onChange={handleRangeChange} />
+      {/* Date picker, catalog and view toggle */}
+
+      <div>
         <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
+      </div>
+      <div className="mb-4 flex items-center space-x-2">
+        <DateRangePicker value={currentRange} onChange={handleRangeChange} />
+        <button
+          onClick={() => setShowBudget((b) => !b)}
+          className="px-3 py-2 border rounded text-sm"
+        >
+          {showBudget ? 'Planner' : 'Budget'}
+        </button>
+
+        <ViewToggleButton orientation={orientation} onToggle={onToggleView} />
       </div>
 
       {/* Popup filter panel */}
-      <DestinationFilterPanel
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        // When adding from catalog, transform CatalogActivity to Activity
-        onAdd={(catalogItem: CatalogActivity) => {
-          addActivity({
-            id: catalogItem.id,
-            title: catalogItem.name,
-            description: catalogItem.description,
-            duration: catalogItem.duration,
-            imageUrl: catalogItem.image_url,
-            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
-            startTime: '', // default when adding from catalog
-          });
-        }}
-        onRemove={removeActivity}
-        addedIds={addedIds}
-      />
+      {showBudget ? (
+        <BudgetPanel />
+      ) : (
+        <>
+          {/* Popup filter panel */}
+          <DestinationFilterPanel
+            isOpen={isPanelOpen}
+            onClose={() => setIsPanelOpen(false)}
+            // When adding from catalog, transform CatalogActivity to Activity
+            onAdd={(catalogItem: CatalogActivity) => {
+              addActivity({
+                id: catalogItem.id,
+                title: catalogItem.name,
+                description: catalogItem.description,
+                duration: catalogItem.duration,
+                imageUrl: catalogItem.image_url,
+                color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+                startTime: '', // default when adding from catalog
+              });
+            }}
+            onRemove={removeActivity}
+            addedIds={addedIds}
+          />
 
-      {/* Drag-and-Drop board with click-to-edit */}
-      <PlannerBoard
-        days={days}
-        activeId={activeId}
-        sensors={sensors}
-        collisionDetection={collisionDetection}
-        handleDragStart={handleDragStart}
-        handleDragOver={handleDragOver}
-        onSelectActivity={setSelectedActivity}
-        onUpdateTitle={(id, newTitle) => {
-          updateActivity(id, { title: newTitle });
-        }}
-        onAddNew={(dayId, insertIdx) => {
-          const idx = days.findIndex((d) => d.id === dayId);
-          const blank = addBlankActivity(idx, insertIdx);
-          setSelectedActivity({ ...blank, dayId });
-        }}
-      />
+          {/* Drag-and-Drop board with click-to-edit */}
+          <BoardComponent
+            days={days}
+            activeId={activeId}
+            sensors={sensors}
+            collisionDetection={collisionDetection}
+            handleDragStart={handleDragStart}
+            handleDragOver={handleDragOver}
+            onSelectActivity={setSelectedActivity}
+            onUpdateTitle={(id, newTitle) => {
+              updateActivity(id, { title: newTitle });
+            }}
+            onAddNew={(dayId, insertIdx) => {
+              const idx = days.findIndex((d) => d.id === dayId);
+              const blank = addBlankActivity(idx, insertIdx);
+              setSelectedActivity({ ...blank, dayId });
+            }}
+          />
+        </>
+      )}
 
       {/* Activity editing modal */}
-      {selectedActivity && (
+      {!showBudget && selectedActivity && (
         <ActivityModal
           open={true}
           activity={selectedActivity}

@@ -158,6 +158,8 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
       description: '',
       duration: 0,
       color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+      budget: 0,
+      category: '',
     };
     setDays((prev) => {
       const copy = [...prev];

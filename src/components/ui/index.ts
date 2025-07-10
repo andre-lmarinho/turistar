@@ -9,6 +9,7 @@ export { default as CardColorButton } from './IcoCardColor';
 export { default as CloseButton } from './IcoClose';
 export { default as RemoveCardButton } from './IcoRemoveCard';
 export { default as SettingsToggleButton } from './IcoSettingsToggle';
+export { default as ViewToggleButton } from './ViewToggleButton';
 export { Button, buttonVariants } from './button';
 export { Calendar, CalendarDayButton } from './calendar';
 export { DateRangePicker } from './DatePicker';

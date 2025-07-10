@@ -50,7 +50,10 @@ export function useItinerary(dest: string | null, options: { enabled: boolean })
           activities: [],
         };
       }
-      dayPlans[dayIndex].activities.push(activity);
+      dayPlans[dayIndex].activities.push({
+        ...activity,
+        budget: (activity as any).price,
+      });
     });
 
     return dayPlans;
