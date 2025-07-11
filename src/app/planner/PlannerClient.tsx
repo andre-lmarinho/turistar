@@ -15,10 +15,9 @@ import {
   ViewToggleButton,
   ModeToggleButton,
 } from '@/components';
-import { usePlanner, usePlannerBoard } from '@/hooks';
+import { usePlanner } from '@/hooks';
 import type { Activity, CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
-import { buildInitialDays } from '@/utils';
 
 /**
  * Top-level client component for the /planner route.
@@ -39,12 +38,13 @@ export default function PlannerClient({
   const [showBudget] = useState(false);
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
 
-  // Fetch URL + range + tripDays + base state
-  const { dest, tripDays, currentRange, handleRangeChange, isLoading, error } = usePlanner(true);
-
-  // Board state and DnD helpers (syncs with tripDays)
   const {
+    dest,
     days,
+    currentRange,
+    handleRangeChange,
+    isLoading,
+    error,
     activeId,
     sensors,
     collisionDetection,
@@ -54,7 +54,7 @@ export default function PlannerClient({
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = usePlannerBoard(buildInitialDays(tripDays));
+  } = usePlanner(true);
 
   // Build a Set of activity IDs already placed on the board
   const addedIds = useMemo(

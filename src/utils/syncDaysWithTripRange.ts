@@ -17,6 +17,9 @@ import { formatDayPlan } from '@/utils/formatDayPlan';
  */
 export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]): DayPlan[] {
   const newTripDays = tripDays.length;
+  if (newTripDays === 0) {
+    return [];
+  }
 
   // Clone deeply so the original days remain untouched
   const daysCopy = currentDays.map((day) => ({
