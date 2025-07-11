@@ -27,6 +27,14 @@ describe('syncDaysWithTripRange immutability', () => {
     expect(result[1].activities.map((a) => a.id)).toEqual(['b1', 'c1']);
   });
 
+  it('handles empty trip days', () => {
+    const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [buildActivity('a1')] }];
+
+    const result = syncDaysWithTripRange(days, []);
+
+    expect(result).toEqual([]);
+  });
+
   it('does not mutate original days when extending the trip', () => {
     const a1 = buildActivity('a1');
     const b1 = buildActivity('b1');

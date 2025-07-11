@@ -83,7 +83,7 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
         style={{ zIndex: editing ? 50 : undefined }}
       >
         {/* main content */}
-        <div className={`flex-1 p-3 flex flex-col ${twBg ?? ''}`}>
+        <div className={`flex-1 p-3 flex w-40 flex-col ${twBg ?? ''}`}>
           {/* image */}
           {imageUrl && (
             <Image

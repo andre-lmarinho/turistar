@@ -22,7 +22,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
    * Fetch the catalog from the API when the panel is open and not already loaded.
    */
   useEffect(() => {
-    if (!isOpen || items.length > 0) return;
+    if (!isOpen) return;
 
     setLoading(true);
     setError(null);
@@ -35,7 +35,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
       })
       .catch(() => setError('Failed to load catalog.'))
       .finally(() => setLoading(false));
-  }, [isOpen, city, items.length]);
+  }, [isOpen, city]);
 
   /**
    * Returns a filtered and sorted list of activities.
