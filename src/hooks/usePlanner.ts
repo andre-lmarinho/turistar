@@ -1,7 +1,7 @@
 // src/hooks/usePlanner.ts
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
@@ -52,6 +52,7 @@ export function usePlanner(enabled: boolean) {
     sensors,
     handleDragStart,
     handleDragOver,
+    handleDragEnd,
     addActivity,
     removeActivity,
     updateActivity,
@@ -90,9 +91,13 @@ export function usePlanner(enabled: boolean) {
   }, [tripDays, setDays]);
 
   /* ---------------------- Persist to localStorage --------------------- */
+  const lastSaved = useRef<string | null>(null);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, JSON.stringify(days));
+    const serialized = JSON.stringify(days);
+    // Added as a safety net for useEffect usage
+    if (lastSaved.current !== serialized) {
+      lastSaved.current = serialized;
+      localStorage.setItem(storageKey, serialized);
     }
   }, [storageKey, days]);
 
@@ -111,6 +116,7 @@ export function usePlanner(enabled: boolean) {
     collisionDetection: closestCenter,
     handleDragStart,
     handleDragOver,
+    handleDragEnd,
 
     /* Date-picker */
     handleRangeChange,

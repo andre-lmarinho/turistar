@@ -21,6 +21,17 @@ export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]):
     return [];
   }
 
+  // Early return: no structural change
+  const isSameLength = currentDays.length === newTripDays;
+  const isSameDates =
+    isSameLength &&
+    currentDays.every((day, i) => {
+      const formatted = formatDayPlan(tripDays[i]);
+      return day.id === formatted.id && day.label === formatted.label;
+    });
+
+  if (isSameDates) return currentDays;
+
   // Clone deeply so the original days remain untouched
   const daysCopy = currentDays.map((day) => ({
     ...day,

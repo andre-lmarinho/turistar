@@ -50,6 +50,7 @@ export default function PlannerClient({
     collisionDetection,
     handleDragStart,
     handleDragOver,
+    handleDragEnd,
     addActivity,
     removeActivity,
     updateActivity,
@@ -121,6 +122,7 @@ export default function PlannerClient({
             collisionDetection={collisionDetection}
             handleDragStart={handleDragStart}
             handleDragOver={handleDragOver}
+            handleDragEnd={handleDragEnd}
             onSelectActivity={setSelectedActivity}
             onUpdateTitle={(id, newTitle) => {
               updateActivity(id, { title: newTitle });

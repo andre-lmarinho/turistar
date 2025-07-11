@@ -29,7 +29,7 @@ export default function DayColumn({
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (
-    <section className="flex-1 min-w-[200px] max-w-[340px]">
+    <section ref={setNodeRef} className={`flex-1 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
       <header className="m-2 flex items-center justify-between">
         <h4 className="font-semibold">{day.label}</h4>
       </header>

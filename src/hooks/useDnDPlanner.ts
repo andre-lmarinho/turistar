@@ -7,6 +7,7 @@ import {
   useSensors,
   type DragStartEvent,
   type DragOverEvent,
+  type DragEndEvent,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { useState } from 'react';
@@ -31,29 +32,28 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   /* ----------------------------- dnd events ----------------------------- */
-  /** Remember which card was picked up */
   function handleDragStart(e: DragStartEvent) {
     setActiveId(e.active.id as string);
   }
 
-  /**
-   * Live reorder on drag over:
-   * - same column → arrayMove
-   * - cross-column → splice out + insert
-   */
   function handleDragOver(e: DragOverEvent) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
+  }
+
+  function handleDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    setActiveId(null);
+
+    if (!over || active.id === over.id) return;
 
     setDays((prev) => {
-      // 1) localizar índices no estado atual
       const srcDayIdx = prev.findIndex((d) => d.activities.some((a) => a.id === active.id));
       const dstDayIdx = prev.findIndex(
         (d) => d.id === over.id || d.activities.some((a) => a.id === over.id)
       );
       if (srcDayIdx < 0 || dstDayIdx < 0) return prev;
 
-      // 2) clonar apenas os dias afetados e suas atividades
       const updated = [...prev];
       const srcDay = { ...prev[srcDayIdx], activities: [...prev[srcDayIdx].activities] };
       const dstDay =
@@ -73,11 +73,8 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
           ? dstActs.length
           : dstActs.findIndex((a) => a.id === over.id);
 
-      if (srcDayIdx === dstDayIdx && oldIdx === overIdx) {
-        return prev; // no movement → don’t update
-      }
+      if (srcDayIdx === dstDayIdx && oldIdx === overIdx) return prev;
 
-      // 3) aplicar movimento sem mutar o estado original
       let moved: Activity;
       if (srcDayIdx === dstDayIdx) {
         srcDay.activities = arrayMove(srcActs, oldIdx, overIdx);
@@ -189,6 +186,7 @@ export function useDnDPlanner(initial: DayPlan[] = []) {
     /* dnd */
     handleDragStart,
     handleDragOver,
+    handleDragEnd,
     /* external mutators */
     setDays,
     addActivity,
