@@ -16,7 +16,8 @@ export default function ViewToggleButton({ orientation, onToggle }: ViewToggleBu
     <button
       onClick={onToggle}
       className="relative group text-gray-600 hover:text-gray-800 transition-transform hover:scale-110"
-      aria-label="Toggle view"
+      aria-pressed={orientation === 'vertical'}
+      aria-label={label}
     >
       <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded text-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
         {label}

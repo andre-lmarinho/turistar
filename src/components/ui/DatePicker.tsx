@@ -25,7 +25,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            'w-full flex items-center justify-between rounded border px-4 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary transition',
+            'space-x-4 flex items-center justify-between rounded border px-4 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary transition',
             !value?.from && 'text-muted-foreground italic',
             className
           )}

@@ -44,6 +44,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Use Tailwind CSS for styling.
 - Follow a utility-first approach.
 - Write custom CSS only when necessary.
+- Use global.css as source code.
 
 ## Testing Requirements
 

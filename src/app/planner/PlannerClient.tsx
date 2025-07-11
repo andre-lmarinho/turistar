@@ -13,6 +13,7 @@ import {
   DateRangePicker,
   OpenPanelButton,
   ViewToggleButton,
+  ModeToggleButton,
 } from '@/components';
 import { usePlanner, usePlannerBoard } from '@/hooks';
 import type { Activity, CatalogActivity } from '@/types';
@@ -35,7 +36,8 @@ export default function PlannerClient({
   onToggleView,
 }: PlannerClientProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [showBudget, setShowBudget] = useState(false);
+  const [showBudget] = useState(false);
+  const [mode, setMode] = useState<'planner' | 'budget'>('planner');
 
   // Fetch URL + range + tripDays + base state
   const { dest, tripDays, currentRange, handleRangeChange, isLoading, error } = usePlanner(true);
@@ -76,31 +78,26 @@ export default function PlannerClient({
     <>
       {/* Date picker, catalog and view toggle */}
 
-      <div>
-        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
-      </div>
-      <div className="mb-4 flex items-center space-x-2">
+      <div className="mb-4">
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
-        <button
-          onClick={() => setShowBudget((b) => !b)}
-          className="px-3 py-2 border rounded text-sm"
-        >
-          {showBudget ? 'Planner' : 'Budget'}
-        </button>
-
-        <ViewToggleButton orientation={orientation} onToggle={onToggleView} />
+      </div>
+      <div className="mb-4 flex items-center gap-4 ">
+        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
+        <ModeToggleButton value={mode} onChange={setMode} />
+        {mode === 'planner' && (
+          <ViewToggleButton orientation={orientation} onToggle={onToggleView} />
+        )}
       </div>
 
       {/* Popup filter panel */}
-      {showBudget ? (
+      {mode === 'budget' ? (
         <BudgetPanel />
-      ) : (
+      ) : mode === 'planner' ? (
         <>
           {/* Popup filter panel */}
           <DestinationFilterPanel
             isOpen={isPanelOpen}
             onClose={() => setIsPanelOpen(false)}
-            // When adding from catalog, transform CatalogActivity to Activity
             onAdd={(catalogItem: CatalogActivity) => {
               addActivity({
                 id: catalogItem.id,
@@ -109,7 +106,7 @@ export default function PlannerClient({
                 duration: catalogItem.duration,
                 imageUrl: catalogItem.image_url,
                 color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
-                startTime: '', // default when adding from catalog
+                startTime: '',
               });
             }}
             onRemove={removeActivity}
@@ -135,7 +132,7 @@ export default function PlannerClient({
             }}
           />
         </>
-      )}
+      ) : null}
 
       {/* Activity editing modal */}
       {!showBudget && selectedActivity && (

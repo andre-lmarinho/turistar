@@ -38,18 +38,24 @@ export default function BudgetPanel() {
     setValues((prev) => ({ ...prev, [key]: num }));
   };
 
-  const renderInput = (label: string, key: keyof BudgetValues) => (
-    <div className="flex items-center justify-between gap-4">
-      <label className="font-medium">{label}</label>
-      <input
-        type="number"
-        min={0}
-        value={values[key]}
-        onChange={handleChange(key)}
-        className="w-32 border rounded px-2 py-1 text-right"
-      />
-    </div>
-  );
+  const renderInput = (label: string, key: keyof BudgetValues) => {
+    const id = `budget-${key}`;
+    return (
+      <div className="flex items-center justify-between gap-4">
+        <label htmlFor={id} className="font-medium">
+          {label}
+        </label>
+        <input
+          id={id}
+          type="number"
+          min={0}
+          value={values[key]}
+          onChange={handleChange(key)}
+          className="w-32 border rounded px-2 py-1 text-right"
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-4 p-4 bg-background rounded-xl border max-w-md">

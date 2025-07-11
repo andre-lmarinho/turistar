@@ -52,14 +52,24 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             Remove photo
           </button>
         )}
+
+        <label htmlFor="image-url" className="sr-only">
+          Image URL
+        </label>
         <input
+          id="image-url"
           type="text"
           placeholder="Image URL"
           value={editedImageUrl}
           onChange={(e) => setEditedImageUrl(e.target.value)}
           className="w-full border rounded p-2 text-sm"
         />
+
+        <label htmlFor="image-file" className="sr-only">
+          Upload image
+        </label>
         <input
+          id="image-file"
           type="file"
           accept="image/*"
           onChange={(e) => {
@@ -76,50 +86,72 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       </div>
 
       {/* Editable title, description, when & duration */}
-
       <input
         ref={titleInputRef}
         value={editedTitle}
         onChange={(e) => setEditedTitle(e.target.value)}
         placeholder={EMPTY_ACTIVITY_TITLE}
-        className="content-center font-bold rounded mx-4 px-2 py-2 text-2xl"
+        className="content-center font-bold rounded mx-4 mb-4 px-2 py-2 text-2xl"
       />
 
-      <div className="p-6">
-        <input
-          type="time"
-          value={when}
-          onChange={(e) => setWhen(e.target.value)}
-          className="flex-1 border rounded p-2 text-sm mr-4"
-        />
-        <input
-          type="number"
-          min={0}
-          value={duration}
-          onChange={(e) => setDuration(Number(e.target.value))}
-          placeholder="min"
-          className="w-24 border rounded px-3 py-2 text-sm"
-        />
+      {/* Editable title, description, when & duration */}
+      <div className="px-4 mb-4 flex gap-2">
+        <div>
+          <label className="text-xs font-bold flex items-center gap-1">
+            <span>Time</span>
+          </label>
+          <input
+            type="time"
+            value={when}
+            onChange={(e) => setWhen(e.target.value)}
+            className="flex-1 border rounded p-2 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs font-bold flex items-center gap-1">
+            <span>Duration</span>
+          </label>
+          <input
+            type="number"
+            min={0}
+            value={duration}
+            onChange={(e) => setDuration(Number(e.target.value))}
+            placeholder="min"
+            className="w-24 border rounded px-3 py-2 text-sm"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs font-bold flex items-center gap-1">
+            <span>Budget</span>
+          </label>
+          <input
+            id="budget"
+            value={budget}
+            min={0}
+            onChange={(e) => setBudget(Number(e.target.value))}
+            placeholder="Budget"
+            className="w-24 flex-1 border rouded p-2 text-sm"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-bold flex items-center gap-1">
+            <span>Category</span>
+          </label>
+          <input
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Category"
+            className="w-24 flex-1 border rouded p-2 text-sm"
+          />
+        </div>
       </div>
 
-      <div>
-        <input
-          value={budget}
-          min={0}
-          onChange={(e) => setBudget(Number(e.target.value))}
-          placeholder="Budget"
-          className="flex-1 border rouded p-2 text-sm mr-4"
-        />
-        <input
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="Category"
-          className="flex-1 border rouded p-2 text-sm"
-        />
-      </div>
-
+      {/* Notes */}
       <div className="px-4">
-        <label className="p-2 text-xs font-bold flex items-center gap-1 cursor-pointer">
+        <label className="text-xs font-bold flex items-center gap-1">
           <AlignLeft size={12} />
           <span>Notes</span>
         </label>

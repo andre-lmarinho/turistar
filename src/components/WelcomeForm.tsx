@@ -7,7 +7,6 @@ import { Button, DateRangePicker } from '@/components';
 import { STARTER_PLANNER_TITLE } from '@/constants';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
-import Image from 'next/image';
 
 export default function WelcomeForm() {
   const router = useRouter();
@@ -38,42 +37,21 @@ export default function WelcomeForm() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div
-        className="max-w-4xl w-full flex flex-col md:flex-row p-0 rounded-2xl overflow-hidden"
-        style={{ backgroundColor: 'var(--card)' }}
-      >
-        {/* Left Side: Text and Form */}
-        <div className="flex-1 space-y-6 text-left p-8">
+    <div className="items-center text-center max-w-[400px]">
+      <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--card)' }}>
+        <div className="space-y-6 p-8">
           <div>
-            <h1 className="text-4xl md:text-5xl md:min-w-100 font-bold mb-2">
-              Let&#39;s Go to Bahia?
-            </h1>
+            <h1 className="text-3xl font-bold mb-2">Let&#39;s Plan Your Next Trip to Salvador?</h1>
           </div>
 
-          <div
-            className="p-4 rounded-xl space-y-4"
-            style={{ backgroundColor: 'var(--background)' }}
-          >
+          <div className="space-y-4 flex justify-center">
             <DateRangePicker value={range} onChange={setRange} />
           </div>
-          {error && <p className="text-[var(--destructive)] text-sm">{error}</p>}
-          <div className="flex justify-end">
-            <Button type="button" className="cursor-pointer" onClick={handleSubmit}>
-              Start Your Adventure
-            </Button>
-          </div>
-        </div>
+          <Button type="button" className="cursor-pointer" onClick={handleSubmit}>
+            Start Your Planning
+          </Button>
 
-        {/* Right Side: Image pinned to bottom */}
-        <div className="flex-1 flex justify-center md:justify-end items-end relative">
-          <Image
-            src="/images/mascot_1_.webp"
-            alt="Mascot Hippo"
-            width={300}
-            height={300}
-            className="object-contain md:absolute md:bottom-0 md:right-0"
-          />
+          {error && <p className="text-[var(--destructive)] text-sm">{error}</p>}
         </div>
       </div>
     </div>
