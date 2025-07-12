@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import type { SortMode } from '@/components/planner/catalog/SortSelector';
-import type { CatalogActivity } from '@/types/itinerary'; // Catalog-specific type
+import type { CatalogActivity } from '@/types';
 
 /**
  * Hook to fetch and manage the catalog activities.
@@ -27,7 +27,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/itinerary?dest=${city}`)
+    fetch(`/api/catalog?dest=${city}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((data: { activities: CatalogActivity[] }) => {
         // Store activities in the catalog format

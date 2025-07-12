@@ -1,6 +1,6 @@
 // src/utils/syncDaysWithTripRange.ts
 
-import type { DayPlan } from '@/types/itinerary';
+import type { DayPlan } from '@/types';
 import { formatDayPlan } from '@/utils/formatDayPlan';
 
 /**

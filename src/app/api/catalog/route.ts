@@ -1,9 +1,9 @@
-// src/app/api/itinerary/route.ts
+// src/app/api/catalog/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import salvador from '@/data/salvador.json';
 
 /**
- * API route to return the mock itinerary for Salvador.
+ * API route to return the mock catalog for Salvador.
  * This is a static, local file used while the external API integration is paused.
  */
 export async function GET(req: NextRequest) {

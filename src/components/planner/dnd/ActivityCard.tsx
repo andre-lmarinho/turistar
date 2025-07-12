@@ -1,46 +1,25 @@
 // src/components/planner/dnd/ActivityCard.tsx
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
-import { Clock, Hourglass } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Button } from '@/components';
 import type { Activity } from '@/types';
-import { EMPTY_ACTIVITY_TITLE } from '@/constants';
-import ReactDOM from 'react-dom';
+import { isTouchDevice } from '@/lib';
+import { ActivityCardBase } from './ActivityCardBase';
 
-/**
- * Card shown inside DayColumn.
- * - Becomes **clickable** via `onSelect` (opens edit-modal).
- * - Renders a colour strip at the left if `activity.color` is set.
- * - Now accepts the core Activity type as is.
- */
 interface ActivityCardProps {
-  activity: Activity; // The core activity type used across the app
-  onSelect?: () => void; // optional click handler
-  onTitleSave?: (newTitle: string) => void; // inline title update
+  activity: Activity;
+  onSelect?: () => void;
+  onTitleSave?: (newTitle: string) => void;
 }
 
 export default function ActivityCard({ activity, onSelect, onTitleSave }: ActivityCardProps) {
-  const { title, startTime, duration, color, imageUrl } = activity;
-
-  /* Tailwind class (e.g. "bg-sky-500") OR inline hex style */
+  const { title, duration, budget, color, imageUrl } = activity;
   const twBg = color && !color.startsWith('#') ? color : undefined;
-
-  /*
-   * Prevents hydration mismatch by ensuring this section only renders on the client side.
-   * Next.js can render inconsistent initial markup between server and client for dynamic values.
-   * This guard ensures the conditional content is only rendered after the component is mounted in the browser.
-   */
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  /* ------------------------- inline editing ------------------------- */
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement>;
 
   useEffect(() => {
     if (editing) {
@@ -61,90 +40,44 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
     setDraftTitle(title);
     setEditing(false);
   }
-  /* ========================================================================================================== */
 
   return (
     <>
       {editing &&
-        ReactDOM.createPortal(
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={cancel} />,
-          document.body
-        )}
+        ReactDOM.createPortal(<div className="backdrop-overlay" onClick={cancel} />, document.body)}
+
       <div
-        role="button"
+        className="group relative"
         onClick={() => {
           if (!editing) onSelect?.();
         }}
         onContextMenu={(e) => {
+          if (isTouchDevice()) return;
           e.preventDefault();
           if (!editing) setEditing(true);
         }}
-        className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab relative"
-        style={{ zIndex: editing ? 50 : undefined }}
       >
-        {/* main content */}
-        <div className={`flex-1 p-3 flex w-40 flex-col ${twBg ?? ''}`}>
-          {/* image */}
-          {imageUrl && (
-            <Image
-              src={imageUrl}
-              alt={title}
-              width={400}
-              height={200}
-              unoptimized
-              className="h-30 mb-2 rounded-lg w-full object-cover"
-            />
-          )}
+        <ActivityCardBase
+          editing={editing}
+          title={title}
+          draftTitle={draftTitle}
+          onDraftTitleChange={setDraftTitle}
+          onSave={save}
+          inputRef={inputRef}
+          imageUrl={imageUrl}
+          duration={duration}
+          twBg={twBg}
+          budget={budget}
+        />
 
-          {/* title or inline editor */}
-          {editing ? (
-            <div className="space-y-2">
-              <input
-                ref={inputRef}
-                value={draftTitle}
-                onChange={(e) => setDraftTitle(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    save();
-                  }
-                }}
-                className="w-full bg-background px-2 py-1 text-sm"
-              />
-            </div>
-          ) : (
-            <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
-          )}
-
-          {/* Conditionally render schedule and duration only if at least one exists */}
-          {isMounted && (startTime?.trim() || duration! > 0) && (
-            <div className="flex gap-6 text-sm">
-              {/* Conditionally render start time */}
-              {startTime?.trim() && (
-                <span className="inline-flex items-center gap-2">
-                  <Clock size={12} />
-                  {startTime}
-                </span>
-              )}
-              {/* Conditionally render duration */}
-              {duration! > 0 && (
-                <span className="inline-flex items-center gap-2">
-                  <Hourglass size={12} />
-                  {duration} h
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+        {editing && (
+          <div className="relative pt-4 z-50">
+            <Button type="button" size="sm" className="cursor-pointer" onClick={save}>
+              Update
+            </Button>
+          </div>
+        )}
       </div>
-      {/* Update Button Outside */}
-      {editing && (
-        <div className="relative pt-4 z-50">
-          <Button type="button" size="sm" className="cursor-pointer" onClick={save}>
-            Update
-          </Button>
-        </div>
-      )}
     </>
   );
 }

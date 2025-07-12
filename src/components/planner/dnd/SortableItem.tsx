@@ -9,19 +9,13 @@ import { cn } from '@/lib';
 import { ActivityCard } from '@/components';
 import type { Activity } from '@/types';
 
-/**
- * A draggable wrapper around an ActivityCard:
- * - Renders as <li> in the day columns
- * - Renders as <div> in the drag overlay
- * - Handles dnd-kit attributes, listeners, and styles
- */
 export interface SortableItemProps {
-  id: string; // unique identifier for dnd-kit
-  activity: Activity; // data to display in the card
-  onSelect?: () => void; // click handler to open edit modal
-  onTitleSave?: (newTitle: string) => void; // inline title save
-  dragOverlay?: boolean; // true → use <div> for overlay
-  className?: string; // additional CSS classes
+  id: string;
+  activity: Activity;
+  onSelect?: () => void;
+  onTitleSave?: (newTitle: string) => void;
+  dragOverlay?: boolean;
+  className?: string;
 }
 
 export function SortableItem({
@@ -32,22 +26,30 @@ export function SortableItem({
   dragOverlay = false,
   className,
 }: SortableItemProps) {
+  if (dragOverlay) {
+    return (
+      <div className={cn('shadow-lg cursor-grabbing', className)}>
+        <ActivityCard activity={activity} onSelect={onSelect} onTitleSave={onTitleSave} />
+      </div>
+    );
+  }
+
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id,
   });
 
   // Apply transform/transition unless we're in the overlay
-  const style = dragOverlay ? {} : { transform: CSS.Transform.toString(transform), transition };
-
-  // Use <div> for overlay so no list bullets; otherwise <li>
-  const Tag = dragOverlay ? 'div' : 'li';
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   return (
-    <Tag
+    <li
       ref={setNodeRef}
       style={style}
       className={cn(
-        // dragging styles
+        'list-none',
         isDragging
           ? dragOverlay
             ? 'shadow-lg cursor-grabbing'
@@ -58,8 +60,7 @@ export function SortableItem({
       {...attributes}
       {...listeners}
     >
-      {/* Render the activity card; clicking it opens the edit modal */}
       <ActivityCard activity={activity} onSelect={onSelect} onTitleSave={onTitleSave} />
-    </Tag>
+    </li>
   );
 }

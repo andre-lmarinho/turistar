@@ -1,8 +1,8 @@
 // src/components/planner/catalog/DestinationFilterPanel.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { DestinationHeader, DestinationCardGrid, ConfigSidebar } from '@/components';
+import React from 'react';
+import { DestinationHeader, DestinationCardGrid } from '@/components';
 import type { CatalogActivity } from '@/types';
 import { useDestinationFilter } from '@/hooks';
 
@@ -26,8 +26,6 @@ export default function DestinationFilterPanel({
   onRemove,
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   // Extract filter logic into custom hook
   const { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error } =
     useDestinationFilter(isOpen);
@@ -37,28 +35,23 @@ export default function DestinationFilterPanel({
   return (
     <>
       {/* backdrop */}
-      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
+      <div className="backdrop-overlay" onClick={onClose} />
 
       {/* popup */}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="relative w-[95vw] h-[95vh] max-w-[1350px] bg-white rounded-lg shadow-xl flex flex-col">
+        <div className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-white rounded-lg shadow-xl flex flex-col">
           {/* header rows */}
           <DestinationHeader
-            city={'salvador'}
-            onChangeCity={() => {}}
             categories={categories}
             activeCats={activeCats}
             toggleCat={toggleCat}
             sortMode={sortMode}
             setSortMode={setSortMode}
-            onToggleSidebar={() => setSidebarOpen((o) => !o)}
             onClose={onClose}
           />
 
           {/* sidebar + cards */}
           <div className="flex-1 flex overflow-auto">
-            <ConfigSidebar open={sidebarOpen} />
-
             <div className="flex-1 p-6">
               {loading && <p>Loading catalog...</p>}
               {error && <p className="text-red-500">{error}</p>}

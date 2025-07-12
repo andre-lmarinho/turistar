@@ -1,4 +1,4 @@
-// src/components/ui/BtnOpenCatalog.tsx
+// src/components/ui/OpenCatalog.tsx
 'use client';
 
 import React from 'react';

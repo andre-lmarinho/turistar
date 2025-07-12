@@ -58,13 +58,18 @@ export default function BudgetPanel() {
   };
 
   return (
-    <div className="space-y-4 p-4 bg-background rounded-xl border max-w-md">
-      {renderInput('Transportation', 'transport')}
-      {renderInput('Lodging', 'lodging')}
-      {renderInput('Food', 'food')}
-      {renderInput('Tours & Activities', 'activities')}
-      {renderInput('Shopping & Extras', 'shopping')}
-      {renderInput('Documents & Fees', 'documents')}
+    <div className="p-4 md:mb-10 bg-background flex flex-col flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
+      <div className="pb-4 flex justify-between">
+        <h2 className="text-3xl font-semibold">Traveling Budget</h2>
+      </div>
+      <div className="space-y-4">
+        {renderInput('Transportation', 'transport')}
+        {renderInput('Lodging', 'lodging')}
+        {renderInput('Food', 'food')}
+        {renderInput('Tours & Activities', 'activities')}
+        {renderInput('Shopping & Extras', 'shopping')}
+        {renderInput('Documents & Fees', 'documents')}
+      </div>
       <div className="flex items-center justify-between pt-2 border-t font-semibold">
         <span>Total</span>
         <span>${total.toFixed(2)}</span>

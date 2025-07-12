@@ -38,18 +38,6 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npetKkqs7CPmlw0ctlzxOZ3GkZCC77rdpxDg1GSHNvHn0yPZ13ZU0vnpHRHY5DOgpKM2XZ1q1VQhCwXa_TEyPwUrZL7sjwFAgdWgS1Q5zHnlxKyiUP6fcoJ07-oStHH6YTIc3A=w408-h305-k-no"
     },
     {
-      "id": "mother-stella-de-oxóssi-monument",
-      "name": "Mother Stella De Oxóssi Monument",
-      "rating": 4.5,
-      "reviewcount": "42",
-      "category": "monument",
-      "duration": 1,
-      "price": "$",
-      "tags": ["culture", "local", "spiritual", "historic"],
-      "description": "Tribute to an influential Candomblé priestess, representing Afro-Brazilian spirituality.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nod6WQ7RpKRlPZkEMCNvnsIUUgV-DD-gfgjQ8Vdag3XPqhludXICrb8SWiD0OGZv-3xMGCnQ4LjtHo7RmeB0IO4d4mgXLj55adVr0f9zfWgT4AxhGH8rarBr9wyV99uQkXLuPCJ=w408-h544-k-no"
-    },
-    {
       "id": "dunes-park-salvador",
       "name": "Dunes Park Salvador",
       "rating": 4.6,
@@ -816,18 +804,6 @@
       "tags": ["beach", "local", "seafood", "culture", "casual"],
       "description": "One of Salvador’s most famous beaches, known for music, poetry, and laid-back atmosphere.",
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noChD6q1ZnUi85v_I9w7x-FTt8JX2RrxpXWvYICGvOWpM2fQyKKgGpxPKOHuoYa5ogQbrdVjK1o-Nu_1tVfPzwBd825MXpdHiL2aU93g9rb6Tezo_MYvfd1mN0_UgVsKtSPNy9H=w408-h301-k-no"
-    },
-    {
-      "id": "oitozero-travel-&-miles",
-      "name": "OitoZero Travel & Miles",
-      "rating": 5.0,
-      "reviewcount": "485",
-      "category": "tour operator",
-      "duration": null,
-      "price": "$$",
-      "tags": ["travel", "local", "planning", "custom"],
-      "description": "Travel agency focused on customized packages and mileage redemption services.",
-      "image_url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=j3iCIQlLr9SXqTELNnRhpg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=17.153214&pitch=0&thumbfov=100"
     },
     {
       "id": "saco’s-small-waterfall",

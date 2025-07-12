@@ -1,6 +1,7 @@
-import { syncDaysWithTripRange } from './syncDaysWithTripRange';
-import { formatDayPlan } from './formatDayPlan';
-import type { DayPlan, Activity } from '@/types/itinerary';
+// src/utils/syncDaysWithTripRange.test.ts
+
+import { formatDayPlan, syncDaysWithTripRange } from '@/utils';
+import type { DayPlan, Activity } from '@/types';
 
 function buildActivity(id: string): Activity {
   return { id, title: id.toUpperCase(), color: 'red' };
@@ -29,9 +30,7 @@ describe('syncDaysWithTripRange immutability', () => {
 
   it('handles empty trip days', () => {
     const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [buildActivity('a1')] }];
-
     const result = syncDaysWithTripRange(days, []);
-
     expect(result).toEqual([]);
   });
 

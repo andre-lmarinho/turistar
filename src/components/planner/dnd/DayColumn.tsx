@@ -10,9 +10,8 @@ import type { DayPlan, Activity } from '@/types';
 
 interface DayColumnProps {
   day: DayPlan;
-  onRemove?: () => void;
   onSelectActivity?: (activity: Activity) => void;
-  onAddNew: (dayId: string, index?: number) => void; // add a blank activity to this day
+  onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle?: (id: string, title: string) => void;
 }
 
@@ -23,41 +22,46 @@ interface DayColumnProps {
 export default function DayColumn({
   day,
   onSelectActivity,
-  onAddNew,
+  onAddActivity,
   onUpdateTitle,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
   return (
-    <section ref={setNodeRef} className={`flex-1 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
+    <section
+      ref={setNodeRef}
+      className={`flex-1 flex flex-col h-full ${isOver ? 'ring-2 ring-primary/40' : ''}`}
+    >
       <header className="m-2 flex items-center justify-between">
-        <h4 className="font-semibold">{day.label}</h4>
+        <h2 className="font-semibold">{day.label}</h2>
       </header>
 
       <SortableContext
+        key={day.id}
+        id={day.id}
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <ul ref={setNodeRef} className={`mb-4 ${isOver ? 'ring-2 ring-primary/40' : ''}`}>
+        <div className="column h-full overflow-y-auto pr-1">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem
                 id={activity.id}
                 activity={activity}
+                dragOverlay={false}
                 onSelect={() => onSelectActivity?.(activity)}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
               />
               {idx < day.activities.length - 1 && (
-                <InsertNewCard dayId={day.id} index={idx + 1} onAddNew={onAddNew} />
+                <InsertNewCard dayId={day.id} index={idx + 1} onAddActivity={onAddActivity} />
               )}
             </React.Fragment>
           ))}
-        </ul>
+        </div>
       </SortableContext>
 
-      {/* Add a “New card” button at the bottom */}
-      <div className="flex justify-center">
-        <AddNewCard dayId={day.id} index={day.activities.length} onAddNew={onAddNew} />
+      <div className="mt-4 flex justify-center">
+        <AddNewCard dayId={day.id} index={day.activities.length} onAddActivity={onAddActivity} />
       </div>
     </section>
   );

@@ -47,7 +47,7 @@ export default function WelcomeForm() {
           <div className="space-y-4 flex justify-center">
             <DateRangePicker value={range} onChange={setRange} />
           </div>
-          <Button type="button" className="cursor-pointer" onClick={handleSubmit}>
+          <Button type="button" onClick={handleSubmit}>
             Start Your Planning
           </Button>
 

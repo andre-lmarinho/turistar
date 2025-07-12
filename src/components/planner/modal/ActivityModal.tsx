@@ -29,29 +29,22 @@ export default function ActivityModal({
   if (!open) return null;
 
   return ReactDOM.createPortal(
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={onClose} />
+    <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
+      <div
+        className="bg-white rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <ActivityModalHeader
+          activity={activity}
+          bgColor={color}
+          onDelete={onDelete}
+          onClose={onClose}
+          onColorChange={onColorChange}
+        />
 
-      {/* Modal container */}
-      <div className="fixed rounded-lg inset-0 z-50 top-50 left-50 items-center justify-center w-[95%] max-w-[650px] max-h-[95dvh] ">
-        <div
-          className="bg-white rounded-lg shadow-xl flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header */}
-          <ActivityModalHeader
-            bgColor={color}
-            onDelete={onDelete}
-            onClose={onClose}
-            onColorChange={onColorChange}
-          />
-
-          {/* Form */}
-          <ActivityModalForm activity={activity} onClose={onClose} onSave={onSave} color={color} />
-        </div>
+        <ActivityModalForm activity={activity} onClose={onClose} onSave={onSave} color={color} />
       </div>
-    </>,
+    </div>,
     document.body
   );
 }

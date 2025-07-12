@@ -70,7 +70,7 @@ export function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
           ${
             value === mode
               ? 'text-[var(--accent-foreground)]'
-              : 'text-[var(--foreground)] hover:text-[var(--primary)]'
+              : 'text-[var(--foreground)] hover:text-[var(--accent)]'
           }
         `}
           >

@@ -1,7 +1,7 @@
 // src/utils/formatDayPlan.ts
 
 import { formatISO, format } from 'date-fns';
-import type { DayPlan } from '@/types/itinerary';
+import type { DayPlan } from '@/types';
 
 /**
  * Formats a single date into a DayPlan structure.

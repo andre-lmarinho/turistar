@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import PlannerBoardVertical from '@/app/planner/PlannerBoardVertical';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 
 import {
@@ -12,10 +12,9 @@ import {
   DestinationFilterPanel,
   DateRangePicker,
   OpenPanelButton,
-  ViewToggleButton,
   ModeToggleButton,
 } from '@/components';
-import { usePlanner } from '@/hooks';
+import { usePlanner, useActivitiesById } from '@/hooks';
 import type { Activity, CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
@@ -25,18 +24,13 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
  *   and the drag-and-drop board.
  * - Handles selecting a card to open the ActivityModal.
  */
-interface PlannerClientProps {
-  orientation?: 'horizontal' | 'vertical';
-  onToggleView: () => void;
-}
 
-export default function PlannerClient({
-  orientation = 'horizontal',
-  onToggleView,
-}: PlannerClientProps) {
+export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [showBudget] = useState(false);
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
+  const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
+    null
+  );
 
   const {
     dest,
@@ -58,90 +52,78 @@ export default function PlannerClient({
   } = usePlanner(true);
 
   // Build a Set of activity IDs already placed on the board
-  const addedIds = useMemo(
-    () => new Set(days.flatMap((d) => d.activities.map((a) => a.id))),
-    [days]
-  );
-
-  const BoardComponent = orientation === 'vertical' ? PlannerBoardVertical : PlannerBoard;
-
-  const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
-    null
-  );
+  const activitiesById = useActivitiesById(days);
+  const addedIds = useMemo(() => new Set(Object.keys(activitiesById)), [activitiesById]);
+  const searchParams = useSearchParams();
+  const destination = searchParams.get('dest') || 'Catalog';
 
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
-  if (isLoading) return <p className="p-4">Loading itinerary…</p>;
+  if (isLoading) return <p className="p-4">Loading catalog…</p>;
   if (error) return <p className="p-4">Failed to load.</p>;
-  if (!days.length) return <p className="p-4">No itinerary found.</p>;
+  if (!days.length) return <p className="p-4">No catalog found.</p>;
+
+  // dragOverlay needs a string
+  const stringActiveId = activeId != null ? String(activeId) : null;
 
   return (
-    <>
-      {/* Date picker, catalog and view toggle */}
-
-      <div className="mb-4">
+    <main className="flex flex-col px-4 md:px-12 py-4 bg-card h-screen">
+      <div className="pb-4 flex justify-between">
+        <h1 className="text-5xl font-semibold capitalize">{destination}</h1>
+        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
+      </div>
+      <div className="pb-4 flex justify-between gap-4">
+        <div>
+          <ModeToggleButton value={mode} onChange={setMode} />
+        </div>
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
       </div>
-      <div className="mb-4 flex items-center gap-4 ">
-        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
-        <ModeToggleButton value={mode} onChange={setMode} />
-        {mode === 'planner' && (
-          <ViewToggleButton orientation={orientation} onToggle={onToggleView} />
-        )}
-      </div>
 
-      {/* Popup filter panel */}
       {mode === 'budget' ? (
         <BudgetPanel />
-      ) : mode === 'planner' ? (
+      ) : (
         <>
-          {/* Popup filter panel */}
           <DestinationFilterPanel
             isOpen={isPanelOpen}
             onClose={() => setIsPanelOpen(false)}
-            onAdd={(catalogItem: CatalogActivity) => {
+            onAdd={(item: CatalogActivity) =>
               addActivity({
-                id: catalogItem.id,
-                title: catalogItem.name,
-                description: catalogItem.description,
-                duration: catalogItem.duration,
-                imageUrl: catalogItem.image_url,
+                id: item.id,
+                title: item.name,
+                description: item.description,
+                duration: item.duration,
+                imageUrl: item.image_url,
                 color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
                 startTime: '',
-              });
-            }}
+              })
+            }
             onRemove={removeActivity}
             addedIds={addedIds}
           />
 
-          {/* Drag-and-Drop board with click-to-edit */}
-          <BoardComponent
+          <PlannerBoard
             days={days}
-            activeId={activeId}
+            activeId={stringActiveId}
             sensors={sensors}
             collisionDetection={collisionDetection}
             handleDragStart={handleDragStart}
             handleDragOver={handleDragOver}
             handleDragEnd={handleDragEnd}
             onSelectActivity={setSelectedActivity}
-            onUpdateTitle={(id, newTitle) => {
-              updateActivity(id, { title: newTitle });
-            }}
-            onAddNew={(dayId, insertIdx) => {
-              const idx = days.findIndex((d) => d.id === dayId);
-              const blank = addBlankActivity(idx, insertIdx);
+            onUpdateTitle={(id, title) => updateActivity(id, { title })}
+            onAddActivity={(dayId, insertIdx) => {
+              const dayIndex = days.findIndex((d) => d.id === dayId);
+              const blank = addBlankActivity(dayIndex, insertIdx);
               setSelectedActivity({ ...blank, dayId });
             }}
           />
         </>
-      ) : null}
+      )}
 
-      {/* Activity editing modal */}
-      {!showBudget && selectedActivity && (
+      {selectedActivity && (
         <ActivityModal
-          open={true}
+          open
           activity={selectedActivity}
-          // Discard temporary cards when closing without a title
           onClose={() => {
             if (selectedActivity.id.startsWith('blank-') && !selectedActivity.title.trim()) {
               removeActivity(selectedActivity.id);
@@ -149,7 +131,7 @@ export default function PlannerClient({
             setSelectedActivity(null);
           }}
           onSave={(patch) => {
-            if (!patch.title || !patch.title.trim()) return;
+            if (!patch.title?.trim()) return;
             if (selectedActivity.id.startsWith('temp-')) {
               addActivity(
                 {
@@ -171,7 +153,7 @@ export default function PlannerClient({
             removeActivity(selectedActivity.id);
             setSelectedActivity(null);
           }}
-          color={selectedActivity.color ?? ''}
+          color={selectedActivity.color}
           onColorChange={(newColor) => {
             setSelectedActivity({ ...selectedActivity, color: newColor });
             if (selectedActivity.title.trim() && !selectedActivity.id.startsWith('temp-')) {
@@ -180,6 +162,6 @@ export default function PlannerClient({
           }}
         />
       )}
-    </>
+    </main>
   );
 }

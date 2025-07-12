@@ -2,8 +2,8 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import { useDnDPlanner } from '@/hooks/useDnDPlanner';
-import type { DayPlan } from '@/types/itinerary';
+import { useDnDPlanner } from '@/hooks';
+import type { DayPlan } from '@/types';
 
 /* ------------------------------------------------------------------ */
 /*  Context boilerplate                                               */

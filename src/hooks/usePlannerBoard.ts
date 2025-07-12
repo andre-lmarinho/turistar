@@ -2,15 +2,12 @@
 'use client';
 
 import { closestCenter } from '@dnd-kit/core';
-
 import { useDnDPlanner } from '@/hooks';
 import type { DayPlan } from '@/types';
 
 /**
- * Encapsulates drag-and-drop and activity state logic for the planner board.
- * - Accepts initial day data
- * - Manages sorting, sensors, and activity manipulation
- * - Keeps DnD logic separated from URL/date logic in usePlanner
+ * Encapsulates drag-and-drop state and handlers.
+ * Returns both the “official” days and the preview copy while dragging.
  */
 export function usePlannerBoard(initialDays: DayPlan[]) {
   const {
@@ -32,6 +29,7 @@ export function usePlannerBoard(initialDays: DayPlan[]) {
     setDays,
     activeId,
     sensors,
+    collisionDetection: closestCenter,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
@@ -39,6 +37,5 @@ export function usePlannerBoard(initialDays: DayPlan[]) {
     removeActivity,
     updateActivity,
     addBlankActivity,
-    collisionDetection: closestCenter,
   };
 }

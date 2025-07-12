@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono'
 
 export const metadata: Metadata = {
   title: 'Travel Planner',
-  description: 'AI-powered itinerary builder built with Next.js 15',
+  description: '',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

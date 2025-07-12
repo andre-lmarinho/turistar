@@ -2,7 +2,6 @@
 'use client';
 
 import React from 'react';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import {
   DndContext,
   DragOverlay,
@@ -13,30 +12,22 @@ import {
   type DragOverEvent,
   type DragEndEvent,
 } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import { DayColumn, SortableItem } from '@/components';
+import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
+import { useActivitiesById } from '@/hooks';
 import type { Activity, DayPlan } from '@/types';
 
 export interface PlannerBoardProps {
-  /** Board columns of activities */
   days: DayPlan[];
-  /** Currently dragged card ID */
   activeId: string | null;
-  /** DnD-kit sensors */
   sensors: SensorDescriptor<SensorOptions>[];
-  /** Collision detection strategy */
   collisionDetection: CollisionDetection;
-  /** Start dragging handler */
   handleDragStart: (e: DragStartEvent) => void;
-  /** Drag-over handler */
   handleDragOver: (e: DragOverEvent) => void;
-  /** End dragging handler */
   handleDragEnd: (e: DragEndEvent) => void;
-  /** Called when user clicks a card to edit */
   onSelectActivity: (activity: Activity) => void;
-  /** Called when user clicks + New Card Button */
-  onAddNew: (dayId: string, index?: number) => void;
-  /** Inline title update */
+  onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle: (id: string, title: string) => void;
 }
 
@@ -44,6 +35,7 @@ export interface PlannerBoardProps {
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
+
 export default function PlannerBoard({
   days,
   activeId,
@@ -53,10 +45,11 @@ export default function PlannerBoard({
   handleDragOver,
   handleDragEnd,
   onSelectActivity,
-  onAddNew,
+  onAddActivity,
   onUpdateTitle,
 }: PlannerBoardProps) {
-  const activeActivity = days.flatMap((d) => d.activities).find((a) => a.id === activeId);
+  const byId = useActivitiesById(days);
+  const active = activeId ? byId[activeId] : null;
 
   return (
     <DndContext
@@ -65,27 +58,25 @@ export default function PlannerBoard({
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      modifiers={[restrictToWindowEdges]}
     >
-      {/* Horizontal scroll of day columns */}
       <div className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
-        <SortableContext items={days.map((d) => d.id)}>
-          {days.map((day) => (
-            <div key={day.id} className="flex flex-col flex-shrink-0 min-w-[250px]">
-              <DayColumn
-                day={day}
-                onAddNew={onAddNew}
-                onSelectActivity={onSelectActivity}
-                onUpdateTitle={onUpdateTitle}
-              />
-            </div>
-          ))}
-        </SortableContext>
+        {days.map((d) => (
+          <div key={d.id} className="min-w-[250px] flex-shrink-0">
+            <DayColumn
+              day={d}
+              onAddActivity={onAddActivity}
+              onSelectActivity={onSelectActivity}
+              onUpdateTitle={onUpdateTitle}
+            />
+          </div>
+        ))}
       </div>
-
-      {/* Floating preview of the dragged card */}
       <DragOverlay>
-        {activeActivity && (
-          <SortableItem id={activeActivity.id} dragOverlay={true} activity={activeActivity} />
+        {active ? (
+          <SortableItem id={active.id} activity={active} dragOverlay />
+        ) : (
+          <DragOverlayFallback />
         )}
       </DragOverlay>
     </DndContext>

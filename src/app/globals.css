@@ -140,3 +140,10 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+/* ========================
+   Overlay Backdrop
+======================== */
+.backdrop-overlay {
+  @apply fixed inset-0 bg-black/40 backdrop-blur-sm z-40;
+}

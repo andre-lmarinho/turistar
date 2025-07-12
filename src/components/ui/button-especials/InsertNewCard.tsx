@@ -1,4 +1,4 @@
-// src/components/ui/BtnInsertNewCard.tsx
+// src/components/ui/InsertNewCard.tsx
 
 'use client';
 
@@ -9,16 +9,16 @@ import { DEFAULT_NEW_CARD_COLOR_INDEX, COLOR_FOREGROUND_VALUES } from '@/constan
 interface InsertNewCardProps {
   dayId: string;
   index?: number;
-  onAddNew: (dayId: string, index?: number) => void;
+  onAddActivity: (dayId: string, index?: number) => void;
 }
 
-export default function InsertNewCard({ dayId, index, onAddNew }: InsertNewCardProps) {
+export default function InsertNewCard({ dayId, index, onAddActivity }: InsertNewCardProps) {
   const foregroundColor = COLOR_FOREGROUND_VALUES[DEFAULT_NEW_CARD_COLOR_INDEX];
 
   return (
     <button
       type="button"
-      onClick={() => onAddNew(dayId, index)}
+      onClick={() => onAddActivity(dayId, index)}
       className={`h-2 group cursor-pointer relative flex justify-center items-center w-full transition z-20`}
     >
       <Plus

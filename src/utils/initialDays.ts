@@ -1,7 +1,7 @@
 // src/utils/initialDays.ts
 
-import { formatDayPlan } from '@/utils/formatDayPlan';
-import type { DayPlan } from '@/types/itinerary';
+import { formatDayPlan } from '@/utils';
+import type { DayPlan } from '@/types';
 
 /**
  * Builds an initial empty DayPlan array.

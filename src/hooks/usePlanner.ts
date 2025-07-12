@@ -5,32 +5,17 @@ import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
-import { useTripRange, useItinerary, usePlannerBoard } from '@/hooks';
+import { useTripRange, useCatalog, usePlannerBoard } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
+import type { DayPlan } from '@/types';
 
-/**
- * High-level planner hook
- * - URL params      (dest, ?start, ?end)
- * - Date-range      (tripDays)
- * - Data fetch      (itinerary)
- * - Drag-and-drop   (days board)
- * - Helpers         (add / remove / update)
- */
 export function usePlanner(enabled: boolean) {
-  /* ----------------------- URL + date range ----------------------- */
+  /* URL + date range */
   const params = useSearchParams();
   const router = useRouter();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
-  /* Ensure the unique plan id is reflected in the URL
-   *
-   * We only want to run this effect:
-   * 1. On initial mount (or whenever planId changes),
-   * 2. Not on every params change (params object gets a new reference each render).
-   *
-   * That's why we omit `params` from the dependency list and disable the rule.
-   */
   useEffect(() => {
     if (!params.get('plan')) {
       const search = new URLSearchParams(params.toString());
@@ -41,10 +26,9 @@ export function usePlanner(enabled: boolean) {
   }, [planId, router]);
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
-  // only fetch itinerary when `enabled` is true
-  const { isLoading, error } = useItinerary(dest, { enabled });
+  const { isLoading, error } = useCatalog(dest, { enabled });
 
-  /* -------------------------- DnD state --------------------------- */
+  /* DnD state */
   const {
     days,
     setDays,
@@ -57,19 +41,12 @@ export function usePlanner(enabled: boolean) {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = usePlannerBoard(buildInitialDays(tripDays)); // useDnDPlanner → usePlannerBoard
+  } = usePlannerBoard(buildInitialDays(tripDays));
 
-  const storageKey = `itinerary-${planId}`;
+  const storageKey = `catalog-${planId}`;
+  const lastSaved = useRef<string | null>(null);
 
-  /* Load initial state from localStorage
-   *
-   * We want to run this effect only when the storageKey changes —
-   * i.e. when switching to a new plan.
-   * Including `setDays` would cause the effect to re-run
-   * whenever days state updates, leading to unwanted loops.
-   *
-   * That's why we omit `setDays` and disable the rule.
-   */
+  /* Load initial state */
   useEffect(() => {
     const stored = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
     if (stored) {
@@ -78,30 +55,25 @@ export function usePlanner(enabled: boolean) {
         if (Array.isArray(parsed)) {
           setDays(parsed);
         }
-      } catch {
-        /* ignore invalid JSON */
-      }
+      } catch {}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
-  /* ------------------ Sync days on trip range change ------------------ */
+  /* Sync on range change */
   useEffect(() => {
-    setDays((prevDays) => syncDaysWithTripRange(prevDays, tripDays));
+    setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
   }, [tripDays, setDays]);
 
-  /* ---------------------- Persist to localStorage --------------------- */
-  const lastSaved = useRef<string | null>(null);
+  /* Persist to localStorage */
   useEffect(() => {
     const serialized = JSON.stringify(days);
-    // Added as a safety net for useEffect usage
     if (lastSaved.current !== serialized) {
       lastSaved.current = serialized;
       localStorage.setItem(storageKey, serialized);
     }
   }, [storageKey, days]);
 
-  /* --------------------------- export ----------------------------- */
   return {
     dest,
     days,
@@ -110,18 +82,12 @@ export function usePlanner(enabled: boolean) {
     isLoading,
     error,
     activeId,
-
-    /* DnD configuration */
     sensors,
     collisionDetection: closestCenter,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
-
-    /* Date-picker */
     handleRangeChange,
-
-    /* Add / remove helpers for the filter panel */
     addActivity,
     removeActivity,
     updateActivity,

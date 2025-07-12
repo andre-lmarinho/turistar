@@ -3,8 +3,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { AlignLeft } from 'lucide-react';
+import { DollarSign, Clock } from 'lucide-react';
 
-import { ActivityHeaderCard } from '@/components';
 import type { Activity } from '@/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 
@@ -18,11 +18,8 @@ interface ActivityModalFormProps {
 export default function ActivityModalForm({ activity, onSave, color }: ActivityModalFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title);
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
-  const [when, setWhen] = useState(activity.startTime ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
-  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const [budget, setBudget] = useState<number>(activity.budget || 0);
-  const [category, setCategory] = useState(activity.category ?? '');
 
   /**
    * Automatically focus the title input only when the activity title is empty.
@@ -37,54 +34,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
 
   return (
     <>
-      {/* Image if have it */}
-      <div className="p-4 space-y-2">
-        <ActivityHeaderCard
-          name={editedTitle.trim() || EMPTY_ACTIVITY_TITLE}
-          imageUrl={activity.imageUrl}
-        />
-        {editedImageUrl && (
-          <button
-            type="button"
-            className="text-sm text-red-600 underline"
-            onClick={() => setEditedImageUrl('')}
-          >
-            Remove photo
-          </button>
-        )}
-
-        <label htmlFor="image-url" className="sr-only">
-          Image URL
-        </label>
-        <input
-          id="image-url"
-          type="text"
-          placeholder="Image URL"
-          value={editedImageUrl}
-          onChange={(e) => setEditedImageUrl(e.target.value)}
-          className="w-full border rounded p-2 text-sm"
-        />
-
-        <label htmlFor="image-file" className="sr-only">
-          Upload image
-        </label>
-        <input
-          id="image-file"
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              if (reader.result) setEditedImageUrl(String(reader.result));
-            };
-            reader.readAsDataURL(file);
-          }}
-          className="mt-2 text-sm"
-        />
-      </div>
-
       {/* Editable title, description, when & duration */}
       <input
         ref={titleInputRef}
@@ -94,58 +43,54 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         className="content-center font-bold rounded mx-4 mb-4 px-2 py-2 text-2xl"
       />
 
-      {/* Editable title, description, when & duration */}
       <div className="px-4 mb-4 flex gap-2">
-        <div>
-          <label className="text-xs font-bold flex items-center gap-1">
-            <span>Time</span>
+        {/* Duration */}
+        <div className="relative w-28">
+          <label
+            htmlFor="duration"
+            className={`absolute left-2 top-2 text-xs font-semibold text-muted-foreground transition-all duration-200 pointer-events-none ${
+              duration ? 'translate-y-[-1.5rem] text-[12px]' : 'translate-y-2 opacity-0'
+            }`}
+          >
+            Duration
           </label>
-          <input
-            type="time"
-            value={when}
-            onChange={(e) => setWhen(e.target.value)}
-            className="flex-1 border rounded p-2 text-sm"
-          />
+
+          <div className="flex hover:bg-gray-50 items-center border rounded px-2 py-1 bg-background focus-within:ring-2 ring-primary">
+            <Clock size={14} className="text-muted-foreground mr-1" />
+            <input
+              id="duration"
+              type="number"
+              min={0}
+              value={duration === 0 ? '' : duration}
+              onChange={(e) => setDuration(Number(e.target.value))}
+              placeholder="Duration"
+              className="w-full text-sm bg-transparent outline-none placeholder:text-muted-foreground"
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="text-xs font-bold flex items-center gap-1">
-            <span>Duration</span>
+        {/* Budget */}
+        <div className="relative w-28 ">
+          <label
+            htmlFor="budget"
+            className={`absolute left-2 top-2 text-xs font-semibold text-muted-foreground transition-all duration-200 pointer-events-none ${
+              budget ? 'translate-y-[-1.5rem] text-[12px]' : 'translate-y-2 opacity-0'
+            }`}
+          >
+            Budget
           </label>
-          <input
-            type="number"
-            min={0}
-            value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-            placeholder="min"
-            className="w-24 border rounded px-3 py-2 text-sm"
-          />
-        </div>
-
-        <div>
-          <label className="text-xs font-bold flex items-center gap-1">
-            <span>Budget</span>
-          </label>
-          <input
-            id="budget"
-            value={budget}
-            min={0}
-            onChange={(e) => setBudget(Number(e.target.value))}
-            placeholder="Budget"
-            className="w-24 flex-1 border rouded p-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="text-xs font-bold flex items-center gap-1">
-            <span>Category</span>
-          </label>
-          <input
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            placeholder="Category"
-            className="w-24 flex-1 border rouded p-2 text-sm"
-          />
+          <div className="flex hover:bg-gray-50 items-center border rounded px-2 py-1 bg-background focus-within:ring-2 ring-primary">
+            <DollarSign size={14} className="text-muted-foreground mr-1" />
+            <input
+              id="budget"
+              type="number"
+              value={budget === 0 ? '' : budget}
+              onChange={(e) => setBudget(Number(e.target.value))}
+              placeholder="Budget"
+              className="w-full text-sm bg-transparent outline-none placeholder:text-muted-foreground"
+              min={0}
+            />
+          </div>
         </div>
       </div>
 
@@ -158,9 +103,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         <textarea
           value={editedDescription}
           onChange={(e) => setEditedDescription(e.target.value)}
-          placeholder="Description"
+          placeholder="Add a more detailed description."
           rows={3}
-          className="w-full border rounded p-2 text-sm resize-none"
+          className="w-full  rounded p-2 text-sm resize-none"
         />
       </div>
 
@@ -172,11 +117,8 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               title: editedTitle.trim(),
               description: editedDescription,
               color,
-              startTime: when,
               duration: Number(duration),
-              imageUrl: editedImageUrl.trim() || undefined,
               budget,
-              category,
             })
           }
           className={`px-4 py-2 rounded text-sm ${

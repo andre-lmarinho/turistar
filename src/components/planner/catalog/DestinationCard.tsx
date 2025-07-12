@@ -34,7 +34,7 @@ export default function DestinationCard({
   onRemove,
 }: DestinationCardProps) {
   return (
-    <div className="relative flex flex-col bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow p-4 transition-transform duration-200 hover:-translate-y-1 border border-[var(--border)]">
+    <div className="relative flex flex-col bg-[var(--card)] text-[var(--card-foreground)] rounded shadow p-4 border border-[var(--border)]">
       {/* quick-remove icon (only when added) */}
       <div className="absolute left-2 top-2">
         {added && <RemoveCardButton onClick={onRemove} />}
@@ -47,7 +47,7 @@ export default function DestinationCard({
         width={400}
         height={200}
         unoptimized
-        className="w-full h-40 object-cover rounded-md mb-4 border border-[var(--border)]"
+        className="w-full h-40 object-cover rounded mb-4"
       />
 
       {/* Title */}
