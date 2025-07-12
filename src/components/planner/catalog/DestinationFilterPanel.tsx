@@ -39,7 +39,12 @@ export default function DestinationFilterPanel({
 
       {/* popup */}
       <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-white rounded-lg shadow-xl flex flex-col">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="destination-filter-title"
+          className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-white rounded-lg shadow-xl flex flex-col"
+        >
           {/* header rows */}
           <DestinationHeader
             categories={categories}

@@ -24,7 +24,9 @@ export default function DestinationHeader({
   return (
     <>
       <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h3 className="font-bold text-2xl text-center flex-1">Search Your Adventures</h3>
+        <h3 id="destination-filter-title" className="font-bold text-2xl text-center flex-1">
+          Search Your Adventures
+        </h3>{' '}
         <CloseButton onClick={onClose} />
       </div>
 

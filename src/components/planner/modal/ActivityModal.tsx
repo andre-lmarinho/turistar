@@ -31,9 +31,15 @@ export default function ActivityModal({
   return ReactDOM.createPortal(
     <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="activity-modal-title"
         className="bg-white rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
+        <h2 id="activity-modal-title" className="sr-only">
+          Edit Activity
+        </h2>
         <ActivityModalHeader
           activity={activity}
           bgColor={color}

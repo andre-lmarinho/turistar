@@ -1,6 +1,7 @@
 // src/components/ui/CloseButton.tsx
 'use client';
 
+import React from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components';
 

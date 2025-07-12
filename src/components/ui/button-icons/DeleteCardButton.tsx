@@ -1,6 +1,7 @@
 // src/components/ui/IcoRemoveCard.tsx
 'use client';
 
+import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components';
 

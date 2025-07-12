@@ -19,8 +19,10 @@ export default function InsertNewCard({ dayId, index, onAddActivity }: InsertNew
     <button
       type="button"
       onClick={() => onAddActivity(dayId, index)}
+      aria-label="Insert new card"
       className={`h-2 group cursor-pointer relative flex justify-center items-center w-full transition z-20`}
     >
+      <span className="sr-only">Insert new card</span>
       <Plus
         size={24}
         className={` bg-white rounded transition-opacity w-6 h-5 opacity-0 z-20 group-hover:opacity-100 shadow-md`}

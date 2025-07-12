@@ -1,6 +1,7 @@
 // src/components/ui/CardColor.tsx
 'use client';
 
+import React from 'react';
 import { Palette } from 'lucide-react';
 import { Button } from '@/components';
 

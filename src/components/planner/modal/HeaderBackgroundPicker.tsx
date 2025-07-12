@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { DEFAULT_COLORS } from '@/constants';
+import { DEFAULT_COLORS, COLOR_NAMES } from '@/constants';
 import { Button } from '@/components';
 
 interface HeaderBackgroundPickerProps {
@@ -50,17 +50,20 @@ export default function HeaderBackgroundPicker({
       <div className="my-4 py-4 border-b-1">
         <label className="text-xs font-bold mb-1 block">Colors</label>
         <div className="flex justify-between flex-wrap gap-2">
-          {colors.map((c) => (
-            <button
-              key={c}
-              onClick={() => onChangeColor(c)}
-              className={`w-[31%] h-10 shadow-xl rounded-xs border-2 ${
-                c.startsWith('#') ? '' : c
-              } ${selectedColor === c ? 'ring-2 ring-black' : 'border-white'}`}
-              style={c.startsWith('#') ? { backgroundColor: c } : undefined}
-              aria-label={c}
-            />
-          ))}
+          {colors.map((c) => {
+            const label = COLOR_NAMES[c] ?? c;
+            return (
+              <button
+                key={c}
+                onClick={() => onChangeColor(c)}
+                className={`w-[31%] h-10 shadow-xl rounded-xs border-2 ${
+                  c.startsWith('#') ? '' : c
+                } ${selectedColor === c ? 'ring-2 ring-primary' : 'border-background'}`}
+                style={c.startsWith('#') ? { backgroundColor: c } : undefined}
+                aria-label={label}
+              />
+            );
+          })}
         </div>
       </div>
 

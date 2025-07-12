@@ -51,3 +51,12 @@ export const COLOR_BORDER_CLASSES = [
   'border-[var(--color-4-foreground)]',
   'border-[var(--color-5-foreground)]',
 ];
+
+export const COLOR_NAMES: Record<string, string> = {
+  'bg-[var(--color-0)]': 'White',
+  'bg-[var(--color-1)]': 'Orange',
+  'bg-[var(--color-2)]': 'Yellow',
+  'bg-[var(--color-3)]': 'Teal',
+  'bg-[var(--color-4)]': 'Sky Blue',
+  'bg-[var(--color-5)]': 'Pink',
+};

@@ -90,7 +90,13 @@ function Button({
     : baseClasses;
 
   return (
-    <Comp data-slot="button" className={finalClasses} disabled={disabled} {...props}>
+    <Comp
+      data-slot="button"
+      className={finalClasses}
+      disabled={disabled}
+      {...(title ? { 'aria-label': title } : {})}
+      {...props}
+    >
       <ButtonIconWrapper variant={variant} title={title}>
         {children}
       </ButtonIconWrapper>

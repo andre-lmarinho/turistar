@@ -10,23 +10,17 @@ import {
   type DragOverEvent,
   type UniqueIdentifier,
 } from '@dnd-kit/core';
-import type { DayPlan, Activity } from '@/types';
+import type { DayPlan } from '@/types';
 
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const [activeItem, setActiveItem] = useState<Activity | null>(null);
-
-  const lastOverRef = useRef<{ containerId: string; index: number } | null>(null);
   const lastTimeRef = useRef<number>(0);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
-    const found = days.flatMap((d) => d.activities).find((a) => a.id === e.active.id) ?? null;
-    setActiveItem(found);
-    lastOverRef.current = null;
     lastTimeRef.current = 0;
   }
 
@@ -45,7 +39,7 @@ export function useDragState(initialDays: DayPlan[]) {
       const srcActs = updated[srcDayIdx].activities;
       const oldIndex = srcActs.findIndex((a) => a.id === active.id);
 
-      const toSortable = over.data.current?.sortable;
+      const toSortable = over.data?.current?.sortable;
 
       let dstDayIdx: number;
       let newIndex: number;
@@ -55,8 +49,13 @@ export function useDragState(initialDays: DayPlan[]) {
         newIndex = toSortable.index;
       } else {
         dstDayIdx = updated.findIndex((d) => d.id === over.id);
-        if (dstDayIdx < 0) return prevDays;
-        newIndex = updated[dstDayIdx].activities.length;
+        if (dstDayIdx < 0) {
+          dstDayIdx = updated.findIndex((d) => d.activities.some((a) => a.id === over.id));
+          if (dstDayIdx < 0) return prevDays;
+          newIndex = updated[dstDayIdx].activities.findIndex((a) => a.id === over.id);
+        } else {
+          newIndex = updated[dstDayIdx].activities.length;
+        }
       }
 
       if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
@@ -77,14 +76,12 @@ export function useDragState(initialDays: DayPlan[]) {
 
   function handleDragEnd(): void {
     setActiveId(null);
-    setActiveItem(null);
   }
 
   return {
     days,
     setDays,
     activeId,
-    activeItem,
     sensors,
     handleDragStart,
     handleDragOver,
