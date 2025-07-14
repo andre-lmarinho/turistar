@@ -32,7 +32,7 @@ export default function DayPickerPopup({ days, selected, onSelect, onClose, trig
       className="w-[200px] bg-[var(--background)] rounded-lg shadow-xl"
     >
       <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h3 id="card-color-popup" className="font-bold">
+        <h3 id="card-color-popup-title" className="font-bold">
           Change Day
         </h3>
         <CloseButton onClick={onClose} />

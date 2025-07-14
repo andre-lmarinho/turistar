@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import type { Activity, DayPlan } from '@/types';
-import { usePopupTriggerRef } from '@/hooks';
+import { useCardPopups } from '@/hooks';
 import { ChevronDown } from 'lucide-react';
 
 import {
@@ -36,10 +36,16 @@ export default function ActivityModalHeader({
   availableDays: DayPlan[];
   onChangeDay: (dayId: string) => void;
 }) {
-  const colorButtonRef = usePopupTriggerRef();
-  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const dateButtonRef = usePopupTriggerRef();
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const {
+    colorButtonRef,
+    dateButtonRef,
+    isColorPickerOpen,
+    isDatePickerOpen,
+    handleColorButtonClick,
+    handleDateButtonClick,
+    setIsColorPickerOpen,
+    setIsDatePickerOpen,
+  } = useCardPopups();
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
 
   return (
@@ -65,23 +71,14 @@ export default function ActivityModalHeader({
             size="sm"
             variant="icon"
             type="button"
-            onClick={() => {
-              setIsDatePickerOpen((p) => !p);
-              setIsColorPickerOpen(false);
-            }}
+            onClick={handleDateButtonClick}
           >
             Change Day
             <ChevronDown className="size-4" />
           </Button>
           <div className="flex items-center gap-2">
             <RemoveCardButton onClick={onDelete} />
-            <CardColorButton
-              ref={colorButtonRef}
-              onClick={() => {
-                setIsColorPickerOpen((prev) => !prev);
-                setIsDatePickerOpen(false);
-              }}
-            />
+            <CardColorButton ref={colorButtonRef} onClick={handleColorButtonClick} />
             <CloseButton onClick={onClose} />
           </div>
         </div>

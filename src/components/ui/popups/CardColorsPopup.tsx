@@ -47,7 +47,7 @@ export default function CardColorsPopup({
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h3 id="card-color-popup" className="font-bold">
+        <h3 id="card-color-popup-title" className="font-bold">
           Card Background
         </h3>
         <CloseButton onClick={onClose} />

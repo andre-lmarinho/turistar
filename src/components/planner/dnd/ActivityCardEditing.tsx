@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight } from 'lucide-react';
 import type { Activity, DayPlan } from '@/types';
 import { Button, CardColorsPopup, DayPickerPopup } from '@/components';
-import { usePopupTriggerRef, useWindowSize } from '@/hooks';
+import { useCardPopups, useWindowSize } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -31,10 +31,16 @@ export default function ActivityCardEditing({
   onSave,
   cardRef,
 }: Props) {
-  const colorButtonRef = usePopupTriggerRef();
-  const dateButtonRef = usePopupTriggerRef();
-  const [isColorPickerOpen, setIsColorPickerOpen] = React.useState(false);
-  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+  const {
+    colorButtonRef,
+    dateButtonRef,
+    isColorPickerOpen,
+    isDatePickerOpen,
+    handleColorButtonClick,
+    handleDateButtonClick,
+    setIsColorPickerOpen,
+    setIsDatePickerOpen,
+  } = useCardPopups();
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
@@ -77,10 +83,7 @@ export default function ActivityCardEditing({
             size="sm"
             variant="icon"
             type="button"
-            onClick={() => {
-              setIsDatePickerOpen((p) => !p);
-              setIsColorPickerOpen(false);
-            }}
+            onClick={handleDateButtonClick}
           >
             <ArrowLeftRight className="size-4" />
             Move
@@ -107,10 +110,7 @@ export default function ActivityCardEditing({
             size="sm"
             variant="icon"
             type="button"
-            onClick={() => {
-              setIsColorPickerOpen((prev) => !prev);
-              setIsDatePickerOpen(false);
-            }}
+            onClick={handleColorButtonClick}
           >
             <Palette className="size-4" />
             Card Colors

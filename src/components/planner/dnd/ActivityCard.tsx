@@ -96,7 +96,7 @@ export default function ActivityCard({
         {!editing && (
           <EditCardButton
             type="button"
-            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
               setEditing(true);

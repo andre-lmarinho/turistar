@@ -14,9 +14,8 @@ import {
   OpenPanelButton,
   ModeToggleButton,
 } from '@/components';
-import { usePlanner, useActivitiesById } from '@/hooks';
-import type { Activity, CatalogActivity } from '@/types';
-import { moveActivityToDay } from '@/utils';
+import { usePlanner, useActivitiesById, useSelectedActivity } from '@/hooks';
+import type { CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 /**
@@ -29,9 +28,6 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
-  const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId?: string }) | null>(
-    null
-  );
 
   const {
     dest,
@@ -53,14 +49,33 @@ export default function PlannerClient() {
     addBlankActivity,
   } = usePlanner(true);
 
-  function handleChangeDay(activityId: string, dayId: string) {
-    setDays((prev) => moveActivityToDay(prev, activityId, dayId));
-    setSelectedActivity((prev) => (prev ? { ...prev, dayId } : prev));
-  }
+  const {
+    selectedActivity,
+    setSelectedActivity,
+    changeDay,
+    addBlankAndSelect,
+    closeModal,
+    save,
+    deleteActivity,
+    changeColor,
+  } = useSelectedActivity(days, setDays, {
+    addActivity,
+    removeActivity,
+    updateActivity,
+    addBlankActivity,
+  });
 
   // Build a Set of activity IDs already placed on the board
   const activitiesById = useActivitiesById(days);
   const addedIds = useMemo(() => new Set(Object.keys(activitiesById)), [activitiesById]);
+  const activitiesTotal = useMemo(
+    () =>
+      days.reduce(
+        (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
+        0
+      ),
+    [days]
+  );
   const searchParams = useSearchParams();
   const destination = searchParams.get('dest') || 'Catalog';
 
@@ -87,7 +102,7 @@ export default function PlannerClient() {
       </div>
 
       {mode === 'budget' ? (
-        <BudgetPanel />
+        <BudgetPanel activitiesTotal={activitiesTotal} />
       ) : (
         <>
           <DestinationFilterPanel
@@ -118,16 +133,9 @@ export default function PlannerClient() {
             handleDragEnd={handleDragEnd}
             onSelectActivity={setSelectedActivity}
             onUpdateTitle={(id, title) => updateActivity(id, { title })}
-            onAddActivity={(dayId, insertIdx) => {
-              const dayIndex = days.findIndex((d) => d.id === dayId);
-              const blank = addBlankActivity(dayIndex, insertIdx);
-              setSelectedActivity({ ...blank, dayId });
-            }}
-            onChangeDay={handleChangeDay}
-            onChangeColor={(id, color) => {
-              setSelectedActivity((prev) => prev && { ...prev, color });
-              updateActivity(id, { color });
-            }}
+            onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
+            onChangeDay={changeDay}
+            onChangeColor={(id, color) => changeColor(id, color)}
           />
         </>
       )}
@@ -136,44 +144,13 @@ export default function PlannerClient() {
         <ActivityModal
           open
           activity={selectedActivity}
-          onClose={() => {
-            if (selectedActivity.id.startsWith('blank-') && !selectedActivity.title.trim()) {
-              removeActivity(selectedActivity.id);
-            }
-            setSelectedActivity(null);
-          }}
-          onSave={(patch) => {
-            if (!patch.title?.trim()) return;
-            if (selectedActivity.id.startsWith('temp-')) {
-              addActivity(
-                {
-                  ...selectedActivity,
-                  ...patch,
-                  duration: Number(patch.duration),
-                },
-                days.findIndex((d) => d.id === selectedActivity.dayId)
-              );
-            } else {
-              updateActivity(selectedActivity.id, {
-                ...patch,
-                duration: Number(patch.duration),
-              });
-            }
-            setSelectedActivity(null);
-          }}
-          onDelete={() => {
-            removeActivity(selectedActivity.id);
-            setSelectedActivity(null);
-          }}
+          onClose={closeModal}
+          onSave={save}
+          onDelete={deleteActivity}
           color={selectedActivity.color}
-          onColorChange={(newColor) => {
-            setSelectedActivity({ ...selectedActivity, color: newColor });
-            if (selectedActivity.title.trim() && !selectedActivity.id.startsWith('temp-')) {
-              updateActivity(selectedActivity.id, { color: newColor });
-            }
-          }}
+          onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
           days={days}
-          onChangeDay={(dayId) => handleChangeDay(selectedActivity.id, dayId)}
+          onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
         />
       )}
     </main>

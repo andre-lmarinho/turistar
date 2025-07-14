@@ -5,7 +5,7 @@ import React from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
-import { SortableItem, AddNewCard, InsertNewCard } from '@/components';
+import { SortableItem, AddCardButton } from '@/components';
 import type { DayPlan, Activity } from '@/types';
 
 interface DayColumnProps {
@@ -62,7 +62,12 @@ export default function DayColumn({
                 bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (
-                <InsertNewCard dayId={day.id} index={idx + 1} onAddActivity={onAddActivity} />
+                <AddCardButton
+                  position="insert"
+                  dayId={day.id}
+                  index={idx + 1}
+                  onAddActivity={onAddActivity}
+                />
               )}
             </React.Fragment>
           ))}
@@ -70,7 +75,12 @@ export default function DayColumn({
       </SortableContext>
 
       <div className="mt-4 flex justify-center">
-        <AddNewCard dayId={day.id} index={day.activities.length} onAddActivity={onAddActivity} />
+        <AddCardButton
+          position="new"
+          dayId={day.id}
+          index={day.activities.length}
+          onAddActivity={onAddActivity}
+        />
       </div>
     </section>
   );

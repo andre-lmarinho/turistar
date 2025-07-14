@@ -1,4 +1,4 @@
-// src/utils/usePopupTriggerRef.ts
+// src/utils/useFlexibleRef.ts
 
 import { useRef } from 'react';
 
@@ -7,7 +7,8 @@ import { useRef } from 'react';
  * and with popup triggerRefs (HTMLElement).
  * This avoids repetitive casting when the same ref needs to be passed to both.
  */
-export function usePopupTriggerRef() {
+
+export function useFlexibleRef() {
   return useRef<HTMLButtonElement>(null) as React.RefObject<HTMLButtonElement> &
     React.RefObject<HTMLElement>;
 }

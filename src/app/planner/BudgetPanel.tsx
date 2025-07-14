@@ -2,7 +2,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
+import { BudgetItem } from '@/components';
 
+interface Props {
+  activitiesTotal: number;
+}
 interface BudgetValues {
   transport: number;
   lodging: number;
@@ -12,7 +17,17 @@ interface BudgetValues {
   documents: number;
 }
 
-export default function BudgetPanel() {
+const CATEGORIES = [
+  { key: 'transport', label: 'Transportation', icon: Bus },
+  { key: 'lodging', label: 'Lodging', icon: Hotel },
+  { key: 'food', label: 'Food', icon: Utensils },
+  { key: 'activities', label: 'Tours & Activities', icon: Ticket },
+  { key: 'shopping', label: 'Shopping & Extras', icon: ShoppingCart },
+  { key: 'documents', label: 'Documents & Fees', icon: FileText },
+] as const;
+type CategoryKey = (typeof CATEGORIES)[number]['key'];
+
+export default function BudgetPanel({ activitiesTotal }: Props) {
   const [values, setValues] = useState<BudgetValues>({
     transport: 0,
     lodging: 0,
@@ -29,32 +44,13 @@ export default function BudgetPanel() {
       values.food +
       values.activities +
       values.shopping +
-      values.documents,
-    [values]
+      values.documents +
+      activitiesTotal,
+    [values, activitiesTotal]
   );
 
-  const handleChange = (key: keyof BudgetValues) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const num = Number(e.target.value);
-    setValues((prev) => ({ ...prev, [key]: num }));
-  };
-
-  const renderInput = (label: string, key: keyof BudgetValues) => {
-    const id = `budget-${key}`;
-    return (
-      <div className="flex items-center justify-between gap-4">
-        <label htmlFor={id} className="font-medium">
-          {label}
-        </label>
-        <input
-          id={id}
-          type="number"
-          min={0}
-          value={values[key]}
-          onChange={handleChange(key)}
-          className="w-32 border rounded px-2 py-1 text-right"
-        />
-      </div>
-    );
+  const handleChange = (key: CategoryKey) => (value: number) => {
+    setValues((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -62,15 +58,33 @@ export default function BudgetPanel() {
       <div className="pb-4 flex justify-between">
         <h2 className="text-3xl font-semibold">Traveling Budget</h2>
       </div>
-      <div className="space-y-4">
-        {renderInput('Transportation', 'transport')}
-        {renderInput('Lodging', 'lodging')}
-        {renderInput('Food', 'food')}
-        {renderInput('Tours & Activities', 'activities')}
-        {renderInput('Shopping & Extras', 'shopping')}
-        {renderInput('Documents & Fees', 'documents')}
+      <div className="grid grid-cols-2 gap-4">
+        {CATEGORIES.map(({ key, label, icon }) =>
+          key === 'activities' ? (
+            <div
+              key={key}
+              className="flex items-center justify-between gap-4 border rounded-lg p-3 bg-muted"
+            >
+              <div className="flex items-center gap-2">
+                {React.createElement(icon, { size: 16 })}
+                <span className="font-medium">{label}</span>
+              </div>
+              <span>${activitiesTotal.toFixed(2)}</span>
+            </div>
+          ) : (
+            <BudgetItem
+              key={key}
+              id={`budget-${key}`}
+              icon={icon}
+              label={label}
+              amount={values[key]}
+              onChange={handleChange(key)}
+            />
+          )
+        )}
       </div>
-      <div className="flex items-center justify-between pt-2 border-t font-semibold">
+
+      <div className="flex items-center justify-between pt-2 border-t font-bold text-lg">
         <span>Total</span>
         <span>${total.toFixed(2)}</span>
       </div>

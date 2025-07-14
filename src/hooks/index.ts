@@ -1,15 +1,16 @@
 //src/hooks/index.ts
 
+export * from './useActivitiesById';
+export * from './useActivityState';
+export * from './useCardPopups';
+export * from './useCatalog';
 export * from './useDestinationCatalog';
+export * from './useDestinationFilter';
 export * from './useDnDPlanner';
+export * from './useDragState';
 export * from './usePlanner';
 export * from './usePlannerBoard';
-export * from './useCatalog';
-export * from './useTripRange';
-export * from './useDestinationFilter';
-export * from './useActivitiesById';
-export * from './useDragState';
-export * from './useActivityState';
 export * from './usePopupOutsideHandler';
-export * from './usePopupTriggerRef';
+export * from './useSelectedActivity';
+export * from './useTripRange';
 export * from './useWindowSize';

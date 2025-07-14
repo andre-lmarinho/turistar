@@ -9,6 +9,7 @@ import type { DayPlan } from '@/types';
  * Encapsulates drag-and-drop state and handlers.
  * Returns both the “official” days and the preview copy while dragging.
  */
+
 export function usePlannerBoard(initialDays: DayPlan[]) {
   const {
     days,

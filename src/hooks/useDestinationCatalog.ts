@@ -10,6 +10,7 @@ import type { CatalogActivity } from '@/types';
  * - Provides category-based filtering and sorting.
  * - Handles loading and error states.
  */
+
 export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
   // Catalog activities list (raw from API)
   const [items, setItems] = useState<CatalogActivity[]>([]);
