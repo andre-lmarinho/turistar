@@ -63,6 +63,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             <Hourglass size={14} className="text-muted-foreground mr-1" />
             <input
               id="duration"
+              autoComplete="off"
               type="number"
               min={0}
               value={duration === 0 ? '' : duration}
@@ -87,6 +88,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             <DollarSign size={14} className="text-muted-foreground mr-1" />
             <input
               id="budget"
+              autoComplete="off"
               type="number"
               value={budget === 0 ? '' : budget}
               onChange={(e) => setBudget(Number(e.target.value))}

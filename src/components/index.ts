@@ -1,5 +1,8 @@
 // src/components/index.ts
 
+// Budget components
+export * from './budget';
+
 // Planner domain
 export * from './planner';
 

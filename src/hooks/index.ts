@@ -2,6 +2,7 @@
 
 export * from './useActivitiesById';
 export * from './useActivityState';
+export * from './useBudget';
 export * from './useCardPopups';
 export * from './useCatalog';
 export * from './useDestinationCatalog';

@@ -1,92 +1,93 @@
-// src/app/planner/BudgetPanel.tsx
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
-import { BudgetItem } from '@/components';
+import React from 'react';
+import { useBudget } from '@/hooks/useBudget';
+import { CATEGORIES } from '@/constants';
 
+import { CalculatorButton, CategoryProgressBar, ExpenseTable } from '@/components';
 interface Props {
   activitiesTotal: number;
 }
-interface BudgetValues {
-  transport: number;
-  lodging: number;
-  food: number;
-  activities: number;
-  shopping: number;
-  documents: number;
-}
-
-const CATEGORIES = [
-  { key: 'transport', label: 'Transportation', icon: Bus },
-  { key: 'lodging', label: 'Lodging', icon: Hotel },
-  { key: 'food', label: 'Food', icon: Utensils },
-  { key: 'activities', label: 'Tours & Activities', icon: Ticket },
-  { key: 'shopping', label: 'Shopping & Extras', icon: ShoppingCart },
-  { key: 'documents', label: 'Documents & Fees', icon: FileText },
-] as const;
-type CategoryKey = (typeof CATEGORIES)[number]['key'];
 
 export default function BudgetPanel({ activitiesTotal }: Props) {
-  const [values, setValues] = useState<BudgetValues>({
-    transport: 0,
-    lodging: 0,
-    food: 0,
-    activities: 0,
-    shopping: 0,
-    documents: 0,
-  });
-
-  const total = useMemo(
-    () =>
-      values.transport +
-      values.lodging +
-      values.food +
-      values.activities +
-      values.shopping +
-      values.documents +
-      activitiesTotal,
-    [values, activitiesTotal]
-  );
-
-  const handleChange = (key: CategoryKey) => (value: number) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
-  };
+  const {
+    budget,
+    setBudget,
+    entries,
+    categoryTotals,
+    totalSpent,
+    difference,
+    desc,
+    setDesc,
+    cat,
+    setCat,
+    amount,
+    setAmount,
+    handleAdd,
+    handleUpdateEntry,
+    handleDeleteEntry,
+  } = useBudget(activitiesTotal);
 
   return (
     <div className="p-4 md:mb-10 bg-background flex flex-col flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
       <div className="pb-4 flex justify-between">
         <h2 className="text-3xl font-semibold">Traveling Budget</h2>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        {CATEGORIES.map(({ key, label, icon }) =>
-          key === 'activities' ? (
-            <div
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-1 flex flex-col gap-2">
+          <label htmlFor="budget-input" className="font-medium">
+            Total Budget
+          </label>
+          <input
+            id="budget-input"
+            type="number"
+            min={0}
+            value={budget}
+            onChange={(e) => setBudget(Number(e.target.value))}
+            className="border rounded px-2 py-1"
+          />
+          <div className="flex items-center justify-between pt-2 font-medium">
+            <span>Total Spent</span>
+            <span>${totalSpent.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between font-medium">
+            <span>Difference</span>
+            <span>${difference.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <div className="col-span-2 flex flex-col gap-2">
+          {CATEGORIES.map(({ key }, idx) => (
+            <CategoryProgressBar
               key={key}
-              className="flex items-center justify-between gap-4 border rounded-lg p-3 bg-muted"
-            >
-              <div className="flex items-center gap-2">
-                {React.createElement(icon, { size: 16 })}
-                <span className="font-medium">{label}</span>
-              </div>
-              <span>${activitiesTotal.toFixed(2)}</span>
-            </div>
-          ) : (
-            <BudgetItem
-              key={key}
-              id={`budget-${key}`}
-              icon={icon}
-              label={label}
-              amount={values[key]}
-              onChange={handleChange(key)}
+              category={key}
+              value={categoryTotals[key]}
+              total={totalSpent}
+              colorIndex={idx}
             />
-          )
-        )}
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t font-bold text-lg">
-        <span>Total</span>
-        <span>${total.toFixed(2)}</span>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">Expenses</h3>
+          <CalculatorButton />
+        </div>
+
+        <ExpenseTable
+          entries={entries}
+          desc={desc}
+          cat={cat}
+          amount={amount}
+          setDesc={setDesc}
+          setCat={setCat}
+          setAmount={setAmount}
+          onAdd={handleAdd}
+          onUpdate={handleUpdateEntry}
+          onDelete={handleDeleteEntry}
+        />
       </div>
     </div>
   );

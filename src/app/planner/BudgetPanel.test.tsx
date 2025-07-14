@@ -5,12 +5,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 
 describe('BudgetPanel', () => {
-  it('calculates total automatically and shows activities total read-only', () => {
+  it('adds expenses and updates totals', () => {
     render(<BudgetPanel activitiesTotal={25} />);
-    const input = screen.getByLabelText('Transportation') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '50' } });
+    fireEvent.change(screen.getByPlaceholderText('Description'), {
+      target: { value: 'Taxi' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Amount'), {
+      target: { value: '50' },
+    });
+    fireEvent.click(screen.getByTitle('Add expense'));
     expect(screen.getByText('$75.00')).toBeInTheDocument();
-    expect(screen.getByText('$25.00')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Tours & Activities')).toBeNull();
   });
 });
