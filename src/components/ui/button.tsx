@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import Tooltip from './buttonTooltip';
 
 /* Button Variants ----------------------------------------------------- */
 const buttonVariants = cva(
@@ -14,8 +15,8 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         muted: 'w-full bg-card text-foreground shadow-xs hover:bg-muted',
-        icon: 'bg-background border border-bg-gray-200 hover:bg-gray-200 backdrop-blur-sm transition-transform duration-300 hover:scale-110',
-        icon2: 'bg-background p-2 opacity-0 group-hover:opacity-100 transition-opacity',
+        icon: 'bg-background border border-bg-gray-200 hover:bg-gray-200 backdrop-blur-sm',
+        icon2: 'bg-background rounded-full',
         ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
       },
       size: {
@@ -36,12 +37,14 @@ function ButtonIconWrapper({
   title = 'Action',
   children,
   variant,
+  position = 'top',
 }: {
   title?: string;
   children: React.ReactNode;
   variant?: VariantProps<typeof buttonVariants>['variant'];
+  position?: 'top' | 'bottom';
 }) {
-  if (variant === 'icon' && React.isValidElement(children) && 'props' in children) {
+  if (variant?.includes('icon') && React.isValidElement(children) && 'props' in children) {
     const child = children as React.ReactElement<{ className?: string }>;
 
     const icon = React.cloneElement(child, {
@@ -50,12 +53,11 @@ function ButtonIconWrapper({
     });
 
     return (
-      <div className="relative group/icon w-full h-full flex items-center justify-center">
-        <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 text-nowrap group-hover/icon:opacity-100 transition-opacity pointer-events-none">
-          {title}
+      <Tooltip content={title} position={position}>
+        <div className="relative group/icon w-full h-full flex items-center justify-center">
+          {icon}
         </div>
-        {icon}
-      </div>
+      </Tooltip>
     );
   }
 
@@ -71,11 +73,13 @@ function Button({
   disabled,
   title,
   children,
+  position = 'top',
   ...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
     title?: string;
+    position?: 'top' | 'bottom';
   }) {
   const Comp = asChild ? Slot : 'button';
 
@@ -97,7 +101,7 @@ function Button({
       {...(title ? { 'aria-label': title } : {})}
       {...props}
     >
-      <ButtonIconWrapper variant={variant} title={title}>
+      <ButtonIconWrapper variant={variant} title={title} position={position}>
         {children}
       </ButtonIconWrapper>
     </Comp>

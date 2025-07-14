@@ -29,6 +29,8 @@ export interface PlannerBoardProps {
   onSelectActivity: (activity: Activity) => void;
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle: (id: string, title: string) => void;
+  onChangeDay: (activityId: string, dayId: string) => void;
+  onChangeColor: (activityId: string, color: string) => void;
 }
 
 /**
@@ -47,6 +49,8 @@ export default function PlannerBoard({
   onSelectActivity,
   onAddActivity,
   onUpdateTitle,
+  onChangeDay,
+  onChangeColor,
 }: PlannerBoardProps) {
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
@@ -64,17 +68,29 @@ export default function PlannerBoard({
         {days.map((d) => (
           <div key={d.id} className="min-w-[250px] flex-shrink-0">
             <DayColumn
+              key={d.id}
               day={d}
+              days={days}
               onAddActivity={onAddActivity}
               onSelectActivity={onSelectActivity}
               onUpdateTitle={onUpdateTitle}
+              onChangeDay={(activityId, dayId) => onChangeDay(activityId, dayId)}
+              onChangeColor={(activityId, color) => onChangeColor(activityId, color)}
             />
           </div>
         ))}
       </div>
       <DragOverlay>
         {active ? (
-          <SortableItem id={active.id} activity={active} dragOverlay />
+          <SortableItem
+            dragOverlay
+            id={active.id}
+            activity={active}
+            availableDays={days}
+            onChangeDay={(newDayId) => onChangeDay(active.id, newDayId)}
+            onChangeColor={(newColor) => onChangeColor(active.id, newColor)}
+            bgColor={active.color}
+          />
         ) : (
           <DragOverlayFallback />
         )}

@@ -77,6 +77,7 @@ export function usePlanner(enabled: boolean) {
   return {
     dest,
     days,
+    setDays,
     tripDays,
     currentRange,
     isLoading,

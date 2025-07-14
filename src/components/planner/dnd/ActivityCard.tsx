@@ -3,23 +3,37 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from '@/components';
-import type { Activity } from '@/types';
+import type { Activity, DayPlan } from '@/types';
 import { isTouchDevice } from '@/lib';
-import { ActivityCardBase } from './ActivityCardBase';
 
-interface ActivityCardProps {
-  activity: Activity;
+import { EditCardButton, ActivityCardBase, ActivityCardEditing } from '@/components';
+
+export interface ActivityCardProps {
+  activity: Activity & { dayId?: string };
   onSelect?: () => void;
   onTitleSave?: (newTitle: string) => void;
+  onChangeDay: (dayId: string) => void;
+  availableDays: DayPlan[];
+  bgColor: string;
+  onChangeColor: (color: string) => void;
 }
 
-export default function ActivityCard({ activity, onSelect, onTitleSave }: ActivityCardProps) {
+export default function ActivityCard({
+  activity,
+  availableDays,
+  onSelect,
+  onTitleSave,
+  onChangeDay,
+  bgColor,
+  onChangeColor,
+}: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
   const twBg = color && !color.startsWith('#') ? color : undefined;
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement>;
+  const cardRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
 
   useEffect(() => {
     if (editing) {
@@ -48,6 +62,7 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
 
       <div
         className="group relative"
+        ref={cardRef}
         onClick={() => {
           if (!editing) onSelect?.();
         }}
@@ -70,12 +85,30 @@ export default function ActivityCard({ activity, onSelect, onTitleSave }: Activi
           budget={budget}
         />
 
+        {!editing && (
+          <EditCardButton
+            type="button"
+            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditing(true);
+            }}
+          />
+        )}
+
         {editing && (
-          <div className="relative pt-4 z-50">
-            <Button type="button" size="sm" className="cursor-pointer" onClick={save}>
-              Update
-            </Button>
-          </div>
+          <ActivityCardEditing
+            cardRef={cardRef}
+            activity={activity}
+            availableDays={availableDays}
+            bgColor={bgColor}
+            onChangeColor={onChangeColor}
+            onChangeDay={onChangeDay}
+            onSave={save}
+            onCancel={cancel}
+            editedImageUrl={editedImageUrl}
+            setEditedImageUrl={setEditedImageUrl}
+          />
         )}
       </div>
     </>

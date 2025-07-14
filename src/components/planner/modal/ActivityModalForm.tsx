@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { AlignLeft } from 'lucide-react';
-import { DollarSign, Clock } from 'lucide-react';
+import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants';
@@ -35,7 +35,11 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   return (
     <>
       {/* Editable title, description, when & duration */}
+      <label htmlFor="title" className="sr-only">
+        Title
+      </label>
       <input
+        id="title"
         ref={titleInputRef}
         value={editedTitle}
         onChange={(e) => setEditedTitle(e.target.value)}
@@ -56,7 +60,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           </label>
 
           <div className="flex hover:bg-gray-50 items-center border rounded px-2 py-1 bg-background focus-within:ring-2 ring-primary">
-            <Clock size={14} className="text-muted-foreground mr-1" />
+            <Hourglass size={14} className="text-muted-foreground mr-1" />
             <input
               id="duration"
               type="number"

@@ -5,16 +5,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
-import type { Activity } from '@/types';
+import type { Activity, DayPlan } from '@/types';
 
 interface ActivityModalProps {
   open: boolean;
-  activity: Activity;
+  activity: Activity & { dayId?: string };
   onClose: () => void;
   onDelete: () => void;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
   onColorChange: (color: string) => void;
+  days: DayPlan[];
+  onChangeDay: (dayId: string) => void;
 }
 
 export default function ActivityModal({
@@ -25,6 +27,8 @@ export default function ActivityModal({
   onSave,
   color,
   onColorChange,
+  days,
+  onChangeDay,
 }: ActivityModalProps) {
   if (!open) return null;
 
@@ -46,6 +50,8 @@ export default function ActivityModal({
           onDelete={onDelete}
           onClose={onClose}
           onColorChange={onColorChange}
+          availableDays={days}
+          onChangeDay={onChangeDay}
         />
 
         <ActivityModalForm activity={activity} onClose={onClose} onSave={onSave} color={color} />

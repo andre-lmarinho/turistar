@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { CloseButton, RemoveCardButton, CardColorButton } from '@/components';
 
 describe('icon buttons aria-label', () => {
@@ -15,5 +15,17 @@ describe('icon buttons aria-label', () => {
     expect(screen.getByTestId('close')).toHaveAttribute('aria-label', 'Close');
     expect(screen.getByTestId('delete')).toHaveAttribute('aria-label', 'Delete');
     expect(screen.getByTestId('color')).toHaveAttribute('aria-label', 'Card Color');
+  });
+
+  it('shows tooltip on hover', () => {
+    render(
+      <div>
+        <CloseButton data-testid="close" />
+      </div>
+    );
+
+    const btn = screen.getByTestId('close').firstChild as HTMLElement;
+    fireEvent.mouseEnter(btn);
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Close');
   });
 });

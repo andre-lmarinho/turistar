@@ -10,9 +10,12 @@ import type { DayPlan, Activity } from '@/types';
 
 interface DayColumnProps {
   day: DayPlan;
+  days: DayPlan[];
   onSelectActivity?: (activity: Activity) => void;
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle?: (id: string, title: string) => void;
+  onChangeDay: (activityId: string, dayId: string) => void;
+  onChangeColor: (activityId: string, color: string) => void;
 }
 
 /**
@@ -21,9 +24,12 @@ interface DayColumnProps {
  */
 export default function DayColumn({
   day,
+  days,
   onSelectActivity,
   onAddActivity,
   onUpdateTitle,
+  onChangeDay,
+  onChangeColor,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
@@ -42,15 +48,18 @@ export default function DayColumn({
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="column h-full overflow-y-auto pr-1">
+        <div className="column overflow-y-auto pr-1">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem
                 id={activity.id}
                 activity={activity}
-                dragOverlay={false}
+                availableDays={days}
                 onSelect={() => onSelectActivity?.(activity)}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
+                onChangeDay={(newDayId) => onChangeDay(activity.id, newDayId)}
+                onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
+                bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (
                 <InsertNewCard dayId={day.id} index={idx + 1} onAddActivity={onAddActivity} />

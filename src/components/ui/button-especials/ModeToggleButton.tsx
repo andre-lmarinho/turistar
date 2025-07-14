@@ -53,6 +53,7 @@ export function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
     <div className="inline-flex">
       <div
         ref={containerRef}
+        role="group"
         className="relative flex bg-[var(--border)] rounded-[var(--radius)] overflow-hidden min-w-[200px]"
       >
         <motion.div
@@ -65,6 +66,7 @@ export function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
             key={mode}
             type="button"
             onClick={() => onChange(mode)}
+            aria-pressed={value === mode}
             className={`
           flex-1 relative z-10 text-sm font-medium transition-colors
           ${

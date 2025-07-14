@@ -16,6 +16,7 @@ import {
 } from '@/components';
 import { usePlanner, useActivitiesById } from '@/hooks';
 import type { Activity, CatalogActivity } from '@/types';
+import { moveActivityToDay } from '@/utils';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 /**
@@ -35,6 +36,7 @@ export default function PlannerClient() {
   const {
     dest,
     days,
+    setDays,
     currentRange,
     handleRangeChange,
     isLoading,
@@ -50,6 +52,11 @@ export default function PlannerClient() {
     updateActivity,
     addBlankActivity,
   } = usePlanner(true);
+
+  function handleChangeDay(activityId: string, dayId: string) {
+    setDays((prev) => moveActivityToDay(prev, activityId, dayId));
+    setSelectedActivity((prev) => (prev ? { ...prev, dayId } : prev));
+  }
 
   // Build a Set of activity IDs already placed on the board
   const activitiesById = useActivitiesById(days);
@@ -116,6 +123,11 @@ export default function PlannerClient() {
               const blank = addBlankActivity(dayIndex, insertIdx);
               setSelectedActivity({ ...blank, dayId });
             }}
+            onChangeDay={handleChangeDay}
+            onChangeColor={(id, color) => {
+              setSelectedActivity((prev) => prev && { ...prev, color });
+              updateActivity(id, { color });
+            }}
           />
         </>
       )}
@@ -160,6 +172,8 @@ export default function PlannerClient() {
               updateActivity(selectedActivity.id, { color: newColor });
             }
           }}
+          days={days}
+          onChangeDay={(dayId) => handleChangeDay(selectedActivity.id, dayId)}
         />
       )}
     </main>

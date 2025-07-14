@@ -36,10 +36,14 @@ export function ActivityCardBase({
   return (
     <div
       role="button"
-      className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-white overflow-hidden hover:shadow-md transition cursor-grab relative"
+      className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-[var(--background)] hover:shadow-md transition cursor-grab relative"
       style={{ zIndex: editing ? 50 : undefined }}
     >
-      <div className={`flex-1 flex w-40 flex-col ${twBg ?? ''}`}>
+      <div
+        className={`flex-1 flex w-40 flex-col rounded-lg border border-[var(--border)] overflow-hidden ${
+          twBg ?? ''
+        }`}
+      >
         {imageUrl && (
           <Image
             src={imageUrl}
