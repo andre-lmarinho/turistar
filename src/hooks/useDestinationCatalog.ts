@@ -17,6 +17,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
   const [error, setError] = useState<string | null>(null);
   const [activeCats, setActiveCats] = useState<Set<string>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>('A-Z');
+  const [search, setSearch] = useState('');
 
   /**
    * Fetch the catalog from the API when the panel is open and not already loaded.
@@ -43,8 +44,15 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
    * - Sorts by price, duration, or name.
    */
   const visibleItems = useMemo(() => {
-    const filtered =
+    const catFiltered =
       activeCats.size === 0 ? items : items.filter((it) => activeCats.has(it.category));
+
+    const searchLower = search.toLowerCase();
+    const filtered = catFiltered.filter(
+      (it) =>
+        it.name.toLowerCase().includes(searchLower) ||
+        it.description.toLowerCase().includes(searchLower)
+    );
 
     return [...filtered].sort((a, b) => {
       switch (sortMode) {
@@ -56,7 +64,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
           return a.name.localeCompare(b.name);
       }
     });
-  }, [items, activeCats, sortMode]);
+  }, [items, activeCats, sortMode, search]);
 
   /**
    * Builds the list of unique categories from the catalog.
@@ -74,5 +82,16 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
       return next;
     });
 
-  return { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error };
+  return {
+    visibleItems,
+    categories,
+    sortMode,
+    setSortMode,
+    toggleCat,
+    activeCats,
+    loading,
+    error,
+    search,
+    setSearch,
+  };
 }

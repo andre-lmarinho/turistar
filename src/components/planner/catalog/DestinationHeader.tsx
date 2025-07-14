@@ -10,6 +10,8 @@ interface DestinationHeaderProps {
   toggleCat: (c: string) => void;
   sortMode: SortMode;
   setSortMode: (m: SortMode) => void;
+  search: string;
+  onSearchChange: (s: string) => void;
   onClose: () => void;
 }
 
@@ -19,6 +21,8 @@ export default function DestinationHeader({
   toggleCat,
   sortMode,
   setSortMode,
+  search,
+  onSearchChange,
   onClose,
 }: DestinationHeaderProps) {
   return (
@@ -34,6 +38,13 @@ export default function DestinationHeader({
         <div className="flex-1 overflow-x-auto">
           <CategoryFilterBar categories={categories} active={activeCats} onToggle={toggleCat} />
         </div>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search"
+          className="border rounded px-2 py-1 text-sm"
+        />
         <SortSelector value={sortMode} onChange={setSortMode} />
       </div>
     </>

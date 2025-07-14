@@ -30,16 +30,18 @@ export default function Tooltip({ content, children, className, position = 'top'
 
   const hide = () => setVisible(false);
 
-  const trigger = React.cloneElement(children, {
-    ref,
-    onMouseEnter: show,
-    onMouseLeave: hide,
-    onFocus: show,
-    onBlur: hide,
-  });
-
-  const verticalTranslate =
-    position === 'bottom' ? 'translate-y-1' : '-translate-y-[calc(100%+0.25rem)]';
+  const trigger = (
+    <span
+      ref={ref}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      className="inline-block"
+    >
+      {children}
+    </span>
+  );
 
   return (
     <>
@@ -49,7 +51,7 @@ export default function Tooltip({ content, children, className, position = 'top'
           <div
             className={cn(
               'pointer-events-none absolute z-50 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-[10px] text-white',
-              verticalTranslate,
+              position === 'bottom' ? 'translate-y-[12px]' : '-translate-y-[calc(100%+12px)]',
               className
             )}
             style={{ left: coords.x, top: coords.y }}

@@ -3,7 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { ChevronDown } from 'lucide-react';
+import { Palette, ArrowLeftRight } from 'lucide-react';
 import type { Activity, DayPlan } from '@/types';
 import { Button, CardColorsPopup, DayPickerPopup } from '@/components';
 import { usePopupTriggerRef, useWindowSize } from '@/hooks';
@@ -82,8 +82,8 @@ export default function ActivityCardEditing({
               setIsColorPickerOpen(false);
             }}
           >
+            <ArrowLeftRight className="size-4" />
             Move
-            <ChevronDown className="size-4" />
           </Button>
           <div className="relative mb-1">
             {isDatePickerOpen && availableDays?.length > 0 && (
@@ -112,8 +112,8 @@ export default function ActivityCardEditing({
               setIsDatePickerOpen(false);
             }}
           >
+            <Palette className="size-4" />
             Card Colors
-            <ChevronDown className="size-4" />
           </Button>
           <div className="relative mb-1">
             {isColorPickerOpen && (

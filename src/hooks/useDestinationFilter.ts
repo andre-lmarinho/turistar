@@ -12,8 +12,18 @@ import { STARTER_PLANNER_TITLE } from '@/constants';
 export function useDestinationFilter(isOpen: boolean) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error } =
-    useDestinationCatalog(isOpen);
+  const {
+    visibleItems,
+    categories,
+    sortMode,
+    setSortMode,
+    toggleCat,
+    activeCats,
+    loading,
+    error,
+    search,
+    setSearch,
+  } = useDestinationCatalog(isOpen);
 
   return {
     city: STARTER_PLANNER_TITLE,
@@ -27,5 +37,7 @@ export function useDestinationFilter(isOpen: boolean) {
     activeCats,
     loading,
     error,
+    search,
+    setSearch,
   };
 }

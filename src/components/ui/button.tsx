@@ -16,7 +16,7 @@ const buttonVariants = cva(
         default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
         muted: 'w-full bg-card text-foreground shadow-xs hover:bg-muted',
         icon: 'bg-background border border-bg-gray-200 hover:bg-gray-200 backdrop-blur-sm',
-        icon2: 'bg-background rounded-full',
+        round: 'bg-background rounded-full',
         ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
       },
       size: {

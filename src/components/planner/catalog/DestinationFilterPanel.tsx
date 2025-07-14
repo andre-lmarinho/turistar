@@ -27,8 +27,18 @@ export default function DestinationFilterPanel({
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
   // Extract filter logic into custom hook
-  const { visibleItems, categories, sortMode, setSortMode, toggleCat, activeCats, loading, error } =
-    useDestinationFilter(isOpen);
+  const {
+    visibleItems,
+    categories,
+    sortMode,
+    setSortMode,
+    toggleCat,
+    activeCats,
+    loading,
+    error,
+    search,
+    setSearch,
+  } = useDestinationFilter(isOpen);
 
   if (!isOpen) return null;
 
@@ -52,6 +62,8 @@ export default function DestinationFilterPanel({
             toggleCat={toggleCat}
             sortMode={sortMode}
             setSortMode={setSortMode}
+            search={search}
+            onSearchChange={setSearch}
             onClose={onClose}
           />
 

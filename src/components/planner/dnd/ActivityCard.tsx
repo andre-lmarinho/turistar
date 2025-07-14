@@ -31,7 +31,7 @@ export default function ActivityCard({
   const twBg = color && !color.startsWith('#') ? color : undefined;
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
-  const inputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement>;
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const cardRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
 
@@ -61,10 +61,18 @@ export default function ActivityCard({
         ReactDOM.createPortal(<div className="backdrop-overlay" onClick={cancel} />, document.body)}
 
       <div
+        role="button"
+        tabIndex={0}
         className="group relative"
         ref={cardRef}
         onClick={() => {
           if (!editing) onSelect?.();
+        }}
+        onKeyDown={(e) => {
+          if (!editing && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onSelect?.();
+          }
         }}
         onContextMenu={(e) => {
           if (isTouchDevice()) return;

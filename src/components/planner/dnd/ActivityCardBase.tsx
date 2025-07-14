@@ -11,7 +11,7 @@ interface ActivityCardBaseProps {
   draftTitle?: string;
   onDraftTitleChange?: (value: string) => void;
   onSave?: () => void;
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLTextAreaElement | null>;
   imageUrl?: string;
   duration?: number;
   editing?: boolean;
@@ -35,7 +35,6 @@ export function ActivityCardBase({
 
   return (
     <div
-      role="button"
       className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-[var(--background)] hover:shadow-md transition cursor-grab relative"
       style={{ zIndex: editing ? 50 : undefined }}
     >
@@ -55,40 +54,45 @@ export function ActivityCardBase({
           />
         )}
 
-        <div className="mx-4 my-2">
-          {editing ? (
-            <input
-              ref={inputRef}
-              value={draftTitle}
-              onChange={(e) => onDraftTitleChange?.(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  onSave?.();
-                }
-              }}
-              className="w-full bg-background px-2 py-1 text-sm"
-            />
-          ) : (
-            <h4 className="font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
-          )}
+        {editing ? (
+          <textarea
+            ref={inputRef}
+            value={draftTitle}
+            rows={1}
+            onChange={(e) => onDraftTitleChange?.(e.target.value)}
+            onInput={(e) => {
+              const ta = e.currentTarget;
+              ta.style.height = 'auto';
+              ta.style.height = `${ta.scrollHeight}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSave?.();
+              }
+            }}
+            className="w-full min-h-[5rem] bg-background px-2 py-1 text-sm resize-none overflow-hidden"
+            style={{ verticalAlign: 'top' }}
+          />
+        ) : (
+          <h4 className="px-2 py-1 font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+        )}
 
-          {isMounted && (duration! > 0 || budget! > 0) && (
-            <div className="absolute top-2 left-2 flex gap-2 px-2 rounded-full text-xs bg-white">
-              {duration! > 0 && (
-                <span className="inline-flex items-center gap-1">
-                  <Hourglass size={12} />
-                  {duration} h
-                </span>
-              )}
-              {budget! > 0 && (
-                <span className="inline-flex items-center gap-1">
-                  <DollarSign size={12} /> {budget}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+        {isMounted && (duration! > 0 || budget! > 0) && (
+          <div className="absolute top-2 left-2 flex gap-2 px-2 rounded-full text-xs bg-white">
+            {duration! > 0 && (
+              <span className="inline-flex items-center gap-1">
+                <Hourglass size={12} />
+                {duration} h
+              </span>
+            )}
+            {budget! > 0 && (
+              <span className="inline-flex items-center gap-1">
+                <DollarSign size={12} /> {budget}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

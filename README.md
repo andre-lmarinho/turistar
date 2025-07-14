@@ -1,9 +1,27 @@
 # Turistar – Drag-and-Drop Travel Planner
 
+Next.js + DnD Kit
+
 A simple travel planner built with Next.js, React and drag‑and‑drop. Select your travel dates to Salvador/Brazil to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 _or_ deploy easily to Vercel or Netlify with the same settings.
+
+## ✨ About the Project
+
+Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Radix UI, and the App Router in Next.js 15.
+
+---
+
+## 📷 Snapshots of the project
+
+![Turistar Planner Screenshot](./public/preview_01.png)
+
+![Catalog of Atractions Screenshot](./public/preview_02.png)
+
+![Atractions Card Screenshot](./public/preview_03.png)
+
+![Atractions Card Screenshot - Right Click](./public/preview_04.png)
 
 ---
 
@@ -15,6 +33,8 @@ _or_ deploy easily to Vercel or Netlify with the same settings.
   Drag activities between days or add blank cards to build your schedule.
 - **Catalog Popup**
   Browse suggested activities and insert them directly into the board.
+  - **Search Catalog**
+    Quickly filter activities by typing a query.
 - **Local Data Mock**
   Demo catalog comes from `/api/catalog`, which serves a static JSON file.
 - **Persistent Storage**
@@ -41,7 +61,6 @@ You can deploy the same app to Vercel or Netlify.
 
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/components`: React components that should follow the guidelines in this document
-  - `/context`: React context for shared state
   - `/hooks`: Custom React hooks
   - `/lib`: Internal utilities
   - `/services`: External API wrappers
@@ -50,13 +69,13 @@ You can deploy the same app to Vercel or Netlify.
 
 ---
 
-## 📖 How It Works
+## 🧭 User Flow
 
-1. **Welcome Form** – Home page asks for your trip dates.
-2. **Planner Board** – One column per day with drag‑and‑drop cards.
-3. **Catalog Popup** – Add activities from a local JSON mock using the “Open Panel” button.
-4. **Edit & Reorder** – Click a card to edit or drag between days.
-5. **Local Storage** – Your plan persists in the browser across refreshes.
+1. Start by selecting your trip dates
+2. Review suggested activities in the catalog popup
+3. Drag cards into the planner board by day
+4. Click cards to edit title, image, or move between days
+5. All changes persist automatically in `localStorage`
 
 ---
 
@@ -125,6 +144,17 @@ _For detailed guides, see:_
 - Next.js Deployment Docs: https://nextjs.org/docs/app/building-your-application/deploying
 - Vercel Docs: https://vercel.com/docs
 - Netlify Docs: https://docs.netlify.com/
+
+---
+
+## 🧠 What I Focused On
+
+- Modular architecture with `/hooks`, `/lib`, and typed APIs
+- Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
+- Custom components built on top of Radix UI primitives
+- Local persistence using `localStorage`
+- UX patterns: inline editing, optimistic updates, responsive layout
+- Progressive structure ready to scale with real APIs
 
 ---
 
