@@ -53,7 +53,7 @@ export default function DayColumn({
             <React.Fragment key={activity.id}>
               <SortableItem
                 id={activity.id}
-                activity={activity}
+                activity={{ ...activity, dayId: day.id }}
                 availableDays={days}
                 onSelect={() => onSelectActivity?.(activity)}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}

@@ -1,7 +1,9 @@
 // src/components/budget/CategoryProgressBar.tsx
 
 import React from 'react';
-import { CategoryKey, CATEGORIES, CHART_COLORS } from '@/constants';
+import { Info } from 'lucide-react';
+import { CategoryKey, CATEGORIES, CHART_COLORS, BUDGET_INFO } from '@/constants';
+import { Tooltip } from '@/components';
 
 interface Props {
   category: CategoryKey;
@@ -18,7 +20,12 @@ export function CategoryProgressBar({ category, value, total, colorIndex }: Prop
   return (
     <div className="flex items-center gap-2">
       <Icon size={16} aria-hidden />
-      <span className="w-32 text-sm">{label}</span>
+      <span className="w-32 text-sm flex items-center gap-1">
+        {label}
+        <Tooltip content={BUDGET_INFO[category]}>
+          <Info size={12} className="text-muted-foreground" />
+        </Tooltip>
+      </span>
       <div className="flex-1 h-2 bg-muted rounded" aria-hidden>
         <div
           className="h-2 rounded"

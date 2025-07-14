@@ -1,4 +1,4 @@
-// src/components/ui/buttonTooltips.tsx
+// src/components/ui/buttonTooltip.tsx
 
 'use client';
 

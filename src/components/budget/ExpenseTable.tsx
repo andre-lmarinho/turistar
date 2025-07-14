@@ -1,10 +1,10 @@
 // src/components/budget/ExpenseTable.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { Pencil, Trash2, Plus, Check, X } from 'lucide-react';
-import { Button } from '@/components';
-import { CATEGORIES, CategoryKey } from '@/constants';
+import React, { useState, useEffect } from 'react';
+import { Pencil, Trash2, Plus, Check, X, Info, DollarSign } from 'lucide-react';
+import { Button, Tooltip } from '@/components';
+import { CATEGORIES, CategoryKey, BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
 
 interface ExpenseTableProps {
@@ -34,10 +34,26 @@ export function ExpenseTable({
 }: ExpenseTableProps) {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
+  const [amountInput, setAmountInput] = useState(amount ? String(amount) : '');
+  const [editAmountInput, setEditAmountInput] = useState('');
+
+  useEffect(() => {
+    setAmountInput(amount ? String(amount) : '');
+  }, [amount]);
+
+  const normalizeAmount = (val: string) => {
+    const cleaned = val
+      .replace(/[^0-9.]/g, '')
+      .replace(/,/g, '')
+      .replace(/^0+(?!\.)/, '');
+    const num = parseFloat(cleaned);
+    return isFinite(num) ? num : 0;
+  };
 
   const startEdit = (index: number) => {
     setEditIndex(index);
     setEditEntry(entries[index]);
+    setEditAmountInput(String(entries[index].amount));
   };
 
   const cancelEdit = () => {
@@ -56,10 +72,38 @@ export function ExpenseTable({
     <table className="w-full text-sm border rounded">
       <thead className="bg-muted">
         <tr>
-          <th className="p-2 text-left">Description</th>
-          <th className="p-2 text-left">Category</th>
-          <th className="p-2 text-right">Amount</th>
-          <th className="p-2 text-right">Actions</th>
+          <th className="p-2 text-left">
+            <span className="flex items-center gap-1">
+              Description
+              <Tooltip content={BUDGET_INFO.description}>
+                <Info size={12} className="text-muted-foreground" />
+              </Tooltip>
+            </span>
+          </th>
+          <th className="p-2 text-left">
+            <span className="flex items-center gap-1">
+              Category
+              <Tooltip content={BUDGET_INFO.category}>
+                <Info size={12} className="text-muted-foreground" />
+              </Tooltip>
+            </span>
+          </th>
+          <th className="p-2 text-right">
+            <span className="flex items-center gap-1 justify-end">
+              Amount
+              <Tooltip content={BUDGET_INFO.amount}>
+                <Info size={12} className="text-muted-foreground" />
+              </Tooltip>
+            </span>
+          </th>
+          <th className="p-2 text-right">
+            <span className="flex items-center gap-1 justify-end">
+              Actions
+              <Tooltip content={BUDGET_INFO.actions}>
+                <Info size={12} className="text-muted-foreground" />
+              </Tooltip>
+            </span>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -96,16 +140,23 @@ export function ExpenseTable({
                   </select>
                 </td>
                 <td className="p-2 text-right">
-                  <input
-                    type="number"
-                    autoComplete="off"
-                    value={editEntry?.amount ?? 0}
-                    onChange={(ev) =>
-                      setEditEntry((prev) => prev && { ...prev, amount: Number(ev.target.value) })
-                    }
-                    aria-label="Amount"
-                    className="border rounded px-2 py-1 w-full text-right"
-                  />
+                  <div className="relative">
+                    <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground" />
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      value={editAmountInput}
+                      onChange={(ev) => setEditAmountInput(ev.target.value)}
+                      onBlur={() =>
+                        setEditEntry(
+                          (prev) => prev && { ...prev, amount: normalizeAmount(editAmountInput) }
+                        )
+                      }
+                      aria-label="Amount"
+                      className="border rounded px-2 py-1 pl-5 w-full text-right bg-background [appearance:textfield]"
+                    />
+                  </div>
                 </td>
                 <td className="p-2 text-right flex gap-2 justify-end">
                   <Button size="icon" variant="ghost" onClick={confirmEdit} title="Save">
@@ -164,16 +215,24 @@ export function ExpenseTable({
             </select>
           </td>
           <td className="p-2">
-            <input
-              type="number"
-              autoComplete="off"
-              min={0}
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-              placeholder="Amount"
-              aria-label="Amount"
-              className="border rounded px-2 py-1 w-full text-right"
-            />
+            <div className="relative">
+              <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground" />
+              <input
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                value={amountInput}
+                onChange={(e) => setAmountInput(e.target.value)}
+                onBlur={() => {
+                  const val = normalizeAmount(amountInput);
+                  setAmount(val);
+                  setAmountInput(val ? String(val) : '0');
+                }}
+                placeholder="Amount"
+                aria-label="Amount"
+                className="border rounded px-2 py-1 pl-5 w-full text-right bg-background [appearance:textfield]"
+              />
+            </div>
           </td>
           <td className="p-2 text-right">
             <Button variant="icon" size="icon" title="Add expense" onClick={onAdd}>

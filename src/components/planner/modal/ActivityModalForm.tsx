@@ -7,6 +7,7 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants';
+import { UpdateButton } from '@/components';
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -114,9 +115,10 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         />
       </div>
 
-      {/* Footer: Cancel & Update */}
+      {/* Update */}
       <div className="px-4 py-3 flex justify-center gap-2">
-        <button
+        <UpdateButton
+          ready={Boolean(editedTitle.trim())}
           onClick={() =>
             onSave({
               title: editedTitle.trim(),
@@ -126,15 +128,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               budget,
             })
           }
-          className={`px-4 py-2 rounded text-sm ${
-            editedTitle.trim()
-              ? 'bg-blue-600 text-white hover:bg-blue-700'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
-          disabled={!editedTitle.trim()}
         >
           Update
-        </button>
+        </UpdateButton>
       </div>
     </>
   );

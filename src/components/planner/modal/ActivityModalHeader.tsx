@@ -47,6 +47,7 @@ export default function ActivityModalHeader({
     setIsDatePickerOpen,
   } = useCardPopups();
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
 
   return (
     <>
@@ -73,7 +74,7 @@ export default function ActivityModalHeader({
             type="button"
             onClick={handleDateButtonClick}
           >
-            Change Day
+            {currentDayLabel ?? 'Change Day'}
             <ChevronDown className="size-4" />
           </Button>
           <div className="flex items-center gap-2">

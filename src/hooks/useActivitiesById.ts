@@ -10,11 +10,11 @@ import type { DayPlan, Activity } from '@/types';
 
 export function useActivitiesById(days: DayPlan[]) {
   return useMemo(() => {
-    const map: Record<string, Activity> = {};
+    const map: Record<string, Activity & { dayId: string }> = {};
 
     for (const day of days) {
       for (const activity of day.activities) {
-        map[activity.id] = activity;
+        map[activity.id] = { ...activity, dayId: day.id };
       }
     }
 
