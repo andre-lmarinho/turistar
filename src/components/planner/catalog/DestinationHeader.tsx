@@ -38,7 +38,11 @@ export default function DestinationHeader({
         <div className="flex-1 overflow-x-auto">
           <CategoryFilterBar categories={categories} active={activeCats} onToggle={toggleCat} />
         </div>
+        <label htmlFor="catalog-search" className="sr-only">
+          Search catalog
+        </label>
         <input
+          id="catalog-search"
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}

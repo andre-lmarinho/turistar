@@ -1,4 +1,5 @@
 // src/app/api/catalog/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import salvador from '@/data/salvador.json';
 

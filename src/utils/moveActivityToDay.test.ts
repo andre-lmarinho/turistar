@@ -1,3 +1,5 @@
+// src/utils/moveActivityToDay.test.ts
+
 import { moveActivityToDay } from '@/utils/moveActivityToDay';
 import type { DayPlan, Activity } from '@/types';
 

@@ -54,7 +54,7 @@ export default function ActivityModal({
           onChangeDay={onChangeDay}
         />
 
-        <ActivityModalForm activity={activity} onClose={onClose} onSave={onSave} color={color} />
+        <ActivityModalForm activity={activity} onSave={onSave} color={color} />
       </div>
     </div>,
     document.body

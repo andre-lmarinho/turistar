@@ -1,4 +1,5 @@
 // src/components/budget/CategoryProgressBar.tsx
+
 import React from 'react';
 import { CategoryKey, CATEGORIES, CHART_COLORS } from '@/constants';
 

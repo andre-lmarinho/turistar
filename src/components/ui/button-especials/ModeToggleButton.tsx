@@ -1,4 +1,5 @@
-// src/components/ui/ModeSelector.tsx
+// src/components/ui/button-especials/ModeSelector.tsx
+
 'use client';
 
 import React, { useRef, useEffect } from 'react';

@@ -1,3 +1,4 @@
+// src/app/planner/BudgetPanel.tsx
 'use client';
 
 import React from 'react';

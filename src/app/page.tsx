@@ -1,4 +1,4 @@
-//src/app/page
+// src/app/page.tsx
 
 import { WelcomeForm } from '@/components';
 

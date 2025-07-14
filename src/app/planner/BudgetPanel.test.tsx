@@ -13,7 +13,7 @@ describe('BudgetPanel', () => {
     fireEvent.change(screen.getByPlaceholderText('Amount'), {
       target: { value: '50' },
     });
-    fireEvent.click(screen.getByTitle('Add expense'));
+    fireEvent.click(screen.getByLabelText('Add expense'));
     expect(screen.getByText('$75.00')).toBeInTheDocument();
   });
 });

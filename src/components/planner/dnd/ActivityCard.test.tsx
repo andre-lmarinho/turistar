@@ -1,4 +1,5 @@
 // src/components/planner/dnd/ActivityCard.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivityCard from './ActivityCard';

@@ -1,4 +1,4 @@
-// src/constants/ui/button-especials/index.ts
+// src/components/ui/button-especials/index.ts
 
 export { default as AddCardButton } from './AddCardButton';
 export { default as DestinationActionButton } from './DestinationAction';

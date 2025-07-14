@@ -74,6 +74,7 @@ export function ExpenseTable({
                     onChange={(ev) =>
                       setEditEntry((prev) => prev && { ...prev, description: ev.target.value })
                     }
+                    aria-label="Description"
                     className="border rounded px-2 py-1 w-full"
                   />
                 </td>
@@ -102,6 +103,7 @@ export function ExpenseTable({
                     onChange={(ev) =>
                       setEditEntry((prev) => prev && { ...prev, amount: Number(ev.target.value) })
                     }
+                    aria-label="Amount"
                     className="border rounded px-2 py-1 w-full text-right"
                   />
                 </td>
@@ -141,8 +143,10 @@ export function ExpenseTable({
           <td className="p-2">
             <input
               value={desc}
+              autoComplete="off"
               onChange={(e) => setDesc(e.target.value)}
               placeholder="Description"
+              aria-label="Description"
               className="border rounded px-2 py-1 w-full"
             />
           </td>
@@ -162,10 +166,12 @@ export function ExpenseTable({
           <td className="p-2">
             <input
               type="number"
+              autoComplete="off"
               min={0}
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder="Amount"
+              aria-label="Amount"
               className="border rounded px-2 py-1 w-full text-right"
             />
           </td>

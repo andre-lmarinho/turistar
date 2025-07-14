@@ -1,4 +1,5 @@
 // src/constants/budgetConstants.ts
+
 import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
 
 export const CATEGORIES = [

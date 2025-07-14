@@ -1,4 +1,5 @@
-// src/components/ui/CardColor.tsx
+// src/components/ui/button-icons/CardColor.tsx
+
 'use client';
 
 import React from 'react';

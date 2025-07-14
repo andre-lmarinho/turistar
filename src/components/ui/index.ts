@@ -1,4 +1,4 @@
-// src/constants/ui/index.ts
+// src/components/ui/index.ts
 
 export { Button, buttonVariants } from './button';
 export { default as Tooltip } from './buttonTooltip';

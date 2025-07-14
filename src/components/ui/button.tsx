@@ -99,7 +99,7 @@ function Button({
       data-slot="button"
       className={finalClasses}
       disabled={disabled}
-      {...(title ? { 'aria-label': title } : {})}
+      {...(title ? { 'aria-label': title, title } : {})}
       {...props}
     >
       <ButtonIconWrapper variant={variant} title={title} position={position}>

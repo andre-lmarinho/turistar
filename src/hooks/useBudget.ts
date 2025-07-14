@@ -1,4 +1,5 @@
 // src/hooks/useBudget.ts
+
 import { useState, useMemo } from 'react';
 import type { CategoryKey } from '@/constants';
 import type { Entry } from '@/types/budget';

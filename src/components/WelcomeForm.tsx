@@ -51,7 +51,11 @@ export default function WelcomeForm() {
             Start Your Planning
           </Button>
 
-          {error && <p className="text-[var(--destructive)] text-sm">{error}</p>}
+          {error && (
+            <p role="alert" className="text-[var(--destructive)] text-sm">
+              {error}
+            </p>
+          )}
         </div>
       </div>
     </div>

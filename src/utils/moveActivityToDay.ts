@@ -1,4 +1,5 @@
 // src/utils/moveActivityToDay.ts
+
 import type { DayPlan } from '@/types';
 
 export function moveActivityToDay(

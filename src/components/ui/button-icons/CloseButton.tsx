@@ -1,4 +1,5 @@
-// src/components/ui/CloseButton.tsx
+// src/components/ui/button-icons/CloseButton.tsx
+
 'use client';
 
 import React from 'react';

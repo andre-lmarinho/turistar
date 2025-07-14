@@ -10,7 +10,6 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 
 interface ActivityModalFormProps {
   activity: Activity;
-  onClose: () => void;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
 }

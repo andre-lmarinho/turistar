@@ -12,6 +12,3 @@ export * from './ui';
 // Shared/standalone components
 export { default as WelcomeForm } from './WelcomeForm';
 export { default as Providers } from './Providers';
-
-// Budget components
-export { default as BudgetItem } from './BudgetItem';
