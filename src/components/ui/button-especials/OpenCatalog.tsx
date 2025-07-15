@@ -24,7 +24,7 @@ export default function OpenPanelButton({
         color: 'var(--primary-foreground)',
       }}
     >
-      <Compass size={18} className="transform transition duration-300" />
+      <Compass size={18} aria-hidden="true" className="transform transition duration-300" />
       <span className="text-sm font-medium whitespace-nowrap">{title}</span>
     </button>
   );

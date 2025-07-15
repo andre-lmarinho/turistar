@@ -40,7 +40,7 @@ export default function AddCardButton({
         onClick={() => onAddActivity(dayId, index)}
         className={`p-2 cursor-pointer ${borderColor} ${baseColor} bg-background ${hoverColor} flex items-center w-full h-10 rounded-lg transition`}
       >
-        <Plus size={18} className="mr-2" style={{ color: foregroundColor }} />
+        <Plus size={18} aria-hidden="true" className="mr-2" style={{ color: foregroundColor }} />
         <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
           New Card
         </span>
@@ -58,6 +58,7 @@ export default function AddCardButton({
       <span className="sr-only">Insert new card</span>
       <Plus
         size={24}
+        aria-hidden="true"
         className={` bg-white rounded transition-opacity w-6 h-5 opacity-0 z-20 group-hover:opacity-100 shadow-md`}
         style={{ color: foregroundColor }}
       />

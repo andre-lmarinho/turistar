@@ -75,7 +75,7 @@ export default function ActivityModalHeader({
             onClick={handleDateButtonClick}
           >
             {currentDayLabel ?? 'Change Day'}
-            <ChevronDown className="size-4" />
+            <ChevronDown className="size-4" aria-hidden="true" />
           </Button>
           <div className="flex items-center gap-2">
             <RemoveCardButton onClick={onDelete} />

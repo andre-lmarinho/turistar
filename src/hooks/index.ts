@@ -9,6 +9,7 @@ export * from './useDestinationCatalog';
 export * from './useDestinationFilter';
 export * from './useDnDPlanner';
 export * from './useDragState';
+export * from './useEscapeKey';
 export * from './usePlanner';
 export * from './usePlannerBoard';
 export * from './usePopupOutsideHandler';

@@ -61,7 +61,7 @@ export function TableRowEdit({
           }
           inputSize="default"
           background="default"
-          icon={<DollarSign className="size-4 text-muted-foreground" />}
+          icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
           inputMode="decimal"
           autoComplete="off"
           aria-label="Amount"
@@ -69,10 +69,10 @@ export function TableRowEdit({
       </td>
       <td className="p-2 text-right flex gap-2 justify-end">
         <Button size="icon" variant="ghost" onClick={onConfirm} title="Save">
-          <Check className="size-4" />
+          <Check aria-hidden="true" className="size-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={onCancel} title="Cancel">
-          <X className="size-4" />
+          <X aria-hidden="true" className="size-4" />
         </Button>
       </td>
     </tr>

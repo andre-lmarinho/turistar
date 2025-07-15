@@ -66,7 +66,7 @@ export function TableRowNew({
           }}
           inputSize="default"
           background="default"
-          icon={<DollarSign className="size-4 text-muted-foreground" />}
+          icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
           inputMode="decimal"
           autoComplete="off"
           placeholder="Amount"
@@ -75,7 +75,7 @@ export function TableRowNew({
       </td>
       <td className="p-2 text-right">
         <Button variant="icon" size="icon" title="Add expense" onClick={onAdd}>
-          <Plus className="size-4" />
+          <Plus aria-hidden="true" className="size-4" />
         </Button>
       </td>
     </tr>

@@ -34,7 +34,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
           aria-label="Pick a date range"
         >
           <span>{label}</span>
-          <CalendarIcon className="h-4 w-4 text-gray-400" />
+          <CalendarIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
         </button>
       </PopoverTrigger>
 

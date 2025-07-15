@@ -2,12 +2,13 @@
 
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
 import { useTripRange, useCatalog, usePlannerBoard } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
+import { useLocalStorageSync } from '@/lib';
 import type { DayPlan } from '@/types';
 
 export function usePlanner(enabled: boolean) {
@@ -45,37 +46,15 @@ export function usePlanner(enabled: boolean) {
   } = usePlannerBoard(buildInitialDays(tripDays));
 
   const storageKey = `catalog-${planId}`;
-  const lastSaved = useRef<string | null>(null);
-
-  /* Load initial state */
-  useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setDays(parsed);
-        }
-      } catch {}
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey]);
+  useLocalStorageSync(storageKey, days, setDays);
 
   /* Sync on range change */
   useEffect(() => {
     setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
   }, [tripDays, setDays]);
 
-  /* Persist to localStorage */
-  useEffect(() => {
-    const serialized = JSON.stringify(days);
-    if (lastSaved.current !== serialized) {
-      lastSaved.current = serialized;
-      localStorage.setItem(storageKey, serialized);
-    }
-  }, [storageKey, days]);
-
   return {
+    planId,
     dest,
     days,
     setDays,

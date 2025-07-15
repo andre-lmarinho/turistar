@@ -85,7 +85,7 @@ export default function ActivityCardEditing({
             type="button"
             onClick={handleDateButtonClick}
           >
-            <ArrowLeftRight className="size-4" />
+            <ArrowLeftRight className="size-4" aria-hidden="true" />
             Move
           </Button>
           <div className="relative mb-1">
@@ -112,7 +112,7 @@ export default function ActivityCardEditing({
             type="button"
             onClick={handleColorButtonClick}
           >
-            <Palette className="size-4" />
+            <Palette className="size-4" aria-hidden="true" />
             Card Colors
           </Button>
           <div className="relative mb-1">

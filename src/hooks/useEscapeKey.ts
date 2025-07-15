@@ -1,0 +1,42 @@
+// src/hooks/useEscapeKey.ts
+'use client';
+
+import { useEffect, useRef, RefObject } from 'react';
+
+/**
+ * Attaches a keydown listener for the Escape key while the popup is open.
+ * When triggered, calls onClose and restores focus to the element that
+ * initially opened the popup (provided via triggerRef or taken from the
+ * currently focused element).
+ */
+export function useEscapeKey({
+  onClose,
+  isActive = true,
+  triggerRef,
+}: {
+  onClose: () => void;
+  isActive?: boolean;
+  triggerRef?: RefObject<HTMLElement>;
+}) {
+  const prevFocusedRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    prevFocusedRef.current =
+      (triggerRef?.current ?? (document.activeElement as HTMLElement)) || null;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      prevFocusedRef.current?.focus?.();
+    };
+  }, [isActive, onClose, triggerRef]);
+}

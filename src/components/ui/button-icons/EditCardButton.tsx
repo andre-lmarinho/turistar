@@ -9,7 +9,7 @@ import { Button } from '@/components';
 export default function EditCardButton(props: React.ComponentProps<'button'>) {
   return (
     <Button variant="iconrd" size="iconsm" title="Edit Card" position="bottom" {...props}>
-      <Pencil />
+      <Pencil aria-hidden="true" />
     </Button>
   );
 }

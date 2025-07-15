@@ -3,9 +3,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
 import type { Activity, DayPlan } from '@/types';
+import { useEscapeKey } from '@/hooks';
 
 interface ActivityModalProps {
   open: boolean;
@@ -30,6 +30,8 @@ export default function ActivityModal({
   days,
   onChangeDay,
 }: ActivityModalProps) {
+  useEscapeKey({ onClose, isActive: open });
+
   if (!open) return null;
 
   return ReactDOM.createPortal(

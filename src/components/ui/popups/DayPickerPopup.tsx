@@ -5,7 +5,7 @@
 import React, { useRef } from 'react';
 import type { DayPlan } from '@/types';
 import { CloseButton } from '@/components';
-import { usePopupOutsideHandler } from '@/hooks';
+import { usePopupOutsideHandler, useEscapeKey } from '@/hooks';
 
 interface Props {
   days: DayPlan[];
@@ -24,6 +24,8 @@ export default function DayPickerPopup({ days, selected, onSelect, onClose, trig
     onClose,
   });
 
+  useEscapeKey({ onClose, triggerRef });
+
   return (
     <div
       ref={popupRef}
@@ -33,7 +35,7 @@ export default function DayPickerPopup({ days, selected, onSelect, onClose, trig
       className="w-[200px] bg-[var(--background)] rounded-lg shadow-xl"
     >
       <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h3 id="card-color-popup-title" className="font-bold">
+        <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
         <CloseButton onClick={onClose} />

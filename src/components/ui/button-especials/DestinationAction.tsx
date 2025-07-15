@@ -26,7 +26,7 @@ export default function DestinationActionButton({
           color: 'var(--secondary-foreground)',
         }}
       >
-        <Check />
+        <Check aria-hidden="true" />
         Added
       </button>
     );

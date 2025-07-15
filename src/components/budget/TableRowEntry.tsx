@@ -25,10 +25,10 @@ export function TableRowEntry({
       <td className="p-2 text-right">${entry.amount.toFixed(2)}</td>
       <td className="p-2 text-right flex gap-2 justify-end">
         <Button size="icon" variant="ghost" onClick={() => onEdit(index)} title="Edit">
-          <Pencil className="size-4" />
+          <Pencil aria-hidden="true" className="size-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={() => onDelete?.(index)} title="Delete">
-          <Trash2 className="size-4" />
+          <Trash2 aria-hidden="true" className="size-4" />
         </Button>
       </td>
     </tr>

@@ -9,7 +9,7 @@ import { Button } from '@/components';
 export default function DeleteCardButton(props: React.ComponentProps<'button'>) {
   return (
     <Button variant="icon" size="icon" title="Delete" {...props}>
-      <Trash2 />
+      <Trash2 aria-hidden="true" />
     </Button>
   );
 }

@@ -5,7 +5,7 @@
 import React, { useRef, useState } from 'react';
 import { DEFAULT_COLORS, COLOR_NAMES } from '@/constants';
 import { Button, CloseButton } from '@/components';
-import { usePopupOutsideHandler } from '@/hooks';
+import { usePopupOutsideHandler, useEscapeKey } from '@/hooks';
 
 interface CardColorsPopupProps {
   imageUrl: string;
@@ -37,6 +37,8 @@ export default function CardColorsPopup({
     triggerRef,
     onClose,
   });
+
+  useEscapeKey({ onClose, triggerRef });
 
   return (
     <div

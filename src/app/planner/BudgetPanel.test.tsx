@@ -6,7 +6,7 @@ import BudgetPanel from '@/app/planner/BudgetPanel';
 
 describe('BudgetPanel', () => {
   it('adds expenses and updates totals', () => {
-    render(<BudgetPanel activitiesTotal={25} />);
+    render(<BudgetPanel planId="test" activitiesTotal={25} />);
     fireEvent.change(screen.getByPlaceholderText('Description'), {
       target: { value: 'Taxi' },
     });
@@ -14,6 +14,6 @@ describe('BudgetPanel', () => {
       target: { value: '50' },
     });
     fireEvent.click(screen.getByLabelText('Add expense'));
-    expect(screen.getByText('$75.00')).toBeInTheDocument();
+    expect(screen.getByText(/\$\s*75\.00/)).toBeInTheDocument();
   });
 });

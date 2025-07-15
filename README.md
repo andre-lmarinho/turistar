@@ -38,7 +38,7 @@ Turistar is a UX-focused travel planner designed to showcase front-end architect
 - **Local Data Mock**
   Demo catalog comes from `/api/catalog`, which serves a static JSON file.
 - **Persistent Storage**
-  All changes are saved to `localStorage` so your plan stays when you refresh.
+  All planner and budget changes are saved to `localStorage` so they stay when you refresh.
 
 You can deploy the same app to Vercel or Netlify.
 
@@ -75,7 +75,7 @@ You can deploy the same app to Vercel or Netlify.
 2. Review suggested activities in the catalog popup
 3. Drag cards into the planner board by day
 4. Click cards to edit title, image, or move between days
-5. All changes persist automatically in `localStorage`
+5. All planner and budget data persist automatically in `localStorage`
 
 ---
 
@@ -152,7 +152,7 @@ _For detailed guides, see:_
 - Modular architecture with `/hooks`, `/lib`, and typed APIs
 - Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
 - Custom components built on top of Radix UI primitives
-- Local persistence using `localStorage`
+- Local persistence using `localStorage` for planner and budget
 - UX patterns: inline editing, optimistic updates, responsive layout
 - Progressive structure ready to scale with real APIs
 

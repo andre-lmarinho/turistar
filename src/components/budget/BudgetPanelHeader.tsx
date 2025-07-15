@@ -43,7 +43,7 @@ export default function BudgetPanelHeader({
           <label htmlFor="budget-input" className="font-medium flex items-center gap-1">
             Total Budget
             <Tooltip content={BUDGET_INFO.totalBudget}>
-              <Info size={12} className="text-muted-foreground" />
+              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </label>
 
@@ -55,7 +55,7 @@ export default function BudgetPanelHeader({
             background="default"
             autoComplete="off"
             placeholder="Budget"
-            icon={<DollarSign className="size-4 text-muted-foreground" />}
+            icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
             onBlur={() => {
               const val = normalizeAmount(budgetInput);
               setBudget(val);
@@ -69,10 +69,10 @@ export default function BudgetPanelHeader({
           <span className="flex items-center gap-1">
             Total Spent
             <Tooltip content={BUDGET_INFO.totalSpent}>
-              <Info size={12} className="text-muted-foreground" />
+              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </span>
-          <span className="px-2 py-1 text-right">$ {totalSpent.toFixed(2)}</span>
+          <span className="px-2 py-1 text-right">${totalSpent.toFixed(2)}</span>
         </div>
 
         {/* Difference */}
@@ -80,10 +80,10 @@ export default function BudgetPanelHeader({
           <span className="flex items-center gap-1">
             Difference
             <Tooltip content={BUDGET_INFO.difference}>
-              <Info size={12} className="text-muted-foreground" />
+              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </span>
-          <span className="px-2 py-1 text-right">$ {difference.toFixed(2)}</span>
+          <span className="px-2 py-1 text-right">${difference.toFixed(2)}</span>
         </div>
       </div>
 

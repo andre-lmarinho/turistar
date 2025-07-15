@@ -30,6 +30,7 @@ export default function PlannerClient() {
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
 
   const {
+    planId,
     dest,
     days,
     setDays,
@@ -102,7 +103,7 @@ export default function PlannerClient() {
       </div>
 
       {mode === 'budget' ? (
-        <BudgetPanel activitiesTotal={activitiesTotal} />
+        <BudgetPanel planId={planId} activitiesTotal={activitiesTotal} />
       ) : (
         <>
           <DestinationFilterPanel

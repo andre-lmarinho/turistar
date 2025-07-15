@@ -57,7 +57,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           background="default"
           type="number"
           placeholder="Hrs"
-          icon={<Hourglass size={14} className="text-muted-foreground" />}
+          icon={<Hourglass size={14} aria-hidden="true" className="text-muted-foreground" />}
           className="text-sm"
           autoComplete="off"
           min={0}
@@ -71,7 +71,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           type="number"
           inputSize="default"
           background="default"
-          icon={<DollarSign size={14} className="text-muted-foreground" />}
+          icon={<DollarSign size={14} aria-hidden="true" className="text-muted-foreground" />}
           placeholder="Budget"
           min={0}
           autoComplete="off"
@@ -82,7 +82,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       {/* Notes */}
       <div className="px-4">
         <label className="text-xs font-bold flex items-center gap-1">
-          <AlignLeft size={12} />
+          <AlignLeft size={12} aria-hidden="true" />
           <span>Notes</span>
         </label>
         <textarea

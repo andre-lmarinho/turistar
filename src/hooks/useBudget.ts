@@ -1,6 +1,7 @@
 // src/hooks/useBudget.ts
 
 import { useState, useMemo } from 'react';
+import { useLocalStorageSync } from '@/lib';
 import type { CategoryKey } from '@/constants';
 import type { Entry } from '@/types/budget';
 
@@ -10,13 +11,27 @@ import type { Entry } from '@/types/budget';
  * Accepts an initial value for the "Tours & Activities" category.
  */
 
-export function useBudget(activitiesTotal: number) {
+export function useBudget(planId: string, activitiesTotal: number) {
   const [budget, setBudget] = useState(0);
   const [entries, setEntries] = useState<Entry[]>([]);
 
   const [desc, setDesc] = useState('');
   const [cat, setCat] = useState<CategoryKey>('transport');
   const [amount, setAmount] = useState(0);
+
+  const persistedValue = useMemo(() => ({ budget, entries }), [budget, entries]);
+
+  const storageKey = `budget-${planId}`;
+  useLocalStorageSync(storageKey, persistedValue, (val) => {
+    if (val && typeof val === 'object') {
+      if (typeof (val as any).budget === 'number') {
+        setBudget((val as any).budget);
+      }
+      if (Array.isArray((val as any).entries)) {
+        setEntries((val as any).entries);
+      }
+    }
+  });
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {

@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
 import { Tooltip } from '@/components';
-import { CATEGORIES, CategoryKey, BUDGET_INFO } from '@/constants';
+import { CategoryKey, BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
 import { TableRowEdit } from './TableRowEdit';
 import { TableRowEntry } from './TableRowEntry';
@@ -79,7 +79,7 @@ export function ExpenseTable({
             <span className="flex items-center gap-1">
               Description
               <Tooltip content={BUDGET_INFO.description}>
-                <Info size={12} className="text-muted-foreground" />
+                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
           </th>
@@ -87,7 +87,7 @@ export function ExpenseTable({
             <span className="flex items-center gap-1">
               Category
               <Tooltip content={BUDGET_INFO.category}>
-                <Info size={12} className="text-muted-foreground" />
+                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
           </th>
@@ -95,7 +95,7 @@ export function ExpenseTable({
             <span className="flex items-center gap-1 justify-end">
               Amount
               <Tooltip content={BUDGET_INFO.amount}>
-                <Info size={12} className="text-muted-foreground" />
+                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
           </th>
@@ -103,7 +103,7 @@ export function ExpenseTable({
             <span className="flex items-center gap-1 justify-end">
               Actions
               <Tooltip content={BUDGET_INFO.actions}>
-                <Info size={12} className="text-muted-foreground" />
+                <Info size={12} aria-hidden="true" className="text-muted-foreground" />
               </Tooltip>
             </span>
           </th>

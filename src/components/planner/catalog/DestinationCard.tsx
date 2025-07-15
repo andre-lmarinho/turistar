@@ -56,7 +56,7 @@ export default function DestinationCard({
       {/* Duration | Price chips */}
       <div className="flex items-center text-sm text-[var(--muted-foreground)] mb-2 space-x-2">
         <span className="flex items-center gap-1">
-          <Clock size={12} /> {duration} h
+          <Clock aria-hidden="true" size={12} /> {duration} h
         </span>
         <span>|</span>
         <span>{price}</span>

@@ -9,7 +9,7 @@ import { Button } from '@/components';
 export default function CardColorButton(props: React.ComponentProps<'button'>) {
   return (
     <Button variant="icon" size="icon" title="Card Color" {...props}>
-      <Palette />
+      <Palette aria-hidden="true" />
     </Button>
   );
 }

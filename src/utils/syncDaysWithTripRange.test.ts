@@ -1,6 +1,7 @@
 // src/utils/syncDaysWithTripRange.test.ts
 
 import { formatDayPlan, syncDaysWithTripRange } from '@/utils';
+import { parseISO } from 'date-fns';
 import type { DayPlan, Activity } from '@/types';
 
 function buildActivity(id: string): Activity {
@@ -58,13 +59,13 @@ describe('syncDaysWithTripRange relabeling', () => {
     const a1 = buildActivity('a1');
     const b1 = buildActivity('b1');
 
-    const initialTrip = [new Date('2023-01-01'), new Date('2023-01-02')];
+    const initialTrip = [parseISO('2023-01-01T00:00:00Z'), parseISO('2023-01-02T00:00:00Z')];
     const days: DayPlan[] = [
       { ...formatDayPlan(initialTrip[0]), activities: [a1] },
       { ...formatDayPlan(initialTrip[1]), activities: [b1] },
     ];
 
-    const newTrip = [new Date('2023-02-01'), new Date('2023-02-02')];
+    const newTrip = [parseISO('2023-02-01T00:00:00Z'), parseISO('2023-02-02T00:00:00Z')];
 
     const result = syncDaysWithTripRange(days, newTrip);
 

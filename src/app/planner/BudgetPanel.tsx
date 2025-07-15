@@ -9,10 +9,11 @@ import BudgetPanelHeader from '@/components/budget/BudgetPanelHeader';
 
 import { Tooltip, CalculatorButton, ExpenseTable } from '@/components';
 interface Props {
+  planId: string;
   activitiesTotal: number;
 }
 
-export default function BudgetPanel({ activitiesTotal }: Props) {
+export default function BudgetPanel({ planId, activitiesTotal }: Props) {
   const {
     budget,
     setBudget,
@@ -29,7 +30,7 @@ export default function BudgetPanel({ activitiesTotal }: Props) {
     handleAdd,
     handleUpdateEntry,
     handleDeleteEntry,
-  } = useBudget(activitiesTotal);
+  } = useBudget(planId, activitiesTotal);
 
   return (
     <div className="p-4 md:mb-10 bg-background flex flex-col flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
@@ -48,7 +49,7 @@ export default function BudgetPanel({ activitiesTotal }: Props) {
         <div className="flex items-center justify-between">
           <h3 className="font-semibold flex items-center gap-1">
             Expenses
-            <Tooltip content={BUDGET_INFO.expenses}>
+            <Tooltip aria-hidden="true" content={BUDGET_INFO.expenses}>
               <Info size={12} className="text-muted-foreground" />
             </Tooltip>
           </h3>

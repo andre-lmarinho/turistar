@@ -15,7 +15,7 @@ export default function CalculatorButton(props: React.ComponentProps<'button'>) 
 
   return (
     <Button variant="icon" size="icon" title="Open calculator" onClick={handleClick} {...props}>
-      <Calculator />
+      <Calculator aria-hidden="true" />
     </Button>
   );
 }

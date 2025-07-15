@@ -4,7 +4,7 @@
 import React from 'react';
 import { DestinationHeader, DestinationCardGrid } from '@/components';
 import type { CatalogActivity } from '@/types';
-import { useDestinationFilter } from '@/hooks';
+import { useDestinationFilter, useEscapeKey } from '@/hooks';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
@@ -39,6 +39,8 @@ export default function DestinationFilterPanel({
     search,
     setSearch,
   } = useDestinationFilter(isOpen);
+
+  useEscapeKey({ onClose, isActive: isOpen });
 
   if (!isOpen) return null;
 

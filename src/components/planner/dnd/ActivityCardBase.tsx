@@ -82,13 +82,13 @@ export function ActivityCardBase({
           <div className="absolute top-2 left-2 flex gap-2 px-2 rounded-full text-xs bg-white">
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
-                <Hourglass size={12} />
+                <Hourglass size={12} aria-hidden="true" />
                 {duration} h
               </span>
             )}
             {budget! > 0 && (
               <span className="inline-flex items-center gap-1">
-                <DollarSign size={12} /> {budget}
+                <DollarSign size={12} aria-hidden="true" /> {budget}
               </span>
             )}
           </div>
