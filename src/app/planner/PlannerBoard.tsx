@@ -26,7 +26,7 @@ export interface PlannerBoardProps {
   handleDragStart: (e: DragStartEvent) => void;
   handleDragOver: (e: DragOverEvent) => void;
   handleDragEnd: (e: DragEndEvent) => void;
-  onSelectActivity: (activity: Activity) => void;
+  onSelectActivity: (activity: Activity & { dayId: string }) => void;
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle: (id: string, title: string) => void;
   onChangeDay: (activityId: string, dayId: string) => void;

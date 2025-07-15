@@ -1,6 +1,7 @@
 // src/components/ui/index.ts
 
 export { Button, buttonVariants } from './button';
+export { Input, inputVariants } from './input';
 export { default as Tooltip } from './buttonTooltip';
 export { Calendar, CalendarDayButton } from './calendar';
 export { DateRangePicker } from './DatePicker';

@@ -9,6 +9,7 @@ describe('UpdateButton', () => {
     render(<UpdateButton ready={false}>Update</UpdateButton>);
     const button = screen.getByRole('button', { name: 'Update' });
     expect(button).toBeDisabled();
+    expect(button.className).toMatch(/cursor-not-allowed/);
   });
 
   it('is enabled when ready is true', () => {

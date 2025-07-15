@@ -89,9 +89,7 @@ function Button({
   const finalClasses = disabled
     ? baseClasses
         .replace(/hover:[^\s]+/g, '')
-        .concat(
-          ' pointer-events-none opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]'
-        )
+        .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
     : baseClasses;
 
   return (
