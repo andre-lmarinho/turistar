@@ -19,7 +19,7 @@ interface Props {
   onCancel: () => void;
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
-  cardRef: React.RefObject<HTMLElement>;
+  cardRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function ActivityCardEditing({
