@@ -1,18 +1,23 @@
 //src/hooks/index.ts
 
-export * from './useActivitiesById';
-export * from './useActivityState';
-export * from './useBudget';
-export * from './useCardPopups';
-export * from './useCatalog';
-export * from './useDestinationCatalog';
-export * from './useDestinationFilter';
-export * from './useDnDPlanner';
-export * from './useDragState';
-export * from './useEscapeKey';
-export * from './usePlanner';
-export * from './usePlannerBoard';
-export * from './usePopupOutsideHandler';
-export * from './useSelectedActivity';
-export * from './useTripRange';
-export * from './useWindowSize';
+export * from './planner/useActivitiesById';
+export * from './planner/useActivityState';
+export * from './planner/useDnDPlanner';
+export * from './planner/useDragState';
+export * from './planner/usePlanner';
+export * from './planner/usePlannerBoard';
+export * from './planner/useSelectedActivity';
+
+export * from './budget/useBudget';
+
+export * from './catalog/useCatalog';
+export * from './catalog/useDestinationCatalog';
+export * from './catalog/useDestinationFilter';
+
+export * from './ui/useCardPopups';
+export * from './ui/useEscapeKey';
+
+export * from './ui/usePopupOutsideHandler';
+
+export * from './ui/useTripRange';
+export * from './ui/useWindowSize';

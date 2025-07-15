@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Info } from 'lucide-react';
-import { useBudget } from '@/hooks/useBudget';
+import { useBudget } from '@/hooks/budget/useBudget';
 import { BUDGET_INFO } from '@/constants';
 import BudgetPanelHeader from '@/components/budget/BudgetPanelHeader';
 

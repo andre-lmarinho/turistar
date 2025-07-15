@@ -34,6 +34,8 @@ export default function ActivityCard({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const cardRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const [overlayRect, setOverlayRect] = useState<DOMRect | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (editing) {
@@ -42,17 +44,26 @@ export default function ActivityCard({
     }
   }, [editing]);
 
+  function startEditing() {
+    if (cardRef.current) {
+      setOverlayRect(cardRef.current.getBoundingClientRect());
+    }
+    setEditing(true);
+  }
+
   function save() {
     const trimmed = draftTitle.trim();
     if (trimmed && trimmed !== title) {
       onTitleSave?.(trimmed);
     }
     setEditing(false);
+    setOverlayRect(null);
   }
 
   function cancel() {
     setDraftTitle(title);
     setEditing(false);
+    setOverlayRect(null);
   }
 
   return (
@@ -65,6 +76,7 @@ export default function ActivityCard({
         tabIndex={0}
         className="group relative"
         ref={cardRef}
+        style={{ visibility: editing ? 'hidden' : undefined }}
         onClick={() => {
           if (!editing) onSelect?.();
         }}
@@ -77,11 +89,11 @@ export default function ActivityCard({
         onContextMenu={(e) => {
           if (isTouchDevice()) return;
           e.preventDefault();
-          if (!editing) setEditing(true);
+          if (!editing) startEditing();
         }}
       >
         <ActivityCardBase
-          editing={editing}
+          editing={false}
           title={title}
           draftTitle={draftTitle}
           onDraftTitleChange={setDraftTitle}
@@ -99,26 +111,47 @@ export default function ActivityCard({
             className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
-              setEditing(true);
+              startEditing();
             }}
           />
         )}
-
-        {editing && (
-          <ActivityCardEditing
-            cardRef={cardRef}
-            activity={activity}
-            availableDays={availableDays}
-            bgColor={bgColor}
-            onChangeColor={onChangeColor}
-            onChangeDay={onChangeDay}
-            onSave={save}
-            onCancel={cancel}
-            editedImageUrl={editedImageUrl}
-            setEditedImageUrl={setEditedImageUrl}
-          />
-        )}
       </div>
+
+      {editing &&
+        overlayRect &&
+        ReactDOM.createPortal(
+          <div
+            ref={overlayRef}
+            className="fixed z-50"
+            style={{ top: overlayRect.top, left: overlayRect.left, width: overlayRect.width }}
+          >
+            <ActivityCardBase
+              editing={true}
+              title={title}
+              draftTitle={draftTitle}
+              onDraftTitleChange={setDraftTitle}
+              onSave={save}
+              inputRef={inputRef}
+              imageUrl={imageUrl}
+              duration={duration}
+              twBg={twBg}
+              budget={budget}
+            />
+            <ActivityCardEditing
+              cardRef={overlayRef}
+              activity={activity}
+              availableDays={availableDays}
+              bgColor={bgColor}
+              onChangeColor={onChangeColor}
+              onChangeDay={onChangeDay}
+              onSave={save}
+              onCancel={cancel}
+              editedImageUrl={editedImageUrl}
+              setEditedImageUrl={setEditedImageUrl}
+            />
+          </div>,
+          document.body
+        )}
     </>
   );
 }

@@ -11,6 +11,11 @@ import type { Entry } from '@/types/budget';
  * Accepts an initial value for the "Tours & Activities" category.
  */
 
+interface PersistedBudget {
+  budget: number;
+  entries: Entry[];
+}
+
 export function useBudget(planId: string, activitiesTotal: number) {
   const [budget, setBudget] = useState(0);
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -19,16 +24,17 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const [cat, setCat] = useState<CategoryKey>('transport');
   const [amount, setAmount] = useState(0);
 
-  const persistedValue = useMemo(() => ({ budget, entries }), [budget, entries]);
+  const persistedValue = useMemo<PersistedBudget>(() => ({ budget, entries }), [budget, entries]);
 
   const storageKey = `budget-${planId}`;
-  useLocalStorageSync(storageKey, persistedValue, (val) => {
-    if (val && typeof val === 'object') {
-      if (typeof (val as any).budget === 'number') {
-        setBudget((val as any).budget);
+  useLocalStorageSync<PersistedBudget>(storageKey, persistedValue, (val) => {
+    const data = typeof val === 'function' ? val(persistedValue) : val;
+    if (data && typeof data === 'object') {
+      if (typeof data.budget === 'number') {
+        setBudget(data.budget);
       }
-      if (Array.isArray((val as any).entries)) {
-        setEntries((val as any).entries);
+      if (Array.isArray(data.entries)) {
+        setEntries(data.entries);
       }
     }
   });
