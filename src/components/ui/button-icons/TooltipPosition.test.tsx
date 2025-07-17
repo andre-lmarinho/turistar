@@ -16,13 +16,15 @@ describe('icon tooltip position', () => {
     expect(tooltip.className).toContain('-translate-y');
   });
 
-  it.skip('renders tooltip below icon when position="bottom"', async () => {
+  it('renders tooltip below icon when position="bottom"', async () => {
     render(<EditCardButton title="Edit" />);
+
     const btn = screen.getByRole('button').firstChild as HTMLElement;
     fireEvent.mouseEnter(btn);
     fireEvent.mouseEnter(btn.firstChild as HTMLElement);
-    await new Promise((r) => setTimeout(r, 0));
-    const tooltip = await screen.findByText('Edit');
+
+    const tooltip = await screen.findByRole('tooltip');
+    expect(tooltip).toHaveTextContent('Edit');
     expect(tooltip.className).toContain('translate-y-[12px]');
   });
 });

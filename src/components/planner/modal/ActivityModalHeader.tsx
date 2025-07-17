@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import type { Activity, DayPlan } from '@/types';
+import Image from 'next/image';
 import { useCardPopups } from '@/hooks';
 import { ChevronDown } from 'lucide-react';
 
@@ -58,10 +59,13 @@ export default function ActivityModalHeader({
         style={bgColor.startsWith('#') ? { backgroundColor: bgColor } : undefined}
       >
         {editedImageUrl && (
-          <img
+          <Image
             src={editedImageUrl}
             alt={activity.title}
             className="absolute top-0 left-0 rounded-t-lg w-full h-full object-cover"
+            width={400}
+            height={200}
+            unoptimized
           />
         )}
 
