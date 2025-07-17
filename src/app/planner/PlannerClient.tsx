@@ -90,7 +90,7 @@ export default function PlannerClient() {
   const stringActiveId = activeId != null ? String(activeId) : null;
 
   return (
-    <main className="flex flex-col px-4 md:px-12 py-4 bg-card h-screen">
+    <main id="main-content" className="flex flex-col px-4 md:px-12 py-4 bg-card h-screen">
       <div className="pb-4 flex justify-between">
         <h1 className="text-5xl font-semibold capitalize">{destination}</h1>
         <OpenPanelButton onClick={() => setIsPanelOpen(true)} />

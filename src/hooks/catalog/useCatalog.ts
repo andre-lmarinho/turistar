@@ -1,4 +1,4 @@
-// src/hooks/useCatalog.ts
+// src/hooks/catalog/useCatalog.ts
 
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';

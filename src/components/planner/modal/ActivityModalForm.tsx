@@ -53,6 +53,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           labelId="duration"
           value={duration === 0 ? '' : String(duration)}
           onValueChange={(val) => setDuration(Number(val))}
+          aria-label="Duration"
           inputSize="sm"
           background="default"
           type="number"
@@ -68,6 +69,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           labelId="budget"
           value={budget === 0 ? '' : String(budget)}
           onValueChange={(val) => setBudget(Number(val))}
+          aria-label="Budget"
           type="number"
           inputSize="default"
           background="default"

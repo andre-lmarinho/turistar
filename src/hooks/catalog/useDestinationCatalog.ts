@@ -1,4 +1,4 @@
-// src/hooks/useDestinationCatalog.ts
+// src/hooks/catalog/useDestinationCatalog.ts
 
 import { useState, useEffect, useMemo } from 'react';
 import type { SortMode } from '@/components/planner/catalog/SortSelector';

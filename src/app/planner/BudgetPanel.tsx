@@ -7,7 +7,7 @@ import { useBudget } from '@/hooks/budget/useBudget';
 import { BUDGET_INFO } from '@/constants';
 import BudgetPanelHeader from '@/components/budget/BudgetPanelHeader';
 
-import { Tooltip, CalculatorButton, ExpenseTable } from '@/components';
+import { InfoPopup, ExpenseTable } from '@/components';
 interface Props {
   planId: string;
   activitiesTotal: number;
@@ -49,11 +49,10 @@ export default function BudgetPanel({ planId, activitiesTotal }: Props) {
         <div className="flex items-center justify-between">
           <h3 className="font-semibold flex items-center gap-1">
             Expenses
-            <Tooltip aria-hidden="true" content={BUDGET_INFO.expenses}>
+            <InfoPopup aria-hidden="true" content={BUDGET_INFO.expenses}>
               <Info size={12} className="text-muted-foreground" />
-            </Tooltip>
+            </InfoPopup>
           </h3>
-          <CalculatorButton />
         </div>
 
         <ExpenseTable

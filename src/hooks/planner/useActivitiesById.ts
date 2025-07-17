@@ -1,4 +1,4 @@
-// src/hooks/useActivitiesById.ts
+// src/hooks/planner/useActivitiesById.ts
 
 import { useMemo } from 'react';
 import type { DayPlan, Activity } from '@/types';

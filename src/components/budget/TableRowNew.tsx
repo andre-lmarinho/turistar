@@ -52,7 +52,7 @@ export function TableRowNew({
           ))}
         </select>
       </td>
-      <td className="p-2 w-36">
+      <td className="p-2">
         <Input
           value={amountInput}
           onValueChange={(val) => {

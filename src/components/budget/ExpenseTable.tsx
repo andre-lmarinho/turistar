@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
-import { Tooltip } from '@/components';
+import { InfoPopup } from '@/components';
 import { CategoryKey, BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
 import { TableRowEdit } from './TableRowEdit';
@@ -78,33 +78,33 @@ export function ExpenseTable({
           <th className="p-2 text-left">
             <span className="flex items-center gap-1">
               Description
-              <Tooltip content={BUDGET_INFO.description}>
+              <InfoPopup content={BUDGET_INFO.description}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </Tooltip>
+              </InfoPopup>
             </span>
           </th>
           <th className="p-2 text-left">
             <span className="flex items-center gap-1">
               Category
-              <Tooltip content={BUDGET_INFO.category}>
+              <InfoPopup content={BUDGET_INFO.category}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </Tooltip>
+              </InfoPopup>
             </span>
           </th>
-          <th className="p-2 text-right">
+          <th className="p-2 text-right w-32">
             <span className="flex items-center gap-1 justify-end">
               Amount
-              <Tooltip content={BUDGET_INFO.amount}>
+              <InfoPopup content={BUDGET_INFO.amount}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </Tooltip>
+              </InfoPopup>
             </span>
           </th>
           <th className="p-2 text-right">
             <span className="flex items-center gap-1 justify-end">
               Actions
-              <Tooltip content={BUDGET_INFO.actions}>
+              <InfoPopup content={BUDGET_INFO.actions}>
                 <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-              </Tooltip>
+              </InfoPopup>
             </span>
           </th>
         </tr>

@@ -69,7 +69,7 @@ export function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
             onClick={() => onChange(mode)}
             aria-pressed={value === mode}
             className={`
-          flex-1 relative z-10 text-sm font-medium transition-colors
+          flex-1 relative z-10 text-sm cursor-pointer font-medium transition-colors
           ${
             value === mode
               ? 'text-[var(--accent-foreground)]'

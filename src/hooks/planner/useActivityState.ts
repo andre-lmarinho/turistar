@@ -1,4 +1,4 @@
-// src/hooks/useActivityState.ts
+// src/hooks/planner/useActivityState.ts
 'use client';
 
 import type { Activity, DayPlan } from '@/types';

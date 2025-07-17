@@ -2,6 +2,7 @@
   "name": "travel-planner",
   "version": "0.1.0",
   "private": true,
+  "repository": "https://github.com/andre-lmarinho/travel-planner",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

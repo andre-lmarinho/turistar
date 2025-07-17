@@ -17,11 +17,11 @@ Turistar is a UX-focused travel planner designed to showcase front-end architect
 
 ![Turistar Planner Screenshot](./public/previews/preview_01.png)
 
-![Catalog of Atractions Screenshot](./public/previews/preview_02.png)
+![Catalog of Attractions Screenshot](./public/previews/preview_02.png)
 
-![Atractions Card Screenshot](./public/previews/preview_03.png)
+![Attractions Card Screenshot](./public/previews/preview_03.png)
 
-![Atractions Card Screenshot - Right Click](./public/previews/preview_04.png)
+![Attractions Card Screenshot - Right Click](./public/previews/preview_04.png)
 
 ---
 

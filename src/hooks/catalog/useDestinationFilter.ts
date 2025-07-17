@@ -1,4 +1,4 @@
-// src/hooks/useDestinationFilter.ts
+// src/hooks/catalog/useDestinationFilter.ts
 'use client';
 
 import { useDestinationCatalog } from '@/hooks';

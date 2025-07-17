@@ -1,4 +1,4 @@
-// src/hooks/usePlannerBoard.ts
+// src/hooks/planner/usePlannerBoard.ts
 'use client';
 
 import { useState } from 'react';
