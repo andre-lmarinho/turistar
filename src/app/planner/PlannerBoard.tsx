@@ -14,7 +14,6 @@ import {
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import clsx from 'clsx';
 import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
 import { useActivitiesById } from '@/hooks';
 import type { Activity, DayPlan } from '@/types';
@@ -56,7 +55,6 @@ export default function PlannerBoard({
 }: PlannerBoardProps) {
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
-  const hasScroll = days.length > 1;
 
   return (
     <DndContext
@@ -71,7 +69,7 @@ export default function PlannerBoard({
         role="list"
         aria-label="Days"
         tabIndex={0}
-        className="p-4 bg-background flex flex-1 w-full gap-4 overflow-x-auto overflow-y-hidden h-full rounded-xl border"
+        className="p-4 bg-background flex flex-1 gap-4 overflow-x-auto overflow-y-hidden h-full w-full rounded-xl border"
       >
         {days.map((d) => (
           <div key={d.id} role="listitem" className="min-w-[250px] flex-shrink-0">
