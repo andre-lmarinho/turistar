@@ -20,4 +20,12 @@ describe('ActivitiesBudget', () => {
     fireEvent.blur(input);
     expect(onUpdate).toHaveBeenCalledWith('a1', 50);
   });
+
+  it('calls onClose when clicking outside the dialog', () => {
+    const onClose = vi.fn();
+    render(<ActivitiesBudget open days={days} onUpdate={() => {}} onClose={onClose} />);
+    const dialog = screen.getByRole('dialog');
+    fireEvent.click(dialog.parentElement as HTMLElement);
+    expect(onClose).toHaveBeenCalled();
+  });
 });

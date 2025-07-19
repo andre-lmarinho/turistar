@@ -58,7 +58,7 @@ export default function AddCardButton({
       <Plus
         size={24}
         aria-hidden="true"
-        className={` bg-white rounded transition-opacity w-6 h-5 opacity-0 z-20 group-hover:opacity-100 shadow-md`}
+        className={` bg-background rounded transition-opacity w-6 h-5 opacity-0 z-20 group-hover:opacity-100 shadow-md`}
         style={{ color: foregroundColor }}
       />
       <span className="absolute border-t-2 border-dashed border-gray-300 opacity-0 group-hover:opacity-100 w-[90%] transition"></span>

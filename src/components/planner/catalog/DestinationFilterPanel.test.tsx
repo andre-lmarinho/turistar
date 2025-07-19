@@ -49,4 +49,27 @@ describe('DestinationFilterPanel search', () => {
       expect(screen.getByText('City Museum')).toBeInTheDocument();
     });
   });
+
+  it('calls onClose when clicking outside the dialog', async () => {
+    vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ activities }),
+    } as unknown as Response);
+
+    const onClose = vi.fn();
+    render(
+      <DestinationFilterPanel
+        isOpen={true}
+        onClose={onClose}
+        onAdd={() => {}}
+        onRemove={() => {}}
+      />
+    );
+
+    await screen.findByText('Beach Fun');
+
+    const dialog = screen.getByRole('dialog');
+    fireEvent.click(dialog.parentElement as HTMLElement);
+    expect(onClose).toHaveBeenCalled();
+  });
 });

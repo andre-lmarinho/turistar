@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
 import type { CatalogActivity } from '@/types';
 import { useDestinationFilter, useEscapeKey } from '@/hooks';
@@ -44,53 +45,49 @@ export default function DestinationFilterPanel({
 
   if (!isOpen) return null;
 
-  return (
-    <>
-      {/* backdrop */}
-      <div className="backdrop-overlay" onClick={onClose} />
+  return ReactDOM.createPortal(
+    <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="destination-filter-title"
+        className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-background rounded-lg shadow-xl flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* header rows */}
+        <DestinationHeader
+          categories={categories}
+          activeCats={activeCats}
+          toggleCat={toggleCat}
+          sortMode={sortMode}
+          setSortMode={setSortMode}
+          search={search}
+          onSearchChange={setSearch}
+          onClose={onClose}
+        />
 
-      {/* popup */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="destination-filter-title"
-          className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-white rounded-lg shadow-xl flex flex-col"
-        >
-          {/* header rows */}
-          <DestinationHeader
-            categories={categories}
-            activeCats={activeCats}
-            toggleCat={toggleCat}
-            sortMode={sortMode}
-            setSortMode={setSortMode}
-            search={search}
-            onSearchChange={setSearch}
-            onClose={onClose}
-          />
-
-          {/* sidebar + cards */}
-          <div className="flex-1 flex overflow-auto">
-            <div className="flex-1 p-6">
-              {loading && (
-                <div className="flex items-center gap-2">
-                  <Spinner />
-                  <span>Loading catalog...</span>
-                </div>
-              )}
-              {error && <p className="text-red-500">{error}</p>}
-              {!loading && !error && (
-                <DestinationCardGrid
-                  items={visibleItems}
-                  addedIds={addedIds}
-                  onAdd={onAdd}
-                  onRemove={onRemove}
-                />
-              )}
-            </div>
+        {/* sidebar + cards */}
+        <div className="flex-1 flex overflow-auto">
+          <div className="flex-1 p-6">
+            {loading && (
+              <div className="flex items-center gap-2">
+                <Spinner />
+                <span>Loading catalog...</span>
+              </div>
+            )}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && !error && (
+              <DestinationCardGrid
+                items={visibleItems}
+                addedIds={addedIds}
+                onAdd={onAdd}
+                onRemove={onRemove}
+              />
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>,
+    document.body
   );
 }

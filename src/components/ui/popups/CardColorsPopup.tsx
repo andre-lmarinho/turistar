@@ -54,7 +54,7 @@ export default function CardColorsPopup({
         </h3>
         <CloseButton onClick={onClose} />
       </div>
-      <div className="p-4 gap-4 w-[304px] bg-white rounded-lg shadow-xl">
+      <div className="p-4 gap-4 w-[304px] bg-background rounded-lg shadow-xl">
         {tempImageUrl && (
           <Button
             size="sm"
