@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
@@ -14,10 +14,9 @@ import {
   OpenPanelButton,
   ModeToggleButton,
 } from '@/components';
-import { usePlanner, useActivitiesById, useSelectedActivity } from '@/hooks';
+import { usePlanner, useActivitiesById, useSelectedActivity, usePlanTitle } from '@/hooks';
 import type { CatalogActivity } from '@/types';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
-
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } from '@/constants';
 /**
  * Top-level client component for the /planner route.
  * - Shows the date-range picker, the “Open Panel” button, the filter panel,
@@ -50,6 +49,8 @@ export default function PlannerClient() {
     addBlankActivity,
   } = usePlanner(true);
 
+  const { title, setTitle } = usePlanTitle(planId, STARTER_PLANNER_TITLE);
+
   const {
     selectedActivity,
     setSelectedActivity,
@@ -77,8 +78,6 @@ export default function PlannerClient() {
       ),
     [days]
   );
-  const searchParams = useSearchParams();
-  const destination = searchParams.get('dest') || 'Catalog';
 
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
@@ -92,7 +91,16 @@ export default function PlannerClient() {
   return (
     <main id="main-content" className="flex flex-col px-4 md:px-12 py-4 bg-card h-screen">
       <div className="pb-4 flex justify-between">
-        <h1 className="text-5xl font-semibold capitalize">{destination}</h1>
+        <h1 className="text-5xl font-semibold capitalize">
+          <input
+            aria-label="Planner title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            size={Math.max(title.length, 1)}
+            className="outline-none"
+          />
+        </h1>
         <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
       </div>
       <div className="pb-4 flex justify-between gap-4">
@@ -120,25 +128,45 @@ export default function PlannerClient() {
         addedIds={addedIds}
       />
 
-      {mode === 'budget' ? (
-        <BudgetPanel planId={planId} activitiesTotal={activitiesTotal} />
-      ) : (
-        <PlannerBoard
-          days={days}
-          activeId={stringActiveId}
-          sensors={sensors}
-          collisionDetection={collisionDetection}
-          handleDragStart={handleDragStart}
-          handleDragOver={handleDragOver}
-          handleDragEnd={handleDragEnd}
-          onSelectActivity={setSelectedActivity}
-          onUpdateTitle={(id, title) => updateActivity(id, { title })}
-          onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
-          onChangeDay={changeDay}
-          onChangeColor={(id, color) => changeColor(id, color)}
-          onDelete={removeActivity}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {mode === 'budget' ? (
+          <motion.div
+            key="budget"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1"
+          >
+            <BudgetPanel planId={planId} activitiesTotal={activitiesTotal} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="planner"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="flex-1"
+          >
+            <PlannerBoard
+              days={days}
+              activeId={stringActiveId}
+              sensors={sensors}
+              collisionDetection={collisionDetection}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDragEnd={handleDragEnd}
+              onSelectActivity={setSelectedActivity}
+              onUpdateTitle={(id, title) => updateActivity(id, { title })}
+              onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
+              onChangeDay={changeDay}
+              onChangeColor={(id, color) => changeColor(id, color)}
+              onDelete={removeActivity}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {selectedActivity && (
         <ActivityModal
