@@ -6,7 +6,7 @@ import { Plus, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 
-export function TableRowNew({
+export default function TableRowNew({
   desc,
   setDesc,
   cat,

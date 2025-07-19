@@ -7,7 +7,7 @@ import { Button } from '@/components';
 import { CATEGORIES } from '@/constants';
 import type { Entry } from '@/types';
 
-export function TableRowEntry({
+export default function TableRowEntry({
   entry,
   index,
   onEdit,

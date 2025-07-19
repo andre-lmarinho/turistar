@@ -23,7 +23,7 @@ export interface SortableItemProps {
   onDelete: () => void;
 }
 
-export function SortableItem({
+export default function SortableItem({
   id,
   activity,
   availableDays,

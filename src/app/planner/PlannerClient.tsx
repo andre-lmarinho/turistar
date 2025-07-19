@@ -89,16 +89,17 @@ export default function PlannerClient() {
   const stringActiveId = activeId != null ? String(activeId) : null;
 
   return (
-    <main id="main-content" className="flex flex-col px-4 md:px-12 py-4 bg-card h-screen">
+    <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 py-4 h-screen">
       <div className="pb-4 flex justify-between">
-        <h1 className="text-5xl font-semibold capitalize">
+        <h1 className="text-4xl cursor-pointer whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_50%,transparent)]">
           <input
             aria-label="Planner title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             size={Math.max(title.length, 1)}
-            className="outline-none"
+            onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
+            className="px-4 py-2 border-2 border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
         <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
@@ -138,7 +139,12 @@ export default function PlannerClient() {
             transition={{ duration: 0.2 }}
             className="flex-1"
           >
-            <BudgetPanel planId={planId} activitiesTotal={activitiesTotal} />
+            <BudgetPanel
+              planId={planId}
+              activitiesTotal={activitiesTotal}
+              days={days}
+              onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
+            />{' '}
           </motion.div>
         ) : (
           <motion.div

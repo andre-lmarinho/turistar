@@ -1,5 +1,4 @@
 // src/components/ui/button-especials/ModeSelector.tsx
-
 'use client';
 
 import React, { useRef, useEffect } from 'react';
@@ -13,7 +12,7 @@ interface ModeSelectorProps {
   onChange: (v: Mode) => void;
 }
 
-export function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
+export default function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);

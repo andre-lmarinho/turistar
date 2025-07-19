@@ -19,7 +19,7 @@ interface ActivityCardBaseProps {
   budget?: number;
 }
 
-export function ActivityCardBase({
+export default function ActivityCardBase({
   title,
   draftTitle,
   onDraftTitleChange,

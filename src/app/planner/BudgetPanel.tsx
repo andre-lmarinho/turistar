@@ -1,19 +1,27 @@
 // src/app/planner/BudgetPanel.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { useBudget } from '@/hooks/budget/useBudget';
 import { BUDGET_INFO } from '@/constants';
-import BudgetPanelHeader from '@/components/budget/BudgetPanelHeader';
+import type { DayPlan } from '@/types';
+import {
+  BudgetPanelHeader,
+  InfoPopup,
+  ExpenseTable,
+  Button,
+  ActivitiesBudgetPopup,
+} from '@/components';
 
-import { InfoPopup, ExpenseTable } from '@/components';
 interface Props {
   planId: string;
   activitiesTotal: number;
+  days: DayPlan[];
+  onUpdateBudget: (id: string, amount: number) => void;
 }
 
-export default function BudgetPanel({ planId, activitiesTotal }: Props) {
+export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBudget }: Props) {
   const {
     budget,
     setBudget,
@@ -32,10 +40,15 @@ export default function BudgetPanel({ planId, activitiesTotal }: Props) {
     handleDeleteEntry,
   } = useBudget(planId, activitiesTotal);
 
+  const [editActivities, setEditActivities] = useState(false);
+
   return (
     <div className="p-4 md:mb-10 bg-background flex flex-col flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
       <div className="pb-4 flex justify-between">
         <h2 className="text-3xl font-semibold">Traveling Budget</h2>
+        <Button size="sm" onClick={() => setEditActivities(true)}>
+          Budget Your Activities
+        </Button>
       </div>
       <BudgetPanelHeader
         budget={budget}
@@ -68,6 +81,12 @@ export default function BudgetPanel({ planId, activitiesTotal }: Props) {
           onDelete={handleDeleteEntry}
         />
       </div>
+      <ActivitiesBudgetPopup
+        open={editActivities}
+        days={days}
+        onUpdate={onUpdateBudget}
+        onClose={() => setEditActivities(false)}
+      />
     </div>
   );
 }

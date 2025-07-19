@@ -2,10 +2,11 @@
 
 export { Button, buttonVariants } from './button';
 export { Input, inputVariants } from './input';
-export { default as Tooltip } from './buttonTooltip';
 export { Calendar, CalendarDayButton } from './calendar';
 export { DateRangePicker } from './DatePicker';
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover';
+
+export { default as Tooltip } from './buttonTooltip';
 
 // Icons components
 export * from './button-icons';

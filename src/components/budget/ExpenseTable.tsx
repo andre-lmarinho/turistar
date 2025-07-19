@@ -3,12 +3,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
-import { InfoPopup } from '@/components';
+import { InfoPopup, TableRowEdit, TableRowEntry, TableRowNew } from '@/components';
 import { CategoryKey, BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
-import { TableRowEdit } from './TableRowEdit';
-import { TableRowEntry } from './TableRowEntry';
-import { TableRowNew } from './TableRowNew';
 
 interface ExpenseTableProps {
   entries: Entry[];
@@ -23,7 +20,7 @@ interface ExpenseTableProps {
   onDelete?: (index: number) => void;
 }
 
-export function ExpenseTable({
+export default function ExpenseTable({
   entries,
   desc,
   cat,

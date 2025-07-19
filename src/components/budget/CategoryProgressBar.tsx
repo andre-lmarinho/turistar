@@ -12,7 +12,7 @@ interface Props {
   colorIndex: number;
 }
 
-export function CategoryProgressBar({ category, value, total, colorIndex }: Props) {
+export default function CategoryProgressBar({ category, value, total, colorIndex }: Props) {
   const { label, icon } = CATEGORIES.find((c) => c.key === category)!;
   const percent = total ? Math.min(100, (value / total) * 100) : 0;
   const Icon = icon;
