@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { DestinationHeader, DestinationCardGrid } from '@/components';
+import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
 import type { CatalogActivity } from '@/types';
 import { useDestinationFilter, useEscapeKey } from '@/hooks';
 
@@ -72,7 +72,12 @@ export default function DestinationFilterPanel({
           {/* sidebar + cards */}
           <div className="flex-1 flex overflow-auto">
             <div className="flex-1 p-6">
-              {loading && <p>Loading catalog...</p>}
+              {loading && (
+                <div className="flex items-center gap-2">
+                  <Spinner />
+                  <span>Loading catalog...</span>
+                </div>
+              )}
               {error && <p className="text-red-500">{error}</p>}
               {!loading && !error && (
                 <DestinationCardGrid

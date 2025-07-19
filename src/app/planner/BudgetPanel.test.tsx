@@ -4,7 +4,10 @@ import BudgetPanel from '@/app/planner/BudgetPanel';
 
 describe('BudgetPanel', () => {
   it('adds expenses and updates totals', () => {
-    render(<BudgetPanel planId="test" activitiesTotal={25} />);
+    const days = [{ id: 'd1', label: 'Day 1', activities: [] }];
+    render(
+      <BudgetPanel planId="test" activitiesTotal={25} days={days} onUpdateBudget={() => {}} />
+    );
     fireEvent.change(screen.getByPlaceholderText('Description'), {
       target: { value: 'Taxi' },
     });

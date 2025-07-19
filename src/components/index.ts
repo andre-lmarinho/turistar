@@ -1,14 +1,10 @@
 // src/components/index.ts
 
-// Budget components
 export * from './budget';
-
-// Planner domain
 export * from './planner';
-
-// UI components
 export * from './ui';
+export * from './home';
 
-// Shared/standalone components
-export { default as WelcomeForm } from './WelcomeForm';
 export { default as Providers } from './Providers';
+export { default as LoadingScreen } from './LoadingScreen';
+export { default as TutorialCarousel } from './TutorialCarousel';

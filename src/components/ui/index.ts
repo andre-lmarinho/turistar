@@ -7,6 +7,7 @@ export { DateRangePicker } from './DatePicker';
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover';
 
 export { default as Tooltip } from './buttonTooltip';
+export { default as Spinner } from './Spinner';
 
 // Icons components
 export * from './button-icons';

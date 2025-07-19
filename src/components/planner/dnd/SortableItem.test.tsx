@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { DndContext } from '@dnd-kit/core';
-import { SortableItem } from './SortableItem';
+import { SortableItem } from '@/components';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/types';
 

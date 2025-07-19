@@ -1,5 +1,4 @@
 // src/components/ui/button-icons/SearchCatalogButton.tsx
-
 'use client';
 
 import React from 'react';

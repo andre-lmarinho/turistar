@@ -3,9 +3,16 @@
 
 import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
+import { List, DollarSign } from 'lucide-react';
 
 type Mode = 'planner' | 'budget';
 const modes: Mode[] = ['planner', 'budget'];
+
+const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIcon }> = {
+  planner: { label: 'Planner', icon: List },
+  budget: { label: 'Budget', icon: DollarSign },
+};
 
 interface ModeSelectorProps {
   value: Mode;
@@ -61,13 +68,17 @@ export default function ModeToggleButton({ value, onChange }: ModeSelectorProps)
           className="absolute inset-1 bg-[var(--accent)] rounded-[calc(var(--radius)-0.25rem)]"
         />
 
-        {modes.map((mode) => (
-          <button
-            key={mode}
-            type="button"
-            onClick={() => onChange(mode)}
-            aria-pressed={value === mode}
-            className={`
+        {modes.map((mode) => {
+          const Icon = MODE_CONFIG[mode].icon;
+          const label = MODE_CONFIG[mode].label;
+
+          return (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => onChange(mode)}
+              aria-pressed={value === mode}
+              className={`
           flex-1 relative z-10 text-sm cursor-pointer font-medium transition-colors
           ${
             value === mode
@@ -75,12 +86,14 @@ export default function ModeToggleButton({ value, onChange }: ModeSelectorProps)
               : 'text-[var(--foreground)] hover:text-[var(--accent)]'
           }
         `}
-          >
-            <div className="flex items-center justify-center p-2 w-full h-full">
-              {mode.charAt(0).toUpperCase() + mode.slice(1)}
-            </div>
-          </button>
-        ))}
+            >
+              <div className="flex items-center justify-center gap-2 p-2 w-full h-full">
+                <Icon aria-hidden="true" className="size-4" />
+                {label}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

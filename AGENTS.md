@@ -37,6 +37,24 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Always define prop types properly.
 - Use PascalCase for custom component filenames. The `/src/components/ui` directory intentionally retains the lowercase naming style inherited from shadcn-ui.
 
+### Export Conventions
+
+To keep code clear and maintainable, we recommend:
+
+- **React Components**
+  - One component per file.
+  - Use `export default` so importers immediately know what the file provides.
+
+- **Hooks / Utilities / Constants / Types**
+  - Files that export multiple items should use named exports.
+  - Improves tree‑shaking and makes available symbols explicit.
+
+- **Barrel Files (`index.ts`)**
+  - Re‑export default component exports as named exports.
+  - Re-export named exports from hooks/util modules.
+
+This approach ensures consistent imports, better IDE support, and safer refactoring when renaming files or symbols.```
+
 ## CSS/Styling Standards
 
 - Use Tailwind CSS for styling.

@@ -1,5 +1,4 @@
 // src/components/ui/popups/DayPickerPopup.tsx
-
 'use client';
 
 import React, { useRef } from 'react';

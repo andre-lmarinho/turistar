@@ -1,7 +1,7 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import PlannerBoard from '@/app/planner/PlannerBoard';
@@ -12,7 +12,9 @@ import {
   DestinationFilterPanel,
   DateRangePicker,
   OpenPanelButton,
+  EmptyPlannerHint,
   ModeToggleButton,
+  LoadingScreen,
 } from '@/components';
 import { usePlanner, useActivitiesById, useSelectedActivity, usePlanTitle } from '@/hooks';
 import type { CatalogActivity } from '@/types';
@@ -27,6 +29,7 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } f
 export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
+  const addButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const {
     planId,
@@ -81,7 +84,7 @@ export default function PlannerClient() {
 
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
-  if (isLoading) return <p className="p-4">Loading catalog…</p>;
+  if (isLoading) return <LoadingScreen text="Loading catalog…" />;
   if (error) return <p className="p-4">Failed to load.</p>;
   if (!days.length) return <p className="p-4">No catalog found.</p>;
 
@@ -90,21 +93,21 @@ export default function PlannerClient() {
 
   return (
     <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 py-4 h-screen">
-      <div className="pb-4 flex justify-between">
+      <div className="pb-4 flex items-center justify-between">
         <h1 className="text-4xl cursor-pointer whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_50%,transparent)]">
           <input
             aria-label="Planner title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            size={Math.max(title.length, 1)}
+            style={{ width: `${Math.max(title.length, 1)}ch` }}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
             className="px-4 py-2 border-2 border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
-        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
+        <OpenPanelButton ref={addButtonRef} onClick={() => setIsPanelOpen(true)} />
       </div>
-      <div className="pb-4 flex justify-between gap-4">
+      <div className="pb-4 flex items-center justify-between gap-4">
         <div>
           <ModeToggleButton value={mode} onChange={setMode} />
         </div>
@@ -186,6 +189,9 @@ export default function PlannerClient() {
           days={days}
           onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
         />
+      )}
+      {days.every((d) => d.activities.length === 0) && (
+        <EmptyPlannerHint targetRef={addButtonRef} />
       )}
     </main>
   );

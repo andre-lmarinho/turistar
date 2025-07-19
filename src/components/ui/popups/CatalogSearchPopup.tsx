@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { CloseButton } from '@/components';
+import { CloseButton, Spinner } from '@/components';
 import { usePopupOutsideHandler, useEscapeKey, useDestinationCatalog } from '@/hooks';
 import type { CatalogActivity } from '@/types';
 
@@ -50,7 +50,12 @@ export default function CatalogSearchPopup({
           placeholder="Search"
           className="w-full border rounded px-2 py-1 text-sm"
         />
-        {loading && <p className="text-sm">Loading...</p>}
+        {loading && (
+          <div className="flex items-center gap-2 text-sm">
+            <Spinner className="size-4" />
+            <span>Loading...</span>
+          </div>
+        )}
         {error && <p className="text-sm text-red-500">{error}</p>}
         {!loading && !error && (
           <ul className="max-h-60 overflow-y-auto space-y-1">
