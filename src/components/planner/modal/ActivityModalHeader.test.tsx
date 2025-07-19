@@ -73,3 +73,21 @@ it('opens catalog popup and selects an item', () => {
   expect(handleSelect).toHaveBeenCalledTimes(1);
   expect(screen.queryByTestId('catalog-popup')).not.toBeInTheDocument();
 });
+
+it('renders remove photo button only when image exists', () => {
+  const withImage = {
+    ...sampleActivity,
+    imageUrl: 'test.png',
+  };
+  const { rerender } = render(
+    <ActivityModalHeader {...defaultProps} activity={withImage} onCatalogSelect={() => {}} />
+  );
+
+  expect(screen.getByRole('button', { name: /remove photo/i })).toBeInTheDocument();
+
+  rerender(
+    <ActivityModalHeader {...defaultProps} activity={sampleActivity} onCatalogSelect={() => {}} />
+  );
+
+  expect(screen.queryByRole('button', { name: /remove photo/i })).not.toBeInTheDocument();
+});
