@@ -50,7 +50,7 @@ export default function DayColumn({
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="column overflow-y-auto pr-1">
+        <div className="flex-1 overflow-y-auto pr-1">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem
