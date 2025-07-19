@@ -16,6 +16,8 @@ interface OnboardingCarouselProps {
   pauseOnHover?: boolean;
   loop?: boolean;
   round?: boolean;
+  /** chamado quando o usuário avançar além do último passo */
+  onFinish?: () => void;
 }
 
 const GAP = 16;
@@ -34,6 +36,7 @@ export default function OnboardingCarousel({
   pauseOnHover = false,
   loop = false,
   round = false,
+  onFinish,
 }: OnboardingCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -41,14 +44,10 @@ export default function OnboardingCarousel({
   const [isResetting, setIsResetting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // calculamos o height para manter 9:16
   const containerHeight = (baseWidth * 16) / 9;
-
-  // itemWidth desconta padding p-4 (16px)
   const itemWidth = baseWidth - 16 * 2;
   const itemHeight = (itemWidth * 16) / 9;
   const trackItemOffset = itemWidth + GAP;
-
   const steps = loop ? [...ONBOARDING_STEPS, ONBOARDING_STEPS[0]] : ONBOARDING_STEPS;
 
   // hover to pause
@@ -69,10 +68,23 @@ export default function OnboardingCarousel({
   useEffect(() => {
     if (!autoplay || (pauseOnHover && isHovered)) return;
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev === steps.length - 1 ? (loop ? prev + 1 : prev) : prev + 1));
+      if (currentIndex === steps.length - 1) {
+        loop ? setCurrentIndex((prev) => prev + 1) : onFinish?.();
+      } else {
+        setCurrentIndex((prev) => prev + 1);
+      }
     }, autoplayDelay);
     return () => clearInterval(timer);
-  }, [autoplay, autoplayDelay, isHovered, pauseOnHover, loop, steps.length]);
+  }, [
+    autoplay,
+    autoplayDelay,
+    isHovered,
+    pauseOnHover,
+    loop,
+    steps.length,
+    currentIndex,
+    onFinish,
+  ]);
 
   // loop reset
   const handleAnimationComplete = () => {
@@ -88,7 +100,11 @@ export default function OnboardingCarousel({
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const { offset, velocity } = info;
     if (offset.x < -DRAG_BUFFER || velocity.x < -VELOCITY_THRESHOLD) {
-      setCurrentIndex((prev) => Math.min(prev + 1, steps.length - 1));
+      if (currentIndex === steps.length - 1) {
+        onFinish?.();
+      } else {
+        setCurrentIndex((prev) => prev + 1);
+      }
     } else if (offset.x > DRAG_BUFFER || velocity.x > VELOCITY_THRESHOLD) {
       setCurrentIndex((prev) => Math.max(prev - 1, 0));
     }
@@ -104,19 +120,20 @@ export default function OnboardingCarousel({
   return (
     <div
       ref={containerRef}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Onboarding steps"
+      tabIndex={0}
       className={`relative overflow-hidden p-4 ${
         round ? 'rounded-full border border-background' : 'rounded-md border'
       }`}
-      style={{
-        width: `${baseWidth}px`,
-        height: `${containerHeight}px`,
-      }}
+      style={{ width: `${baseWidth}px`, height: `${containerHeight}px` }}
     >
       {/* Previous */}
       <button
-        onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
-        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80"
-        aria-label="Previous"
+        onClick={() => (currentIndex === 0 ? null : setCurrentIndex((prev) => prev - 1))}
+        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label="Previous step"
       >
         <ChevronLeft size={20} />
       </button>
@@ -161,7 +178,7 @@ export default function OnboardingCarousel({
               transition={effectiveTransition}
             >
               <div className={`${round ? 'p-0 m-0' : 'p-5 mb-4 h-full'}`}>
-                <div className="relative w-full h-[70%]  flex-none">
+                <div className="relative w-full h-[70%] flex-none">
                   <Image src={step.image} alt={step.title} fill className="object-cover" />
                 </div>
                 <div className="flex-1 mt-2">
@@ -176,29 +193,38 @@ export default function OnboardingCarousel({
 
       {/* Next */}
       <button
-        onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, steps.length - 1))}
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80"
-        aria-label="Next"
+        onClick={() => {
+          if (currentIndex === steps.length - 1) onFinish?.();
+          else setCurrentIndex((prev) => prev + 1);
+        }}
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label="Next step"
       >
         <ChevronRight size={20} />
       </button>
 
       {/* Dots */}
       <div
+        role="tablist"
+        aria-label="Slide navigation"
         className={`flex w-full justify-center ${
           round ? 'absolute bottom-4 left-1/2 -translate-x-1/2 z-20' : 'mt-4'
         }`}
       >
         <div className="flex gap-2">
           {ONBOARDING_STEPS.map((_, i) => (
-            <div
+            <button
               key={i}
-              className={`h-2 w-2 bg-border rounded-full transition-transform ${
+              role="tab"
+              aria-selected={currentIndex % ONBOARDING_STEPS.length === i}
+              tabIndex={currentIndex % ONBOARDING_STEPS.length === i ? 0 : -1}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-2 w-2 rounded-full transition-transform focus:outline-none focus:ring-2 focus:ring-primary ${
                 currentIndex % ONBOARDING_STEPS.length === i
                   ? 'scale-125 bg-primary'
                   : 'bg-[rgba(255,255,255,1)]'
               }`}
-              onClick={() => setCurrentIndex(i)}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>

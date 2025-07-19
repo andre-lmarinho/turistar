@@ -45,28 +45,37 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
 
   return (
     <>
-      <div className="backdrop-overlay" onClick={onClose} />
+      <div className="backdrop-overlay" onClick={onClose} aria-hidden="true" />
+
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="activities-budget-title"
-          className="bg-white rounded-lg shadow-xl w-[95%] max-w-md"
+          tabIndex={-1}
+          className="bg-white rounded-lg shadow-xl w-[95%] max-w-md focus:outline-none focus:ring-2 focus:ring-primary"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between px-4 py-2 border-b">
             <h3 id="activities-budget-title" className="font-bold">
               Budget suas atividades
             </h3>
-            <CloseButton onClick={onClose} />
+            <CloseButton onClick={onClose} aria-label="Close activities budget dialog" />
           </div>
-          <div className="p-4 space-y-2 max-h-[70vh] overflow-y-auto">
-            {activities.map((act) => (
-              <div key={act.id} className="flex items-center justify-between gap-2">
+
+          <div
+            role="list"
+            aria-labelledby="activities-budget-title"
+            tabIndex={0}
+            className="p-4 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent"
+          >
+            {activities.map((act, idx) => (
+              <div key={act.id} role="listitem" className="flex items-center justify-between gap-2">
                 <span className="truncate text-sm flex-1">
                   {act.title || 'Untitled'} – {act.dayLabel}
                 </span>
                 <Input
+                  autoFocus={idx === 0}
                   labelId={`budget-${act.id}`}
                   value={inputs[act.id] ?? ''}
                   onValueChange={(v) => setInputs((prev) => ({ ...prev, [act.id]: v }))}
@@ -74,7 +83,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
                   inputSize="sm"
                   background="default"
                   placeholder="Budget"
-                  aria-label="Budget"
+                  aria-label={`Budget for ${act.title || 'untitled'} – ${act.dayLabel}`}
                   icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
                 />
               </div>

@@ -11,12 +11,24 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProps) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--background)]">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      className="flex min-h-screen flex-col items-center justify-center bg-[var(--background)]"
+    >
       <div className="relative w-32 h-32 mb-6">
-        <Image src="/images/mascot_1_.webp" alt="Mascot" fill className="object-contain" priority />
+        <Image
+          src="/images/mascot_1_.webp"
+          alt="Mascot"
+          aria-hidden="true"
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
-      <div className="flex items-center gap-2 text-lg">
-        <Spinner className="size-6" />
+      <div role="status" aria-live="polite" className="flex items-center gap-2 text-lg">
+        <Spinner className="size-6" aria-hidden="true" />
         <span>{text}</span>
       </div>
     </div>

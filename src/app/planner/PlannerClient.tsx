@@ -12,7 +12,6 @@ import {
   DestinationFilterPanel,
   DateRangePicker,
   OpenPanelButton,
-  EmptyPlannerHint,
   ModeToggleButton,
   LoadingScreen,
   OnboardingModal,
@@ -102,20 +101,22 @@ export default function PlannerClient() {
   const stringActiveId = activeId != null ? String(activeId) : null;
 
   return (
-    <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 py-4 h-screen">
+    <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 md:pb-12 py-4 h-screen">
       <div className="pb-4 flex items-center justify-between">
         <h1 className="text-4xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <input
+            id="planner-title"
+            name="title"
             aria-label="Planner title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{ width: `${Math.max(title.length, 1)}ch` }}
+            size={Math.max(title.length, 1)}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
             className="px-4 py-2 border-2 rounded-md bg-transparent border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
-        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
+        <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
       </div>
       <div className="pb-4 flex items-center justify-between gap-4">
         <div>
@@ -123,7 +124,6 @@ export default function PlannerClient() {
         </div>
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
       </div>
-
       <DestinationFilterPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
@@ -141,7 +141,6 @@ export default function PlannerClient() {
         onRemove={removeActivity}
         addedIds={addedIds}
       />
-
       <AnimatePresence mode="wait">
         {mode === 'budget' ? (
           <motion.div
@@ -157,7 +156,7 @@ export default function PlannerClient() {
               activitiesTotal={activitiesTotal}
               days={days}
               onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
-            />{' '}
+            />
           </motion.div>
         ) : (
           <motion.div
@@ -186,7 +185,6 @@ export default function PlannerClient() {
           </motion.div>
         )}
       </AnimatePresence>
-
       {selectedActivity && (
         <ActivityModal
           open
@@ -201,7 +199,6 @@ export default function PlannerClient() {
         />
       )}
       <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
-      {days.every((d) => d.activities.length === 0) && <EmptyPlannerHint />}
     </main>
   );
 }

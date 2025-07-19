@@ -24,7 +24,7 @@ describe('icon buttons aria-label', () => {
       </div>
     );
 
-    const btn = screen.getByTestId('close').firstChild as HTMLElement;
+    const btn = screen.getByTestId('close');
     fireEvent.mouseEnter(btn);
     expect(screen.getByRole('tooltip')).toHaveTextContent('Close');
   });

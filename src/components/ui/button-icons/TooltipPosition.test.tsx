@@ -6,7 +6,7 @@ describe('icon tooltip position', () => {
   it('renders top tooltip by default', async () => {
     render(<RemoveCardButton title="Delete" />);
 
-    const btn = screen.getByRole('button').firstChild as HTMLElement;
+    const btn = screen.getByRole('button');
     fireEvent.mouseEnter(btn);
     fireEvent.mouseEnter(btn.firstChild as HTMLElement);
     await new Promise((r) => setTimeout(r, 0));
@@ -17,12 +17,12 @@ describe('icon tooltip position', () => {
   it('renders tooltip below icon when position="bottom"', async () => {
     render(<EditCardButton title="Edit" />);
 
-    const btn = screen.getByRole('button').firstChild as HTMLElement;
+    const btn = screen.getByRole('button');
     fireEvent.mouseEnter(btn);
     fireEvent.mouseEnter(btn.firstChild as HTMLElement);
 
     const tooltip = await screen.findByRole('tooltip');
     expect(tooltip).toHaveTextContent('Edit');
-    expect(tooltip.className).toContain('translate-y-[12px]');
+    expect(tooltip.className).toContain('translate-y-[6px]');
   });
 });

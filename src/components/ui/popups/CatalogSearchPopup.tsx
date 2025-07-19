@@ -44,6 +44,8 @@ export default function CatalogSearchPopup({
       </div>
       <div className="p-2 space-y-2">
         <input
+          id="catalog-search-input"
+          name="search"
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

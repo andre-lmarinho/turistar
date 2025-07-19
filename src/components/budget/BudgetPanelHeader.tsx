@@ -35,8 +35,14 @@ export default function BudgetPanelHeader({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="md:col-span-1 flex flex-col gap-2">
-        <h4 className="font-semibold">Summary</h4>
+      <div
+        role="region"
+        aria-labelledby="budget-summary-heading"
+        className="md:col-span-1 flex flex-col gap-2"
+      >
+        <h4 id="budget-summary-heading" className="font-semibold">
+          Summary
+        </h4>
 
         {/* Total Budget */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-medium">
@@ -72,7 +78,12 @@ export default function BudgetPanelHeader({
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
-          <span className="px-2 py-1 text-right">${totalSpent.toFixed(2)}</span>
+          <span
+            className="px-2 py-1 text-right"
+            aria-label={`Total spent: $${totalSpent.toFixed(2)}`}
+          >
+            ${totalSpent.toFixed(2)}
+          </span>
         </div>
 
         {/* Difference */}
@@ -83,12 +94,23 @@ export default function BudgetPanelHeader({
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
-          <span className="px-2 py-1 text-right">${difference.toFixed(2)}</span>
+          <span
+            className="px-2 py-1 text-right"
+            aria-label={`Difference: $${difference.toFixed(2)}`}
+          >
+            ${difference.toFixed(2)}
+          </span>
         </div>
       </div>
 
-      <div className="md:col-span-2 flex flex-col">
-        <h4 className="font-semibold">Categories</h4>
+      <div
+        role="region"
+        aria-labelledby="budget-categories-heading"
+        className="md:col-span-2 flex flex-col"
+      >
+        <h4 id="budget-categories-heading" className="font-semibold">
+          Categories
+        </h4>
         {CATEGORIES.map(({ key }, idx) => (
           <CategoryProgressBar
             key={key}

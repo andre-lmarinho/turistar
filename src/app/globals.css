@@ -146,6 +146,6 @@
   @apply fixed inset-0 bg-black/40 backdrop-blur-sm z-40;
 }
 
-.font-architects-daughter {
+.handcrafted {
   font-family: var(--font-architects-daughter), cursive;
 }

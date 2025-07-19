@@ -38,7 +38,7 @@ export default function DayColumn({
   return (
     <section
       ref={setNodeRef}
-      className={`flex-1 flex snap-center flex-col h-full ${isOver ? 'ring-2 ring-primary/40' : ''}`}
+      className={`flex flex-col h-full overflow-hidden ${isOver ? 'ring-2 ring-primary/40' : ''}`}
     >
       <header className="m-2 flex items-center justify-between">
         <h2 className="font-semibold">{day.label}</h2>

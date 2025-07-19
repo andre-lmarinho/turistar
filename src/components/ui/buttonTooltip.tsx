@@ -16,6 +16,7 @@ export default function Tooltip({ content, children, className, position = 'top'
   const [visible, setVisible] = React.useState(false);
   const [coords, setCoords] = React.useState({ x: 0, y: 0 });
   const ref = React.useRef<HTMLElement | null>(null);
+  const tooltipId = React.useId();
 
   const show = () => {
     if (!ref.current) return;
@@ -36,7 +37,8 @@ export default function Tooltip({ content, children, className, position = 'top'
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
-      className="inline-block"
+      className="inline-block w-full h-full"
+      aria-describedby={tooltipId}
     >
       {children}
     </span>
@@ -48,9 +50,10 @@ export default function Tooltip({ content, children, className, position = 'top'
       {visible &&
         ReactDOM.createPortal(
           <div
+            id={tooltipId}
             className={cn(
               'pointer-events-none absolute z-50 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-[10px] text-white',
-              position === 'bottom' ? 'translate-y-[12px]' : '-translate-y-[calc(100%+12px)]',
+              position === 'bottom' ? 'translate-y-[6px]' : '-translate-y-[calc(100%+6px)]',
               className
             )}
             style={{ left: coords.x, top: coords.y }}

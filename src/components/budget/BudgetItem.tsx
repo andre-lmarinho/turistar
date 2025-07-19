@@ -26,22 +26,37 @@ export default function BudgetItem({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4">
-      <label htmlFor={id} className="flex items-center gap-2 font-medium">
+    <div
+      role="group"
+      aria-labelledby={`${id}-label`}
+      className="flex items-center justify-between gap-4"
+    >
+      <label id={`${id}-label`} htmlFor={id} className="flex items-center gap-2 font-medium">
         <Icon aria-hidden="true" className="size-4" />
         {label}
       </label>
+
       {editable ? (
         <input
           id={id}
+          role="spinbutton"
+          aria-labelledby={`${id}-label`}
           type="number"
+          inputMode="decimal"
           min={0}
+          aria-valuemin={0}
+          aria-valuemax={Number.POSITIVE_INFINITY}
+          aria-valuenow={amount}
           value={amount}
           onChange={handleChange}
-          className="w-32 border rounded px-2 py-1 text-right"
+          className="w-32 border rounded px-2 py-1 text-right focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         />
       ) : (
-        <span id={id} className="w-32 text-right">
+        <span
+          role="text"
+          aria-label={`${label}: $${amount.toFixed(2)}`}
+          className="w-32 text-right"
+        >
           ${amount.toFixed(2)}
         </span>
       )}

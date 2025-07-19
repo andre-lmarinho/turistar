@@ -56,6 +56,8 @@ export default function ActivityCardBase({
 
         {editing ? (
           <textarea
+            id="activity-card-title"
+            name="activity-card-title"
             ref={inputRef}
             value={draftTitle}
             rows={1}

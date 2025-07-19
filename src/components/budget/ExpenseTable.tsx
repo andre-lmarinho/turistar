@@ -69,10 +69,17 @@ export default function ExpenseTable({
   };
 
   return (
-    <table className="w-full text-sm border rounded">
-      <thead className="bg-muted">
-        <tr>
-          <th className="p-2 text-left">
+    <table
+      role="table"
+      aria-labelledby="expense-table-caption"
+      className="w-full text-sm border rounded"
+    >
+      <caption id="expense-table-caption" className="sr-only">
+        Expenses table showing description, category, amount, and actions
+      </caption>
+      <thead role="rowgroup" className="bg-muted">
+        <tr role="row">
+          <th scope="col" className="p-2 text-left">
             <span className="flex items-center gap-1">
               Description
               <InfoPopup content={BUDGET_INFO.description}>
@@ -80,7 +87,7 @@ export default function ExpenseTable({
               </InfoPopup>
             </span>
           </th>
-          <th className="p-2 text-left">
+          <th scope="col" className="p-2 text-left">
             <span className="flex items-center gap-1">
               Category
               <InfoPopup content={BUDGET_INFO.category}>
@@ -88,7 +95,7 @@ export default function ExpenseTable({
               </InfoPopup>
             </span>
           </th>
-          <th className="p-2 text-right w-32">
+          <th scope="col" className="p-2 text-right w-32">
             <span className="flex items-center gap-1 justify-end">
               Amount
               <InfoPopup content={BUDGET_INFO.amount}>
@@ -96,17 +103,17 @@ export default function ExpenseTable({
               </InfoPopup>
             </span>
           </th>
-          <th className="p-2 text-right">
+          <th scope="col" className="p-2 text-right">
             <span className="flex items-center gap-1 justify-end">
               Actions
               <InfoPopup content={BUDGET_INFO.actions}>
-                <Info size={12} aria-hidden="true" className="text-muted-foreground" />
+                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </InfoPopup>
             </span>
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody role="rowgroup">
         {entries.map((e, idx) =>
           editIndex === idx && editEntry ? (
             <TableRowEdit
