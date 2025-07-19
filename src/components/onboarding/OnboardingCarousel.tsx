@@ -9,14 +9,12 @@ import { ONBOARDING_STEPS } from '@/constants';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface OnboardingCarouselProps {
-  /** largura do card em px; a altura será calculada como width * (16/9) */
   baseWidth?: number;
   autoplay?: boolean;
   autoplayDelay?: number;
   pauseOnHover?: boolean;
   loop?: boolean;
   round?: boolean;
-  /** chamado quando o usuário avançar além do último passo */
   onFinish?: () => void;
 }
 
