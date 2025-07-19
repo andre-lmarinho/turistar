@@ -20,6 +20,7 @@ export interface SortableItemProps {
   onChangeDay: (dayId: string) => void;
   onChangeColor: (color: string) => void;
   bgColor: string;
+  onDelete: () => void;
 }
 
 export function SortableItem({
@@ -30,6 +31,7 @@ export function SortableItem({
   onTitleSave,
   onChangeDay,
   onChangeColor,
+  onDelete,
   bgColor,
   dragOverlay = false,
   className,
@@ -45,6 +47,7 @@ export function SortableItem({
           onTitleSave={onTitleSave}
           onChangeDay={onChangeDay}
           onChangeColor={onChangeColor}
+          onDelete={onDelete}
           bgColor={bgColor}
         />
       </div>
@@ -79,6 +82,7 @@ export function SortableItem({
         onTitleSave={onTitleSave}
         onChangeDay={onChangeDay}
         onChangeColor={onChangeColor}
+        onDelete={onDelete}
         bgColor={bgColor}
       />
     </li>

@@ -102,43 +102,42 @@ export default function PlannerClient() {
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
       </div>
 
+      <DestinationFilterPanel
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+        onAdd={(item: CatalogActivity) =>
+          addActivity({
+            id: item.id,
+            title: item.name,
+            description: item.description,
+            duration: item.duration,
+            imageUrl: item.image_url,
+            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+            startTime: '',
+          })
+        }
+        onRemove={removeActivity}
+        addedIds={addedIds}
+      />
+
       {mode === 'budget' ? (
         <BudgetPanel planId={planId} activitiesTotal={activitiesTotal} />
       ) : (
-        <>
-          <DestinationFilterPanel
-            isOpen={isPanelOpen}
-            onClose={() => setIsPanelOpen(false)}
-            onAdd={(item: CatalogActivity) =>
-              addActivity({
-                id: item.id,
-                title: item.name,
-                description: item.description,
-                duration: item.duration,
-                imageUrl: item.image_url,
-                color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
-                startTime: '',
-              })
-            }
-            onRemove={removeActivity}
-            addedIds={addedIds}
-          />
-
-          <PlannerBoard
-            days={days}
-            activeId={stringActiveId}
-            sensors={sensors}
-            collisionDetection={collisionDetection}
-            handleDragStart={handleDragStart}
-            handleDragOver={handleDragOver}
-            handleDragEnd={handleDragEnd}
-            onSelectActivity={setSelectedActivity}
-            onUpdateTitle={(id, title) => updateActivity(id, { title })}
-            onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
-            onChangeDay={changeDay}
-            onChangeColor={(id, color) => changeColor(id, color)}
-          />
-        </>
+        <PlannerBoard
+          days={days}
+          activeId={stringActiveId}
+          sensors={sensors}
+          collisionDetection={collisionDetection}
+          handleDragStart={handleDragStart}
+          handleDragOver={handleDragOver}
+          handleDragEnd={handleDragEnd}
+          onSelectActivity={setSelectedActivity}
+          onUpdateTitle={(id, title) => updateActivity(id, { title })}
+          onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
+          onChangeDay={changeDay}
+          onChangeColor={(id, color) => changeColor(id, color)}
+          onDelete={removeActivity}
+        />
       )}
 
       {selectedActivity && (

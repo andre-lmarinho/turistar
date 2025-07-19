@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import Image from 'next/image';
-import { useCardPopups } from '@/hooks';
+import { useCardPopups, useFlexibleRef } from '@/hooks';
 import { ChevronDown } from 'lucide-react';
 
 import {
@@ -14,6 +14,8 @@ import {
   CardColorButton,
   CardColorsPopup,
   DayPickerPopup,
+  CatalogSearchPopup,
+  SearchCatalogButton,
 } from '@/components';
 
 /**
@@ -28,6 +30,7 @@ export default function ActivityModalHeader({
   onColorChange,
   availableDays,
   onChangeDay,
+  onCatalogSelect,
 }: {
   activity: Activity & { dayId?: string };
   bgColor: string;
@@ -36,6 +39,7 @@ export default function ActivityModalHeader({
   onColorChange: (color: string) => void;
   availableDays: DayPlan[];
   onChangeDay: (dayId: string) => void;
+  onCatalogSelect: (item: CatalogActivity) => void;
 }) {
   const {
     colorButtonRef,
@@ -47,6 +51,8 @@ export default function ActivityModalHeader({
     setIsColorPickerOpen,
     setIsDatePickerOpen,
   } = useCardPopups();
+  const searchButtonRef = useFlexibleRef();
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
 
@@ -84,6 +90,16 @@ export default function ActivityModalHeader({
           <div className="flex items-center gap-2">
             <RemoveCardButton onClick={onDelete} />
             <CardColorButton ref={colorButtonRef} onClick={handleColorButtonClick} />
+
+            <SearchCatalogButton
+              ref={searchButtonRef}
+              onClick={() => {
+                setIsCatalogOpen((p) => !p);
+                setIsColorPickerOpen(false);
+                setIsDatePickerOpen(false);
+              }}
+            ></SearchCatalogButton>
+
             <CloseButton onClick={onClose} />
           </div>
         </div>
@@ -115,6 +131,20 @@ export default function ActivityModalHeader({
               }}
               onClose={() => setIsDatePickerOpen(false)}
               triggerRef={dateButtonRef}
+            />
+          </div>
+        )}
+        {isCatalogOpen && (
+          <div className="absolute top-[3rem] right-[3rem] z-50">
+            <CatalogSearchPopup
+              open={isCatalogOpen}
+              onSelect={(item) => {
+                onCatalogSelect(item);
+                setEditedImageUrl(item.image_url || '');
+                setIsCatalogOpen(false);
+              }}
+              onClose={() => setIsCatalogOpen(false)}
+              triggerRef={searchButtonRef}
             />
           </div>
         )}

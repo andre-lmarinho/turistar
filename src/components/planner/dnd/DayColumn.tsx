@@ -16,6 +16,7 @@ interface DayColumnProps {
   onUpdateTitle?: (id: string, title: string) => void;
   onChangeDay: (activityId: string, dayId: string) => void;
   onChangeColor: (activityId: string, color: string) => void;
+  onDelete: (activityId: string) => void;
 }
 
 /**
@@ -30,6 +31,7 @@ export default function DayColumn({
   onUpdateTitle,
   onChangeDay,
   onChangeColor,
+  onDelete,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
@@ -59,6 +61,7 @@ export default function DayColumn({
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
                 onChangeDay={(newDayId) => onChangeDay(activity.id, newDayId)}
                 onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
+                onDelete={() => onDelete(activity.id)}
                 bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (

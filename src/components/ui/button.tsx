@@ -9,7 +9,7 @@ import Tooltip from './buttonTooltip';
 
 /* Button Variants ----------------------------------------------------- */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded font-medium transition-all [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded font-medium transition-all [&_svg]:pointer-events-none  shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer',
   {
     variants: {
       variant: {
@@ -22,8 +22,8 @@ const buttonVariants = cva(
       size: {
         default: 'h-9 px-6 py-6 has-[>svg]:px-3 text-base',
         sm: 'h-8 gap-1.5 px-3 has-[>svg]:px-2.5 text-sm',
-        icon: 'w-8 h-8',
-        iconsm: 'w-6 h-6',
+        icon: 'w-8 h-8 [&_svg:not([class*="size-"])]:size-4',
+        iconsm: 'w-6 h-6 [&_svg:not([class*="size-"])]:size-3',
       },
     },
     defaultVariants: {
@@ -55,9 +55,7 @@ function ButtonIconWrapper({
 
     return (
       <Tooltip content={title} position={position}>
-        <div className="relative group/icon w-full h-full flex items-center justify-center">
-          {icon}
-        </div>
+        <div className="relative w-full h-full flex items-center justify-center">{icon}</div>
       </Tooltip>
     );
   }
@@ -86,11 +84,13 @@ function Button({
 
   const baseClasses = buttonVariants({ variant, size, className });
 
+  const iconGroup = variant?.includes('icon') ? ' group/icon' : '';
+
   const finalClasses = disabled
     ? baseClasses
         .replace(/hover:[^\s]+/g, '')
         .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
-    : baseClasses;
+    : baseClasses + iconGroup;
 
   return (
     <Comp

@@ -11,6 +11,8 @@ _or_ deploy easily to Vercel or Netlify with the same settings.
 
 Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Radix UI, and the App Router in Next.js 15.
 
+While editing an activity, you can search the catalog directly from the modal or by right-clicking a card to quickly swap in a new suggestion.
+
 ---
 
 ## 📷 Snapshots of the project

@@ -20,6 +20,7 @@ const defaultProps = {
   availableDays: [] as DayPlan[],
   bgColor: '',
   onChangeColor: vi.fn(),
+  onDelete: vi.fn(),
 };
 
 describe('ActivityCard', () => {

@@ -3,7 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { Palette, ArrowLeftRight } from 'lucide-react';
+import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan } from '@/types';
 import { Button, CardColorsPopup, DayPickerPopup } from '@/components';
 import { useCardPopups, useWindowSize } from '@/hooks';
@@ -17,6 +17,7 @@ interface Props {
   onChangeDay: (dayId: string) => void;
   onSave: () => void;
   onCancel: () => void;
+  onDelete: () => void;
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
   cardRef: React.RefObject<HTMLDivElement | null>;
@@ -29,6 +30,7 @@ export default function ActivityCardEditing({
   onChangeColor,
   onChangeDay,
   onSave,
+  onDelete,
   cardRef,
 }: Props) {
   const {
@@ -56,7 +58,7 @@ export default function ActivityCardEditing({
   const coords = cardRect
     ? {
         top: cardRect.top,
-        left: position === 'right' ? cardRect.right + gap : cardRect.left - gap - buttonGroupWidth,
+        left: position === 'right' ? cardRect.right + gap : cardRect.left - gap,
       }
     : null;
 
@@ -74,7 +76,7 @@ export default function ActivityCardEditing({
           ref={buttonContainerRef}
           className={cn(
             'fixed z-50 flex flex-col gap-1',
-            position === 'right' ? 'items-start' : 'items-end'
+            position === 'right' ? 'items-start' : 'items-end -translate-x-full'
           )}
           style={{ top: coords.top, left: coords.left }}
         >
@@ -133,6 +135,11 @@ export default function ActivityCardEditing({
               </div>
             )}
           </div>
+
+          <Button size="sm" variant="icon" type="button" onClick={onDelete}>
+            <Trash2 className="size-4" aria-hidden="true" />
+            Delete
+          </Button>
         </div>,
         document.body
       )}

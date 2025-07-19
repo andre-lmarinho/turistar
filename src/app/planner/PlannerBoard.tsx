@@ -31,6 +31,7 @@ export interface PlannerBoardProps {
   onUpdateTitle: (id: string, title: string) => void;
   onChangeDay: (activityId: string, dayId: string) => void;
   onChangeColor: (activityId: string, color: string) => void;
+  onDelete: (activityId: string) => void;
 }
 
 /**
@@ -51,6 +52,7 @@ export default function PlannerBoard({
   onUpdateTitle,
   onChangeDay,
   onChangeColor,
+  onDelete,
 }: PlannerBoardProps) {
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
@@ -76,6 +78,7 @@ export default function PlannerBoard({
               onUpdateTitle={onUpdateTitle}
               onChangeDay={(activityId, dayId) => onChangeDay(activityId, dayId)}
               onChangeColor={(activityId, color) => onChangeColor(activityId, color)}
+              onDelete={onDelete}
             />
           </div>
         ))}
@@ -90,6 +93,7 @@ export default function PlannerBoard({
             onChangeDay={(newDayId) => onChangeDay(active.id, newDayId)}
             onChangeColor={(newColor) => onChangeColor(active.id, newColor)}
             bgColor={active.color}
+            onDelete={() => onDelete(active.id)}
           />
         ) : (
           <DragOverlayFallback />

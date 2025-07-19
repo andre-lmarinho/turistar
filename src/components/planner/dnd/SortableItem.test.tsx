@@ -16,6 +16,7 @@ describe('SortableItem', () => {
     onChangeDay: vi.fn(),
     onChangeColor: vi.fn(),
     bgColor: '',
+    onDelete: vi.fn(),
   };
 
   it('renders the activity title', () => {

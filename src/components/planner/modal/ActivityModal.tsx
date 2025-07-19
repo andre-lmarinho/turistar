@@ -1,10 +1,10 @@
 // src/components/planner/modal/ActivityModal.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
 
 interface ActivityModalProps {
@@ -32,6 +32,23 @@ export default function ActivityModal({
 }: ActivityModalProps) {
   useEscapeKey({ onClose, isActive: open });
 
+  const [draft, setDraft] = useState(activity);
+
+  useEffect(() => {
+    setDraft(activity);
+  }, [activity]);
+
+  function handleCatalogSelect(item: CatalogActivity) {
+    setDraft((prev) => ({
+      ...prev,
+      title: item.name,
+      description: item.description,
+      duration: item.duration,
+      imageUrl: item.image_url,
+      category: item.category,
+    }));
+  }
+
   if (!open) return null;
 
   return ReactDOM.createPortal(
@@ -47,16 +64,16 @@ export default function ActivityModal({
           Edit Activity
         </h2>
         <ActivityModalHeader
-          activity={activity}
+          activity={draft}
           bgColor={color}
           onDelete={onDelete}
           onClose={onClose}
           onColorChange={onColorChange}
           availableDays={days}
           onChangeDay={onChangeDay}
+          onCatalogSelect={handleCatalogSelect}
         />
-
-        <ActivityModalForm activity={activity} onSave={onSave} color={color} />
+        <ActivityModalForm activity={draft} onSave={onSave} color={color} />{' '}
       </div>
     </div>,
     document.body

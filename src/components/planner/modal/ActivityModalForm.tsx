@@ -21,9 +21,15 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
 
-  /**
-   * Automatically focus the title input only when the activity title is empty.
-   */
+  // Update internal state when the activity prop changes
+  useEffect(() => {
+    setEditedTitle(activity.title);
+    setEditedDescription(activity.description ?? '');
+    setDuration(activity.duration || 0);
+    setBudget(activity.budget || 0);
+  }, [activity]);
+
+  // Automatically focus the title input only when the activity title is empty.
   const titleInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (titleInputRef.current && !editedTitle.trim()) {
