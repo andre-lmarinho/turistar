@@ -34,10 +34,8 @@ const buttonVariants = cva(
 
 /* Wrapper for Icon Variant ------------------------------------------- */
 function ButtonIconWrapper({
-  title = 'Action',
   children,
   variant,
-  position = 'top',
 }: {
   title?: string;
   children: React.ReactNode;
@@ -52,11 +50,7 @@ function ButtonIconWrapper({
         `${child.props.className ?? ''} transition duration-300 group-hover/icon:scale-105`.trim(),
     });
 
-    return (
-      <Tooltip content={title} position={position}>
-        <div className="relative w-full h-full flex items-center justify-center">{icon}</div>
-      </Tooltip>
-    );
+    return <div className="relative w-full h-full flex items-center justify-center">{icon}</div>;
   }
 
   return <>{children}</>;
@@ -91,7 +85,7 @@ function Button({
         .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
     : baseClasses + iconGroup;
 
-  return (
+  const buttonElement = (
     <Comp
       data-slot="button"
       className={finalClasses}
@@ -99,10 +93,16 @@ function Button({
       {...(title ? { 'aria-label': title, title } : {})}
       {...props}
     >
-      <ButtonIconWrapper variant={variant} title={title} position={position}>
-        {children}
-      </ButtonIconWrapper>
+      <ButtonIconWrapper variant={variant}>{children}</ButtonIconWrapper>
     </Comp>
+  );
+
+  return variant?.includes('icon') && title ? (
+    <Tooltip content={title} position={position}>
+      {buttonElement}
+    </Tooltip>
+  ) : (
+    buttonElement
   );
 }
 

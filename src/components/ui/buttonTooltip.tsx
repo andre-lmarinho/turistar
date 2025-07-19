@@ -15,12 +15,11 @@ interface TooltipProps {
 export default function Tooltip({ content, children, className, position = 'top' }: TooltipProps) {
   const [visible, setVisible] = React.useState(false);
   const [coords, setCoords] = React.useState({ x: 0, y: 0 });
-  const ref = React.useRef<HTMLElement | null>(null);
   const tooltipId = React.useId();
 
-  const show = () => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
+  const show = (e: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
     setCoords({
       x: rect.left + rect.width / 2,
       y: position === 'bottom' ? rect.bottom : rect.top,
@@ -30,19 +29,25 @@ export default function Tooltip({ content, children, className, position = 'top'
 
   const hide = () => setVisible(false);
 
-  const trigger = (
-    <span
-      ref={ref}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
-      onBlur={hide}
-      className="inline-block w-full h-full"
-      aria-describedby={tooltipId}
-    >
-      {children}
-    </span>
-  );
+  const trigger = React.cloneElement(children, {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+      children.props.onMouseEnter?.(e);
+      show(e);
+    },
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+      children.props.onMouseLeave?.(e);
+      hide();
+    },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      children.props.onFocus?.(e);
+      show(e);
+    },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      children.props.onBlur?.(e);
+      hide();
+    },
+    'aria-describedby': tooltipId,
+  });
 
   return (
     <>
