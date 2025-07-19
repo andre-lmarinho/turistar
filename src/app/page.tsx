@@ -23,7 +23,7 @@ const features = [
 export default function Home() {
   return (
     <main id="main-content" className="space-y-16">
-      <section className="flex min-h-screen items-center justify-center p-4">
+      <section className="flex h-screen items-center justify-center p-4">
         <WelcomeForm />
       </section>
 

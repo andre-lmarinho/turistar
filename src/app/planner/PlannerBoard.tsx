@@ -71,12 +71,7 @@ export default function PlannerBoard({
         role="list"
         aria-label="Days"
         tabIndex={0}
-        className={clsx(
-          'p-4 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border',
-          activeId == null && 'snap-x snap-mandatory',
-          'focus:outline-none focus:ring-2 focus:ring-primary',
-          hasScroll && 'scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent'
-        )}
+        className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border"
       >
         {days.map((d) => (
           <div key={d.id} role="listitem" className="min-w-[250px] flex-shrink-0">

@@ -38,7 +38,7 @@ export default function DayColumn({
   return (
     <section
       ref={setNodeRef}
-      className={`flex flex-col max-h-full overflow-y-auto  ${isOver ? 'ring-2 ring-primary/40' : ''}`}
+      className={`flex-1 flex flex-col h-full ${isOver ? 'ring-2 ring-primary/40' : ''}`}
     >
       <header className="m-2 flex items-center justify-between">
         <h2 className="font-semibold">{day.label}</h2>
@@ -50,7 +50,7 @@ export default function DayColumn({
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="pr-1">
+        <div className="column overflow-y-auto pr-1">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem

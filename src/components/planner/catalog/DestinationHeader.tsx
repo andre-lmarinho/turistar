@@ -2,7 +2,8 @@
 'use client';
 
 import React from 'react';
-import { CloseButton, CategoryFilterBar, SortSelector, SortMode } from '@/components';
+import { CloseButton, CategoryFilterBar, SortMode } from '@/components';
+import SortSelector from './SortSelector';
 
 interface DestinationHeaderProps {
   categories: string[];

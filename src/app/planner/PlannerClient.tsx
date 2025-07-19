@@ -101,7 +101,7 @@ export default function PlannerClient() {
   const stringActiveId = activeId != null ? String(activeId) : null;
 
   return (
-    <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 md:pb-12 py-4 h-screen">
+    <main id="main-content" className="flex flex-col bg-card p-4 md:px-12 md:pb-12 h-screen">
       <div className="pb-4 flex items-center justify-between">
         <h1 className="text-4xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <input
