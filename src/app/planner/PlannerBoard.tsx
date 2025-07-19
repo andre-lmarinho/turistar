@@ -72,7 +72,7 @@ export default function PlannerBoard({
         aria-label="Days"
         tabIndex={0}
         className={clsx(
-          'p-4 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl snap-x snap-mandatory border',
+          'p-4 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl snap-x snap-mandatory border items-start',
           'focus:outline-none focus:ring-2 focus:ring-primary',
           hasScroll && 'scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent'
         )}

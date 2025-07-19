@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 interface TooltipProps {
   content: React.ReactNode;
-  children: React.ReactElement;
+  children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
   className?: string;
   position?: 'top' | 'bottom';
 }

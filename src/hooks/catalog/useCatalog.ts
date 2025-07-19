@@ -2,10 +2,11 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Activity, DayPlan } from '@/types';
+import { Activity, CatalogActivity, DayPlan } from '@/types';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 interface CatalogResponse {
-  activities: Activity[];
+  activities: CatalogActivity[];
 }
 
 // Type guard to check that the data has an activities array
@@ -50,10 +51,19 @@ export function useCatalog(dest: string | null, options: { enabled: boolean }) {
           activities: [],
         };
       }
-      dayPlans[dayIndex].activities.push({
-        ...activity,
-        budget: activity.budget ?? 0,
-      });
+      const mapped: Activity = {
+        id: activity.id,
+        title: activity.name,
+        color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+        description: activity.description,
+        duration: activity.duration,
+        startTime: '',
+        imageUrl: activity.image_url,
+        budget: 0,
+        category: activity.category,
+      };
+
+      dayPlans[dayIndex].activities.push(mapped);
     });
 
     return dayPlans;
