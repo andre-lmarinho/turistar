@@ -1,7 +1,7 @@
 // src/components/planner/modal/ActivityModalHeader.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import Image from 'next/image';
 import { useCardPopups, useFlexibleRef } from '@/hooks';
@@ -54,6 +54,12 @@ export default function ActivityModalHeader({
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+
+  // Keep local image state in sync with the selected activity
+  useEffect(() => {
+    setEditedImageUrl(activity.imageUrl ?? '');
+  }, [activity.imageUrl]);
+
   const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
 
   return (

@@ -1,0 +1,75 @@
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import ActivityModalHeader from './ActivityModalHeader';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
+
+// Stub CatalogSearchPopup to avoid complex behavior
+vi.mock('@/components', async () => {
+  const actual = await vi.importActual<typeof import('@/components')>('@/components');
+  const stubItem: CatalogActivity = {
+    id: '1',
+    name: 'Stub Item',
+    description: '',
+    duration: 1,
+    image_url: '',
+    price: '',
+    category: '',
+  };
+  function CatalogSearchPopup({
+    open,
+    onSelect,
+    onClose,
+  }: {
+    open: boolean;
+    onSelect: (item: CatalogActivity) => void;
+    onClose: () => void;
+  }) {
+    if (!open) return null;
+    return (
+      <div data-testid="catalog-popup">
+        <button
+          onClick={() => {
+            onSelect(stubItem);
+            onClose();
+          }}
+        >
+          Pick Stub
+        </button>
+      </div>
+    );
+  }
+  return { ...actual, CatalogSearchPopup };
+});
+
+const sampleActivity: Activity & { dayId?: string } = {
+  id: 'a1',
+  title: 'Test',
+  color: 'red',
+};
+
+const defaultProps = {
+  activity: sampleActivity,
+  bgColor: '',
+  onDelete: () => {},
+  onClose: () => {},
+  onColorChange: () => {},
+  availableDays: [] as DayPlan[],
+  onChangeDay: () => {},
+};
+
+it('opens catalog popup and selects an item', () => {
+  const handleSelect = vi.fn();
+  render(<ActivityModalHeader {...defaultProps} onCatalogSelect={handleSelect} />);
+
+  const searchBtn = screen.getByRole('button', { name: 'Search' });
+  fireEvent.click(searchBtn);
+
+  const popup = screen.getByTestId('catalog-popup');
+  expect(popup).toBeInTheDocument();
+
+  fireEvent.click(screen.getByText('Pick Stub'));
+
+  expect(handleSelect).toHaveBeenCalledTimes(1);
+  expect(screen.queryByTestId('catalog-popup')).not.toBeInTheDocument();
+});

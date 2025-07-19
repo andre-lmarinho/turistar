@@ -1,5 +1,3 @@
-// src/components/ui/button-icons/AriaLabel.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CloseButton, RemoveCardButton, CardColorButton } from '@/components';

@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { useDestinationCatalog } from './useDestinationCatalog';
+import { useDestinationFilter } from './useDestinationFilter';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -35,7 +35,7 @@ const activities = [
   },
 ];
 
-describe('useDestinationCatalog', () => {
+describe('useDestinationFilter', () => {
   beforeEach(() => {
     vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
@@ -43,10 +43,12 @@ describe('useDestinationCatalog', () => {
     } as unknown as Response);
   });
 
-  it('filters by search term and category', async () => {
-    const { result } = renderHook(() => useDestinationCatalog(true));
+  it('returns the starter city and filters by category and search', async () => {
+    const { result } = renderHook(() => useDestinationFilter(true));
 
     await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.city).toBe('Salvador');
 
     act(() => {
       result.current.toggleCat('outdoors');
@@ -61,29 +63,27 @@ describe('useDestinationCatalog', () => {
     expect(result.current.visibleItems.map((a) => a.name)).toEqual(['City Walk']);
   });
 
-  it('sorts by price and duration', async () => {
-    const { result } = renderHook(() => useDestinationCatalog(true));
+  it('resets filter when category toggled off', async () => {
+    const { result } = renderHook(() => useDestinationFilter(true));
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
     act(() => {
-      result.current.setSortMode('Price');
+      result.current.toggleCat('outdoors');
     });
 
-    expect(result.current.visibleItems.map((a) => a.name)).toEqual([
-      'Beach Fun',
-      'Museum Tour',
-      'City Walk',
-    ]);
+    expect(result.current.visibleItems).toHaveLength(2);
 
     act(() => {
-      result.current.setSortMode('Duration');
+      result.current.toggleCat('outdoors');
     });
 
-    expect(result.current.visibleItems.map((a) => a.name)).toEqual([
-      'City Walk',
-      'Beach Fun',
-      'Museum Tour',
-    ]);
+    expect(result.current.visibleItems).toHaveLength(3);
+
+    act(() => {
+      result.current.setSearch('museum');
+    });
+
+    expect(result.current.visibleItems.map((a) => a.name)).toEqual(['Museum Tour']);
   });
 });

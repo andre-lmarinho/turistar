@@ -79,7 +79,7 @@ export function ActivityCardBase({
         )}
 
         {isMounted && (duration! > 0 || budget! > 0) && (
-          <div className="absolute top-2 left-2 flex gap-2 px-2 rounded-full text-xs bg-white">
+          <div className="flex gap-2 p-2 rounded-full text-xs ">
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
                 <Hourglass size={12} aria-hidden="true" />

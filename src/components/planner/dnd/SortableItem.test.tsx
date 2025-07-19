@@ -1,5 +1,3 @@
-// src/components/planner/dnd/SortableItem.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { DndContext } from '@dnd-kit/core';
@@ -10,7 +8,7 @@ import type { DayPlan } from '@/types';
 describe('SortableItem', () => {
   const activity = { id: 'x', title: 'Hello', color: 'red' } as const;
 
-  // props mínimas que o SortableItem exige
+  // minimum props required by SortableItem
   const defaultProps = {
     availableDays: [] as DayPlan[],
     onChangeDay: vi.fn(),

@@ -113,6 +113,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               color,
               duration: Number(duration),
               budget,
+              imageUrl: activity.imageUrl,
             })
           }
         >

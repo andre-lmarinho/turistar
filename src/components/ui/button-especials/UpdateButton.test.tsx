@@ -1,5 +1,3 @@
-// src/components/ui/button-especials/UpdateButton.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { UpdateButton } from '@/components';

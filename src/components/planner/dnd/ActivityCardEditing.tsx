@@ -3,10 +3,10 @@
 
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
-import type { Activity, DayPlan } from '@/types';
-import { Button, CardColorsPopup, DayPickerPopup } from '@/components';
-import { useCardPopups, useWindowSize } from '@/hooks';
+import { Palette, ArrowLeftRight, Trash2, Search } from 'lucide-react';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
+import { Button, CardColorsPopup, DayPickerPopup, CatalogSearchPopup } from '@/components';
+import { useCardPopups, useWindowSize, useFlexibleRef, useEscapeKey } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
   onSave: () => void;
   onCancel: () => void;
   onDelete: () => void;
+  onApplyCatalogItem?: (item: CatalogActivity) => void;
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
   cardRef: React.RefObject<HTMLDivElement | null>;
@@ -30,7 +31,11 @@ export default function ActivityCardEditing({
   onChangeColor,
   onChangeDay,
   onSave,
+  onCancel,
   onDelete,
+  editedImageUrl,
+  setEditedImageUrl,
+  onApplyCatalogItem,
   cardRef,
 }: Props) {
   const {
@@ -43,11 +48,13 @@ export default function ActivityCardEditing({
     setIsColorPickerOpen,
     setIsDatePickerOpen,
   } = useCardPopups();
-  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
-
+  const searchButtonRef = useFlexibleRef();
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const cardRect = useWindowSize(cardRef);
   const buttonRect = useWindowSize(buttonContainerRef);
+
+  useEscapeKey({ onClose: onCancel });
 
   const gap = 8;
   const buttonGroupWidth = buttonRect?.width ?? 160;
@@ -75,7 +82,7 @@ export default function ActivityCardEditing({
         <div
           ref={buttonContainerRef}
           className={cn(
-            'fixed z-50 flex flex-col gap-1',
+            'fixed z-50 flex flex-col',
             position === 'right' ? 'items-start' : 'items-end -translate-x-full'
           )}
           style={{ top: coords.top, left: coords.left }}
@@ -131,6 +138,37 @@ export default function ActivityCardEditing({
                   }}
                   onClose={() => setIsColorPickerOpen(false)}
                   triggerRef={colorButtonRef}
+                />
+              </div>
+            )}
+          </div>
+
+          <Button
+            ref={searchButtonRef}
+            size="sm"
+            variant="icon"
+            type="button"
+            onClick={() => {
+              setIsCatalogOpen((p) => !p);
+              setIsColorPickerOpen(false);
+              setIsDatePickerOpen(false);
+            }}
+          >
+            <Search className="size-4" aria-hidden="true" />
+            Search Catalog
+          </Button>
+          <div className="relative mb-1">
+            {isCatalogOpen && (
+              <div className="absolute top-1 left-full z-50">
+                <CatalogSearchPopup
+                  open={isCatalogOpen}
+                  onSelect={(item) => {
+                    onApplyCatalogItem?.(item);
+                    setEditedImageUrl(item.image_url || '');
+                    setIsCatalogOpen(false);
+                  }}
+                  onClose={() => setIsCatalogOpen(false)}
+                  triggerRef={searchButtonRef}
                 />
               </div>
             )}

@@ -1,5 +1,3 @@
-// src/components/ui/button-icons/TooltipPosition.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EditCardButton, RemoveCardButton } from '@/components';

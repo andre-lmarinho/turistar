@@ -3,10 +3,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { isTouchDevice } from '@/lib';
 
 import { EditCardButton, ActivityCardBase, ActivityCardEditing } from '@/components';
+import { useEscapeKey } from '@/hooks';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };
@@ -17,6 +18,7 @@ export interface ActivityCardProps {
   bgColor: string;
   onChangeColor: (color: string) => void;
   onDelete: () => void;
+  onApplyCatalogItem?: (item: CatalogActivity) => void;
 }
 
 export default function ActivityCard({
@@ -28,6 +30,7 @@ export default function ActivityCard({
   onDelete,
   bgColor,
   onChangeColor,
+  onApplyCatalogItem,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
   const twBg = color && !color.startsWith('#') ? color : undefined;
@@ -38,6 +41,7 @@ export default function ActivityCard({
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const [overlayRect, setOverlayRect] = useState<DOMRect | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  useEscapeKey({ onClose: () => editing && cancel(), isActive: editing });
 
   useEffect(() => {
     if (editing) {
@@ -149,6 +153,7 @@ export default function ActivityCard({
               onSave={save}
               onCancel={cancel}
               onDelete={() => onDelete?.()}
+              onApplyCatalogItem={onApplyCatalogItem}
               editedImageUrl={editedImageUrl}
               setEditedImageUrl={setEditedImageUrl}
             />
