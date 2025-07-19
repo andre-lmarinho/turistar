@@ -6,6 +6,7 @@ import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import Image from 'next/image';
 import { useCardPopups, useFlexibleRef } from '@/hooks';
 import { ChevronDown } from 'lucide-react';
+import { isTouchDevice } from '@/lib';
 
 import {
   Button,
@@ -54,6 +55,7 @@ export default function ActivityModalHeader({
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const [showRemove, setShowRemove] = useState(false);
 
   // Keep local image state in sync with the selected activity
   useEffect(() => {
@@ -65,10 +67,13 @@ export default function ActivityModalHeader({
   return (
     <>
       <div
-        className={`relative mb-4 rounded-t-lg ${
+        className={`relative mb-4 rounded-t-lg group ${
           editedImageUrl ? 'h-32' : ''
         } ${!editedImageUrl && !bgColor.startsWith('#') ? bgColor : ''}`}
         style={bgColor.startsWith('#') ? { backgroundColor: bgColor } : undefined}
+        onClick={() => {
+          if (isTouchDevice() && editedImageUrl) setShowRemove((p) => !p);
+        }}
       >
         {editedImageUrl && (
           <Image
@@ -79,6 +84,19 @@ export default function ActivityModalHeader({
             height={200}
             unoptimized
           />
+        )}
+        {editedImageUrl && (
+          <Button
+            size="sm"
+            className={`absolute top-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowRemove(false);
+              setEditedImageUrl('');
+            }}
+          >
+            Remove photo
+          </Button>
         )}
 
         {/* Header buttons */}
