@@ -1,7 +1,7 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import PlannerBoard from '@/app/planner/PlannerBoard';
@@ -15,6 +15,7 @@ import {
   EmptyPlannerHint,
   ModeToggleButton,
   LoadingScreen,
+  OnboardingModal,
 } from '@/components';
 import { usePlanner, useActivitiesById, useSelectedActivity, usePlanTitle } from '@/hooks';
 import type { CatalogActivity } from '@/types';
@@ -29,7 +30,6 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } f
 export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<'planner' | 'budget'>('planner');
-  const addButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const {
     planId,
@@ -53,6 +53,16 @@ export default function PlannerClient() {
   } = usePlanner(true);
 
   const { title, setTitle } = usePlanTitle(planId, STARTER_PLANNER_TITLE);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const seen = localStorage.getItem('planner-onboarding-shown');
+    if (!seen) {
+      setShowOnboarding(true);
+      localStorage.setItem('planner-onboarding-shown', 'true');
+    }
+  }, []);
 
   const {
     selectedActivity,
@@ -105,7 +115,7 @@ export default function PlannerClient() {
             className="px-4 py-2 border-2 rounded-md bg-transparent border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
-        <OpenPanelButton ref={addButtonRef} onClick={() => setIsPanelOpen(true)} />
+        <OpenPanelButton onClick={() => setIsPanelOpen(true)} />
       </div>
       <div className="pb-4 flex items-center justify-between gap-4">
         <div>
@@ -190,9 +200,8 @@ export default function PlannerClient() {
           onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
         />
       )}
-      {days.every((d) => d.activities.length === 0) && (
-        <EmptyPlannerHint targetRef={addButtonRef} />
-      )}
+      <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
+      {days.every((d) => d.activities.length === 0) && <EmptyPlannerHint />}
     </main>
   );
 }

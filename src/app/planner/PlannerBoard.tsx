@@ -66,7 +66,7 @@ export default function PlannerBoard({
       onDragEnd={handleDragEnd}
       modifiers={[restrictToWindowEdges]}
     >
-      <div className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border">
+      <div className="p-4 md:mb-10 bg-background flex flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl snap-x snap-mandatory border">
         {days.map((d) => (
           <div key={d.id} className="min-w-[250px] flex-shrink-0">
             <DayColumn

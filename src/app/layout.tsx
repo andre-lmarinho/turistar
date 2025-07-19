@@ -13,6 +13,7 @@ const architectsDaughter = Architects_Daughter({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-architects-daughter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${architectsDaughter.variable}`}
     >
-      <body suppressHydrationWarning className="antialiased bg-background text-foreground">
+      <body
+        suppressHydrationWarning
+        className={'antialiased ${geistSans.className} bg-background text-foreground'}
+      >
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
