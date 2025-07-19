@@ -57,7 +57,7 @@ export default function ActivityModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="activity-modal-title"
-        className="bg-white rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col"
+        className="bg-background rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 id="activity-modal-title" className="sr-only">

@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { Button, DateRangePicker, TutorialCarousel } from '@/components';
+import { Button, DateRangePicker } from '@/components';
 import { STARTER_PLANNER_TITLE } from '@/constants';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
@@ -57,9 +57,6 @@ export default function WelcomeForm() {
             </p>
           )}
         </div>
-      </div>
-      <div className="mt-6">
-        <TutorialCarousel />
       </div>
     </div>
   );

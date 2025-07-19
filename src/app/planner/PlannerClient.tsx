@@ -94,7 +94,7 @@ export default function PlannerClient() {
   return (
     <main id="main-content" className="flex flex-col px-4 bg-card md:px-12 py-4 h-screen">
       <div className="pb-4 flex items-center justify-between">
-        <h1 className="text-4xl cursor-pointer whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_50%,transparent)]">
+        <h1 className="text-4xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <input
             aria-label="Planner title"
             type="text"
@@ -102,7 +102,7 @@ export default function PlannerClient() {
             onChange={(e) => setTitle(e.target.value)}
             style={{ width: `${Math.max(title.length, 1)}ch` }}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-            className="px-4 py-2 border-2 border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
+            className="px-4 py-2 border-2 rounded-md bg-transparent border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
         <OpenPanelButton ref={addButtonRef} onClick={() => setIsPanelOpen(true)} />

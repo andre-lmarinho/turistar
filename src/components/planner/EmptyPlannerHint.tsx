@@ -23,7 +23,6 @@ export default function EmptyPlannerHint({ targetRef }: EmptyPlannerHintProps) {
 
   return ReactDOM.createPortal(
     <>
-      <div className="backdrop-overlay" />
       <div
         className="fixed z-50 flex flex-col items-center pointer-events-none -translate-x-1/2 -translate-y-full font-[var(--font-architects-daughter)]"
         style={{ left: coords.x, top: coords.y }}
