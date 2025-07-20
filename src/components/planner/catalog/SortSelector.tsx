@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-export const sortModes = ['A-Z', 'Price', 'Duration'] as const;
+export const sortModes = ['A-Z', 'Price', 'Duration', 'Rating', 'Reviews'] as const;
 export type SortMode = (typeof sortModes)[number]; // <- union type
 
 /** Tiny select used in DestinationFilterPanel */

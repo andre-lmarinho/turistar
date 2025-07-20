@@ -16,6 +16,8 @@ const activities = [
     image_url: '',
     price: '$15',
     category: 'outdoors',
+    rating: 4.2,
+    reviewcount: '100',
   },
   {
     id: '2',
@@ -25,6 +27,8 @@ const activities = [
     image_url: '',
     price: '$20',
     category: 'culture',
+    rating: 4.8,
+    reviewcount: '50',
   },
   {
     id: '3',
@@ -34,6 +38,8 @@ const activities = [
     image_url: '',
     price: '$5',
     category: 'outdoors',
+    rating: 3.9,
+    reviewcount: '150',
   },
 ];
 
@@ -80,6 +86,32 @@ describe('useDestinationCatalog', () => {
 
     act(() => {
       result.current.setSortMode('Duration');
+    });
+
+    expect(result.current.visibleItems.map((a) => a.name)).toEqual([
+      'City Walk',
+      'Beach Fun',
+      'Museum Tour',
+    ]);
+  });
+
+  it('sorts by rating and reviews', async () => {
+    const { result } = renderHook(() => useDestinationCatalog(true));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.setSortMode('Rating');
+    });
+
+    expect(result.current.visibleItems.map((a) => a.name)).toEqual([
+      'Museum Tour',
+      'Beach Fun',
+      'City Walk',
+    ]);
+
+    act(() => {
+      result.current.setSortMode('Reviews');
     });
 
     expect(result.current.visibleItems.map((a) => a.name)).toEqual([
