@@ -14,6 +14,7 @@ export interface ActivityCardProps {
   onSelect?: () => void;
   onTitleSave?: (newTitle: string) => void;
   onChangeDay: (dayId: string) => void;
+  onChangePosition: (index: number) => void;
   availableDays: DayPlan[];
   bgColor: string;
   onChangeColor: (color: string) => void;
@@ -27,6 +28,7 @@ export default function ActivityCard({
   onSelect,
   onTitleSave,
   onChangeDay,
+  onChangePosition,
   onDelete,
   bgColor,
   onChangeColor,
@@ -150,6 +152,7 @@ export default function ActivityCard({
               bgColor={bgColor}
               onChangeColor={onChangeColor}
               onChangeDay={onChangeDay}
+              onChangePosition={onChangePosition}
               onSave={save}
               onCancel={cancel}
               onDelete={() => onDelete?.()}

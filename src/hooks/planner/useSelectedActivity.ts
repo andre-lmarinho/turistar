@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import type { Activity, DayPlan } from '@/types';
-import { moveActivityToDay } from '@/utils';
+import { moveActivityToDay, moveActivityPosition } from '@/utils';
 
 /**
  * Manages the currently selected activity for editing in the planner.
@@ -82,10 +82,15 @@ export function useSelectedActivity(
     }
   };
 
+  const changePosition = (activityId: string, newIndex: number) => {
+    setDays((prev) => moveActivityPosition(prev, activityId, newIndex));
+  };
+
   return {
     selectedActivity,
     setSelectedActivity,
     changeDay,
+    changePosition,
     addBlankAndSelect,
     closeModal,
     save,

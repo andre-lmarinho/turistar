@@ -18,6 +18,7 @@ interface ActivityModalProps {
   onColorChange: (color: string) => void;
   days: DayPlan[];
   onChangeDay: (dayId: string) => void;
+  onChangePosition: (index: number) => void;
 }
 
 export default function ActivityModal({
@@ -30,6 +31,7 @@ export default function ActivityModal({
   onColorChange,
   days,
   onChangeDay,
+  onChangePosition,
 }: ActivityModalProps) {
   useEscapeKey({ onClose, isActive: open });
 
@@ -80,6 +82,7 @@ export default function ActivityModal({
             onColorChange={onColorChange}
             availableDays={days}
             onChangeDay={onChangeDay}
+            onChangePosition={onChangePosition}
             onCatalogSelect={handleCatalogSelect}
           />
           <ActivityModalForm activity={draft} onSave={onSave} color={color} />

@@ -66,6 +66,7 @@ export default function PlannerClient() {
     selectedActivity,
     setSelectedActivity,
     changeDay,
+    changePosition,
     addBlankAndSelect,
     closeModal,
     save,
@@ -160,6 +161,7 @@ export default function PlannerClient() {
           onUpdateTitle={(id, title) => updateActivity(id, { title })}
           onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
           onChangeDay={changeDay}
+          onChangePosition={changePosition}
           onChangeColor={(id, color) => changeColor(id, color)}
           onDelete={removeActivity}
         />
@@ -175,6 +177,7 @@ export default function PlannerClient() {
           onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
           days={days}
           onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
+          onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
         />
       )}
       <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
