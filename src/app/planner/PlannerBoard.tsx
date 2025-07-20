@@ -30,6 +30,7 @@ export interface PlannerBoardProps {
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle: (id: string, title: string) => void;
   onChangeDay: (activityId: string, dayId: string) => void;
+  onChangePosition: (activityId: string, index: number) => void;
   onChangeColor: (activityId: string, color: string) => void;
   onDelete: (activityId: string) => void;
 }
@@ -50,6 +51,7 @@ export default function PlannerBoard({
   onAddActivity,
   onUpdateTitle,
   onChangeDay,
+  onChangePosition,
   onChangeColor,
   onDelete,
 }: PlannerBoardProps) {
@@ -80,6 +82,7 @@ export default function PlannerBoard({
               onSelectActivity={onSelectActivity}
               onUpdateTitle={onUpdateTitle}
               onChangeDay={(activityId, dayId) => onChangeDay(activityId, dayId)}
+              onChangePosition={(activityId, idx) => onChangePosition(activityId, idx)}
               onChangeColor={(activityId, color) => onChangeColor(activityId, color)}
               onDelete={onDelete}
             />
@@ -94,6 +97,7 @@ export default function PlannerBoard({
             activity={active}
             availableDays={days}
             onChangeDay={(newDayId) => onChangeDay(active.id, newDayId)}
+            onChangePosition={(idx) => onChangePosition(active.id, idx)}
             onChangeColor={(newColor) => onChangeColor(active.id, newColor)}
             bgColor={active.color}
             onDelete={() => onDelete(active.id)}

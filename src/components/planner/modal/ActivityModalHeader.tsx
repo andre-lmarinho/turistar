@@ -15,6 +15,7 @@ import {
   CardColorButton,
   CardColorsPopup,
   DayPickerPopup,
+  PositionPickerPopup,
   CatalogSearchPopup,
   SearchCatalogButton,
 } from '@/components';
@@ -31,6 +32,7 @@ export default function ActivityModalHeader({
   onColorChange,
   availableDays,
   onChangeDay,
+  onChangePosition,
   onCatalogSelect,
 }: {
   activity: Activity & { dayId?: string };
@@ -40,17 +42,22 @@ export default function ActivityModalHeader({
   onColorChange: (color: string) => void;
   availableDays: DayPlan[];
   onChangeDay: (dayId: string) => void;
+  onChangePosition: (index: number) => void;
   onCatalogSelect: (item: CatalogActivity) => void;
 }) {
   const {
     colorButtonRef,
     dateButtonRef,
+    positionButtonRef,
     isColorPickerOpen,
     isDatePickerOpen,
+    isPositionPickerOpen,
     handleColorButtonClick,
     handleDateButtonClick,
+    handlePositionButtonClick,
     setIsColorPickerOpen,
     setIsDatePickerOpen,
+    setIsPositionPickerOpen,
   } = useCardPopups();
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
@@ -63,6 +70,9 @@ export default function ActivityModalHeader({
   }, [activity.imageUrl]);
 
   const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
+  const currentDay = availableDays.find((d) => d.id === activity.dayId);
+  const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
+  const totalPositions = currentDay?.activities.length ?? 0;
 
   return (
     <>
@@ -102,16 +112,28 @@ export default function ActivityModalHeader({
 
         {/* Header buttons */}
         <div className="relative z-10 flex items-center justify-between p-2">
-          <Button
-            ref={dateButtonRef}
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={handleDateButtonClick}
-          >
-            {currentDayLabel ?? 'Change Day'}
-            <ChevronDown className="size-4" aria-hidden="true" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              ref={dateButtonRef}
+              size="sm"
+              variant="icon"
+              type="button"
+              onClick={handleDateButtonClick}
+            >
+              {currentDayLabel ?? 'Change Day'}
+              <ChevronDown className="size-4" aria-hidden="true" />
+            </Button>
+            <Button
+              ref={positionButtonRef}
+              size="sm"
+              variant="icon"
+              type="button"
+              onClick={handlePositionButtonClick}
+            >
+              Change Position
+              <ChevronDown className="size-4" aria-hidden="true" />
+            </Button>
+          </div>
           <div className="flex items-center gap-2">
             <RemoveCardButton onClick={onDelete} />
             <CardColorButton ref={colorButtonRef} onClick={handleColorButtonClick} />
@@ -122,6 +144,7 @@ export default function ActivityModalHeader({
                 setIsCatalogOpen((p) => !p);
                 setIsColorPickerOpen(false);
                 setIsDatePickerOpen(false);
+                setIsPositionPickerOpen(false);
               }}
             ></SearchCatalogButton>
 
@@ -156,6 +179,20 @@ export default function ActivityModalHeader({
               }}
               onClose={() => setIsDatePickerOpen(false)}
               triggerRef={dateButtonRef}
+            />
+          </div>
+        )}
+        {isPositionPickerOpen && totalPositions > 0 && (
+          <div className="absolute top-[3rem] left-[9rem] z-50">
+            <PositionPickerPopup
+              total={totalPositions}
+              selected={currentIndex}
+              onSelect={(idx: number) => {
+                onChangePosition(idx);
+                setIsPositionPickerOpen(false);
+              }}
+              onClose={() => setIsPositionPickerOpen(false)}
+              triggerRef={positionButtonRef}
             />
           </div>
         )}

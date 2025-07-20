@@ -15,6 +15,7 @@ interface DayColumnProps {
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle?: (id: string, title: string) => void;
   onChangeDay: (activityId: string, dayId: string) => void;
+  onChangePosition: (activityId: string, index: number) => void;
   onChangeColor: (activityId: string, color: string) => void;
   onDelete: (activityId: string) => void;
 }
@@ -30,6 +31,7 @@ export default function DayColumn({
   onAddActivity,
   onUpdateTitle,
   onChangeDay,
+  onChangePosition,
   onChangeColor,
   onDelete,
 }: DayColumnProps) {
@@ -60,6 +62,7 @@ export default function DayColumn({
                 onSelect={() => onSelectActivity?.({ ...activity, dayId: day.id })}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
                 onChangeDay={(newDayId) => onChangeDay(activity.id, newDayId)}
+                onChangePosition={(idx) => onChangePosition(activity.id, idx)}
                 onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
                 onDelete={() => onDelete(activity.id)}
                 bgColor={activity.color}

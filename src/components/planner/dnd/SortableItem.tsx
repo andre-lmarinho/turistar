@@ -18,6 +18,7 @@ export interface SortableItemProps {
   dragOverlay?: boolean;
   className?: string;
   onChangeDay: (dayId: string) => void;
+  onChangePosition: (index: number) => void;
   onChangeColor: (color: string) => void;
   bgColor: string;
   onDelete: () => void;
@@ -30,6 +31,7 @@ export default function SortableItem({
   onSelect,
   onTitleSave,
   onChangeDay,
+  onChangePosition,
   onChangeColor,
   onDelete,
   bgColor,
@@ -46,6 +48,7 @@ export default function SortableItem({
           onSelect={onSelect}
           onTitleSave={onTitleSave}
           onChangeDay={onChangeDay}
+          onChangePosition={onChangePosition}
           onChangeColor={onChangeColor}
           onDelete={onDelete}
           bgColor={bgColor}
@@ -81,6 +84,7 @@ export default function SortableItem({
         onSelect={onSelect}
         onTitleSave={onTitleSave}
         onChangeDay={onChangeDay}
+        onChangePosition={onChangePosition}
         onChangeColor={onChangeColor}
         onDelete={onDelete}
         bgColor={bgColor}
