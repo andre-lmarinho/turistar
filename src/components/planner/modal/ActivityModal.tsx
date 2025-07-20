@@ -1,7 +1,7 @@
 // src/components/planner/modal/ActivityModal.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
@@ -35,6 +35,8 @@ export default function ActivityModal({
 }: ActivityModalProps) {
   useEscapeKey({ onClose, isActive: open });
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [draft, setDraft] = useState(activity);
 
   useEffect(() => {
@@ -61,9 +63,13 @@ export default function ActivityModal({
         focusTrapOptions={{
           clickOutsideDeactivates: true,
           escapeDeactivates: false,
+          initialFocus: false,
+          fallbackFocus: () => containerRef.current ?? document.body,
+          tabbableOptions: { displayCheck: 'none' },
         }}
       >
         <div
+          ref={containerRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="activity-modal-title"

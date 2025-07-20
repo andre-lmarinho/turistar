@@ -1,7 +1,7 @@
 // src/components/planner/catalog/DestinationFilterPanel.tsx
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
@@ -44,6 +44,8 @@ export default function DestinationFilterPanel({
 
   useEscapeKey({ onClose, isActive: isOpen });
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -53,9 +55,13 @@ export default function DestinationFilterPanel({
         focusTrapOptions={{
           clickOutsideDeactivates: true,
           escapeDeactivates: false,
+          initialFocus: false,
+          fallbackFocus: () => containerRef.current ?? document.body,
+          tabbableOptions: { displayCheck: 'none' },
         }}
       >
         <div
+          ref={containerRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="destination-filter-title"

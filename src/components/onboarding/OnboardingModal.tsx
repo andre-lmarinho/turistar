@@ -1,7 +1,7 @@
 // src/components/onboarding/OnboardingModal.tsx
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import FocusTrap from 'focus-trap-react';
 import ReactDOM from 'react-dom';
 import { OnboardingCarousel, CloseButton } from '@/components';
@@ -14,6 +14,8 @@ interface OnboardingModalProps {
 
 export default function OnboardingModal({ open, onClose }: OnboardingModalProps) {
   useEscapeKey({ onClose, isActive: open });
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   if (!open) return null;
 
@@ -28,9 +30,13 @@ export default function OnboardingModal({ open, onClose }: OnboardingModalProps)
           focusTrapOptions={{
             clickOutsideDeactivates: true,
             escapeDeactivates: false,
+            initialFocus: false,
+            fallbackFocus: () => containerRef.current ?? document.body,
+            tabbableOptions: { displayCheck: 'none' },
           }}
         >
           <div
+            ref={containerRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="onboarding-carousel-title"
