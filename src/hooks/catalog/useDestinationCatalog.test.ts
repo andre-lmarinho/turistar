@@ -2,6 +2,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useDestinationCatalog } from './useDestinationCatalog';
+import { vi } from 'vitest';
 
 afterEach(() => {
   vi.restoreAllMocks();

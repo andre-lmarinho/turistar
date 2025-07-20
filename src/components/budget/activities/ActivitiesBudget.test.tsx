@@ -4,6 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivitiesBudget from './ActivitiesBudget';
 import type { DayPlan } from '@/types';
+import { vi } from 'vitest';
 
 describe('ActivitiesBudget', () => {
   const days: DayPlan[] = [

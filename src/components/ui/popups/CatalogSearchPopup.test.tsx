@@ -4,6 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CatalogSearchPopup } from '@/components';
 import type { CatalogActivity } from '@/types';
+import { vi } from 'vitest';
 
 // Mock hooks used by CatalogSearchPopup
 const catalog: CatalogActivity[] = [

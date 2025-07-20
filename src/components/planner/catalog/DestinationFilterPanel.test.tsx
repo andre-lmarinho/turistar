@@ -3,6 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DestinationFilterPanel from './DestinationFilterPanel';
+import { vi } from 'vitest';
 
 const activities = [
   {
