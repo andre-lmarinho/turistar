@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body
         suppressHydrationWarning
-        className={'antialiased ${geistSans.className} bg-background text-foreground'}
+        className={`antialiased ${geistSans.className} bg-background text-foreground`}
       >
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
