@@ -8,6 +8,12 @@ import {
   DEFAULT_COLORS,
 } from '@/constants';
 
+/**
+ * Provides helpers for modifying day activities.
+ * - Adds, removes or updates activities in the given days state.
+ * - Can insert a blank placeholder activity.
+ */
+
 export function useActivityState(setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>) {
   function addActivity(act: Activity, dayIndex = 0): void {
     setDays((prev) => {

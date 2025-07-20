@@ -1,4 +1,4 @@
-//src/hooks/planner/index.ts
+// src/hooks/planner/index.ts
 
 export * from './useActivitiesById';
 export * from './useActivityState';

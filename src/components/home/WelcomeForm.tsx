@@ -40,11 +40,14 @@ export default function WelcomeForm() {
   return (
     <form onSubmit={handleSubmit} className="items-center text-center max-w-[400px]" noValidate>
       <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--card)' }}>
+        {/* Card */}
         <div className="space-y-6 p-8">
+          {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2">Let&#39;s Plan Your Next Trip to Salvador?</h1>
           </div>
 
+          {/* Date range */}
           <fieldset className="space-y-4 flex justify-center" aria-labelledby="daterange-label">
             <legend id="daterange-label" className="sr-only">
               Travel dates
@@ -57,6 +60,7 @@ export default function WelcomeForm() {
             />
           </fieldset>
 
+          {/* Actions */}
           <Button type="submit">Start Your Planning</Button>
 
           {error && (

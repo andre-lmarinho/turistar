@@ -1,4 +1,4 @@
-//src/hooks/catalog/index.ts
+// src/hooks/catalog/index.ts
 
 export * from './useCatalog';
 export * from './useDestinationCatalog';

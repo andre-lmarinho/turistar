@@ -12,6 +12,12 @@ import {
 } from '@dnd-kit/core';
 import type { DayPlan } from '@/types';
 
+/**
+ * Handles drag-and-drop interactions for day plans.
+ * - Maintains the days array and active drag ID.
+ * - Provides sensors and event handlers for use with dnd-kit.
+ */
+
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);

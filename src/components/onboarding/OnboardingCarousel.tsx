@@ -122,19 +122,19 @@ export default function OnboardingCarousel({
       aria-roledescription="carousel"
       aria-label="Onboarding steps"
       tabIndex={0}
-      className={`relative overflow-hidden p-4 ${
-        round ? 'rounded-full border border-background' : 'rounded-md border'
-      }`}
+      className={`relative overflow-hidden`}
       style={{ width: `${baseWidth}px`, height: `${containerHeight}px` }}
     >
       {/* Previous */}
-      <button
-        onClick={() => (currentIndex === 0 ? null : setCurrentIndex((prev) => prev - 1))}
-        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary"
-        aria-label="Previous step"
-      >
-        <ChevronLeft size={20} />
-      </button>
+      {currentIndex !== 0 && (
+        <button
+          onClick={() => setCurrentIndex((prev) => prev - 1)}
+          className="absolute left-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-background border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+          aria-label="Previous step"
+        >
+          <ChevronLeft size={20} />
+        </button>
+      )}
 
       {/* Draggable track */}
       <motion.div
@@ -162,7 +162,7 @@ export default function OnboardingCarousel({
           return (
             <motion.div
               key={idx}
-              className={`relative shrink-0 flex flex-col bg-card ${
+              className={`relative border shrink-0 flex flex-col bg-card ${
                 round
                   ? 'items-center justify-center text-center border-0'
                   : 'items-start justify-between rounded-lg'
@@ -180,8 +180,8 @@ export default function OnboardingCarousel({
                   <Image src={step.image} alt={step.title} fill className="object-cover" />
                 </div>
                 <div className="flex-1 mt-2">
-                  <h3 className="font-semibold mb-1 text-foreground">{step.title}</h3>
-                  <p className="text-sm text-foreground">{step.description}</p>
+                  <h3 className="font-semibold text-3xl mb-1 text-foreground">{step.title}</h3>
+                  <p className="text-[1.2rem] text-foreground">{step.description}</p>
                 </div>
               </div>
             </motion.div>
@@ -195,7 +195,7 @@ export default function OnboardingCarousel({
           if (currentIndex === steps.length - 1) onFinish?.();
           else setCurrentIndex((prev) => prev + 1);
         }}
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-card hover:bg-card/80 focus:outline-none focus:ring-2 focus:ring-primary"
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-background border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
         aria-label="Next step"
       >
         <ChevronRight size={20} />
@@ -217,7 +217,7 @@ export default function OnboardingCarousel({
               aria-selected={currentIndex % ONBOARDING_STEPS.length === i}
               tabIndex={currentIndex % ONBOARDING_STEPS.length === i ? 0 : -1}
               onClick={() => setCurrentIndex(i)}
-              className={`h-2 w-2 rounded-full transition-transform focus:outline-none focus:ring-2 focus:ring-primary ${
+              className={`h-2 w-2 bg-border rounded-full transition-transform focus:outline-none focus:ring-2 focus:ring-primary ${
                 currentIndex % ONBOARDING_STEPS.length === i
                   ? 'scale-125 bg-primary'
                   : 'bg-[rgba(255,255,255,1)]'

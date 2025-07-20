@@ -38,11 +38,13 @@ export default function ActivityCardBase({
       className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-[var(--background)] hover:shadow-md transition cursor-grab relative"
       style={{ zIndex: editing ? 50 : undefined }}
     >
+      {/* Content */}
       <div
         className={`flex-1 flex w-40 flex-col rounded-lg border border-[var(--border)] overflow-hidden ${
           twBg ?? ''
         }`}
       >
+        {/* Image */}
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -54,6 +56,7 @@ export default function ActivityCardBase({
           />
         )}
 
+        {/* Title */}
         {editing ? (
           <textarea
             id="activity-card-title"
@@ -80,6 +83,7 @@ export default function ActivityCardBase({
           <h4 className="px-2 py-1 font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
         )}
 
+        {/* Meta */}
         {isMounted && (duration! > 0 || budget! > 0) && (
           <div className="flex gap-2 p-2 rounded-full text-xs ">
             {duration! > 0 && (

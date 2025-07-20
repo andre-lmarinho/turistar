@@ -6,6 +6,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { eachDayOfInterval, parseISO } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
+/**
+ * Manages the trip date range via the URL parameters.
+ * - Computes all days within the selected range.
+ * - Updates the router when the range changes.
+ */
+
 export function useTripRange(dest: string, planId?: string) {
   const params = useSearchParams();
   const router = useRouter();

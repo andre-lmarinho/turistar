@@ -1,4 +1,4 @@
-//src/lib/storage.ts
+// src/lib/storage.ts
 import { useEffect, useRef } from 'react';
 
 /**

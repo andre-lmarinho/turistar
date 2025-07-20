@@ -1,4 +1,4 @@
-//src/hooks/index.ts
+// src/hooks/index.ts
 
 export * from './budget/useBudget';
 export * from './general/useTripRange';

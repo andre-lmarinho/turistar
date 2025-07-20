@@ -1,4 +1,4 @@
-//src/hooks/ui/index.ts
+// src/hooks/ui/index.ts
 
 export * from './useCardPopups';
 export * from './useEscapeKey';

@@ -20,6 +20,7 @@ export default function FeaturePreview({ title, description, imgSrc }: FeaturePr
       className="text-center space-y-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
     >
       <div className="rounded-lg overflow-hidden border mx-auto">
+        {/* Image */}
         <Image
           src={imgSrc}
           alt={title}
@@ -29,6 +30,7 @@ export default function FeaturePreview({ title, description, imgSrc }: FeaturePr
           className="w-full h-48 object-cover"
         />
       </div>
+      {/* Heading & Description */}
       <figcaption>
         <h3 id={titleId} className="text-lg font-semibold">
           {title}

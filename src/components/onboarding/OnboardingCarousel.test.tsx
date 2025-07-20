@@ -11,3 +11,8 @@ describe('OnboardingCarousel', () => {
     });
   });
 });
+
+it('hides the previous button on the first step', () => {
+  render(<OnboardingCarousel />);
+  expect(screen.queryByLabelText('Previous step')).toBeNull();
+});

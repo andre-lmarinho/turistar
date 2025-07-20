@@ -29,6 +29,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Follow the existing code style in each file.
 - Write meaningful variable and function names.
 - Add comments for complex logic.
+- Follow the commenting conventions in [docs/COMMENTING.md](docs/COMMENTING.md).
 
 ## React Components Guidelines
 

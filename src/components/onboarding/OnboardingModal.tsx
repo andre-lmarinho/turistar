@@ -18,22 +18,29 @@ export default function OnboardingModal({ open, onClose }: OnboardingModalProps)
 
   return ReactDOM.createPortal(
     <>
+      {/* Overlay */}
       <div className="backdrop-overlay" onClick={onClose} />
       <div className="fixed inset-0 z-50 flex items-center justify-center">
+        {/* Dialog */}
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="onboarding-carousel-title"
-          className="relative bg-background rounded-lg shadow-xl w-[95%] max-w-md p-4"
+          className="relative bg-background rounded-lg shadow-xl max-w-sm p-4"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Heading */}
           <h2 id="onboarding-carousel-title" className="sr-only">
             Welcome
           </h2>
-          <div className="absolute top-2 right-2">
+          {/* Close button */}
+          <div className="flex items-center justify-end pb-4">
             <CloseButton onClick={onClose} />
           </div>
-          <OnboardingCarousel autoplay loop pauseOnHover baseWidth={320} />
+          {/* Carousel */}
+          <div className="flex items-center justify-center">
+            <OnboardingCarousel autoplay pauseOnHover baseWidth={384} onFinish={onClose} />
+          </div>
         </div>
       </div>
     </>,
