@@ -56,12 +56,13 @@ export default function PlannerClient() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const seen = localStorage.getItem('planner-onboarding-shown');
+    const storageKey = `planner-onboarding-shown-${planId}`;
+    const seen = localStorage.getItem(storageKey);
     if (!seen) {
       setShowOnboarding(true);
-      localStorage.setItem('planner-onboarding-shown', 'true');
+      localStorage.setItem(storageKey, 'true');
     }
-  }, []);
+  }, [planId]);
 
   const {
     selectedActivity,
