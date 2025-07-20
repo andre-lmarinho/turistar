@@ -1,11 +1,9 @@
 // src/components/ui/popups/DayPickerPopup.tsx
 'use client';
 
-import React, { useRef } from 'react';
-import FocusTrap from 'focus-trap-react';
+import React from 'react';
 import type { DayPlan } from '@/types';
-import { CloseButton } from '@/components';
-import { usePopupOutsideHandler, useEscapeKey } from '@/hooks';
+import { CloseButton, Popup } from '@/components';
 
 interface Props {
   days: DayPlan[];
@@ -16,53 +14,34 @@ interface Props {
 }
 
 export default function DayPickerPopup({ days, selected, onSelect, onClose, triggerRef }: Props) {
-  const popupRef = useRef<HTMLDivElement>(null);
-
-  usePopupOutsideHandler({
-    popupRef,
-    triggerRef,
-    onClose,
-  });
-
-  useEscapeKey({ onClose, triggerRef });
-
   return (
-    <FocusTrap
-      focusTrapOptions={{
-        clickOutsideDeactivates: true,
-        escapeDeactivates: false,
-      }}
+    <Popup
+      triggerRef={triggerRef}
+      onClose={onClose}
+      size="sm"
+      aria-labelledby="day-picker-popup-title"
     >
-      <div
-        ref={popupRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="day-picker-popup-title"
-        tabIndex={-1}
-        className="w-[200px] bg-[var(--background)] rounded-lg shadow-xl focus:outline-none focus:ring-2 focus:ring-primary"
-      >
-        <div className="flex items-center justify-between px-4 py-2 border-b">
-          <h3 id="day-picker-popup-title" className="font-bold">
-            Change Day
-          </h3>
-          <CloseButton onClick={onClose} />
-        </div>
-        <ul className="space-y-1">
-          {days.map((d) => (
-            <li key={d.id}>
-              <button
-                type="button"
-                onClick={() => onSelect(d.id)}
-                className={`w-full text-left rounded px-2 py-1 hover:bg-accent ${
-                  selected === d.id ? 'bg-accent' : ''
-                }`}
-              >
-                {d.label}
-              </button>
-            </li>
-          ))}
-        </ul>
+      <div className="flex items-center justify-between px-4 py-2 border-b">
+        <h3 id="day-picker-popup-title" className="font-bold">
+          Change Day
+        </h3>
+        <CloseButton onClick={onClose} />
       </div>
-    </FocusTrap>
+      <ul className="space-y-1">
+        {days.map((d) => (
+          <li key={d.id}>
+            <button
+              type="button"
+              onClick={() => onSelect(d.id)}
+              className={`w-full text-left rounded px-2 py-1 hover:bg-accent ${
+                selected === d.id ? 'bg-accent' : ''
+              }`}
+            >
+              {d.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Popup>
   );
 }
