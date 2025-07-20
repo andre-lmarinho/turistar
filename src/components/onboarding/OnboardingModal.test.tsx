@@ -4,6 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import OnboardingModal from './OnboardingModal';
 import { ONBOARDING_STEPS } from '@/constants';
+import { vi } from 'vitest';
 
 describe('OnboardingModal', () => {
   it('renders all onboarding steps when open', () => {
