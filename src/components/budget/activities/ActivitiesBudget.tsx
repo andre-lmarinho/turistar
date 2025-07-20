@@ -100,7 +100,6 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
                   labelId={`budget-${act.id}`}
                   value={inputs[act.id] ?? ''}
                   onValueChange={(v) => setInputs((prev) => ({ ...prev, [act.id]: v }))}
-                  onBlur={() => onUpdate(act.id, normalizeAmount(inputs[act.id] ?? '0'))}
                   inputSize="sm"
                   background="default"
                   placeholder="Budget"
