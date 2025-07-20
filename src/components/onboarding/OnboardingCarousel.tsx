@@ -6,7 +6,7 @@ import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition } from 'framer-motion';
 import Image from 'next/image';
 import { ONBOARDING_STEPS } from '@/constants';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { NavCircleButton } from '@/components';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;
@@ -127,13 +127,12 @@ export default function OnboardingCarousel({
     >
       {/* Previous */}
       {currentIndex !== 0 && (
-        <button
+        <NavCircleButton
+          direction="left"
           onClick={() => setCurrentIndex((prev) => prev - 1)}
-          className="absolute left-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-background border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
           aria-label="Previous step"
-        >
-          <ChevronLeft size={20} />
-        </button>
+          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+        />
       )}
 
       {/* Draggable track */}
@@ -190,16 +189,15 @@ export default function OnboardingCarousel({
       </motion.div>
 
       {/* Next */}
-      <button
+      <NavCircleButton
+        direction="right"
         onClick={() => {
           if (currentIndex === steps.length - 1) onFinish?.();
           else setCurrentIndex((prev) => prev + 1);
         }}
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 p-2 rounded-full bg-background border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
         aria-label="Next step"
-      >
-        <ChevronRight size={20} />
-      </button>
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+      />
 
       {/* Dots */}
       <div

@@ -75,9 +75,8 @@ export default function DestinationFilterPanel({
             onClose={onClose}
           />
 
-          {/* sidebar + cards */}
           <div className="flex-1 flex overflow-auto">
-            <div className="flex-1 p-6">
+            <div className="flex-1 p-4">
               {loading && (
                 <div className="flex items-center gap-2">
                   <Spinner />

@@ -64,6 +64,8 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
         focusTrapOptions={{
           clickOutsideDeactivates: true,
           escapeDeactivates: false,
+          initialFocus: false,
+          tabbableOptions: { displayCheck: 'none' },
         }}
       >
         <div

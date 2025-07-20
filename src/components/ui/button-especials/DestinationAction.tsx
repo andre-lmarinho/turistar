@@ -19,7 +19,7 @@ export default function DestinationActionButton({
     return (
       <button
         onClick={onRemove}
-        className="mt-auto px-4 py-2 rounded cursor-pointer flex items-center justify-center gap-1 hover:opacity-80"
+        className="mt-auto px-4 py-2 rounded cursor-pointer flex items-center justify-center gap-1 hover:opacity-80 focus:ring focus:ring-[var(--ring)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
         style={{
           backgroundColor: 'var(--secondary)',
           color: 'var(--secondary-foreground)',

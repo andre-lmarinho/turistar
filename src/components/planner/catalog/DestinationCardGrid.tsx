@@ -19,7 +19,10 @@ interface Props {
  */
 export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }: Props) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow">
+    <ul
+      aria-label="List of activities"
+      className="grid gap-4 justify-start [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]"
+    >
       {items.map((item) => {
         const isAdded = addedIds.has(item.id);
 
@@ -41,6 +44,6 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
           />
         );
       })}
-    </div>
+    </ul>
   );
 }

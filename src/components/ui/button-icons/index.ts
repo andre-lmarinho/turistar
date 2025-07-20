@@ -5,3 +5,4 @@ export { default as CloseButton } from './CloseButton';
 export { default as RemoveCardButton } from './DeleteCardButton';
 export { default as EditCardButton } from './EditCardButton';
 export { default as SearchCatalogButton } from './SearchCatalogButton';
+export { default as NavCircleButton } from './NavCircleButton';
