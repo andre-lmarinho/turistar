@@ -14,21 +14,33 @@ describe('ActivitiesBudget', () => {
     },
   ];
 
-  it('calls onUpdate when budget input loses focus', () => {
-    const onUpdate = vi.fn();
-    render(<ActivitiesBudget open days={days} onUpdate={onUpdate} onClose={() => {}} />);
-    const input = screen.getByPlaceholderText('Budget') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '50' } });
-    fireEvent.blur(input);
-    expect(onUpdate).toHaveBeenCalledWith('a1', 50);
-  });
-
   it('calls onClose when clicking outside the dialog', () => {
     const onClose = vi.fn();
     render(<ActivitiesBudget open days={days} onUpdate={() => {}} onClose={onClose} />);
     const dialog = screen.getByRole('dialog');
     fireEvent.click(dialog.parentElement as HTMLElement);
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('allows moving focus between inputs without closing', () => {
+    const onClose = vi.fn();
+    const multiple: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'Museum', color: '', budget: 10 },
+          { id: 'a2', title: 'Park', color: '', budget: 5 },
+        ],
+      },
+    ];
+    render(<ActivitiesBudget open days={multiple} onUpdate={() => {}} onClose={onClose} />);
+    const inputs = screen.getAllByPlaceholderText('Budget') as HTMLInputElement[];
+    fireEvent.focus(inputs[0]);
+    fireEvent.blur(inputs[0]);
+    fireEvent.focus(inputs[1]);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it('saves all edited budgets when closing', () => {
