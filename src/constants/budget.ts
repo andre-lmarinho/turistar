@@ -1,4 +1,4 @@
-// src/constants/budgetConstants.ts
+// src/constants/budget.ts
 
 import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
 

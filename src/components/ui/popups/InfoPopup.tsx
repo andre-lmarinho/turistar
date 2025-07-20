@@ -1,4 +1,4 @@
-// src/components/ui/popups/InfoPopup.ts
+// src/components/ui/popups/InfoPopup.tsx
 'use client';
 
 import React from 'react';

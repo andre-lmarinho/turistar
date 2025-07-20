@@ -1,4 +1,4 @@
-// src/components/budget/activities/TableRowEdit.tsx
+// src/components/budget/TableRowEdit.tsx
 'use client';
 
 import React, { useId } from 'react';

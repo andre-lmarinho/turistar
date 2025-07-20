@@ -1,4 +1,4 @@
-// src/components/ui/button-especials/ModeSelector.tsx
+// src/components/ui/button-especials/ModeToggleButton.tsx
 'use client';
 
 import React, { useRef, useEffect } from 'react';

@@ -1,3 +1,5 @@
+// src/hooks/catalog/useDestinationCatalog.test.ts
+
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useDestinationCatalog } from './useDestinationCatalog';
 

@@ -1,3 +1,5 @@
+// src/components/onboarding/OnboardingModal.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import OnboardingModal from './OnboardingModal';

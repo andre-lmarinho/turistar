@@ -1,3 +1,5 @@
+// src/hooks/ui/useWindowSize.test.ts
+
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { useWindowSize } from './useWindowSize';

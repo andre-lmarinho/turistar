@@ -1,4 +1,4 @@
-// src/components/budget/activities/TableRowEntry.tsx
+// src/components/budget/TableRowEntry.tsx
 'use client';
 
 import React from 'react';

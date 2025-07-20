@@ -1,3 +1,5 @@
+// src/components/ui/popups/CatalogSearchPopup.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CatalogSearchPopup } from '@/components';

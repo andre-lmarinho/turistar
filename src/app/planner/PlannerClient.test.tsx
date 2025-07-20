@@ -1,9 +1,18 @@
+// src/app/planner/PlannerClient.test.tsx
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
+import type { DayPlan } from '@/types';
 import PlannerClient from './PlannerClient';
 
 let mockPlanId = 'plan1';
+
+interface MockOpenPanelButtonProps {
+  onClick: () => void;
+  title?: string;
+  days?: DayPlan[];
+}
 
 vi.mock('@/hooks', async () => {
   const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
@@ -56,7 +65,9 @@ vi.mock('@/components', async () => {
     ...actual,
     DestinationFilterPanel: () => null,
     DateRangePicker: () => <div data-testid="date-picker" />,
-    OpenPanelButton: (props: any) => <button onClick={props.onClick}>Open</button>,
+    OpenPanelButton: ({ onClick }: MockOpenPanelButtonProps) => (
+      <button onClick={onClick}>Open</button>
+    ),
     ModeToggleButton: () => <div data-testid="mode-toggle" />,
     ActivityModal: () => null,
     LoadingScreen: () => <div>Loading...</div>,

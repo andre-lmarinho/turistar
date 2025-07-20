@@ -1,3 +1,5 @@
+// src/hooks/catalog/useDestinationFilter.test.tsx
+
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useDestinationFilter } from './useDestinationFilter';
 

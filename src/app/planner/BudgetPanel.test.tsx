@@ -1,3 +1,5 @@
+// src/app/planner/BudgetPanel.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';

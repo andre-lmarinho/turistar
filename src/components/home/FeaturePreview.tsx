@@ -1,4 +1,4 @@
-// src/components/FeaturePreview.tsx
+// src/components/home/FeaturePreview.tsx
 'use client';
 
 import React, { useId } from 'react';
