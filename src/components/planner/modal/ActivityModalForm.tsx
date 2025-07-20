@@ -35,7 +35,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     if (titleInputRef.current && !editedTitle.trim()) {
       titleInputRef.current.focus();
     }
-  });
+  }, [editedTitle]);
 
   return (
     <>
