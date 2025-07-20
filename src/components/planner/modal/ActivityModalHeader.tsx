@@ -87,8 +87,9 @@ export default function ActivityModalHeader({
         )}
         {editedImageUrl && (
           <Button
+            variant="icon"
             size="sm"
-            className={`absolute top-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            className={`absolute bottom-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
               e.stopPropagation();
               setShowRemove(false);

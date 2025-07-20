@@ -73,7 +73,7 @@ export default function ActivityModal({
           onChangeDay={onChangeDay}
           onCatalogSelect={handleCatalogSelect}
         />
-        <ActivityModalForm activity={draft} onSave={onSave} color={color} />{' '}
+        <ActivityModalForm activity={draft} onSave={onSave} color={color} />
       </div>
     </div>,
     document.body

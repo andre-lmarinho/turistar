@@ -72,7 +72,7 @@ export default function CardColorsPopup({
 
         {/* Color Section */}
         <div className="my-4 py-4 border-b-1">
-          <span className="text-xs font-bold mb-1 block">Colors</span>{' '}
+          <span className="text-xs font-bold mb-1 block">Colors</span>
           <div className="flex justify-between flex-wrap gap-2">
             {colors.map((c) => {
               const label = COLOR_NAMES[c] ?? c;
