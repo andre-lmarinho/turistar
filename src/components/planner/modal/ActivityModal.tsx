@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import FocusTrap from 'focus-trap-react';
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
 import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
@@ -53,28 +54,37 @@ export default function ActivityModal({
 
   return ReactDOM.createPortal(
     <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="activity-modal-title"
-        className="bg-background rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+      <FocusTrap
+        active={open}
+        focusTrapOptions={{
+          clickOutsideDeactivates: true,
+          escapeDeactivates: false,
+        }}
       >
-        <h2 id="activity-modal-title" className="sr-only">
-          Edit Activity
-        </h2>
-        <ActivityModalHeader
-          activity={draft}
-          bgColor={color}
-          onDelete={onDelete}
-          onClose={onClose}
-          onColorChange={onColorChange}
-          availableDays={days}
-          onChangeDay={onChangeDay}
-          onCatalogSelect={handleCatalogSelect}
-        />
-        <ActivityModalForm activity={draft} onSave={onSave} color={color} />
-      </div>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="activity-modal-title"
+          tabIndex={-1}
+          className="bg-background rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col focus:outline-none focus:ring-2 focus:ring-primary"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 id="activity-modal-title" className="sr-only">
+            Edit Activity
+          </h2>
+          <ActivityModalHeader
+            activity={draft}
+            bgColor={color}
+            onDelete={onDelete}
+            onClose={onClose}
+            onColorChange={onColorChange}
+            availableDays={days}
+            onChangeDay={onChangeDay}
+            onCatalogSelect={handleCatalogSelect}
+          />
+          <ActivityModalForm activity={draft} onSave={onSave} color={color} />
+        </div>
+      </FocusTrap>
     </div>,
     document.body
   );
