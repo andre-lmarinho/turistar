@@ -62,7 +62,13 @@ export default function Popup({
   const popup = (
     <FocusTrap
       active={open}
-      focusTrapOptions={{ clickOutsideDeactivates: true, escapeDeactivates: false }}
+      focusTrapOptions={{
+        clickOutsideDeactivates: true,
+        escapeDeactivates: false,
+        initialFocus: false,
+        fallbackFocus: () => popupRef.current ?? document.body,
+        tabbableOptions: { displayCheck: 'none' },
+      }}
     >
       <div
         ref={popupRef}
