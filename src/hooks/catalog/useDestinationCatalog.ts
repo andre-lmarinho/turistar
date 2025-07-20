@@ -64,7 +64,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
         case 'Rating':
           return (b.rating ?? 0) - (a.rating ?? 0);
         case 'Reviews':
-          return parseInt(b.reviewcount ?? '0', 10) - parseInt(a.reviewcount ?? '0', 10);
+          return Number(b.reviewcount ?? 0) - Number(a.reviewcount ?? 0);
         default:
           return a.name.localeCompare(b.name);
       }
