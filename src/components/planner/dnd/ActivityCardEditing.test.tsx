@@ -54,7 +54,7 @@ describe('ActivityCardEditing', () => {
     });
 
     // day picker
-    const moveBtn = screen.getByRole('button', { name: /move/i });
+    const moveBtn = screen.getByRole('button', { name: /move day/i });
     fireEvent.click(moveBtn);
     await screen.findByRole('dialog', { name: /change day/i });
     const dayOption = screen.getByRole('button', { name: 'Day 2' });
