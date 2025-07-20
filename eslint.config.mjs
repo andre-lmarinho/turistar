@@ -1,8 +1,9 @@
-// eslint.config.js
+// eslint.config.mjs
 import eslintPluginReact from 'eslint-plugin-react';
 import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
 import eslintPluginTypeScript from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 
 export default [
   {
@@ -16,7 +17,7 @@ export default [
     ],
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -29,8 +30,11 @@ export default [
       react: eslintPluginReact,
       'react-hooks': eslintPluginReactHooks,
       '@typescript-eslint': eslintPluginTypeScript,
+      prettier: eslintPluginPrettier,
     },
+    extends: ['plugin:react/recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
     rules: {
+      'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
