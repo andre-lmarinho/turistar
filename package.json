@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "clean": "rimraf .next node_modules",
-    "setup": "npm install && npm run format && npm run lint && npm run test",
+    "setup": "npm ci && npm run format:check && npm run lint --fix && npm run typecheck && npm run test",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "lint": "eslint . --ext .ts,.tsx --cache --fix",
