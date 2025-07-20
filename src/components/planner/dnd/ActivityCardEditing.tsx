@@ -3,15 +3,9 @@
 
 import React, { useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { Palette, ArrowLeftRight, ArrowUpDown, Trash2, Search } from 'lucide-react';
+import { Palette, ArrowLeftRight, Trash2, Search } from 'lucide-react';
 import type { Activity, DayPlan, CatalogActivity } from '@/types';
-import {
-  Button,
-  CardColorsPopup,
-  DayPickerPopup,
-  CatalogSearchPopup,
-  PositionPickerPopup,
-} from '@/components';
+import { Button, CardColorsPopup, DayPickerPopup, CatalogSearchPopup } from '@/components';
 import { useCardPopups, useWindowSize, useFlexibleRef, useEscapeKey } from '@/hooks';
 import { cn } from '@/lib/utils';
 
@@ -49,13 +43,10 @@ export default function ActivityCardEditing({
   const {
     colorButtonRef,
     dateButtonRef,
-    positionButtonRef,
     isColorPickerOpen,
     isDatePickerOpen,
-    isPositionPickerOpen,
     handleColorButtonClick,
     handleDateButtonClick,
-    handlePositionButtonClick,
     setIsColorPickerOpen,
     setIsDatePickerOpen,
     setIsPositionPickerOpen,
@@ -73,7 +64,6 @@ export default function ActivityCardEditing({
 
   const currentDay = availableDays.find((d) => d.id === activity.dayId);
   const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
-  const totalPositions = currentDay?.activities.length ?? 0;
 
   const position =
     cardRect && window.innerWidth - cardRect.right - gap >= buttonGroupWidth ? 'right' : 'left';
@@ -111,7 +101,7 @@ export default function ActivityCardEditing({
             onClick={handleDateButtonClick}
           >
             <ArrowLeftRight className="size-4" aria-hidden="true" />
-            Move Day
+            Move
           </Button>
           <div className="relative mb-1">
             {isDatePickerOpen && availableDays?.length > 0 && (
@@ -119,39 +109,14 @@ export default function ActivityCardEditing({
                 <DayPickerPopup
                   days={availableDays}
                   selected={activity.dayId}
+                  selectedIndex={currentIndex}
                   onSelect={(dayId: string) => {
                     onChangeDay(dayId);
                     setIsDatePickerOpen(false);
                   }}
+                  onSelectIndex={(idx: number) => onChangePosition(idx)}
                   onClose={() => setIsDatePickerOpen(false)}
                   triggerRef={dateButtonRef}
-                />
-              </div>
-            )}
-          </div>
-
-          <Button
-            ref={positionButtonRef}
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={handlePositionButtonClick}
-          >
-            <ArrowUpDown className="size-4" aria-hidden="true" />
-            Move Position
-          </Button>
-          <div className="relative mb-1">
-            {isPositionPickerOpen && totalPositions > 0 && (
-              <div className="absolute top-1 left-full z-50">
-                <PositionPickerPopup
-                  total={totalPositions}
-                  selected={currentIndex}
-                  onSelect={(idx: number) => {
-                    onChangePosition(idx);
-                    setIsPositionPickerOpen(false);
-                  }}
-                  onClose={() => setIsPositionPickerOpen(false)}
-                  triggerRef={positionButtonRef}
                 />
               </div>
             )}

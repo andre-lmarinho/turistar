@@ -9,16 +9,31 @@ interface Props {
   days: DayPlan[];
   selected?: string;
   onSelect: (dayId: string) => void;
+  selectedIndex?: number;
+  onSelectIndex?: (index: number) => void;
   onClose: () => void;
   triggerRef?: React.RefObject<HTMLElement>;
 }
 
-export default function DayPickerPopup({ days, selected, onSelect, onClose, triggerRef }: Props) {
+export default function DayPickerPopup({
+  days,
+  selected,
+  onSelect,
+  selectedIndex,
+  onSelectIndex,
+  onClose,
+  triggerRef,
+}: Props) {
+  const positions = React.useMemo(() => {
+    const day = days.find((d) => d.id === selected);
+    return Array.from({ length: day?.activities.length ?? 0 });
+  }, [days, selected]);
+
   return (
     <Popup
       triggerRef={triggerRef}
       onClose={onClose}
-      size="sm"
+      size="md"
       aria-labelledby="day-picker-popup-title"
     >
       <div className="flex items-center justify-between px-4 py-2 border-b">
@@ -27,21 +42,42 @@ export default function DayPickerPopup({ days, selected, onSelect, onClose, trig
         </h3>
         <CloseButton onClick={onClose} />
       </div>
-      <ul className="space-y-1">
-        {days.map((d) => (
-          <li key={d.id}>
-            <button
-              type="button"
-              onClick={() => onSelect(d.id)}
-              className={`w-full text-left rounded px-2 py-1 hover:bg-accent ${
-                selected === d.id ? 'bg-accent' : ''
-              }`}
-            >
-              {d.label}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="p-4 flex gap-2">
+        <div className="w-[65%]">
+          <label htmlFor="day-select" className="text-xs font-bold">
+            Day
+          </label>
+          <select
+            id="day-select"
+            value={selected}
+            onChange={(e) => onSelect(e.target.value)}
+            className="border rounded px-2 py-1 text-sm w-full"
+          >
+            {days.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-[30%]">
+          <label htmlFor="position-select" className="text-xs maw-w-[5rem]  font-bold">
+            Position
+          </label>
+          <select
+            id="position-select"
+            value={selectedIndex}
+            onChange={(e) => onSelectIndex?.(Number(e.target.value))}
+            className="border rounded px-2 py-1 text-sm w-full"
+          >
+            {positions.map((_, i) => (
+              <option key={i} value={i}>
+                {i + 1}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
     </Popup>
   );
 }

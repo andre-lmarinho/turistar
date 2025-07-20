@@ -15,7 +15,6 @@ import {
   CardColorButton,
   CardColorsPopup,
   DayPickerPopup,
-  PositionPickerPopup,
   CatalogSearchPopup,
   SearchCatalogButton,
 } from '@/components';
@@ -48,13 +47,10 @@ export default function ActivityModalHeader({
   const {
     colorButtonRef,
     dateButtonRef,
-    positionButtonRef,
     isColorPickerOpen,
     isDatePickerOpen,
-    isPositionPickerOpen,
     handleColorButtonClick,
     handleDateButtonClick,
-    handlePositionButtonClick,
     setIsColorPickerOpen,
     setIsDatePickerOpen,
     setIsPositionPickerOpen,
@@ -72,7 +68,6 @@ export default function ActivityModalHeader({
   const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
   const currentDay = availableDays.find((d) => d.id === activity.dayId);
   const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
-  const totalPositions = currentDay?.activities.length ?? 0;
 
   return (
     <>
@@ -99,7 +94,7 @@ export default function ActivityModalHeader({
           <Button
             variant="icon"
             size="sm"
-            className={`absolute bottom-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            className={`absolute text-xs bottom-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
               e.stopPropagation();
               setShowRemove(false);
@@ -119,18 +114,9 @@ export default function ActivityModalHeader({
               variant="icon"
               type="button"
               onClick={handleDateButtonClick}
+              className="text-xs"
             >
               {currentDayLabel ?? 'Change Day'}
-              <ChevronDown className="size-4" aria-hidden="true" />
-            </Button>
-            <Button
-              ref={positionButtonRef}
-              size="sm"
-              variant="icon"
-              type="button"
-              onClick={handlePositionButtonClick}
-            >
-              Change Position
               <ChevronDown className="size-4" aria-hidden="true" />
             </Button>
           </div>
@@ -173,26 +159,14 @@ export default function ActivityModalHeader({
             <DayPickerPopup
               days={availableDays}
               selected={activity.dayId}
+              selectedIndex={currentIndex}
               onSelect={(dayId: string) => {
                 onChangeDay(dayId);
                 setIsDatePickerOpen(false);
               }}
+              onSelectIndex={(idx: number) => onChangePosition(idx)}
               onClose={() => setIsDatePickerOpen(false)}
               triggerRef={dateButtonRef}
-            />
-          </div>
-        )}
-        {isPositionPickerOpen && totalPositions > 0 && (
-          <div className="absolute top-[3rem] left-[9rem] z-50">
-            <PositionPickerPopup
-              total={totalPositions}
-              selected={currentIndex}
-              onSelect={(idx: number) => {
-                onChangePosition(idx);
-                setIsPositionPickerOpen(false);
-              }}
-              onClose={() => setIsPositionPickerOpen(false)}
-              triggerRef={positionButtonRef}
             />
           </div>
         )}
