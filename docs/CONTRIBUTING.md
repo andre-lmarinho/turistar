@@ -1,0 +1,49 @@
+# Contributing Guide
+
+Thank you for taking the time to contribute to Turistar! This document outlines the development conventions for the project so that all contributions are consistent and easy to review.
+
+## Branches and Conventional Commits
+
+- Use short branch names starting with a type, for example `feature/*`, `fix/*` or `chore/*`.
+- Commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) style.
+  - Prefix your commit subject with `feat:`, `fix:`, `chore:` and so on.
+  - Keep messages brief and imperative.
+  - Example: `feat: add date picker to planner`
+- Squash commits before merging so the main branch history stays tidy.
+
+## Linting and Formatting
+
+Before opening a pull request, ensure the code passes Prettier and ESLint checks:
+
+```bash
+npm run format
+npm run lint
+```
+
+Formatting uses Prettier with semicolons and single quotes; ESLint enforces the project's TypeScript and React rules.
+
+## Running Tests
+
+Unit tests run with [Vitest](https://vitest.dev/). Execute them with:
+
+```bash
+npm run test
+```
+
+Use `npm run test:watch` for watch mode or `npm run test:coverage` to produce coverage reports.
+
+## Storybook
+
+The repository does not yet include a Storybook setup. When one is added, you will typically start it with:
+
+```bash
+npm run storybook
+```
+
+## Local Documentation
+
+Developer documentation lives inside the `src/docs` folder. There is no automated docs site yet, so open the Markdown files directly or generate your own from them.
+
+---
+
+Happy coding!

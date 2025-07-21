@@ -1,7 +1,7 @@
 // src/components/budget/activities/ActivitiesBudget.tsx
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { DollarSign } from 'lucide-react';
 import FocusTrap from 'focus-trap-react';
@@ -19,6 +19,8 @@ interface ActivitiesBudgetProps {
 
 export default function ActivitiesBudget({ open, days, onUpdate, onClose }: ActivitiesBudgetProps) {
   useEscapeKey({ onClose, isActive: open });
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const activities = useMemo(
     () => days.flatMap((day) => day.activities.map((a) => ({ ...a, dayLabel: day.label }))),
@@ -65,10 +67,12 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           clickOutsideDeactivates: true,
           escapeDeactivates: false,
           initialFocus: false,
+          fallbackFocus: () => containerRef.current ?? document.body,
           tabbableOptions: { displayCheck: 'none' },
         }}
       >
         <div
+          ref={containerRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="activities-budget-title"

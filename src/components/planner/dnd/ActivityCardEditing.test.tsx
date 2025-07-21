@@ -54,11 +54,11 @@ describe('ActivityCardEditing', () => {
     });
 
     // day picker
-    const moveBtn = screen.getByRole('button', { name: /move day/i });
+    const moveBtn = screen.getByRole('button', { name: /move/i });
     fireEvent.click(moveBtn);
     await screen.findByRole('dialog', { name: /change day/i });
-    const dayOption = screen.getByRole('button', { name: 'Day 2' });
-    fireEvent.click(dayOption);
+    const daySelect = screen.getByLabelText('Day');
+    fireEvent.change(daySelect, { target: { value: 'd2' } });
     expect(onChangeDay).toHaveBeenCalledWith('d2');
   });
 });

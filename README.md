@@ -5,6 +5,21 @@ A simple travel planner built with Next.js, React and drag‑and‑drop. Select 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 _or_ deploy easily to Vercel or Netlify with the same settings.
 
+## Table of Contents
+
+- [About the Project](#-about-the-project)
+- [Snapshots](#-snapshots-of-the-project)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [User Flow](#-user-flow)
+- [Getting Started](#-getting-started)
+- [Scripts](#-scripts)
+- [Deployment](#-deployment)
+- [Developer Guide](#-developer-guide)
+- [What I Focused On](#-what-i-focused-on)
+- [License](#-license)
+
 ## ✨ About the Project
 
 Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Radix UI, and the App Router in Next.js 15.
@@ -59,6 +74,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 📁 Project Structure
 
+- `/docs`: Project notes and guidelines (see `state-data-flow.md` for how data moves)
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/components`: React components that should follow the guidelines in this document
   - `/hooks`: Custom React hooks
@@ -116,6 +132,15 @@ You can deploy the same app to Vercel or Netlify.
    - Create a `.env.local` at project root if you add any API keys (e.g. Google Maps).
    - For now, no API keys are required for the static MVP.
 
+### Development Workflow
+
+1. Install dependencies with `npm install`.
+2. Start the dev server using `npm run dev`.
+3. Format code before committing with `npm run format`.
+4. Run the linter via `npm run lint`.
+5. Ensure all tests pass with `npm run test`.
+6. Follow the commit message style outlined in [`AGENTS.md`](AGENTS.md) when committing changes.
+
 ---
 
 ## 📦 Scripts
@@ -127,6 +152,10 @@ You can deploy the same app to Vercel or Netlify.
 - `npm run format` — run Prettier
 - `npm run test` — run unit tests
 - `npm run test:watch` — run tests in watch mode
+
+## 🧪 Testing
+
+See [docs/testing.md](docs/testing.md) for details on the Vitest setup and testing approach.
 
 ---
 
@@ -155,6 +184,24 @@ _For detailed guides, see:_
 - Local persistence using `localStorage` for planner and budget
 - UX patterns: inline editing, optimistic updates, responsive layout
 - Progressive structure ready to scale with real APIs
+
+---
+
+## 🛠️ Developer Guide
+
+For more details on project conventions, see:
+
+- [Project Overview](docs/OVERVIEW.md)
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [State Data Flow](docs/STATE-DATA-FLOW.md)
+- [Components](docs/COMPONENTS.md)
+- [Hooks](docs/HOOKS.md)
+- [Style Guide](docs/STYLE-GUIDE.md)
+- [Accessibility](docs/ACCESSIBILITY.md)
+- [Testing](docs/TESTING.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Commenting Standards](docs/COMMENTING.md)
+- [Contributing](docs/CONTRIBUTING.md)
 
 ---
 
