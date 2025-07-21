@@ -42,7 +42,7 @@ npm run storybook
 
 ## Local Documentation
 
-Developer documentation lives inside the `src/docs` folder. There is no automated docs site yet, so open the Markdown files directly or generate your own from them.
+Developer documentation lives inside the `docs` folder. There is no automated docs site yet, so open the Markdown files directly or generate your own from them.
 
 ---
 

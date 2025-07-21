@@ -155,7 +155,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 🧪 Testing
 
-See [docs/testing.md](docs/testing.md) for details on the Vitest setup and testing approach.
+See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
 
 ---
 
