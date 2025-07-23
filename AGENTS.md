@@ -30,6 +30,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Write meaningful variable and function names.
 - Add comments for complex logic.
 - Follow the commenting conventions in [docs/COMMENTING.md](docs/COMMENTING.md).
+- Keep all documentation up to date after each interaction so changes stay synchronized with the codebase.
 
 ## React Components Guidelines
 
@@ -54,7 +55,7 @@ To keep code clear and maintainable, we recommend:
   - Re‑export default component exports as named exports.
   - Re-export named exports from hooks/util modules.
 
-This approach ensures consistent imports, better IDE support, and safer refactoring when renaming files or symbols.```
+This approach ensures consistent imports, better IDE support, and safer refactoring when renaming files or symbols.
 
 ## CSS/Styling Standards
 

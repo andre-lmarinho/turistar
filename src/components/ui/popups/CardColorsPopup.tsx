@@ -70,7 +70,7 @@ export default function CardColorsPopup({
                 <button
                   key={c}
                   onClick={() => onChangeColor(c)}
-                  className={`w-[31%] h-10 shadow-xl rounded-xs border-2 ${
+                  className={`w-[31%] h-10 shadow-xl rounded border-2 ${
                     c.startsWith('#') ? '' : c
                   } ${selectedColor === c ? 'ring-2 ring-primary' : 'border-background'}`}
                   style={c.startsWith('#') ? { backgroundColor: c } : undefined}

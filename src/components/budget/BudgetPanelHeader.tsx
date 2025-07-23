@@ -82,7 +82,7 @@ export default function BudgetPanelHeader({
             className="px-2 py-1 text-right"
             aria-label={`Total spent: $${totalSpent.toFixed(2)}`}
           >
-            ${totalSpent.toFixed(2)}
+            {'$' + totalSpent.toFixed(2)}
           </span>
         </div>
 
@@ -98,7 +98,7 @@ export default function BudgetPanelHeader({
             className="px-2 py-1 text-right"
             aria-label={`Difference: $${difference.toFixed(2)}`}
           >
-            ${difference.toFixed(2)}
+            {'$' + difference.toFixed(2)}
           </span>
         </div>
       </div>

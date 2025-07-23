@@ -4,6 +4,8 @@
     {
       "id": "abaeté-lagoon",
       "name": "Abaeté Lagoon",
+      "latitude": -12.9833,
+      "longitude": -38.5,
       "rating": 4.3,
       "reviewcount": "2256",
       "category": "nature",
@@ -16,6 +18,8 @@
     {
       "id": "humaitá-point",
       "name": "Humaitá Point",
+      "latitude": -12.986,
+      "longitude": -38.509,
       "rating": 4.8,
       "reviewcount": "6709",
       "category": "viewpoint",
@@ -28,6 +32,8 @@
     {
       "id": "historic-center-of-salvador",
       "name": "Historic Center of Salvador",
+      "latitude": -12.9698,
+      "longitude": -38.5048,
       "rating": 4.6,
       "reviewcount": "3930",
       "category": "historic site",
@@ -40,6 +46,8 @@
     {
       "id": "dunes-park-salvador",
       "name": "Dunes Park Salvador",
+      "latitude": -12.91872739,
+      "longitude": -38.31772009,
       "rating": 4.6,
       "reviewcount": "2070",
       "category": "nature reserve",
@@ -52,6 +60,8 @@
     {
       "id": "lacerda-elevator",
       "name": "Lacerda Elevator",
+      "latitude": -12.9745,
+      "longitude": -38.51321,
       "rating": 4.5,
       "reviewcount": "54583",
       "category": "urban landmark",
@@ -64,6 +74,8 @@
     {
       "id": "itapuã-lighthouse",
       "name": "Itapuã Lighthouse",
+      "latitude": -12.95714,
+      "longitude": -38.35387,
       "rating": 4.6,
       "reviewcount": "7574",
       "category": "lighthouse",
@@ -76,6 +88,8 @@
     {
       "id": "mermaid's-hole",
       "name": "Mermaid's Hole",
+      "latitude": -12.985,
+      "longitude": -38.51,
       "rating": 4.8,
       "reviewcount": "127",
       "category": "nature spot",
@@ -88,6 +102,8 @@
     {
       "id": "christ-hill",
       "name": "Christ Hill",
+      "latitude": -12.9855,
+      "longitude": -38.5105,
       "rating": 4.8,
       "reviewcount": "14333",
       "category": "viewpoint",
@@ -100,6 +116,8 @@
     {
       "id": "gamboa-beach",
       "name": "Gamboa Beach",
+      "latitude": -12.986,
+      "longitude": -38.523,
       "rating": 4.7,
       "reviewcount": "782",
       "category": "beach",
@@ -112,6 +130,8 @@
     {
       "id": "fallen-cross-monument",
       "name": "Fallen Cross Monument",
+      "latitude": -12.973346,
+      "longitude": -38.511977,
       "rating": 4.6,
       "reviewcount": "1508",
       "category": "monument",
@@ -124,6 +144,8 @@
     {
       "id": "jesus-square",
       "name": "Jesus Square",
+      "latitude": -12.973346,
+      "longitude": -38.511977,
       "rating": 4.5,
       "reviewcount": "3839",
       "category": "historic square",
@@ -136,6 +158,8 @@
     {
       "id": "pituaçu-metropolitan-park",
       "name": "Pituaçu Metropolitan Park",
+      "latitude": -12.957,
+      "longitude": -38.41931,
       "rating": 4.2,
       "reviewcount": "4759",
       "category": "park",
@@ -146,20 +170,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrFli-mGrNp7OMfQXIrCyd768rrTPbe36Qs2zsl90uSjr1XtNuyqlRgVbKi1Yrz7-P8wOwvh1Q_rqbltqJFwAGxH4Jr6cDM3kwUbFhTliu3HWrHtMSgQVYq12EqDTADptAZBd4=w408-h306-k-no"
     },
     {
-      "id": "omolú-garden",
-      "name": "Omolú Garden",
-      "rating": 5.0,
-      "reviewcount": "2",
-      "category": "spiritual site",
-      "duration": 1,
-      "price": "$",
-      "tags": ["culture", "spiritual", "local", "historic"],
-      "description": "Spiritual garden dedicated to Omolú, reflecting Afro-Brazilian heritage.",
-      "image_url": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=LLRzNJOPGn3Jc5V0DhgTnQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=134.45059&pitch=0&thumbfov=100"
-    },
-    {
       "id": "founding-landmark-of-salvador",
       "name": "Founding Landmark of Salvador",
+      "latitude": -12.97111,
+      "longitude": -38.5125,
       "rating": 4.4,
       "reviewcount": "39",
       "category": "historic landmark",
@@ -172,6 +186,8 @@
     {
       "id": "ecological-park-of-lauro-de-freitas",
       "name": "Ecological Park of Lauro de Freitas",
+      "latitude": -12.89444,
+      "longitude": -38.32722,
       "rating": 4.6,
       "reviewcount": "498",
       "category": "nature reserve",
@@ -184,6 +200,8 @@
     {
       "id": "lovers’-garden",
       "name": "Lovers’ Garden",
+      "latitude": -13.00165,
+      "longitude": -38.44987,
       "rating": 4.6,
       "reviewcount": "10072",
       "category": "park",
@@ -196,6 +214,8 @@
     {
       "id": "itacaranha-beach",
       "name": "Itacaranha Beach",
+      "latitude": -12.88889,
+      "longitude": -38.48222,
       "rating": 4.6,
       "reviewcount": "736",
       "category": "beach",
@@ -208,6 +228,8 @@
     {
       "id": "pelourinho-square",
       "name": "Pelourinho Square",
+      "latitude": -12.97125,
+      "longitude": -38.5084,
       "rating": 4.7,
       "reviewcount": "1030",
       "category": "historic square",
@@ -220,6 +242,8 @@
     {
       "id": "fort-são-marcelo",
       "name": "Fort São Marcelo",
+      "latitude": -12.97004,
+      "longitude": -38.51803,
       "rating": 4.6,
       "reviewcount": "572",
       "category": "fort",
@@ -232,6 +256,8 @@
     {
       "id": "house-of-rio-vermelho",
       "name": "House of Rio Vermelho",
+      "latitude": -12.97177,
+      "longitude": -38.50867,
       "rating": 4.8,
       "reviewcount": "5425",
       "category": "museum",
@@ -244,6 +270,8 @@
     {
       "id": "tororó-dam",
       "name": "Tororó Dam",
+      "latitude": -12.97472,
+      "longitude": -38.47667,
       "rating": 4.6,
       "reviewcount": "553",
       "category": "lake",
@@ -256,6 +284,8 @@
     {
       "id": "foot-of-the-caboclo-–-july-2nd-monument",
       "name": "Foot of the Caboclo – July 2nd Monument",
+      "latitude": -12.98938,
+      "longitude": -38.52125,
       "rating": 4.6,
       "reviewcount": "624",
       "category": "monument",
@@ -268,6 +298,8 @@
     {
       "id": "monument-to-the-city-of-salvador",
       "name": "Monument to the City of Salvador",
+      "latitude": -12.97404,
+      "longitude": -38.51433,
       "rating": 4.5,
       "reviewcount": "85",
       "category": "monument",
@@ -280,6 +312,8 @@
     {
       "id": "july-2nd-square",
       "name": "July 2nd Square",
+      "latitude": -12.9820084,
+      "longitude": -38.5165588,
       "rating": 4.5,
       "reviewcount": "3935",
       "category": "historic square",
@@ -292,6 +326,8 @@
     {
       "id": "joventino-silva-city-park",
       "name": "Joventino Silva City Park",
+      "latitude": -12.99649586887884,
+      "longitude": -38.47380759294352,
       "rating": 4.6,
       "reviewcount": "11736",
       "category": "park",
@@ -304,6 +340,8 @@
     {
       "id": "rio-branco-palace",
       "name": "Rio Branco Palace",
+      "latitude": -12.97502,
+      "longitude": -38.51319,
       "rating": 4.5,
       "reviewcount": "441",
       "category": "historic building",
@@ -316,6 +354,8 @@
     {
       "id": "piedade-square",
       "name": "Piedade Square",
+      "latitude": -12.98314,
+      "longitude": -38.51508,
       "rating": 3.9,
       "reviewcount": "4118",
       "category": "urban square",
@@ -328,6 +368,8 @@
     {
       "id": "fort-of-são-pedro",
       "name": "Fort of São Pedro",
+      "latitude": -12.98745,
+      "longitude": -38.52061,
       "rating": 4.5,
       "reviewcount": "387",
       "category": "fort",
@@ -340,6 +382,8 @@
     {
       "id": "eugênio-teixeira-leal-museum",
       "name": "Eugênio Teixeira Leal Museum",
+      "latitude": -12.97257888,
+      "longitude": -38.50943889,
       "rating": 4.7,
       "reviewcount": "284",
       "category": "museum",
@@ -352,6 +396,8 @@
     {
       "id": "monte-serrat-fort",
       "name": "Monte Serrat Fort",
+      "latitude": -12.92997,
+      "longitude": -38.51772,
       "rating": 4.7,
       "reviewcount": "3526",
       "category": "fort",
@@ -364,6 +410,8 @@
     {
       "id": "church-and-convent-of-são-francisco",
       "name": "Church and Convent of São Francisco",
+      "latitude": -12.9746,
+      "longitude": -38.5091,
       "rating": 4.8,
       "reviewcount": "7227",
       "category": "church",
@@ -376,6 +424,8 @@
     {
       "id": "mercado-modelo",
       "name": "Mercado Modelo",
+      "latitude": -12.99068995,
+      "longitude": -38.50856449,
       "rating": 4.3,
       "reviewcount": "60810",
       "category": "market",
@@ -388,6 +438,8 @@
     {
       "id": "ponta-de-areia-beach",
       "name": "Ponta de Areia Beach",
+      "latitude": -12.9,
+      "longitude": -38.6546,
       "rating": 4.7,
       "reviewcount": "146",
       "category": "beach",
@@ -400,6 +452,8 @@
     {
       "id": "stella-maris-seafront",
       "name": "Stella Maris Seafront",
+      "latitude": -12.94895,
+      "longitude": -38.34113,
       "rating": 4.8,
       "reviewcount": "486",
       "category": "beachfront",
@@ -412,6 +466,8 @@
     {
       "id": "vilas-do-atlântico-beach",
       "name": "Vilas do Atlântico Beach",
+      "latitude": -12.89185,
+      "longitude": -38.28997,
       "rating": 4.8,
       "reviewcount": "187",
       "category": "beach",
@@ -424,6 +480,8 @@
     {
       "id": "island-tours",
       "name": "Island Tours",
+      "latitude": -12.991,
+      "longitude": -38.5106,
       "rating": 4.5,
       "reviewcount": "90",
       "category": "tour",
@@ -436,6 +494,8 @@
     {
       "id": "museum-of-contemporary-art-of-bahia",
       "name": "Museum of Contemporary Art of Bahia",
+      "latitude": -12.97491,
+      "longitude": -38.51458,
       "rating": 4.7,
       "reviewcount": "3476",
       "category": "museum",
@@ -448,6 +508,8 @@
     {
       "id": "coroa-do-limo-sandbar",
       "name": "Coroa do Limo Sandbar",
+      "latitude": -12.893,
+      "longitude": -38.327,
       "rating": 4.5,
       "reviewcount": "11",
       "category": "nature spot",
@@ -460,6 +522,8 @@
     {
       "id": "getúlio-vargas-zoo-botanical-park",
       "name": "Getúlio Vargas Zoo-Botanical Park",
+      "latitude": -13.00633,
+      "longitude": -38.50562,
       "rating": 3.9,
       "reviewcount": "10216",
       "category": "zoo-park",
@@ -472,6 +536,8 @@
     {
       "id": "lord’s-beach",
       "name": "Lord’s Beach",
+      "latitude": -12.5775448,
+      "longitude": -38.0049816,
       "rating": 4.7,
       "reviewcount": "4217",
       "category": "beach",
@@ -484,6 +550,8 @@
     {
       "id": "bahia-nautical-museum---barra-lighthouse",
       "name": "Bahia Nautical Museum - Barra Lighthouse",
+      "latitude": -13.01035,
+      "longitude": -38.53303,
       "rating": 4.8,
       "reviewcount": "69670",
       "category": "museum",
@@ -496,6 +564,8 @@
     {
       "id": "neves-beach",
       "name": "Neves Beach",
+      "latitude": -12.8883,
+      "longitude": -38.6784,
       "rating": 4.6,
       "reviewcount": "6871",
       "category": "beach",
@@ -508,6 +578,8 @@
     {
       "id": "basilica-of-senhor-do-bonfim",
       "name": "Basilica of Senhor do Bonfim",
+      "latitude": -12.92375,
+      "longitude": -38.50812,
       "rating": 4.8,
       "reviewcount": "38841",
       "category": "church",
@@ -520,6 +592,8 @@
     {
       "id": "erivaldo-cerqueira-municipal-park",
       "name": "Erivaldo Cerqueira Municipal Park",
+      "latitude": -12.236,
+      "longitude": -38.9648,
       "rating": 4.6,
       "reviewcount": "4624",
       "category": "park",
@@ -532,6 +606,8 @@
     {
       "id": "itapuã-mermaid-sculpture",
       "name": "Itapuã Mermaid Sculpture",
+      "latitude": -12.95053,
+      "longitude": -38.36696,
       "rating": 4.5,
       "reviewcount": "8462",
       "category": "landmark",
@@ -544,6 +620,8 @@
     {
       "id": "jorge-amado-foundation",
       "name": "Jorge Amado Foundation",
+      "latitude": -12.97176528,
+      "longitude": -38.50867499,
       "rating": 4.7,
       "reviewcount": "5391",
       "category": "museum",
@@ -556,6 +634,8 @@
     {
       "id": "brazilian-girls-monument",
       "name": "Brazilian Girls Monument",
+      "latitude": -13.01,
+      "longitude": -38.50917,
       "rating": 4.6,
       "reviewcount": "5313",
       "category": "monument",
@@ -568,6 +648,8 @@
     {
       "id": "aflitos-square",
       "name": "Aflitos Square",
+      "latitude": -12.9840322,
+      "longitude": -38.519689,
       "rating": 4.4,
       "reviewcount": "311",
       "category": "urban square",
@@ -580,6 +662,8 @@
     {
       "id": "carnival-house-of-bahia",
       "name": "Carnival House of Bahia",
+      "latitude": -12.972685,
+      "longitude": -38.512903,
       "rating": 4.7,
       "reviewcount": "2202",
       "category": "museum",
@@ -592,6 +676,8 @@
     {
       "id": "carlos-and-margarida-costa-pinto-museum",
       "name": "Carlos and Margarida Costa Pinto Museum",
+      "latitude": -12.99483307,
+      "longitude": -38.52750009,
       "rating": 4.7,
       "reviewcount": "486",
       "category": "museum",
@@ -602,20 +688,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrX8z837tywciHnonU1wH3r7jiVKteve_dxzVkLcrgg5vitxACfU_Q15hVJ2YQlwpAhL6vCkQ1IsLyVd3pI7QvHKV1TVRnMyD3mq5Tjyd6LZQzt-AhLDmUUeaAaymDOq-Jji7Fy=w408-h271-k-no"
     },
     {
-      "id": "square-of-the-46",
-      "name": "Square of the 46",
-      "rating": 4.4,
-      "reviewcount": "1598",
-      "category": "urban square",
-      "duration": 1,
-      "price": "$",
-      "tags": ["local", "casual", "community", "public"],
-      "description": "Community square in Cajazeiras, often used for public gatherings and local commerce.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nptcBP_ycle9GPR--kzoSJfbzFeqRm-q4JTfH0L8kw1nprEVgnAnzhkq6dnU5OR4viYln-TFwx5bbN-eNpynOtz0UQKNvx5x4qv5Xofb5BsYfVirGapUWkPnzxCC_fFBktuLLDLCQ=w408-h544-k-no"
-    },
-    {
       "id": "bica-fountain",
       "name": "Bica Fountain",
+      "latitude": -12.94239,
+      "longitude": -38.47626,
       "rating": 4.6,
       "reviewcount": "2120",
       "category": "landmark",
@@ -626,20 +702,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noVMGW9yFJrzzeLSoXkrACMfHmbD3V2bGEWPO-9OnP0EG7GVvUqoXbJ_ckc42O2-1ba-iNFoiHqOFnwfzR7BVYe8xNqlwo80XQPV8hxfxhnsI6-LmZ0ujiPOXT61zZS6wqbEULw4w=w408-h272-k-no"
     },
     {
-      "id": "unfinished-church-of-old-alagoinhas",
-      "name": "Unfinished Church of Old Alagoinhas",
-      "rating": 4.5,
-      "reviewcount": "1812",
-      "category": "historic site",
-      "duration": 1,
-      "price": "$",
-      "tags": ["historic", "ruins", "spiritual", "culture"],
-      "description": "Ruins of a church in Alagoinhas Velha, filled with local legends and spiritual atmosphere.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np8j7hbSlFgHgfi6gp62_3E3trI5uD4DLD4KT5E-6F8CX_7nrNP2oTm3mAQsgHuz7w2EuoMTyydRxiK1RY_z-pJoEaZhkcJFNGvtMQHyURuK4A-3qStItccQIjtRzhEAfJIbNLM=w408-h306-k-no"
-    },
-    {
       "id": "baiana-women-memorial",
       "name": "Baiana Women Memorial",
+      "latitude": -12.97,
+      "longitude": -38.513,
       "rating": 4.3,
       "reviewcount": "64",
       "category": "museum",
@@ -652,6 +718,8 @@
     {
       "id": "papa-gente-beach",
       "name": "Papa Gente Beach",
+      "latitude": -12.5848,
+      "longitude": -38.0053,
       "rating": 4.6,
       "reviewcount": "135",
       "category": "beach",
@@ -664,6 +732,8 @@
     {
       "id": "energy-museum---neoenergia-efficiency-center",
       "name": "Energy Museum - Neoenergia Efficiency Center",
+      "latitude": -12.9711,
+      "longitude": -38.5108,
       "rating": 4.5,
       "reviewcount": "872",
       "category": "museum",
@@ -676,6 +746,8 @@
     {
       "id": "geological-museum-of-bahia",
       "name": "Geological Museum of Bahia",
+      "latitude": -12.9975,
+      "longitude": -38.5135,
       "rating": 4.7,
       "reviewcount": "1266",
       "category": "museum",
@@ -688,6 +760,8 @@
     {
       "id": "museum-of-mercy",
       "name": "Museum of Mercy",
+      "latitude": -12.9723,
+      "longitude": -38.5126,
       "rating": 4.8,
       "reviewcount": "892",
       "category": "museum",
@@ -700,6 +774,8 @@
     {
       "id": "solar-do-unhão---mam",
       "name": "Solar do Unhão - MAM",
+      "latitude": -12.9774,
+      "longitude": -38.5173,
       "rating": 4.7,
       "reviewcount": "6964",
       "category": "museum",
@@ -712,6 +788,8 @@
     {
       "id": "bahia-art-museum",
       "name": "Bahia Art Museum",
+      "latitude": -12.993657,
+      "longitude": -38.525977,
       "rating": 4.7,
       "reviewcount": "2195",
       "category": "museum",
@@ -724,6 +802,8 @@
     {
       "id": "carybé-art-space---são-diogo-fort",
       "name": "Carybé Art Space - São Diogo Fort",
+      "latitude": -12.9774,
+      "longitude": -38.5284,
       "rating": 4.7,
       "reviewcount": "1253",
       "category": "museum",
@@ -736,6 +816,8 @@
     {
       "id": "dom-pedro-ii-bridge",
       "name": "Dom Pedro II Bridge",
+      "latitude": -12.603941,
+      "longitude": -38.968725,
       "rating": 4.6,
       "reviewcount": "901",
       "category": "bridge",
@@ -748,6 +830,8 @@
     {
       "id": "cathedral-basilica-of-salvador",
       "name": "Cathedral Basilica of Salvador",
+      "latitude": -12.9715,
+      "longitude": -38.5113,
       "rating": 4.8,
       "reviewcount": "1930",
       "category": "church",
@@ -760,6 +844,8 @@
     {
       "id": "solar-amado-bahia---ice-cream-museum",
       "name": "Solar Amado Bahia - Ice Cream Museum",
+      "latitude": -12.9691,
+      "longitude": -38.5133,
       "rating": 4.6,
       "reviewcount": "2713",
       "category": "museum",
@@ -772,6 +858,8 @@
     {
       "id": "passeio-norte-mall",
       "name": "Passeio Norte Mall",
+      "latitude": -12.9099,
+      "longitude": -38.3377,
       "rating": 4.3,
       "reviewcount": "3967",
       "category": "shopping",
@@ -782,32 +870,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqkWYZn2oAd-AgIZQw-1OnKJyrePCBSQj3SFk5daf2x0uzTjVnIstJPlX_GZe-u9TzA49w2wvpSI5IHyZYp0q8Jpm4O-pliK9rjgfT6beLHTfZlg0bwH2Pcj0Y5Uh7hnOCEhhA3=w408-h544-k-no"
     },
     {
-      "id": "noêmia-meireles-square",
-      "name": "Noêmia Meireles Square",
-      "rating": 3.9,
-      "reviewcount": "411",
-      "category": "urban square",
-      "duration": 1,
-      "price": "$",
-      "tags": ["local", "casual", "family", "outdoor"],
-      "description": "Community square with green areas, playgrounds, and local events in Stella Maris.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4no3AIiD4QJLkAVxg3AXfSzHkhZzHA8h_XY5DZUKUkvCcII_62-pUMGWDXjJ5ejlU0yNFEJaNT4u8VoDhgl2deUEY0uOi_lSSA4mgMAP25OnY4CelGb2s-7bfeCRYBegpbJsumu9=w426-h240-k-no"
-    },
-    {
-      "id": "itapuã-beach",
-      "name": "Itapuã Beach",
-      "rating": 4.4,
-      "reviewcount": "1769",
-      "category": "beach",
-      "duration": 2,
-      "price": "$",
-      "tags": ["beach", "local", "seafood", "culture", "casual"],
-      "description": "One of Salvador’s most famous beaches, known for music, poetry, and laid-back atmosphere.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noChD6q1ZnUi85v_I9w7x-FTt8JX2RrxpXWvYICGvOWpM2fQyKKgGpxPKOHuoYa5ogQbrdVjK1o-Nu_1tVfPzwBd825MXpdHiL2aU93g9rb6Tezo_MYvfd1mN0_UgVsKtSPNy9H=w408-h301-k-no"
-    },
-    {
       "id": "saco’s-small-waterfall",
       "name": "Saco’s Small Waterfall",
+      "latitude": -12.876389,
+      "longitude": -38.318889,
       "rating": 4.6,
       "reviewcount": "259",
       "category": "nature spot",
@@ -818,20 +884,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrx3VbzHktNVnG0U97QCecdO0DEesw2XMk8ni5cuoD7HlCoWTkKwWCauloq1V-1rLBG592SK_BW8kvAkW2CoLU73S0rXFPVb6haOjUnJRKpBzipQhDZ1Ed4gNHV9CqBne8ZellRjg=w426-h240-k-no"
     },
     {
-      "id": "mirante-beach",
-      "name": "Mirante Beach",
-      "rating": 4.8,
-      "reviewcount": "237",
-      "category": "beach",
-      "duration": 2,
-      "price": "$",
-      "tags": ["beach", "viewpoint", "casual", "peaceful"],
-      "description": "Scenic beach offering elevated viewpoints, calm waters, and fewer crowds.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqESwUm4LBaNbpbI8oeaWEwaKJkzh4TA0XRT0S1-D4qa1DcmYKDucVuMviKvAZtPS9SMqF0_wQ1gHscDW7RsTmSVnU9zJ4lrXhDcVB8NCkSzGYRqtDdjxK098q_VCoxQg26RwU=w426-h240-k-no"
-    },
-    {
       "id": "ufba-archaeology-and-ethnology-museum",
       "name": "UFBA Archaeology and Ethnology Museum",
+      "latitude": -12.9715,
+      "longitude": -38.5113,
       "rating": 4.6,
       "reviewcount": "162",
       "category": "museum",
@@ -842,32 +898,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npA-QN1jF7v41jldXKQXiquHJXWzVHGJAa9GfpnHcg4OcYdUM3JZKhmnQ1qaii9eueOmTp3KdyaNy_fBp2icpIMjhiwpbP21gKUjbtIVoX7TWxTDNirr6CkVhCDazkNdGs1D6yNRw=w408-h292-k-no"
     },
     {
-      "id": "mariquita-square",
-      "name": "Mariquita Square",
-      "rating": 4.6,
-      "reviewcount": "928",
-      "category": "urban square",
-      "duration": 1,
-      "price": "$",
-      "tags": ["local", "nightlife", "food", "culture"],
-      "description": "Traditional square in Rio Vermelho filled with bars, acarajé stands, and local nightlife.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq5_4bCXidMpOpQMk_QvwW-SI9R1zrzJNKjXfwQtfLnV0L5Pqdb3V9GNemPk9hDWghaymNjXp6T2yGLXvYS_5cHiw9uUUoL6TYTmHYz6oW9_sqgABxhW_ANfhrbp5IURsz9mboR=w408-h902-k-no"
-    },
-    {
-      "id": "taquari-beach",
-      "name": "Taquari Beach",
-      "rating": 4.6,
-      "reviewcount": "864",
-      "category": "beach",
-      "duration": 2,
-      "price": "$",
-      "tags": ["beach", "local", "casual", "peaceful"],
-      "description": "Quiet beach in the lower region of Salvador, known for natural beauty and simplicity.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrq7OHmM0uyuYWqxXW6FcNGhn4sMiCVteGiNeJCDNYlQ_y9XKqN88zIh-JJ3RnCl6tz-w6F-ElNrStz15KFUj5DalMqNsm8iGDXrHziKMF98OCYGFTU2YCh5l1bn6VObNMHt3Bb=w408-h273-k-no"
-    },
-    {
       "id": "baianas’-square",
       "name": "Baianas’ Square",
+      "latitude": -12.971569,
+      "longitude": -38.511598,
       "rating": 4.5,
       "reviewcount": "2114",
       "category": "urban square",
@@ -878,20 +912,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nodYFllYemZD34IG9hcUy79pCAMQvJmyGLKwVeO-ELOrXmKCDm4HsMbngbac36-ZkK7rgDoROBo6SwT_nlZr1PqTn1MC3JQnPHA7LjFHN7DRFBrdFyA4iHKUxuyl9c3ceLn8dXY=w408-h306-k-no"
     },
     {
-      "id": "afro-brazilian-museum---ufba",
-      "name": "Afro-Brazilian Museum - UFBA",
-      "rating": 4.6,
-      "reviewcount": "328",
-      "category": "museum",
-      "duration": 2,
-      "price": "$$",
-      "tags": ["culture", "history", "religion", "African"],
-      "description": "Museum focused on African heritage and its influence on Brazilian society and religion.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrXiJ7oYEYLRdlCx3oWp1SHXn978-inRNlDJx0y-44v-fLDIKgWjEN-nW6m2jp1OIfMrPSD3JInu1Md3PDHt7oBzEHCUCXwk_kMQLMIG89dDSmaCQP8L04PHMndRpMiKrnJ2Hvm=w408-h306-k-no"
-    },
-    {
       "id": "national-museum-of-afro-brazilian-culture",
       "name": "National Museum of Afro-Brazilian Culture",
+      "latitude": -12.972519,
+      "longitude": -38.509997,
       "rating": 4.8,
       "reviewcount": "565",
       "category": "museum",
@@ -904,6 +928,8 @@
     {
       "id": "pierre-verger-foundation",
       "name": "Pierre Verger Foundation",
+      "latitude": -12.9813,
+      "longitude": -38.5147,
       "rating": 4.7,
       "reviewcount": "315",
       "category": "cultural institution",
@@ -916,6 +942,8 @@
     {
       "id": "aleluia-beach",
       "name": "Aleluia Beach",
+      "latitude": -12.946389,
+      "longitude": -38.358333,
       "rating": 4.6,
       "reviewcount": "368",
       "category": "beach",
@@ -928,6 +956,8 @@
     {
       "id": "ponta-do-curral-beach",
       "name": "Ponta do Curral Beach",
+      "latitude": -13.3643,
+      "longitude": -39.0652,
       "rating": 4.6,
       "reviewcount": "93",
       "category": "beach",
@@ -940,6 +970,8 @@
     {
       "id": "sapiranga-reserve",
       "name": "Sapiranga Reserve",
+      "latitude": -12.5667,
+      "longitude": -38.0778,
       "rating": 4.6,
       "reviewcount": "767",
       "category": "nature reserve",
@@ -950,20 +982,10 @@
       "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4np6x2QXYuhryNty4Fivf1WK39Ke3jxJOYVaFOhiM65YpENeVS1A1bt4igfJ8Gl1DxcUfpX5qrAUJryci1IIzb0XKZQfBa_rBir5uHEi-VeAkHvC87nAbFzFbF74rU9H4vroYw0tHg=w408-h306-k-no"
     },
     {
-      "id": "clay-wall",
-      "name": "Clay Wall",
-      "rating": 4.6,
-      "reviewcount": "2720",
-      "category": "nature spot",
-      "duration": 2,
-      "price": "$",
-      "tags": ["nature", "geology", "casual", "viewpoint"],
-      "description": "Natural cliff formation with reddish clay, popular for photos and natural treatments.",
-      "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noVbTQD-jhORkRRk9HaJ3wE9r5ZaX3R7ZsJn6EIMw0NKpE8mlVjZxjHHEaV6IsKgfEG4HzeCvbVU582LXwFpSxEWY6KpyWr5SsAcP0DJVL20Xwd3HY5x1afzze72jUELJvTE1OA=w408-h306-k-no"
-    },
-    {
       "id": "folkloric-ballet-of-bahia",
       "name": "Folkloric Ballet of Bahia",
+      "latitude": -12.9711,
+      "longitude": -38.5108,
       "rating": 4.9,
       "reviewcount": "455",
       "category": "show",
@@ -976,6 +998,8 @@
     {
       "id": "flamengo-beach",
       "name": "Flamengo Beach",
+      "latitude": -12.925278,
+      "longitude": -38.315278,
       "rating": 4.7,
       "reviewcount": "3061",
       "category": "beach",

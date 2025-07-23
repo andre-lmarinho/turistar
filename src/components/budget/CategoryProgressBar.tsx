@@ -30,7 +30,7 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
           </span>
         </div>
         <span className="mr-1 text-right text-sm w-20" aria-label={`$${value.toFixed(2)} spent`}>
-          ${value.toFixed(2)}
+          {'$' + value.toFixed(2)}
         </span>
       </div>
 

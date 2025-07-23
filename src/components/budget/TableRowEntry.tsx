@@ -31,7 +31,7 @@ export default function TableRowEntry({
         className="p-2 text-right"
         aria-label={`Amount: $${entry.amount.toFixed(2)}`}
       >
-        ${entry.amount.toFixed(2)}
+        {'$' + entry.amount.toFixed(2)}
       </td>
       <td role="gridcell" className="p-2 text-right flex gap-2 justify-end">
         <Button

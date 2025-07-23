@@ -57,7 +57,7 @@ export default function BudgetItem({
           aria-label={`${label}: $${amount.toFixed(2)}`}
           className="w-32 text-right"
         >
-          ${amount.toFixed(2)}
+          {'$' + amount.toFixed(2)}
         </span>
       )}
     </div>
