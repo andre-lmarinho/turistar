@@ -6,11 +6,13 @@ import { vi } from 'vitest';
 import MapView from './MapView';
 import type { DayPlan } from '@/types';
 
-// Stub react-leaflet components and expose a shared map instance
+// Mover para fora do mock: escopo global para os testes
 const map = { fitBounds: vi.fn() };
+const markers: Array<{ title?: string }> = [];
+
+// Stub do react-leaflet
 vi.mock('react-leaflet', () => {
   const React = require('react');
-  const markers: Array<{ title?: string }> = [];
   return {
     MapContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     TileLayer: () => null,
@@ -23,7 +25,7 @@ vi.mock('react-leaflet', () => {
   };
 });
 
-// Simplify Leaflet utilities used by MapView
+// Simplify Leaflet utilities
 vi.mock('leaflet', () => ({
   __esModule: true,
   default: {
@@ -52,11 +54,9 @@ describe('FitAllMarkers effect', () => {
     const { rerender } = render(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    // identical coordinates should not trigger fit again
     rerender(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    // new coordinates cause a new fit
     rerender(<MapView days={buildDays([2, 2])} onSelectActivity={() => {}} />);
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
   });
@@ -77,7 +77,6 @@ describe('Marker accessibility', () => {
     ];
 
     render(<MapView days={days} onSelectActivity={() => {}} />);
-
     expect(markers[0].title).toBe('Walk');
   });
 });

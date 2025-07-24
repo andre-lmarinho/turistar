@@ -2,11 +2,7 @@
 'use client';
 
 import type { Activity, DayPlan } from '@/types';
-import {
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-  DEFAULT_ADD_ACTIVITY_COLOR_INDEX,
-  DEFAULT_COLORS,
-} from '@/constants';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS } from '@/constants';
 
 /**
  * Provides helpers for modifying day activities.
