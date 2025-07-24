@@ -157,6 +157,15 @@
   display: none; /* Chrome, Safari */
 }
 
+/* Hide vertical scrollbar in DayColumn */
+[data-testid='day-scroll'] {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+[data-testid='day-scroll']::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .container {
   margin-left: auto;
   margin-right: auto;
@@ -164,4 +173,35 @@
   max-width: 80rem;
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+/* Override Leaflet para z-index:0 */
+.leaflet-container .leaflet-tile-pane,
+.leaflet-container .leaflet-overlay-pane,
+.leaflet-container .leaflet-shadow-pane,
+.leaflet-container .leaflet-marker-pane,
+.leaflet-container .leaflet-tooltip-pane,
+.leaflet-container .leaflet-popup-pane {
+  z-index: 0 !important;
+}
+
+/* 1) Força o container do mapa a z-index 0 */
+.leaflet-container {
+  position: relative; /* garante stacking context, mas sem transformar */
+  z-index: 0 !important;
+}
+
+/* 2) Força todas as “panes” do Leaflet a z-index 0 */
+.leaflet-container .leaflet-pane {
+  z-index: 0 !important;
+}
+
+/* 3) Também cobre controles e elementos flutuantes */
+.leaflet-container .leaflet-control-container,
+.leaflet-container .leaflet-marker-pane,
+.leaflet-container .leaflet-overlay-pane,
+.leaflet-container .leaflet-shadow-pane,
+.leaflet-container .leaflet-tooltip-pane,
+.leaflet-container .leaflet-popup-pane {
+  z-index: 0 !important;
 }

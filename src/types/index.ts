@@ -13,10 +13,10 @@ export interface Activity {
   duration?: number;
   startTime?: string;
   imageUrl?: string;
-  /** Optional budget for the activity */
   budget?: number;
-  /** Category of the activity, e.g. "museum" */
   category?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 /**
@@ -31,7 +31,9 @@ export interface CatalogActivity {
   price: string;
   category: string;
   rating?: number;
-  reviewcount?: number;
+  reviewcount?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 /**

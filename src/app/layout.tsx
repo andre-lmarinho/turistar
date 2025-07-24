@@ -3,6 +3,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Architects_Daughter } from 'next/font/google';
 import '@/app/globals.css';
+import 'leaflet/dist/leaflet.css';
 
 import { Providers } from '@/components';
 

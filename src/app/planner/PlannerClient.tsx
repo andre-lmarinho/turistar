@@ -2,8 +2,10 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
+const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 
 import {
   ActivityModal,
@@ -26,7 +28,7 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } f
 
 export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [mode, setMode] = useState<'planner' | 'budget'>('planner');
+  const [mode, setMode] = useState<'planner' | 'budget' | 'map'>('planner');
 
   const {
     planId,
@@ -134,6 +136,8 @@ export default function PlannerClient() {
             description: item.description,
             duration: item.duration,
             imageUrl: item.image_url,
+            latitude: item.latitude,
+            longitude: item.longitude,
             color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
             startTime: '',
           })
@@ -148,6 +152,8 @@ export default function PlannerClient() {
           days={days}
           onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
         />
+      ) : mode === 'map' ? (
+        <MapView days={days} onSelectActivity={setSelectedActivity} />
       ) : (
         <PlannerBoard
           days={days}

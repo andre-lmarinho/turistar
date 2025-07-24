@@ -4,14 +4,15 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
-import { List, DollarSign } from 'lucide-react';
+import { List, DollarSign, Map } from 'lucide-react';
 
-type Mode = 'planner' | 'budget';
-const modes: Mode[] = ['planner', 'budget'];
+type Mode = 'planner' | 'budget' | 'map';
+const modes: Mode[] = ['planner', 'budget', 'map'];
 
 const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIcon }> = {
   planner: { label: 'Planner', icon: List },
   budget: { label: 'Budget', icon: DollarSign },
+  map: { label: 'Map', icon: Map },
 };
 
 interface ModeSelectorProps {
@@ -61,6 +62,7 @@ export default function ModeToggleButton({ value, onChange }: ModeSelectorProps)
       <div
         ref={containerRef}
         role="group"
+        aria-label="Mode selector"
         className="relative flex bg-[var(--border)] rounded-[var(--radius)] overflow-hidden min-w-[200px]"
       >
         <motion.div
@@ -88,7 +90,7 @@ export default function ModeToggleButton({ value, onChange }: ModeSelectorProps)
         `}
             >
               <div className="flex items-center justify-center gap-2 p-2 w-full h-full">
-                <Icon aria-hidden="true" className="size-4" />
+                <Icon aria-hidden="true" className="w-4 h-4" />
                 {label}
               </div>
             </button>
