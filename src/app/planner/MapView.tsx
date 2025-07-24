@@ -11,23 +11,34 @@ interface MapViewProps {
   onSelectActivity: (activity: Activity & { dayId: string }) => void;
 }
 
-// Extrai a cor real da string Tailwind "bg-[var(--color-X)]"
+// Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls: string): string => {
   const m = cls.match(/^bg-\[([^]+)\]$/);
   return m ? m[1] : cls;
 };
 
-// Roda o fitBounds só uma vez
+// Fit map view to all markers whenever coordinates change
 function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   const map = useMap();
-  const fitted = useRef(false);
+  const prev = useRef<LatLngExpression[] | null>(null);
 
   useEffect(() => {
-    if (!fitted.current && coords.length > 0) {
+    if (coords.length === 0) return;
+
+    const same =
+      prev.current &&
+      prev.current.length === coords.length &&
+      prev.current.every((c, i) => {
+        const a = c as [number, number];
+        const b = coords[i] as [number, number];
+        return a[0] === b[0] && a[1] === b[1];
+      });
+
+    if (!same) {
       map.fitBounds(L.latLngBounds(coords), { padding: [50, 50] });
-      fitted.current = true;
+      prev.current = coords;
     }
-  }, [map, coords]);
+  }, [coords, map]);
 
   return null;
 }

@@ -38,10 +38,20 @@ export default function SortableItem({
   dragOverlay = false,
   className,
 }: SortableItemProps) {
-  // Render as overlay when dragging
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
+
   if (dragOverlay) {
     return (
-      <div className={cn('shadow-lg cursor-grabbing', className)}>
+      <div
+        className={cn(
+          'shadow-lg cursor-grabbing pointer-events-none',
+          'origin-bottom rotate-[3deg]',
+          'transition-transform duration-200 ease-out',
+          className
+        )}
+      >
         <ActivityCard
           activity={activity}
           availableDays={availableDays}
@@ -56,10 +66,6 @@ export default function SortableItem({
       </div>
     );
   }
-
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
-    id,
-  });
 
   const style = {
     transform: CSS.Transform.toString(transform),

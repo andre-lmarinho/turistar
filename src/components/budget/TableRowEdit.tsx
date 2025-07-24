@@ -24,7 +24,7 @@ export default function TableRowEdit({
   onCancel: () => void;
   normalizeAmount: (val: string) => number;
 }) {
-  // useId gera um sufixo único para cada instância
+  // useId generates a unique suffix for each instance
   const baseId = useId();
 
   return (

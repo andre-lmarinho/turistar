@@ -24,6 +24,8 @@ _or_ deploy easily to Vercel or Netlify with the same settings.
 
 Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Radix UI, and the App Router in Next.js 15.
 
+A new **Map View** lets you preview your itinerary locations on an interactive map.
+
 While editing an activity, you can search the catalog directly from the modal or by right-clicking a card to quickly swap in a new suggestion.
 
 ---
@@ -38,6 +40,8 @@ While editing an activity, you can search the catalog directly from the modal or
 
 ![Attractions Card Screenshot - Right Click](./public/previews/preview_04.png)
 
+![Map View Screenshot](./public/previews/preview_05.png)
+
 ---
 
 ## 🚀 Key Features
@@ -50,6 +54,8 @@ While editing an activity, you can search the catalog directly from the modal or
   Browse suggested activities and insert them directly into the board.
   - **Search Catalog**
     Quickly filter activities by typing a query.
+- **Map View**
+  View all your planned attractions on an interactive map.
 - **Local Data Mock**
   Demo catalog comes from `/api/catalog`, which serves a static JSON file.
 - **Persistent Storage**
@@ -68,6 +74,7 @@ You can deploy the same app to Vercel or Netlify.
 - **Radix UI** components
 - **TanStack Query** for data fetching
 - **date-fns** and **react-day-picker** for date handling
+- **leaflet** & **react-leaflet** for the map view
 - **Vercel** or **Netlify** for hosting
 
 ---

@@ -42,8 +42,8 @@ export default function DayColumn({
       ref={setNodeRef}
       className={`flex-1 flex flex-col h-full ${isOver ? 'ring-2 ring-primary/40' : ''}`}
     >
-      <header className="m-2 flex items-center justify-between">
-        <h2 className="font-semibold">{day.label}</h2>
+      <header className="m-2 flex text-[var(--muted-foreground)]">
+        <h2 className="text-sm font-medium">{day.label}</h2>
       </header>
 
       <SortableContext

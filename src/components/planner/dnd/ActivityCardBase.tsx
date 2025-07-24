@@ -17,6 +17,7 @@ interface ActivityCardBaseProps {
   editing?: boolean;
   twBg?: string;
   budget?: number;
+  borderColorClass?: string;
 }
 
 export default function ActivityCardBase({
@@ -30,6 +31,7 @@ export default function ActivityCardBase({
   editing = false,
   twBg,
   budget,
+  borderColorClass,
 }: ActivityCardBaseProps) {
   const isMounted = typeof window !== 'undefined';
 
@@ -40,9 +42,9 @@ export default function ActivityCardBase({
     >
       {/* Content */}
       <div
-        className={`flex-1 flex w-40 flex-col rounded-lg border border-[var(--border)] overflow-hidden ${
-          twBg ?? ''
-        }`}
+        className={`flex-1 flex w-40 flex-col rounded-lg border ${
+          borderColorClass
+        } overflow-hidden ${twBg ?? ''}`}
       >
         {/* Image */}
         {imageUrl && (

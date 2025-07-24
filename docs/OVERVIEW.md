@@ -11,6 +11,7 @@ The application lets users create and organize trip itineraries, persisting data
   - Search the catalog in real time.
 - **Local Data Mock** – The catalog is served from a static JSON API.
 - **Persistent Storage** – Planner data and budget stay saved in the browser.
+- **Map Mode** – View itinerary on an interactive map built with Leaflet.
 
 ## Tech Stack
 
@@ -21,6 +22,7 @@ The application lets users create and organize trip itineraries, persisting data
 - **Radix UI** components
 - **TanStack Query** for data fetching
 - **date-fns** and **react-day-picker** for date management
+- **Leaflet** & **React Leaflet** for interactive maps
 
 ## Project Structure
 

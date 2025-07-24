@@ -94,25 +94,23 @@
   --sidebar-ring: oklch(0.7 0.02 80);
 
   /* Special Cards Base Colors */
-
-  --color-0: oklch(1 0 0);
-  --color-0-foreground: oklch(0.15 0 0);
+  --color-0: oklch(1 0 0); /* branco */
+  --color-0-border: oklch(0.7 0 0); /* borda suave */
 
   --color-1: oklch(0.98 0.05 75); /* pastel orange */
-  --color-1-foreground: oklch(0.45 0.15 75); /* deep orange */
+  --color-1-border: oklch(0.8 0.1 75); /* laranja mais suave */
 
   --color-2: oklch(0.98 0.05 100); /* pastel yellow */
-  --color-2-foreground: oklch(0.45 0.15 100); /* deep amber */
+  --color-2-border: oklch(0.8 0.1 100); /* amarelo suave */
 
-  --color-3: oklch(0.98 0.05 190); /* pastel green/blue */
-  --color-3-foreground: oklch(0.45 0.15 190); /* deep turquoise */
+  --color-3: oklch(0.98 0.05 145); /* pastel green */
+  --color-3-border: oklch(0.8 0.1 145); /* verde suave */
 
-  --color-4: oklch(0.98 0.05 250); /* pastel blue */
-  --color-4-foreground: oklch(0.45 0.15 250); /* deep sky blue */
+  --color-4: oklch(0.98 0.05 260); /* pastel blue */
+  --color-4-border: oklch(0.8 0.1 260); /* azul suave */
 
-  --color-5: oklch(0.98 0.05 320); /* pastel pink/purple */
-  --color-5-foreground: oklch(0.45 0.15 320); /* deep magenta */
-  /* Always available */
+  --color-5: oklch(0.98 0.05 320); /* pastel pink */
+  --color-5-border: oklch(0.8 0.1 320); /* magenta suave */
 }
 
 @layer base {
@@ -175,7 +173,7 @@
   padding-right: 2rem;
 }
 
-/* Override Leaflet para z-index:0 */
+/* Override Leaflet panes to z-index 0 */
 .leaflet-container .leaflet-tile-pane,
 .leaflet-container .leaflet-overlay-pane,
 .leaflet-container .leaflet-shadow-pane,
@@ -185,18 +183,18 @@
   z-index: 0 !important;
 }
 
-/* 1) Força o container do mapa a z-index 0 */
+/* 1) Force the map container to z-index 0 */
 .leaflet-container {
-  position: relative; /* garante stacking context, mas sem transformar */
+  position: relative; /* ensures stacking context without transformation */
   z-index: 0 !important;
 }
 
-/* 2) Força todas as “panes” do Leaflet a z-index 0 */
+/* 2) Force all Leaflet panes to z-index 0 */
 .leaflet-container .leaflet-pane {
   z-index: 0 !important;
 }
 
-/* 3) Também cobre controles e elementos flutuantes */
+/* 3) Also cover controls and floating elements */
 .leaflet-container .leaflet-control-container,
 .leaflet-container .leaflet-marker-pane,
 .leaflet-container .leaflet-overlay-pane,

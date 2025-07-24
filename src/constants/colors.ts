@@ -35,21 +35,21 @@ export const COLOR_HOVER_CLASSES = [
 ];
 
 export const COLOR_FOREGROUND_VALUES = [
-  'var(--color-0-foreground)',
-  'var(--color-1-foreground)',
-  'var(--color-2-foreground)',
-  'var(--color-3-foreground)',
-  'var(--color-4-foreground)',
-  'var(--color-5-foreground)',
+  'var(--color-0-border)',
+  'var(--color-1-border)',
+  'var(--color-2-border)',
+  'var(--color-3-border)',
+  'var(--color-4-border)',
+  'var(--color-5-border)',
 ];
 
 export const COLOR_BORDER_CLASSES = [
-  'border-[var(--color-0-foreground)]',
-  'border-[var(--color-1-foreground)]',
-  'border-[var(--color-2-foreground)]',
-  'border-[var(--color-3-foreground)]',
-  'border-[var(--color-4-foreground)]',
-  'border-[var(--color-5-foreground)]',
+  'border-[var(--color-0-border)]',
+  'border-[var(--color-1-border)]',
+  'border-[var(--color-2-border)]',
+  'border-[var(--color-3-border)]',
+  'border-[var(--color-4-border)]',
+  'border-[var(--color-5-border)]',
 ];
 
 export const COLOR_NAMES: Record<string, string> = {

@@ -4,90 +4,94 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
-import { List, DollarSign, Map } from 'lucide-react';
+import { List, Map, DollarSign } from 'lucide-react';
 
-type Mode = 'planner' | 'budget' | 'map';
-const modes: Mode[] = ['planner', 'budget', 'map'];
+type Mode = 'planner' | 'map' | 'budget';
+
+const modes: Mode[] = ['planner', 'map', 'budget'];
 
 const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIcon }> = {
   planner: { label: 'Planner', icon: List },
-  budget: { label: 'Budget', icon: DollarSign },
   map: { label: 'Map', icon: Map },
+  budget: { label: 'Budget', icon: DollarSign },
 };
 
-interface ModeSelectorProps {
+interface ModeToggleButtonProps {
   value: Mode;
-  onChange: (v: Mode) => void;
+  onChange: (mode: Mode) => void;
 }
 
-export default function ModeToggleButton({ value, onChange }: ModeSelectorProps) {
+export default function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const x = useMotionValue(0);
-  const width = useMotionValue(0);
-  const isFirstRender = useRef(true);
+  const highlightX = useMotionValue(0);
+  const highlightW = useMotionValue(0);
+  const isFirst = useRef(true);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-    const buttons = Array.from(container.querySelectorAll<HTMLButtonElement>('button'));
+    const btns = Array.from(el.querySelectorAll<HTMLButtonElement>('button'));
     const idx = modes.indexOf(value);
-    const btn = buttons[idx];
+    const btn = btns[idx];
     if (!btn) return;
 
-    const containerRect = container.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
-    const newX = btnRect.left - containerRect.left;
-    const newWidth = btn.offsetWidth - 8;
+    const { left: cLeft } = el.getBoundingClientRect();
+    const { left: bLeft, width: bWidth } = btn.getBoundingClientRect();
+    const newX = bLeft - cLeft;
+    const newW = bWidth - 8;
 
-    const springConfig: ValueAnimationTransition<number> = {
+    const spring: ValueAnimationTransition<number> = {
       type: 'spring',
-      stiffness: 200,
-      damping: 25,
+      stiffness: 300,
+      damping: 30,
     };
 
-    if (isFirstRender.current) {
-      x.set(newX);
-      width.set(newWidth);
-      isFirstRender.current = false;
+    if (isFirst.current) {
+      highlightX.set(newX);
+      highlightW.set(newW);
+      isFirst.current = false;
     } else {
-      animate(x, newX, springConfig);
-      animate(width, newWidth, springConfig);
+      // Animate on mode change
+      animate(highlightX, newX, spring);
+      animate(highlightW, newW, spring);
     }
-  }, [value, x, width]);
+  }, [value, highlightX, highlightW]);
 
   return (
     <div className="inline-flex">
       <div
         ref={containerRef}
-        role="group"
-        aria-label="Mode selector"
+        role="tablist"
+        aria-label="View mode selector"
         className="relative flex bg-[var(--border)] rounded-[var(--radius)] overflow-hidden min-w-[200px]"
       >
+        {/* Animated highlight behind the selected button */}
         <motion.div
-          style={{ x, width }}
+          style={{ x: highlightX, width: highlightW }}
           className="absolute inset-1 bg-[var(--accent)] rounded-[calc(var(--radius)-0.25rem)]"
         />
 
         {modes.map((mode) => {
-          const Icon = MODE_CONFIG[mode].icon;
-          const label = MODE_CONFIG[mode].label;
+          const { label, icon: Icon } = MODE_CONFIG[mode];
+          const selected = mode === value;
 
           return (
             <button
               key={mode}
+              role="tab"
               type="button"
               onClick={() => onChange(mode)}
-              aria-pressed={value === mode}
+              aria-selected={selected}
               className={`
-          flex-1 relative z-10 text-sm cursor-pointer font-medium transition-colors
-          ${
-            value === mode
-              ? 'text-[var(--accent-foreground)]'
-              : 'text-[var(--foreground)] hover:text-[var(--accent)]'
-          }
-        `}
+                flex-1 px-2 cursor-pointer relative z-10 text-sm font-medium transition-colors
+                ${
+                  selected
+                    ? 'text-[var(--accent-foreground)]'
+                    : 'text-[var(--foreground)] hover:text-[var(--accent)]'
+                }
+              `}
             >
               <div className="flex items-center justify-center gap-2 p-2 w-full h-full">
                 <Icon aria-hidden="true" className="w-4 h-4" />

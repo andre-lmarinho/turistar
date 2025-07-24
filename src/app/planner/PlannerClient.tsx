@@ -19,6 +19,8 @@ import {
 import { usePlanner, useActivitiesById, useSelectedActivity, usePlanTitle } from '@/hooks';
 import type { CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } from '@/constants';
+import { motion } from 'framer-motion';
+
 /**
  * Top-level client component for the /planner route.
  * - Shows the date-range picker, the “Open Panel” button, the filter panel,
@@ -26,9 +28,12 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } f
  * - Handles selecting a card to open the ActivityModal.
  */
 
+type Mode = 'planner' | 'map' | 'budget';
+const modeOrder: Mode[] = ['planner', 'map', 'budget'];
+
 export default function PlannerClient() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [mode, setMode] = useState<'planner' | 'budget' | 'map'>('planner');
+  const [mode, setMode] = useState<Mode>('planner');
 
   const {
     planId,
@@ -56,11 +61,10 @@ export default function PlannerClient() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const storageKey = `planner-onboarding-shown-${planId}`;
-    const seen = localStorage.getItem(storageKey);
-    if (!seen) {
+    const key = `planner-onboarding-shown-${planId}`;
+    if (!localStorage.getItem(key)) {
       setShowOnboarding(true);
-      localStorage.setItem(storageKey, 'true');
+      localStorage.setItem(key, 'true');
     }
   }, [planId]);
 
@@ -99,11 +103,14 @@ export default function PlannerClient() {
   if (error) return <p className="p-4">Failed to load.</p>;
   if (!days.length) return <p className="p-4">No catalog found.</p>;
 
-  // dragOverlay needs a string
   const stringActiveId = activeId != null ? String(activeId) : null;
+  const activeIdx = modeOrder.indexOf(mode);
 
   return (
-    <main id="main-content" className="flex flex-col bg-card p-4 md:px-12 md:pb-12 h-screen">
+    <main
+      id="main-content"
+      className="flex flex-col bg-card p-4 lg:px-12 md:pb-12 h-screen overflow-hidden"
+    >
       <div className="pb-4 flex items-center justify-between">
         <h1 className="text-4xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <input
@@ -120,12 +127,12 @@ export default function PlannerClient() {
         </h1>
         <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
       </div>
+
       <div className="pb-4 flex items-center justify-between gap-4">
-        <div>
-          <ModeToggleButton value={mode} onChange={setMode} />
-        </div>
+        <ModeToggleButton value={mode} onChange={setMode} />
         <DateRangePicker value={currentRange} onChange={handleRangeChange} />
       </div>
+
       <DestinationFilterPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
@@ -145,33 +152,72 @@ export default function PlannerClient() {
         onRemove={removeActivity}
         addedIds={addedIds}
       />
-      {mode === 'budget' ? (
-        <BudgetPanel
-          planId={planId}
-          activitiesTotal={activitiesTotal}
-          days={days}
-          onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
-        />
-      ) : mode === 'map' ? (
-        <MapView days={days} onSelectActivity={setSelectedActivity} />
-      ) : (
-        <PlannerBoard
-          days={days}
-          activeId={stringActiveId}
-          sensors={sensors}
-          collisionDetection={collisionDetection}
-          handleDragStart={handleDragStart}
-          handleDragOver={handleDragOver}
-          handleDragEnd={handleDragEnd}
-          onSelectActivity={setSelectedActivity}
-          onUpdateTitle={(id, title) => updateActivity(id, { title })}
-          onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
-          onChangeDay={changeDay}
-          onChangePosition={changePosition}
-          onChangeColor={(id, color) => changeColor(id, color)}
-          onDelete={removeActivity}
-        />
-      )}
+
+      <div className="relative flex-1 overflow-visible">
+        {modeOrder.map((m, idx) => {
+          const isActive = idx === activeIdx;
+          const rel = idx - activeIdx;
+          const abs = Math.abs(idx - activeIdx);
+          const z = 3 - abs;
+          const offsetMap = [0, 6, 10];
+          const offset = offsetMap[abs] * Math.sign(rel);
+          const scaleMap = [1, 0.92, 0.87];
+          const scale = scaleMap[abs] ?? 0.7;
+          const opacityMap = [1, 0.92, 0.8];
+          const opacity = opacityMap[abs] ?? 0.6;
+          const rotate = rel * 2;
+
+          return (
+            <motion.div
+              key={m}
+              className={`absolute inset-0 ${!isActive ? 'cursor-pointer' : ''}`}
+              style={{
+                zIndex: z,
+              }}
+              initial={false}
+              animate={{
+                x: `${offset}%`,
+                scale: scale,
+                opacity: opacity,
+                rotateZ: rotate,
+              }}
+              transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+              onClick={() => !isActive && setMode(m)}
+            >
+              <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
+                {m === 'planner' && (
+                  <PlannerBoard
+                    days={days}
+                    activeId={stringActiveId}
+                    sensors={sensors}
+                    collisionDetection={collisionDetection}
+                    handleDragStart={handleDragStart}
+                    handleDragOver={handleDragOver}
+                    handleDragEnd={handleDragEnd}
+                    onSelectActivity={setSelectedActivity}
+                    onUpdateTitle={(id, title) => updateActivity(id, { title })}
+                    onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
+                    onChangeDay={changeDay}
+                    onChangePosition={changePosition}
+                    onChangeColor={(id, color) => changeColor(id, color)}
+                    onDelete={removeActivity}
+                  />
+                )}
+                {m === 'budget' && (
+                  <BudgetPanel
+                    planId={planId}
+                    activitiesTotal={activitiesTotal}
+                    days={days}
+                    onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
+                  />
+                )}
+                {m === 'map' && <MapView days={days} onSelectActivity={setSelectedActivity} />}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
       {selectedActivity && (
         <ActivityModal
           open
@@ -186,6 +232,7 @@ export default function PlannerClient() {
           onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
         />
       )}
+
       <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </main>
   );
