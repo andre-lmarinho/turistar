@@ -7,7 +7,7 @@ import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { isTouchDevice } from '@/lib';
 
 import { EditCardButton, ActivityCardBase, ActivityCardEditing } from '@/components';
-import { DEFAULT_COLORS, COLOR_BORDER_CLASSES } from '@/constants';
+import { DEFAULT_COLORS } from '@/constants';
 import { useEscapeKey } from '@/hooks';
 
 export interface ActivityCardProps {
@@ -38,9 +38,8 @@ export default function ActivityCard({
   const { title, duration, budget, color, imageUrl } = activity;
   const twBg = color && !color.startsWith('#') ? color : undefined;
   const colorClass = twBg ?? (bgColor && !bgColor.startsWith('#') ? bgColor : undefined);
-  const colorIndex =
-    colorClass && DEFAULT_COLORS.includes(colorClass) ? DEFAULT_COLORS.indexOf(colorClass) : -1;
-  const borderColorClass = colorIndex >= 0 ? COLOR_BORDER_CLASSES[colorIndex] : undefined;
+  const colorIndex = colorClass ? DEFAULT_COLORS.findIndex((c) => c.bg === colorClass) : -1;
+  const borderColorClass = colorIndex >= 0 ? DEFAULT_COLORS[colorIndex].border : undefined;
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
   const inputRef = useRef<HTMLTextAreaElement>(null);

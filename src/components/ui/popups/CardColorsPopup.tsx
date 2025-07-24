@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { DEFAULT_COLORS, COLOR_NAMES } from '@/constants';
+import { DEFAULT_COLORS } from '@/constants';
 import { Button, CloseButton, Popup } from '@/components';
 
 interface CardColorsPopupProps {
@@ -13,7 +13,7 @@ interface CardColorsPopupProps {
   onChangeColor: (color: string) => void;
   onClose: () => void;
   triggerRef?: React.RefObject<HTMLElement>;
-  colors?: string[];
+  colors?: typeof DEFAULT_COLORS;
 }
 
 export default function CardColorsPopup({
@@ -65,15 +65,15 @@ export default function CardColorsPopup({
           </label>
           <div className="flex justify-between flex-wrap gap-2">
             {colors.map((c) => {
-              const label = COLOR_NAMES[c] ?? c;
+              const label = c.name;
               return (
                 <button
-                  key={c}
-                  onClick={() => onChangeColor(c)}
+                  key={c.bg}
+                  onClick={() => onChangeColor(c.bg)}
                   className={`w-[31%] h-10 shadow-xl rounded border-2 ${
-                    c.startsWith('#') ? '' : c
-                  } ${selectedColor === c ? 'ring-2 ring-primary' : 'border-background'}`}
-                  style={c.startsWith('#') ? { backgroundColor: c } : undefined}
+                    c.bg.startsWith('#') ? '' : c.bg
+                  } ${selectedColor === c.bg ? 'ring-2 ring-primary' : 'border-background'}`}
+                  style={c.bg.startsWith('#') ? { backgroundColor: c.bg } : undefined}
                   aria-label={label}
                 />
               );

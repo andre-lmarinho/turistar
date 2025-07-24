@@ -145,7 +145,7 @@ export default function PlannerClient() {
             imageUrl: item.image_url,
             latitude: item.latitude,
             longitude: item.longitude,
-            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
             startTime: '',
           })
         }

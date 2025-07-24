@@ -10,10 +10,14 @@ import type { DayPlan } from '@/types';
 const map = { fitBounds: vi.fn() };
 vi.mock('react-leaflet', () => {
   const React = require('react');
+  const markers: Array<{ title?: string }> = [];
   return {
     MapContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     TileLayer: () => null,
-    Marker: () => null,
+    Marker: (props: { title?: string }) => {
+      markers.push(props);
+      return null;
+    },
     Polyline: () => null,
     useMap: () => map,
   };
@@ -31,6 +35,7 @@ vi.mock('leaflet', () => ({
 describe('FitAllMarkers effect', () => {
   afterEach(() => {
     map.fitBounds.mockClear();
+    markers.length = 0;
   });
 
   const baseActivity = { id: 'a1', title: 'A1', color: 'red' };
@@ -54,5 +59,25 @@ describe('FitAllMarkers effect', () => {
     // new coordinates cause a new fit
     rerender(<MapView days={buildDays([2, 2])} onSelectActivity={() => {}} />);
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('Marker accessibility', () => {
+  afterEach(() => {
+    markers.length = 0;
+  });
+
+  it('sets each marker title', () => {
+    const days: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [{ id: 'a1', title: 'Walk', color: 'red', latitude: 1, longitude: 1 }],
+      },
+    ];
+
+    render(<MapView days={days} onSelectActivity={() => {}} />);
+
+    expect(markers[0].title).toBe('Walk');
   });
 });

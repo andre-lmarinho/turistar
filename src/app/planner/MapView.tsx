@@ -1,7 +1,7 @@
 // src/app/planner/MapView.tsx
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
 import type { DayPlan, Activity } from '@/types';
@@ -44,15 +44,19 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
 }
 
 export default function MapView({ days, onSelectActivity }: MapViewProps) {
-  const dayPaths = days
-    .map((day, dayIdx) => {
-      const acts = day.activities.filter((a) => a.latitude != null && a.longitude != null);
-      const coords = acts.map((a) => [a.latitude!, a.longitude!] as LatLngExpression);
-      return { day, dayIdx, coords, acts };
-    })
-    .filter((d) => d.coords.length > 0);
+  const dayPaths = useMemo(
+    () =>
+      days
+        .map((day, dayIdx) => {
+          const acts = day.activities.filter((a) => a.latitude != null && a.longitude != null);
+          const coords = acts.map((a) => [a.latitude!, a.longitude!] as LatLngExpression);
+          return { day, dayIdx, coords, acts };
+        })
+        .filter((d) => d.coords.length > 0),
+    [days]
+  );
 
-  const allCoords = dayPaths.flatMap((d) => d.coords);
+  const allCoords = useMemo(() => dayPaths.flatMap((d) => d.coords), [dayPaths]);
   const center: LatLngExpression = allCoords.length ? allCoords[0] : [0, 0];
 
   return (
@@ -101,6 +105,7 @@ export default function MapView({ days, onSelectActivity }: MapViewProps) {
                   key={`${day.id}-${i}`}
                   position={pos}
                   icon={icon}
+                  title={act.title}
                   eventHandlers={{
                     click: () =>
                       onSelectActivity({

@@ -24,7 +24,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       if (!copy[dayIndex].activities.some((a) => a.id === act.id)) {
         copy[dayIndex].activities.push({
           ...act,
-          color: DEFAULT_COLORS[DEFAULT_ADD_ACTIVITY_COLOR_INDEX],
+          color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
         });
       }
       return copy;
@@ -56,7 +56,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       title: '',
       description: '',
       duration: 0,
-      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX],
+      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
       budget: 0,
       category: '',
     };

@@ -11,52 +11,44 @@ export const DEFAULT_NEW_CARD_COLOR_INDEX = 2;
  */
 export const DEFAULT_ADD_ACTIVITY_COLOR_INDEX = 4;
 
-// ===================== CALCULATIONS ONLY =====================================
-
 /**
  * Palette of background color variables from the design system
  */
-export const DEFAULT_COLORS = [
-  'bg-[var(--color-0)]',
-  'bg-[var(--color-1)]',
-  'bg-[var(--color-2)]',
-  'bg-[var(--color-3)]',
-  'bg-[var(--color-4)]',
-  'bg-[var(--color-5)]',
-];
+export interface CardColor {
+  bg: string;
+  border: string;
+  name: string;
+}
 
-export const COLOR_HOVER_CLASSES = [
-  'hover:bg-[var(--color-0)]',
-  'hover:bg-[var(--color-1)]',
-  'hover:bg-[var(--color-2)]',
-  'hover:bg-[var(--color-3)]',
-  'hover:bg-[var(--color-4)]',
-  'hover:bg-[var(--color-5)]',
+export const DEFAULT_COLORS: CardColor[] = [
+  {
+    bg: 'bg-[var(--color-0)]',
+    border: 'border-[var(--color-0-border)]',
+    name: 'White',
+  },
+  {
+    bg: 'bg-[var(--color-1)]',
+    border: 'border-[var(--color-1-border)]',
+    name: 'Orange',
+  },
+  {
+    bg: 'bg-[var(--color-2)]',
+    border: 'border-[var(--color-2-border)]',
+    name: 'Yellow',
+  },
+  {
+    bg: 'bg-[var(--color-3)]',
+    border: 'border-[var(--color-3-border)]',
+    name: 'Teal',
+  },
+  {
+    bg: 'bg-[var(--color-4)]',
+    border: 'border-[var(--color-4-border)]',
+    name: 'Sky Blue',
+  },
+  {
+    bg: 'bg-[var(--color-5)]',
+    border: 'border-[var(--color-5-border)]',
+    name: 'Pink',
+  },
 ];
-
-export const COLOR_FOREGROUND_VALUES = [
-  'var(--color-0-border)',
-  'var(--color-1-border)',
-  'var(--color-2-border)',
-  'var(--color-3-border)',
-  'var(--color-4-border)',
-  'var(--color-5-border)',
-];
-
-export const COLOR_BORDER_CLASSES = [
-  'border-[var(--color-0-border)]',
-  'border-[var(--color-1-border)]',
-  'border-[var(--color-2-border)]',
-  'border-[var(--color-3-border)]',
-  'border-[var(--color-4-border)]',
-  'border-[var(--color-5-border)]',
-];
-
-export const COLOR_NAMES: Record<string, string> = {
-  'bg-[var(--color-0)]': 'White',
-  'bg-[var(--color-1)]': 'Orange',
-  'bg-[var(--color-2)]': 'Yellow',
-  'bg-[var(--color-3)]': 'Teal',
-  'bg-[var(--color-4)]': 'Sky Blue',
-  'bg-[var(--color-5)]': 'Pink',
-};
