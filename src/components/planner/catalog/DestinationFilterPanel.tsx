@@ -57,6 +57,7 @@ export default function DestinationFilterPanel({
           escapeDeactivates: false,
           initialFocus: false,
           fallbackFocus: () => containerRef.current ?? document.body,
+          returnFocusOnDeactivate: false,
           tabbableOptions: { displayCheck: 'none' },
         }}
       >
