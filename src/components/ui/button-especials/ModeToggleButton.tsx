@@ -5,6 +5,8 @@ import React, { useRef, useState, useLayoutEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
+import { Tooltip } from '@/components';
+import { KEY_BINDS } from '@/constants';
 
 type Mode = 'planner' | 'map' | 'budget';
 const modes: Mode[] = ['planner', 'map', 'budget'];
@@ -85,7 +87,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
           const { label, icon: Icon } = MODE_CONFIG[mode];
           const selected = mode === value;
 
-          return (
+          const button = (
             <button
               key={mode}
               role="tab"
@@ -106,6 +108,24 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
                 {label}
               </div>
             </button>
+          );
+          const keyLabel = KEY_BINDS[mode as keyof typeof KEY_BINDS].toUpperCase();
+
+          return (
+            <Tooltip
+              key={mode}
+              content={
+                <>
+                  {label}{' '}
+                  <kbd className="bg-white text-gray-800 text-xs font-medium px-1 py-0.5 rounded">
+                    {keyLabel}
+                  </kbd>
+                </>
+              }
+              position="bottom"
+            >
+              {button}
+            </Tooltip>
           );
         })}
       </div>

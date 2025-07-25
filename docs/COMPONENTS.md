@@ -308,6 +308,16 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** select start/end dates
 - **Performance notes:** none
 
+### DateRangePickerIcon
+
+- **Location:** `src/components/ui/DatePicker.tsx`
+- **Responsibility:** Compact icon button version of the range picker.
+- **Props:** value, onChange, `className`
+- **State:** internal open state
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** labeled button and calendar popup
+
 ### Spinner
 
 - **Location:** `src/components/ui/Spinner.tsx`
@@ -344,6 +354,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Accessibility:** proper aria labels
 - **Interactions:** various click actions
 - **Performance notes:** ModeToggleButton animates using framer motion
+- **Variants:** `OpenPanelButton` and `OpenPanelIcon` provide full and icon-only triggers for the destination panel
 
 ### Input, Popover and Popups
 

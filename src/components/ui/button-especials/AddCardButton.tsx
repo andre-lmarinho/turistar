@@ -3,7 +3,8 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS } from '@/constants';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS, KEY_BINDS } from '@/constants';
+import { Tooltip } from '@/components';
 
 export type AddCardButtonPosition = 'new' | 'insert';
 
@@ -25,7 +26,7 @@ export default function AddCardButton({
   if (position === 'new') {
     const baseColor = baseBg;
 
-    return (
+    const button = (
       <button
         type="button"
         onClick={() => onAddActivity(dayId, index)}
@@ -36,6 +37,21 @@ export default function AddCardButton({
           New Card
         </span>
       </button>
+    );
+    return (
+      <Tooltip
+        content={
+          <>
+            New Card{' '}
+            <kbd className="bg-white text-gray-800 text-xs font-medium px-1 py-0.5 rounded">
+              {KEY_BINDS.newCard.toUpperCase()}
+            </kbd>
+          </>
+        }
+        position="bottom"
+      >
+        {button}
+      </Tooltip>
     );
   }
 

@@ -4,7 +4,8 @@
 import React from 'react';
 import { Compass } from 'lucide-react';
 import { Button } from '@/components';
-
+import { Tooltip } from '@/components';
+import { KEY_BINDS } from '@/constants';
 import type { DayPlan } from '@/types';
 
 interface OpenPanelButtonProps {
@@ -21,7 +22,7 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
     const isEmpty = days?.every((d) => d.activities.length === 0);
     const buttonTitle = isEmpty ? 'Start Here' : title;
 
-    return (
+    const button = (
       <button
         type="button"
         ref={ref}
@@ -38,6 +39,21 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
         />
         <span className="text-xl handcrafted whitespace-nowrap">{buttonTitle}</span>
       </button>
+    );
+    return (
+      <Tooltip
+        position="bottom"
+        content={
+          <>
+            {buttonTitle}{' '}
+            <kbd className="bg-white text-gray-800 text-xs font-medium px-1 py-0.5 rounded">
+              {KEY_BINDS.catalog.toUpperCase()}
+            </kbd>
+          </>
+        }
+      >
+        {button}
+      </Tooltip>
     );
   }
 );

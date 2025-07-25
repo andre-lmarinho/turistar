@@ -60,6 +60,8 @@ While editing an activity, you can search the catalog directly from the modal or
   Demo catalog comes from `/api/catalog`, which serves a static JSON file.
 - **Persistent Storage**
   All planner and budget changes are saved to `localStorage` so they stay when you refresh.
+- **Accessibility & Responsive Design**
+  Fully keyboard-accessible with layouts optimised for mobile and desktop.
 
 You can deploy the same app to Vercel or Netlify.
 
@@ -189,7 +191,7 @@ _For detailed guides, see:_
 - Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
 - Custom components built on top of Radix UI primitives
 - Local persistence using `localStorage` for planner and budget
-- UX patterns: inline editing, optimistic updates, responsive layout
+- UX patterns: inline editing, optimistic updates, responsive layout and accessible components
 - Progressive structure ready to scale with real APIs
 
 ---

@@ -316,6 +316,42 @@ export function useEscapeKey({
 - **Exceptions**
   None.
 
+### `useKeyBinds`
+
+_File: `src/hooks/ui/useKeyBinds.ts`_
+
+```ts
+export function useKeyBinds({
+  onPlanner,
+  onMap,
+  onBudget,
+  onNewCard,
+  onCatalog,
+  isActive = true,
+}: {
+  onPlanner: () => void;
+  onMap: () => void;
+  onBudget: () => void;
+  onNewCard: () => void;
+  onCatalog: () => void;
+  isActive?: boolean;
+});
+```
+
+- **Inputs**
+  - `onPlanner`: callback for Planner mode.
+  - `onMap`: callback for Map mode.
+  - `onBudget`: callback for Budget mode.
+  - `onNewCard`: callback to create a new card.
+  - `onCatalog`: callback to open the catalog.
+  - `isActive`: enable or disable the listeners.
+- **Outputs**
+  None (side effect hook).
+- **Lifecycle**
+  Adds a `keydown` listener when active and removes it on cleanup.
+- **Exceptions**
+  None.
+
 ### `useFlexibleRef`
 
 _File: `src/hooks/ui/useFlexibleRef.ts`_

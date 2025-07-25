@@ -3,5 +3,6 @@
 export * from './useCardPopups';
 export * from './useEscapeKey';
 export * from './useFlexibleRef';
+export * from './useKeyBinds';
 export * from './usePopupOutsideHandler';
 export * from './useWindowSize';

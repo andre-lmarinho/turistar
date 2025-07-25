@@ -18,7 +18,13 @@ import {
   LoadingScreen,
   OnboardingModal,
 } from '@/components';
-import { usePlanner, useActivitiesById, useSelectedActivity, usePlanTitle } from '@/hooks';
+import {
+  usePlanner,
+  useActivitiesById,
+  useSelectedActivity,
+  usePlanTitle,
+  useKeyBinds,
+} from '@/hooks';
 import type { CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } from '@/constants';
 import { motion } from 'framer-motion';
@@ -98,6 +104,14 @@ export default function PlannerClient() {
       ),
     [days]
   );
+
+  useKeyBinds({
+    onPlanner: () => setMode('planner'),
+    onMap: () => setMode('map'),
+    onBudget: () => setMode('budget'),
+    onNewCard: () => addBlankAndSelect(days[0].id),
+    onCatalog: () => setIsPanelOpen(true),
+  });
 
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
