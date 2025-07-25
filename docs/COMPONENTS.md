@@ -275,6 +275,8 @@ This document summarizes each React component in the repository. It follows the 
 - **Accessibility:** ARIA attributes for drag
 - **Interactions:** handles drag start/end events
 - **Performance notes:** minimal
+- **Visual behavior:** leaves a dashed placeholder while dragging and the overlay
+  card uses a translucent glass style
 
 ---
 

@@ -3,8 +3,7 @@
 
 import React from 'react';
 import { Compass } from 'lucide-react';
-import { Button } from '@/components';
-import { Tooltip } from '@/components';
+import { Button, TooltipKeyHint } from '@/components';
 import { KEY_BINDS } from '@/constants';
 import type { DayPlan } from '@/types';
 
@@ -41,19 +40,9 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
       </button>
     );
     return (
-      <Tooltip
-        position="bottom"
-        content={
-          <>
-            {buttonTitle}{' '}
-            <kbd className="bg-white text-gray-800 text-xs font-medium px-1 py-0.5 rounded">
-              {KEY_BINDS.catalog.toUpperCase()}
-            </kbd>
-          </>
-        }
-      >
+      <TooltipKeyHint shortcut={KEY_BINDS.catalog} content={buttonTitle} position="bottom">
         {button}
-      </Tooltip>
+      </TooltipKeyHint>
     );
   }
 );

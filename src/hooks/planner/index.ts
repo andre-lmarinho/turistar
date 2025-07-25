@@ -5,6 +5,5 @@ export * from './useActivityState';
 export * from './useDnDPlanner';
 export * from './useDragState';
 export * from './usePlanner';
-export * from './usePlannerBoard';
 export * from './usePlanTitle';
 export * from './useSelectedActivity';

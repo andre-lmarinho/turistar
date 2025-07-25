@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { closestCenter } from '@dnd-kit/core';
 
-import { useTripRange, useCatalog, usePlannerBoard } from '@/hooks';
+import { useTripRange, useCatalog, useDnDPlanner } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
 import { useLocalStorageSync } from '@/lib';
 import type { DayPlan } from '@/types';
@@ -43,7 +43,7 @@ export function usePlanner(enabled: boolean) {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = usePlannerBoard(buildInitialDays(tripDays));
+  } = useDnDPlanner(buildInitialDays(tripDays));
 
   const storageKey = `catalog-${planId}`;
   useLocalStorageSync(storageKey, days, setDays);

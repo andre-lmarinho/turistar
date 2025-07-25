@@ -9,8 +9,7 @@ This document outlines how planner data moves through the application.
 
 ## Hooks
 
-- `usePlanner` orchestrates planner state. It gathers trip range data, loads the catalog and initializes the board via `usePlannerBoard`.
-- `usePlannerBoard` wraps `useDnDPlanner` to provide drag-and-drop helpers and the `days` array.
+- `usePlanner` orchestrates planner state. It gathers trip range data, loads the catalog and initializes drag-and-drop via `useDnDPlanner`.
 - `useDnDPlanner` combines drag handlers from `useDragState` with activity helpers from `useActivityState`.
 - `useLocalStorageSync` persists planner data in `localStorage`. It is called by `usePlanner`, `usePlanTitle` and `useBudget`.
 

@@ -194,23 +194,6 @@ export function useDnDPlanner(initialDays: DayPlan[]);
 - **Exceptions**
   None.
 
-### `usePlannerBoard`
-
-_File: `src/hooks/planner/usePlannerBoard.ts`_
-
-```ts
-export function usePlannerBoard(initialDays: DayPlan[]);
-```
-
-- **Inputs**
-  - `initialDays`: days to start with.
-- **Outputs**
-  DnD state, activities helpers, and `collisionDetection` set to `closestCenter`.
-- **Lifecycle**
-  Built on top of `useDnDPlanner`.
-- **Exceptions**
-  None.
-
 ### `usePlanner`
 
 _File: `src/hooks/planner/usePlanner.ts`_

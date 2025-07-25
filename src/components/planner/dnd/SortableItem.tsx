@@ -46,9 +46,10 @@ export default function SortableItem({
     return (
       <div
         className={cn(
-          'shadow-lg cursor-grabbing pointer-events-none',
+          'cursor-grabbing pointer-events-none',
           'origin-bottom rotate-[3deg]',
           'transition-transform duration-200 ease-out',
+          'bg-background/70 backdrop-blur-md rounded-lg',
           className
         )}
       >
@@ -77,24 +78,29 @@ export default function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'list-none',
-        isDragging ? 'opacity-50 cursor-grabbing' : 'cursor-grab',
+        'list-none relative',
+        isDragging ? 'cursor-grabbing' : 'cursor-grab',
         className
       )}
       {...attributes}
       {...listeners}
     >
-      <ActivityCard
-        activity={activity}
-        availableDays={availableDays}
-        onSelect={onSelect}
-        onTitleSave={onTitleSave}
-        onChangeDay={onChangeDay}
-        onChangePosition={onChangePosition}
-        onChangeColor={onChangeColor}
-        onDelete={onDelete}
-        bgColor={bgColor}
-      />
+      <div className={cn(isDragging && 'opacity-0')}>
+        <ActivityCard
+          activity={activity}
+          availableDays={availableDays}
+          onSelect={onSelect}
+          onTitleSave={onTitleSave}
+          onChangeDay={onChangeDay}
+          onChangePosition={onChangePosition}
+          onChangeColor={onChangeColor}
+          onDelete={onDelete}
+          bgColor={bgColor}
+        />
+      </div>
+      {isDragging && (
+        <div className="absolute inset-0 rounded-lg border-2 border-dashed border-gray-300 bg-background" />
+      )}
     </li>
   );
 }

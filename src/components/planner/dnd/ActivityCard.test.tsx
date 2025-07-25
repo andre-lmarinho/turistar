@@ -17,6 +17,7 @@ const baseActivity: Activity & { dayId?: string } = {
 const defaultProps = {
   activity: baseActivity,
   onChangeDay: vi.fn(),
+  onChangePosition: vi.fn(),
   availableDays: [] as DayPlan[],
   bgColor: '',
   onChangeColor: vi.fn(),
@@ -42,9 +43,8 @@ describe('ActivityCard', () => {
     render(<ActivityCard {...defaultProps} onSelect={handleSelect} />);
 
     const titleEl = screen.getByText('Visit museum');
-    const card = titleEl.closest('[role="button"]') as HTMLElement;
-
-    expect(card).toHaveAttribute('tabindex', '0');
+    const card = titleEl.closest('button') as HTMLElement;
+    expect(card).toHaveAttribute('type', 'button');
 
     fireEvent.keyDown(card, { key: 'Enter' });
     expect(handleSelect).toHaveBeenCalledTimes(1);

@@ -6,7 +6,8 @@ export { Calendar, CalendarDayButton } from './calendar';
 export { DateRangePicker, DateRangePickerIcon } from './DatePicker';
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover';
 
-export { default as Tooltip } from './buttonTooltip';
+export { default as Tooltip } from './Tooltip';
+export { default as TooltipKeyHint } from './TooltipKeyHint';
 export { default as Spinner } from './Spinner';
 
 // Icons components

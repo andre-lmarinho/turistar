@@ -43,7 +43,7 @@ export default function ActivityCard({
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const cardRef = useRef<HTMLDivElement>(null);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const [overlayRect, setOverlayRect] = useState<DOMRect | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -84,39 +84,42 @@ export default function ActivityCard({
         ReactDOM.createPortal(<div className="backdrop-overlay" onClick={cancel} />, document.body)}
 
       <div
-        role="button"
-        tabIndex={0}
         className="group relative"
         ref={cardRef}
         style={{ visibility: editing ? 'hidden' : undefined }}
-        onClick={() => {
-          if (!editing) onSelect?.();
-        }}
-        onKeyDown={(e) => {
-          if (!editing && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            onSelect?.();
-          }
-        }}
-        onContextMenu={(e) => {
-          if (isTouchDevice()) return;
-          e.preventDefault();
-          if (!editing) startEditing();
-        }}
       >
-        <ActivityCardBase
-          editing={false}
-          title={title}
-          draftTitle={draftTitle}
-          onDraftTitleChange={setDraftTitle}
-          onSave={save}
-          inputRef={inputRef}
-          imageUrl={imageUrl}
-          duration={duration}
-          twBg={twBg}
-          budget={budget}
-          borderColorClass={borderColorClass}
-        />
+        <button
+          type="button"
+          className="w-full text-left"
+          onClick={() => {
+            if (!editing) onSelect?.();
+          }}
+          onKeyDown={(e) => {
+            if (!editing && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              onSelect?.();
+            }
+          }}
+          onContextMenu={(e) => {
+            if (isTouchDevice()) return;
+            e.preventDefault();
+            if (!editing) startEditing();
+          }}
+        >
+          <ActivityCardBase
+            editing={false}
+            title={title}
+            draftTitle={draftTitle}
+            onDraftTitleChange={setDraftTitle}
+            onSave={save}
+            inputRef={inputRef}
+            imageUrl={imageUrl}
+            duration={duration}
+            twBg={twBg}
+            budget={budget}
+            borderColorClass={borderColorClass}
+          />
+        </button>
 
         {!editing && (
           <EditCardButton

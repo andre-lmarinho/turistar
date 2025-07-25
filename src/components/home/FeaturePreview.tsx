@@ -1,42 +1,112 @@
 // src/components/home/FeaturePreview.tsx
 'use client';
 
-import React, { useId } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
-interface FeaturePreviewProps {
-  title: string;
-  description: string;
-  imgSrc: string;
-}
-
-export default function FeaturePreview({ title, description, imgSrc }: FeaturePreviewProps) {
-  const titleId = useId();
-
+export default function FeaturePreview() {
   return (
-    <figure
-      role="group"
-      aria-labelledby={titleId}
-      className="text-center space-y-4 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-    >
-      <div className="rounded-lg overflow-hidden border mx-auto">
-        {/* Image */}
-        <Image
-          src={imgSrc}
-          alt={title}
-          width={600}
-          height={400}
-          loading="lazy"
-          className="w-full h-48 object-cover"
-        />
+    <section className="featured-preview relative z-10 pt-40 lg:pt-32 md:pt-24 sm:pt-16">
+      <div className="container relative z-10 lg:max-w-[960px] md:max-w-3xl xs:max-w-md">
+        <h2 className="font-title font-semibold leading-[0.9] tracking-tight text-foreground text-[32px] sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px] pb-6">
+          What can you do?
+        </h2>
+        <p className="mt-6 max-w-[705px] text-18 leading-tight tracking-tight lg:mt-5 sm:mt-3 sm:max-w-lg sm:text-15">
+          Turistar is a personal project focused on clean architecture, drag-and-drop logic, and
+          real-world UX — all wrapped in something genuinely helpful.
+        </p>
+        <ul className="mt-10 grid grid-cols-1 gap-y-5 gap-x-0 sm:gap-y-5 sm:gap-x-5 auto-rows-[200px] sm:grid-cols-3 sm:auto-rows-[300px]">
+          {/* 1ª Left (1/3) */}
+          <li className="relative bg-black col-span-1 w-full h-full overflow-hidden rounded-xl bg-grey-2 ring-[6px] ring-white/40">
+            <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 lg:px-5 lg:pb-5 md:px-4 md:pb-4 sm:px-5 sm:pb-5">
+              <p className="relative z-10 font-light leading-snug tracking-snugger text-white/65 md:leading-[1.2] sm:text-15">
+                <span className="font-medium text-white">Smart planning. </span>
+                Create a complete travel itinerary based on your selected dates — no templates, just
+                flexibility.
+              </p>
+            </div>
+            <div className="relative col-span-full row-span-full">
+              <span className="absolute left-1/2 top-0 -z-10 h-full w-px"></span>
+              <div className="absolute left-1/2 h-full w-full -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto xs:-top-8">
+                <Image
+                  src="/images/mascot_1_.webp"
+                  alt=""
+                  role="presentation"
+                  width={252}
+                  height={260}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </li>
+          {/* 1ª Right (2/3) */}
+          <li className="relative bg-black col-span-2 w-full h-full overflow-hidden rounded-xl bg-grey-2 ring-[6px] ring-white/40">
+            <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 lg:px-5 lg:pb-5 md:px-4 md:pb-4  sm:px-5 sm:pb-5">
+              <p className="relative z-10 font-light leading-snug tracking-snugger text-white/65 md:leading-[1.2] sm:text-15">
+                <span className="font-medium text-white">Drag-and-drop scheduling. </span>
+                Easily move and rearrange activities between days to build your ideal trip.
+              </p>
+            </div>
+            <div className="relative col-span-full row-span-full">
+              <span className="absolute left-1/2 top-0 -z-10 h-full w-px"></span>
+              <div className="absolute left-1/2 aspect-[1.82857] h-full w-full -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto xs:-top-8">
+                <Image
+                  src="/images/mascot_1_.webp"
+                  alt=""
+                  role="presentation"
+                  width={475}
+                  height={260}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </li>
+          {/* 2ª Left (2/3) */}
+          <li className="relative bg-black col-span-2 w-full h-full overflow-hidden rounded-xl bg-grey-2 ring-[6px] ring-white/40">
+            <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 lg:px-5 lg:pb-5 md:px-4 md:pb-4  sm:px-5 sm:pb-5">
+              <p className="relative z-10 font-light leading-snug tracking-snugger text-white/65 md:leading-[1.2] sm:text-15">
+                <span className="font-medium text-white">Budget tracking. </span>
+                Edit and manage your expenses in a dedicated panel — keep it organized, day by day.
+              </p>
+            </div>
+            <div className="relative col-span-full row-span-full">
+              <span className="absolute left-1/2 top-0 -z-10 h-full w-px"></span>
+              <div className="absolute left-1/2 aspect-[1.82857] h-full w-full -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto xs:-top-8">
+                <Image
+                  src="/images/mascot_1_.webp"
+                  alt=""
+                  role="presentation"
+                  width={475}
+                  height={260}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </li>
+          {/* 2ª Right (1/3) */}
+          <li className="relative bg-black col-span-1 w-full h-full overflow-hidden rounded-xl bg-grey-2 ring-[6px] ring-white/40">
+            <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 lg:px-5 lg:pb-5 md:px-4 md:pb-4  sm:px-5 sm:pb-5">
+              <p className="relative z-10 font-light leading-snug tracking-snugger text-white/65 md:leading-[1.2] sm:text-15">
+                <span className="font-medium text-white">Interactive map view. </span>
+                See all your planned locations mapped out for better spatial awareness.
+              </p>
+            </div>
+            <div className="relative col-span-full row-span-full">
+              <span className="absolute left-1/2 top-0 -z-10 h-full w-px"></span>
+              <div className="absolute left-1/2 aspect-[1.01904] h-full w-full -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto xs:-top-8">
+                <Image
+                  src="/images/mascot_1_.webp"
+                  alt=""
+                  role="presentation"
+                  width={252}
+                  height={260}
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-      {/* Heading & Description */}
-      <figcaption>
-        <h3 id={titleId} className="text-lg font-semibold">
-          {title}
-        </h3>
-        <p className="text-muted-foreground text-sm">{description}</p>
-      </figcaption>
-    </figure>
+    </section>
   );
 }
