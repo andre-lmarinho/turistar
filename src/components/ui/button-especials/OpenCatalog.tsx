@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Compass } from 'lucide-react';
+import { Button } from '@/components';
 
 import type { DayPlan } from '@/types';
 
@@ -22,16 +23,13 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
 
     return (
       <button
+        type="button"
         ref={ref}
         onClick={onClick}
         aria-label={buttonTitle}
         className={`flex group cursor-pointer items-center gap-2 px-6 py-2 rounded hover:opacity-90 transition-colors ${
           isEmpty ? 'animate-bounce' : ''
-        }`}
-        style={{
-          backgroundColor: 'var(--primary)',
-          color: 'var(--primary-foreground)',
-        }}
+        } bg-[var(--primary)] text-[var(--primary-foreground)]`}
       >
         <Compass
           size={18}
@@ -44,4 +42,15 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
   }
 );
 
-export default OpenPanelButton;
+const OpenPanelIcon = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<'button'> & { title?: string }
+>(function OpenPanelIconButton({ title = 'Add Adventures', ...props }, ref) {
+  return (
+    <Button ref={ref} variant="icon" size="icon" position="bottom" title={title} {...props}>
+      <Compass aria-hidden="true" />
+    </Button>
+  );
+});
+
+export { OpenPanelButton, OpenPanelIcon };

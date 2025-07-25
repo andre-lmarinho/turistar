@@ -56,7 +56,7 @@ describe('CatalogSearchPopup', () => {
     expect(screen.getByText('Beach')).toBeInTheDocument();
     expect(screen.getByText('Museum')).toBeInTheDocument();
 
-    const input = screen.getByPlaceholderText('Search');
+    const input = screen.getByLabelText('Search catalog');
     fireEvent.change(input, { target: { value: 'mus' } });
 
     await waitFor(() => {

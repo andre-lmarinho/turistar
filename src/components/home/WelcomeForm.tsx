@@ -20,6 +20,14 @@ export default function WelcomeForm() {
   // Declare error state
   const [error, setError] = useState<string>('');
 
+  function handleRangeChange(r: DateRange | undefined) {
+    setRange(r);
+    // Clear any prior errors once a full range is chosen
+    if (r?.from && r?.to) {
+      setError('');
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Block submission if dates are missing
@@ -58,7 +66,7 @@ export default function WelcomeForm() {
                 </legend>
                 <DateRangePicker
                   value={range}
-                  onChange={setRange}
+                  onChange={handleRangeChange}
                   aria-describedby={error ? 'date-error' : undefined}
                   aria-invalid={Boolean(error)}
                 />
@@ -78,7 +86,8 @@ export default function WelcomeForm() {
         <div className="absolute bottom-0 right-[10%] w-[40%] min-w-[100px] max-w-[280px] lg:w-[36%] lg:max-w-[420px] lg:right-[20%]">
           <Image
             src="/images/mascot_1_.webp"
-            alt="Mascot"
+            alt=""
+            role="presentation"
             width={800}
             height={600}
             className="w-full h-auto"

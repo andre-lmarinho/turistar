@@ -19,7 +19,14 @@ export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProp
     >
       {/* Mascot */}
       <div className="relative w-32 h-32 mb-6">
-        <Image src="/images/mascot_1_.webp" alt="" fill className="object-contain" priority />
+        <Image
+          src="/images/mascot_1_.webp"
+          alt=""
+          role="presentation"
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
       {/* Text */}
       <div role="status" aria-live="polite" className="flex items-center gap-2 text-lg">

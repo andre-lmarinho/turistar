@@ -22,7 +22,7 @@ const features = [
 
 export default function Home() {
   return (
-    <main id="main-content" className="space-y-16">
+    <main id="main-content" className="p-8 space-y-16">
       <section className="hero relative h-[1438px] overflow-hidden bg-grey-1 pt-[184px] px-safe lg:h-[1078px] lg:pt-28 md:h-auto md:pt-24 sm:pt-[92px]">
         <WelcomeForm />
       </section>

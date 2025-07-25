@@ -36,6 +36,9 @@ export default function CatalogSearchPopup({
         <CloseButton onClick={onClose} />
       </div>
       <div className="p-2 space-y-2">
+        <label htmlFor="catalog-search-input" className="sr-only">
+          Search catalog
+        </label>
         <input
           id="catalog-search-input"
           name="search"

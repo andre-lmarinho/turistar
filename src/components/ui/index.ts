@@ -3,7 +3,7 @@
 export { Button, buttonVariants } from './button';
 export { Input, inputVariants } from './input';
 export { Calendar, CalendarDayButton } from './calendar';
-export { DateRangePicker } from './DatePicker';
+export { DateRangePicker, DateRangePickerIcon } from './DatePicker';
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover';
 
 export { default as Tooltip } from './buttonTooltip';

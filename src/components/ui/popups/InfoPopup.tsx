@@ -11,6 +11,7 @@ interface InfoPopupProps {
 
 export default function InfoPopup({ content, children }: InfoPopupProps) {
   const [open, setOpen] = React.useState(false);
+  const contentId = React.useId();
 
   React.useEffect(() => {
     if (!open) return;
@@ -23,17 +24,26 @@ export default function InfoPopup({ content, children }: InfoPopupProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         asChild
+        aria-haspopup="true"
+        aria-expanded={open}
+        aria-describedby={contentId}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
       >
         {children}
       </PopoverTrigger>
       <PopoverContent
+        id={contentId}
+        role="tooltip"
         side="top"
         align="center"
         className="w-max max-w-xs p-2 text-xs rounded-md border bg-background shadow-md"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
       >
         {content}
       </PopoverContent>

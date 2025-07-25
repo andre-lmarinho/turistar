@@ -12,7 +12,7 @@ This document summarizes each React component in the repository. It follows the 
 - **State:** none
 - **External Hooks:** none
 - **Side-effects:** none
-- **Accessibility:** `role="status"`, `aria-busy`, live region for text.
+- **Accessibility:** `role="status"`, `aria-busy`, live region for text, decorative mascot image marked with `role="presentation"`.
 - **Interactions:** none
 - **Performance notes:** simple component
 
@@ -331,6 +331,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Accessibility:** ARIA labels for icon buttons
 - **Interactions:** click handlers
 - **Performance notes:** uses `class-variance-authority`
+- **Layout notes:** tooltip is set to avoid expanding the viewport
 
 ### Specialized Buttons
 

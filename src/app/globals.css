@@ -169,8 +169,6 @@
   margin-right: auto;
   width: 100%;
   max-width: 80rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 /* Override Leaflet panes to z-index 0 */

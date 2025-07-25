@@ -37,12 +37,12 @@ export default function ActivityCardBase({
 
   return (
     <div
-      className="group w-full text-left flex items-stretch rounded-lg border shadow-sm bg-[var(--background)] hover:shadow-md transition cursor-grab relative"
+      className="group w-full text-left flex items-stretch rounded-lg border bg-[var(--background)] transition cursor-grab relative"
       style={{ zIndex: editing ? 50 : undefined }}
     >
       {/* Content */}
       <div
-        className={`flex-1 flex w-40 flex-col rounded-lg border ${
+        className={`flex-1 flex w-40 flex-col rounded-lg border border-b-3 ${
           borderColorClass
         } overflow-hidden ${twBg ?? ''}`}
       >

@@ -91,6 +91,9 @@ export default function CardColorsPopup({
             Upload image
           </Button>
 
+          <label htmlFor="upload-image" className="sr-only">
+            Upload image
+          </label>
           <input
             id="upload-image"
             name="upload-image"

@@ -61,7 +61,7 @@ export default function DayPickerPopup({
           </select>
         </div>
         <div className="w-[30%]">
-          <label htmlFor="position-select" className="text-xs maw-w-[5rem]  font-bold">
+          <label htmlFor="position-select" className="text-xs maw-w-[5rem] font-bold">
             Position
           </label>
           <select

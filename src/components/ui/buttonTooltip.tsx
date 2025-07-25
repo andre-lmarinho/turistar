@@ -57,7 +57,7 @@ export default function Tooltip({ content, children, className, position = 'top'
           <div
             id={tooltipId}
             className={cn(
-              'pointer-events-none absolute z-50 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-[10px] text-background',
+              'pointer-events-none fixed z-50 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-[10px] text-background',
               position === 'bottom' ? 'translate-y-[6px]' : '-translate-y-[calc(100%+6px)]',
               className
             )}

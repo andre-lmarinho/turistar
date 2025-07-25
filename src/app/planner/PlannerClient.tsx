@@ -11,7 +11,9 @@ import {
   ActivityModal,
   DestinationFilterPanel,
   DateRangePicker,
+  DateRangePickerIcon,
   OpenPanelButton,
+  OpenPanelIcon,
   ModeToggleButton,
   LoadingScreen,
   OnboardingModal,
@@ -111,49 +113,45 @@ export default function PlannerClient() {
       id="main-content"
       className="flex flex-col bg-card p-4 lg:px-12 md:pb-12 h-screen overflow-hidden"
     >
-      <div className="pb-4 flex items-center justify-between">
-        <h1 className="text-4xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
+      {/* HEADER */}
+      <div className="container pb-4 flex items-center justify-between gap-4">
+        <h1 className="inline-flex flex-none text-3xl md:text-5xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] ">
           <input
             id="planner-title"
             name="title"
+            role="heading"
+            aria-level={1}
             aria-label="Planner title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            size={Math.max(title.length, 1)}
+            style={{ width: `${Math.max(title.length, 1)}ch` }}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
             className="px-4 py-2 border-2 rounded-md bg-transparent border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
           />
         </h1>
-        <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
+        <div className="flex gap-2 md:hidden">
+          <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
+          <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
+        </div>
+        <div className="md:flex hidden">
+          <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
+        </div>
       </div>
 
-      <div className="pb-4 flex items-center justify-between gap-4">
+      {/* CONTROLS: single wrapper for toggle and date-picker */}
+      <div className="container py-2 flex items-center justify-center md:justify-between gap-4 order-3 md:order-2 md:pt-0 md:pb-4">
         <ModeToggleButton value={mode} onChange={setMode} />
-        <DateRangePicker value={currentRange} onChange={handleRangeChange} />
+        {/* DateRangePicker only on desktop */}
+        <DateRangePicker
+          value={currentRange}
+          onChange={handleRangeChange}
+          className="hidden md:flex"
+        />
       </div>
 
-      <DestinationFilterPanel
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        onAdd={(item: CatalogActivity) =>
-          addActivity({
-            id: item.id,
-            title: item.name,
-            description: item.description,
-            duration: item.duration,
-            imageUrl: item.image_url,
-            latitude: item.latitude,
-            longitude: item.longitude,
-            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-            startTime: '',
-          })
-        }
-        onRemove={removeActivity}
-        addedIds={addedIds}
-      />
-
-      <div className="relative flex-1 overflow-visible">
+      {/* BOARD / MAP / BUDGET */}
+      <div className="relative container flex-1 overflow-visible order-2 md:order-3">
         {modeOrder.map((m, idx) => {
           const isActive = idx === activeIdx;
           const rel = idx - activeIdx;
@@ -171,16 +169,9 @@ export default function PlannerClient() {
             <motion.div
               key={m}
               className={`absolute inset-0 ${!isActive ? 'cursor-pointer' : ''}`}
-              style={{
-                zIndex: z,
-              }}
+              style={{ zIndex: z }}
               initial={false}
-              animate={{
-                x: `${offset}%`,
-                scale: scale,
-                opacity: opacity,
-                rotateZ: rotate,
-              }}
+              animate={{ x: `${offset}%`, scale, opacity, rotateZ: rotate }}
               transition={{ type: 'spring', stiffness: 200, damping: 25 }}
               onClick={() => !isActive && setMode(m)}
             >
@@ -234,6 +225,25 @@ export default function PlannerClient() {
       )}
 
       <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
+      <DestinationFilterPanel
+        isOpen={isPanelOpen}
+        onClose={() => setIsPanelOpen(false)}
+        onAdd={(item: CatalogActivity) =>
+          addActivity({
+            id: item.id,
+            title: item.name,
+            description: item.description,
+            duration: item.duration,
+            imageUrl: item.image_url,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+            startTime: '',
+          })
+        }
+        onRemove={removeActivity}
+        addedIds={addedIds}
+      />
     </main>
   );
 }

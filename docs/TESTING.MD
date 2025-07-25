@@ -21,4 +21,4 @@ Test files use the `*.test.tsx` pattern and live next to the source they cover. 
 ## Mocking guidelines
 
 - **Global mocks:** put shared mocks in `vitest.setup.tsx` so all tests can rely on them.
-- **Local mocks:** use `vi.mock()` inside individual test files when the behaviour is specific to that test.
+- **Local mocks:** use `vi.mock()` inside individual test files when the behavior is specific to that test.
