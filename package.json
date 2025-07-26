@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "fast-glob": "^3.3.3",
     "focus-trap-react": "^11.0.4",
     "framer-motion": "^12.23.3",
     "leaflet": "^1.9.4",
@@ -41,6 +42,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4",
     "@tanstack/react-query-devtools": "^5.81.5",
     "@testing-library/jest-dom": "^6.6.3",
@@ -52,7 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "eslint": "^9.30.1",
-    "eslint-config-next": "15.3.4",
+    "eslint-config-next": "^15.4.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",

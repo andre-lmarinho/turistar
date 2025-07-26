@@ -44,7 +44,9 @@ function Input({
   icon,
   ...props
 }: InputProps) {
-  const inputId = labelId ?? useId();
+  // Always call useId() at the top level
+  const generatedId = useId();
+  const inputId = labelId ?? generatedId;
 
   return (
     <div className={cn(inputVariants({ inputSize, background }), className)}>

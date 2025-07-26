@@ -138,7 +138,7 @@ This document summarizes each React component in the repository. It follows the 
 
 ### OnboardingCarousel
 
-- **Location:** `src/components/onboarding/OnboardingCarousel.tsx`
+- **Location:** `src/components/planner/onboarding/OnboardingCarousel.tsx`
 - **Responsibility:** Animated carousel for onboarding steps.
 - **Props:** options for width, autoplay, callbacks
 - **State:** `isHovered`, `isResetting`, `currentIndex`
@@ -150,7 +150,7 @@ This document summarizes each React component in the repository. It follows the 
 
 ### OnboardingModal
 
-- **Location:** `src/components/onboarding/OnboardingModal.tsx`
+- **Location:** `src/components/planner/onboarding/OnboardingModal.tsx`
 - **Responsibility:** Modal wrapper showing the carousel.
 - **Props:** `{ open, onClose }`
 - **State:** none
