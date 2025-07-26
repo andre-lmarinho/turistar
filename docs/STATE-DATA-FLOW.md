@@ -18,5 +18,6 @@ This document outlines how planner data moves through the application.
 - **PlannerClient** – main client component for `/planner`. It calls `usePlanner` and passes state to the board, budget panel and modals.
 - **PlannerBoard** – presentation layer for the drag-and-drop board. Receives `days` and DnD callbacks as props.
 - **BudgetPanel** – controls travel expenses through `useBudget` and updates activities when budgets change.
+- **PlannerControls** – groups mode switching and date range selection UI.
 
 `days` and other planner state flow from `usePlanner` down to these components, keeping the UI consistent and persisted across visits.

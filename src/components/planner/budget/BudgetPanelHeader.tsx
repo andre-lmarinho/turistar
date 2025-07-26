@@ -1,4 +1,4 @@
-// src/components/budget/BudgetPanelHeader.tsx
+// src/components/planner/budget/BudgetPanelHeader.tsx
 'use client';
 
 import React, { useState } from 'react';

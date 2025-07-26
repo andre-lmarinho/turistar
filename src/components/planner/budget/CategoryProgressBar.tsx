@@ -1,4 +1,4 @@
-// src/components/budget/CategoryProgressBar.tsx
+// src/components/planner/budget/CategoryProgressBar.tsx
 
 import React from 'react';
 import { Info } from 'lucide-react';

@@ -1,6 +1,5 @@
 // src/components/index.ts
 
-export * from './budget';
 export * from './planner';
 export * from './ui';
 export * from './home';

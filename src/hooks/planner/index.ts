@@ -7,3 +7,4 @@ export * from './useDragState';
 export * from './usePlanner';
 export * from './usePlanTitle';
 export * from './useSelectedActivity';
+export * from './useOnboardingCheck';

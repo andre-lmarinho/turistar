@@ -381,7 +381,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Props:** none
 - **State:** `isPanelOpen`, `mode`, `showOnboarding`
 - **External Hooks:** `usePlanner`, `usePlanTitle`, `useSelectedActivity`, `useActivitiesById`
-- **Side-effects:** onboarding check via `useEffect` with `localStorage`
+- **Side-effects:** none
 - **Accessibility:** input IDs, focus on select, ARIA labels
 - **Interactions:** numerous callbacks: `handleDragStart`, `handleDragEnd`, etc.
 - **Performance notes:** `useMemo` for totals and added ID set
@@ -408,4 +408,16 @@ This document summarizes each React component in the repository. It follows the 
 - **Side-effects:** none
 - **Accessibility:** region with heading, labels
 - **Interactions:** open activities popup, update entries
+- **Performance notes:** none
+
+### PlannerControls
+
+- **Location:** `src/components/planner/PlannerControls.tsx`
+- **Responsibility:** Wrapper for the view mode switch and trip date range picker.
+- **Props:** `{ mode, onModeChange, range, onRangeChange }`
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** passes ARIA props to child buttons and pickers
+- **Interactions:** toggles modes, selects date ranges
 - **Performance notes:** none

@@ -1,4 +1,4 @@
-// src/components/budget/TableRowNew.tsx
+// src/components/planner/budget/TableRowNew.tsx
 'use client';
 
 import React, { useId } from 'react';

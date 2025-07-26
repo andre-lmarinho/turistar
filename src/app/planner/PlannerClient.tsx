@@ -1,7 +1,7 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
@@ -10,13 +10,12 @@ const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 import {
   ActivityModal,
   DestinationFilterPanel,
-  DateRangePicker,
   DateRangePickerIcon,
   OpenPanelButton,
   OpenPanelIcon,
-  ModeToggleButton,
   LoadingScreen,
   OnboardingModal,
+  PlannerControls,
 } from '@/components';
 import {
   usePlanner,
@@ -24,6 +23,7 @@ import {
   useSelectedActivity,
   usePlanTitle,
   useKeyBinds,
+  useOnboardingCheck,
 } from '@/hooks';
 import type { CatalogActivity } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } from '@/constants';
@@ -65,16 +65,7 @@ export default function PlannerClient() {
   } = usePlanner(true);
 
   const { title, setTitle } = usePlanTitle(planId, STARTER_PLANNER_TITLE);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const key = `planner-onboarding-shown-${planId}`;
-    if (!localStorage.getItem(key)) {
-      setShowOnboarding(true);
-      localStorage.setItem(key, 'true');
-    }
-  }, [planId]);
+  const { showOnboarding, setShowOnboarding } = useOnboardingCheck(planId);
 
   const {
     selectedActivity,
@@ -153,16 +144,12 @@ export default function PlannerClient() {
         </div>
       </div>
 
-      {/* CONTROLS: single wrapper for toggle and date-picker */}
-      <div className="order-3 container flex items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
-        <ModeToggleButton value={mode} onChange={setMode} />
-        {/* DateRangePicker only on desktop */}
-        <DateRangePicker
-          value={currentRange}
-          onChange={handleRangeChange}
-          className="hidden md:flex"
-        />
-      </div>
+      <PlannerControls
+        mode={mode}
+        onModeChange={setMode}
+        range={currentRange}
+        onRangeChange={handleRangeChange}
+      />
 
       {/* BOARD / MAP / BUDGET */}
       <div className="relative order-2 container flex-1 overflow-visible md:order-3">

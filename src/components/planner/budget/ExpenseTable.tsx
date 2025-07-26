@@ -1,4 +1,4 @@
-// src/components/budget/ExpenseTable.tsx
+// src/components/planner/budget/ExpenseTable.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';

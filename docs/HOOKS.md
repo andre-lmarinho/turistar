@@ -265,6 +265,23 @@ export function usePlanTitle(planId: string, defaultTitle = '');
 - **Exceptions**
   None.
 
+### `useOnboardingCheck`
+
+_File: `src/hooks/planner/useOnboardingCheck.ts`_
+
+```ts
+export function useOnboardingCheck(planId: string);
+```
+
+- **Inputs**
+  - `planId`: planner identifier used for the storage key.
+- **Outputs**
+  `{ showOnboarding, setShowOnboarding }`.
+- **Lifecycle**
+  Checks `localStorage` on mount and only shows onboarding once per plan.
+- **Exceptions**
+  None.
+
 ### `useSelectedActivity`
 
 _File: `src/hooks/planner/useSelectedActivity.ts`_
