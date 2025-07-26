@@ -10,6 +10,8 @@ This project aims to meet WCAG 2.1 AA requirements. Use the checklist below when
 - Avoid content that flashes more than three times per second
 - Label form controls and interactive elements clearly
 - Use semantic HTML and ARIA roles only when necessary
+- Add `aria-label="Itinerary map"` to `<MapContainer>` components so screen
+  readers can identify the map
 
 Refer to the official guidelines for details: <https://www.w3.org/WAI/WCAG21/quickref/>
 

@@ -29,31 +29,20 @@ export function useKeyBinds({
   useEffect(() => {
     if (!isActive) return;
 
+    const handlers: Record<string, () => void> = {
+      [KEY_BINDS.planner]: onPlanner,
+      [KEY_BINDS.map]: onMap,
+      [KEY_BINDS.budget]: onBudget,
+      [KEY_BINDS.newCard]: onNewCard,
+      [KEY_BINDS.catalog]: onCatalog,
+    };
+
     function handleKeyDown(e: KeyboardEvent) {
       const key = e.key.toLowerCase();
-      switch (key) {
-        case KEY_BINDS.planner:
-          e.preventDefault();
-          onPlanner();
-          break;
-        case KEY_BINDS.map:
-          e.preventDefault();
-          onMap();
-          break;
-        case KEY_BINDS.budget:
-          e.preventDefault();
-          onBudget();
-          break;
-        case KEY_BINDS.newCard:
-          e.preventDefault();
-          onNewCard();
-          break;
-        case KEY_BINDS.catalog:
-          e.preventDefault();
-          onCatalog();
-          break;
-        default:
-          break;
+      const handler = handlers[key];
+      if (handler) {
+        e.preventDefault();
+        handler();
       }
     }
 

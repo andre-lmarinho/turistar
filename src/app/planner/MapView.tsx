@@ -61,10 +61,14 @@ export default function MapView({ days, onSelectActivity }: MapViewProps) {
 
   return (
     <div className="relative h-full w-full rounded-xl border bg-background overflow-hidden">
-      <MapContainer center={center} zoom={13} style={{ width: '100%', height: '100%' }}>
+      <MapContainer
+        center={center}
+        zoom={13}
+        style={{ width: '100%', height: '100%' }}
+        aria-label="Itinerary map"
+      >
         <FitAllMarkers coords={allCoords} />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
         {dayPaths.map(({ day, dayIdx, coords, acts }) => (
           <React.Fragment key={day.id}>
             {coords.length > 1 && (
