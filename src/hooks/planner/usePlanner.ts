@@ -1,31 +1,17 @@
 // src/hooks/planner/usePlanner.ts
-
 'use client';
-
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { closestCenter } from '@dnd-kit/core';
 
 import { useTripRange, useCatalog, useDnDPlanner } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
-import { useLocalStorageSync } from '@/lib';
+import { usePlanParams } from './usePlanParams';
+import { usePlanDaysStorage } from './usePlanDaysStorage';
 import type { DayPlan } from '@/types';
 
 export function usePlanner(enabled: boolean) {
-  /* URL + date range */
-  const params = useSearchParams();
-  const router = useRouter();
-  const dest = params.get('dest')?.trim().toLowerCase() ?? '';
-  const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
-
-  useEffect(() => {
-    if (!params.get('plan')) {
-      const search = new URLSearchParams(params.toString());
-      search.set('plan', planId);
-      router.replace(`/planner?${search.toString()}`, { scroll: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId, router]);
+  /* Plan id + destination from URL */
+  const { dest, planId } = usePlanParams();
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
   const { isLoading, error } = useCatalog(dest, { enabled });
@@ -45,8 +31,7 @@ export function usePlanner(enabled: boolean) {
     addBlankActivity,
   } = useDnDPlanner(buildInitialDays(tripDays));
 
-  const storageKey = `catalog-${planId}`;
-  useLocalStorageSync(storageKey, days, setDays);
+  usePlanDaysStorage(planId, days, setDays);
 
   /* Sync on range change */
   useEffect(() => {

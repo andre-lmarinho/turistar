@@ -194,6 +194,40 @@ export function useDnDPlanner(initialDays: DayPlan[]);
 - **Exceptions**
   None.
 
+### `usePlanParams`
+
+_File: `src/hooks/planner/usePlanParams.ts`_
+
+```ts
+export function usePlanParams();
+```
+
+- **Outputs**
+  `{ dest, planId }` from the URL.
+- **Lifecycle**
+  Generates a plan id when missing and updates the URL.
+- **Exceptions**
+  None.
+
+### `usePlanDaysStorage`
+
+_File: `src/hooks/planner/usePlanDaysStorage.ts`_
+
+```ts
+export function usePlanDaysStorage(
+  planId: string,
+  days: DayPlan[],
+  setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>
+);
+```
+
+- **Outputs**
+  None (side effects only).
+- **Lifecycle**
+  Loads days from `localStorage` and saves on change.
+- **Exceptions**
+  None.
+
 ### `usePlanner`
 
 _File: `src/hooks/planner/usePlanner.ts`_
@@ -207,8 +241,8 @@ export function usePlanner(enabled: boolean);
 - **Outputs**
   Planner state: days, trip range utilities, drag-and-drop handlers, and more.
 - **Lifecycle**
-  - Initializes `planId` and syncs it to the URL.
-  - Persists days to `localStorage`.
+  - Composes `usePlanParams`, `usePlanDaysStorage`, `useTripRange`,
+    `useDnDPlanner`, and `useCatalog`.
   - Updates planner days whenever the trip range changes.
 - **Exceptions**
   None internally; any catalog fetch errors are exposed via `error`.
