@@ -231,10 +231,10 @@ This document summarizes each React component in the repository. It follows the 
 ### ActivityCard / ActivityCardBase / ActivityCardEditing
 
 - **Location:** `src/components/planner/dnd`
-- **Responsibility:** Activity card display, editing overlay and base layout.
+- **Responsibility:** Activity card display. Editing state handled by `useActivityCardEditor` hook.
 - **Props:** activity data, callbacks for updates, color, catalog search
-- **State:** editing flags, draft title, overlay position
-- **External Hooks:** `useEscapeKey`, `useCardPopups`, `useWindowSize`, `useFlexibleRef`
+- **State:** managed within the hook – draft title, overlay position
+- **External Hooks:** `useActivityCardEditor`, `useCardPopups`, `useWindowSize`, `useFlexibleRef`
 - **Side-effects:** portal overlays, focusing inputs
 - **Accessibility:** keyboard interaction, ARIA buttons
 - **Interactions:** click/drag to edit, color and date pickers
@@ -398,6 +398,18 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** drag start/over/end events
 - **Performance notes:** memoizes activity lookups
 
+### PlannerControls
+
+- **Location:** `src/components/planner/PlannerControls.tsx`
+- **Responsibility:** Wrapper for the view mode switch and trip date range picker.
+- **Props:** `{ mode, onModeChange, range, onRangeChange }`
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** passes ARIA props to child buttons and pickers
+- **Interactions:** toggles modes, selects date ranges
+- **Performance notes:** none
+
 ### BudgetPanel
 
 - **Location:** `src/app/planner/BudgetPanel.tsx`
@@ -410,14 +422,10 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** open activities popup, update entries
 - **Performance notes:** none
 
-### PlannerControls
+### MapView
 
-- **Location:** `src/components/planner/PlannerControls.tsx`
-- **Responsibility:** Wrapper for the view mode switch and trip date range picker.
-- **Props:** `{ mode, onModeChange, range, onRangeChange }`
-- **State:** none
-- **External Hooks:** none
-- **Side-effects:** none
-- **Accessibility:** passes ARIA props to child buttons and pickers
-- **Interactions:** toggles modes, selects date ranges
-- **Performance notes:** none
+- **Location:** `src/app/planner/MapView.tsx`
+- **Responsibility:** Interactive itinerary map using Leaflet to display markers and paths.
+- **Props:** `{ days: DayPlan[], onSelectActivity: (activity) => void }`
+- **Accessibility:** `<MapContainer>` labeled with `aria-label="Itinerary map"`.
+- **Performance notes:** Fits bounds to markers when coordinates change.

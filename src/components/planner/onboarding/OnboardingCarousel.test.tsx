@@ -1,4 +1,4 @@
-// src/components/onboarding/OnboardingCarousel.test.tsx
+// src/components/planner/onboarding/OnboardingCarousel.test.tsx
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';

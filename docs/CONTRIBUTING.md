@@ -22,6 +22,8 @@ npm run lint
 
 Formatting uses Prettier with semicolons and single quotes; ESLint enforces the project's TypeScript and React rules.
 
+- Run `npm run typecheck` before committing to verify type safety.
+
 ## Running Tests
 
 Unit tests run with [Vitest](https://vitest.dev/). Execute them with:

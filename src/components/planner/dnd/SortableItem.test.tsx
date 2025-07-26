@@ -15,6 +15,7 @@ describe('SortableItem', () => {
     availableDays: [] as DayPlan[],
     onChangeDay: vi.fn(),
     onChangeColor: vi.fn(),
+    onChangePosition: vi.fn(),
     bgColor: '',
     onDelete: vi.fn(),
   };

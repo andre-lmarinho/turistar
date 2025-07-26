@@ -30,7 +30,6 @@ The application lets users create and organize trip itineraries, persisting data
 ├─ components/ – React components
 ├─ hooks/ – Custom hooks
 ├─ lib/ – Shared helpers
-├─ services/ – External API wrappers
 ├─ types/ – Shared TypeScript definitions
 └─ utils/ – Planner utilities
 /public – Static assets

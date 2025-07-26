@@ -1,43 +1,29 @@
 // src/hooks/catalog/useDestinationCatalog.ts
 
-import { useState, useEffect, useMemo } from 'react';
-import type { SortMode } from '@/components/planner/catalog/SortSelector';
-import type { CatalogActivity } from '@/types';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import type { SortMode } from '@/components';
+import { useFetchCatalog } from '@/hooks';
 
 /**
  * Hook to fetch and manage the catalog activities.
- * - Loads catalog activities by destination from the API.
+ * - Loads catalog activities by destination from the API with React Query.
  * - Provides category-based filtering and sorting.
  * - Handles loading and error states.
  */
 
 export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
   // Catalog activities list (raw from API)
-  const [items, setItems] = useState<CatalogActivity[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['catalog', city],
+    queryFn: () => useFetchCatalog(city),
+    enabled: isOpen,
+  });
+  const loading = isLoading;
+  const error = isError ? 'Failed to load catalog.' : null;
   const [activeCats, setActiveCats] = useState<Set<string>>(new Set());
   const [sortMode, setSortMode] = useState<SortMode>('A-Z');
   const [search, setSearch] = useState('');
-
-  /**
-   * Fetch the catalog from the API when the panel is open and not already loaded.
-   */
-  useEffect(() => {
-    if (!isOpen) return;
-
-    setLoading(true);
-    setError(null);
-
-    fetch(`/api/catalog?dest=${city}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((data: { activities: CatalogActivity[] }) => {
-        // Store activities in the catalog format
-        setItems(data.activities);
-      })
-      .catch(() => setError('Failed to load catalog.'))
-      .finally(() => setLoading(false));
-  }, [isOpen, city]);
 
   /**
    * Returns a filtered and sorted list of activities.
@@ -45,8 +31,9 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
    * - Sorts by price, duration, or name.
    */
   const visibleItems = useMemo(() => {
+    const activities = data?.activities ?? [];
     const catFiltered =
-      activeCats.size === 0 ? items : items.filter((it) => activeCats.has(it.category));
+      activeCats.size === 0 ? activities : activities.filter((it) => activeCats.has(it.category));
 
     const searchLower = search.toLowerCase();
     const filtered = catFiltered.filter(
@@ -69,12 +56,15 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
           return a.name.localeCompare(b.name);
       }
     });
-  }, [items, activeCats, sortMode, search]);
+  }, [data?.activities, activeCats, sortMode, search]);
 
   /**
    * Builds the list of unique categories from the catalog.
    */
-  const categories = useMemo(() => [...new Set(items.map((i) => i.category))], [items]);
+  const categories = useMemo(() => {
+    const activities = data?.activities ?? [];
+    return [...new Set(activities.map((i) => i.category))];
+  }, [data?.activities]);
 
   /**
    * Toggles a category selection.

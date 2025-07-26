@@ -56,6 +56,7 @@ const defaultProps = {
   onDelete: () => {},
   onClose: () => {},
   onColorChange: () => {},
+  onChangePosition: () => {},
   availableDays: [] as DayPlan[],
   onChangeDay: () => {},
 };

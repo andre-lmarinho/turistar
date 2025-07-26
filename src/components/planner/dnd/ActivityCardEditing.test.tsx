@@ -20,6 +20,7 @@ function renderComponent() {
     bgColor: 'bg-[var(--color-0)]',
     onChangeColor: vi.fn(),
     onChangeDay: vi.fn(),
+    onChangePosition: vi.fn(),
     onSave: vi.fn(),
     onCancel: vi.fn(),
     onDelete: vi.fn(),

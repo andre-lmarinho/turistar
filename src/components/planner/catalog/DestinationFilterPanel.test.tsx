@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import DestinationFilterPanel from './DestinationFilterPanel';
 import { vi } from 'vitest';
 
@@ -26,6 +27,10 @@ const activities = [
   },
 ];
 
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>
+);
+
 describe('DestinationFilterPanel search', () => {
   it('filters items when typing a query', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValue({
@@ -39,7 +44,8 @@ describe('DestinationFilterPanel search', () => {
         onClose={() => {}}
         onAdd={() => {}}
         onRemove={() => {}}
-      />
+      />,
+      { wrapper }
     );
 
     await screen.findByText('Beach Fun');
@@ -66,7 +72,8 @@ describe('DestinationFilterPanel search', () => {
         onClose={onClose}
         onAdd={() => {}}
         onRemove={() => {}}
-      />
+      />,
+      { wrapper }
     );
 
     await screen.findByText('Beach Fun');

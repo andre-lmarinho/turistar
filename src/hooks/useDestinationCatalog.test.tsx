@@ -1,6 +1,8 @@
 // src/hooks/catalog/useDestinationCatalog.test.ts
 
+import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useDestinationCatalog } from './useDestinationCatalog';
 import { vi } from 'vitest';
 
@@ -44,6 +46,10 @@ const activities = [
   },
 ];
 
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>
+);
+
 describe('useDestinationCatalog', () => {
   beforeEach(() => {
     vi.spyOn(global, 'fetch').mockResolvedValue({
@@ -53,7 +59,7 @@ describe('useDestinationCatalog', () => {
   });
 
   it('filters by search term and category', async () => {
-    const { result } = renderHook(() => useDestinationCatalog(true));
+    const { result } = renderHook(() => useDestinationCatalog(true), { wrapper });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
@@ -71,7 +77,7 @@ describe('useDestinationCatalog', () => {
   });
 
   it('sorts by price and duration', async () => {
-    const { result } = renderHook(() => useDestinationCatalog(true));
+    const { result } = renderHook(() => useDestinationCatalog(true), { wrapper });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
@@ -97,7 +103,7 @@ describe('useDestinationCatalog', () => {
   });
 
   it('sorts by rating and reviews', async () => {
-    const { result } = renderHook(() => useDestinationCatalog(true));
+    const { result } = renderHook(() => useDestinationCatalog(true), { wrapper });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 

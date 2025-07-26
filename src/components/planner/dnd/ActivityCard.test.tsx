@@ -1,10 +1,10 @@
 // src/components/planner/dnd/ActivityCard.test.tsx
-
 import React from 'react';
+(global as any).React = React;
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivityCard from './ActivityCard';
 import { vi } from 'vitest';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 
 const baseActivity: Activity & { dayId?: string } = {
   id: 'a1',
@@ -22,16 +22,16 @@ const defaultProps = {
   bgColor: '',
   onChangeColor: vi.fn(),
   onDelete: vi.fn(),
+  onApplyCatalogItem: vi.fn(),
 };
 
 describe('ActivityCard', () => {
-  it('shows edit icon and enters edit mode on click', () => {
+  it('renders edit button and enters edit mode on click', () => {
     render(<ActivityCard {...defaultProps} />);
 
-    const editBtn = screen.getByLabelText('Edit Card');
+    const editBtn = screen.getByRole('button', { name: /edit card/i });
     expect(editBtn).toBeInTheDocument();
     expect(editBtn.querySelector('svg')).toBeInTheDocument();
-
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 
     fireEvent.click(editBtn);
@@ -43,13 +43,13 @@ describe('ActivityCard', () => {
     render(<ActivityCard {...defaultProps} onSelect={handleSelect} />);
 
     const titleEl = screen.getByText('Visit museum');
-    const card = titleEl.closest('button') as HTMLElement;
-    expect(card).toHaveAttribute('type', 'button');
+    const cardButton = titleEl.closest('button') as HTMLElement;
+    expect(cardButton).toHaveAttribute('type', 'button');
 
-    fireEvent.keyDown(card, { key: 'Enter' });
+    fireEvent.keyDown(cardButton, { key: 'Enter', code: 'Enter' });
     expect(handleSelect).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(card, { key: ' ' });
+    fireEvent.keyDown(cardButton, { key: ' ', code: 'Space' });
     expect(handleSelect).toHaveBeenCalledTimes(2);
   });
 });

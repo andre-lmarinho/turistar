@@ -1,14 +1,12 @@
 // src/components/planner/dnd/ActivityCard.tsx
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
-import type { Activity, DayPlan, CatalogActivity } from '@/types';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { isTouchDevice } from '@/lib';
-
-import { EditCardButton, ActivityCardBase, ActivityCardEditing } from '@/components';
-import { DEFAULT_COLORS } from '@/constants';
-import { useEscapeKey } from '@/hooks';
+import { ActivityCardBase, ActivityCardEditing, EditCardButton } from '@/components';
+import { useActivityCardEditor, useCardColors } from '@/hooks';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };
@@ -36,64 +34,58 @@ export default function ActivityCard({
   onApplyCatalogItem,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
-  const twBg = color && !color.startsWith('#') ? color : undefined;
-  const colorClass = twBg ?? (bgColor && !bgColor.startsWith('#') ? bgColor : undefined);
-  const colorIndex = colorClass ? DEFAULT_COLORS.findIndex((c) => c.bg === colorClass) : -1;
-  const borderColorClass = colorIndex >= 0 ? DEFAULT_COLORS[colorIndex].border : undefined;
-  const [editing, setEditing] = useState(false);
-  const [draftTitle, setDraftTitle] = useState(title);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
-  const [overlayRect, setOverlayRect] = useState<DOMRect | null>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  useEscapeKey({ onClose: () => editing && cancel(), isActive: editing });
 
+  const { twBg, border: borderColorClass } = useCardColors(
+    color && !color.startsWith('#') ? color : undefined,
+    bgColor
+  );
+
+  const { editing, draft, setDraft, inputRef, cardRef, overlayRef, start, save, cancel } =
+    useActivityCardEditor({
+      title,
+      imageUrl,
+      onTitleSave,
+    });
+
+  const [editedImageUrl, setEditedImageUrl] = useState(imageUrl ?? '');
+
+  const [rect, setRect] = useState<DOMRect | null>(null);
   useEffect(() => {
-    if (editing) {
+    if (editing && cardRef.current) {
+      setRect(cardRef.current.getBoundingClientRect());
       inputRef.current?.focus();
       inputRef.current?.select();
     }
   }, [editing]);
 
-  function startEditing() {
-    if (cardRef.current) {
-      setOverlayRect(cardRef.current.getBoundingClientRect());
-    }
-    setEditing(true);
-  }
-
-  function save() {
-    const trimmed = draftTitle.trim();
-    if (trimmed && trimmed !== title) {
-      onTitleSave?.(trimmed);
-    }
-    setEditing(false);
-    setOverlayRect(null);
-  }
-
-  function cancel() {
-    setDraftTitle(title);
-    setEditing(false);
-    setOverlayRect(null);
-  }
+  useEffect(() => {
+    if (!editing) return;
+    const update = () => {
+      if (cardRef.current) {
+        setRect(cardRef.current.getBoundingClientRect());
+      }
+    };
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [editing]);
 
   return (
     <>
       {editing &&
-        ReactDOM.createPortal(<div className="backdrop-overlay" onClick={cancel} />, document.body)}
-
+        createPortal(<div className="backdrop-overlay" onClick={cancel} />, document.body)}
       <div
-        className="group relative"
         ref={cardRef}
+        className="group relative"
         style={{ visibility: editing ? 'hidden' : undefined }}
       >
         <button
           type="button"
           className="w-full text-left"
-          onClick={() => {
-            if (!editing) onSelect?.();
-          }}
+          onClick={() => !editing && onSelect?.()}
           onKeyDown={(e) => {
             if (!editing && (e.key === 'Enter' || e.key === ' ')) {
               e.preventDefault();
@@ -103,14 +95,14 @@ export default function ActivityCard({
           onContextMenu={(e) => {
             if (isTouchDevice()) return;
             e.preventDefault();
-            if (!editing) startEditing();
+            if (!editing) start();
           }}
         >
           <ActivityCardBase
             editing={false}
             title={title}
-            draftTitle={draftTitle}
-            onDraftTitleChange={setDraftTitle}
+            draftTitle={draft}
+            onDraftTitleChange={setDraft}
             onSave={save}
             inputRef={inputRef}
             imageUrl={imageUrl}
@@ -127,28 +119,34 @@ export default function ActivityCard({
             className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
-              startEditing();
+              start();
             }}
           />
         )}
       </div>
 
       {editing &&
-        overlayRect &&
-        ReactDOM.createPortal(
+        rect &&
+        createPortal(
           <div
             ref={overlayRef}
             className="fixed z-50"
-            style={{ top: overlayRect.top, left: overlayRect.left, width: overlayRect.width }}
+            style={{
+              top: rect.top,
+              left: rect.left,
+              width: rect.width,
+              maxHeight: '90vh',
+              overflowY: 'auto',
+            }}
           >
             <ActivityCardBase
               editing={true}
               title={title}
-              draftTitle={draftTitle}
-              onDraftTitleChange={setDraftTitle}
+              draftTitle={draft}
+              onDraftTitleChange={setDraft}
               onSave={save}
               inputRef={inputRef}
-              imageUrl={imageUrl}
+              imageUrl={editedImageUrl}
               duration={duration}
               twBg={twBg}
               budget={budget}
@@ -164,7 +162,7 @@ export default function ActivityCard({
               onChangePosition={onChangePosition}
               onSave={save}
               onCancel={cancel}
-              onDelete={() => onDelete?.()}
+              onDelete={onDelete}
               onApplyCatalogItem={onApplyCatalogItem}
               editedImageUrl={editedImageUrl}
               setEditedImageUrl={setEditedImageUrl}

@@ -33,6 +33,7 @@ function renderBoard() {
         onAddActivity={() => {}}
         onUpdateTitle={() => {}}
         onChangeDay={() => {}}
+        onChangePosition={() => {}}
         onChangeColor={() => {}}
         onDelete={() => {}}
       />

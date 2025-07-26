@@ -9,43 +9,33 @@ import { useFlexibleRef } from './useFlexibleRef';
  * Provides trigger refs and handlers to toggle these popups.
  */
 
+export type CardPopupType = 'color' | 'date' | 'position' | null;
+
 export function useCardPopups() {
   const colorButtonRef = useFlexibleRef();
   const dateButtonRef = useFlexibleRef();
   const positionButtonRef = useFlexibleRef();
 
-  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [isPositionPickerOpen, setIsPositionPickerOpen] = useState(false);
+  const [activePopup, setActivePopup] = useState<CardPopupType>(null);
 
   function handleColorButtonClick() {
-    setIsColorPickerOpen((prev) => !prev);
-    setIsDatePickerOpen(false);
-    setIsPositionPickerOpen(false);
+    setActivePopup((prev) => (prev === 'color' ? null : 'color'));
   }
 
   function handleDateButtonClick() {
-    setIsDatePickerOpen((prev) => !prev);
-    setIsColorPickerOpen(false);
-    setIsPositionPickerOpen(false);
+    setActivePopup((prev) => (prev === 'date' ? null : 'date'));
   }
 
   function handlePositionButtonClick() {
-    setIsPositionPickerOpen((prev) => !prev);
-    setIsColorPickerOpen(false);
-    setIsDatePickerOpen(false);
+    setActivePopup((prev) => (prev === 'position' ? null : 'position'));
   }
 
   return {
     colorButtonRef,
     dateButtonRef,
     positionButtonRef,
-    isColorPickerOpen,
-    setIsColorPickerOpen,
-    isDatePickerOpen,
-    setIsDatePickerOpen,
-    isPositionPickerOpen,
-    setIsPositionPickerOpen,
+    activePopup,
+    setActivePopup,
     handleColorButtonClick,
     handleDateButtonClick,
     handlePositionButtonClick,

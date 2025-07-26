@@ -2,16 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Activity, CatalogActivity, DayPlan } from '@/types';
+import { Activity, DayPlan } from '@/types';
+import { useFetchCatalog, CatalogApiResponse } from '@/hooks';
+
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
-interface CatalogResponse {
-  activities: CatalogActivity[];
-}
-
 // Type guard to check that the data has an activities array
-const hasActivities = (data: unknown): data is CatalogResponse =>
-  !!data && typeof data === 'object' && Array.isArray((data as CatalogResponse).activities);
+const hasActivities = (data: unknown): data is CatalogApiResponse =>
+  !!data && typeof data === 'object' && Array.isArray((data as CatalogApiResponse).activities);
 
 /**
  * Hook to fetch and format catalog by destination.
@@ -25,13 +23,7 @@ export function useCatalog(dest: string | null, options: { enabled: boolean }) {
   // 1) Run the query only if we have a dest and enabled
   const query = useQuery({
     queryKey: ['catalog', dest],
-    queryFn: async () => {
-      const res = await fetch(`/api/catalog?dest=${encodeURIComponent(dest || '')}`);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch catalog: HTTP ${res.status}`);
-      }
-      return res.json();
-    },
+    queryFn: () => useFetchCatalog(dest || ''),
     enabled: !!dest && options.enabled,
   });
 

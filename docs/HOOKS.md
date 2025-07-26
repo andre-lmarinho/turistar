@@ -2,8 +2,6 @@
 
 This document outlines the available custom hooks in the project. Each section details the signature, expected inputs and outputs, lifecycle behaviors, thrown exceptions, and example usage.
 
-## 1. Budget Hooks
-
 ### `useBudget`
 
 _File: `src/hooks/budget/useBudget.ts`_
@@ -28,8 +26,6 @@ export function useBudget(planId: string, activitiesTotal: number);
 const { budget, setBudget, entries, handleAdd } = useBudget(planId, activitiesTotal);
 ```
 
-## 2. General Hooks
-
 ### `useTripRange`
 
 _File: `src/hooks/general/useTripRange.ts`_
@@ -53,7 +49,20 @@ export function useTripRange(dest: string, planId?: string);
 const { tripDays, handleRangeChange } = useTripRange(dest, planId);
 ```
 
-## 3. Catalog Hooks
+### `fetchCatalog`
+
+_File: `src/hooks/catalog/fetchCatalog.ts`_
+
+```ts
+export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
+```
+
+- **Inputs**
+  - `dest`: destination name.
+- **Outputs**
+  Catalog activities from the API.
+- **Lifecycle**
+  Throws an `Error` when the request fails.
 
 ### `useCatalog`
 
@@ -101,30 +110,6 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador');
 ```ts
 const { visibleItems, toggleCat } = useDestinationCatalog(open);
 ```
-
-### `useDestinationFilter`
-
-_File: `src/hooks/catalog/useDestinationFilter.ts`_
-
-```ts
-export function useDestinationFilter(isOpen: boolean);
-```
-
-- **Inputs**
-  - `isOpen`: forwarded to `useDestinationCatalog`.
-- **Outputs**
-  Catalog filtering utilities plus the `city` name.
-- **Lifecycle**
-  Delegates to `useDestinationCatalog`; no additional side effects.
-- **Exceptions**
-  None.
-- **Example**
-
-```ts
-const { city, visibleItems } = useDestinationFilter(panelOpen);
-```
-
-## 4. Planner Hooks
 
 ### `useActivitiesById`
 
@@ -304,8 +289,6 @@ export function useSelectedActivity(
 - **Exceptions**
   None (invalid save operations are ignored).
 
-## 5. UI Hooks
-
 ### `useCardPopups`
 
 _File: `src/hooks/ui/useCardPopups.ts`_
@@ -317,7 +300,7 @@ export function useCardPopups();
 - **Inputs**
   None.
 - **Outputs**
-  Popup refs, boolean flags, and click handlers.
+  Popup refs, `activePopup` state, a `setActivePopup` function and toggle handlers.
 - **Lifecycle**
   Plain `useState` with no side effects.
 - **Exceptions**

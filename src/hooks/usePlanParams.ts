@@ -17,13 +17,13 @@ export function usePlanParams() {
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
   useEffect(() => {
-    if (!params.get('plan')) {
+    const currentPlan = params.get('plan');
+    if (currentPlan !== planId) {
       const search = new URLSearchParams(params.toString());
       search.set('plan', planId);
       router.replace(`/planner?${search.toString()}`, { scroll: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId, router]);
+  }, [planId, params, router]);
 
   return { dest, planId };
 }

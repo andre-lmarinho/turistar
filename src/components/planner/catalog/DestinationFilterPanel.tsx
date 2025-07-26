@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
 import type { CatalogActivity } from '@/types';
-import { useDestinationFilter, useEscapeKey } from '@/hooks';
+import { useDestinationCatalog, useEscapeKey } from '@/hooks';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ export default function DestinationFilterPanel({
     error,
     search,
     setSearch,
-  } = useDestinationFilter(isOpen);
+  } = useDestinationCatalog(isOpen);
 
   useEscapeKey({ onClose, isActive: isOpen });
 

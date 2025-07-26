@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
-import { useBudget } from '@/hooks/budget/useBudget';
+import { useBudget } from '@/hooks/useBudget';
 import { BUDGET_INFO } from '@/constants';
 import type { DayPlan } from '@/types';
 import {

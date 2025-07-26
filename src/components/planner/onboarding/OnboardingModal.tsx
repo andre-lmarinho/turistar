@@ -1,4 +1,4 @@
-// src/components/onboarding/OnboardingModal.tsx
+// src/components/planner/onboarding/OnboardingModal.tsx
 'use client';
 
 import React, { useRef } from 'react';

@@ -47,14 +47,13 @@ export default function ActivityModalHeader({
   const {
     colorButtonRef,
     dateButtonRef,
-    isColorPickerOpen,
-    isDatePickerOpen,
+    activePopup,
+    setActivePopup,
     handleColorButtonClick,
     handleDateButtonClick,
-    setIsColorPickerOpen,
-    setIsDatePickerOpen,
-    setIsPositionPickerOpen,
   } = useCardPopups();
+  const isColorPickerOpen = activePopup === 'color';
+  const isDatePickerOpen = activePopup === 'date';
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
@@ -128,9 +127,7 @@ export default function ActivityModalHeader({
               ref={searchButtonRef}
               onClick={() => {
                 setIsCatalogOpen((p) => !p);
-                setIsColorPickerOpen(false);
-                setIsDatePickerOpen(false);
-                setIsPositionPickerOpen(false);
+                setActivePopup(null);
               }}
             ></SearchCatalogButton>
 
@@ -147,9 +144,9 @@ export default function ActivityModalHeader({
               selectedColor={bgColor}
               onChangeColor={(selectedColor: string) => {
                 onColorChange(selectedColor);
-                setIsColorPickerOpen(false);
+                setActivePopup(null);
               }}
-              onClose={() => setIsColorPickerOpen(false)}
+              onClose={() => setActivePopup(null)}
               triggerRef={colorButtonRef}
             />
           </div>
@@ -162,10 +159,10 @@ export default function ActivityModalHeader({
               selectedIndex={currentIndex}
               onSelect={(dayId: string) => {
                 onChangeDay(dayId);
-                setIsDatePickerOpen(false);
+                setActivePopup(null);
               }}
               onSelectIndex={(idx: number) => onChangePosition(idx)}
-              onClose={() => setIsDatePickerOpen(false)}
+              onClose={() => setActivePopup(null)}
               triggerRef={dateButtonRef}
             />
           </div>
