@@ -1,4 +1,4 @@
-// src/hooks/useWindowSize.ts
+// src/hooks/useElementRect.ts
 
 import { useState, useEffect, RefObject } from 'react';
 
@@ -7,7 +7,7 @@ import { useState, useEffect, RefObject } from 'react';
  * It updates the rect on window resize or when the element changes.
  */
 
-export function useWindowSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>) {
+export function useElementRect<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>) {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {

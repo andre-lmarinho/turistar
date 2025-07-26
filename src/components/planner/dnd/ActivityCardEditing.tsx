@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2, Search } from 'lucide-react';
 import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { Button, CardColorsPopup, DayPickerPopup, CatalogSearchPopup } from '@/components';
-import { useCardPopups, useWindowSize, useFlexibleRef, useEscapeKey } from '@/hooks';
+import { useCardPopups, useElementRect, useFlexibleRef, useEscapeKey } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -53,8 +53,8 @@ export default function ActivityCardEditing({
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
-  const cardRect = useWindowSize(cardRef);
-  const buttonRect = useWindowSize(buttonContainerRef);
+  const cardRect = useElementRect(cardRef);
+  const buttonRect = useElementRect(buttonContainerRef);
 
   useEscapeKey({ onClose: onCancel });
 

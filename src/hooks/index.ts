@@ -7,7 +7,7 @@ export * from './useEscapeKey';
 export * from './useFlexibleRef';
 export * from './useKeyBinds';
 export * from './usePopupOutsideHandler';
-export * from './useWindowSize';
+export * from './useElementRect';
 export * from './useCardColors';
 export * from './useActivitiesById';
 export * from './useActivityState';

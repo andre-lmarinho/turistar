@@ -4,7 +4,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 ## Project Structure
 
-- `/docs`: Project notes and guidelines (see `state-data-flow.md` for how data moves)
+- `/docs`: Project notes and guidelines (see `STATE-DATA-FLOW.md` for how data moves)
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/components`: React components that should follow the guidelines in this document
   - `/app`: Next.js app directory with pages and API routes

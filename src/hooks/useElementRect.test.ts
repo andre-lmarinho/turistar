@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { useWindowSize } from './useWindowSize';
+import { useElementRect } from '@/hooks';
 import { vi } from 'vitest';
 
 afterEach(() => {
@@ -18,7 +18,7 @@ test('returns bounding rect and updates on resize', () => {
     .mockReturnValueOnce(first)
     .mockReturnValue(second);
 
-  const { result } = renderHook(() => useWindowSize(ref), {
+  const { result } = renderHook(() => useElementRect(ref), {
     wrapper: ({ children }) => React.createElement('div', { ref }, children),
   });
 
