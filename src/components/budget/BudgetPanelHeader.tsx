@@ -34,11 +34,11 @@ export default function BudgetPanelHeader({
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       <div
         role="region"
         aria-labelledby="budget-summary-heading"
-        className="md:col-span-1 flex flex-col gap-2"
+        className="flex flex-col gap-2 md:col-span-1"
       >
         <h4 id="budget-summary-heading" className="font-semibold">
           Summary
@@ -46,7 +46,7 @@ export default function BudgetPanelHeader({
 
         {/* Total Budget */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-medium">
-          <label htmlFor="budget-input" className="font-medium flex items-center gap-1">
+          <label htmlFor="budget-input" className="flex items-center gap-1 font-medium">
             Total Budget
             <InfoPopup content={BUDGET_INFO.totalBudget}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
@@ -61,7 +61,7 @@ export default function BudgetPanelHeader({
             background="default"
             autoComplete="off"
             placeholder="Budget"
-            icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
+            icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
             onBlur={() => {
               const val = normalizeAmount(budgetInput);
               setBudget(val);
@@ -106,7 +106,7 @@ export default function BudgetPanelHeader({
       <div
         role="region"
         aria-labelledby="budget-categories-heading"
-        className="md:col-span-2 flex flex-col"
+        className="flex flex-col md:col-span-2"
       >
         <h4 id="budget-categories-heading" className="font-semibold">
           Categories

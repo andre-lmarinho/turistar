@@ -22,7 +22,7 @@ export default function NavCircleButton({
       type="button"
       {...props}
       className={cn(
-        'p-1 rounded-full cursor-pointer bg-background border border-bg-gray-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary',
+        'bg-background border-bg-gray-200 focus:ring-primary cursor-pointer rounded-full border p-1 hover:bg-gray-200 focus:ring-2 focus:outline-none',
         className
       )}
     >

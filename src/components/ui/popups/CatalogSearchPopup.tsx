@@ -29,13 +29,13 @@ export default function CatalogSearchPopup({
       aria-labelledby="catalog-search-popup-title"
       size="md"
     >
-      <div className="flex items-center justify-between px-4 py-2 border-b">
+      <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="catalog-search-popup-title" className="font-bold">
           Search Catalog
         </h3>
         <CloseButton onClick={onClose} />
       </div>
-      <div className="p-2 space-y-2">
+      <div className="space-y-2 p-2">
         <label htmlFor="catalog-search-input" className="sr-only">
           Search catalog
         </label>
@@ -46,7 +46,7 @@ export default function CatalogSearchPopup({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search"
-          className="w-full border rounded px-2 py-1 text-sm"
+          className="w-full rounded border px-2 py-1 text-sm"
         />
         {loading && (
           <div className="flex items-center gap-2 text-sm">
@@ -56,12 +56,12 @@ export default function CatalogSearchPopup({
         )}
         {error && <p className="text-sm text-red-500">{error}</p>}
         {!loading && !error && (
-          <ul className="max-h-60 overflow-y-auto space-y-1">
+          <ul className="max-h-60 space-y-1 overflow-y-auto">
             {visibleItems.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
-                  className="w-full text-left rounded px-2 py-1 hover:bg-accent"
+                  className="hover:bg-accent w-full rounded px-2 py-1 text-left"
                   onClick={() => {
                     onSelect(item);
                     onClose();

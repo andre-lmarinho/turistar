@@ -52,11 +52,11 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         placeholder={EMPTY_ACTIVITY_TITLE}
         required
         aria-required="true"
-        className="content-center font-bold rounded mx-4 mb-4 px-2 py-2 text-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
       />
 
       {/* Duration & Budget group */}
-      <fieldset className="px-4 mb-4 flex gap-2" aria-labelledby="time-budget-legend">
+      <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
         <legend id="time-budget-legend" className="sr-only">
           Duration and Budget
         </legend>
@@ -72,7 +72,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           type="number"
           placeholder="Hrs"
           icon={<Hourglass size={14} aria-hidden="true" className="text-muted-foreground" />}
-          className="text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           autoComplete="off"
           min={0}
         />
@@ -90,13 +90,13 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           placeholder="Budget"
           min={0}
           autoComplete="off"
-          className="text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </fieldset>
 
       {/* Notes */}
       <div className="px-4">
-        <label htmlFor="activity-notes" className="text-xs font-bold flex items-center gap-1">
+        <label htmlFor="activity-notes" className="flex items-center gap-1 text-xs font-bold">
           <AlignLeft size={12} aria-hidden="true" />
           <span>Notes</span>
         </label>
@@ -107,12 +107,12 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           onChange={(e) => setEditedDescription(e.target.value)}
           placeholder="Add a more detailed description."
           rows={3}
-          className="w-full rounded p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-full resize-none rounded p-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </div>
 
       {/* Update */}
-      <div className="px-4 py-3 flex justify-center gap-2">
+      <div className="flex justify-center gap-2 px-4 py-3">
         <UpdateButton
           type="button"
           ready={Boolean(editedTitle.trim())}
@@ -127,7 +127,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               imageUrl: activity.imageUrl,
             })
           }
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           Update
         </UpdateButton>

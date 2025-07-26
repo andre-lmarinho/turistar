@@ -46,10 +46,10 @@ export default function SortableItem({
     return (
       <div
         className={cn(
-          'cursor-grabbing pointer-events-none',
+          'pointer-events-none cursor-grabbing',
           'origin-bottom rotate-[3deg]',
           'transition-transform duration-200 ease-out',
-          'bg-background/70 backdrop-blur-md rounded-lg',
+          'bg-background/70 rounded-lg backdrop-blur-md',
           className
         )}
       >
@@ -78,7 +78,7 @@ export default function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'list-none relative',
+        'relative list-none',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         className
       )}
@@ -99,7 +99,7 @@ export default function SortableItem({
         />
       </div>
       {isDragging && (
-        <div className="absolute inset-0 rounded-lg border-2 border-dashed border-gray-300 bg-background" />
+        <div className="bg-background absolute inset-0 rounded-lg border-2 border-dashed border-gray-300" />
       )}
     </li>
   );

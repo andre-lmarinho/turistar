@@ -60,7 +60,7 @@ export default function MapView({ days, onSelectActivity }: MapViewProps) {
   const center: LatLngExpression = allCoords.length ? allCoords[0] : [0, 0];
 
   return (
-    <div className="relative h-full w-full rounded-xl border bg-background overflow-hidden">
+    <div className="bg-background relative h-full w-full overflow-hidden rounded-xl border">
       <MapContainer
         center={center}
         zoom={13}

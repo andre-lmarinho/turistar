@@ -29,7 +29,7 @@ export default function TooltipKeyHint({
       content={
         <>
           {content}{' '}
-          <kbd className="bg-background text-gray-800 text-xs font-medium px-1 py-0.5 rounded">
+          <kbd className="bg-background rounded px-1 py-0.5 text-xs font-medium text-gray-800">
             {label}
           </kbd>
         </>

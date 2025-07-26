@@ -19,17 +19,17 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
 
   return (
     <>
-      <div className="flex z-30 items-center justify-between">
+      <div className="z-30 flex items-center justify-between">
         <div className="ml-1 flex items-center gap-2">
           <Icon size={16} aria-hidden="true" />
-          <span className="text-sm flex items-center gap-1">
+          <span className="flex items-center gap-1 text-sm">
             {label}
             <InfoPopup content={BUDGET_INFO[category]}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
         </div>
-        <span className="mr-1 text-right text-sm w-20" aria-label={`$${value.toFixed(2)} spent`}>
+        <span className="mr-1 w-20 text-right text-sm" aria-label={`$${value.toFixed(2)} spent`}>
           {'$' + value.toFixed(2)}
         </span>
       </div>
@@ -41,7 +41,7 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
         aria-valuemax={100}
         aria-valuenow={Math.round(percent)}
         aria-label={`${label} usage ${Math.round(percent)}%`}
-        className="flex-1 mb-3 bg-muted rounded"
+        className="bg-muted mb-3 flex-1 rounded"
       >
         <div
           className="h-2 rounded"

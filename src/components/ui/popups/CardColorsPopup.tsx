@@ -36,13 +36,13 @@ export default function CardColorsPopup({
       className="w-[304px]"
       aria-labelledby="card-color-popup-title"
     >
-      <div className="flex items-center justify-between px-4 py-2 border-b">
+      <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="card-color-popup-title" className="font-bold">
           Card Background
         </h3>
         <CloseButton onClick={onClose} />
       </div>
-      <div className="p-4 gap-4">
+      <div className="gap-4 p-4">
         {tempImageUrl && (
           <Button
             size="sm"
@@ -59,20 +59,20 @@ export default function CardColorsPopup({
         )}
 
         {/* Color Section */}
-        <div className="my-4 py-4 border-b-1">
+        <div className="my-4 border-b-1 py-4">
           <label htmlFor="day-select" className="text-xs font-bold">
             Colors
           </label>
-          <div className="flex justify-between flex-wrap gap-2">
+          <div className="flex flex-wrap justify-between gap-2">
             {colors.map((c) => {
               const label = c.name;
               return (
                 <button
                   key={c.bg}
                   onClick={() => onChangeColor(c.bg)}
-                  className={`w-[31%] h-10 shadow-xl rounded border-2 ${
+                  className={`h-10 w-[31%] rounded border-2 shadow-xl ${
                     c.bg.startsWith('#') ? '' : c.bg
-                  } ${selectedColor === c.bg ? 'ring-2 ring-primary' : 'border-background'}`}
+                  } ${selectedColor === c.bg ? 'ring-primary ring-2' : 'border-background'}`}
                   style={c.bg.startsWith('#') ? { backgroundColor: c.bg } : undefined}
                   aria-label={label}
                 />

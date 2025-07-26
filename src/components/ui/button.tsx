@@ -50,7 +50,7 @@ function ButtonIconWrapper({
         `${child.props.className ?? ''} transition duration-300 group-hover/icon:scale-105`.trim(),
     });
 
-    return <div className="relative w-full h-full flex items-center justify-center">{icon}</div>;
+    return <div className="relative flex h-full w-full items-center justify-center">{icon}</div>;
   }
 
   return <>{children}</>;

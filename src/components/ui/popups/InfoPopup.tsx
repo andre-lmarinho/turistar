@@ -39,7 +39,7 @@ export default function InfoPopup({ content, children }: InfoPopupProps) {
         role="tooltip"
         side="top"
         align="center"
-        className="w-max max-w-xs p-2 text-xs rounded-md border bg-background shadow-md"
+        className="bg-background w-max max-w-xs rounded-md border p-2 text-xs shadow-md"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         onFocus={() => setOpen(true)}

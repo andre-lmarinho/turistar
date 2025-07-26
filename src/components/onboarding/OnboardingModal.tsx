@@ -41,7 +41,7 @@ export default function OnboardingModal({ open, onClose }: OnboardingModalProps)
             aria-modal="true"
             aria-labelledby="onboarding-carousel-title"
             tabIndex={-1}
-            className="relative bg-background rounded-lg shadow-xl max-w-sm p-4 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="bg-background focus:ring-primary relative max-w-sm rounded-lg p-4 shadow-xl focus:ring-2 focus:outline-none"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Heading */}

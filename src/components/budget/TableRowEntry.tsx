@@ -33,14 +33,14 @@ export default function TableRowEntry({
       >
         {'$' + entry.amount.toFixed(2)}
       </td>
-      <td role="gridcell" className="p-2 text-right flex gap-2 justify-end">
+      <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
         <Button
           size="icon"
           variant="ghost"
           type="button"
           onClick={() => onEdit(index)}
           aria-label="Edit entry"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           <Pencil aria-hidden="true" className="size-4" />
         </Button>
@@ -50,7 +50,7 @@ export default function TableRowEntry({
           type="button"
           onClick={() => onDelete?.(index)}
           aria-label="Delete entry"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           <Trash2 aria-hidden="true" className="size-4" />
         </Button>

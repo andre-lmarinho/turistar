@@ -12,7 +12,7 @@ export default function Spinner({ className }: SpinnerProps) {
   return (
     <span
       className={cn(
-        'inline-block size-5 animate-spin rounded-full border-2 border-primary border-t-transparent',
+        'border-primary inline-block size-5 animate-spin rounded-full border-2 border-t-transparent',
         className
       )}
       aria-label="Loading"

@@ -67,7 +67,7 @@ export default function DestinationFilterPanel({
           aria-modal="true"
           aria-labelledby="destination-filter-title"
           tabIndex={-1}
-          className="relative w-[95vw] h-[90vh] max-w-[1350px] bg-background rounded-lg shadow-xl flex flex-col focus:outline-none focus:ring-2 focus:ring-primary"
+          className="bg-background focus:ring-primary relative flex h-[90vh] w-[95vw] max-w-[1350px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/* header rows */}
@@ -82,7 +82,7 @@ export default function DestinationFilterPanel({
             onClose={onClose}
           />
 
-          <div className="flex-1 flex overflow-auto">
+          <div className="flex flex-1 overflow-auto">
             <div className="flex-1 p-4">
               {loading && (
                 <div className="flex items-center gap-2">

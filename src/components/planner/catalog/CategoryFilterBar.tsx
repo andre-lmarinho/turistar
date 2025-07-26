@@ -1,3 +1,4 @@
+// src/components/planner/catalog/CategoryFilterBar.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -84,14 +85,14 @@ export default function CategoryFilterBar({
   }, []);
 
   return (
-    <div className="relative p-1 flex items-center">
+    <div className="relative flex items-center p-1">
       {/* Left scroll button */}
       {canScrollLeft && (
         <NavCircleButton
           direction="left"
           aria-label="Scroll left"
           onClick={() => scrollBy('left')}
-          className="absolute left-1 z-10 -translate-y-1/2 top-1/2 shadow-md"
+          className="absolute top-1/2 left-1 z-10 -translate-y-1/2 shadow-md"
         />
       )}
 
@@ -99,7 +100,7 @@ export default function CategoryFilterBar({
       <div
         ref={containerRef}
         onMouseDown={onMouseDown}
-        className="scrollbar-hidden flex overflow-x-auto gap-2 px-2 select-none mx-8"
+        className="scrollbar-hidden mx-8 flex gap-2 overflow-x-auto px-2 select-none"
       >
         {categories.map((cat) => {
           const isOn = active.has(cat);
@@ -109,13 +110,11 @@ export default function CategoryFilterBar({
               onClick={() => {
                 if (!isDragging) onToggle(cat);
               }}
-              className={`whitespace-nowrap px-3 py-1 rounded-lg cursor-pointer text-sm border transition
-                ${
-                  isOn
-                    ? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
-                    : 'bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:text-[var(--muted-foreground)]'
-                }
-              `}
+              className={`cursor-pointer rounded-lg border px-3 py-1 text-sm whitespace-nowrap transition ${
+                isOn
+                  ? 'bg-[var(--muted)] text-[var(--muted-foreground)]'
+                  : 'bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:text-[var(--muted-foreground)]'
+              } `}
             >
               {cat}
             </button>
@@ -129,7 +128,7 @@ export default function CategoryFilterBar({
           direction="right"
           aria-label="Scroll right"
           onClick={() => scrollBy('right')}
-          className="absolute right-1 z-10 -translate-y-1/2 top-1/2 shadow-md"
+          className="absolute top-1/2 right-1 z-10 -translate-y-1/2 shadow-md"
         />
       )}
     </div>

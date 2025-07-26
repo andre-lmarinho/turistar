@@ -21,7 +21,7 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
   return (
     <ul
       aria-label="List of activities"
-      className="grid gap-4 justify-start [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]"
+      className="grid [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))] justify-start gap-4"
     >
       {items.map((item) => {
         const isAdded = addedIds.has(item.id);

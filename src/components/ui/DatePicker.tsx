@@ -27,18 +27,18 @@ export function DateRangePicker({ className, value, onChange }: Props) {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            'space-x-4 flex items-center justify-between rounded border px-4 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary transition',
+            'bg-background focus:ring-primary flex items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none',
             !value?.from && 'text-muted-foreground italic',
             className
           )}
           aria-label="Pick a date range"
         >
           <span>{label}</span>
-          <CalendarIcon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <CalendarIcon className="text-muted-foreground h-4 w-4" aria-hidden="true" />
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0 mt-2 shadow-lg min-w-[500px]" align="start" side="bottom">
+      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
         <Calendar
           mode="range"
           selected={value}
@@ -75,7 +75,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           <CalendarIcon aria-hidden="true" className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 mt-2 shadow-lg min-w-[500px]" align="start" side="bottom">
+      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
         <Calendar
           mode="range"
           selected={value}

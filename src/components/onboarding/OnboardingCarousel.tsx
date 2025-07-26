@@ -131,7 +131,7 @@ export default function OnboardingCarousel({
           direction="left"
           onClick={() => setCurrentIndex((prev) => prev - 1)}
           aria-label="Previous step"
-          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+          className="absolute top-1/2 left-2 z-20 -translate-y-1/2"
         />
       )}
 
@@ -161,9 +161,9 @@ export default function OnboardingCarousel({
           return (
             <motion.div
               key={idx}
-              className={`relative border shrink-0 flex flex-col bg-card ${
+              className={`bg-card relative flex shrink-0 flex-col border ${
                 round
-                  ? 'items-center justify-center text-center border-0'
+                  ? 'items-center justify-center border-0 text-center'
                   : 'items-start justify-between rounded-lg'
               } overflow-hidden`}
               style={{
@@ -174,13 +174,13 @@ export default function OnboardingCarousel({
               }}
               transition={effectiveTransition}
             >
-              <div className={`${round ? 'p-0 m-0' : 'p-5 mb-4 h-full'}`}>
-                <div className="relative w-full h-[70%] flex-none">
+              <div className={`${round ? 'm-0 p-0' : 'mb-4 h-full p-5'}`}>
+                <div className="relative h-[70%] w-full flex-none">
                   <Image src={step.image} alt={step.title} fill className="object-cover" />
                 </div>
-                <div className="flex-1 mt-2">
-                  <h3 className="font-semibold text-3xl mb-1 text-foreground">{step.title}</h3>
-                  <p className="text-[1.2rem] text-foreground">{step.description}</p>
+                <div className="mt-2 flex-1">
+                  <h3 className="text-foreground mb-1 text-3xl font-semibold">{step.title}</h3>
+                  <p className="text-foreground text-[1.2rem]">{step.description}</p>
                 </div>
               </div>
             </motion.div>
@@ -196,7 +196,7 @@ export default function OnboardingCarousel({
           else setCurrentIndex((prev) => prev + 1);
         }}
         aria-label="Next step"
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+        className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
       />
 
       {/* Dots */}
@@ -204,7 +204,7 @@ export default function OnboardingCarousel({
         role="tablist"
         aria-label="Slide navigation"
         className={`flex w-full justify-center ${
-          round ? 'absolute bottom-4 left-1/2 -translate-x-1/2 z-20' : 'mt-4'
+          round ? 'absolute bottom-4 left-1/2 z-20 -translate-x-1/2' : 'mt-4'
         }`}
       >
         <div className="flex gap-2">
@@ -215,9 +215,9 @@ export default function OnboardingCarousel({
               aria-selected={currentIndex % ONBOARDING_STEPS.length === i}
               tabIndex={currentIndex % ONBOARDING_STEPS.length === i ? 0 : -1}
               onClick={() => setCurrentIndex(i)}
-              className={`h-2 w-2 bg-border rounded-full transition-transform focus:outline-none focus:ring-2 focus:ring-primary ${
+              className={`bg-border focus:ring-primary h-2 w-2 rounded-full transition-transform focus:ring-2 focus:outline-none ${
                 currentIndex % ONBOARDING_STEPS.length === i
-                  ? 'scale-125 bg-primary'
+                  ? 'bg-primary scale-125'
                   : 'bg-[rgba(255,255,255,1)]'
               }`}
               aria-label={`Go to slide ${i + 1}`}

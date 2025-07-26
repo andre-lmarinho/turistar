@@ -125,11 +125,11 @@ export default function PlannerClient() {
   return (
     <main
       id="main-content"
-      className="flex flex-col bg-card p-4 lg:px-12 md:pb-12 h-screen overflow-hidden"
+      className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12"
     >
       {/* HEADER */}
-      <div className="container pb-4 flex items-center justify-between gap-4">
-        <h1 className="inline-flex flex-none text-3xl md:text-5xl cursor-pointer rounded-md whitespace-nowrap bg-card font-semibold capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] ">
+      <div className="container flex items-center justify-between gap-4 pb-4">
+        <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] md:text-5xl">
           <input
             id="planner-title"
             name="title"
@@ -141,20 +141,20 @@ export default function PlannerClient() {
             onChange={(e) => setTitle(e.target.value)}
             style={{ width: `${Math.max(title.length, 1)}ch` }}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-            className="px-4 py-2 border-2 rounded-md bg-transparent border-transparent outline-none transition-colors focus:border-border focus:bg-background cursor-pointer focus:cursor-text"
+            className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
           />
         </h1>
         <div className="flex gap-2 md:hidden">
           <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
           <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
         </div>
-        <div className="md:flex hidden">
+        <div className="hidden md:flex">
           <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
         </div>
       </div>
 
       {/* CONTROLS: single wrapper for toggle and date-picker */}
-      <div className="container py-2 flex items-center justify-center md:justify-between gap-4 order-3 md:order-2 md:pt-0 md:pb-4">
+      <div className="order-3 container flex items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
         <ModeToggleButton value={mode} onChange={setMode} />
         {/* DateRangePicker only on desktop */}
         <DateRangePicker
@@ -165,7 +165,7 @@ export default function PlannerClient() {
       </div>
 
       {/* BOARD / MAP / BUDGET */}
-      <div className="relative container flex-1 overflow-visible order-2 md:order-3">
+      <div className="relative order-2 container flex-1 overflow-visible md:order-3">
         {modeOrder.map((m, idx) => {
           const isActive = idx === activeIdx;
           const rel = idx - activeIdx;

@@ -20,7 +20,7 @@ export default function DestinationActionButton({
       <button
         onClick={onRemove}
         type="button"
-        className="mt-auto px-4 py-2 rounded cursor-pointer flex items-center justify-center gap-1 hover:opacity-80 focus:ring focus:ring-[var(--ring)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
+        className="mt-auto flex cursor-pointer items-center justify-center gap-1 rounded px-4 py-2 hover:opacity-80 focus:ring focus:ring-[var(--ring)] focus:ring-offset-2 focus:ring-offset-[var(--background)]"
         style={{
           backgroundColor: 'var(--secondary)',
           color: 'var(--secondary-foreground)',
@@ -38,7 +38,7 @@ export default function DestinationActionButton({
         e.stopPropagation();
         onAdd();
       }}
-      className="mt-auto px-4 py-2 cursor-pointer rounded hover:opacity-80"
+      className="mt-auto cursor-pointer rounded px-4 py-2 hover:opacity-80"
       style={{
         backgroundColor: 'var(--primary)',
         color: 'var(--primary-foreground)',

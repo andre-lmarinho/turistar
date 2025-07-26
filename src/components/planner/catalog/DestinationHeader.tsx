@@ -28,14 +28,14 @@ export default function DestinationHeader({
 }: DestinationHeaderProps) {
   return (
     <>
-      <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h3 id="destination-filter-title" className="font-bold text-2xl text-center flex-1">
+      <div className="flex items-center justify-between border-b px-4 py-2">
+        <h3 id="destination-filter-title" className="flex-1 text-center text-2xl font-bold">
           Search Your Adventures
         </h3>
         <CloseButton onClick={onClose} />
       </div>
 
-      <div className="flex items-center justify-between px-4 py-2 border-b gap-2">
+      <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
         <div className="flex-1 overflow-x-auto">
           <CategoryFilterBar categories={categories} active={activeCats} onToggle={toggleCat} />
         </div>
@@ -48,7 +48,7 @@ export default function DestinationHeader({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search"
-          className="border rounded px-2 py-1 text-sm"
+          className="rounded border px-2 py-1 text-sm"
         />
         <SortSelector value={sortMode} onChange={setSortMode} />
       </div>

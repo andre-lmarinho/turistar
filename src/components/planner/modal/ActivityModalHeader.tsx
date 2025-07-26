@@ -72,7 +72,7 @@ export default function ActivityModalHeader({
   return (
     <>
       <div
-        className={`relative mb-4 rounded-t-lg group ${
+        className={`group relative mb-4 rounded-t-lg ${
           editedImageUrl ? 'h-32' : ''
         } ${!editedImageUrl && !bgColor.startsWith('#') ? bgColor : ''}`}
         style={bgColor.startsWith('#') ? { backgroundColor: bgColor } : undefined}
@@ -84,7 +84,7 @@ export default function ActivityModalHeader({
           <Image
             src={editedImageUrl}
             alt={activity.title}
-            className="absolute top-0 left-0 rounded-t-lg w-full h-full object-cover"
+            className="absolute top-0 left-0 h-full w-full rounded-t-lg object-cover"
             width={400}
             height={200}
             unoptimized
@@ -94,7 +94,7 @@ export default function ActivityModalHeader({
           <Button
             variant="icon"
             size="sm"
-            className={`absolute text-xs bottom-2 right-2 z-20 ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            className={`absolute right-2 bottom-2 z-20 text-xs ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
               e.stopPropagation();
               setShowRemove(false);

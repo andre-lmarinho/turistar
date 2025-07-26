@@ -49,7 +49,7 @@ export default function BudgetItem({
           aria-valuenow={amount}
           value={amount}
           onChange={handleChange}
-          className="w-32 border rounded px-2 py-1 text-right focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-32 rounded border px-2 py-1 text-right focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       ) : (
         <span

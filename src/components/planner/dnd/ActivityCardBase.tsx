@@ -37,12 +37,12 @@ export default function ActivityCardBase({
 
   return (
     <div
-      className="group w-full text-left flex items-stretch rounded-lg border bg-[var(--background)] transition cursor-grab relative"
+      className="group relative flex w-full cursor-grab items-stretch rounded-lg border bg-[var(--background)] text-left transition"
       style={{ zIndex: editing ? 50 : undefined }}
     >
       {/* Content */}
       <div
-        className={`flex-1 flex w-40 flex-col rounded-lg border border-b-3 ${
+        className={`flex w-40 flex-1 flex-col rounded-lg border border-b-3 ${
           borderColorClass
         } overflow-hidden ${twBg ?? ''}`}
       >
@@ -54,7 +54,7 @@ export default function ActivityCardBase({
             width={400}
             height={200}
             unoptimized
-            className="h-30 rounded-t-lg w-full object-cover"
+            className="h-30 w-full rounded-t-lg object-cover"
           />
         )}
 
@@ -78,7 +78,7 @@ export default function ActivityCardBase({
                 onSave?.();
               }
             }}
-            className="w-full min-h-[5rem] bg-background px-2 py-1 text-sm resize-none overflow-hidden"
+            className="bg-background min-h-[5rem] w-full resize-none overflow-hidden px-2 py-1 text-sm"
             style={{ verticalAlign: 'top' }}
           />
         ) : (
@@ -87,7 +87,7 @@ export default function ActivityCardBase({
 
         {/* Meta */}
         {isMounted && (duration! > 0 || budget! > 0) && (
-          <div className="flex gap-2 p-2 rounded-full text-xs ">
+          <div className="flex gap-2 rounded-full p-2 text-xs">
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
                 <Hourglass size={12} aria-hidden="true" />

@@ -46,10 +46,10 @@ export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBud
     <div
       role="region"
       aria-label="Budget panel"
-      className="p-4 bg-background flex flex-col flex-1 w-full gap-4 overflow-x-auto h-full rounded-xl border"
+      className="bg-background flex h-full w-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl border p-4"
       tabIndex={0}
     >
-      <div className="pb-4 flex justify-between">
+      <div className="flex justify-between pb-4">
         <h2 className="text-3xl font-semibold">Traveling Budget</h2>
         <Button variant="icon" size="sm" onClick={() => setEditActivities(true)}>
           Budget Your Activities
@@ -65,7 +65,7 @@ export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBud
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 id="expenses-heading" className="font-semibold flex items-center gap-1">
+          <h3 id="expenses-heading" className="flex items-center gap-1 font-semibold">
             Expenses
             <InfoPopup content={BUDGET_INFO.expenses} aria-hidden="true">
               <Info size={12} className="text-muted-foreground" aria-hidden="true" />

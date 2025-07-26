@@ -27,16 +27,16 @@ const OpenPanelButton = React.forwardRef<HTMLButtonElement, OpenPanelButtonProps
         ref={ref}
         onClick={onClick}
         aria-label={buttonTitle}
-        className={`flex group cursor-pointer items-center gap-2 px-6 py-2 rounded hover:opacity-90 transition-colors ${
+        className={`group flex cursor-pointer items-center gap-2 rounded px-6 py-2 transition-colors hover:opacity-90 ${
           isEmpty ? 'animate-bounce' : ''
         } bg-[var(--primary)] text-[var(--primary-foreground)]`}
       >
         <Compass
           size={18}
           aria-hidden="true"
-          className="group-hover:rotate-135 transform transition duration-300 group-hover/icon:scale-105"
+          className="transform transition duration-300 group-hover:rotate-135 group-hover/icon:scale-105"
         />
-        <span className="text-xl handcrafted whitespace-nowrap">{buttonTitle}</span>
+        <span className="handcrafted text-xl whitespace-nowrap">{buttonTitle}</span>
       </button>
     );
     return (

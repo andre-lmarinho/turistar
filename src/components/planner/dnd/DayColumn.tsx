@@ -40,7 +40,7 @@ export default function DayColumn({
   return (
     <section
       ref={setNodeRef}
-      className={`flex-1 flex flex-col h-full ${isOver ? 'ring-2 ring-primary/40' : ''}`}
+      className={`flex h-full flex-1 flex-col ${isOver ? 'ring-primary/40 ring-2' : ''}`}
     >
       <header className="m-2 flex text-[var(--muted-foreground)]">
         <h2 className="text-sm font-medium">{day.label}</h2>

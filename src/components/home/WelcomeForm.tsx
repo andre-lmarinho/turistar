@@ -48,20 +48,20 @@ export default function WelcomeForm() {
   };
 
   return (
-    <section className="hero relative overflow-hidden bg-grey-1 pt-[184px] px-safe lg:pt-28 md:h-auto md:pt-24 sm:pt-[92px]">
-      <div className="container relative flex flex-col pt-20">
+    <section className="hero bg-grey-1 px-safe relative overflow-hidden pt-[184px] sm:pt-[92px] md:h-auto md:pt-24 lg:pt-28">
+      <div className="relative container flex flex-col pt-20">
         <div className="relative z-10 flex flex-col-reverse items-center gap-10 lg:flex-row lg:items-start">
           <div className="flex w-full items-start gap-4 sm:gap-6 md:gap-8 lg:gap-10">
             {/* Text */}
             <div className="flex-1 pb-[5dvh] lg:pb-[15dvh]">
-              <h1 className="font-title font-semibold leading-[0.9] tracking-tight text-foreground text-[32px] sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px] pb-6">
+              <h1 className="font-title text-foreground pb-6 text-[32px] leading-[0.9] font-semibold tracking-tight sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px]">
                 Turistar App
                 <br />
                 for your trip
               </h1>
 
               <form onSubmit={handleSubmit} noValidate>
-                <fieldset className="pb-4 flex" aria-labelledby="daterange-label">
+                <fieldset className="flex pb-4" aria-labelledby="daterange-label">
                   <legend id="daterange-label" className="sr-only">
                     Travel dates
                   </legend>
@@ -79,7 +79,7 @@ export default function WelcomeForm() {
                   <p
                     id="date-error"
                     role="alert"
-                    className="text-[var(--destructive)] text-sm mt-2"
+                    className="mt-2 text-sm text-[var(--destructive)]"
                   >
                     {error}
                   </p>
@@ -88,20 +88,20 @@ export default function WelcomeForm() {
             </div>
           </div>
           {/* Mascot */}
-          <div className="absolute bottom-0 right-[10%] w-[40%] min-w-[100px] max-w-[280px] lg:w-[36%] lg:max-w-[420px] lg:right-[20%]">
+          <div className="absolute right-[10%] bottom-0 w-[40%] max-w-[280px] min-w-[100px] lg:right-[20%] lg:w-[36%] lg:max-w-[420px]">
             <Image
               src="/images/mascot_1_.webp"
               alt=""
               role="presentation"
               width={800}
               height={600}
-              className="w-full h-auto"
+              className="h-auto w-full"
             />
           </div>
         </div>
 
         {/* App Preview */}
-        <div className="relative z-10 w-[90%] rounded-t-md lg:left-0 lg:w-[78.4%] overflow-hidden">
+        <div className="relative z-10 w-[90%] overflow-hidden rounded-t-md lg:left-0 lg:w-[78.4%]">
           {/* Imagem */}
           <Image
             src="/previews/preview_01.png"
@@ -111,7 +111,7 @@ export default function WelcomeForm() {
             className="w-full rounded-t-lg shadow-xl"
           />
 
-          <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none">
+          <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-40">
             <div
               className="absolute inset-0"
               style={{
@@ -120,7 +120,7 @@ export default function WelcomeForm() {
               }}
             />
             <div
-              className="absolute bottom-0 left-0 right-0 h-5"
+              className="absolute right-0 bottom-0 left-0 h-5"
               style={{
                 backgroundColor: 'var(--background)',
               }}

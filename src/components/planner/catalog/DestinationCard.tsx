@@ -39,7 +39,7 @@ export default function DestinationCard({
     <li
       role="group"
       aria-labelledby={titleId}
-      className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow border border-[var(--border)] hover:shadow-lg transition duration-300"
+      className="rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] shadow transition duration-300 hover:shadow-lg"
     >
       <div className="relative">
         {/* Image */}
@@ -49,10 +49,10 @@ export default function DestinationCard({
           width={400}
           height={200}
           unoptimized
-          className="w-full h-40 object-cover rounded-t"
+          className="h-40 w-full rounded-t object-cover"
         />
         {/* quick-remove icon (only when added) */}
-        <div className="absolute left-2 top-2">
+        <div className="absolute top-2 left-2">
           {added && <RemoveCardButton aria-label={`Remove ${name}`} onClick={onRemove} />}
         </div>
         {/* Action button */}
@@ -69,12 +69,12 @@ export default function DestinationCard({
 
       <div className="p-2 leading-tight">
         {/* Title */}
-        <h3 id={titleId} className="font-bold mb-2">
+        <h3 id={titleId} className="mb-2 font-bold">
           {name}
         </h3>
 
         {/* Duration | Price chips */}
-        <dl className="flex items-center text-sm text-[var(--muted-foreground)] space-x-2 mb-1">
+        <dl className="mb-1 flex items-center space-x-2 text-sm text-[var(--muted-foreground)]">
           <dt className="sr-only">Duração</dt>
           <dd>
             <time
@@ -102,7 +102,7 @@ export default function DestinationCard({
         </dl>
 
         {/* Description */}
-        <p className="text-sm text-[var(--muted-foreground)] flex-1 mb-1">{description}</p>
+        <p className="mb-1 flex-1 text-sm text-[var(--muted-foreground)]">{description}</p>
       </div>
     </li>
   );

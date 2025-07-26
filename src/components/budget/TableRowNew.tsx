@@ -43,7 +43,7 @@ export default function TableRowNew({
           onChange={(e) => setDesc(e.target.value)}
           placeholder="Description"
           aria-label="Description"
-          className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </td>
       <td role="gridcell" className="p-2">
@@ -55,7 +55,7 @@ export default function TableRowNew({
           name="category"
           value={cat}
           onChange={(e) => setCat(e.target.value as CategoryKey)}
-          className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           {CATEGORIES.map(({ key, label }) => (
             <option key={key} value={key}>
@@ -86,8 +86,8 @@ export default function TableRowNew({
           autoComplete="off"
           placeholder="Amount"
           aria-label="Amount"
-          icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </td>
       <td role="gridcell" className="p-2 text-right">
@@ -97,7 +97,7 @@ export default function TableRowNew({
           type="button"
           onClick={onAdd}
           aria-label="Add expense"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           <Plus aria-hidden="true" className="size-4" />
         </Button>

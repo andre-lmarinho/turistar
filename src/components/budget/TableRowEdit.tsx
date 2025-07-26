@@ -43,7 +43,7 @@ export default function TableRowEdit({
             setEditEntry((prev) => prev && { ...prev, description: ev.target.value })
           }
           aria-label="Description"
-          className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </td>
       <td role="gridcell" className="p-2">
@@ -63,7 +63,7 @@ export default function TableRowEdit({
                 }
             )
           }
-          className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           {CATEGORIES.map(({ key, label }) => (
             <option key={key} value={key}>
@@ -94,18 +94,18 @@ export default function TableRowEdit({
           inputMode="decimal"
           autoComplete="off"
           aria-label="Amount"
-          icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </td>
-      <td role="gridcell" className="p-2 text-right flex gap-2 justify-end">
+      <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
         <Button
           size="icon"
           variant="ghost"
           type="button"
           onClick={onConfirm}
           aria-label="Save entry"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           <Check aria-hidden="true" className="size-4" />
         </Button>
@@ -115,7 +115,7 @@ export default function TableRowEdit({
           type="button"
           onClick={onCancel}
           aria-label="Cancel edit"
-          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           <X aria-hidden="true" className="size-4" />
         </Button>

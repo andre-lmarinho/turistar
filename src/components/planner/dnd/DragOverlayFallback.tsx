@@ -9,7 +9,7 @@ import React from 'react';
  */
 export default function DragOverlayFallback() {
   return (
-    <div className="w-[220px] h-[120px] rounded-md bg-muted flex items-center justify-center shadow text-sm text-muted-foreground italic">
+    <div className="bg-muted text-muted-foreground flex h-[120px] w-[220px] items-center justify-center rounded-md text-sm italic shadow">
       Moving item...
     </div>
   );

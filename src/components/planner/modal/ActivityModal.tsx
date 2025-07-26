@@ -74,7 +74,7 @@ export default function ActivityModal({
           aria-modal="true"
           aria-labelledby="activity-modal-title"
           tabIndex={-1}
-          className="bg-background rounded-lg shadow-xl w-[95%] max-w-[452px] flex flex-col focus:outline-none focus:ring-2 focus:ring-primary"
+          className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
           onClick={(e) => e.stopPropagation()}
         >
           <h2 id="activity-modal-title" className="sr-only">

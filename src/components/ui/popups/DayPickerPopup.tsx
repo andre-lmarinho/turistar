@@ -36,13 +36,13 @@ export default function DayPickerPopup({
       size="md"
       aria-labelledby="day-picker-popup-title"
     >
-      <div className="flex items-center justify-between px-4 py-2 border-b">
+      <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
         <CloseButton onClick={onClose} />
       </div>
-      <div className="p-4 flex gap-2">
+      <div className="flex gap-2 p-4">
         <div className="w-[65%]">
           <label htmlFor="day-select" className="text-xs font-bold">
             Day
@@ -51,7 +51,7 @@ export default function DayPickerPopup({
             id="day-select"
             value={selected}
             onChange={(e) => onSelect(e.target.value)}
-            className="border rounded px-2 py-1 text-sm w-full"
+            className="w-full rounded border px-2 py-1 text-sm"
           >
             {days.map((d) => (
               <option key={d.id} value={d.id}>
@@ -61,14 +61,14 @@ export default function DayPickerPopup({
           </select>
         </div>
         <div className="w-[30%]">
-          <label htmlFor="position-select" className="text-xs maw-w-[5rem] font-bold">
+          <label htmlFor="position-select" className="maw-w-[5rem] text-xs font-bold">
             Position
           </label>
           <select
             id="position-select"
             value={selectedIndex}
             onChange={(e) => onSelectIndex?.(Number(e.target.value))}
-            className="border rounded px-2 py-1 text-sm w-full"
+            className="w-full rounded border px-2 py-1 text-sm"
           >
             {positions.map((_, i) => (
               <option key={i} value={i}>

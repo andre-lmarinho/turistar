@@ -49,33 +49,33 @@ const layoutStyles: Record<Feature['layout'], { li: string; wrapper: string; wid
 
 export default function FeaturePreview() {
   return (
-    <section className="featured-preview relative z-10 pt-40 lg:pt-32 md:pt-24 sm:pt-16">
-      <div className="container relative z-10 lg:max-w-[960px] md:max-w-3xl xs:max-w-md">
-        <h2 className="font-title font-semibold leading-[0.9] tracking-tight text-foreground text-[32px] sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px] pb-6">
+    <section className="featured-preview relative z-10 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
+      <div className="xs:max-w-md relative z-10 container md:max-w-3xl lg:max-w-[960px]">
+        <h2 className="font-title text-foreground pb-6 text-[32px] leading-[0.9] font-semibold tracking-tight sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px]">
           What can you do?
         </h2>
-        <p className="mt-6 max-w-[705px] text-18 leading-tight tracking-tight lg:mt-5 sm:mt-3 sm:max-w-lg sm:text-15">
+        <p className="text-18 sm:text-15 mt-6 max-w-[705px] leading-tight tracking-tight sm:mt-3 sm:max-w-lg lg:mt-5">
           Turistar is a personal project focused on clean architecture, drag-and-drop logic, and
           real-world UX — all wrapped in something genuinely helpful.
         </p>
-        <ul className="mt-10 grid grid-cols-1 gap-y-5 gap-x-0 sm:gap-y-5 sm:gap-x-5 auto-rows-[200px] sm:grid-cols-3 sm:auto-rows-[300px]">
+        <ul className="mt-10 grid auto-rows-[200px] grid-cols-1 gap-x-0 gap-y-5 sm:auto-rows-[300px] sm:grid-cols-3 sm:gap-x-5 sm:gap-y-5">
           {features.map(({ title, description, imgSrc, layout }) => {
             const styles = layoutStyles[layout];
             return (
               <li
                 key={title}
-                className={`relative bg-black ${styles.li} w-full h-full overflow-hidden rounded-xl bg-grey-2 ring-[6px] ring-white/40`}
+                className={`relative bg-black ${styles.li} bg-grey-2 h-full w-full overflow-hidden rounded-xl ring-[6px] ring-white/40`}
               >
-                <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 lg:px-5 lg:pb-5 md:px-4 md:pb-4 sm:px-5 sm:pb-5">
-                  <p className="relative z-10 font-light leading-snug tracking-snugger text-white/65 md:leading-[1.2] sm:text-15">
+                <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 sm:px-5 sm:pb-5 md:px-4 md:pb-4 lg:px-5 lg:pb-5">
+                  <p className="tracking-snugger sm:text-15 relative z-10 leading-snug font-light text-white/65 md:leading-[1.2]">
                     <span className="font-medium text-white">{title} </span>
                     {description}
                   </p>
                 </div>
                 <div className="relative col-span-full row-span-full">
-                  <span className="absolute left-1/2 top-0 -z-10 h-full w-px"></span>
+                  <span className="absolute top-0 left-1/2 -z-10 h-full w-px"></span>
                   <div
-                    className={`absolute left-1/2 ${styles.wrapper} -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto xs:-top-8`}
+                    className={`absolute left-1/2 ${styles.wrapper} xs:-top-8 -translate-x-1/2 overflow-hidden sm:-top-12 sm:h-auto`}
                   >
                     <Image
                       src={imgSrc}
@@ -83,7 +83,7 @@ export default function FeaturePreview() {
                       role="presentation"
                       width={styles.width}
                       height={260}
-                      className="w-full h-auto"
+                      className="h-auto w-full"
                     />
                   </div>
                 </div>

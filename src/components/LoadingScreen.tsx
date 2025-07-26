@@ -18,7 +18,7 @@ export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProp
       className="flex min-h-screen flex-col items-center justify-center bg-[var(--background)]"
     >
       {/* Mascot */}
-      <div className="relative w-32 h-32 mb-6">
+      <div className="relative mb-6 h-32 w-32">
         <Image
           src="/images/mascot_1_.webp"
           alt=""

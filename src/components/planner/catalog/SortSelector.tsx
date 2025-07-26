@@ -20,7 +20,7 @@ export default function SortSelector({
       name="sort"
       value={value}
       onChange={(e) => onChange(e.target.value as SortMode)}
-      className="border rounded px-2 py-1 text-sm"
+      className="rounded border px-2 py-1 text-sm"
     >
       {sortModes.map((m) => (
         <option key={m} value={m}>

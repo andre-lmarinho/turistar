@@ -79,7 +79,7 @@ export default function ActivityCardEditing({
 
   return (
     <>
-      <div className="relative mt-2 z-50 flex">
+      <div className="relative z-50 mt-2 flex">
         <Button type="button" size="sm" className="cursor-pointer" onClick={onSave}>
           Update
         </Button>
@@ -89,7 +89,7 @@ export default function ActivityCardEditing({
           ref={buttonContainerRef}
           className={cn(
             'fixed z-50 flex flex-col',
-            position === 'right' ? 'items-start' : 'items-end -translate-x-full'
+            position === 'right' ? 'items-start' : '-translate-x-full items-end'
           )}
           style={{ top: coords.top, left: coords.left }}
         >

@@ -72,7 +72,7 @@ export default function ExpenseTable({
     <table
       role="table"
       aria-labelledby="expense-table-caption"
-      className="w-full text-sm border rounded"
+      className="w-full rounded border text-sm"
     >
       <caption id="expense-table-caption" className="sr-only">
         Expenses table showing description, category, amount, and actions
@@ -95,8 +95,8 @@ export default function ExpenseTable({
               </InfoPopup>
             </span>
           </th>
-          <th scope="col" className="p-2 text-right w-32">
-            <span className="flex items-center gap-1 justify-end">
+          <th scope="col" className="w-32 p-2 text-right">
+            <span className="flex items-center justify-end gap-1">
               Amount
               <InfoPopup content={BUDGET_INFO.amount}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
@@ -104,7 +104,7 @@ export default function ExpenseTable({
             </span>
           </th>
           <th scope="col" className="p-2 text-right">
-            <span className="flex items-center gap-1 justify-end">
+            <span className="flex items-center justify-end gap-1">
               Actions
               <InfoPopup content={BUDGET_INFO.actions}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />

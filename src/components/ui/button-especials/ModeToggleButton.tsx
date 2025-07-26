@@ -73,13 +73,13 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
         ref={containerRef}
         role="tablist"
         aria-label="View mode selector"
-        className="relative flex bg-[var(--border)] rounded-[var(--radius)] overflow-hidden min-w-[200px]"
+        className="relative flex min-w-[200px] overflow-hidden rounded-[var(--radius)] bg-[var(--border)]"
       >
         {ready && (
           <motion.div
             initial={false}
             style={{ x: highlightX, width: highlightW }}
-            className="absolute inset-1 bg-[var(--accent)] rounded-[calc(var(--radius)-0.25rem)]"
+            className="absolute inset-1 rounded-[calc(var(--radius)-0.25rem)] bg-[var(--accent)]"
           />
         )}
 
@@ -94,17 +94,14 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
               type="button"
               onClick={() => onChange(mode)}
               aria-selected={selected}
-              className={`
-                flex-1 px-2 py-1 cursor-pointer relative z-10 text-sm font-medium transition-colors
-                ${
-                  selected
-                    ? 'text-[var(--accent-foreground)]'
-                    : 'text-[var(--foreground)] hover:text-[var(--accent)]'
-                }
-              `}
+              className={`relative z-10 flex-1 cursor-pointer px-2 py-1 text-sm font-medium transition-colors ${
+                selected
+                  ? 'text-[var(--accent-foreground)]'
+                  : 'text-[var(--foreground)] hover:text-[var(--accent)]'
+              } `}
             >
-              <div className="flex items-center justify-center gap-2 p-2 w-full h-full">
-                <Icon aria-hidden="true" className="w-4 h-4" />
+              <div className="flex h-full w-full items-center justify-center gap-2 p-2">
+                <Icon aria-hidden="true" className="h-4 w-4" />
                 {label}
               </div>
             </button>

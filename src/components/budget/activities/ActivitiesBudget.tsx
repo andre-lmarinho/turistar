@@ -77,10 +77,10 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           aria-modal="true"
           aria-labelledby="activities-budget-title"
           tabIndex={-1}
-          className="bg-white rounded-lg shadow-xl w-[95%] max-w-md focus:outline-none focus:ring-2 focus:ring-primary"
+          className="focus:ring-primary w-[95%] max-w-md rounded-lg bg-white shadow-xl focus:ring-2 focus:outline-none"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center justify-between px-4 py-2 border-b">
+          <div className="flex items-center justify-between border-b px-4 py-2">
             <h3 id="activities-budget-title" className="font-bold">
               Budget Your Activities
             </h3>
@@ -90,11 +90,11 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           <div
             role="list"
             aria-labelledby="activities-budget-title"
-            className="p-4 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent"
+            className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
           >
             {activities.map((act, idx) => (
               <div key={act.id} role="listitem" className="flex items-center justify-between gap-2">
-                <span className="truncate text-sm flex-1">
+                <span className="flex-1 truncate text-sm">
                   {act.title || 'Untitled'} – {act.dayLabel}
                 </span>
                 <Input
@@ -108,7 +108,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
                   background="default"
                   placeholder="Budget"
                   aria-label={`Budget for ${act.title || 'untitled'} – ${act.dayLabel}`}
-                  icon={<DollarSign aria-hidden="true" className="size-4 text-muted-foreground" />}
+                  icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
                 />
               </div>
             ))}

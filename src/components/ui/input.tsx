@@ -48,14 +48,14 @@ function Input({
 
   return (
     <div className={cn(inputVariants({ inputSize, background }), className)}>
-      <label htmlFor={inputId} className="bg-gray-100 border-r-1">
-        {icon && <div className="m-2 text-muted-foreground">{icon}</div>}
+      <label htmlFor={inputId} className="border-r-1 bg-gray-100">
+        {icon && <div className="text-muted-foreground m-2">{icon}</div>}
       </label>
       <input
         id={inputId}
         type="text"
         inputMode="decimal"
-        className="px-2 py-1 w-full text-right bg-transparent [appearance:textfield] outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="w-full [appearance:textfield] bg-transparent px-2 py-1 text-right outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         value={value}
         onChange={(e) => onValueChange(e.target.value)}
         {...props}
