@@ -1,10 +1,9 @@
 // src/components/planner/dnd/ActivityCard.test.tsx
 import React from 'react';
-(global as any).React = React;
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivityCard from './ActivityCard';
 import { vi } from 'vitest';
-import type { Activity, DayPlan, CatalogActivity } from '@/types';
+import type { Activity, DayPlan } from '@/types';
 
 const baseActivity: Activity & { dayId?: string } = {
   id: 'a1',

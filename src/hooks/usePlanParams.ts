@@ -13,17 +13,19 @@ export function usePlanParams() {
   const params = useSearchParams();
   const router = useRouter();
 
+  const paramsString = params.toString();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
   useEffect(() => {
-    const currentPlan = params.get('plan');
+    const currentSearch = new URLSearchParams(paramsString);
+    const currentPlan = currentSearch.get('plan');
     if (currentPlan !== planId) {
-      const search = new URLSearchParams(params.toString());
-      search.set('plan', planId);
-      router.replace(`/planner?${search.toString()}`, { scroll: false });
+      const newSearch = new URLSearchParams(paramsString);
+      newSearch.set('plan', planId);
+      router.replace(`/planner?${newSearch.toString()}`, { scroll: false });
     }
-  }, [planId, params, router]);
+  }, [planId, paramsString, router]);
 
   return { dest, planId };
 }

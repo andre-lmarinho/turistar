@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { SortMode } from '@/components';
-import { useFetchCatalog } from '@/hooks';
+import { fetchCatalog } from '@/hooks';
 
 /**
  * Hook to fetch and manage the catalog activities.
@@ -16,7 +16,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
   // Catalog activities list (raw from API)
   const { data, isLoading, isError } = useQuery({
     queryKey: ['catalog', city],
-    queryFn: () => useFetchCatalog(city),
+    queryFn: () => fetchCatalog(city),
     enabled: isOpen,
   });
   const loading = isLoading;

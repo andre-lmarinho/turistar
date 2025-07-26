@@ -1,15 +1,9 @@
 // src/hooks/useCatalog.ts
 
-import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Activity, DayPlan } from '@/types';
-import { useFetchCatalog, CatalogApiResponse } from '@/hooks';
-
+import { useCatalogActivities } from '@/hooks';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
-
-// Type guard to check that the data has an activities array
-const hasActivities = (data: unknown): data is CatalogApiResponse =>
-  !!data && typeof data === 'object' && Array.isArray((data as CatalogApiResponse).activities);
 
 /**
  * Hook to fetch and format catalog by destination.
@@ -19,22 +13,19 @@ const hasActivities = (data: unknown): data is CatalogApiResponse =>
  * - Splits activities into days, 3 per day
  * - Returns both React Query props and `days` as DayPlan[]
  */
+
 export function useCatalog(dest: string | null, options: { enabled: boolean }) {
-  // 1) Run the query only if we have a dest and enabled
-  const query = useQuery({
-    queryKey: ['catalog', dest],
-    queryFn: () => useFetchCatalog(dest || ''),
-    enabled: !!dest && options.enabled,
-  });
+  // 1) Load catalog activities using the shared hook
+  const { activities, ...query } = useCatalogActivities(dest, options);
 
   // 2) Memoize transforming raw activities into day-based buckets
   const days: DayPlan[] | undefined = useMemo(() => {
-    if (!query.data || !hasActivities(query.data)) return;
+    if (!activities) return;
 
     const chunkSize = 3;
     const dayPlans: DayPlan[] = [];
 
-    query.data.activities.forEach((activity, i) => {
+    activities.forEach((activity, i) => {
       const dayIndex = Math.floor(i / chunkSize);
       if (!dayPlans[dayIndex]) {
         dayPlans[dayIndex] = {
@@ -59,7 +50,7 @@ export function useCatalog(dest: string | null, options: { enabled: boolean }) {
     });
 
     return dayPlans;
-  }, [query.data]);
+  }, [activities]);
 
   // 3) Expose both the formatted days and all React Query state
   return { days, ...query };

@@ -18,7 +18,7 @@ beforeEach(() => {
 describe('usePlanDaysStorage', () => {
   test('loads days from storage on mount', async () => {
     const stored = JSON.stringify([{ id: 'd1', label: 'Day 1', activities: [] }]);
-    localStorage.setItem('catalog-plan1', stored);
+    localStorage.setItem('days-plan1', stored);
     const { result } = renderHook(() => useWrapper([]));
     await waitFor(() => expect(result.current.days).toHaveLength(1));
   });
@@ -29,7 +29,7 @@ describe('usePlanDaysStorage', () => {
       result.current.setDays([{ id: 'd1', label: 'Day 1', activities: [] }]);
     });
     await waitFor(() =>
-      expect(localStorage.getItem('catalog-plan1')).toBe(
+      expect(localStorage.getItem('days-plan1')).toBe(
         JSON.stringify([{ id: 'd1', label: 'Day 1', activities: [] }])
       )
     );

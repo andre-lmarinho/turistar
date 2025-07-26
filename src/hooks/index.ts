@@ -22,5 +22,6 @@ export * from './usePlanDaysStorage';
 export * from './useActivityCardEditor';
 export * from './useCatalog';
 export * from './useDestinationCatalog';
+export * from './useCatalogActivities';
 
-export { useFetchCatalog, type CatalogApiResponse } from './useFetchCatalog';
+export { fetchCatalog, type CatalogApiResponse } from './fetchCatalog';

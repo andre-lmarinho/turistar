@@ -13,6 +13,6 @@ export function usePlanDaysStorage(
   days: DayPlan[],
   setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>
 ) {
-  const storageKey = `catalog-${planId}`;
+  const storageKey = `days-${planId}`;
   useLocalStorageSync(storageKey, days, setDays);
 }

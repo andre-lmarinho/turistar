@@ -2,6 +2,11 @@
 
 import { useEffect, RefObject } from 'react';
 
+/**
+ * Detects outside clicks on the popup element and triggers onClose.
+ * Useful for inline editing panels and portal overlays.
+ */
+
 export function usePopupOutsideHandler({
   popupRef,
   triggerRef,

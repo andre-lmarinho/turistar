@@ -49,12 +49,12 @@ export function useTripRange(dest: string, planId?: string);
 const { tripDays, handleRangeChange } = useTripRange(dest, planId);
 ```
 
-### `useFetchCatalog`
+### `fetchCatalog`
 
-_File: `src/hooks/useFetchCatalog.ts`_
+_File: `src/hooks/fetchCatalog.ts`_
 
 ```ts
-export async function useFetchCatalog(dest: string): Promise<CatalogApiResponse>;
+export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
 ```
 
 - **Inputs**
@@ -63,6 +63,22 @@ export async function useFetchCatalog(dest: string): Promise<CatalogApiResponse>
   Catalog activities from the API.
 - **Lifecycle**
   Throws an `Error` when the request fails.
+
+### `useCatalogActivities`
+
+_File: `src/hooks/useCatalogActivities.ts`_
+
+```ts
+export function useCatalogActivities(dest: string | null, options: { enabled: boolean });
+```
+
+- **Inputs**
+  - `dest`: destination name.
+  - `options.enabled`: whether the query should execute.
+- **Outputs**
+  Raw catalog `activities` plus React Query props.
+- **Lifecycle**
+  Fetches catalog data via `useFetchCatalog` when enabled.
 
 ### `useCatalog`
 
@@ -78,7 +94,7 @@ export function useCatalog(dest: string | null, options: { enabled: boolean });
 - **Outputs**
   React Query result props plus `days` (activities grouped by day).
 - **Lifecycle**
-  - Fetches `/api/catalog?dest=…` when enabled.
+  - Uses `useCatalogActivities` internally to load activities.
   - Memoizes transformation of activities into `DayPlan[]`.
 - **Exceptions**
   Throws an `Error` if the HTTP response is not OK.
@@ -102,7 +118,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador');
 - **Outputs**
   Filtered `visibleItems`, category utilities, sort mode setters, loading and error flags.
 - **Lifecycle**
-  Fetches activities when the catalog panel opens and memoizes the filtered list.
+  Uses `useCatalogActivities` internally when the panel opens and memoizes the filtered list.
 - **Exceptions**
   Sets an error state when the fetch fails.
 - **Example**
@@ -209,7 +225,7 @@ export function usePlanDaysStorage(
 - **Outputs**
   None (side effects only).
 - **Lifecycle**
-  Loads days from `localStorage` and saves on change.
+  Loads days from `localStorage` using the `days-${planId}` key and saves on change.
 - **Exceptions**
   None.
 

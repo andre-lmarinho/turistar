@@ -56,7 +56,7 @@ export default function ActivityCard({
       inputRef.current?.focus();
       inputRef.current?.select();
     }
-  }, [editing]);
+  }, [editing, cardRef, inputRef]);
 
   useEffect(() => {
     if (!editing) return;
@@ -71,7 +71,7 @@ export default function ActivityCard({
       window.removeEventListener('scroll', update, true);
       window.removeEventListener('resize', update);
     };
-  }, [editing]);
+  }, [editing, cardRef]);
 
   return (
     <>
