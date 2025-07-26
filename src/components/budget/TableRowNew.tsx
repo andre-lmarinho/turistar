@@ -5,6 +5,7 @@ import React, { useId } from 'react';
 import { Plus, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
+import { normalizeAmount } from '@/utils';
 
 export default function TableRowNew({
   desc,
@@ -14,7 +15,6 @@ export default function TableRowNew({
   amountInput,
   setAmountInput,
   setAmount,
-  normalizeAmount,
   onAdd,
 }: {
   desc: string;
@@ -24,7 +24,6 @@ export default function TableRowNew({
   amountInput: string;
   setAmountInput: (val: string) => void;
   setAmount: (v: number) => void;
-  normalizeAmount: (val: string) => number;
   onAdd: () => void;
 }) {
   const baseId = useId();

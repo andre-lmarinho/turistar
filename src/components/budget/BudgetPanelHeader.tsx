@@ -6,6 +6,7 @@ import { Info, DollarSign } from 'lucide-react';
 import { InfoPopup } from '@/components';
 import { CATEGORIES, BUDGET_INFO } from '@/constants';
 import { CategoryProgressBar, Input } from '@/components';
+import { normalizeAmount } from '@/utils';
 
 interface Props {
   budget: number;
@@ -22,15 +23,6 @@ export default function BudgetPanelHeader({
   difference,
   categoryTotals,
 }: Props) {
-  const normalizeAmount = (val: string) => {
-    const cleaned = val
-      .replace(/[^0-9.]/g, '')
-      .replace(/,/g, '')
-      .replace(/^0+(?!\.)/, '');
-    const num = parseFloat(cleaned);
-    return isFinite(num) ? num : 0;
-  };
-
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
 
   return (

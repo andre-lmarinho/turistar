@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 /* Variants ------------------------------------------------------------ */
-const inputVariants = cva('grid grid-cols-[auto_1fr] items-center overflow-hidden border rounded', {
+const inputVariants = cva('grid grid-cols-[auto_1fr] items-center overflow-hidden rounded border', {
   variants: {
     inputSize: {
       default: 'w-28',

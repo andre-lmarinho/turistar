@@ -8,6 +8,7 @@ import FocusTrap from 'focus-trap-react';
 
 import { Input, CloseButton } from '@/components';
 import { useEscapeKey } from '@/hooks';
+import { normalizeAmount } from '@/utils';
 import type { DayPlan } from '@/types';
 
 interface ActivitiesBudgetProps {
@@ -40,15 +41,6 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
     setShouldAutoFocus(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
-
-  const normalizeAmount = (val: string) => {
-    const cleaned = val
-      .replace(/[^0-9.]/g, '')
-      .replace(/,/g, '')
-      .replace(/^0+(?!\.)/, '');
-    const num = parseFloat(cleaned);
-    return isFinite(num) ? num : 0;
-  };
 
   const handleClose = () => {
     for (const [id, val] of Object.entries(inputs)) {

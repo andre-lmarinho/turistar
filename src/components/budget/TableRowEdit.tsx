@@ -6,6 +6,7 @@ import { Check, X, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 import type { Entry } from '@/types';
+import { normalizeAmount } from '@/utils';
 
 export default function TableRowEdit({
   editEntry,
@@ -14,7 +15,6 @@ export default function TableRowEdit({
   setEditAmountInput,
   onConfirm,
   onCancel,
-  normalizeAmount,
 }: {
   editEntry: Entry;
   setEditEntry: React.Dispatch<React.SetStateAction<Entry | null>>;
@@ -22,7 +22,6 @@ export default function TableRowEdit({
   setEditAmountInput: (val: string) => void;
   onConfirm: () => void;
   onCancel: () => void;
-  normalizeAmount: (val: string) => number;
 }) {
   // useId generates a unique suffix for each instance
   const baseId = useId();

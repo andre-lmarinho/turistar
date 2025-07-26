@@ -2,6 +2,7 @@
 
 export * from './formatDayPlan';
 export * from './initialDays';
-export * from './syncDaysWithTripRange';
 export * from './moveActivityToDay';
 export * from './moveActivityPosition';
+export * from './normalizeAmount';
+export * from './syncDaysWithTripRange';

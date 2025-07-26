@@ -9,7 +9,7 @@ import { usePopupOutsideHandler, useEscapeKey } from '@/hooks';
 
 /** Popup style variants */
 export const popupVariants = cva(
-  'bg-background rounded-lg shadow-xl focus:outline-none focus:ring-2 focus:ring-primary',
+  'bg-background focus:ring-primary rounded-lg shadow-xl focus:ring-2 focus:outline-none',
   {
     variants: {
       size: {

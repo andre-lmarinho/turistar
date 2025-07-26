@@ -41,15 +41,6 @@ export default function ExpenseTable({
     setAmountInput(amount ? String(amount) : '');
   }, [amount]);
 
-  const normalizeAmount = (val: string) => {
-    const cleaned = val
-      .replace(/[^0-9.]/g, '')
-      .replace(/,/g, '')
-      .replace(/^0+(?!\.)/, '');
-    const num = parseFloat(cleaned);
-    return isFinite(num) ? num : 0;
-  };
-
   const startEdit = (index: number) => {
     setEditIndex(index);
     setEditEntry(entries[index]);
@@ -122,7 +113,6 @@ export default function ExpenseTable({
               setEditEntry={setEditEntry}
               editAmountInput={editAmountInput}
               setEditAmountInput={setEditAmountInput}
-              normalizeAmount={normalizeAmount}
               onConfirm={confirmEdit}
               onCancel={cancelEdit}
             />
@@ -138,7 +128,6 @@ export default function ExpenseTable({
           setCat={setCat}
           setAmount={setAmount}
           setAmountInput={setAmountInput}
-          normalizeAmount={normalizeAmount}
           onAdd={onAdd}
         />
       </tbody>
