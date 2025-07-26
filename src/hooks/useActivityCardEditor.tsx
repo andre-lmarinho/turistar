@@ -1,4 +1,4 @@
-// src/hooks/planner/useActivityCardEditor.tsx
+// src/hooks/useActivityCardEditor.tsx
 
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';

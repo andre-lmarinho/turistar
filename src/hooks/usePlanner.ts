@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanner.ts
+// src/hooks/usePlanner.ts
 'use client';
 import { useEffect } from 'react';
 import { closestCenter } from '@dnd-kit/core';

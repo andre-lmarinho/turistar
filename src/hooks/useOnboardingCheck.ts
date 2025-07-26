@@ -1,4 +1,4 @@
-// src/hooks/planner/useOnboardingCheck.ts
+// src/hooks/useOnboardingCheck.ts
 'use client';
 
 import { useState, useEffect } from 'react';

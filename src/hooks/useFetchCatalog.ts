@@ -1,4 +1,4 @@
-// src/hooks/catalog/useFetchCatalog.ts
+// src/hooks/useFetchCatalog.ts
 
 import type { CatalogActivity } from '@/types';
 

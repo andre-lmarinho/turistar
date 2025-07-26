@@ -1,4 +1,4 @@
-// src/hooks/ui/useFlexibleRef.ts
+// src/hooks/useFlexibleRef.ts
 
 import { useRef } from 'react';
 

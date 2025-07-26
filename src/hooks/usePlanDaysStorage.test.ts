@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanDaysStorage.test.ts
+// src/hooks/usePlanDaysStorage.test.ts
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useState } from 'react';

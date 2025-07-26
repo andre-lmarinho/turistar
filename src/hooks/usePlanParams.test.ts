@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanParams.test.ts
+// src/hooks/usePlanParams.test.ts
 
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';

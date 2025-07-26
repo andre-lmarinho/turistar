@@ -1,4 +1,4 @@
-// src/hooks/ui/useKeyBinds.ts
+// src/hooks/useKeyBinds.ts
 'use client';
 
 import { useEffect } from 'react';

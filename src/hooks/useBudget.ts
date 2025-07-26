@@ -1,4 +1,4 @@
-// src/hooks/budget/useBudget.ts
+// src/hooks/useBudget.ts
 
 import { useState, useMemo } from 'react';
 import { useLocalStorageSync } from '@/lib';

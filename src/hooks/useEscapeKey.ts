@@ -1,4 +1,4 @@
-// src/hooks/ui/useEscapeKey.ts
+// src/hooks/useEscapeKey.ts
 'use client';
 
 import { useEffect, useRef, RefObject } from 'react';

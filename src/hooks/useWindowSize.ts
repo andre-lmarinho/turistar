@@ -1,4 +1,4 @@
-// src/hooks/ui/useWindowSize.ts
+// src/hooks/useWindowSize.ts
 
 import { useState, useEffect, RefObject } from 'react';
 

@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanParams.ts
+// src/hooks/usePlanParams.ts
 'use client';
 
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-// src/hooks/ui/useCardPopups.ts
+// src/hooks/useCardPopups.ts
 'use client';
 
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-// src/hooks/ui/useCardColors.ts
+// src/hooks/useCardColors.ts
 import { DEFAULT_COLORS } from '@/constants';
 
 export function useCardColors(twBg?: string, bgColor?: string) {

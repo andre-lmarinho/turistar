@@ -1,4 +1,4 @@
-// src/hooks/planner/useSelectedActivity.ts
+// src/hooks/useSelectedActivity.ts
 'use client';
 
 import { useState } from 'react';

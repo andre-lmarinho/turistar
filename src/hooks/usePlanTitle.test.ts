@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanTitle.test.ts
+// src/hooks/usePlanTitle.test.ts
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { usePlanTitle } from './usePlanTitle';

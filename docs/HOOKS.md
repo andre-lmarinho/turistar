@@ -4,7 +4,7 @@ This document outlines the available custom hooks in the project. Each section d
 
 ### `useBudget`
 
-_File: `src/hooks/budget/useBudget.ts`_
+_File: `src/hooks/useBudget.ts`_
 
 ```ts
 export function useBudget(planId: string, activitiesTotal: number);
@@ -28,7 +28,7 @@ const { budget, setBudget, entries, handleAdd } = useBudget(planId, activitiesTo
 
 ### `useTripRange`
 
-_File: `src/hooks/general/useTripRange.ts`_
+_File: `src/hooks/useTripRange.ts`_
 
 ```ts
 export function useTripRange(dest: string, planId?: string);
@@ -49,12 +49,12 @@ export function useTripRange(dest: string, planId?: string);
 const { tripDays, handleRangeChange } = useTripRange(dest, planId);
 ```
 
-### `fetchCatalog`
+### `useFetchCatalog`
 
-_File: `src/hooks/catalog/fetchCatalog.ts`_
+_File: `src/hooks/useFetchCatalog.ts`_
 
 ```ts
-export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
+export async function useFetchCatalog(dest: string): Promise<CatalogApiResponse>;
 ```
 
 - **Inputs**
@@ -66,7 +66,7 @@ export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
 
 ### `useCatalog`
 
-_File: `src/hooks/catalog/useCatalog.ts`_
+_File: `src/hooks/useCatalog.ts`_
 
 ```ts
 export function useCatalog(dest: string | null, options: { enabled: boolean });
@@ -90,7 +90,7 @@ const { days, isLoading } = useCatalog(dest, { enabled: true });
 
 ### `useDestinationCatalog`
 
-_File: `src/hooks/catalog/useDestinationCatalog.ts`_
+_File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
 export function useDestinationCatalog(isOpen: boolean, city = 'salvador');
@@ -113,7 +113,7 @@ const { visibleItems, toggleCat } = useDestinationCatalog(open);
 
 ### `useActivitiesById`
 
-_File: `src/hooks/planner/useActivitiesById.ts`_
+_File: `src/hooks/useActivitiesById.ts`_
 
 ```ts
 export function useActivitiesById(days: DayPlan[]);
@@ -130,7 +130,7 @@ export function useActivitiesById(days: DayPlan[]);
 
 ### `useActivityState`
 
-_File: `src/hooks/planner/useActivityState.ts`_
+_File: `src/hooks/useActivityState.ts`_
 
 ```ts
 export function useActivityState(setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>);
@@ -147,7 +147,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
 ### `useDragState`
 
-_File: `src/hooks/planner/useDragState.ts`_
+_File: `src/hooks/useDragState.ts`_
 
 ```ts
 export function useDragState(initialDays: DayPlan[]);
@@ -164,7 +164,7 @@ export function useDragState(initialDays: DayPlan[]);
 
 ### `useDnDPlanner`
 
-_File: `src/hooks/planner/useDnDPlanner.ts`_
+_File: `src/hooks/useDnDPlanner.ts`_
 
 ```ts
 export function useDnDPlanner(initialDays: DayPlan[]);
@@ -181,7 +181,7 @@ export function useDnDPlanner(initialDays: DayPlan[]);
 
 ### `usePlanParams`
 
-_File: `src/hooks/planner/usePlanParams.ts`_
+_File: `src/hooks/usePlanParams.ts`_
 
 ```ts
 export function usePlanParams();
@@ -196,7 +196,7 @@ export function usePlanParams();
 
 ### `usePlanDaysStorage`
 
-_File: `src/hooks/planner/usePlanDaysStorage.ts`_
+_File: `src/hooks/usePlanDaysStorage.ts`_
 
 ```ts
 export function usePlanDaysStorage(
@@ -215,7 +215,7 @@ export function usePlanDaysStorage(
 
 ### `usePlanner`
 
-_File: `src/hooks/planner/usePlanner.ts`_
+_File: `src/hooks/usePlanner.ts`_
 
 ```ts
 export function usePlanner(enabled: boolean);
@@ -234,7 +234,7 @@ export function usePlanner(enabled: boolean);
 
 ### `usePlanTitle`
 
-_File: `src/hooks/planner/usePlanTitle.ts`_
+_File: `src/hooks/usePlanTitle.ts`_
 
 ```ts
 export function usePlanTitle(planId: string, defaultTitle = '');
@@ -252,7 +252,7 @@ export function usePlanTitle(planId: string, defaultTitle = '');
 
 ### `useOnboardingCheck`
 
-_File: `src/hooks/planner/useOnboardingCheck.ts`_
+_File: `src/hooks/useOnboardingCheck.ts`_
 
 ```ts
 export function useOnboardingCheck(planId: string);
@@ -269,7 +269,7 @@ export function useOnboardingCheck(planId: string);
 
 ### `useSelectedActivity`
 
-_File: `src/hooks/planner/useSelectedActivity.ts`_
+_File: `src/hooks/useSelectedActivity.ts`_
 
 ```ts
 export function useSelectedActivity(
@@ -291,7 +291,7 @@ export function useSelectedActivity(
 
 ### `useCardPopups`
 
-_File: `src/hooks/ui/useCardPopups.ts`_
+_File: `src/hooks/useCardPopups.ts`_
 
 ```ts
 export function useCardPopups();
@@ -308,7 +308,7 @@ export function useCardPopups();
 
 ### `useEscapeKey`
 
-_File: `src/hooks/ui/useEscapeKey.ts`_
+_File: `src/hooks/useEscapeKey.ts`_
 
 ```ts
 export function useEscapeKey({
@@ -335,7 +335,7 @@ export function useEscapeKey({
 
 ### `useKeyBinds`
 
-_File: `src/hooks/ui/useKeyBinds.ts`_
+_File: `src/hooks/useKeyBinds.ts`_
 
 ```ts
 export function useKeyBinds({
@@ -371,7 +371,7 @@ export function useKeyBinds({
 
 ### `useFlexibleRef`
 
-_File: `src/hooks/ui/useFlexibleRef.ts`_
+_File: `src/hooks/useFlexibleRef.ts`_
 
 ```ts
 export function useFlexibleRef();
@@ -388,7 +388,7 @@ export function useFlexibleRef();
 
 ### `usePopupOutsideHandler`
 
-_File: `src/hooks/ui/usePopupOutsideHandler.ts`_
+_File: `src/hooks/usePopupOutsideHandler.ts`_
 
 ```ts
 export function usePopupOutsideHandler({
@@ -413,7 +413,7 @@ export function usePopupOutsideHandler({
 
 ### `useWindowSize`
 
-_File: `src/hooks/ui/useWindowSize.ts`_
+_File: `src/hooks/useWindowSize.ts`_
 
 ```ts
 export function useWindowSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>);

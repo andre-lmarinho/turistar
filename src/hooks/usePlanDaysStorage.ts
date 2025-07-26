@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanDaysStorage.ts
+// src/hooks/usePlanDaysStorage.ts
 'use client';
 
 import { useLocalStorageSync } from '@/lib';

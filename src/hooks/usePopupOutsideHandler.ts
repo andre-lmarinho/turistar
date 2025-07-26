@@ -1,4 +1,4 @@
-// src/hooks/ui/usePopupOutsideHandler.ts
+// src/hooks/usePopupOutsideHandler.ts
 
 import { useEffect, RefObject } from 'react';
 

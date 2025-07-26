@@ -1,4 +1,4 @@
-// src/hooks/general/useTripRange.test.ts
+// src/hooks/useTripRange.test.ts
 
 import { renderHook, act } from '@testing-library/react';
 import { useTripRange } from './useTripRange';

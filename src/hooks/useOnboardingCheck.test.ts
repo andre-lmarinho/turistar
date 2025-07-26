@@ -1,4 +1,4 @@
-// src/hooks/planner/useOnboardingCheck.test.ts
+// src/hooks/useOnboardingCheck.test.ts
 
 import { renderHook, waitFor } from '@testing-library/react';
 import { useOnboardingCheck } from './useOnboardingCheck';

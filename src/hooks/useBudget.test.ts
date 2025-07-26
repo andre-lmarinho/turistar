@@ -1,4 +1,4 @@
-// src/hooks/budget/useBudget.test.ts
+// src/hooks/useBudget.test.ts
 
 import { renderHook, act } from '@testing-library/react';
 import { useBudget } from './useBudget';
