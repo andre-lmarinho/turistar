@@ -38,6 +38,3 @@ yarn-error.log*
 # npm oddities occasionally created on Windows
 .ignored_node_modules/
 .vercel
-
-*storybook.log
-storybook-static
