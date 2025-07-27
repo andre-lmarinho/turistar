@@ -12,6 +12,7 @@ build/              # qualquer pasta de build custom
 .turbo/             # Turbopack/Turborepo cache
 .eslintcache
 *.tsbuildinfo       # TypeScript incremental
+tsconfig.tsbuildinfo
 
 # Testing / E2E
 coverage/

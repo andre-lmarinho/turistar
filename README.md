@@ -84,11 +84,14 @@ You can deploy the same app to Vercel or Netlify.
 ## 📁 Project Structure
 
 - `/docs`: Project notes and guidelines (see `state-data-flow.md` for how data moves)
+- `/public`: Static assets served directly
 - `/src`: Source code to be analyzed and maintained by AI agents
+  - `/app`: Next.js app directory with pages and API routes
   - `/components`: React components that should follow the guidelines in this document
+  - `/constants`: Shared configuration values
+  - `/data`: Local JSON used for demo itineraries
   - `/hooks`: Custom React hooks
   - `/lib`: Internal utilities
-  - `/services`: External API wrappers
   - `/types`: Shared TypeScript definitions
   - `/utils`: Planner-specific helpers
 
@@ -106,7 +109,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 💻 Getting Started
 
-**Prerequisites**: Node.js v16+, npm
+**Prerequisites**: Node.js v18+, npm
 
 1. **Clone the repo**
 
