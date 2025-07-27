@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { DEFAULT_COLORS } from '@/constants';
+import { DEFAULT_COLORS, MAX_FILE_SIZE } from '@/constants';
 import { Button, CloseButton, Popup } from '@/components';
 
 interface CardColorsPopupProps {
@@ -99,10 +99,11 @@ export default function CardColorsPopup({
             name="upload-image"
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/png,image/jpeg"
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
+              if (file.size > MAX_FILE_SIZE) return;
               const reader = new FileReader();
               reader.onloadend = () => {
                 if (reader.result) {
