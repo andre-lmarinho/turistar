@@ -49,7 +49,7 @@ const layoutStyles: Record<Feature['layout'], { li: string; wrapper: string; wid
 
 export default function FeaturePreview() {
   return (
-    <section className="featured-preview relative z-10 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
+    <section className="featured-preview relative z-10 p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
       <div className="xs:max-w-md relative z-10 container md:max-w-3xl lg:max-w-[960px]">
         <h2 className="font-title text-foreground pb-6 text-[32px] leading-[0.9] font-semibold tracking-tight sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px]">
           What can you do?

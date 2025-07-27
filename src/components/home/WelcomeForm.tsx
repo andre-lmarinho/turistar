@@ -48,7 +48,7 @@ export default function WelcomeForm() {
   };
 
   return (
-    <section className="hero bg-grey-1 px-safe relative overflow-hidden pt-[184px] sm:pt-[92px] md:h-auto md:pt-24 lg:pt-28">
+    <section className="hero relative overflow-hidden p-8 pt-[184px] sm:pt-[92px] md:h-auto md:pt-24 lg:pt-28">
       <div className="relative container flex flex-col pt-20">
         <div className="relative z-10 flex flex-col-reverse items-center gap-10 lg:flex-row lg:items-start">
           <div className="flex w-full items-start gap-4 sm:gap-6 md:gap-8 lg:gap-10">
@@ -95,7 +95,7 @@ export default function WelcomeForm() {
               role="presentation"
               width={800}
               height={600}
-              className="h-auto w-full"
+              className="h-auto w-full -scale-x-100 transform"
             />
           </div>
         </div>

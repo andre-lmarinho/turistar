@@ -4,7 +4,7 @@ import { FeaturePreview, WelcomeForm } from '@/components';
 
 export default function Home() {
   return (
-    <main id="main-content" className="space-y-16 p-8">
+    <main id="main-content" className="space-y-16">
       <WelcomeForm />
       <FeaturePreview />
     </main>
