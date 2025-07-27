@@ -1,7 +1,7 @@
 // src/components/planner/catalog/DestinationFilterPanel.tsx
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
@@ -45,6 +45,25 @@ export default function DestinationFilterPanel({
   useEscapeKey({ onClose, isActive: isOpen });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  // Preserve scroll position so the list doesn't jump after adding/removing
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollPosRef = useRef(0);
+
+  const handleAdd = (a: CatalogActivity) => {
+    scrollPosRef.current = scrollRef.current?.scrollTop ?? 0;
+    onAdd(a);
+  };
+
+  const handleRemove = (id: string) => {
+    scrollPosRef.current = scrollRef.current?.scrollTop ?? 0;
+    onRemove(id);
+  };
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollPosRef.current;
+    }
+  }, [addedIds]);
 
   if (!isOpen) return null;
 
@@ -82,7 +101,7 @@ export default function DestinationFilterPanel({
             onClose={onClose}
           />
 
-          <div className="flex flex-1 overflow-auto">
+          <div className="flex flex-1 overflow-auto" ref={scrollRef}>
             <div className="flex-1 p-4">
               {loading && (
                 <div className="flex items-center gap-2">
@@ -95,8 +114,8 @@ export default function DestinationFilterPanel({
                 <DestinationCardGrid
                   items={visibleItems}
                   addedIds={addedIds}
-                  onAdd={onAdd}
-                  onRemove={onRemove}
+                  onAdd={handleAdd}
+                  onRemove={handleRemove}
                 />
               )}
             </div>
