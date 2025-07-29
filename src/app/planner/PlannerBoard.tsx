@@ -16,7 +16,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
 import { useActivitiesById } from '@/hooks';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
 
 export interface PlannerBoardProps {
   days: DayPlan[];
@@ -34,6 +34,8 @@ export interface PlannerBoardProps {
   onChangePosition: (activityId: string, index: number) => void;
   onChangeColor: (activityId: string, color: string) => void;
   onDelete: (activityId: string) => void;
+  onUpdateImage?: (activityId: string, url: string) => void;
+  onApplyCatalogItem?: (activityId: string, item: CatalogActivity) => void;
 }
 
 /**
@@ -56,6 +58,8 @@ export default function PlannerBoard({
   onChangePosition,
   onChangeColor,
   onDelete,
+  onUpdateImage,
+  onApplyCatalogItem,
 }: PlannerBoardProps) {
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
@@ -88,6 +92,8 @@ export default function PlannerBoard({
               onChangePosition={(activityId, idx) => onChangePosition(activityId, idx)}
               onChangeColor={(activityId, color) => onChangeColor(activityId, color)}
               onDelete={onDelete}
+              onUpdateImage={onUpdateImage}
+              onApplyCatalogItem={onApplyCatalogItem}
             />
           </div>
         ))}
@@ -105,6 +111,8 @@ export default function PlannerBoard({
             onChangeColor={(newColor) => onChangeColor(active.id, newColor)}
             bgColor={active.color}
             onDelete={() => onDelete(active.id)}
+            onUpdateImage={(url) => onUpdateImage?.(active.id, url)}
+            onApplyCatalogItem={(item) => onApplyCatalogItem?.(active.id, item)}
             aria-grabbed="true"
             aria-label={`Dragging ${active.title}`}
           />

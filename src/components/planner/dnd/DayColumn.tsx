@@ -6,7 +6,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core';
 
 import { SortableItem, AddCardButton } from '@/components';
-import type { DayPlan, Activity } from '@/types';
+import type { DayPlan, Activity, CatalogActivity } from '@/types';
 
 interface DayColumnProps {
   day: DayPlan;
@@ -19,6 +19,8 @@ interface DayColumnProps {
   onChangePosition: (activityId: string, index: number) => void;
   onChangeColor: (activityId: string, color: string) => void;
   onDelete: (activityId: string) => void;
+  onUpdateImage?: (activityId: string, url: string) => void;
+  onApplyCatalogItem?: (activityId: string, item: CatalogActivity) => void;
 }
 
 /**
@@ -36,6 +38,8 @@ export default function DayColumn({
   onChangePosition,
   onChangeColor,
   onDelete,
+  onUpdateImage,
+  onApplyCatalogItem,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
 
@@ -68,6 +72,8 @@ export default function DayColumn({
                 onChangePosition={(idx) => onChangePosition(activity.id, idx)}
                 onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
                 onDelete={() => onDelete(activity.id)}
+                onUpdateImage={(url) => onUpdateImage?.(activity.id, url)}
+                onApplyCatalogItem={(item) => onApplyCatalogItem?.(activity.id, item)}
                 bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (
