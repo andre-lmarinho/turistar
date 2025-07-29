@@ -7,15 +7,17 @@ import type { Metadata } from 'next';
 import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData } from '@/utils';
 
-interface PageProps {
+interface InspirationPageProps {
   params: { city: string };
 }
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: InspirationPageProps): Promise<Metadata> {
   const { city } = params;
   return { title: `${city} Inspiration` };
 }
 
-export default function InspirationPage({ params }: PageProps) {
+export default function InspirationPage({ params }: InspirationPageProps) {
   const { city } = params;
   const filePath = join(process.cwd(), 'src', 'data', `${city}.json`);
   const raw = readFileSync(filePath, 'utf-8');
