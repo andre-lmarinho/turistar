@@ -1,7 +1,7 @@
 // src/app/inspiration/[city]/page.tsx
 
 import type { Metadata } from 'next';
-import InspirationPlanner from './InspirationPlanner';
+import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData } from '@/utils';
 
 export async function generateMetadata({

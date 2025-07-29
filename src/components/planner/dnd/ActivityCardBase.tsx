@@ -23,7 +23,6 @@ interface ActivityCardBaseProps {
 
 export default function ActivityCardBase({
   title,
-  address,
   draftTitle,
   onDraftTitleChange,
   onSave,

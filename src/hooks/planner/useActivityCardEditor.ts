@@ -1,6 +1,6 @@
 // src/hooks/useActivityCardEditor.ts
 
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useEscapeKey } from '@/hooks';
 
 export function useActivityCardEditor({

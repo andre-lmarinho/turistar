@@ -170,8 +170,8 @@ This document summarizes each React component in the repository. It follows the 
 
 ### InspirationPlanner
 
-- **Location:** `src/app/inspiration/rome/InspirationPlanner.tsx`
-- **Responsibility:** Interactive planner used by the Rome inspiration page.
+- **Location:** `src/app/inspiration/InspirationPlanner.tsx`
+- **Responsibility:** Interactive planner used by the city inspiration pages.
 - **Props:** `{ initialDays, dest, planId }`
 - **State:** planner days, selected activity, mode
 - **External Hooks:** `useDnDPlanner`, `useSelectedActivity`, `usePlanTitle`, `useKeyBinds`

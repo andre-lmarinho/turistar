@@ -18,8 +18,31 @@ type GeoapifyFeature = {
     distance?: number;
   };
 };
-
 type GeoapifyResponse = { features: GeoapifyFeature[] };
+type GeoapifyPlaceDetails = {
+  features: Array<{
+    properties: {
+      place_id?: string | number;
+      name?: string;
+      formatted?: string;
+      lat: number;
+      lon: number;
+      categories?: string[];
+      rank?: { popularity?: number };
+      distance?: number;
+      description?: string;
+      wikipedia_extracts?: { text: string };
+      datasource?: {
+        raw?: {
+          wikidata?: string;
+          wikipedia?: string;
+        };
+        wikidata?: string;
+        wikipedia?: string;
+      };
+    };
+  }>;
+};
 
 /* Static config */
 const DEFAULT_RADIUS_METERS = 20_000;
@@ -68,8 +91,10 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
 }
 
 /* Geoapify – Place details (single call)  */
-
-async function fetchPlaceDetails(placeId: string, key: string) {
+async function fetchPlaceDetails(
+  placeId: string,
+  key: string
+): Promise<GeoapifyPlaceDetails | null> {
   const url = `https://api.geoapify.com/v2/place-details?id=${encodeURIComponent(
     placeId
   )}&features=details&lang=pt&apiKey=${key}`;
@@ -77,32 +102,44 @@ async function fetchPlaceDetails(placeId: string, key: string) {
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) return null;
 
-  return (await r.json()) as {
-    features: Array<{ properties: Record<string, any> }>;
-  };
+  return (await r.json()) as GeoapifyPlaceDetails;
 }
 
 /* Wikimedia helpers – extract QID / Wikipedia info */
+function extractWikiIds(details: GeoapifyPlaceDetails | null): {
+  qid?: string;
+  wikiTitle?: string;
+  wikiLang?: string;
+} {
+  // If no details, bail out
+  if (!details?.features?.length) {
+    return { qid: undefined, wikiTitle: undefined, wikiLang: undefined };
+  }
 
-function extractWikiIds(details: any) {
-  const props = details?.features?.[0]?.properties ?? {};
-  const ds = props.datasource || {};
-  const raw = ds.raw || props;
+  const props = details.features[0].properties;
 
-  let qid: string | undefined;
+  // Geoapify sometimes nests datasource info under props.datasource.raw,
+  // other times it's directly under props.datasource.
+  const ds = props.datasource;
+  const rawSource = ds?.raw ?? ds ?? {};
+
+  // Attempt to read Wikidata QID
+  const qid = typeof rawSource.wikidata === 'string' ? rawSource.wikidata : undefined;
+
   let wikiTitle: string | undefined;
   let wikiLang: string | undefined;
 
-  if (typeof raw.wikidata === 'string') qid = raw.wikidata;
-  if (typeof raw.wikipedia === 'string') {
-    const parts = raw.wikipedia.split(':'); // e.g. "pt:Elevador Lacerda"
+  // Attempt to read Wikipedia title (format "lang:Title" or just "Title")
+  if (typeof rawSource.wikipedia === 'string') {
+    const parts = rawSource.wikipedia.split(':', 2);
     if (parts.length === 2) {
       wikiLang = parts[0];
       wikiTitle = parts[1];
     } else {
-      wikiTitle = raw.wikipedia;
+      wikiTitle = rawSource.wikipedia;
     }
   }
+
   return { qid, wikiTitle, wikiLang };
 }
 

@@ -21,7 +21,6 @@ vi.mock('@/components', async () => {
     open,
     onSelect,
     onClose,
-    dest,
   }: {
     open: boolean;
     onSelect: (item: CatalogActivity) => void;

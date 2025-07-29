@@ -1,7 +1,7 @@
 // src/utils/buildDaysFromInspirationData.ts
 
 import { formatDayPlan } from '@/utils';
-import type { DayPlan, Activity } from '@/types';
+import type { Activity, DayPlan } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 /**

@@ -1,7 +1,7 @@
 // src/utils/buildDaysFromInspirationData.test.ts
 
 import { buildDaysFromInspirationData } from '@/utils/buildDaysFromInspirationData';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity } from '@/types';
 
 const sample = {
   destination: 'Test',
