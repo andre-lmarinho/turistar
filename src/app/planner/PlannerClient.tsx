@@ -81,6 +81,15 @@ export default function PlannerClient() {
     addBlankActivity,
   });
 
+  const handleUpdateImage = (id: string, url: string) => {
+    updateActivity(id, { imageUrl: url });
+    setSelectedActivity((prev) => (prev && prev.id === id ? { ...prev, imageUrl: url } : prev));
+  };
+
+  const handleApplyCatalogItem = (id: string, item: CatalogActivity) => {
+    handleUpdateImage(id, item.imageUrl || '');
+  };
+
   // Build a Set of activity IDs already placed on the board
   const activitiesById = useActivitiesById(days);
   const addedIds = useMemo(() => new Set(Object.keys(activitiesById)), [activitiesById]);
@@ -188,6 +197,8 @@ export default function PlannerClient() {
                     onChangeDay={changeDay}
                     onChangePosition={changePosition}
                     onChangeColor={(id, color) => changeColor(id, color)}
+                    onUpdateImage={handleUpdateImage}
+                    onApplyCatalogItem={handleApplyCatalogItem}
                     onDelete={removeActivity}
                   />
                 )}

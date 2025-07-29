@@ -61,6 +61,7 @@ const defaultProps = {
   availableDays: [] as DayPlan[],
   onChangeDay: () => {},
   dest: 'rome',
+  onImageChange: () => {},
 };
 
 it('opens catalog popup and selects an item', () => {

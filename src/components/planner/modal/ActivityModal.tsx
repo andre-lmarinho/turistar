@@ -56,6 +56,10 @@ export default function ActivityModal({
     }));
   }
 
+  function handleImageChange(url: string) {
+    setDraft((prev) => ({ ...prev, imageUrl: url }));
+  }
+
   if (!open) return null;
 
   return ReactDOM.createPortal(
@@ -93,6 +97,7 @@ export default function ActivityModal({
             onChangeDay={onChangeDay}
             onChangePosition={onChangePosition}
             onCatalogSelect={handleCatalogSelect}
+            onImageChange={handleImageChange}
           />
           <ActivityModalForm activity={draft} onSave={onSave} color={color} />
         </div>

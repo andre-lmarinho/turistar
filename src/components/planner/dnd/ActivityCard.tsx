@@ -19,6 +19,7 @@ export interface ActivityCardProps {
   onChangeColor: (color: string) => void;
   onDelete: () => void;
   onApplyCatalogItem?: (item: CatalogActivity) => void;
+  onUpdateImage?: (url: string) => void;
   dest: string;
 }
 
@@ -33,6 +34,7 @@ export default function ActivityCard({
   bgColor,
   onChangeColor,
   onApplyCatalogItem,
+  onUpdateImage,
   dest,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
@@ -147,7 +149,10 @@ export default function ActivityCard({
               title={title}
               draftTitle={draft}
               onDraftTitleChange={setDraft}
-              onSave={save}
+              onSave={(url) => {
+                onUpdateImage?.(url);
+                save();
+              }}
               inputRef={inputRef}
               imageUrl={editedImageUrl}
               address={activity.address}
@@ -164,10 +169,16 @@ export default function ActivityCard({
               onChangeColor={onChangeColor}
               onChangeDay={onChangeDay}
               onChangePosition={onChangePosition}
-              onSave={save}
+              onSave={(url) => {
+                onUpdateImage?.(url);
+                save();
+              }}
               onCancel={cancel}
               onDelete={onDelete}
-              onApplyCatalogItem={onApplyCatalogItem}
+              onApplyCatalogItem={(item) => {
+                onApplyCatalogItem?.(item);
+                setEditedImageUrl(item.imageUrl || '');
+              }}
               editedImageUrl={editedImageUrl}
               setEditedImageUrl={setEditedImageUrl}
               dest={dest}

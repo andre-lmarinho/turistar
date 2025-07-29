@@ -16,7 +16,7 @@ interface Props {
   onChangeColor: (color: string) => void;
   onChangeDay: (dayId: string) => void;
   onChangePosition: (index: number) => void;
-  onSave: () => void;
+  onSave: (imageUrl: string) => void;
   onCancel: () => void;
   onDelete: () => void;
   onApplyCatalogItem?: (item: CatalogActivity) => void;
@@ -81,7 +81,12 @@ export default function ActivityCardEditing({
   return (
     <>
       <div className="relative z-50 mt-2 flex">
-        <Button type="button" size="sm" className="cursor-pointer" onClick={onSave}>
+        <Button
+          type="button"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => onSave(editedImageUrl)}
+        >
           Update
         </Button>
       </div>

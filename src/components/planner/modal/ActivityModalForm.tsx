@@ -22,6 +22,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [editedAddress, setEditedAddress] = useState(activity.address ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
+  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const { results: addressResults, loading: addressLoading } =
     useDestinationAutocomplete(editedAddress);
   const [addressOpen, setAddressOpen] = useState(false);
@@ -33,6 +34,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     setEditedAddress(activity.address ?? '');
     setDuration(activity.duration || 0);
     setBudget(activity.budget || 0);
+    setEditedImageUrl(activity.imageUrl ?? '');
   }, [activity]);
 
   // Automatically focus the title input only when the activity title is empty.
@@ -170,7 +172,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
               color,
               duration: Number(duration),
               budget,
-              imageUrl: activity.imageUrl,
+              imageUrl: editedImageUrl,
             })
           }
           className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"

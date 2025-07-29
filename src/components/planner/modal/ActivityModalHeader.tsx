@@ -34,6 +34,7 @@ export default function ActivityModalHeader({
   onChangeDay,
   onChangePosition,
   onCatalogSelect,
+  onImageChange,
 }: {
   activity: Activity & { dayId?: string };
   dest: string;
@@ -45,6 +46,7 @@ export default function ActivityModalHeader({
   onChangeDay: (dayId: string) => void;
   onChangePosition: (index: number) => void;
   onCatalogSelect: (item: CatalogActivity) => void;
+  onImageChange: (url: string) => void;
 }) {
   const {
     colorButtonRef,
@@ -100,6 +102,7 @@ export default function ActivityModalHeader({
               e.stopPropagation();
               setShowRemove(false);
               setEditedImageUrl('');
+              onImageChange('');
             }}
           >
             Remove photo
@@ -141,8 +144,14 @@ export default function ActivityModalHeader({
           <div className="absolute top-[3rem] right-[1rem] z-50">
             <CardColorsPopup
               imageUrl={editedImageUrl}
-              onChangeImage={(url: string) => setEditedImageUrl(url)}
-              onClearImage={() => setEditedImageUrl('')}
+              onChangeImage={(url: string) => {
+                setEditedImageUrl(url);
+                onImageChange(url);
+              }}
+              onClearImage={() => {
+                setEditedImageUrl('');
+                onImageChange('');
+              }}
               selectedColor={bgColor}
               onChangeColor={(selectedColor: string) => {
                 onColorChange(selectedColor);
@@ -176,7 +185,9 @@ export default function ActivityModalHeader({
               dest={dest}
               onSelect={(item) => {
                 onCatalogSelect(item);
-                setEditedImageUrl(item.imageUrl || '');
+                const url = item.imageUrl || '';
+                setEditedImageUrl(url);
+                onImageChange(url);
                 setIsCatalogOpen(false);
               }}
               onClose={() => setIsCatalogOpen(false)}
