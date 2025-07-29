@@ -1,7 +1,5 @@
 // src/app/inspiration/rome/page.tsx
-'use client';
 
-import React, { useMemo } from 'react';
 import rome from '@/data/rome.json';
 import InspirationPlanner from './InspirationPlanner';
 import { formatDayPlan } from '@/utils';
@@ -30,6 +28,6 @@ function buildInitialDays(): DayPlan[] {
 }
 
 export default function RomeInspirationPage() {
-  const initialDays = useMemo(buildInitialDays, []);
+  const initialDays = buildInitialDays();
   return <InspirationPlanner initialDays={initialDays} dest="rome" planId="rome-inspiration" />;
 }
