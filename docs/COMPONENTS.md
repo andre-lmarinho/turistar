@@ -125,7 +125,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Location:** `src/components/home/WelcomeForm.tsx`
 - **Responsibility:** Landing form selecting travel dates.
 - **Props:** none
-- **State:** `range`, `error`
+- **State:** `range`, `dest`, `coords`, `error`
 - **External Hooks:** `useRouter`
 - **Side-effects:** none
 - **Accessibility:** form labels, validation message
@@ -136,13 +136,13 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/home/DestinationInput.tsx`
 - **Responsibility:** Text field with Geoapify autocomplete suggestions.
-- **Props:** `{ value, onChange }`
+- **Props:** `{ value, onChange }` where `onChange` may receive `{ name, latitude, longitude }` on selection
 - **State:** `open`
 - **External Hooks:** `useDestinationAutocomplete`
 - **Side-effects:** none
 - **Accessibility:** input label, list of suggestions
-- **Interactions:** choose suggestion via click or Tab key
-- **Performance notes:** none
+- **Interactions:** choose suggestion via click or Tab key; clicked suggestion passes only the city name
+  - **Performance notes:** none
 
 ---
 
@@ -204,7 +204,7 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/catalog/DestinationFilterPanel.tsx`
 - **Responsibility:** Full catalog modal with search and filters.
-- **Props:** `{ isOpen, onClose, onAdd, onRemove, addedIds? }`
+- **Props:** `{ isOpen, onClose, onAdd, onRemove, dest, addedIds? }`
 - **State:** handled in `useDestinationFilter`
 - **External Hooks:** `useDestinationFilter`, `useEscapeKey`
 - **Side-effects:** portal rendering

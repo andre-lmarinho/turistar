@@ -16,6 +16,7 @@ export default function WelcomeForm() {
     to: addDays(new Date(), 7),
   });
   const [dest, setDest] = useState('');
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   // Declare error state
   const [error, setError] = useState<string>('');
@@ -28,6 +29,16 @@ export default function WelcomeForm() {
     }
   }
 
+  function handleDestChange(val: string | { name: string; latitude: number; longitude: number }) {
+    if (typeof val === 'string') {
+      setDest(val);
+      setCoords(null);
+    } else {
+      setDest(val.name);
+      setCoords({ lat: val.latitude, lng: val.longitude });
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Block submission if dates are missing
@@ -37,7 +48,7 @@ export default function WelcomeForm() {
     }
 
     setError('');
-    const destParam = dest.trim();
+    const destParam = dest.trim().split(',')[0];
     if (!destParam) {
       setError('Please choose a destination.');
       return;
@@ -46,8 +57,13 @@ export default function WelcomeForm() {
       dest: destParam,
       start: range.from.toISOString(),
       end: range.to.toISOString(),
-    }).toString();
-    router.push(`/planner?${query}`);
+    });
+    if (coords) {
+      query.set('lat', String(coords.lat));
+      query.set('lng', String(coords.lng));
+    }
+    const queryString = query.toString();
+    router.push(`/planner?${queryString}`);
   };
 
   return (
@@ -68,7 +84,7 @@ export default function WelcomeForm() {
                   <legend id="dest-label" className="sr-only">
                     Destination
                   </legend>
-                  <DestinationInput value={dest} onChange={setDest} />
+                  <DestinationInput value={dest} onChange={handleDestChange} />
                 </fieldset>
                 <fieldset className="flex pb-4" aria-labelledby="daterange-label">
                   <legend id="daterange-label" className="sr-only">

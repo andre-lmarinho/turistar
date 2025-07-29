@@ -11,6 +11,7 @@ interface CatalogSearchPopupProps {
   onSelect: (item: CatalogActivity) => void;
   onClose: () => void;
   triggerRef?: React.RefObject<HTMLElement>;
+  dest: string;
 }
 
 export default function CatalogSearchPopup({
@@ -18,8 +19,9 @@ export default function CatalogSearchPopup({
   onSelect,
   onClose,
   triggerRef,
+  dest,
 }: CatalogSearchPopupProps) {
-  const { visibleItems, search, setSearch, loading, error } = useDestinationCatalog(open);
+  const { visibleItems, search, setSearch, loading, error } = useDestinationCatalog(open, [], dest);
 
   return (
     <Popup

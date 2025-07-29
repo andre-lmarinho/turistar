@@ -25,6 +25,7 @@ import {
  */
 export default function ActivityModalHeader({
   activity,
+  dest,
   bgColor,
   onDelete,
   onClose,
@@ -35,6 +36,7 @@ export default function ActivityModalHeader({
   onCatalogSelect,
 }: {
   activity: Activity & { dayId?: string };
+  dest: string;
   bgColor: string;
   onDelete: () => void;
   onClose: () => void;
@@ -171,6 +173,7 @@ export default function ActivityModalHeader({
           <div className="absolute top-[3rem] right-[3rem] z-50">
             <CatalogSearchPopup
               open={isCatalogOpen}
+              dest={dest}
               onSelect={(item) => {
                 onCatalogSelect(item);
                 setEditedImageUrl(item.imageUrl || '');

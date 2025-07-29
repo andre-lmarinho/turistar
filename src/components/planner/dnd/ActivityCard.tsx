@@ -19,6 +19,7 @@ export interface ActivityCardProps {
   onChangeColor: (color: string) => void;
   onDelete: () => void;
   onApplyCatalogItem?: (item: CatalogActivity) => void;
+  dest: string;
 }
 
 export default function ActivityCard({
@@ -32,6 +33,7 @@ export default function ActivityCard({
   bgColor,
   onChangeColor,
   onApplyCatalogItem,
+  dest,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
 
@@ -166,6 +168,7 @@ export default function ActivityCard({
               onApplyCatalogItem={onApplyCatalogItem}
               editedImageUrl={editedImageUrl}
               setEditedImageUrl={setEditedImageUrl}
+              dest={dest}
             />
           </div>,
           document.body

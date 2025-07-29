@@ -125,7 +125,7 @@ export function useDestinationCatalog(enabled: boolean, categories: string[], ci
 - **Example**
 
 ```ts
-const { visibleItems } = useDestinationCatalog(open, ['outdoors']);
+const { visibleItems } = useDestinationCatalog(open, ['outdoors'], 'rome');
 ```
 
 ### `useDestinationAutocomplete`
@@ -226,7 +226,7 @@ export function usePlanParams();
 ```
 
 - **Outputs**
-  `{ dest, planId }` from the URL.
+  `{ dest, planId, destCoords }` from the URL.
 - **Lifecycle**
   Generates a plan id when missing and updates the URL.
 - **Exceptions**

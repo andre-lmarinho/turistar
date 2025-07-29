@@ -27,6 +27,7 @@ function renderComponent() {
     editedImageUrl: '',
     setEditedImageUrl: vi.fn(),
     cardRef,
+    dest: 'rome',
   };
 
   render(

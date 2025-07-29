@@ -11,6 +11,7 @@ import { useDestinationCatalog, useEscapeKey } from '@/hooks';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
+  dest: string;
   onClose: () => void;
   onAdd: (a: CatalogActivity) => void; // Catalog items only
   onRemove: (id: string) => void;
@@ -27,6 +28,7 @@ export default function DestinationFilterPanel({
   onClose,
   onAdd,
   onRemove,
+  dest,
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
@@ -42,7 +44,8 @@ export default function DestinationFilterPanel({
 
   const { visibleItems, loading, error, search, setSearch } = useDestinationCatalog(
     isOpen && submitted,
-    Array.from(selectedCats)
+    Array.from(selectedCats),
+    dest
   );
 
   useEscapeKey({ onClose, isActive: isOpen });

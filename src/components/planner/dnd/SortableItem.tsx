@@ -11,6 +11,7 @@ import type { Activity, DayPlan } from '@/types';
 
 export interface SortableItemProps {
   id: string;
+  dest: string;
   activity: Activity & { dayId?: string };
   availableDays: DayPlan[];
   onSelect?: () => void;
@@ -26,6 +27,7 @@ export interface SortableItemProps {
 
 export default function SortableItem({
   id,
+  dest,
   activity,
   availableDays,
   onSelect,
@@ -55,6 +57,7 @@ export default function SortableItem({
       >
         <ActivityCard
           activity={activity}
+          dest={dest}
           availableDays={availableDays}
           onSelect={onSelect}
           onTitleSave={onTitleSave}
@@ -88,6 +91,7 @@ export default function SortableItem({
       <div className={cn(isDragging && 'opacity-0')}>
         <ActivityCard
           activity={activity}
+          dest={dest}
           availableDays={availableDays}
           onSelect={onSelect}
           onTitleSave={onTitleSave}
