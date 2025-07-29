@@ -310,10 +310,20 @@ export async function fetchGeoapifySearch(
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
+  // Geocode the text first to obtain coordinates
+  const auto = await fetchGeoapifyAutocomplete(text);
+  if (!auto.length) {
+    // If the query can't be geocoded, return an empty list
+    return { activities: [] };
+  }
+  const { latitude: lat, longitude: lon } = auto[0];
+
   const baseUrl = 'https://api.geoapify.com/v2/places';
   const url =
     `${baseUrl}?name=${encodeURIComponent(text)}` +
     `&categories=${encodeURIComponent(DEFAULT_CATEGORIES)}` +
+    `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
+    `&bias=proximity:${lon},${lat}` +
     `&limit=10&lang=pt&apiKey=${key}`;
 
   const res = await fetch(url, { cache: 'no-store' });

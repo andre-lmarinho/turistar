@@ -164,6 +164,7 @@ export function useGeoapifySearch(query: string);
   Catalog `results`, loading and error flags.
 - **Lifecycle**
   Fetches `/api/search?q=` when the query has at least 3 characters.
+  The backend geocodes the text and searches around that point using the default radius.
 - **Exceptions**
   Sets an error state when the request fails.
 

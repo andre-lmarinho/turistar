@@ -411,7 +411,7 @@ This document summarizes each React component in the repository. It follows the 
 ### CatalogSearchPopup
 
 - **Location:** `src/components/ui/popups/CatalogSearchPopup.tsx`
-- **Responsibility:** Search widget that queries `/api/search` for Geoapify places.
+- **Responsibility:** Search widget that queries `/api/search` for Geoapify places near the typed location.
 - **Props:** `{ open, onSelect, onClose, triggerRef? }`
 - **State:** `search` string
 - **External Hooks:** `useGeoapifySearch`
