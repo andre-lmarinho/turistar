@@ -370,6 +370,18 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** open/close, select options
 - **Performance notes:** none
 
+### CatalogSearchPopup
+
+- **Location:** `src/components/ui/popups/CatalogSearchPopup.tsx`
+- **Responsibility:** Search widget that queries `/api/search` for Geoapify places.
+- **Props:** `{ open, onSelect, onClose, triggerRef? }`
+- **State:** `search` string
+- **External Hooks:** `useGeoapifySearch`
+- **Side-effects:** none
+- **Accessibility:** labelled input, popup list
+- **Interactions:** type to search and pick a result
+- **Performance notes:** results fetched with React Query
+
 ---
 
 ## Planner Page Components

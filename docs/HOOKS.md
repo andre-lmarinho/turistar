@@ -149,6 +149,27 @@ export function useDestinationAutocomplete(query: string);
 const { results } = useDestinationAutocomplete(search);
 ```
 
+### `useGeoapifySearch`
+
+_File: `src/hooks/useGeoapifySearch.ts`_
+
+```ts
+export function useGeoapifySearch(query: string);
+```
+
+- **Inputs**
+  - `query`: search text.
+- **Outputs**
+  Catalog `results`, loading and error flags.
+- **Lifecycle**
+  Fetches `/api/search?q=` when the query has at least 3 characters.
+- **Exceptions**
+  Sets an error state when the request fails.
+
+```ts
+const { results } = useGeoapifySearch(query);
+```
+
 ### `useActivitiesById`
 
 _File: `src/hooks/useActivitiesById.ts`_

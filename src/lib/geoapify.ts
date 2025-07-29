@@ -228,3 +228,63 @@ export async function fetchGeoapifyCatalog(
 
   return { activities };
 }
+
+export async function fetchGeoapifyPlaceDetails(placeId: string) {
+  const key = process.env.GEOAPIFY_KEY;
+  if (!key) throw new Error('GEOAPIFY_KEY not set');
+
+  const details = await fetchPlaceDetails(placeId, key);
+  const description =
+    details?.features?.[0]?.properties?.wikipedia_extracts?.text ||
+    details?.features?.[0]?.properties?.details?.wikipedia_extracts?.text ||
+    details?.features?.[0]?.properties?.description;
+
+  const img = await resolveBestImage(placeId, key);
+  const lat = details?.features?.[0]?.properties?.lat;
+  const lon = details?.features?.[0]?.properties?.lon;
+  const imageUrl =
+    img?.url || (lat != null && lon != null ? staticMapThumbnail(lat, lon, key) : undefined);
+
+  return { description, imageUrl };
+}
+
+export async function fetchGeoapifySearch(
+  text: string
+): Promise<{ activities: CatalogActivity[] }> {
+  const key = process.env.GEOAPIFY_KEY;
+  if (!key) throw new Error('GEOAPIFY_KEY not set');
+
+  const base = 'https://api.geoapify.com/v2/places';
+  const url =
+    `${base}?` +
+    `name=${encodeURIComponent(text)}` +
+    `&categories=${encodeURIComponent(DEFAULT_CATEGORIES)}` +
+    `&limit=10&lang=pt&apiKey=${key}`;
+
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`Geoapify request failed: ${res.status}`);
+  }
+
+  const data = (await res.json()) as GeoapifyResponse;
+  const activities: CatalogActivity[] = [];
+  for (const f of data.features) {
+    const p = f.properties;
+    activities.push({
+      id: String(p.place_id),
+      name: p.name || p.formatted || text,
+      category: p.categories?.[0] ?? 'sight',
+      rating: p.rank?.popularity,
+      latitude: p.lat,
+      longitude: p.lon,
+    });
+  }
+
+  for (const act of activities) {
+    const details = await fetchGeoapifyPlaceDetails(act.id);
+    if (details.description) act.description = details.description;
+    if (details.imageUrl) act.imageUrl = details.imageUrl;
+  }
+
+  return { activities };
+}
