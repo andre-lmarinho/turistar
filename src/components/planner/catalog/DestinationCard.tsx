@@ -23,6 +23,7 @@ interface DestinationCardProps extends CatalogActivity {
 export default function DestinationCard({
   name,
   imageUrl,
+  description,
   rating,
   added,
   onAdd,
@@ -75,6 +76,7 @@ export default function DestinationCard({
             {rating?.toFixed(1) ?? 'N/A'} 
           </dd>
         </dl>
+        {description && <p className="text-sm text-[var(--muted-foreground)]">{description}</p>}
       </div>
     </li>
   );

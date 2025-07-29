@@ -31,6 +31,8 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
             key={item.id}
             id={item.id}
             name={item.name}
+            imageUrl={item.imageUrl}
+            description={item.description}
             category={item.category}
             rating={item.rating}
             added={isAdded}

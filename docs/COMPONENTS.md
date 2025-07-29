@@ -192,7 +192,7 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/catalog`
 - **Responsibility:** Card display for catalog items and grid layout.
-- **Props:** card info plus add/remove callbacks
+- **Props:** card info with optional `imageUrl` and `description`, add/remove callbacks
 - **State:** none
 - **External Hooks:** none
 - **Side-effects:** none
