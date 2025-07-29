@@ -61,6 +61,93 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
   }));
 }
 
+// -------------------------------------------------------
+
+async function fetchPlaceDetails(placeId: string, key: string) {
+  const url = `https://api.geoapify.com/v2/place-details?id=${encodeURIComponent(
+    placeId
+  )}&features=details&lang=pt&apiKey=${key}`;
+  const r = await fetch(url, { cache: 'no-store' });
+  if (!r.ok) return null;
+  return (await r.json()) as {
+    features: Array<{ properties: Record<string, any> }>;
+  };
+}
+/** Tenta extrair QID ou título da Wikipedia de um objeto details. */
+function extractWikiIds(details: any): { qid?: string; wikiTitle?: string; wikiLang?: string } {
+  const props = details?.features?.[0]?.properties ?? {};
+  // Campos possíveis vindos do OSM via Geoapify (varia por lugar):
+  const ds = props.datasource || {};
+  const raw = ds.raw || props; // às vezes tags OSM vêm em raw
+  let qid: string | undefined;
+  let wikiTitle: string | undefined;
+  let wikiLang: string | undefined;
+
+  if (typeof raw.wikidata === 'string') qid = raw.wikidata;
+  if (typeof raw.wikipedia === 'string') {
+    // exemplo: "pt:Elevador Lacerda"
+    const parts = raw.wikipedia.split(':');
+    if (parts.length === 2) {
+      wikiLang = parts[0];
+      wikiTitle = parts[1];
+    } else {
+      wikiTitle = raw.wikipedia;
+    }
+  }
+  return { qid, wikiTitle, wikiLang };
+}
+
+async function wikidataImageFromP18(qid: string) {
+  const url = `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity=${encodeURIComponent(
+    qid
+  )}&format=json&origin=*`;
+  const r = await fetch(url, { cache: 'no-store' });
+  if (!r.ok) return null;
+  const j = await r.json();
+  const claim = j?.claims?.P18?.[0]?.mainsnak?.datavalue?.value as string | undefined;
+  if (!claim) return null;
+  // URL direta (redimensionável) via Special:FilePath
+  const filename = claim.replace(/ /g, '_');
+  return {
+    url: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=960`,
+    credit: `Imagem: ${filename} · Wikimedia Commons`,
+  };
+}
+
+async function wikipediaThumbnail(title: string, lang = 'pt', width = 960) {
+  const url = `https://${lang}.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=thumbnail&pithumbsize=${width}&titles=${encodeURIComponent(
+    title
+  )}&origin=*`;
+  const r = await fetch(url, { cache: 'no-store' });
+  if (!r.ok) return null;
+  const j = await r.json();
+  const page = j?.query?.pages?.[0];
+  const thumb = page?.thumbnail?.source as string | undefined;
+  if (!thumb) return null;
+  return {
+    url: thumb,
+    credit: `Imagem da Wikipédia (${lang}) — ${page?.title ?? title}`,
+  };
+}
+
+/** Resolve imagem com prioridade: Wikidata P18 -> Wikipedia thumb -> null */
+async function resolveBestImage(placeId: string, key: string) {
+  const details = await fetchPlaceDetails(placeId, key);
+  const { qid, wikiTitle, wikiLang } = extractWikiIds(details);
+
+  if (qid) {
+    const img = await wikidataImageFromP18(qid);
+    if (img) return img;
+  }
+  if (wikiTitle) {
+    const img = await wikipediaThumbnail(wikiTitle, wikiLang || 'pt');
+    if (img) return img;
+  }
+  return null;
+}
+
+//--------------------------------------------------------
+
 export async function fetchGeoapifyCatalog(
   dest: string,
   categories: string[] = GEOAPIFY_CATEGORIES

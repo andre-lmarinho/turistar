@@ -2,7 +2,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchGeoapifyAutocomplete } from '@/lib';
+import { fetchAutocomplete } from '@/hooks';
 import type { AutocompletePlace } from '@/types';
 
 /**
@@ -11,7 +11,7 @@ import type { AutocompletePlace } from '@/types';
 export function useDestinationAutocomplete(query: string) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['autocomplete', query],
-    queryFn: () => fetchGeoapifyAutocomplete(query),
+    queryFn: () => fetchAutocomplete(query),
     enabled: query.length >= 3,
   });
 

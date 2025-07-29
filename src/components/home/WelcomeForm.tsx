@@ -124,7 +124,7 @@ export default function WelcomeForm() {
             <div
               className="absolute inset-0"
               style={{
-                background: 'linear-gradient(to bottom, transparent 0%, var(--background) 90%)',
+                background: 'linear-gradient(to bottom, transparent 0%, var(--background) 70%)',
                 height: '100%',
               }}
             />

@@ -25,4 +25,5 @@ export * from './useDestinationCatalog';
 export * from './useCatalogActivities';
 export * from './useDestinationAutocomplete';
 
+export { fetchAutocomplete } from './fetchAutocomplete';
 export { fetchCatalog, type CatalogApiResponse } from './fetchCatalog';
