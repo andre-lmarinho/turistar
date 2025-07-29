@@ -28,8 +28,7 @@
           "startTime": "14:30",
           "duration": 1,
           "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Via_dei_Condotti_in_Rome.jpg"
+          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Dinner at Trattoria da Enzo al 29",
@@ -57,8 +56,7 @@
           "startTime": "11:00",
           "duration": 1,
           "address": "Via dei Fori Imperiali, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Fori_Imperiali_Rome.jpg"
+          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Lunch at Ristorante Aroma",
@@ -73,8 +71,7 @@
           "startTime": "13:00",
           "duration": 1,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Colosseum-Entrance_LII.jpg"
+          "color": "bg-[var(--color-1)]"
         },
         {
           "title": "Colosseum, Roman Forum & Palatine Hill Guided Tour",
@@ -89,8 +86,7 @@
           "startTime": "17:00",
           "duration": 1,
           "address": "Via del Teatro di Marcello, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Marcello_Theatre_Rome.jpg"
+          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Dinner at Spaghetteria L'Archeologia",
@@ -118,8 +114,7 @@
           "startTime": "10:30",
           "duration": 0.5,
           "address": "Piazza Navona, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Piazza_Navona_3.jpg"
+          "color": "bg-[var(--color-1)]"
         },
         {
           "title": "Explore Piazza Navona",
@@ -150,8 +145,7 @@
           "startTime": "15:00",
           "duration": 1,
           "address": "Via della Panetteria, 42, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Gelateria_del_Pantheon.jpg"
+          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Shopping on Via del Corso",
@@ -187,8 +181,7 @@
           "startTime": "11:00",
           "duration": 0.5,
           "address": "Piazza di Spagna, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Spanish_Steps_Rome.jpg"
+          "color": "bg-[var(--color-1)]"
         },
         {
           "title": "Explore the Spanish Steps",
@@ -211,8 +204,7 @@
           "startTime": "14:30",
           "duration": 0.5,
           "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Galleria_Borghese_Facade.jpg"
+          "color": "bg-[var(--color-1)]"
         },
         {
           "title": "Tour of the Borghese Gallery",
@@ -227,8 +219,7 @@
           "startTime": "17:00",
           "duration": 1,
           "address": "Terrazza del Pincio, 00197 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Terrazza_del_Pincio.jpg"
+          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Farewell Dinner at Osteria Antica",

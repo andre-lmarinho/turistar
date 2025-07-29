@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <main id="main-content" className="space-y-16">
       <WelcomeForm />
-      <FeaturePreview />
       <InspirationLink />
+      <FeaturePreview />
     </main>
   );
 }

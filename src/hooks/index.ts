@@ -1,31 +1,40 @@
 // src/hooks/index.ts
 
-export * from './useBudget';
-export * from './useTripRange';
-export * from './useCardPopups';
-export * from './useEscapeKey';
-export * from './useFlexibleRef';
-export * from './useKeyBinds';
-export * from './usePopupOutsideHandler';
-export * from './useElementRect';
-export * from './useCardColors';
-export * from './useActivitiesById';
-export * from './useActivityState';
-export * from './useDnDPlanner';
-export * from './useDragState';
-export * from './usePlanner';
-export * from './usePlanTitle';
-export * from './useSelectedActivity';
-export * from './useOnboardingCheck';
-export * from './usePlanParams';
-export * from './usePlanDaysStorage';
-export * from './useActivityCardEditor';
-export * from './useCatalog';
-export * from './useDestinationCatalog';
-export * from './useCatalogActivities';
-export * from './useDestinationAutocomplete';
-export * from './useGeoapifySearch';
+// planner
+export * from './planner/useTripRange';
+export * from './planner/useActivitiesById';
+export * from './planner/useActivityState';
+export * from './planner/useDnDPlanner';
+export * from './planner/useDragState';
+export * from './planner/usePlanner';
+export * from './planner/usePlanTitle';
+export * from './planner/useSelectedActivity';
+export * from './planner/usePlanParams';
+export * from './planner/usePlanDaysStorage';
+export * from './planner/useActivityCardEditor';
 
-export { fetchAutocomplete } from './fetchAutocomplete';
-export { fetchCatalog, type CatalogApiResponse } from './fetchCatalog';
-export { fetchSearch } from './fetchSearch';
+// catalog
+export * from './catalog/useCatalog';
+export * from './catalog/useDestinationCatalog';
+export * from './catalog/useCatalogActivities';
+export * from './catalog/useDestinationAutocomplete';
+export * from './catalog/useGeoapifySearch';
+
+export { fetchAutocomplete } from './catalog/fetchAutocomplete';
+export { fetchCatalog, type CatalogApiResponse } from './catalog/fetchCatalog';
+export { fetchSearch } from './catalog/fetchSearch';
+
+// budget
+export * from './budget/useBudget';
+
+// onboarding
+export * from './onboarding/useOnboardingCheck';
+
+// ui
+export * from './ui/useCardPopups';
+export * from './ui/useEscapeKey';
+export * from './ui/useFlexibleRef';
+export * from './ui/useKeyBinds';
+export * from './ui/usePopupOutsideHandler';
+export * from './ui/useElementRect';
+export * from './ui/useCardColors';

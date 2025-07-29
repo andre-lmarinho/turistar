@@ -2,7 +2,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchSearch } from '@/hooks/fetchSearch';
+import { fetchSearch } from '@/hooks/catalog/fetchSearch';
 import type { CatalogActivity } from '@/types';
 
 /**
