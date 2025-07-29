@@ -147,19 +147,19 @@ This document summarizes each React component in the repository. It follows the 
 ### InspirationLink
 
 - **Location:** `src/components/home/InspirationLink.tsx`
-- **Responsibility:** Link to view the sample Rome itinerary.
+- **Responsibility:** Links to sample destination itineraries.
 - **Props:** none
 - **State:** none
 - **External Hooks:** none
 - **Side-effects:** none
-- **Accessibility:** semantic heading and link
-- **Interactions:** navigates to `/inspiration/rome`
+- **Accessibility:** semantic heading and link list
+- **Interactions:** navigates to `/inspiration/[city]`
 - **Performance notes:** none
 
-### RomeInspirationPage
+### InspirationPage
 
-- **Location:** `src/app/inspiration/rome/page.tsx`
-- **Responsibility:** Server page that sets the title and loads sample days.
+- **Location:** `src/app/inspiration/[city]/page.tsx`
+- **Responsibility:** Interactive demo planner loading a local itinerary.
 - **Props:** none
 - **State:** none
 - **External Hooks:** none

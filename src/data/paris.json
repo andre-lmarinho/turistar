@@ -1,0 +1,34 @@
+{
+  "title": "Paris",
+  "title_inspiration": "A weekend in Paris",
+  "duration_days": 2,
+  "destination": "Paris",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "title": "Visit the Eiffel Tower",
+          "startTime": "09:00",
+          "duration": 2,
+          "address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France",
+          "color": "bg-[var(--color-3)]",
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "title": "Louvre Museum",
+          "startTime": "10:00",
+          "duration": 3,
+          "address": "Rue de Rivoli, 75001 Paris, France",
+          "color": "bg-[var(--color-3)]",
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/af/Louvre_Museum_Wikimedia_Commons.jpg"
+        }
+      ]
+    }
+  ]
+}

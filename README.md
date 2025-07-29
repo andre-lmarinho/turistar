@@ -63,7 +63,7 @@ While editing an activity, you can search the catalog directly from the modal or
 - **Accessibility & Responsive Design**
   Fully keyboard-accessible with layouts optimised for mobile and desktop.
 - **Sample Plan**
-  Try the interactive 4 day Rome itinerary from the home page link.
+  Try the interactive sample itineraries from the home page links.
 
 You can deploy the same app to Vercel or Netlify.
 

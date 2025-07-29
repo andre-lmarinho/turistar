@@ -1,5 +1,6 @@
 // src/utils/index.ts
 
+export * from './buildDaysFromInspirationData';
 export * from './formatDayPlan';
 export * from './initialDays';
 export * from './moveActivityToDay';
