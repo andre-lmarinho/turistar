@@ -5,9 +5,15 @@ import React from 'react';
 import { Spinner } from '@/components';
 import { useDestinationAutocomplete } from '@/hooks';
 
+interface PlaceSelection {
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface Props {
   value: string;
-  onChange: (val: string) => void;
+  onChange: (val: string | PlaceSelection) => void;
 }
 
 export default function DestinationInput({ value, onChange }: Props) {
@@ -32,7 +38,11 @@ export default function DestinationInput({ value, onChange }: Props) {
           if (e.key === 'Tab' && open) {
             const first = results[0];
             if (first) {
-              onChange(first.name);
+              onChange({
+                name: first.name,
+                latitude: first.latitude,
+                longitude: first.longitude,
+              });
             }
             setOpen(false);
           }
@@ -50,7 +60,10 @@ export default function DestinationInput({ value, onChange }: Props) {
               <button
                 type="button"
                 className="hover:bg-accent w-full px-2 py-1 text-left"
-                onClick={() => onChange(r.name)}
+                onClick={() => {
+                  onChange(r.name.split(',')[0]);
+                  setOpen(false);
+                }}
               >
                 {r.name}
               </button>

@@ -175,6 +175,7 @@ export default function PlannerClient() {
                 {m === 'planner' && (
                   <PlannerBoard
                     days={days}
+                    dest={dest}
                     activeId={stringActiveId}
                     sensors={sensors}
                     collisionDetection={collisionDetection}
@@ -215,6 +216,7 @@ export default function PlannerClient() {
           color={selectedActivity.color}
           onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
           days={days}
+          dest={dest}
           onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
           onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
         />
@@ -224,6 +226,7 @@ export default function PlannerClient() {
       <DestinationFilterPanel
         isOpen={isPanelOpen}
         onClose={() => setIsPanelOpen(false)}
+        dest={dest}
         onAdd={(item: CatalogActivity) =>
           addActivity({
             id: item.id,

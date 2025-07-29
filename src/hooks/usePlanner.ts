@@ -9,7 +9,7 @@ import type { DayPlan } from '@/types';
 
 export function usePlanner() {
   /* Plan id + destination from URL */
-  const { dest, planId } = usePlanParams();
+  const { dest, planId, destCoords } = usePlanParams();
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
 
@@ -38,6 +38,7 @@ export function usePlanner() {
   return {
     planId,
     dest,
+    destCoords,
     days,
     setDays,
     tripDays,

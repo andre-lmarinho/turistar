@@ -11,6 +11,7 @@ interface CatalogSearchPopupProps {
   onSelect: (item: CatalogActivity) => void;
   onClose: () => void;
   triggerRef?: React.RefObject<HTMLElement>;
+  dest: string;
 }
 
 export default function CatalogSearchPopup({
@@ -18,6 +19,7 @@ export default function CatalogSearchPopup({
   onSelect,
   onClose,
   triggerRef,
+  dest,
 }: CatalogSearchPopupProps) {
   const [search, setSearch] = React.useState('');
   const { results, loading, error } = useGeoapifySearch(search);

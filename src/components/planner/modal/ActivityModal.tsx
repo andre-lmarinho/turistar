@@ -17,6 +17,7 @@ interface ActivityModalProps {
   color: string;
   onColorChange: (color: string) => void;
   days: DayPlan[];
+  dest: string;
   onChangeDay: (dayId: string) => void;
   onChangePosition: (index: number) => void;
 }
@@ -30,6 +31,7 @@ export default function ActivityModal({
   color,
   onColorChange,
   days,
+  dest,
   onChangeDay,
   onChangePosition,
 }: ActivityModalProps) {
@@ -81,6 +83,7 @@ export default function ActivityModal({
           </h2>
           <ActivityModalHeader
             activity={draft}
+            dest={dest}
             bgColor={color}
             onDelete={onDelete}
             onClose={onClose}

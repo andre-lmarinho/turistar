@@ -15,6 +15,9 @@ export function usePlanParams() {
 
   const paramsString = params.toString();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
+  const lat = params.get('lat');
+  const lng = params.get('lng');
+  const destCoords = lat && lng ? { lat: Number(lat), lng: Number(lng) } : null;
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
   useEffect(() => {
@@ -27,5 +30,5 @@ export function usePlanParams() {
     }
   }, [planId, paramsString, router]);
 
-  return { dest, planId };
+  return { dest, planId, destCoords };
 }

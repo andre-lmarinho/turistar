@@ -61,7 +61,7 @@ vi.mock('@/components', async () => {
   const actual = await vi.importActual<typeof import('@/components')>('@/components');
   return {
     ...actual,
-    DestinationFilterPanel: () => null,
+    DestinationFilterPanel: (_props: any) => null,
     DateRangePicker: () => <div data-testid="date-picker" />,
     OpenPanelButton: ({ onClick }: MockOpenPanelButtonProps) => (
       <button onClick={onClick}>Open</button>

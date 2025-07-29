@@ -23,6 +23,7 @@ interface Props {
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
   cardRef: React.RefObject<HTMLDivElement | null>;
+  dest: string;
 }
 
 export default function ActivityCardEditing({
@@ -39,6 +40,7 @@ export default function ActivityCardEditing({
   setEditedImageUrl,
   onApplyCatalogItem,
   cardRef,
+  dest,
 }: Props) {
   const {
     colorButtonRef,
@@ -168,6 +170,7 @@ export default function ActivityCardEditing({
               <div className="absolute top-1 left-full z-50">
                 <CatalogSearchPopup
                   open={isCatalogOpen}
+                  dest={dest}
                   onSelect={(item) => {
                     onApplyCatalogItem?.(item);
                     setEditedImageUrl(item.imageUrl || '');

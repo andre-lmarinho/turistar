@@ -20,10 +20,12 @@ vi.mock('@/components', async () => {
     open,
     onSelect,
     onClose,
+    dest,
   }: {
     open: boolean;
     onSelect: (item: CatalogActivity) => void;
     onClose: () => void;
+    dest: string;
   }) {
     if (!open) return null;
     return (
@@ -57,6 +59,7 @@ const defaultProps = {
   onChangePosition: () => {},
   availableDays: [] as DayPlan[],
   onChangeDay: () => {},
+  dest: 'rome',
 };
 
 it('opens catalog popup and selects an item', () => {
