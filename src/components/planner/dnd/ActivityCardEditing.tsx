@@ -23,7 +23,6 @@ interface Props {
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
   cardRef: React.RefObject<HTMLDivElement | null>;
-  dest: string;
 }
 
 export default function ActivityCardEditing({
@@ -40,7 +39,6 @@ export default function ActivityCardEditing({
   setEditedImageUrl,
   onApplyCatalogItem,
   cardRef,
-  dest,
 }: Props) {
   const {
     colorButtonRef,

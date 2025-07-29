@@ -55,7 +55,7 @@ export default function CatalogSearchPopup({
             <span>Loading...</span>
           </div>
         )}
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-red-500">Failed to load results.</p>}
         {!loading && !error && (
           <ul className="max-h-60 space-y-1 overflow-y-auto">
             {results.map((item) => (

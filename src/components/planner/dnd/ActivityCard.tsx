@@ -24,7 +24,6 @@ export interface ActivityCardProps {
   onDelete: () => void;
   onApplyCatalogItem?: (item: CatalogActivity) => void;
   onUpdateImage?: (url: string) => void;
-  dest: string;
 }
 
 export default function ActivityCard({
@@ -39,7 +38,6 @@ export default function ActivityCard({
   onChangeColor,
   onApplyCatalogItem,
   onUpdateImage,
-  dest,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
 
@@ -158,7 +156,6 @@ export default function ActivityCard({
           }}
           editedImageUrl={editedImageUrl}
           setEditedImageUrl={setEditedImageUrl}
-          dest={dest}
         />
       </ActivityCardEditorOverlay>
     </>

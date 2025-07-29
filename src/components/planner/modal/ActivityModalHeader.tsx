@@ -25,7 +25,6 @@ import {
  */
 export default function ActivityModalHeader({
   activity,
-  dest,
   bgColor,
   onDelete,
   onClose,
@@ -37,7 +36,6 @@ export default function ActivityModalHeader({
   onImageChange,
 }: {
   activity: Activity & { dayId?: string };
-  dest: string;
   bgColor: string;
   onDelete: () => void;
   onClose: () => void;

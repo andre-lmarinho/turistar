@@ -20,7 +20,6 @@ import type { Activity, DayPlan, CatalogActivity } from '@/types';
 
 export interface PlannerBoardProps {
   days: DayPlan[];
-  dest: string;
   activeId: string | null;
   sensors: SensorDescriptor<SensorOptions>[];
   collisionDetection: CollisionDetection;
@@ -44,7 +43,6 @@ export interface PlannerBoardProps {
  */
 export default function PlannerBoard({
   days,
-  dest,
   activeId,
   sensors,
   collisionDetection,
@@ -82,7 +80,6 @@ export default function PlannerBoard({
         {days.map((d) => (
           <div key={d.id} role="listitem" className="min-w-[250px] flex-shrink-0">
             <DayColumn
-              dest={dest}
               day={d}
               days={days}
               onAddActivity={onAddActivity}
@@ -103,7 +100,6 @@ export default function PlannerBoard({
           <SortableItem
             dragOverlay
             id={active.id}
-            dest={dest}
             activity={active}
             availableDays={days}
             onChangeDay={(newDayId) => onChangeDay(active.id, newDayId)}

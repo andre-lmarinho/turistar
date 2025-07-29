@@ -11,7 +11,6 @@ import type { DayPlan, Activity, CatalogActivity } from '@/types';
 interface DayColumnProps {
   day: DayPlan;
   days: DayPlan[];
-  dest: string;
   onSelectActivity?: (activity: Activity & { dayId: string }) => void;
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle?: (id: string, title: string) => void;
@@ -30,7 +29,6 @@ interface DayColumnProps {
 export default function DayColumn({
   day,
   days,
-  dest,
   onSelectActivity,
   onAddActivity,
   onUpdateTitle,
@@ -65,7 +63,6 @@ export default function DayColumn({
                 id={activity.id}
                 activity={{ ...activity, dayId: day.id }}
                 availableDays={days}
-                dest={dest}
                 onSelect={() => onSelectActivity?.({ ...activity, dayId: day.id })}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
                 onChangeDay={(newDayId) => onChangeDay(activity.id, newDayId)}

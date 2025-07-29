@@ -477,6 +477,6 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/app/planner/MapView.tsx`
 - **Responsibility:** Interactive itinerary map using Leaflet to display markers and paths.
-- **Props:** `{ days: DayPlan[], onSelectActivity: (activity) => void }`
+- **Props:** `{ days: DayPlan[], onSelectActivity: (activity) => void, centerCoords?: { lat: number; lng: number } }`
 - **Accessibility:** `<MapContainer>` labeled with `aria-label="Itinerary map"`.
 - **Performance notes:** Fits bounds to markers when coordinates change.

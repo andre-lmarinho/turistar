@@ -68,6 +68,7 @@ export default function PlannerClient({
     planId,
     dest,
     days,
+    destCoords,
     setDays,
     currentRange,
     handleRangeChange,
@@ -212,7 +213,6 @@ export default function PlannerClient({
                 {m === 'planner' && (
                   <PlannerBoard
                     days={days}
-                    dest={dest}
                     activeId={stringActiveId}
                     sensors={sensors}
                     collisionDetection={collisionDetection}
@@ -238,7 +238,13 @@ export default function PlannerClient({
                     onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
                   />
                 )}
-                {m === 'map' && <MapView days={days} onSelectActivity={setSelectedActivity} />}
+                {m === 'map' && (
+                  <MapView
+                    days={days}
+                    onSelectActivity={setSelectedActivity}
+                    centerCoords={destCoords ?? undefined}
+                  />
+                )}
               </div>
             </motion.div>
           );
@@ -255,7 +261,6 @@ export default function PlannerClient({
           color={selectedActivity.color}
           onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
           days={days}
-          dest={dest}
           onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
           onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
         />

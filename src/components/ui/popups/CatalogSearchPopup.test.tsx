@@ -10,9 +10,12 @@ vi.mock('@/hooks', async () => {
   return {
     ...actual,
     useGeoapifySearch: (query: string) => ({
-      results: query ? ([{ id: '1', name: 'Museum', category: 'sight' }] as CatalogActivity[]) : [],
+      results:
+        query && query !== 'err'
+          ? ([{ id: '1', name: 'Museum', category: 'sight' }] as CatalogActivity[])
+          : [],
       loading: false,
-      error: false,
+      error: query === 'err',
     }),
   };
 });
@@ -29,5 +32,14 @@ describe('CatalogSearchPopup', () => {
     fireEvent.click(itemBtn);
 
     expect(handleSelect).toHaveBeenCalledWith({ id: '1', name: 'Museum', category: 'sight' });
+  });
+
+  it('shows an error message when loading fails', () => {
+    render(<CatalogSearchPopup open onSelect={() => {}} onClose={() => {}} />);
+
+    const input = screen.getByPlaceholderText('Search');
+    fireEvent.change(input, { target: { value: 'err' } });
+
+    expect(screen.getByText('Failed to load results.')).toBeInTheDocument();
   });
 });

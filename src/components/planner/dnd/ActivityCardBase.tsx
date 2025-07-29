@@ -34,8 +34,6 @@ export default function ActivityCardBase({
   budget,
   borderColorClass,
 }: ActivityCardBaseProps) {
-  const isMounted = typeof window !== 'undefined';
-
   return (
     <div
       className="group relative flex w-full cursor-grab items-stretch rounded-lg border bg-[var(--background)] text-left transition"
@@ -88,7 +86,7 @@ export default function ActivityCardBase({
         )}
 
         {/* Meta */}
-        {isMounted && (duration! > 0 || budget! > 0) && (
+        {(duration! > 0 || budget! > 0) && (
           <div className="flex gap-2 rounded-full p-2 text-xs">
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
