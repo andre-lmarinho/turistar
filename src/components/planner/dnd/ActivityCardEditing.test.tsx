@@ -4,7 +4,33 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import ActivityCardEditing from './ActivityCardEditing';
-import type { Activity, DayPlan } from '@/types';
+import type { Activity, DayPlan, CatalogActivity } from '@/types';
+
+vi.mock('@/components', async () => {
+  const actual = await vi.importActual<typeof import('@/components')>('@/components');
+  const stubItem: CatalogActivity = {
+    id: 'c1',
+    name: 'Stub Place',
+    description: 'info',
+    imageUrl: 'photo.jpg',
+    category: '',
+  };
+  function CatalogSearchPopup({
+    open,
+    onSelect,
+  }: {
+    open: boolean;
+    onSelect: (i: CatalogActivity) => void;
+  }) {
+    if (!open) return null;
+    return (
+      <div data-testid="catalog-popup">
+        <button onClick={() => onSelect(stubItem)}>Pick</button>
+      </div>
+    );
+  }
+  return { ...actual, CatalogSearchPopup };
+});
 
 function renderComponent() {
   const cardRef = React.createRef<HTMLDivElement>();
@@ -24,6 +50,7 @@ function renderComponent() {
     onSave: vi.fn(),
     onCancel: vi.fn(),
     onDelete: vi.fn(),
+    onApplyCatalogItem: vi.fn(),
     editedImageUrl: '',
     setEditedImageUrl: vi.fn(),
     cardRef,
@@ -62,5 +89,26 @@ describe('ActivityCardEditing', () => {
     const daySelect = screen.getByLabelText('Day');
     fireEvent.change(daySelect, { target: { value: 'd2' } });
     expect(onChangeDay).toHaveBeenCalledWith('d2');
+  });
+
+  it('selects catalog item and updates image', () => {
+    const { onApplyCatalogItem, setEditedImageUrl } = renderComponent();
+
+    const searchBtn = screen.getByRole('button', { name: /search catalog/i });
+    fireEvent.click(searchBtn);
+
+    const popup = screen.getByTestId('catalog-popup');
+    expect(popup).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Pick'));
+
+    expect(onApplyCatalogItem).toHaveBeenCalledWith({
+      id: 'c1',
+      name: 'Stub Place',
+      description: 'info',
+      imageUrl: 'photo.jpg',
+      category: '',
+    });
+    expect(setEditedImageUrl).toHaveBeenCalledWith('photo.jpg');
   });
 });

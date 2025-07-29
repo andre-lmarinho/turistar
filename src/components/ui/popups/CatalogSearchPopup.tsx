@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { CloseButton, Spinner, Popup } from '@/components';
-import { useDestinationCatalog } from '@/hooks';
+import { useGeoapifySearch } from '@/hooks';
 import type { CatalogActivity } from '@/types';
 
 interface CatalogSearchPopupProps {
@@ -21,7 +21,8 @@ export default function CatalogSearchPopup({
   triggerRef,
   dest,
 }: CatalogSearchPopupProps) {
-  const { visibleItems, search, setSearch, loading, error } = useDestinationCatalog(open, [], dest);
+  const [search, setSearch] = React.useState('');
+  const { results, loading, error } = useGeoapifySearch(search);
 
   return (
     <Popup
@@ -59,7 +60,7 @@ export default function CatalogSearchPopup({
         {error && <p className="text-sm text-red-500">{error}</p>}
         {!loading && !error && (
           <ul className="max-h-60 space-y-1 overflow-y-auto">
-            {visibleItems.map((item) => (
+            {results.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"

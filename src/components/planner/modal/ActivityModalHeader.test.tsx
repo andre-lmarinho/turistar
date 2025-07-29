@@ -12,8 +12,8 @@ vi.mock('@/components', async () => {
   const stubItem: CatalogActivity = {
     id: '1',
     name: 'Stub Item',
-    description: '',
-    imageUrl: '',
+    description: 'desc',
+    imageUrl: 'img.png',
     category: '',
   };
   function CatalogSearchPopup({
@@ -74,7 +74,14 @@ it('opens catalog popup and selects an item', () => {
 
   fireEvent.click(screen.getByText('Pick Stub'));
 
-  expect(handleSelect).toHaveBeenCalledTimes(1);
+  expect(handleSelect).toHaveBeenCalledWith({
+    id: '1',
+    name: 'Stub Item',
+    description: 'desc',
+    imageUrl: 'img.png',
+    category: '',
+  });
+  expect(screen.getByAltText('Test')).toHaveAttribute('src', 'img.png');
   expect(screen.queryByTestId('catalog-popup')).not.toBeInTheDocument();
 });
 
