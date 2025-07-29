@@ -25,8 +25,6 @@ vi.mock('@/hooks', async () => {
       setDays: vi.fn(),
       currentRange: undefined,
       handleRangeChange: vi.fn(),
-      isLoading: false,
-      error: null,
       activeId: null,
       sensors: [],
       collisionDetection: vi.fn(),

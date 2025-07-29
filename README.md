@@ -1,6 +1,6 @@
 # Turistar – Drag-and-Drop Travel Planner
 
-A simple travel planner built with Next.js, React and drag‑and‑drop. Select your travel dates to Salvador/Brazil to generate a starter plan (from a local JSON API) that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
+A simple travel planner built with Next.js, React and drag‑and‑drop. Select any city to generate a starter itinerary that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 _or_ deploy easily to Vercel or Netlify with the same settings.

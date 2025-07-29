@@ -1,5 +1,5 @@
 // src/lib/geoapify.ts
-import type { CatalogActivity } from '@/types';
+import type { CatalogActivity, AutocompletePlace } from '@/types';
 
 type GeoapifyFeature = {
   properties: {
@@ -18,11 +18,7 @@ type GeoapifyResponse = {
   features: GeoapifyFeature[];
 };
 
-const SALVADOR = {
-  lat: -12.977749,
-  lon: -38.501629,
-  radiusMeters: 20_000,
-};
+const DEFAULT_RADIUS_METERS = 20_000;
 
 export const GEOAPIFY_CATEGORIES = [
   'entertainment.culture',
@@ -45,20 +41,44 @@ export const GEOAPIFY_CATEGORIES = [
 
 const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
+export async function fetchGeoapifyAutocomplete(text: string): Promise<AutocompletePlace[]> {
+  const key = process.env.GEOAPIFY_KEY;
+  if (!key) throw new Error('GEOAPIFY_KEY not set');
+
+  const base = 'https://api.geoapify.com/v1/geocode/autocomplete';
+  const url = `${base}?text=${encodeURIComponent(text)}&limit=5&apiKey=${key}`;
+
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`Geoapify request failed: ${res.status}`);
+  }
+
+  const data = (await res.json()) as GeoapifyResponse;
+  return data.features.map((f) => ({
+    name: f.properties.formatted || f.properties.name || text,
+    latitude: f.properties.lat,
+    longitude: f.properties.lon,
+  }));
+}
+
 export async function fetchGeoapifyCatalog(
-  _dest?: string,
+  dest: string,
   categories: string[] = GEOAPIFY_CATEGORIES
 ): Promise<{ activities: CatalogActivity[] }> {
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
   const base = 'https://api.geoapify.com/v2/places';
+  const [{ latitude, longitude }] = await fetchGeoapifyAutocomplete(dest);
+
+  const lat = latitude;
+  const lon = longitude;
 
   const url =
     `${base}?` +
     `categories=${encodeURIComponent(categories.join(',') || DEFAULT_CATEGORIES)}` +
-    `&filter=circle:${SALVADOR.lon},${SALVADOR.lat},${SALVADOR.radiusMeters}` +
-    `&bias=proximity:${SALVADOR.lon},${SALVADOR.lat}` +
+    `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
+    `&bias=proximity:${lon},${lat}` +
     `&limit=60` +
     `&lang=pt` +
     `&apiKey=${key}`;

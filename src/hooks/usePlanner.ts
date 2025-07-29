@@ -3,22 +3,15 @@
 import { useEffect } from 'react';
 import { closestCenter } from '@dnd-kit/core';
 
-import {
-  useTripRange,
-  useCatalog,
-  useDnDPlanner,
-  usePlanParams,
-  usePlanDaysStorage,
-} from '@/hooks';
+import { useTripRange, useDnDPlanner, usePlanParams, usePlanDaysStorage } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
 import type { DayPlan } from '@/types';
 
-export function usePlanner(enabled: boolean) {
+export function usePlanner() {
   /* Plan id + destination from URL */
   const { dest, planId } = usePlanParams();
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
-  const { isLoading, error } = useCatalog(dest, { enabled });
 
   /* DnD state */
   const {
@@ -49,8 +42,6 @@ export function usePlanner(enabled: boolean) {
     setDays,
     tripDays,
     currentRange,
-    isLoading,
-    error,
     activeId,
     sensors,
     collisionDetection: closestCenter,

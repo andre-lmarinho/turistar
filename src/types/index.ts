@@ -32,6 +32,15 @@ export interface CatalogActivity {
 }
 
 /**
+ * Autocomplete location returned by Geoapify.
+ */
+export interface AutocompletePlace {
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
+/**
  * Data structure representing a single day's plan.
  */
 export interface DayPlan {

@@ -11,7 +11,7 @@ import { fetchCatalog } from '@/hooks';
  * - Handles loading and error states.
  */
 
-export function useDestinationCatalog(enabled: boolean, categories: string[], city = 'salvador') {
+export function useDestinationCatalog(enabled: boolean, categories: string[], city: string) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['catalog', city, categories],
     queryFn: () => fetchCatalog(city, categories),

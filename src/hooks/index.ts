@@ -23,5 +23,6 @@ export * from './useActivityCardEditor';
 export * from './useCatalog';
 export * from './useDestinationCatalog';
 export * from './useCatalogActivities';
+export * from './useDestinationAutocomplete';
 
 export { fetchCatalog, type CatalogApiResponse } from './fetchCatalog';

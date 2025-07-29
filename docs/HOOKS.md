@@ -109,7 +109,7 @@ const { days, isLoading } = useCatalog(dest, { enabled: true });
 _File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
-export function useDestinationCatalog(enabled: boolean, categories: string[], city = 'salvador');
+export function useDestinationCatalog(enabled: boolean, categories: string[], city: string);
 ```
 
 - **Inputs**
@@ -126,6 +126,27 @@ export function useDestinationCatalog(enabled: boolean, categories: string[], ci
 
 ```ts
 const { visibleItems } = useDestinationCatalog(open, ['outdoors']);
+```
+
+### `useDestinationAutocomplete`
+
+_File: `src/hooks/useDestinationAutocomplete.ts`_
+
+```ts
+export function useDestinationAutocomplete(query: string);
+```
+
+- **Inputs**
+  - `query`: user input text.
+- **Outputs**
+  Geoapify `results`, loading and error flags.
+- **Lifecycle**
+  Fetches `/api/autocomplete?text=` when the query has at least 3 characters.
+- **Exceptions**
+  Sets an error state when the request fails.
+
+```ts
+const { results } = useDestinationAutocomplete(search);
 ```
 
 ### `useActivitiesById`
@@ -235,16 +256,16 @@ export function usePlanDaysStorage(
 _File: `src/hooks/usePlanner.ts`_
 
 ```ts
-export function usePlanner(enabled: boolean);
+export function usePlanner();
 ```
 
 - **Inputs**
-  - `enabled`: whether catalog fetch is active.
+  None.
 - **Outputs**
   Planner state: days, trip range utilities, drag-and-drop handlers, and more.
 - **Lifecycle**
   - Composes `usePlanParams`, `usePlanDaysStorage`, `useTripRange`,
-    `useDnDPlanner`, and `useCatalog`.
+    `useDnDPlanner` and `useCatalog`.
   - Updates planner days whenever the trip range changes.
 - **Exceptions**
   None internally; any catalog fetch errors are exposed via `error`.

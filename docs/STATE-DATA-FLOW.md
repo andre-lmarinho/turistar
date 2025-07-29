@@ -9,13 +9,13 @@ This document outlines how planner data moves through the application.
 
 ## Hooks
 
-- `usePlanner` orchestrates planner state. It gathers trip range data, loads the catalog and initializes drag-and-drop via `useDnDPlanner`.
+- `usePlanner` orchestrates planner state. It gathers trip range data and initializes drag-and-drop via `useDnDPlanner`.
 - `useDnDPlanner` combines drag handlers from `useDragState` with activity helpers from `useActivityState`.
 - `useLocalStorageSync` persists planner data in `localStorage`. It is called by `usePlanner`, `usePlanTitle` and `useBudget`.
 
 ## Components
 
-- **PlannerClient** – main client component for `/planner`. It calls `usePlanner` and passes state to the board, budget panel and modals.
+- **PlannerClient** – main client component for `/planner`. It calls `usePlanner` to manage board state while the catalog is loaded by `DestinationFilterPanel` after categories are chosen.
 - **PlannerBoard** – presentation layer for the drag-and-drop board. Receives `days` and DnD callbacks as props.
 - **BudgetPanel** – controls travel expenses through `useBudget` and updates activities when budgets change.
 - **PlannerControls** – groups mode switching and date range selection UI.

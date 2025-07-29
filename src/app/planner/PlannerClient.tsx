@@ -13,7 +13,6 @@ import {
   DateRangePickerIcon,
   OpenPanelButton,
   OpenPanelIcon,
-  LoadingScreen,
   OnboardingModal,
   PlannerControls,
 } from '@/components';
@@ -26,7 +25,7 @@ import {
   useOnboardingCheck,
 } from '@/hooks';
 import type { CatalogActivity } from '@/types';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX, STARTER_PLANNER_TITLE } from '@/constants';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 import { motion } from 'framer-motion';
 
 /**
@@ -50,8 +49,6 @@ export default function PlannerClient() {
     setDays,
     currentRange,
     handleRangeChange,
-    isLoading,
-    error,
     activeId,
     sensors,
     collisionDetection,
@@ -62,9 +59,9 @@ export default function PlannerClient() {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = usePlanner(true);
+  } = usePlanner();
 
-  const { title, setTitle } = usePlanTitle(planId, STARTER_PLANNER_TITLE);
+  const { title, setTitle } = usePlanTitle(planId, dest);
   const { showOnboarding, setShowOnboarding } = useOnboardingCheck(planId);
 
   const {
@@ -106,8 +103,6 @@ export default function PlannerClient() {
 
   /* Guard clauses */
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
-  if (isLoading) return <LoadingScreen text="Loading catalog…" />;
-  if (error) return <p className="p-4">Failed to load.</p>;
   if (!days.length) return <p className="p-4">No catalog found.</p>;
 
   const stringActiveId = activeId != null ? String(activeId) : null;

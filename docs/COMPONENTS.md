@@ -132,6 +132,18 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** submits to `/planner` with query params
 - **Performance notes:** none
 
+### DestinationInput
+
+- **Location:** `src/components/home/DestinationInput.tsx`
+- **Responsibility:** Text field with Geoapify autocomplete suggestions.
+- **Props:** `{ value, onChange }`
+- **State:** none
+- **External Hooks:** `useDestinationAutocomplete`
+- **Side-effects:** none
+- **Accessibility:** input label, list of suggestions
+- **Interactions:** choose suggestion to fill input
+- **Performance notes:** none
+
 ---
 
 ## Onboarding Components
