@@ -424,7 +424,9 @@ export function useKeyBinds({
 - **Outputs**
   None (side effect hook).
 - **Lifecycle**
-  Adds a `keydown` listener when active and removes it on cleanup.
+  Adds a `keydown` listener when active and removes it on cleanup. The handler
+  skips events if focus is inside an input, textarea or any content-editable
+  element.
 - **Exceptions**
   None.
 

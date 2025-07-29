@@ -38,6 +38,11 @@ export function useKeyBinds({
     };
 
     function handleKeyDown(e: KeyboardEvent) {
+      const active = document.activeElement as HTMLElement | null;
+      const isTextField =
+        active?.tagName === 'INPUT' || active?.tagName === 'TEXTAREA' || active?.isContentEditable;
+
+      if (isTextField) return;
       const key = e.key.toLowerCase();
       const handler = handlers[key];
       if (handler) {
