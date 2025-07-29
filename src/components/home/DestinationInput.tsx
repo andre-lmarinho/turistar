@@ -12,6 +12,9 @@ interface Props {
 
 export default function DestinationInput({ value, onChange }: Props) {
   const { results, loading } = useDestinationAutocomplete(value);
+
+  // Track whether the suggestion list is visible
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="relative">
       <label htmlFor="dest-input" className="sr-only">
@@ -21,13 +24,26 @@ export default function DestinationInput({ value, onChange }: Props) {
         id="dest-input"
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          setOpen(true);
+          onChange(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Tab' && open) {
+            const first = results[0];
+            if (first) {
+              onChange(first.name);
+            }
+            setOpen(false);
+          }
+        }}
+        onBlur={() => setOpen(false)}
         placeholder="City"
         className="w-full rounded border px-2 py-1 text-sm"
         autoComplete="off"
       />
       {loading && <Spinner className="absolute top-2 right-2 size-4" />}
-      {results.length > 0 && (
+      {open && results.length > 0 && (
         <ul className="bg-background absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded border text-sm shadow">
           {results.map((r) => (
             <li key={`${r.latitude}-${r.longitude}`}>

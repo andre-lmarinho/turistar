@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLocalStorageSync } from '@/lib';
+import { useLocalStorageSync, capitalize } from '@/lib';
 
 /**
  * Stores the planner title in local storage.
@@ -10,7 +10,7 @@ import { useLocalStorageSync } from '@/lib';
  */
 
 export function usePlanTitle(planId: string, defaultTitle = '') {
-  const [title, setTitle] = useState(defaultTitle);
+  const [title, setTitle] = useState(capitalize(defaultTitle));
   useLocalStorageSync(`title-${planId}`, title, setTitle);
   return { title, setTitle };
 }
