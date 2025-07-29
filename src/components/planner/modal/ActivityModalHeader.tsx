@@ -182,7 +182,6 @@ export default function ActivityModalHeader({
           <div className="absolute top-[3rem] right-[3rem] z-50">
             <CatalogSearchPopup
               open={isCatalogOpen}
-              dest={dest}
               onSelect={(item) => {
                 onCatalogSelect(item);
                 const url = item.imageUrl || '';

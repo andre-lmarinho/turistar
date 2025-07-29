@@ -14,7 +14,13 @@ interface UsePlannerOptions {
 }
 export function usePlanner(options: UsePlannerOptions = {}) {
   /* Plan id + destination from URL */
-  const { dest: urlDest, planId: urlPlanId, destCoords } = usePlanParams();
+  const {
+    dest: urlDest,
+    planId: urlPlanId,
+    destCoords,
+  } = usePlanParams({
+    skipReplace: Boolean(options.dest && options.planId),
+  });
   const dest = options.dest ?? urlDest;
   const planId = options.planId ?? urlPlanId;
 

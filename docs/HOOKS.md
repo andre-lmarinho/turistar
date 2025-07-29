@@ -243,15 +243,15 @@ export function useDnDPlanner(initialDays: DayPlan[]);
 _File: `src/hooks/usePlanParams.ts`_
 
 ```ts
-export function usePlanParams();
+export function usePlanParams(options?: { skipReplace?: boolean });
 ```
 
 - **Outputs**
   `{ dest, planId, destCoords }` from the URL.
 - **Lifecycle**
-  Generates a plan id when missing and updates the URL.
-- **Exceptions**
-  None.
+  Generates a plan id when missing and updates the URL unless `skipReplace` is `true`.
+  - **Exceptions**
+    None.
 
 ### `usePlanDaysStorage`
 

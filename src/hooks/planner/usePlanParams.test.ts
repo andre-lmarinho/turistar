@@ -37,4 +37,11 @@ describe('usePlanParams', () => {
     const url = new URL(calledUrl, 'https://example.com');
     expect(url.searchParams.get('plan')).toBe(result.current.planId);
   });
+
+  test('skips url update when skipReplace is true', () => {
+    params = new URLSearchParams({ dest: 'rome' });
+    const { result } = renderHook(() => usePlanParams({ skipReplace: true }));
+    expect(result.current.planId).toBeTruthy();
+    expect(replaceMock).not.toHaveBeenCalled();
+  });
 });

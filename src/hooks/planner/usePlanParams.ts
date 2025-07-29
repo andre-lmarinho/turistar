@@ -9,7 +9,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
  * - Returns the normalized destination and plan id.
  * - Updates the URL with a generated plan id if missing.
  */
-export function usePlanParams() {
+export function usePlanParams(options: { skipReplace?: boolean } = {}) {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -21,14 +21,18 @@ export function usePlanParams() {
   const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
 
   useEffect(() => {
+    if (options.skipReplace) {
+      return;
+    }
     const currentSearch = new URLSearchParams(paramsString);
     const currentPlan = currentSearch.get('plan');
-    if (currentPlan !== planId) {
+    const hasDest = Boolean(currentSearch.get('dest'));
+    if (currentPlan !== planId || (!hasDest && dest)) {
       const newSearch = new URLSearchParams(paramsString);
       newSearch.set('plan', planId);
       router.replace(`/planner?${newSearch.toString()}`, { scroll: false });
     }
-  }, [planId, paramsString, router]);
+  }, [planId, paramsString, router, options.skipReplace]);
 
   return { dest, planId, destCoords };
 }
