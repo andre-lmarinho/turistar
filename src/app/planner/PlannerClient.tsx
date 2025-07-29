@@ -24,7 +24,7 @@ import {
   useKeyBinds,
   useOnboardingCheck,
 } from '@/hooks';
-import type { CatalogActivity } from '@/types';
+import type { CatalogActivity, DayPlan } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 import { motion } from 'framer-motion';
 
@@ -38,7 +38,29 @@ import { motion } from 'framer-motion';
 type Mode = 'planner' | 'map' | 'budget';
 const modeOrder: Mode[] = ['planner', 'map', 'budget'];
 
-export default function PlannerClient() {
+interface PlannerClientProps {
+  initialDays?: DayPlan[];
+  planId?: string;
+  dest?: string;
+  hideOnboarding?: boolean;
+  hideCatalog?: boolean;
+}
+
+interface PlannerClientProps {
+  initialDays?: DayPlan[];
+  planId?: string;
+  dest?: string;
+  hideOnboarding?: boolean;
+  hideCatalog?: boolean;
+}
+
+export default function PlannerClient({
+  initialDays,
+  planId: planIdProp,
+  dest: destProp,
+  hideOnboarding = false,
+  hideCatalog = false,
+}: PlannerClientProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
 
@@ -59,10 +81,12 @@ export default function PlannerClient() {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = usePlanner();
+  } = usePlanner({ initialDays, planId: planIdProp, dest: destProp });
 
   const { title, setTitle } = usePlanTitle(planId, dest);
-  const { showOnboarding, setShowOnboarding } = useOnboardingCheck(planId);
+  const onboarding = useOnboardingCheck(planId);
+  const showOnboarding = hideOnboarding ? false : onboarding.showOnboarding;
+  const setShowOnboarding = hideOnboarding ? () => {} : onboarding.setShowOnboarding;
 
   const {
     selectedActivity,
@@ -107,7 +131,7 @@ export default function PlannerClient() {
     onMap: () => setMode('map'),
     onBudget: () => setMode('budget'),
     onNewCard: () => addBlankAndSelect(days[0].id),
-    onCatalog: () => setIsPanelOpen(true),
+    onCatalog: hideCatalog ? () => {} : () => setIsPanelOpen(true),
   });
 
   /* Guard clauses */
@@ -139,13 +163,17 @@ export default function PlannerClient() {
             className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
           />
         </h1>
-        <div className="flex gap-2 md:hidden">
-          <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
-          <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
-        </div>
-        <div className="hidden md:flex">
-          <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
-        </div>
+        {!hideCatalog && (
+          <>
+            <div className="flex gap-2 md:hidden">
+              <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
+              <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
+            </div>
+            <div className="hidden md:flex">
+              <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
+            </div>
+          </>
+        )}
       </div>
 
       <PlannerControls
@@ -233,26 +261,30 @@ export default function PlannerClient() {
         />
       )}
 
-      <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
-      <DestinationFilterPanel
-        isOpen={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        dest={dest}
-        onAdd={(item: CatalogActivity) =>
-          addActivity({
-            id: item.id,
-            title: item.name,
-            imageUrl: item.imageUrl,
-            address: item.address,
-            latitude: item.latitude,
-            longitude: item.longitude,
-            color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-            startTime: '',
-          })
-        }
-        onRemove={removeActivity}
-        addedIds={addedIds}
-      />
+      {!hideOnboarding && (
+        <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
+      )}
+      {!hideCatalog && (
+        <DestinationFilterPanel
+          isOpen={isPanelOpen}
+          onClose={() => setIsPanelOpen(false)}
+          dest={dest}
+          onAdd={(item: CatalogActivity) =>
+            addActivity({
+              id: item.id,
+              title: item.name,
+              imageUrl: item.imageUrl,
+              address: item.address,
+              latitude: item.latitude,
+              longitude: item.longitude,
+              color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+              startTime: '',
+            })
+          }
+          onRemove={removeActivity}
+          addedIds={addedIds}
+        />
+      )}
     </main>
   );
 }

@@ -7,9 +7,16 @@ import { useTripRange, useDnDPlanner, usePlanParams, usePlanDaysStorage } from '
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
 import type { DayPlan } from '@/types';
 
-export function usePlanner() {
+interface UsePlannerOptions {
+  initialDays?: DayPlan[];
+  planId?: string;
+  dest?: string;
+}
+export function usePlanner(options: UsePlannerOptions = {}) {
   /* Plan id + destination from URL */
-  const { dest, planId, destCoords } = usePlanParams();
+  const { dest: urlDest, planId: urlPlanId, destCoords } = usePlanParams();
+  const dest = options.dest ?? urlDest;
+  const planId = options.planId ?? urlPlanId;
 
   const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
 
@@ -26,14 +33,16 @@ export function usePlanner() {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = useDnDPlanner(buildInitialDays(tripDays));
+  } = useDnDPlanner(options.initialDays ?? buildInitialDays(tripDays));
 
   usePlanDaysStorage(planId, days, setDays);
 
   /* Sync on range change */
   useEffect(() => {
-    setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
-  }, [tripDays, setDays]);
+    if (!options.initialDays) {
+      setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
+    }
+  }, [tripDays, setDays, options.initialDays]);
 
   return {
     planId,
