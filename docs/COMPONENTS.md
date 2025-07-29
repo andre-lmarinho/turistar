@@ -141,7 +141,7 @@ This document summarizes each React component in the repository. It follows the 
 - **External Hooks:** `useDestinationAutocomplete`
 - **Side-effects:** none
 - **Accessibility:** input label, list of suggestions
-- **Interactions:** choose suggestion via click or Tab key; clicked suggestion passes only the city name
+  - **Interactions:** choose suggestion via click or Tab key; both return `{ name, latitude, longitude }`
   - **Performance notes:** none
 
 ---

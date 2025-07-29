@@ -231,6 +231,7 @@ export default function PlannerClient() {
           addActivity({
             id: item.id,
             title: item.name,
+            imageUrl: item.imageUrl,
             address: item.address,
             latitude: item.latitude,
             longitude: item.longitude,

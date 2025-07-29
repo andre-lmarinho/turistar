@@ -20,7 +20,7 @@ vi.mock('@/hooks', async () => {
 });
 
 describe('DestinationInput', () => {
-  it('passes trimmed city name when clicking a suggestion', () => {
+  it('passes the selected place object when clicking a suggestion', () => {
     const handleChange = vi.fn();
     render(<DestinationInput value="" onChange={handleChange} />);
 
@@ -28,8 +28,12 @@ describe('DestinationInput', () => {
     fireEvent.change(input, { target: { value: 'Rome' } });
 
     const option = screen.getByRole('button', { name: 'Rome, Italy' });
-    fireEvent.click(option);
+    fireEvent.mouseDown(option);
 
-    expect(handleChange).toHaveBeenCalledWith('Rome');
+    expect(handleChange).toHaveBeenCalledWith({
+      name: 'Rome, Italy',
+      latitude: 0,
+      longitude: 0,
+    });
   });
 });

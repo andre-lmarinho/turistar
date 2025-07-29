@@ -1,0 +1,244 @@
+{
+  "title": "Rome",
+  "title_inspiration": "A 4 day trip to Rome",
+  "duration_days": 4,
+  "destination": "Rome",
+  "itinerary": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "title": "Rome City Walking Tour",
+          "start_time": "08:00",
+          "duration": "3 h",
+          "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg"
+        },
+        {
+          "title": "Skip-the-Line Group Tour of the Vatican, Sistine Chapel & St. Peter's Basilica",
+          "start_time": "11:30",
+          "duration": "3 h",
+          "address": "Cortile della Pigna, 00120 Vatican City",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg"
+        },
+        {
+          "title": "Break",
+          "start_time": "14:30",
+          "duration": "1 h",
+          "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-0)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Via_dei_Condotti_in_Rome.jpg"
+        },
+        {
+          "title": "Dinner at Trattoria da Enzo al 29",
+          "start_time": "18:00",
+          "duration": "2 h",
+          "address": "Via dei Vascellari, 29, 00153 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://i0.wp.com/planejandoaviagem.com/wp-content/uploads/2015/07/da-enzo-700x466.jpg?ssl=1"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "activities": [
+        {
+          "title": "Explore the Roman Forum",
+          "start_time": "09:00",
+          "duration": "2 h",
+          "address": "Via della Salara Vecchia, 5/6, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Forum_Romanum_%28Rome%29_03.jpg"
+        },
+        {
+          "title": "Break",
+          "start_time": "11:00",
+          "duration": "1 h",
+          "address": "Via dei Fori Imperiali, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-0)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Fori_Imperiali_Rome.jpg"
+        },
+        {
+          "title": "Lunch at Ristorante Aroma",
+          "start_time": "12:00",
+          "duration": "1 h",
+          "address": "Via Labicana, 125, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://res.cloudinary.com/tf-lab/image/upload/restaurant/abdb2f83-6064-4d86-a43c-618f82024713/478b5ce2-f3d8-4a7b-9c41-ae30217c1811.jpg"
+        },
+        {
+          "title": "Transportation to the Colosseum",
+          "start_time": "13:00",
+          "duration": "1 h",
+          "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-1)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Colosseum-Entrance_LII.jpg"
+        },
+        {
+          "title": "Colosseum, Roman Forum & Palatine Hill Guided Tour",
+          "start_time": "14:00",
+          "duration": "3 h",
+          "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Palatine_Hill_%287940391062%29.jpg"
+        },
+        {
+          "title": "Break",
+          "start_time": "17:00",
+          "duration": "1 h",
+          "address": "Via del Teatro di Marcello, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-0)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Marcello_Theatre_Rome.jpg"
+        },
+        {
+          "title": "Dinner at Spaghetteria L'Archeologia",
+          "start_time": "18:00",
+          "duration": "2 h",
+          "address": "Via delle Coppelle, 16/17, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/45/b2/d8/locale.jpg?w=800&h=500&s=1"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "activities": [
+        {
+          "title": "Visit the Pantheon",
+          "start_time": "09:00",
+          "duration": "1.5 h",
+          "address": "Piazza della Rotonda, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pantheon_front_Rome.jpg"
+        },
+        {
+          "title": "Transportation to Piazza Navona",
+          "start_time": "10:30",
+          "duration": "0.5 h",
+          "address": "Piazza Navona, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-1)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Piazza_Navona_3.jpg"
+        },
+        {
+          "title": "Explore Piazza Navona",
+          "start_time": "11:00",
+          "duration": "1.5 h",
+          "address": "Piazza Navona, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Piazza_Navona_Feb_2008.jpg"
+        },
+        {
+          "title": "Lunch at Ristorante Tre Scalini",
+          "start_time": "12:30",
+          "duration": "1 h",
+          "address": "Piazza Navona, 28, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Restaurant_Tre_Scalini_at_Piazza_Navona_in_Rome.jpg/960px-Restaurant_Tre_Scalini_at_Piazza_Navona_in_Rome.jpg?20201114145033"
+        },
+        {
+          "title": "Visit the Trevi Fountain",
+          "start_time": "14:00",
+          "duration": "1 h",
+          "address": "Piazza di Trevi, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Trevi_Fountain_Rome.jpg"
+        },
+        {
+          "title": "Break",
+          "start_time": "15:00",
+          "duration": "1 h",
+          "address": "Via della Panetteria, 42, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-0)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Gelateria_del_Pantheon.jpg"
+        },
+        {
+          "title": "Shopping on Via del Corso",
+          "start_time": "16:00",
+          "duration": "2 h",
+          "address": "Via del Corso, 00186 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Via_del_Corso_Rome.jpg"
+        },
+        {
+          "title": "Dinner at Hostaria Romana",
+          "start_time": "19:00",
+          "duration": "2 h",
+          "address": "Via del Boschetto, 73, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://media-cdn.tripadvisor.com/media/photo-s/12/b3/3f/14/hosteria-romana-roma.jpg"
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "activities": [
+        {
+          "title": "Visit Villa Borghese Gardens",
+          "start_time": "09:00",
+          "duration": "2 h",
+          "address": "Piazzale Napoleone I, 00197 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Villa_Borghese_%28Rome%29_01.jpg"
+        },
+        {
+          "title": "Transportation to Spanish Steps",
+          "start_time": "11:00",
+          "duration": "0.5 h",
+          "address": "Piazza di Spagna, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-1)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Spanish_Steps_Rome.jpg"
+        },
+        {
+          "title": "Explore the Spanish Steps",
+          "start_time": "11:30",
+          "duration": "1 h",
+          "address": "Piazza di Spagna, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Spanish_Steps-top_view.jpg"
+        },
+        {
+          "title": "Lunch at Caffè Greco",
+          "start_time": "13:00",
+          "duration": "1.5 h",
+          "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://www.vamosparaitalia.com.br/wp-content/uploads/2018/05/greco.jpg"
+        },
+        {
+          "title": "Transportation to Borghese Gallery",
+          "start_time": "14:30",
+          "duration": "0.5 h",
+          "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
+          "card_color": "bg-[var(--color-1)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/28/Galleria_Borghese_Facade.jpg"
+        },
+        {
+          "title": "Tour of the Borghese Gallery",
+          "start_time": "15:00",
+          "duration": "2 h",
+          "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
+          "card_color": "bg-[var(--color-3)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Galleria_Borghese_interior.jpg"
+        },
+        {
+          "title": "Break",
+          "start_time": "17:00",
+          "duration": "1 h",
+          "address": "Terrazza del Pincio, 00197 Roma RM, Italy",
+          "card_color": "bg-[var(--color-0)]",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Terrazza_del_Pincio.jpg"
+        },
+        {
+          "title": "Farewell Dinner at Osteria Antica",
+          "start_time": "19:00",
+          "duration": "2 h",
+          "address": "Via Garibaldi, 5, 00184 Roma RM, Italy",
+          "card_color": "bg-[var(--color-4)]",
+          "image_url": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/7c/2c/dc/tramonto-in-riva-all.jpg?w=900&h=500&s=1"
+        }
+      ]
+    }
+  ]
+}

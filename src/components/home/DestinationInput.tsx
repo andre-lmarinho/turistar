@@ -60,8 +60,12 @@ export default function DestinationInput({ value, onChange }: Props) {
               <button
                 type="button"
                 className="hover:bg-accent w-full px-2 py-1 text-left"
-                onClick={() => {
-                  onChange(r.name.split(',')[0]);
+                onMouseDown={() => {
+                  onChange({
+                    name: r.name,
+                    latitude: r.latitude,
+                    longitude: r.longitude,
+                  });
                   setOpen(false);
                 }}
               >

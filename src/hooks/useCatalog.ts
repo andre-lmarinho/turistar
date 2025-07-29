@@ -37,6 +37,7 @@ export function useCatalog(dest: string | null, options: { enabled: boolean }) {
       const mapped: Activity = {
         id: activity.id,
         title: activity.name,
+        imageUrl: activity.imageUrl,
         color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
         startTime: '',
         budget: 0,
