@@ -25,13 +25,8 @@ export interface Activity {
 export interface CatalogActivity {
   id: string;
   name: string;
-  description: string;
-  duration: number;
-  image_url: string;
-  price: string;
   category: string;
   rating?: number;
-  reviewcount?: string;
   latitude?: number;
   longitude?: number;
 }

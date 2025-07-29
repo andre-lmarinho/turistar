@@ -109,14 +109,15 @@ const { days, isLoading } = useCatalog(dest, { enabled: true });
 _File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
-export function useDestinationCatalog(isOpen: boolean, city = 'salvador');
+export function useDestinationCatalog(enabled: boolean, categories: string[], city = 'salvador');
 ```
 
 - **Inputs**
-  - `isOpen`: whether the panel is visible.
+  - `enabled`: whether fetching is active.
+  - `categories`: list of selected categories.
   - `city`: destination name.
 - **Outputs**
-  Filtered `visibleItems`, category utilities, sort mode setters, loading and error flags.
+  Filtered `visibleItems`, loading and error flags, search helpers.
 - **Lifecycle**
   Uses `useCatalogActivities` internally when the panel opens and memoizes the filtered list.
 - **Exceptions**
@@ -124,7 +125,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador');
 - **Example**
 
 ```ts
-const { visibleItems, toggleCat } = useDestinationCatalog(open);
+const { visibleItems } = useDestinationCatalog(open, ['outdoors']);
 ```
 
 ### `useActivitiesById`

@@ -8,13 +8,15 @@ import { fetchGeoapifyCatalog } from '@/lib/geoapify';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const dest = searchParams.get('dest');
+  const cats = searchParams.get('cats');
 
   if (!dest) {
     return NextResponse.json({ error: 'Destination is required.' }, { status: 400 });
   }
 
   try {
-    const data = await fetchGeoapifyCatalog(dest);
+    const categories = cats ? cats.split(',') : undefined;
+    const data = await fetchGeoapifyCatalog(dest, categories);
     return NextResponse.json(data);
   } catch (err) {
     console.error(err);

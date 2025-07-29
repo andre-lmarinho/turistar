@@ -1,10 +1,11 @@
 // src/components/planner/catalog/DestinationFilterPanel.tsx
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
-import { DestinationHeader, DestinationCardGrid, Spinner } from '@/components';
+import { DestinationHeader, DestinationCardGrid, CategoryFilterBar, Spinner } from '@/components';
+import { GEOAPIFY_CATEGORIES } from '@/lib';
 import type { CatalogActivity } from '@/types';
 import { useDestinationCatalog, useEscapeKey } from '@/hooks';
 
@@ -28,19 +29,21 @@ export default function DestinationFilterPanel({
   onRemove,
   addedIds = new Set<string>(),
 }: DestinationFilterPanelProps) {
-  // Extract filter logic into custom hook
-  const {
-    visibleItems,
-    categories,
-    sortMode,
-    setSortMode,
-    toggleCat,
-    activeCats,
-    loading,
-    error,
-    search,
-    setSearch,
-  } = useDestinationCatalog(isOpen);
+  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
+  const [submitted, setSubmitted] = useState(false);
+
+  const toggleCat = (cat: string) =>
+    setSelectedCats((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+
+  const { visibleItems, loading, error, search, setSearch } = useDestinationCatalog(
+    isOpen && submitted,
+    Array.from(selectedCats)
+  );
 
   useEscapeKey({ onClose, isActive: isOpen });
 
@@ -89,37 +92,50 @@ export default function DestinationFilterPanel({
           className="bg-background focus:ring-primary relative flex h-[90vh] w-[95vw] max-w-[1350px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* header rows */}
-          <DestinationHeader
-            categories={categories}
-            activeCats={activeCats}
-            toggleCat={toggleCat}
-            sortMode={sortMode}
-            setSortMode={setSortMode}
-            search={search}
-            onSearchChange={setSearch}
-            onClose={onClose}
-          />
+          {/* header */}
+          <DestinationHeader search={search} onSearchChange={setSearch} onClose={onClose} />
 
-          <div className="flex flex-1 overflow-auto" ref={scrollRef}>
-            <div className="flex-1 p-4">
-              {loading && (
-                <div className="flex items-center gap-2">
-                  <Spinner />
-                  <span>Loading catalog...</span>
-                </div>
-              )}
-              {error && <p className="text-red-500">{error}</p>}
-              {!loading && !error && (
-                <DestinationCardGrid
-                  items={visibleItems}
-                  addedIds={addedIds}
-                  onAdd={handleAdd}
-                  onRemove={handleRemove}
+          {!submitted && (
+            <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
+              <div className="flex-1 overflow-x-auto">
+                <CategoryFilterBar
+                  categories={GEOAPIFY_CATEGORIES}
+                  active={selectedCats}
+                  onToggle={toggleCat}
                 />
-              )}
+              </div>
+              <button
+                type="button"
+                disabled={selectedCats.size === 0}
+                onClick={() => setSubmitted(true)}
+                className="rounded border px-3 py-1 text-sm"
+              >
+                Search
+              </button>
             </div>
-          </div>
+          )}
+
+          {submitted && (
+            <div className="flex flex-1 overflow-auto" ref={scrollRef}>
+              <div className="flex-1 p-4">
+                {loading && (
+                  <div className="flex items-center gap-2">
+                    <Spinner />
+                    <span>Loading catalog...</span>
+                  </div>
+                )}
+                {error && <p className="text-red-500">{error}</p>}
+                {!loading && !error && (
+                  <DestinationCardGrid
+                    items={visibleItems}
+                    addedIds={addedIds}
+                    onAdd={handleAdd}
+                    onRemove={handleRemove}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </FocusTrap>
     </div>,

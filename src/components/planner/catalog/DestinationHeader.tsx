@@ -2,26 +2,15 @@
 'use client';
 
 import React from 'react';
-import { CloseButton, CategoryFilterBar, SortMode } from '@/components';
-import SortSelector from './SortSelector';
+import { CloseButton } from '@/components';
 
 interface DestinationHeaderProps {
-  categories: string[];
-  activeCats: Set<string>;
-  toggleCat: (c: string) => void;
-  sortMode: SortMode;
-  setSortMode: (m: SortMode) => void;
   search: string;
   onSearchChange: (s: string) => void;
   onClose: () => void;
 }
 
 export default function DestinationHeader({
-  categories,
-  activeCats,
-  toggleCat,
-  sortMode,
-  setSortMode,
   search,
   onSearchChange,
   onClose,
@@ -35,10 +24,7 @@ export default function DestinationHeader({
         <CloseButton onClick={onClose} />
       </div>
 
-      <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
-        <div className="flex-1 overflow-x-auto">
-          <CategoryFilterBar categories={categories} active={activeCats} onToggle={toggleCat} />
-        </div>
+      <div className="flex items-center gap-2 border-b px-4 py-2">
         <label htmlFor="catalog-search" className="sr-only">
           Search catalog
         </label>
@@ -48,9 +34,8 @@ export default function DestinationHeader({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search"
-          className="rounded border px-2 py-1 text-sm"
+          className="w-full rounded border px-2 py-1 text-sm"
         />
-        <SortSelector value={sortMode} onChange={setSortMode} />
       </div>
     </>
   );

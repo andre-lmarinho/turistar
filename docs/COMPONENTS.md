@@ -203,25 +203,13 @@ This document summarizes each React component in the repository. It follows the 
 ### DestinationHeader
 
 - **Location:** `src/components/planner/catalog/DestinationHeader.tsx`
-- **Responsibility:** Header controls for filter panel (categories, search, sort).
-- **Props:** categories, active set, handlers
+- **Responsibility:** Header controls for catalog search.
+- **Props:** search string, change handler, close callback
 - **State:** none
 - **External Hooks:** none
 - **Side-effects:** none
 - **Accessibility:** labeled search input
-- **Interactions:** toggles categories, sorts results
-- **Performance notes:** none
-
-### SortSelector
-
-- **Location:** `src/components/planner/catalog/SortSelector.tsx`
-- **Responsibility:** Select element for sort mode (name, duration etc.).
-- **Props:** `{ value, onChange }`
-- **State:** none
-- **External Hooks:** none
-- **Side-effects:** none
-- **Accessibility:** label for select
-- **Interactions:** call `onChange` on selection
+- **Interactions:** updates search text
 - **Performance notes:** none
 
 ---

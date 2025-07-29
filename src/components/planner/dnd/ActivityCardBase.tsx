@@ -82,7 +82,7 @@ export default function ActivityCardBase({
             style={{ verticalAlign: 'top' }}
           />
         ) : (
-          <h4 className="px-2 py-1 font-medium">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+          <h4 className="px-2 py-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
         )}
 
         {/* Meta */}
@@ -91,12 +91,11 @@ export default function ActivityCardBase({
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
                 <Hourglass size={12} aria-hidden="true" />
-                {duration} h
               </span>
             )}
             {budget! > 0 && (
               <span className="inline-flex items-center gap-1">
-                <DollarSign size={12} aria-hidden="true" /> {budget}
+                <DollarSign size={12} aria-hidden="true" />
               </span>
             )}
           </div>

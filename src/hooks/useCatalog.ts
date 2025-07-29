@@ -38,10 +38,7 @@ export function useCatalog(dest: string | null, options: { enabled: boolean }) {
         id: activity.id,
         title: activity.name,
         color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-        description: activity.description,
-        duration: activity.duration,
         startTime: '',
-        imageUrl: activity.image_url,
         budget: 0,
         category: activity.category,
       };

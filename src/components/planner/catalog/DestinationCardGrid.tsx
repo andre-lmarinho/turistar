@@ -31,13 +31,8 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
             key={item.id}
             id={item.id}
             name={item.name}
-            duration={item.duration}
-            image_url={item.image_url}
-            price={item.price}
-            description={item.description}
             category={item.category}
             rating={item.rating}
-            reviewcount={item.reviewcount}
             added={isAdded}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item.id)}

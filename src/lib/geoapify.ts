@@ -19,16 +19,12 @@ type GeoapifyResponse = {
 };
 
 const SALVADOR = {
-  // Ordem exigida pela Geoapify nos filtros: lon,lat
-  lat: -12.977749, // Centro histórico aprox.
+  lat: -12.977749,
   lon: -38.501629,
   radiusMeters: 20_000,
 };
 
-// Conjunto de categorias focadas em pontos turísticos / lazer.
-// Referência de categorias: docs da Geoapify (Places API).
-// Evite "tourism" (não existe).
-const TOURISM_CATEGORIES = [
+export const GEOAPIFY_CATEGORIES = [
   'entertainment.culture',
   'entertainment.culture.theatre',
   'entertainment.museum',
@@ -45,14 +41,13 @@ const TOURISM_CATEGORIES = [
   'man_made.tower',
   'man_made.bridge',
   'man_made.lighthouse',
-].join(',');
+];
 
-/**
- * Busca atividades turísticas na área de Salvador-BA usando Geoapify Places API.
- * Ignora o `dest` por enquanto (bloqueado em Salvador).
- */
+const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
+
 export async function fetchGeoapifyCatalog(
-  _dest?: string
+  _dest?: string,
+  categories: string[] = GEOAPIFY_CATEGORIES
 ): Promise<{ activities: CatalogActivity[] }> {
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
@@ -61,7 +56,7 @@ export async function fetchGeoapifyCatalog(
 
   const url =
     `${base}?` +
-    `categories=${encodeURIComponent(TOURISM_CATEGORIES)}` +
+    `categories=${encodeURIComponent(categories.join(',') || DEFAULT_CATEGORIES)}` +
     `&filter=circle:${SALVADOR.lon},${SALVADOR.lat},${SALVADOR.radiusMeters}` +
     `&bias=proximity:${SALVADOR.lon},${SALVADOR.lat}` +
     `&limit=60` +
@@ -69,12 +64,10 @@ export async function fetchGeoapifyCatalog(
     `&apiKey=${key}`;
 
   const res = await fetch(url, {
-    // Em rotas de API o fetch não é memoizado, mas definimos no-store por segurança.
     cache: 'no-store',
   });
 
   if (!res.ok) {
-    // Tente expor a mensagem de erro da API para depuração
     let detail = '';
     try {
       const text = await res.text();
@@ -92,17 +85,11 @@ export async function fetchGeoapifyCatalog(
     return {
       id: String(p.place_id),
       name: p.name || p.formatted || 'Ponto turístico',
-      description: '',
-      duration: 1,
-      image_url: '',
-      price: '',
       category: p.categories?.[0] ?? 'sight',
-      rating: p.rank?.popularity, // Geoapify expõe "rank.popularity" como sinal de relevância.
+      rating: p.rank?.popularity,
       latitude: p.lat,
       longitude: p.lon,
-      // Se quiser ordenar por proximidade depois:
-      // distance: p.distance,
-    };
+    } as CatalogActivity;
   });
 
   return { activities };

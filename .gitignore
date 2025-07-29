@@ -22,7 +22,10 @@ cypress/videos/
 cypress/screenshots/
 
 # Environment & secrets
-.env*               # .env, .env.local, etc.
+.env.local          # .env, .env.local, etc.
+.env.*.local
+.env
+!.env.example
 .vercel/            # Vercel build output & metadata
 
 # Editors / OS

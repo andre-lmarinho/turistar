@@ -5,4 +5,3 @@ export { default as DestinationCard } from './DestinationCard';
 export { default as DestinationCardGrid } from './DestinationCardGrid';
 export { default as DestinationFilterPanel } from './DestinationFilterPanel';
 export { default as DestinationHeader } from './DestinationHeader';
-export * from './SortSelector';
