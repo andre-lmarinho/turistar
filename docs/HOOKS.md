@@ -54,11 +54,15 @@ const { tripDays, handleRangeChange } = useTripRange(dest, planId);
 _File: `src/hooks/fetchCatalog.ts`_
 
 ```ts
-export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
+export async function fetchCatalog(
+  dest: string,
+  categories: string[],
+): Promise<CatalogApiResponse>;
 ```
 
 - **Inputs**
   - `dest`: destination name.
+  - `categories`: list of active category filters.
 - **Outputs**
   Catalog activities from the API.
 - **Lifecycle**
@@ -69,11 +73,16 @@ export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
 _File: `src/hooks/useCatalogActivities.ts`_
 
 ```ts
-export function useCatalogActivities(dest: string | null, options: { enabled: boolean });
+export function useCatalogActivities(
+  dest: string | null,
+  categories: string[],
+  options: { enabled: boolean },
+);
 ```
 
 - **Inputs**
   - `dest`: destination name.
+  - `categories`: active category filters.
   - `options.enabled`: whether the query should execute.
 - **Outputs**
   Raw catalog `activities` plus React Query props.

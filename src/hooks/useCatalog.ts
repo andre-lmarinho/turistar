@@ -16,7 +16,7 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 export function useCatalog(dest: string | null, options: { enabled: boolean }) {
   // 1) Load catalog activities using the shared hook
-  const { activities, ...query } = useCatalogActivities(dest, options);
+  const { activities, ...query } = useCatalogActivities(dest, [], options);
 
   // 2) Memoize transforming raw activities into day-based buckets
   const days: DayPlan[] | undefined = useMemo(() => {
