@@ -62,6 +62,8 @@ While editing an activity, you can search the catalog directly from the modal or
   All planner and budget changes are saved to `localStorage` so they stay when you refresh.
 - **Accessibility & Responsive Design**
   Fully keyboard-accessible with layouts optimised for mobile and desktop.
+- **Sample Plan**
+  Explore a pre-built 4 day Rome itinerary from the home page.
 
 You can deploy the same app to Vercel or Netlify.
 
