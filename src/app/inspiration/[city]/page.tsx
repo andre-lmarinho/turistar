@@ -1,55 +1,43 @@
 // src/app/inspiration/[city]/page.tsx
-export const dynamic = 'force-dynamic'; // disable SSG/ISR
+export const dynamic = 'force-dynamic';
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData, type InspirationData } from '@/utils';
 
 type CityParams = { city: string };
 
-function isValidSlug(slug: string) {
-  return /^[a-z0-9-]+$/.test(slug);
-}
-
-async function loadInspirationJSON(city: string): Promise<InspirationData> {
-  const filePath = join(process.cwd(), 'src', 'data', `${city}.json`);
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw) as InspirationData;
-}
-
 /* <head> metadata */
 export async function generateMetadata({
   params,
 }: {
-  params: CityParams | Promise<CityParams>;
+  params: Promise<CityParams>;
 }): Promise<Metadata> {
   const { city } = await params;
   return { title: `${city} Inspiration` };
 }
 
 /* page component */
-export default async function InspirationPage({
-  params,
-}: {
-  params: CityParams | Promise<CityParams>;
-}) {
+export default async function InspirationPage({ params }: { params: Promise<CityParams> }) {
   const { city } = await params;
 
-  if (!isValidSlug(city)) notFound();
+  if (!/^[a-z0-9-]+$/.test(city)) notFound();
 
-  let data: InspirationData;
   try {
-    data = await loadInspirationJSON(city);
+    const filePath = join(process.cwd(), 'src', 'data', `${city}.json`);
+    const raw = await fs.readFile(filePath, 'utf8');
+    const data = JSON.parse(raw) as InspirationData;
+
+    const initialDays = buildDaysFromInspirationData(data);
+
+    return (
+      <InspirationPlanner initialDays={initialDays} dest={city} planId={`${city}-inspiration`} />
+    );
   } catch {
     notFound();
   }
-
-  const initialDays = buildDaysFromInspirationData(data);
-
-  return (
-    <InspirationPlanner initialDays={initialDays} dest={city} planId={`${city}-inspiration`} />
-  );
 }
