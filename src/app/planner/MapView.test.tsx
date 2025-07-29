@@ -6,12 +6,12 @@ import { vi } from 'vitest';
 import MapView from './MapView';
 import type { DayPlan } from '@/types';
 
-// Mover para fora do mock: escopo global para os testes
+// Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
-let containerProps: any;
+let containerProps: { center?: unknown } | undefined;
 
-// Stub do react-leaflet
+// Stub react-leaflet
 vi.mock('react-leaflet', () => {
   const React = require('react');
   return {
