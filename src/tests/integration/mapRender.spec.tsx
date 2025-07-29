@@ -8,7 +8,7 @@ import type { DayPlan } from '@/types';
 
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
-let containerProps: any;
+let containerProps: { center?: unknown } | undefined;
 
 vi.mock('react-leaflet', () => {
   const React = require('react');

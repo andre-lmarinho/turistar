@@ -32,7 +32,7 @@ export function usePlanParams(options: { skipReplace?: boolean } = {}) {
       newSearch.set('plan', planId);
       router.replace(`/planner?${newSearch.toString()}`, { scroll: false });
     }
-  }, [planId, paramsString, router, options.skipReplace]);
+  }, [planId, paramsString, router, options.skipReplace, dest]);
 
   return { dest, planId, destCoords };
 }
