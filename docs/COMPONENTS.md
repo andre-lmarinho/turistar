@@ -209,7 +209,7 @@ This document summarizes each React component in the repository. It follows the 
 - **External Hooks:** `useDestinationFilter`, `useEscapeKey`
 - **Side-effects:** portal rendering
 - **Accessibility:** dialog roles, focus trap
-- **Interactions:** filter changes, add/remove actions
+- **Interactions:** filter changes, add/remove actions, **Back** button resets the category step
 - **Performance notes:** none
 
 ### DestinationHeader

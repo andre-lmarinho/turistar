@@ -100,10 +100,11 @@ You can deploy the same app to Vercel or Netlify.
 ## 🧭 User Flow
 
 1. Start by selecting your trip dates
-2. Review suggested activities in the catalog popup
-3. Drag cards into the planner board by day
-4. Click cards to edit title, image, or move between days
-5. All planner and budget data persist automatically in `localStorage`
+2. Choose destination categories and search the catalog
+3. Browse results or use the **Back** button to refine your filters
+4. Drag cards into the planner board by day
+5. Click cards to edit title, image, or move between days
+6. All planner and budget data persist automatically in `localStorage`
 
 ---
 
