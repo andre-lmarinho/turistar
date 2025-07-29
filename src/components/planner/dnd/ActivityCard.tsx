@@ -126,8 +126,8 @@ export default function ActivityCard({
           title={title}
           draftTitle={draft}
           onDraftTitleChange={setDraft}
-          onSave={(url) => {
-            onUpdateImage?.(url);
+          onSave={() => {
+            onUpdateImage?.(editedImageUrl);
             save();
           }}
           inputRef={inputRef}
