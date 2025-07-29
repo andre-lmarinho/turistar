@@ -16,7 +16,7 @@ export function useDestinationCatalog(isOpen: boolean, city = 'salvador') {
   // Catalog activities list (raw from API)
   const { data, isLoading, isError } = useQuery({
     queryKey: ['catalog', city],
-    queryFn: () => fetchCatalog(city),
+    queryFn: () => fetchCatalog(city, []),
     enabled: isOpen,
   });
   const loading = isLoading;
