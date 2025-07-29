@@ -203,6 +203,7 @@ export async function fetchGeoapifyCatalog(
     const base: CatalogActivity = {
       id,
       name: p.name || p.formatted || 'Ponto turístico',
+      address: p.formatted,
       category: p.categories?.[0] ?? 'sight',
       rating: p.rank?.popularity,
       latitude: p.lat,
@@ -273,6 +274,7 @@ export async function fetchGeoapifySearch(
     activities.push({
       id: String(p.place_id),
       name: p.name || p.formatted || text,
+      address: p.formatted,
       category: p.categories?.[0] ?? 'sight',
       rating: p.rank?.popularity,
       latitude: p.lat,

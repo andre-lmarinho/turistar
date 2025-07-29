@@ -7,7 +7,8 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants';
-import { UpdateButton, Input } from '@/components';
+import { UpdateButton, Input, Spinner } from '@/components';
+import { useDestinationAutocomplete } from '@/hooks';
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -18,13 +19,18 @@ interface ActivityModalFormProps {
 export default function ActivityModalForm({ activity, onSave, color }: ActivityModalFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title);
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
+  const [editedAddress, setEditedAddress] = useState(activity.address ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
+  const { results: addressResults, loading: addressLoading } =
+    useDestinationAutocomplete(editedAddress);
+  const [addressOpen, setAddressOpen] = useState(false);
 
   // Update internal state when the activity prop changes
   useEffect(() => {
     setEditedTitle(activity.title);
     setEditedDescription(activity.description ?? '');
+    setEditedAddress(activity.address ?? '');
     setDuration(activity.duration || 0);
     setBudget(activity.budget || 0);
   }, [activity]);
@@ -54,6 +60,45 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         aria-required="true"
         className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
       />
+
+      {/* Address */}
+      <div className="relative mx-4 mb-4">
+        <label htmlFor="activity-address" className="mb-1 block text-xs font-bold">
+          Address
+        </label>
+        <input
+          id="activity-address"
+          type="text"
+          value={editedAddress}
+          onChange={(e) => {
+            setEditedAddress(e.target.value);
+            setAddressOpen(true);
+          }}
+          onBlur={() => setAddressOpen(false)}
+          className="focus:ring-primary w-full rounded px-2 py-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          placeholder="Location"
+          autoComplete="off"
+        />
+        {addressLoading && <Spinner className="absolute top-1 right-1 size-4" />}
+        {addressOpen && addressResults.length > 0 && (
+          <ul className="bg-background absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded border text-sm shadow">
+            {addressResults.map((r) => (
+              <li key={`${r.latitude}-${r.longitude}`}>
+                <button
+                  type="button"
+                  className="hover:bg-accent w-full px-2 py-1 text-left"
+                  onMouseDown={() => {
+                    setEditedAddress(r.name);
+                    setAddressOpen(false);
+                  }}
+                >
+                  {r.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Duration & Budget group */}
       <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
@@ -121,6 +166,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             onSave({
               title: editedTitle.trim(),
               description: editedDescription,
+              address: editedAddress,
               color,
               duration: Number(duration),
               budget,
