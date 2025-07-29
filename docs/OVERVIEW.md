@@ -12,6 +12,7 @@ The application lets users create and organize trip itineraries, persisting data
 - **Geoapify Catalog** – Activities are fetched from Geoapify using your `GEOAPIFY_KEY`.
 - **Persistent Storage** – Planner data and budget stay saved in the browser.
 - **Map Mode** – View itinerary on an interactive map built with Leaflet.
+- **Rome Inspiration** – Browse a pre-built example itinerary for Rome.
 
 ## Tech Stack
 

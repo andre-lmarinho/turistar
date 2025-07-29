@@ -144,6 +144,18 @@ This document summarizes each React component in the repository. It follows the 
   - **Interactions:** choose suggestion via click or Tab key; both return `{ name, latitude, longitude }`
   - **Performance notes:** none
 
+### InspirationLink
+
+- **Location:** `src/components/home/InspirationLink.tsx`
+- **Responsibility:** Link to view the sample Rome itinerary.
+- **Props:** none
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** semantic heading and link
+- **Interactions:** navigates to `/inspiration/rome`
+- **Performance notes:** none
+
 ---
 
 ## Onboarding Components
