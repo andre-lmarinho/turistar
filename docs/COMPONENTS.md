@@ -255,11 +255,11 @@ This document summarizes each React component in the repository. It follows the 
 ### ActivityCard / ActivityCardBase / ActivityCardEditing
 
 - **Location:** `src/components/planner/dnd`
-- **Responsibility:** Activity card display. Editing state handled by `useActivityCardEditor` hook.
+- **Responsibility:** Activity card display. Editing state handled by `useActivityCardEditor` hook and overlay rendered via `ActivityCardEditorOverlay`.
 - **Props:** activity data, callbacks for updates, color, catalog search
-- **State:** managed within the hook – draft title, overlay position
+- **State:** managed within the hook – draft title; overlay position computed in the overlay component
 - **External Hooks:** `useActivityCardEditor`, `useCardPopups`, `useElementRect`, `useFlexibleRef`
-- **Side-effects:** portal overlays, focusing inputs
+- **Side-effects:** focusing inputs; overlay/backdrop via `ActivityCardEditorOverlay`
 - **Accessibility:** keyboard interaction, ARIA buttons
 - **Interactions:** click/drag to edit, color and date pickers
 - **Performance notes:** compute overlay rect; watch window size
