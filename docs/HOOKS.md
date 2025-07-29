@@ -472,12 +472,12 @@ export function usePopupOutsideHandler({
 - **Exceptions**
   None.
 
-### `useWindowSize`
+### `useElementRect`
 
-_File: `src/hooks/useWindowSize.ts`_
+_File: `src/hooks/useElementRect.ts`_
 
 ```ts
-export function useWindowSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>);
+export function useElementRect<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>);
 ```
 
 - **Inputs**
@@ -491,7 +491,7 @@ export function useWindowSize<T extends HTMLElement = HTMLElement>(ref: RefObjec
 - **Example**
 
 ```ts
-const rect = useWindowSize(divRef);
+const rect = useElementRect(divRef);
 ```
 
 ---
