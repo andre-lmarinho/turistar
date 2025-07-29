@@ -96,6 +96,6 @@ describe('Marker accessibility', () => {
     ];
 
     render(<MapView days={days} onSelectActivity={() => {}} centerCoords={{ lat: 5, lng: 6 }} />);
-    expect(containerProps.center).toEqual([5, 6]);
+    expect(containerProps!.center).toEqual([5, 6]);
   });
 });

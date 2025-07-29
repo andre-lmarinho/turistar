@@ -58,6 +58,6 @@ describe('map render integration', () => {
   it('centers map using provided coordinates', () => {
     const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
     render(<MapView days={days} onSelectActivity={() => {}} centerCoords={{ lat: 3, lng: 4 }} />);
-    expect(containerProps.center).toEqual([3, 4]);
+    expect(containerProps!.center).toEqual([3, 4]);
   });
 });
