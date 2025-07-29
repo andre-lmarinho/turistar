@@ -9,7 +9,7 @@ The application lets users create and organize trip itineraries, persisting data
 - **Planner Board** – Rearrange activities between days using drag‑and‑drop.
 - **Catalog Popup** – Browse suggested activities and insert them directly into the board.
   - Search the catalog in real time.
-- **Local Data Mock** – The catalog is served from a static JSON API.
+- **Geoapify Catalog** – Activities are fetched from Geoapify using your `GEOAPIFY_KEY`.
 - **Persistent Storage** – Planner data and budget stay saved in the browser.
 - **Map Mode** – View itinerary on an interactive map built with Leaflet.
 

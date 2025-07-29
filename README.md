@@ -56,8 +56,8 @@ While editing an activity, you can search the catalog directly from the modal or
     Quickly filter activities by typing a query.
 - **Map View**
   View all your planned attractions on an interactive map.
-- **Local Data Mock**
-  Demo catalog comes from `/api/catalog`, which serves a static JSON file.
+- **Dynamic Catalog**
+  Activities are fetched from Geoapify via `/api/catalog` using your `GEOAPIFY_KEY`.
 - **Persistent Storage**
   All planner and budget changes are saved to `localStorage` so they stay when you refresh.
 - **Accessibility & Responsive Design**
@@ -141,8 +141,8 @@ You can deploy the same app to Vercel or Netlify.
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 4. **Configure environment**
-   - Create a `.env.local` at project root if you add any API keys (e.g. Google Maps).
-   - For now, no API keys are required for the static MVP.
+   - Copy `.env.example` to `.env.local`.
+   - Set your Geoapify API key in `GEOAPIFY_KEY`.
 
 ### Development Workflow
 
@@ -178,7 +178,7 @@ Deploy easily to **Vercel** or **Netlify**:
 
 1. Push your code to GitHub.
 2. Import the repository in your hosting service (https://vercel.com/new or https://app.netlify.com/start).
-3. Set up any required environment variables.
+3. Set `GEOAPIFY_KEY` with your API key.
 4. Click "Deploy" — the platform will build and preview automatically.
 
 _For detailed guides, see:_

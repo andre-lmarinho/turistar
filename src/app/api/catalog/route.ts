@@ -1,11 +1,9 @@
 // src/app/api/catalog/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import salvador from '@/data/salvador.json';
-
+import { fetchGeoapifyCatalog } from '@/lib/geoapify';
 /**
- * API route to return the mock catalog for Salvador.
- * This is a static, local file used while the external API integration is paused.
+ * API route that proxies catalog data from Geoapify.
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -15,10 +13,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Destination is required.' }, { status: 400 });
   }
 
-  if (dest.toLowerCase() !== 'salvador') {
-    return NextResponse.json({ error: 'Destination not supported in this mock.' }, { status: 404 });
+  try {
+    const data = await fetchGeoapifyCatalog(dest);
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: 'Failed to load catalog.' }, { status: 500 });
   }
-
-  // Directly return the mock data from the local file
-  return NextResponse.json(salvador);
 }

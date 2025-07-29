@@ -30,6 +30,6 @@ You can also run the production build locally with:
 npm start
 ```
 
-## Offline Data Versioning
+## Catalog API Key
 
-Demo activities are stored under `src/data`. When the JSON files change, increment a version number in your codebase to invalidate any cached planner data in `localStorage`. A simple approach is to store the version with each plan key and clear outdated entries when the version changes.
+Set the `GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify.

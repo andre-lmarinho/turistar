@@ -16,26 +16,26 @@ const features: Feature[] = [
     title: 'Smart planning.',
     description:
       'Create a complete travel itinerary based on your selected dates\u2014 no templates, just flexibility.',
-    imgSrc: '/images/mascot_1_.webp',
+    imgSrc: '/images/background_1_.webp',
     layout: 'small-left',
   },
   {
     title: 'Drag-and-drop scheduling.',
     description: 'Easily move and rearrange activities between days to build your ideal trip.',
-    imgSrc: '/images/mascot_1_.webp',
+    imgSrc: '/previews/preview_01.png',
     layout: 'large-right',
+  },
+  {
+    title: 'Interactive map view.',
+    description: 'See all your planned locations mapped out for better spatial awareness.',
+    imgSrc: '/previews/preview_05.png',
+    layout: 'large-left',
   },
   {
     title: 'Budget tracking.',
     description:
       'Edit and manage your expenses in a dedicated panel \u2014 keep it organized, day by day.',
-    imgSrc: '/images/mascot_1_.webp',
-    layout: 'large-left',
-  },
-  {
-    title: 'Interactive map view.',
-    description: 'See all your planned locations mapped out for better spatial awareness.',
-    imgSrc: '/images/mascot_1_.webp',
+    imgSrc: '/images/Onboarding_004_.jpg',
     layout: 'small-right',
   },
 ];
@@ -64,11 +64,17 @@ export default function FeaturePreview() {
             return (
               <li
                 key={title}
-                className={`relative bg-black ${styles.li} bg-grey-2 h-full w-full overflow-hidden rounded-xl ring-[6px] ring-white/40`}
+                className={`bg-card relative ${styles.li} bg-grey-2 h-full w-full overflow-hidden rounded-xl ring-[6px] ring-white/40`}
               >
-                <div className="absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 sm:px-5 sm:pb-5 md:px-4 md:pb-4 lg:px-5 lg:pb-5">
-                  <p className="tracking-snugger sm:text-15 relative z-10 leading-snug font-light text-white/65 md:leading-[1.2]">
-                    <span className="font-medium text-white">{title} </span>
+                <div
+                  className="bg-background absolute bottom-0 z-10 col-span-full flex w-full items-end px-6 pb-6 sm:px-5 sm:pb-5 md:px-4 md:pb-4 lg:px-5 lg:pb-5"
+                  style={{
+                    background: 'linear-gradient(to bottom, transparent 0%, var(--card) 90%)',
+                    height: '10rem',
+                  }}
+                >
+                  <p className="sm:text-15 relative z-10 pt-4 leading-snug font-light md:leading-[1.2]">
+                    <span className="font-medium">{title} </span>
                     {description}
                   </p>
                 </div>
