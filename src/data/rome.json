@@ -58,7 +58,7 @@
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Palatine_Hill_%287940391062%29.jpg"
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/960px-Colosseo_2020.jpg"
         },
         {
           "title": "Dinner at Spaghetteria L'Archeologia",
@@ -79,7 +79,7 @@
           "duration": 1.5,
           "address": "Piazza della Rotonda, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pantheon_front_Rome.jpg"
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Rome_Pantheon_front.jpg"
         },
         {
           "title": "Explore Piazza Navona",
@@ -87,7 +87,7 @@
           "duration": 1.5,
           "address": "Piazza Navona, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/99/Piazza_Navona_Feb_2008.jpg"
+          "imageUrl": "https://www.archeoroma.org/wp-content/uploads/2020/02/piazza-navona-roma-558x400.jpg"
         },
         {
           "title": "Lunch at Ristorante Tre Scalini",
@@ -103,7 +103,7 @@
           "duration": 1,
           "address": "Piazza di Trevi, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Trevi_Fountain_Rome.jpg"
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg/960px-Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg"
         },
         {
           "title": "Shopping on Via del Corso",
@@ -111,7 +111,7 @@
           "duration": 2,
           "address": "Via del Corso, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Via_del_Corso_Rome.jpg"
+          "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/72/c4/56/via-del-corso.jpg?w=900&h=500&s=1"
         },
         {
           "title": "Dinner at Hostaria Romana",
@@ -132,7 +132,7 @@
           "duration": 2,
           "address": "Piazzale Napoleone I, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Villa_Borghese_%28Rome%29_01.jpg"
+          "imageUrl": "https://www.villaborghesetours.com/info/wp-content/uploads/Fontana-della-Venere.jpg"
         },
         {
           "title": "Explore the Spanish Steps",
@@ -140,7 +140,7 @@
           "duration": 1,
           "address": "Piazza di Spagna, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Spanish_Steps-top_view.jpg"
+          "imageUrl": "https://romesite.com/images/spanish_steps.jpg"
         },
         {
           "title": "Lunch at Caffè Greco",
@@ -156,7 +156,7 @@
           "duration": 2,
           "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Galleria_Borghese_interior.jpg"
+          "imageUrl": "https://cdn-imgix.headout.com/media/images/47fe6d9a07be8f43794b424e0dfb8ffc-Borghese-Gallery.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&ar=16%3A9&crop=faces&fit=crop"
         },
         {
           "title": "Farewell Dinner at Osteria Antica",

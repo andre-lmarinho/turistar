@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'dynamic-media-cdn.tripadvisor.com', pathname: '/**' },
       { protocol: 'https', hostname: 'media-cdn.tripadvisor.com', pathname: '/**' },
       { protocol: 'https', hostname: 'www.vamosparaitalia.com.br', pathname: '/**' },
+      { protocol: 'https', hostname: 'www.archeoroma.org' },
+      { protocol: 'https', hostname: 'www.villaborghesetours.com' },
+      { protocol: 'https', hostname: 'romesite.com' },
+      { protocol: 'https', hostname: 'cdn-imgix.headout.com' },
     ],
   },
 };

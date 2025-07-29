@@ -10,7 +10,6 @@ export interface Activity {
   title: string;
   color: string;
   description?: string;
-  /** Optional street address */
   address?: string;
   duration?: number;
   startTime?: string;
@@ -29,7 +28,6 @@ export interface CatalogActivity {
   name: string;
   category: string;
   description?: string;
-  /** Formatted address if available */
   address?: string;
   imageUrl?: string;
   rating?: number;
