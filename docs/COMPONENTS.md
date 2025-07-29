@@ -155,6 +155,18 @@ This document summarizes each React component in the repository. It follows the 
 - **Accessibility:** semantic heading and link
 - **Interactions:** navigates to `/inspiration/rome`
 - **Performance notes:** none
+### RomeInspirationPage
+
+- **Location:** `src/app/inspiration/rome/page.tsx`
+- **Responsibility:** Interactive demo planner with a four day Rome itinerary.
+- **Props:** none
+- **State:** planner days, selected activity, mode
+- **External Hooks:** `useDnDPlanner`, `useSelectedActivity`, `usePlanTitle`, `useKeyBinds`
+- **Side-effects:** saves title and budget in `localStorage`
+- **Accessibility:** keyboard shortcuts via key binds
+- **Interactions:** drag cards, edit details, switch between planner, map and budget
+- **Performance notes:** memoized activity lookup
+
 
 ---
 
