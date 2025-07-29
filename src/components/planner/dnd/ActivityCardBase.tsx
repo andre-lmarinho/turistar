@@ -54,7 +54,6 @@ export default function ActivityCardBase({
             alt={title}
             width={400}
             height={200}
-            unoptimized
             className="h-30 w-full rounded-t-lg object-cover"
           />
         )}

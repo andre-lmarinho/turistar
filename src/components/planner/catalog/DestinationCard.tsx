@@ -44,7 +44,6 @@ export default function DestinationCard({
           alt={`Photo of ${name}`}
           width={400}
           height={200}
-          unoptimized
           className="h-40 w-full rounded-t object-cover"
         />
         {/* quick-remove icon (only when added) */}

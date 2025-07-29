@@ -90,7 +90,6 @@ export default function ActivityModalHeader({
             className="absolute top-0 left-0 h-full w-full rounded-t-lg object-cover"
             width={400}
             height={200}
-            unoptimized
           />
         )}
         {editedImageUrl && (

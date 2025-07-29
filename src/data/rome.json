@@ -24,13 +24,6 @@
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg"
         },
         {
-          "title": "Break",
-          "startTime": "14:30",
-          "duration": 1,
-          "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]"
-        },
-        {
           "title": "Dinner at Trattoria da Enzo al 29",
           "startTime": "18:00",
           "duration": 2,
@@ -52,13 +45,6 @@
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Forum_Romanum_%28Rome%29_03.jpg"
         },
         {
-          "title": "Break",
-          "startTime": "11:00",
-          "duration": 1,
-          "address": "Via dei Fori Imperiali, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]"
-        },
-        {
           "title": "Lunch at Ristorante Aroma",
           "startTime": "12:00",
           "duration": 1,
@@ -67,26 +53,12 @@
           "imageUrl": "https://res.cloudinary.com/tf-lab/image/upload/restaurant/abdb2f83-6064-4d86-a43c-618f82024713/478b5ce2-f3d8-4a7b-9c41-ae30217c1811.jpg"
         },
         {
-          "title": "Transportation to the Colosseum",
-          "startTime": "13:00",
-          "duration": 1,
-          "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]"
-        },
-        {
           "title": "Colosseum, Roman Forum & Palatine Hill Guided Tour",
           "startTime": "14:00",
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Palatine_Hill_%287940391062%29.jpg"
-        },
-        {
-          "title": "Break",
-          "startTime": "17:00",
-          "duration": 1,
-          "address": "Via del Teatro di Marcello, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Dinner at Spaghetteria L'Archeologia",
@@ -108,13 +80,6 @@
           "address": "Piazza della Rotonda, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pantheon_front_Rome.jpg"
-        },
-        {
-          "title": "Transportation to Piazza Navona",
-          "startTime": "10:30",
-          "duration": 0.5,
-          "address": "Piazza Navona, 00186 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]"
         },
         {
           "title": "Explore Piazza Navona",
@@ -139,13 +104,6 @@
           "address": "Piazza di Trevi, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Trevi_Fountain_Rome.jpg"
-        },
-        {
-          "title": "Break",
-          "startTime": "15:00",
-          "duration": 1,
-          "address": "Via della Panetteria, 42, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Shopping on Via del Corso",
@@ -177,13 +135,6 @@
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Villa_Borghese_%28Rome%29_01.jpg"
         },
         {
-          "title": "Transportation to Spanish Steps",
-          "startTime": "11:00",
-          "duration": 0.5,
-          "address": "Piazza di Spagna, 00187 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]"
-        },
-        {
           "title": "Explore the Spanish Steps",
           "startTime": "11:30",
           "duration": 1,
@@ -200,26 +151,12 @@
           "imageUrl": "https://www.vamosparaitalia.com.br/wp-content/uploads/2018/05/greco.jpg"
         },
         {
-          "title": "Transportation to Borghese Gallery",
-          "startTime": "14:30",
-          "duration": 0.5,
-          "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
-          "color": "bg-[var(--color-1)]"
-        },
-        {
           "title": "Tour of the Borghese Gallery",
           "startTime": "15:00",
           "duration": 2,
           "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
           "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Galleria_Borghese_interior.jpg"
-        },
-        {
-          "title": "Break",
-          "startTime": "17:00",
-          "duration": 1,
-          "address": "Terrazza del Pincio, 00197 Roma RM, Italy",
-          "color": "bg-[var(--color-0)]"
         },
         {
           "title": "Farewell Dinner at Osteria Antica",
