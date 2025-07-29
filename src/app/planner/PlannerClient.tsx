@@ -21,6 +21,7 @@ import {
   useActivitiesById,
   useSelectedActivity,
   usePlanTitle,
+  useInputWidth,
   useKeyBinds,
   useOnboardingCheck,
 } from '@/hooks';
@@ -85,6 +86,7 @@ export default function PlannerClient({
   } = usePlanner({ initialDays, planId: planIdProp, dest: destProp });
 
   const { title, setTitle } = usePlanTitle(planId, dest);
+  const { ref: titleRef, width: titleWidth } = useInputWidth(title);
   const onboarding = useOnboardingCheck(planId);
   const showOnboarding = hideOnboarding ? false : onboarding.showOnboarding;
   const setShowOnboarding = hideOnboarding ? () => {} : onboarding.setShowOnboarding;
@@ -157,9 +159,10 @@ export default function PlannerClient({
             aria-level={1}
             aria-label="Planner title"
             type="text"
+            ref={titleRef}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{ width: `${Math.max(title.length, 1)}ch` }}
+            style={{ width: `${titleWidth}px` }}
             onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
             className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
           />

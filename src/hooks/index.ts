@@ -38,3 +38,4 @@ export * from './ui/useKeyBinds';
 export * from './ui/usePopupOutsideHandler';
 export * from './ui/useElementRect';
 export * from './ui/useCardColors';
+export * from './ui/useInputWidth';
