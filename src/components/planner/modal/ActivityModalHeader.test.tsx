@@ -13,9 +13,7 @@ vi.mock('@/components', async () => {
     id: '1',
     name: 'Stub Item',
     description: '',
-    duration: 1,
-    image_url: '',
-    price: '',
+    imageUrl: '',
     category: '',
   };
   function CatalogSearchPopup({

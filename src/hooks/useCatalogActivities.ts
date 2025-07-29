@@ -1,4 +1,4 @@
-// src/hooks/useDestinationCatalog.ts
+// src/hooks/useCatalogActivities.ts
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchCatalog } from '@/hooks';

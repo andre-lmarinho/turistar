@@ -26,6 +26,8 @@ export interface CatalogActivity {
   id: string;
   name: string;
   category: string;
+  description?: string;
+  imageUrl?: string;
   rating?: number;
   latitude?: number;
   longitude?: number;

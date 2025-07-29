@@ -170,7 +170,7 @@ export default function ActivityCardEditing({
                   open={isCatalogOpen}
                   onSelect={(item) => {
                     onApplyCatalogItem?.(item);
-                    setEditedImageUrl(item.image_url || '');
+                    setEditedImageUrl(item.imageUrl || '');
                     setIsCatalogOpen(false);
                   }}
                   onClose={() => setIsCatalogOpen(false)}

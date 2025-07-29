@@ -173,7 +173,7 @@ export default function ActivityModalHeader({
               open={isCatalogOpen}
               onSelect={(item) => {
                 onCatalogSelect(item);
-                setEditedImageUrl(item.image_url || '');
+                setEditedImageUrl(item.imageUrl || '');
                 setIsCatalogOpen(false);
               }}
               onClose={() => setIsCatalogOpen(false)}

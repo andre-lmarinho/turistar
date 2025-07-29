@@ -146,6 +146,15 @@ async function resolveBestImage(placeId: string, key: string) {
   return null;
 }
 
+function staticMapThumbnail(lat: number, lon: number, key: string, width = 400) {
+  const height = Math.round(width * 0.75);
+  const base = 'https://maps.geoapify.com/v1/staticmap';
+  return (
+    `${base}?style=osm-carto&width=${width}&height=${height}` +
+    `&center=lonlat:${lon},${lat}&zoom=14&apiKey=${key}`
+  );
+}
+
 //--------------------------------------------------------
 
 export async function fetchGeoapifyCatalog(
@@ -187,17 +196,35 @@ export async function fetchGeoapifyCatalog(
 
   const data = (await res.json()) as GeoapifyResponse;
 
-  const activities: CatalogActivity[] = data.features.map((f) => {
+  const activities: CatalogActivity[] = [];
+  for (const f of data.features) {
     const p = f.properties;
-    return {
-      id: String(p.place_id),
+    const id = String(p.place_id);
+    const base: CatalogActivity = {
+      id,
       name: p.name || p.formatted || 'Ponto turístico',
       category: p.categories?.[0] ?? 'sight',
       rating: p.rank?.popularity,
       latitude: p.lat,
       longitude: p.lon,
-    } as CatalogActivity;
-  });
+    };
+
+    const details = await fetchPlaceDetails(id, key);
+    const description =
+      details?.features?.[0]?.properties?.wikipedia_extracts?.text ||
+      details?.features?.[0]?.properties?.details?.wikipedia_extracts?.text ||
+      details?.features?.[0]?.properties?.description;
+    if (description) base.description = description;
+
+    const img = await resolveBestImage(id, key);
+    if (img?.url) {
+      base.imageUrl = img.url;
+    } else if (base.latitude != null && base.longitude != null) {
+      base.imageUrl = staticMapThumbnail(base.latitude, base.longitude, key);
+    }
+
+    activities.push(base);
+  }
 
   return { activities };
 }
