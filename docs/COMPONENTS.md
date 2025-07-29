@@ -234,7 +234,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Responsibility:** Activity card display. Editing state handled by `useActivityCardEditor` hook.
 - **Props:** activity data, callbacks for updates, color, catalog search
 - **State:** managed within the hook – draft title, overlay position
-- **External Hooks:** `useActivityCardEditor`, `useCardPopups`, `useWindowSize`, `useFlexibleRef`
+- **External Hooks:** `useActivityCardEditor`, `useCardPopups`, `useElementRect`, `useFlexibleRef`
 - **Side-effects:** portal overlays, focusing inputs
 - **Accessibility:** keyboard interaction, ARIA buttons
 - **Interactions:** click/drag to edit, color and date pickers

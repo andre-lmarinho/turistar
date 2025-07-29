@@ -1,6 +1,11 @@
 // src/lib/geoapify.ts
+
+// Helpers for fetching POIs, place details, images and thumbnails from the
+// Geoapify API + Wikimedia.
+
 import type { CatalogActivity, AutocompletePlace } from '@/types';
 
+/* Types */
 type GeoapifyFeature = {
   properties: {
     place_id: string | number;
@@ -14,11 +19,11 @@ type GeoapifyFeature = {
   };
 };
 
-type GeoapifyResponse = {
-  features: GeoapifyFeature[];
-};
+type GeoapifyResponse = { features: GeoapifyFeature[] };
 
+/* Static config */
 const DEFAULT_RADIUS_METERS = 20_000;
+const CATALOG_LIMIT = 30;
 
 export const GEOAPIFY_CATEGORIES = [
   'entertainment.culture',
@@ -41,52 +46,56 @@ export const GEOAPIFY_CATEGORIES = [
 
 const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
+/* Geoapify – Autocomplete */
+
 export async function fetchGeoapifyAutocomplete(text: string): Promise<AutocompletePlace[]> {
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
-  const base = 'https://api.geoapify.com/v1/geocode/autocomplete';
-  const url = `${base}?text=${encodeURIComponent(text)}&limit=5&apiKey=${key}`;
+  const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
+    text
+  )}&limit=5&apiKey=${key}`;
 
   const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error(`Geoapify request failed: ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
   return data.features.map((f) => ({
-    name: f.properties.formatted || f.properties.name || text,
+    name: f.properties.formatted ?? f.properties.name ?? text,
     latitude: f.properties.lat,
     longitude: f.properties.lon,
   }));
 }
 
-// -------------------------------------------------------
+/* Geoapify – Place details (single call)  */
 
 async function fetchPlaceDetails(placeId: string, key: string) {
   const url = `https://api.geoapify.com/v2/place-details?id=${encodeURIComponent(
     placeId
   )}&features=details&lang=pt&apiKey=${key}`;
+
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) return null;
+
   return (await r.json()) as {
     features: Array<{ properties: Record<string, any> }>;
   };
 }
-/** Tenta extrair QID ou título da Wikipedia de um objeto details. */
-function extractWikiIds(details: any): { qid?: string; wikiTitle?: string; wikiLang?: string } {
+
+/* Wikimedia helpers – extract QID / Wikipedia info */
+
+function extractWikiIds(details: any) {
   const props = details?.features?.[0]?.properties ?? {};
-  // Campos possíveis vindos do OSM via Geoapify (varia por lugar):
   const ds = props.datasource || {};
-  const raw = ds.raw || props; // às vezes tags OSM vêm em raw
+  const raw = ds.raw || props;
+
   let qid: string | undefined;
   let wikiTitle: string | undefined;
   let wikiLang: string | undefined;
 
   if (typeof raw.wikidata === 'string') qid = raw.wikidata;
   if (typeof raw.wikipedia === 'string') {
-    // exemplo: "pt:Elevador Lacerda"
-    const parts = raw.wikipedia.split(':');
+    const parts = raw.wikipedia.split(':'); // e.g. "pt:Elevador Lacerda"
     if (parts.length === 2) {
       wikiLang = parts[0];
       wikiTitle = parts[1];
@@ -98,18 +107,24 @@ function extractWikiIds(details: any): { qid?: string; wikiTitle?: string; wikiL
 }
 
 async function wikidataImageFromP18(qid: string) {
-  const url = `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity=${encodeURIComponent(
-    qid
-  )}&format=json&origin=*`;
+  const url =
+    'https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity=' +
+    encodeURIComponent(qid) +
+    '&format=json&origin=*';
+
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) return null;
+
   const j = await r.json();
   const claim = j?.claims?.P18?.[0]?.mainsnak?.datavalue?.value as string | undefined;
   if (!claim) return null;
-  // URL direta (redimensionável) via Special:FilePath
+
   const filename = claim.replace(/ /g, '_');
   return {
-    url: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=960`,
+    url:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/' +
+      encodeURIComponent(filename) +
+      '?width=960',
     credit: `Imagem: ${filename} · Wikimedia Commons`,
   };
 }
@@ -118,45 +133,54 @@ async function wikipediaThumbnail(title: string, lang = 'pt', width = 960) {
   const url = `https://${lang}.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=thumbnail&pithumbsize=${width}&titles=${encodeURIComponent(
     title
   )}&origin=*`;
+
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) return null;
+
   const j = await r.json();
   const page = j?.query?.pages?.[0];
   const thumb = page?.thumbnail?.source as string | undefined;
   if (!thumb) return null;
+
   return {
     url: thumb,
     credit: `Imagem da Wikipédia (${lang}) — ${page?.title ?? title}`,
   };
 }
 
-/** Resolve imagem com prioridade: Wikidata P18 -> Wikipedia thumb -> null */
-async function resolveBestImage(placeId: string, key: string) {
-  const details = await fetchPlaceDetails(placeId, key);
-  const { qid, wikiTitle, wikiLang } = extractWikiIds(details);
+/* Image resolver (details -> best image) */
+
+async function resolveBestImage(
+  placeId: string,
+  key: string,
+  details?: Awaited<ReturnType<typeof fetchPlaceDetails>>
+) {
+  const det = details ?? (await fetchPlaceDetails(placeId, key));
+  const { qid, wikiTitle, wikiLang } = extractWikiIds(det);
 
   if (qid) {
     const img = await wikidataImageFromP18(qid);
     if (img) return img;
   }
   if (wikiTitle) {
-    const img = await wikipediaThumbnail(wikiTitle, wikiLang || 'pt');
+    const img = await wikipediaThumbnail(wikiTitle, wikiLang ?? 'pt');
     if (img) return img;
   }
   return null;
 }
 
+/* Static‑map thumbnail (fallback) */
+
 function staticMapThumbnail(lat: number, lon: number, key: string, width = 400) {
   const height = Math.round(width * 0.75);
-  const base = 'https://maps.geoapify.com/v1/staticmap';
+  const marker = encodeURIComponent(`lonlat:${lon},${lat};size:48`);
   return (
-    `${base}?style=osm-carto&width=${width}&height=${height}` +
-    `&center=lonlat:${lon},${lat}&zoom=14&apiKey=${key}`
+    `https://maps.geoapify.com/v1/staticmap?style=osm-carto&width=${width}&height=${height}` +
+    `&center=lonlat:${lon},${lat}&zoom=14&marker=${marker}&apiKey=${key}`
   );
 }
 
-//--------------------------------------------------------
-
+/*  Catalog – main “places” pipeline */
 export async function fetchGeoapifyCatalog(
   dest: string,
   categories: string[] = GEOAPIFY_CATEGORIES
@@ -164,89 +188,83 @@ export async function fetchGeoapifyCatalog(
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
-  const base = 'https://api.geoapify.com/v2/places';
-  const [{ latitude, longitude }] = await fetchGeoapifyAutocomplete(dest);
+  // 1) geocode / autocomplete the destination
+  const auto = await fetchGeoapifyAutocomplete(dest);
+  if (!auto.length) {
+    throw new Error(`Destination “${dest}” not found`);
+  }
+  const { latitude: lat, longitude: lon } = auto[0];
 
-  const lat = latitude;
-  const lon = longitude;
-
+  // 2) fetch POIs around that point
   const url =
-    `${base}?` +
-    `categories=${encodeURIComponent(categories.join(',') || DEFAULT_CATEGORIES)}` +
+    `https://api.geoapify.com/v2/places?` +
+    `categories=${
+      categories.length ? encodeURIComponent(categories.join(',')) : DEFAULT_CATEGORIES
+    }` +
     `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
     `&bias=proximity:${lon},${lat}` +
-    `&limit=60` +
-    `&lang=pt` +
-    `&apiKey=${key}`;
+    `&limit=${CATALOG_LIMIT}&lang=pt&apiKey=${key}`;
 
-  const res = await fetch(url, {
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    let detail = '';
-    try {
-      const text = await res.text();
-      detail = text ? ` — ${text}` : '';
-    } catch {
-      /* ignore */
-    }
-    throw new Error(`Geoapify request failed: ${res.status}${detail}`);
-  }
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
 
-  const activities: CatalogActivity[] = [];
-  for (const f of data.features) {
-    const p = f.properties;
-    const id = String(p.place_id);
-    const base: CatalogActivity = {
-      id,
-      name: p.name || p.formatted || 'Ponto turístico',
-      category: p.categories?.[0] ?? 'sight',
-      rating: p.rank?.popularity,
-      latitude: p.lat,
-      longitude: p.lon,
-    };
+  // 3) enrich each feature in parallel
+  const activities = await Promise.all(
+    data.features.map(async (f): Promise<CatalogActivity> => {
+      const p = f.properties;
+      const placeId = String(p.place_id);
 
-    const details = await fetchPlaceDetails(id, key);
-    const description =
-      details?.features?.[0]?.properties?.wikipedia_extracts?.text ||
-      details?.features?.[0]?.properties?.details?.wikipedia_extracts?.text ||
-      details?.features?.[0]?.properties?.description;
-    if (description) base.description = description;
+      const details = await fetchPlaceDetails(placeId, key);
 
-    const img = await resolveBestImage(id, key);
-    if (img?.url) {
-      base.imageUrl = img.url;
-    } else if (base.latitude != null && base.longitude != null) {
-      base.imageUrl = staticMapThumbnail(base.latitude, base.longitude, key);
-    }
+      const description =
+        details?.features?.[0]?.properties?.wikipedia_extracts?.text ??
+        details?.features?.[0]?.properties?.description;
 
-    activities.push(base);
-  }
+      const img = (await resolveBestImage(placeId, key, details)) ?? {
+        url: staticMapThumbnail(p.lat, p.lon, key),
+      };
+
+      return {
+        id: placeId,
+        name: p.name ?? p.formatted ?? 'Ponto turístico',
+        description,
+        category: p.categories?.[0] ?? 'sight',
+        rating: p.rank?.popularity,
+        latitude: p.lat,
+        longitude: p.lon,
+        imageUrl: img.url,
+      };
+    })
+  );
 
   return { activities };
 }
+
+/* Single place – quick lookup                       */
 
 export async function fetchGeoapifyPlaceDetails(placeId: string) {
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
   const details = await fetchPlaceDetails(placeId, key);
+  if (!details) throw new Error('Place details not found');
+
   const description =
-    details?.features?.[0]?.properties?.wikipedia_extracts?.text ||
-    details?.features?.[0]?.properties?.details?.wikipedia_extracts?.text ||
+    details?.features?.[0]?.properties?.wikipedia_extracts?.text ??
     details?.features?.[0]?.properties?.description;
 
-  const img = await resolveBestImage(placeId, key);
-  const lat = details?.features?.[0]?.properties?.lat;
-  const lon = details?.features?.[0]?.properties?.lon;
-  const imageUrl =
-    img?.url || (lat != null && lon != null ? staticMapThumbnail(lat, lon, key) : undefined);
+  const img = await resolveBestImage(placeId, key, details);
 
-  return { description, imageUrl };
+  const lat = details.features[0]?.properties?.lat;
+  const lon = details.features[0]?.properties?.lon;
+  const fallback = lat != null && lon != null ? staticMapThumbnail(lat, lon, key) : undefined;
+
+  return { description, imageUrl: img?.url ?? fallback };
 }
+
+/* Text search – fallback “quick search” */
 
 export async function fetchGeoapifySearch(
   text: string
@@ -254,37 +272,43 @@ export async function fetchGeoapifySearch(
   const key = process.env.GEOAPIFY_KEY;
   if (!key) throw new Error('GEOAPIFY_KEY not set');
 
-  const base = 'https://api.geoapify.com/v2/places';
+  const baseUrl = 'https://api.geoapify.com/v2/places';
   const url =
-    `${base}?` +
-    `name=${encodeURIComponent(text)}` +
+    `${baseUrl}?name=${encodeURIComponent(text)}` +
     `&categories=${encodeURIComponent(DEFAULT_CATEGORIES)}` +
     `&limit=10&lang=pt&apiKey=${key}`;
 
   const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error(`Geoapify request failed: ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
-  const activities: CatalogActivity[] = [];
-  for (const f of data.features) {
-    const p = f.properties;
-    activities.push({
-      id: String(p.place_id),
-      name: p.name || p.formatted || text,
-      category: p.categories?.[0] ?? 'sight',
-      rating: p.rank?.popularity,
-      latitude: p.lat,
-      longitude: p.lon,
-    });
-  }
 
-  for (const act of activities) {
-    const details = await fetchGeoapifyPlaceDetails(act.id);
-    if (details.description) act.description = details.description;
-    if (details.imageUrl) act.imageUrl = details.imageUrl;
-  }
+  const activities = await Promise.all(
+    data.features.map(async (f): Promise<CatalogActivity> => {
+      const p = f.properties;
+      const placeId = String(p.place_id);
+
+      const details = await fetchPlaceDetails(placeId, key);
+      const description =
+        details?.features?.[0]?.properties?.wikipedia_extracts?.text ??
+        details?.features?.[0]?.properties?.description;
+
+      const img = (await resolveBestImage(placeId, key, details)) ?? {
+        url: staticMapThumbnail(p.lat, p.lon, key),
+      };
+
+      return {
+        id: placeId,
+        name: p.name ?? p.formatted ?? text,
+        description,
+        category: p.categories?.[0] ?? 'sight',
+        rating: p.rank?.popularity,
+        latitude: p.lat,
+        longitude: p.lon,
+        imageUrl: img.url,
+      };
+    })
+  );
 
   return { activities };
 }
