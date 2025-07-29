@@ -54,11 +54,12 @@ const { tripDays, handleRangeChange } = useTripRange(dest, planId);
 _File: `src/hooks/fetchCatalog.ts`_
 
 ```ts
-export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
+export async function fetchCatalog(dest: string, categories: string[]): Promise<CatalogApiResponse>;
 ```
 
 - **Inputs**
   - `dest`: destination name.
+  - `categories`: list of category filters (empty for all).
 - **Outputs**
   Catalog activities from the API.
 - **Lifecycle**
