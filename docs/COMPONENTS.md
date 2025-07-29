@@ -291,7 +291,8 @@ This document summarizes each React component in the repository. It follows the 
 - **External Hooks:** `useEscapeKey`
 - **Side-effects:** portal rendering, updates draft when activity changes
 - **Accessibility:** focus trap, ARIA labels, keyboard shortcuts
-- **Interactions:** edit fields, change day/position, pick color
+- **Interactions:** edit fields (title, address, notes), change day/position, pick color
+  - Address field provides Geoapify autocomplete suggestions while typing.
 - **Performance notes:** none
 
 ---

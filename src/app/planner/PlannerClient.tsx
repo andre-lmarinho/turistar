@@ -231,6 +231,7 @@ export default function PlannerClient() {
           addActivity({
             id: item.id,
             title: item.name,
+            address: item.address,
             latitude: item.latitude,
             longitude: item.longitude,
             color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,

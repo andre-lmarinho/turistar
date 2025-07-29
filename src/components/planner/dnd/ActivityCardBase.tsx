@@ -8,6 +8,7 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 
 interface ActivityCardBaseProps {
   title: string;
+  address?: string;
   draftTitle?: string;
   onDraftTitleChange?: (value: string) => void;
   onSave?: () => void;
@@ -22,6 +23,7 @@ interface ActivityCardBaseProps {
 
 export default function ActivityCardBase({
   title,
+  address,
   draftTitle,
   onDraftTitleChange,
   onSave,
@@ -82,7 +84,10 @@ export default function ActivityCardBase({
             style={{ verticalAlign: 'top' }}
           />
         ) : (
-          <h4 className="px-2 py-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+          <>
+            <h4 className="px-2 py-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+            {address && <p className="text-muted-foreground px-2 pb-1 text-xs">{address}</p>}
+          </>
         )}
 
         {/* Meta */}

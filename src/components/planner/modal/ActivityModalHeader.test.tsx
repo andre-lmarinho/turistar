@@ -14,6 +14,7 @@ vi.mock('@/components', async () => {
     name: 'Stub Item',
     description: 'desc',
     imageUrl: 'img.png',
+    address: 'Some street',
     category: '',
   };
   function CatalogSearchPopup({
@@ -79,6 +80,7 @@ it('opens catalog popup and selects an item', () => {
     name: 'Stub Item',
     description: 'desc',
     imageUrl: 'img.png',
+    address: 'Some street',
     category: '',
   });
   expect(screen.getByAltText('Test')).toHaveAttribute('src', 'img.png');

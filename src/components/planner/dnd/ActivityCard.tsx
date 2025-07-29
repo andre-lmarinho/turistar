@@ -108,6 +108,7 @@ export default function ActivityCard({
             onSave={save}
             inputRef={inputRef}
             imageUrl={imageUrl}
+            address={activity.address}
             duration={duration}
             twBg={twBg}
             budget={budget}
@@ -149,6 +150,7 @@ export default function ActivityCard({
               onSave={save}
               inputRef={inputRef}
               imageUrl={editedImageUrl}
+              address={activity.address}
               duration={duration}
               twBg={twBg}
               budget={budget}

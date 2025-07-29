@@ -228,7 +228,8 @@ export async function fetchGeoapifyCatalog(
 
       return {
         id: placeId,
-        name: p.name ?? p.formatted ?? 'Ponto turístico',
+        name: p.name ?? p.formatted ?? 'Tourist spot',
+        address: p.formatted,
         description,
         category: p.categories?.[0] ?? 'sight',
         rating: p.rank?.popularity,
@@ -300,6 +301,7 @@ export async function fetchGeoapifySearch(
       return {
         id: placeId,
         name: p.name ?? p.formatted ?? text,
+        address: p.formatted,
         description,
         category: p.categories?.[0] ?? 'sight',
         rating: p.rank?.popularity,
