@@ -1,7 +1,6 @@
 // src/contexts/BudgetContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useBudget } from '@/hooks';
-import type { CategoryKey, Entry } from '@/types/budget';
 
 export const BudgetContext = createContext<ReturnType<typeof useBudget> | null>(null);
 

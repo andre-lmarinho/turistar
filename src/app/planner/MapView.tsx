@@ -6,8 +6,6 @@ import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
 import { usePlannerContext } from '@/contexts';
 
-interface MapViewProps {}
-
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls: string): string => {
   const m = cls.match(/^bg-\[([^]+)\]$/);

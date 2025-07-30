@@ -2,16 +2,7 @@
 'use client';
 
 import React from 'react';
-import {
-  DndContext,
-  DragOverlay,
-  type SensorDescriptor,
-  type SensorOptions,
-  type CollisionDetection,
-  type DragStartEvent,
-  type DragOverEvent,
-  type DragEndEvent,
-} from '@dnd-kit/core';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';

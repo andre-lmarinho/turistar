@@ -9,18 +9,7 @@ import type { Entry } from '@/types';
 import { useBudgetContext } from '@/contexts';
 
 export default function ExpenseTable() {
-  const {
-    entries,
-    desc,
-    cat,
-    amount,
-    setDesc,
-    setCat,
-    setAmount,
-    handleAdd,
-    handleUpdateEntry,
-    handleDeleteEntry,
-  } = useBudgetContext();
+  const { entries, amount, handleAdd, handleDeleteEntry } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
   const [amountInput, setAmountInput] = useState(amount ? String(amount) : '');
