@@ -6,6 +6,15 @@ import { vi } from 'vitest';
 import MapView from './MapView';
 import type { DayPlan } from '@/types';
 
+let mockCtx: {
+  days: DayPlan[];
+  setSelectedActivity: () => void;
+  destCoords?: { lat: number; lng: number };
+};
+vi.mock('@/contexts/PlannerContext', () => ({
+  usePlannerContext: () => mockCtx,
+}));
+
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
@@ -38,6 +47,21 @@ vi.mock('leaflet', () => ({
   },
 }));
 
+const baseActivity = { id: 'a1', title: 'A1', color: 'red' };
+
+const buildDays = ([lat, lng]: [number, number]): DayPlan[] => [
+  {
+    id: 'd1',
+    label: 'Day 1',
+    activities: [{ ...baseActivity, latitude: lat, longitude: lng }],
+  },
+];
+
+const renderMap = (days: DayPlan[], dest?: { lat: number; lng: number }) => {
+  mockCtx = { days, setSelectedActivity: vi.fn(), destCoords: dest };
+  return render(<MapView />);
+};
+
 describe('FitAllMarkers effect', () => {
   afterEach(() => {
     map.fitBounds.mockClear();
@@ -45,24 +69,16 @@ describe('FitAllMarkers effect', () => {
     containerProps = undefined;
   });
 
-  const baseActivity = { id: 'a1', title: 'A1', color: 'red' };
-
-  const buildDays = ([lat, lng]: [number, number]): DayPlan[] => [
-    {
-      id: 'd1',
-      label: 'Day 1',
-      activities: [{ ...baseActivity, latitude: lat, longitude: lng }],
-    },
-  ];
-
   it('runs when coordinates change', () => {
-    const { rerender } = render(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
+    const { rerender } = renderMap(buildDays([1, 1]));
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    rerender(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
+    mockCtx.days = buildDays([1, 1]);
+    rerender(<MapView />);
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    rerender(<MapView days={buildDays([2, 2])} onSelectActivity={() => {}} />);
+    mockCtx.days = buildDays([2, 2]);
+    rerender(<MapView />);
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
   });
 });
@@ -82,7 +98,7 @@ describe('Marker accessibility', () => {
       },
     ];
 
-    render(<MapView days={days} onSelectActivity={() => {}} />);
+    renderMap(days);
     expect(markers[0].title).toBe('Walk');
   });
 
@@ -95,7 +111,7 @@ describe('Marker accessibility', () => {
       },
     ];
 
-    render(<MapView days={days} onSelectActivity={() => {}} centerCoords={{ lat: 5, lng: 6 }} />);
+    renderMap(days, { lat: 5, lng: 6 });
     expect(containerProps!.center).toEqual([5, 6]);
   });
 });

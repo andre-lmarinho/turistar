@@ -5,6 +5,14 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/app/planner/MapView';
 import type { DayPlan } from '@/types';
+let mockCtx: {
+  days: DayPlan[];
+  setSelectedActivity: () => void;
+  destCoords?: { lat: number; lng: number };
+};
+vi.mock('@/contexts/PlannerContext', () => ({
+  usePlannerContext: () => mockCtx,
+}));
 
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
@@ -41,6 +49,11 @@ afterEach(() => {
   containerProps = undefined;
 });
 
+const renderMap = (days: DayPlan[], dest?: { lat: number; lng: number }) => {
+  mockCtx = { days, setSelectedActivity: vi.fn(), destCoords: dest };
+  return render(<MapView />);
+};
+
 describe('map render integration', () => {
   it('renders markers for activities', () => {
     const days: DayPlan[] = [
@@ -51,13 +64,13 @@ describe('map render integration', () => {
       },
     ];
 
-    render(<MapView days={days} onSelectActivity={() => {}} />);
+    renderMap(days);
     expect(markers[0].title).toBe('Walk');
   });
 
   it('centers map using provided coordinates', () => {
     const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
-    render(<MapView days={days} onSelectActivity={() => {}} centerCoords={{ lat: 3, lng: 4 }} />);
+    renderMap(days, { lat: 3, lng: 4 });
     expect(containerProps!.center).toEqual([3, 4]);
   });
 });

@@ -1,21 +1,19 @@
 // src/components/planner/catalog/DestinationFilterPanel.tsx
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { DestinationHeader, DestinationCardGrid, CategoryFilterBar, Spinner } from '@/components';
 import { GEOAPIFY_CATEGORIES } from '@/lib';
 import type { CatalogActivity } from '@/types';
-import { useDestinationCatalog, useEscapeKey } from '@/hooks';
+import { useDestinationCatalog, useEscapeKey, useActivitiesById } from '@/hooks';
+import { usePlannerContext } from '@/contexts/PlannerContext';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
-  dest: string;
   onClose: () => void;
-  onAdd: (a: CatalogActivity) => void; // Catalog items only
-  onRemove: (id: string) => void;
-  addedIds?: Set<string>;
 }
 
 /**
@@ -23,14 +21,10 @@ interface DestinationFilterPanelProps {
  * - Displays catalog items to add to the planner.
  * - Works exclusively with CatalogActivity data.
  */
-export default function DestinationFilterPanel({
-  isOpen,
-  onClose,
-  onAdd,
-  onRemove,
-  dest,
-  addedIds = new Set<string>(),
-}: DestinationFilterPanelProps) {
+export default function DestinationFilterPanel({ isOpen, onClose }: DestinationFilterPanelProps) {
+  const { dest, days, addActivity, removeActivity } = usePlannerContext();
+  const activitiesById = useActivitiesById(days);
+  const addedIds = useMemo(() => new Set(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
@@ -57,12 +51,21 @@ export default function DestinationFilterPanel({
 
   const handleAdd = (a: CatalogActivity) => {
     scrollPosRef.current = scrollRef.current?.scrollTop ?? 0;
-    onAdd(a);
+    addActivity({
+      id: a.id,
+      title: a.name,
+      imageUrl: a.imageUrl,
+      address: a.address,
+      latitude: a.latitude,
+      longitude: a.longitude,
+      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      startTime: '',
+    });
   };
 
   const handleRemove = (id: string) => {
     scrollPosRef.current = scrollRef.current?.scrollTop ?? 0;
-    onRemove(id);
+    removeActivity(id);
   };
 
   useEffect(() => {

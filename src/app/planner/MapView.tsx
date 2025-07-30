@@ -4,13 +4,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import type { DayPlan, Activity } from '@/types';
-
-interface MapViewProps {
-  days: DayPlan[];
-  onSelectActivity: (activity: Activity & { dayId: string }) => void;
-  centerCoords?: { lat: number; lng: number };
-}
+import { usePlannerContext } from '@/contexts/PlannerContext';
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls: string): string => {
@@ -44,7 +38,8 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-export default function MapView({ days, onSelectActivity, centerCoords }: MapViewProps) {
+export default function MapView() {
+  const { days, setSelectedActivity, destCoords } = usePlannerContext();
   const dayPaths = useMemo(
     () =>
       days
@@ -60,8 +55,8 @@ export default function MapView({ days, onSelectActivity, centerCoords }: MapVie
   const allCoords = useMemo(() => dayPaths.flatMap((d) => d.coords), [dayPaths]);
   const center: LatLngExpression = allCoords.length
     ? allCoords[0]
-    : centerCoords
-      ? [centerCoords.lat, centerCoords.lng]
+    : destCoords
+      ? [destCoords.lat, destCoords.lng]
       : [0, 0];
   return (
     <div className="bg-background relative h-full w-full overflow-hidden rounded-xl border">
@@ -116,13 +111,13 @@ export default function MapView({ days, onSelectActivity, centerCoords }: MapVie
                   title={act.title}
                   eventHandlers={{
                     click: () =>
-                      onSelectActivity({
+                      setSelectedActivity({
                         ...act,
                         dayId: day.id,
                       }),
                     contextmenu: (e: LeafletMouseEvent) => {
                       e.originalEvent.preventDefault();
-                      onSelectActivity({
+                      setSelectedActivity({
                         ...act,
                         dayId: day.id,
                       });

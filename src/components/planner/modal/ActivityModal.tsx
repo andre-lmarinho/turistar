@@ -5,63 +5,56 @@ import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { ActivityModalHeader, ActivityModalForm } from '@/components';
-import type { Activity, DayPlan, CatalogActivity } from '@/types';
+import type { Activity, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
+import { usePlannerContext } from '@/contexts/PlannerContext';
 
-interface ActivityModalProps {
-  open: boolean;
-  activity: Activity & { dayId?: string };
-  onClose: () => void;
-  onDelete: () => void;
-  onSave: (draft: Partial<Activity>) => void;
-  color: string;
-  onColorChange: (color: string) => void;
-  days: DayPlan[];
-  onChangeDay: (dayId: string) => void;
-  onChangePosition: (index: number) => void;
-}
+export default function ActivityModal() {
+  const {
+    selectedActivity,
+    closeModal,
+    deleteActivity,
+    save,
+    changeColor,
+    days,
+    changeDay,
+    changePosition,
+  } = usePlannerContext();
 
-export default function ActivityModal({
-  open,
-  activity,
-  onClose,
-  onDelete,
-  onSave,
-  color,
-  onColorChange,
-  days,
-  onChangeDay,
-  onChangePosition,
-}: ActivityModalProps) {
-  useEscapeKey({ onClose, isActive: open });
+  const open = Boolean(selectedActivity);
+  useEscapeKey({ onClose: closeModal, isActive: open });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [draft, setDraft] = useState(activity);
+  const [draft, setDraft] = useState<(Activity & { dayId?: string }) | null>(selectedActivity);
 
   useEffect(() => {
-    setDraft(activity);
-  }, [activity]);
+    setDraft(selectedActivity);
+  }, [selectedActivity]);
 
   function handleCatalogSelect(item: CatalogActivity) {
-    setDraft((prev) => ({
-      ...prev,
-      title: item.name,
-      description: item.description,
-      address: item.address,
-      imageUrl: item.imageUrl,
-      category: item.category,
-    }));
+    setDraft((prev) =>
+      prev
+        ? {
+            ...prev,
+            title: item.name,
+            description: item.description,
+            address: item.address,
+            imageUrl: item.imageUrl,
+            category: item.category,
+          }
+        : prev
+    );
   }
 
   function handleImageChange(url: string) {
-    setDraft((prev) => ({ ...prev, imageUrl: url }));
+    setDraft((prev) => (prev ? { ...prev, imageUrl: url } : prev));
   }
 
-  if (!open) return null;
+  if (!open || !draft) return null;
 
   return ReactDOM.createPortal(
-    <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
+    <div className="backdrop-overlay flex items-center justify-center" onClick={closeModal}>
       <FocusTrap
         active={open}
         focusTrapOptions={{
@@ -86,17 +79,17 @@ export default function ActivityModal({
           </h2>
           <ActivityModalHeader
             activity={draft}
-            bgColor={color}
-            onDelete={onDelete}
-            onClose={onClose}
-            onColorChange={onColorChange}
+            bgColor={draft.color}
+            onDelete={deleteActivity}
+            onClose={closeModal}
+            onColorChange={(c) => changeColor(draft.id, c)}
             availableDays={days}
-            onChangeDay={onChangeDay}
-            onChangePosition={onChangePosition}
+            onChangeDay={(dId) => changeDay(draft.id, dId)}
+            onChangePosition={(idx) => changePosition(draft.id, idx)}
             onCatalogSelect={handleCatalogSelect}
             onImageChange={handleImageChange}
           />
-          <ActivityModalForm activity={draft} onSave={onSave} color={color} />
+          <ActivityModalForm activity={draft} onSave={save} color={draft.color} />
         </div>
       </FocusTrap>
     </div>,

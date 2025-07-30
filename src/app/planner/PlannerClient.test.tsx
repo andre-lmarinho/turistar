@@ -37,6 +37,7 @@ vi.mock('@/hooks', async () => {
       addBlankActivity: vi.fn(),
     }),
     usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn() }),
+    useInputWidth: () => ({ ref: { current: null }, width: 100 }),
     useSelectedActivity: () => ({
       selectedActivity: null,
       setSelectedActivity: vi.fn(),

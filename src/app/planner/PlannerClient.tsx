@@ -1,7 +1,7 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
@@ -16,17 +16,10 @@ import {
   OnboardingModal,
   PlannerControls,
 } from '@/components';
-import {
-  usePlanner,
-  useActivitiesById,
-  useSelectedActivity,
-  usePlanTitle,
-  useInputWidth,
-  useKeyBinds,
-  useOnboardingCheck,
-} from '@/hooks';
+import { usePlanTitle, useInputWidth, useKeyBinds, useOnboardingCheck } from '@/hooks';
+import { PlannerProvider, usePlannerContext } from '@/contexts/PlannerContext';
 import type { CatalogActivity, DayPlan } from '@/types';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
+
 import { motion } from 'framer-motion';
 
 /**
@@ -62,6 +55,20 @@ export default function PlannerClient({
   hideOnboarding = false,
   hideCatalog = false,
 }: PlannerClientProps) {
+  return (
+    <PlannerProvider initialDays={initialDays} planId={planIdProp} dest={destProp}>
+      <PlannerContent hideOnboarding={hideOnboarding} hideCatalog={hideCatalog} />
+    </PlannerProvider>
+  );
+}
+
+function PlannerContent({
+  hideOnboarding,
+  hideCatalog,
+}: {
+  hideOnboarding: boolean;
+  hideCatalog: boolean;
+}) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
 
@@ -69,44 +76,19 @@ export default function PlannerClient({
     planId,
     dest,
     days,
-    destCoords,
-    setDays,
     currentRange,
     handleRangeChange,
-    activeId,
-    sensors,
-    collisionDetection,
-    handleDragStart,
-    handleDragOver,
-    handleDragEnd,
-    addActivity,
-    removeActivity,
     updateActivity,
-    addBlankActivity,
-  } = usePlanner({ initialDays, planId: planIdProp, dest: destProp });
+    addBlankAndSelect,
+    selectedActivity,
+    setSelectedActivity,
+  } = usePlannerContext();
 
   const { title, setTitle } = usePlanTitle(planId, dest);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
   const onboarding = useOnboardingCheck(planId);
   const showOnboarding = hideOnboarding ? false : onboarding.showOnboarding;
   const setShowOnboarding = hideOnboarding ? () => {} : onboarding.setShowOnboarding;
-
-  const {
-    selectedActivity,
-    setSelectedActivity,
-    changeDay,
-    changePosition,
-    addBlankAndSelect,
-    closeModal,
-    save,
-    deleteActivity,
-    changeColor,
-  } = useSelectedActivity(days, setDays, {
-    addActivity,
-    removeActivity,
-    updateActivity,
-    addBlankActivity,
-  });
 
   const handleUpdateImage = (id: string, url: string) => {
     updateActivity(id, { imageUrl: url });
@@ -116,18 +98,6 @@ export default function PlannerClient({
   const handleApplyCatalogItem = (id: string, item: CatalogActivity) => {
     handleUpdateImage(id, item.imageUrl || '');
   };
-
-  // Build a Set of activity IDs already placed on the board
-  const activitiesById = useActivitiesById(days);
-  const addedIds = useMemo(() => new Set(Object.keys(activitiesById)), [activitiesById]);
-  const activitiesTotal = useMemo(
-    () =>
-      days.reduce(
-        (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
-        0
-      ),
-    [days]
-  );
 
   useKeyBinds({
     onPlanner: () => setMode('planner'),
@@ -141,7 +111,6 @@ export default function PlannerClient({
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
   if (!days.length) return <p className="p-4">No catalog found.</p>;
 
-  const stringActiveId = activeId != null ? String(activeId) : null;
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
@@ -180,12 +149,7 @@ export default function PlannerClient({
         )}
       </div>
 
-      <PlannerControls
-        mode={mode}
-        onModeChange={setMode}
-        range={currentRange}
-        onRangeChange={handleRangeChange}
-      />
+      <PlannerControls mode={mode} onModeChange={setMode} />
 
       {/* BOARD / MAP / BUDGET */}
       <div className="relative order-2 container flex-1 overflow-visible md:order-3">
@@ -215,83 +179,25 @@ export default function PlannerClient({
               <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
                 {m === 'planner' && (
                   <PlannerBoard
-                    days={days}
-                    activeId={stringActiveId}
-                    sensors={sensors}
-                    collisionDetection={collisionDetection}
-                    handleDragStart={handleDragStart}
-                    handleDragOver={handleDragOver}
-                    handleDragEnd={handleDragEnd}
-                    onSelectActivity={setSelectedActivity}
-                    onUpdateTitle={(id, title) => updateActivity(id, { title })}
-                    onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
-                    onChangeDay={changeDay}
-                    onChangePosition={changePosition}
-                    onChangeColor={(id, color) => changeColor(id, color)}
                     onUpdateImage={handleUpdateImage}
                     onApplyCatalogItem={handleApplyCatalogItem}
-                    onDelete={removeActivity}
                   />
                 )}
-                {m === 'budget' && (
-                  <BudgetPanel
-                    planId={planId}
-                    activitiesTotal={activitiesTotal}
-                    days={days}
-                    onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
-                  />
-                )}
-                {m === 'map' && (
-                  <MapView
-                    days={days}
-                    onSelectActivity={setSelectedActivity}
-                    centerCoords={destCoords ?? undefined}
-                  />
-                )}
+                {m === 'budget' && <BudgetPanel />}
+                {m === 'map' && <MapView />}
               </div>
             </motion.div>
           );
         })}
       </div>
 
-      {selectedActivity && (
-        <ActivityModal
-          open
-          activity={selectedActivity}
-          onClose={closeModal}
-          onSave={save}
-          onDelete={deleteActivity}
-          color={selectedActivity.color}
-          onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
-          days={days}
-          onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
-          onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
-        />
-      )}
+      {selectedActivity && <ActivityModal />}
 
       {!hideOnboarding && (
         <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
       )}
       {!hideCatalog && (
-        <DestinationFilterPanel
-          isOpen={isPanelOpen}
-          onClose={() => setIsPanelOpen(false)}
-          dest={dest}
-          onAdd={(item: CatalogActivity) =>
-            addActivity({
-              id: item.id,
-              title: item.name,
-              imageUrl: item.imageUrl,
-              address: item.address,
-              latitude: item.latitude,
-              longitude: item.longitude,
-              color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-              startTime: '',
-            })
-          }
-          onRemove={removeActivity}
-          addedIds={addedIds}
-        />
+        <DestinationFilterPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
       )}
     </main>
   );
