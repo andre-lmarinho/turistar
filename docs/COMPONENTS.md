@@ -241,7 +241,7 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/catalog/DestinationFilterPanel.tsx`
 - **Responsibility:** Full catalog modal with search and filters.
-- **Props:** `{ isOpen, onClose, onAdd, onRemove, dest, addedIds? }`
+- **Props:** `{ isOpen, onClose }`
 - **State:** handled in `useDestinationFilter`
 - **External Hooks:** `useDestinationFilter`, `useEscapeKey`
 - **Side-effects:** portal rendering
@@ -323,7 +323,7 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/modal`
 - **Responsibility:** Modal for editing an activity (header tools and form).
-- **Props:** various: open state, activity data, callbacks for delete/save/etc.
+- **Props:** none (reads selected activity from context)
 - **State:** `draft` state in modal
 - **External Hooks:** `useEscapeKey`
 - **Side-effects:** portal rendering, updates draft when activity changes
@@ -437,11 +437,11 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** numerous callbacks: `handleDragStart`, `handleDragEnd`, etc.
 - **Performance notes:** `useMemo` for totals and added ID set
 
-### PlannerBoard
+-### PlannerBoard
 
 - **Location:** `src/app/planner/PlannerBoard.tsx`
 - **Responsibility:** Renders droppable board of days using DnD Kit.
-- **Props:** days array, DnD sensors, callbacks
+- **Props:** none (reads data from `PlannerContext`)
 - **State:** none
 - **External Hooks:** `useActivitiesById`
 - **Side-effects:** none
@@ -449,11 +449,11 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** drag start/over/end events
 - **Performance notes:** memoizes activity lookups
 
-### PlannerControls
+-### PlannerControls
 
 - **Location:** `src/components/planner/PlannerControls.tsx`
 - **Responsibility:** Wrapper for the view mode switch and trip date range picker.
-- **Props:** `{ mode, onModeChange, range, onRangeChange }`
+- **Props:** `{ mode, onModeChange }`
 - **State:** none
 - **External Hooks:** none
 - **Side-effects:** none
@@ -461,11 +461,11 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** toggles modes, selects date ranges
 - **Performance notes:** none
 
-### BudgetPanel
+-### BudgetPanel
 
 - **Location:** `src/app/planner/BudgetPanel.tsx`
 - **Responsibility:** Panel displaying and editing trip budget.
-- **Props:** `{ planId, activitiesTotal, days, onUpdateBudget }`
+- **Props:** none (uses `PlannerContext`)
 - **State:** `editActivities` toggle
 - **External Hooks:** `useBudget`
 - **Side-effects:** none
@@ -473,10 +473,10 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** open activities popup, update entries
 - **Performance notes:** none
 
-### MapView
+-### MapView
 
 - **Location:** `src/app/planner/MapView.tsx`
 - **Responsibility:** Interactive itinerary map using Leaflet to display markers and paths.
-- **Props:** `{ days: DayPlan[], onSelectActivity: (activity) => void, centerCoords?: { lat: number; lng: number } }`
+- **Props:** none (uses `PlannerContext`)
 - **Accessibility:** `<MapContainer>` labeled with `aria-label="Itinerary map"`.
 - **Performance notes:** Fits bounds to markers when coordinates change.

@@ -4,12 +4,16 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from './MapView';
+import { PlannerProvider } from '@/contexts/PlannerContext';
 import type { DayPlan } from '@/types';
 
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
 let containerProps: { center?: unknown } | undefined;
+
+let mockDays: DayPlan[] = [];
+let mockDestCoords: { lat: number; lng: number } | null = null;
 
 // Stub react-leaflet
 vi.mock('react-leaflet', () => {
@@ -29,6 +33,43 @@ vi.mock('react-leaflet', () => {
   };
 });
 
+vi.mock('@/hooks', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+  return {
+    ...actual,
+    usePlanner: () => ({
+      planId: 'p1',
+      dest: 'rome',
+      days: mockDays,
+      destCoords: mockDestCoords,
+      setDays: vi.fn(),
+      currentRange: undefined,
+      handleRangeChange: vi.fn(),
+      activeId: null,
+      sensors: [],
+      collisionDetection: vi.fn(),
+      handleDragStart: vi.fn(),
+      handleDragOver: vi.fn(),
+      handleDragEnd: vi.fn(),
+      addActivity: vi.fn(),
+      removeActivity: vi.fn(),
+      updateActivity: vi.fn(),
+      addBlankActivity: vi.fn(),
+    }),
+    useSelectedActivity: () => ({
+      selectedActivity: null,
+      setSelectedActivity: vi.fn(),
+      changeDay: vi.fn(),
+      changePosition: vi.fn(),
+      addBlankAndSelect: vi.fn(),
+      closeModal: vi.fn(),
+      save: vi.fn(),
+      deleteActivity: vi.fn(),
+      changeColor: vi.fn(),
+    }),
+  };
+});
+
 // Simplify Leaflet utilities
 vi.mock('leaflet', () => ({
   __esModule: true,
@@ -43,6 +84,7 @@ describe('FitAllMarkers effect', () => {
     map.fitBounds.mockClear();
     markers.length = 0;
     containerProps = undefined;
+    mockDestCoords = null;
   });
 
   const baseActivity = { id: 'a1', title: 'A1', color: 'red' };
@@ -56,13 +98,27 @@ describe('FitAllMarkers effect', () => {
   ];
 
   it('runs when coordinates change', () => {
-    const { rerender } = render(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
+    mockDays = buildDays([1, 1]);
+    const { rerender } = render(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    rerender(<MapView days={buildDays([1, 1])} onSelectActivity={() => {}} />);
+    rerender(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
-    rerender(<MapView days={buildDays([2, 2])} onSelectActivity={() => {}} />);
+    mockDays = buildDays([2, 2]);
+    rerender(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
   });
 });
@@ -71,6 +127,7 @@ describe('Marker accessibility', () => {
   afterEach(() => {
     markers.length = 0;
     containerProps = undefined;
+    mockDestCoords = null;
   });
 
   it('sets each marker title', () => {
@@ -82,7 +139,12 @@ describe('Marker accessibility', () => {
       },
     ];
 
-    render(<MapView days={days} onSelectActivity={() => {}} />);
+    mockDays = days;
+    render(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
     expect(markers[0].title).toBe('Walk');
   });
 
@@ -94,8 +156,13 @@ describe('Marker accessibility', () => {
         activities: [],
       },
     ];
-
-    render(<MapView days={days} onSelectActivity={() => {}} centerCoords={{ lat: 5, lng: 6 }} />);
+    mockDays = days;
+    mockDestCoords = { lat: 5, lng: 6 };
+    render(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
     expect(containerProps!.center).toEqual([5, 6]);
   });
 });

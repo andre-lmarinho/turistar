@@ -4,13 +4,9 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import type { DayPlan, Activity } from '@/types';
+import { usePlannerContext } from '@/contexts/PlannerContext';
 
-interface MapViewProps {
-  days: DayPlan[];
-  onSelectActivity: (activity: Activity & { dayId: string }) => void;
-  centerCoords?: { lat: number; lng: number };
-}
+interface MapViewProps {}
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls: string): string => {
@@ -44,7 +40,9 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-export default function MapView({ days, onSelectActivity, centerCoords }: MapViewProps) {
+export default function MapView() {
+  const { days, setSelectedActivity, destCoords } = usePlannerContext();
+  const centerCoords = destCoords ?? undefined;
   const dayPaths = useMemo(
     () =>
       days
@@ -116,13 +114,13 @@ export default function MapView({ days, onSelectActivity, centerCoords }: MapVie
                   title={act.title}
                   eventHandlers={{
                     click: () =>
-                      onSelectActivity({
+                      setSelectedActivity({
                         ...act,
                         dayId: day.id,
                       }),
                     contextmenu: (e: LeafletMouseEvent) => {
                       e.originalEvent.preventDefault();
-                      onSelectActivity({
+                      setSelectedActivity({
                         ...act,
                         dayId: day.id,
                       });
