@@ -249,9 +249,9 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** filter changes, add/remove actions, **Back** button resets the category step
 - **Performance notes:** none
 
-### DestinationHeader
+### CatalogHeader
 
-- **Location:** `src/components/planner/catalog/DestinationHeader.tsx`
+- **Location:** `src/components/planner/catalog/CatalogHeader.tsx`
 - **Responsibility:** Header controls for catalog search.
 - **Props:** search string, change handler, close callback
 - **State:** none
@@ -259,6 +259,30 @@ This document summarizes each React component in the repository. It follows the 
 - **Side-effects:** none
 - **Accessibility:** labeled search input
 - **Interactions:** updates search text
+- **Performance notes:** none
+
+### CategorySelector
+
+- **Location:** `src/components/planner/catalog/CategorySelector.tsx`
+- **Responsibility:** Category selection UI with search/back buttons.
+- **Props:** active set, toggle handler, submit/back callbacks, submitted flag
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** buttons and horizontal scroll
+- **Interactions:** choose categories, trigger search or back
+- **Performance notes:** none
+
+### ResultsList
+
+- **Location:** `src/components/planner/catalog/ResultsList.tsx`
+- **Responsibility:** Displays catalog results with loading and error states.
+- **Props:** list items, add/remove callbacks, added ID set
+- **State:** scroll position only
+- **External Hooks:** none
+- **Side-effects:** preserves scroll on add/remove
+- **Accessibility:** status messages, list semantics
+- **Interactions:** add or remove items
 - **Performance notes:** none
 
 ---

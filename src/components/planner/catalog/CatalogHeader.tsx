@@ -1,20 +1,16 @@
-// src/components/planner/catalog/DestinationHeader.tsx
+// src/components/planner/catalog/CatalogHeader.tsx
 'use client';
 
 import React from 'react';
 import { CloseButton } from '@/components';
 
-interface DestinationHeaderProps {
+interface CatalogHeaderProps {
   search: string;
   onSearchChange: (s: string) => void;
   onClose: () => void;
 }
 
-export default function DestinationHeader({
-  search,
-  onSearchChange,
-  onClose,
-}: DestinationHeaderProps) {
+export default function CatalogHeader({ search, onSearchChange, onClose }: CatalogHeaderProps) {
   return (
     <>
       <div className="flex items-center justify-between border-b px-4 py-2">
