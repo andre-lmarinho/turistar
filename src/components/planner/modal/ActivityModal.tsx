@@ -1,10 +1,8 @@
 // src/components/planner/modal/ActivityModal.tsx
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import FocusTrap from 'focus-trap-react';
-import { ActivityModalHeader, ActivityModalForm } from '@/components';
+import React, { useEffect, useState } from 'react';
+import { ActivityModalHeader, ActivityModalForm, Modal } from '@/components';
 import type { Activity, DayPlan, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
 
@@ -35,8 +33,6 @@ export default function ActivityModal({
 }: ActivityModalProps) {
   useEscapeKey({ onClose, isActive: open });
 
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const [draft, setDraft] = useState(activity);
 
   useEffect(() => {
@@ -58,48 +54,30 @@ export default function ActivityModal({
     setDraft((prev) => ({ ...prev, imageUrl: url }));
   }
 
-  if (!open) return null;
-
-  return ReactDOM.createPortal(
-    <div className="backdrop-overlay flex items-center justify-center" onClick={onClose}>
-      <FocusTrap
-        active={open}
-        focusTrapOptions={{
-          clickOutsideDeactivates: true,
-          escapeDeactivates: false,
-          initialFocus: false,
-          fallbackFocus: () => containerRef.current ?? document.body,
-          tabbableOptions: { displayCheck: 'none' },
-        }}
-      >
-        <div
-          ref={containerRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="activity-modal-title"
-          tabIndex={-1}
-          className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <h2 id="activity-modal-title" className="sr-only">
-            Edit Activity
-          </h2>
-          <ActivityModalHeader
-            activity={draft}
-            bgColor={color}
-            onDelete={onDelete}
-            onClose={onClose}
-            onColorChange={onColorChange}
-            availableDays={days}
-            onChangeDay={onChangeDay}
-            onChangePosition={onChangePosition}
-            onCatalogSelect={handleCatalogSelect}
-            onImageChange={handleImageChange}
-          />
-          <ActivityModalForm activity={draft} onSave={onSave} color={color} />
-        </div>
-      </FocusTrap>
-    </div>,
-    document.body
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      overlayClassName="backdrop-overlay"
+      aria-labelledby="activity-modal-title"
+      className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
+    >
+      <h2 id="activity-modal-title" className="sr-only">
+        Edit Activity
+      </h2>
+      <ActivityModalHeader
+        activity={draft}
+        bgColor={color}
+        onDelete={onDelete}
+        onClose={onClose}
+        onColorChange={onColorChange}
+        availableDays={days}
+        onChangeDay={onChangeDay}
+        onChangePosition={onChangePosition}
+        onCatalogSelect={handleCatalogSelect}
+        onImageChange={handleImageChange}
+      />
+      <ActivityModalForm activity={draft} onSave={onSave} color={color} />
+    </Modal>
   );
 }
