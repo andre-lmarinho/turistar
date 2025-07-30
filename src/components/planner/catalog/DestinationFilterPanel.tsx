@@ -2,13 +2,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import {
-  DestinationHeader,
-  DestinationCardGrid,
-  CategoryFilterBar,
-  Spinner,
-  Modal,
-} from '@/components';
+import { DestinationHeader, CategorySelection, DestinationResultsList, Modal } from '@/components';
 import { GEOAPIFY_CATEGORIES } from '@/lib';
 import type { CatalogActivity } from '@/types';
 import { useDestinationCatalog, useEscapeKey, useActivitiesById } from '@/hooks';
@@ -90,23 +84,12 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       <DestinationHeader search={search} onSearchChange={setSearch} onClose={onClose} />
 
       {!submitted && (
-        <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
-          <div className="flex-1 overflow-x-auto">
-            <CategoryFilterBar
-              categories={GEOAPIFY_CATEGORIES}
-              active={selectedCats}
-              onToggle={toggleCat}
-            />
-          </div>
-          <button
-            type="button"
-            disabled={selectedCats.size === 0}
-            onClick={() => setSubmitted(true)}
-            className="rounded border px-3 py-1 text-sm"
-          >
-            Search
-          </button>
-        </div>
+        <CategorySelection
+          categories={GEOAPIFY_CATEGORIES}
+          active={selectedCats}
+          onToggle={toggleCat}
+          onSearch={() => setSubmitted(true)}
+        />
       )}
       {submitted && (
         <div className="flex items-center gap-2 border-b px-4 py-2">
@@ -121,24 +104,15 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       )}
 
       {submitted && (
-        <div className="flex flex-1 overflow-auto" ref={scrollRef}>
-          <div className="flex-1 p-4">
-            {loading && (
-              <div className="flex items-center gap-2">
-                <Spinner />
-                <span>Loading catalog...</span>
-              </div>
-            )}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && !error && (
-              <DestinationCardGrid
-                items={visibleItems}
-                addedIds={addedIds}
-                onAdd={handleAdd}
-                onRemove={handleRemove}
-              />
-            )}
-          </div>
+        <div ref={scrollRef} className="flex flex-1 overflow-auto">
+          <DestinationResultsList
+            loading={loading}
+            error={error}
+            items={visibleItems}
+            addedIds={addedIds}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+          />
         </div>
       )}
     </Modal>
