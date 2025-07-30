@@ -4,7 +4,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import { usePlannerContext } from '@/contexts/PlannerContext';
+import { usePlannerContext } from '@/contexts';
 
 interface MapViewProps {}
 

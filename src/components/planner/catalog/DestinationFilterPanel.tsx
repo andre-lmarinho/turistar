@@ -6,7 +6,7 @@ import { DestinationHeader, CategorySelection, DestinationResultsList, Modal } f
 import { GEOAPIFY_CATEGORIES } from '@/lib';
 import type { CatalogActivity } from '@/types';
 import { useDestinationCatalog, useEscapeKey, useActivitiesById } from '@/hooks';
-import { usePlannerContext } from '@/contexts/PlannerContext';
+import { usePlannerContext } from '@/contexts';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 interface DestinationFilterPanelProps {

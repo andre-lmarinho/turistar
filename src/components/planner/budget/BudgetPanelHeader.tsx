@@ -7,7 +7,7 @@ import { InfoPopup } from '@/components';
 import { CATEGORIES, BUDGET_INFO } from '@/constants';
 import { CategoryProgressBar, Input } from '@/components';
 import { normalizeAmount } from '@/utils';
-import { useBudgetContext } from '@/contexts/BudgetContext';
+import { useBudgetContext } from '@/contexts';
 
 export default function BudgetPanelHeader() {
   const { budget, setBudget, totalSpent, difference, categoryTotals } = useBudgetContext();

@@ -7,7 +7,7 @@ import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 import type { Entry } from '@/types';
 import { normalizeAmount } from '@/utils';
-import { useBudgetContext } from '@/contexts/BudgetContext';
+import { useBudgetContext } from '@/contexts';
 
 export default function TableRowEdit({
   editEntry,

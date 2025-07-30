@@ -6,7 +6,7 @@ import { Plus, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 import { normalizeAmount } from '@/utils';
-import { useBudgetContext } from '@/contexts/BudgetContext';
+import { useBudgetContext } from '@/contexts';
 
 export default function TableRowNew({
   amountInput,

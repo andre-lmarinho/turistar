@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { ModeToggleButton, DateRangePicker } from '@/components';
-import { usePlannerContext } from '@/contexts/PlannerContext';
+import { usePlannerContext } from '@/contexts';
 
 type Mode = 'planner' | 'map' | 'budget';
 

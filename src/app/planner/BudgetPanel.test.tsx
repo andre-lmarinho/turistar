@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
-import { PlannerProvider } from '@/contexts/PlannerContext';
+import { PlannerProvider } from '@/contexts';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/types';
 

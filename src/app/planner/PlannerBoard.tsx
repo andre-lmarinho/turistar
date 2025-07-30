@@ -16,7 +16,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
 import { useActivitiesById } from '@/hooks';
-import { usePlannerContext } from '@/contexts/PlannerContext';
+import { usePlannerContext } from '@/contexts';
 import type { CatalogActivity } from '@/types';
 
 /**

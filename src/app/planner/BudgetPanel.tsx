@@ -4,8 +4,7 @@
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/constants';
-import { usePlannerContext } from '@/contexts/PlannerContext';
-import { BudgetProvider } from '@/contexts/BudgetContext';
+import { usePlannerContext, BudgetProvider } from '@/contexts';
 import {
   BudgetPanelHeader,
   InfoPopup,
