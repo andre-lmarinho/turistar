@@ -201,7 +201,7 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/onboarding/OnboardingModal.tsx`
 - **Responsibility:** Modal wrapper showing the carousel.
-- **Props:** `{ open, onClose }`
+- **Props:** none (uses `OnboardingContext`)
 - **State:** none
 - **External Hooks:** `useEscapeKey`
 - **Side-effects:** none

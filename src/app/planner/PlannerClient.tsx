@@ -23,8 +23,8 @@ import {
   usePlanTitle,
   useInputWidth,
   useKeyBinds,
-  useOnboardingCheck,
 } from '@/hooks';
+import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import type { CatalogActivity, DayPlan } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 import { motion } from 'framer-motion';
@@ -87,9 +87,6 @@ export default function PlannerClient({
 
   const { title, setTitle } = usePlanTitle(planId, dest);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
-  const onboarding = useOnboardingCheck(planId);
-  const showOnboarding = hideOnboarding ? false : onboarding.showOnboarding;
-  const setShowOnboarding = hideOnboarding ? () => {} : onboarding.setShowOnboarding;
 
   const {
     selectedActivity,
@@ -145,154 +142,154 @@ export default function PlannerClient({
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
-    <main
-      id="main-content"
-      className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12"
-    >
-      {/* HEADER */}
-      <div className="container flex items-center justify-between gap-4 pb-4">
-        <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] md:text-5xl">
-          <input
-            id="planner-title"
-            name="title"
-            role="heading"
-            aria-level={1}
-            aria-label="Planner title"
-            type="text"
-            ref={titleRef}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{ width: `${titleWidth}px` }}
-            onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-            className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
-          />
-        </h1>
-        {!hideCatalog && (
-          <>
-            <div className="flex gap-2 md:hidden">
-              <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
-              <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
-            </div>
-            <div className="hidden md:flex">
-              <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
-            </div>
-          </>
-        )}
-      </div>
-
-      <PlannerControls
-        mode={mode}
-        onModeChange={setMode}
-        range={currentRange}
-        onRangeChange={handleRangeChange}
-      />
-
-      {/* BOARD / MAP / BUDGET */}
-      <div className="relative order-2 container flex-1 overflow-visible md:order-3">
-        {modeOrder.map((m, idx) => {
-          const isActive = idx === activeIdx;
-          const rel = idx - activeIdx;
-          const abs = Math.abs(idx - activeIdx);
-          const z = 3 - abs;
-          const offsetMap = [0, 6, 10];
-          const offset = offsetMap[abs] * Math.sign(rel);
-          const scaleMap = [1, 0.92, 0.87];
-          const scale = scaleMap[abs] ?? 0.7;
-          const opacityMap = [1, 0.92, 0.8];
-          const opacity = opacityMap[abs] ?? 0.6;
-          const rotate = rel * 2;
-
-          return (
-            <motion.div
-              key={m}
-              className={`absolute inset-0 ${!isActive ? 'cursor-pointer' : ''}`}
-              style={{ zIndex: z }}
-              initial={false}
-              animate={{ x: `${offset}%`, scale, opacity, rotateZ: rotate }}
-              transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-              onClick={() => !isActive && setMode(m)}
-            >
-              <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
-                {m === 'planner' && (
-                  <PlannerBoard
-                    days={days}
-                    activeId={stringActiveId}
-                    sensors={sensors}
-                    collisionDetection={collisionDetection}
-                    handleDragStart={handleDragStart}
-                    handleDragOver={handleDragOver}
-                    handleDragEnd={handleDragEnd}
-                    onSelectActivity={setSelectedActivity}
-                    onUpdateTitle={(id, title) => updateActivity(id, { title })}
-                    onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
-                    onChangeDay={changeDay}
-                    onChangePosition={changePosition}
-                    onChangeColor={(id, color) => changeColor(id, color)}
-                    onUpdateImage={handleUpdateImage}
-                    onApplyCatalogItem={handleApplyCatalogItem}
-                    onDelete={removeActivity}
-                  />
-                )}
-                {m === 'budget' && (
-                  <BudgetPanel
-                    planId={planId}
-                    activitiesTotal={activitiesTotal}
-                    days={days}
-                    onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
-                  />
-                )}
-                {m === 'map' && (
-                  <MapView
-                    days={days}
-                    onSelectActivity={setSelectedActivity}
-                    centerCoords={destCoords ?? undefined}
-                  />
-                )}
+    <OnboardingProvider planId={planId}>
+      <main
+        id="main-content"
+        className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12"
+      >
+        {/* HEADER */}
+        <div className="container flex items-center justify-between gap-4 pb-4">
+          <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] md:text-5xl">
+            <input
+              id="planner-title"
+              name="title"
+              role="heading"
+              aria-level={1}
+              aria-label="Planner title"
+              type="text"
+              ref={titleRef}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ width: `${titleWidth}px` }}
+              onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
+              className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
+            />
+          </h1>
+          {!hideCatalog && (
+            <>
+              <div className="flex gap-2 md:hidden">
+                <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
+                <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
               </div>
-            </motion.div>
-          );
-        })}
-      </div>
+              <div className="hidden md:flex">
+                <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
+              </div>
+            </>
+          )}
+        </div>
 
-      {selectedActivity && (
-        <ActivityModal
-          open
-          activity={selectedActivity}
-          onClose={closeModal}
-          onSave={save}
-          onDelete={deleteActivity}
-          color={selectedActivity.color}
-          onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
-          days={days}
-          onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
-          onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
+        <PlannerControls
+          mode={mode}
+          onModeChange={setMode}
+          range={currentRange}
+          onRangeChange={handleRangeChange}
         />
-      )}
 
-      {!hideOnboarding && (
-        <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
-      )}
-      {!hideCatalog && (
-        <DestinationFilterPanel
-          isOpen={isPanelOpen}
-          onClose={() => setIsPanelOpen(false)}
-          dest={dest}
-          onAdd={(item: CatalogActivity) =>
-            addActivity({
-              id: item.id,
-              title: item.name,
-              imageUrl: item.imageUrl,
-              address: item.address,
-              latitude: item.latitude,
-              longitude: item.longitude,
-              color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-              startTime: '',
-            })
-          }
-          onRemove={removeActivity}
-          addedIds={addedIds}
-        />
-      )}
-    </main>
+        {/* BOARD / MAP / BUDGET */}
+        <div className="relative order-2 container flex-1 overflow-visible md:order-3">
+          {modeOrder.map((m, idx) => {
+            const isActive = idx === activeIdx;
+            const rel = idx - activeIdx;
+            const abs = Math.abs(idx - activeIdx);
+            const z = 3 - abs;
+            const offsetMap = [0, 6, 10];
+            const offset = offsetMap[abs] * Math.sign(rel);
+            const scaleMap = [1, 0.92, 0.87];
+            const scale = scaleMap[abs] ?? 0.7;
+            const opacityMap = [1, 0.92, 0.8];
+            const opacity = opacityMap[abs] ?? 0.6;
+            const rotate = rel * 2;
+
+            return (
+              <motion.div
+                key={m}
+                className={`absolute inset-0 ${!isActive ? 'cursor-pointer' : ''}`}
+                style={{ zIndex: z }}
+                initial={false}
+                animate={{ x: `${offset}%`, scale, opacity, rotateZ: rotate }}
+                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                onClick={() => !isActive && setMode(m)}
+              >
+                <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
+                  {m === 'planner' && (
+                    <PlannerBoard
+                      days={days}
+                      activeId={stringActiveId}
+                      sensors={sensors}
+                      collisionDetection={collisionDetection}
+                      handleDragStart={handleDragStart}
+                      handleDragOver={handleDragOver}
+                      handleDragEnd={handleDragEnd}
+                      onSelectActivity={setSelectedActivity}
+                      onUpdateTitle={(id, title) => updateActivity(id, { title })}
+                      onAddActivity={(dayId, insertIdx) => addBlankAndSelect(dayId, insertIdx)}
+                      onChangeDay={changeDay}
+                      onChangePosition={changePosition}
+                      onChangeColor={(id, color) => changeColor(id, color)}
+                      onUpdateImage={handleUpdateImage}
+                      onApplyCatalogItem={handleApplyCatalogItem}
+                      onDelete={removeActivity}
+                    />
+                  )}
+                  {m === 'budget' && (
+                    <BudgetPanel
+                      planId={planId}
+                      activitiesTotal={activitiesTotal}
+                      days={days}
+                      onUpdateBudget={(id, amount) => updateActivity(id, { budget: amount })}
+                    />
+                  )}
+                  {m === 'map' && (
+                    <MapView
+                      days={days}
+                      onSelectActivity={setSelectedActivity}
+                      centerCoords={destCoords ?? undefined}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {selectedActivity && (
+          <ActivityModal
+            open
+            activity={selectedActivity}
+            onClose={closeModal}
+            onSave={save}
+            onDelete={deleteActivity}
+            color={selectedActivity.color}
+            onColorChange={(newColor) => changeColor(selectedActivity.id, newColor)}
+            days={days}
+            onChangeDay={(dayId) => changeDay(selectedActivity.id, dayId)}
+            onChangePosition={(idx) => changePosition(selectedActivity.id, idx)}
+          />
+        )}
+
+        {!hideOnboarding && <OnboardingModal />}
+        {!hideCatalog && (
+          <DestinationFilterPanel
+            isOpen={isPanelOpen}
+            onClose={() => setIsPanelOpen(false)}
+            dest={dest}
+            onAdd={(item: CatalogActivity) =>
+              addActivity({
+                id: item.id,
+                title: item.name,
+                imageUrl: item.imageUrl,
+                address: item.address,
+                latitude: item.latitude,
+                longitude: item.longitude,
+                color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+                startTime: '',
+              })
+            }
+            onRemove={removeActivity}
+            addedIds={addedIds}
+          />
+        )}
+      </main>
+    </OnboardingProvider>
   );
 }
