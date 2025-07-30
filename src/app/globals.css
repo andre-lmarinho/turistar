@@ -45,10 +45,10 @@
 :root {
   --radius: 0.625rem;
   /* Base colors for the general interface */
-  --background: oklch(1 0 0); /* Pure white background */
-  --foreground: oklch(0.15 0 0); /* Standard black for text */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
 
-  /* Card components and popovers - using soft beige to create a visual layer */
+  /* Card components and popovers */
   --card: oklch(0.985 0.02 80);
   --card-foreground: oklch(0.15 0 0);
 
@@ -56,13 +56,13 @@
   --popover-foreground: oklch(0.15 0 0);
 
   /* Action colors - primary buttons, secondary buttons, and accents */
-  --primary: oklch(0.7 0.15 190); /* Turquoise green for primary actions */
+  --primary: oklch(0.7 0.15 190);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.92 0.02 80); /* Neutral beige for secondary actions */
+  --secondary: oklch(0.92 0.02 80);
   --secondary-foreground: oklch(0.15 0 0);
 
-  --accent: oklch(0.6 0.25 70); /* Warm orange for highlights */
+  --accent: oklch(0.6 0.25 70);
   --accent-foreground: oklch(1 0 0);
 
   /* Muted elements and disabled states */
@@ -77,22 +77,12 @@
   --input: oklch(0.9 0.02 80);
   --ring: oklch(0.7 0.02 80);
 
-  /* Chart colors for data visualization */
+  /* Budget Chart colors for data visualization */
   --chart-1: oklch(0.7 0.15 190);
   --chart-2: oklch(0.6 0.25 70);
   --chart-3: oklch(0.7 0.1 90);
   --chart-4: oklch(0.4 0.15 45);
   --chart-5: oklch(0.5 0.05 330);
-
-  /* Sidebar-specific colors for modular design */
-  --sidebar: oklch(0.985 0.02 80);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.7 0.15 190);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.6 0.25 70);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.9 0.02 80);
-  --sidebar-ring: oklch(0.7 0.02 80);
 
   /* Special Cards Base Colors */
   --color-0: oklch(1 0 0); /* branco */

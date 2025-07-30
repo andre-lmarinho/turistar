@@ -47,14 +47,6 @@ interface PlannerClientProps {
   hideCatalog?: boolean;
 }
 
-interface PlannerClientProps {
-  initialDays?: DayPlan[];
-  planId?: string;
-  dest?: string;
-  hideOnboarding?: boolean;
-  hideCatalog?: boolean;
-}
-
 export default function PlannerClient({
   initialDays,
   planId: planIdProp,

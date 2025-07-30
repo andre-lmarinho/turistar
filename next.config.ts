@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'www.villaborghesetours.com' },
       { protocol: 'https', hostname: 'romesite.com' },
       { protocol: 'https', hostname: 'cdn-imgix.headout.com' },
+      { protocol: 'https', hostname: 'commons.wikimedia.org' },
+      { protocol: 'https', hostname: 'maps.geoapify.com' },
     ],
   },
 };
