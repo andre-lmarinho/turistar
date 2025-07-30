@@ -16,51 +16,45 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
 import { useActivitiesById } from '@/hooks';
-import type { Activity, DayPlan, CatalogActivity } from '@/types';
-
-export interface PlannerBoardProps {
-  days: DayPlan[];
-  activeId: string | null;
-  sensors: SensorDescriptor<SensorOptions>[];
-  collisionDetection: CollisionDetection;
-  handleDragStart: (e: DragStartEvent) => void;
-  handleDragOver: (e: DragOverEvent) => void;
-  handleDragEnd: (e: DragEndEvent) => void;
-  onSelectActivity: (activity: Activity & { dayId: string }) => void;
-  onAddActivity: (dayId: string, index?: number) => void;
-  onUpdateTitle: (id: string, title: string) => void;
-  onChangeDay: (activityId: string, dayId: string) => void;
-  onChangePosition: (activityId: string, index: number) => void;
-  onChangeColor: (activityId: string, color: string) => void;
-  onDelete: (activityId: string) => void;
-  onUpdateImage?: (activityId: string, url: string) => void;
-  onApplyCatalogItem?: (activityId: string, item: CatalogActivity) => void;
-}
+import { usePlannerContext } from '@/contexts/PlannerContext';
+import type { CatalogActivity } from '@/types';
 
 /**
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
-export default function PlannerBoard({
-  days,
-  activeId,
-  sensors,
-  collisionDetection,
-  handleDragStart,
-  handleDragOver,
-  handleDragEnd,
-  onSelectActivity,
-  onAddActivity,
-  onUpdateTitle,
-  onChangeDay,
-  onChangePosition,
-  onChangeColor,
-  onDelete,
-  onUpdateImage,
-  onApplyCatalogItem,
-}: PlannerBoardProps) {
+export default function PlannerBoard() {
+  const {
+    days,
+    activeId,
+    sensors,
+    collisionDetection,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    setSelectedActivity,
+    addBlankAndSelect,
+    changeDay,
+    changePosition,
+    changeColor,
+    removeActivity,
+    updateActivity,
+    selectedActivity,
+  } = usePlannerContext();
+
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
+
+  const handleUpdateImage = (id: string, url: string) => {
+    updateActivity(id, { imageUrl: url });
+    if (selectedActivity && selectedActivity.id === id) {
+      setSelectedActivity({ ...selectedActivity, imageUrl: url });
+    }
+  };
+
+  const handleApplyCatalogItem = (id: string, item: CatalogActivity) => {
+    handleUpdateImage(id, item.imageUrl || '');
+  };
 
   return (
     <DndContext
@@ -82,15 +76,15 @@ export default function PlannerBoard({
             <DayColumn
               day={d}
               days={days}
-              onAddActivity={onAddActivity}
-              onSelectActivity={onSelectActivity}
-              onUpdateTitle={onUpdateTitle}
-              onChangeDay={(activityId, dayId) => onChangeDay(activityId, dayId)}
-              onChangePosition={(activityId, idx) => onChangePosition(activityId, idx)}
-              onChangeColor={(activityId, color) => onChangeColor(activityId, color)}
-              onDelete={onDelete}
-              onUpdateImage={onUpdateImage}
-              onApplyCatalogItem={onApplyCatalogItem}
+              onAddActivity={(dayId, idx) => addBlankAndSelect(dayId, idx)}
+              onSelectActivity={(a) => setSelectedActivity(a)}
+              onUpdateTitle={(id, title) => updateActivity(id, { title })}
+              onChangeDay={(activityId, dayId) => changeDay(activityId, dayId)}
+              onChangePosition={(activityId, idx) => changePosition(activityId, idx)}
+              onChangeColor={(activityId, color) => changeColor(activityId, color)}
+              onDelete={removeActivity}
+              onUpdateImage={handleUpdateImage}
+              onApplyCatalogItem={(activityId, item) => handleApplyCatalogItem(activityId, item)}
             />
           </div>
         ))}
@@ -102,13 +96,13 @@ export default function PlannerBoard({
             id={active.id}
             activity={active}
             availableDays={days}
-            onChangeDay={(newDayId) => onChangeDay(active.id, newDayId)}
-            onChangePosition={(idx) => onChangePosition(active.id, idx)}
-            onChangeColor={(newColor) => onChangeColor(active.id, newColor)}
+            onChangeDay={(newDayId) => changeDay(active.id, newDayId)}
+            onChangePosition={(idx) => changePosition(active.id, idx)}
+            onChangeColor={(newColor) => changeColor(active.id, newColor)}
             bgColor={active.color}
-            onDelete={() => onDelete(active.id)}
-            onUpdateImage={(url) => onUpdateImage?.(active.id, url)}
-            onApplyCatalogItem={(item) => onApplyCatalogItem?.(active.id, item)}
+            onDelete={() => removeActivity(active.id)}
+            onUpdateImage={(url) => handleUpdateImage(active.id, url)}
+            onApplyCatalogItem={(item) => handleApplyCatalogItem(active.id, item)}
             aria-grabbed="true"
             aria-label={`Dragging ${active.title}`}
           />

@@ -3,41 +3,31 @@
 
 import React, { useEffect, useState } from 'react';
 import { ActivityModalHeader, ActivityModalForm, Modal } from '@/components';
-import type { Activity, DayPlan, CatalogActivity } from '@/types';
+import type { Activity, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
+import { usePlannerContext } from '@/contexts/PlannerContext';
 
-interface ActivityModalProps {
-  open: boolean;
-  activity: Activity & { dayId?: string };
-  onClose: () => void;
-  onDelete: () => void;
-  onSave: (draft: Partial<Activity>) => void;
-  color: string;
-  onColorChange: (color: string) => void;
-  days: DayPlan[];
-  onChangeDay: (dayId: string) => void;
-  onChangePosition: (index: number) => void;
-}
+export default function ActivityModal() {
+  const {
+    selectedActivity: activity,
+    closeModal,
+    save,
+    deleteActivity,
+    changeColor,
+    days,
+    changeDay,
+    changePosition,
+  } = usePlannerContext();
+  const open = Boolean(activity);
+  useEscapeKey({ onClose: closeModal, isActive: open });
 
-export default function ActivityModal({
-  open,
-  activity,
-  onClose,
-  onDelete,
-  onSave,
-  color,
-  onColorChange,
-  days,
-  onChangeDay,
-  onChangePosition,
-}: ActivityModalProps) {
-  useEscapeKey({ onClose, isActive: open });
-
-  const [draft, setDraft] = useState(activity);
+  const [draft, setDraft] = useState(activity ?? ({} as Activity));
 
   useEffect(() => {
-    setDraft(activity);
+    if (activity) setDraft(activity);
   }, [activity]);
+
+  if (!activity) return null;
 
   function handleCatalogSelect(item: CatalogActivity) {
     setDraft((prev) => ({
@@ -57,7 +47,7 @@ export default function ActivityModal({
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={closeModal}
       overlayClassName="backdrop-overlay"
       aria-labelledby="activity-modal-title"
       className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
@@ -67,17 +57,17 @@ export default function ActivityModal({
       </h2>
       <ActivityModalHeader
         activity={draft}
-        bgColor={color}
-        onDelete={onDelete}
-        onClose={onClose}
-        onColorChange={onColorChange}
+        bgColor={activity.color}
+        onDelete={deleteActivity}
+        onClose={closeModal}
+        onColorChange={(color) => changeColor(activity.id, color)}
         availableDays={days}
-        onChangeDay={onChangeDay}
-        onChangePosition={onChangePosition}
+        onChangeDay={(dayId) => changeDay(activity.id, dayId)}
+        onChangePosition={(idx) => changePosition(activity.id, idx)}
         onCatalogSelect={handleCatalogSelect}
         onImageChange={handleImageChange}
       />
-      <ActivityModalForm activity={draft} onSave={onSave} color={color} />
+      <ActivityModalForm activity={draft} onSave={save} color={activity.color} />
     </Modal>
   );
 }

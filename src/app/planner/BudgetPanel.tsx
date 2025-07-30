@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { useBudget } from '@/hooks/budget/useBudget';
 import { BUDGET_INFO } from '@/constants';
-import type { DayPlan } from '@/types';
+import { usePlannerContext } from '@/contexts/PlannerContext';
 import {
   BudgetPanelHeader,
   InfoPopup,
@@ -14,14 +14,12 @@ import {
   ActivitiesBudgetPopup,
 } from '@/components';
 
-interface Props {
-  planId: string;
-  activitiesTotal: number;
-  days: DayPlan[];
-  onUpdateBudget: (id: string, amount: number) => void;
-}
-
-export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBudget }: Props) {
+export default function BudgetPanel() {
+  const { planId, days, updateActivity } = usePlannerContext();
+  const activitiesTotal = days.reduce(
+    (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
+    0
+  );
   const {
     budget,
     setBudget,
@@ -92,7 +90,7 @@ export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBud
       <ActivitiesBudgetPopup
         open={editActivities}
         days={days}
-        onUpdate={onUpdateBudget}
+        onUpdate={(id, amount) => updateActivity(id, { budget: amount })}
         onClose={() => setEditActivities(false)}
       />
     </div>
