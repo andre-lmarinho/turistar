@@ -237,6 +237,30 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** add/remove actions
 - **Performance notes:** none
 
+### CategorySelection
+
+- **Location:** `src/components/planner/catalog/CategorySelection.tsx`
+- **Responsibility:** Category list and submit button for catalog search.
+- **Props:** `{ categories, active, onToggle, onSearch }`
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** buttons
+- **Interactions:** toggle categories, start search
+- **Performance notes:** none
+
+### DestinationResultsList
+
+- **Location:** `src/components/planner/catalog/DestinationResultsList.tsx`
+- **Responsibility:** Displays catalog results with loading and error states.
+- **Props:** `{ loading, error, items, addedIds, onAdd, onRemove }`
+- **State:** none
+- **External Hooks:** none
+- **Side-effects:** none
+- **Accessibility:** list semantics
+- **Interactions:** add/remove actions
+- **Performance notes:** none
+
 ### DestinationFilterPanel
 
 - **Location:** `src/components/planner/catalog/DestinationFilterPanel.tsx`
