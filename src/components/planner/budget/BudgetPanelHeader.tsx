@@ -7,22 +7,10 @@ import { InfoPopup } from '@/components';
 import { CATEGORIES, BUDGET_INFO } from '@/constants';
 import { CategoryProgressBar, Input } from '@/components';
 import { normalizeAmount } from '@/utils';
+import { useBudgetContext } from '@/contexts/BudgetContext';
 
-interface Props {
-  budget: number;
-  setBudget: (val: number) => void;
-  totalSpent: number;
-  difference: number;
-  categoryTotals: Record<string, number>;
-}
-
-export default function BudgetPanelHeader({
-  budget,
-  setBudget,
-  totalSpent,
-  difference,
-  categoryTotals,
-}: Props) {
+export default function BudgetPanelHeader() {
+  const { budget, setBudget, totalSpent, difference, categoryTotals } = useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
 
   return (

@@ -6,26 +6,18 @@ import { Plus, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 import { normalizeAmount } from '@/utils';
+import { useBudgetContext } from '@/contexts/BudgetContext';
 
 export default function TableRowNew({
-  desc,
-  setDesc,
-  cat,
-  setCat,
   amountInput,
   setAmountInput,
-  setAmount,
   onAdd,
 }: {
-  desc: string;
-  setDesc: (v: string) => void;
-  cat: CategoryKey;
-  setCat: (v: CategoryKey) => void;
   amountInput: string;
   setAmountInput: (val: string) => void;
-  setAmount: (v: number) => void;
   onAdd: () => void;
 }) {
+  const { desc, setDesc, cat, setCat, setAmount } = useBudgetContext();
   const baseId = useId();
 
   return (
