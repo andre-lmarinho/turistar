@@ -1,7 +1,7 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
@@ -19,7 +19,7 @@ import {
 import { usePlanTitle, useInputWidth, useKeyBinds } from '@/hooks';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { PlannerProvider, usePlannerContext } from '@/contexts/PlannerContext';
-import type { CatalogActivity, DayPlan } from '@/types';
+import type { DayPlan } from '@/types';
 import { motion } from 'framer-motion';
 
 /**
@@ -50,44 +50,11 @@ function PlannerClientInner({
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
 
-  const {
-    planId,
-    dest,
-    days,
-    destCoords,
-    currentRange,
-    handleRangeChange,
-    activeId,
-    sensors,
-    collisionDetection,
-    handleDragStart,
-    handleDragOver,
-    handleDragEnd,
-    addActivity,
-    removeActivity,
-    updateActivity,
-    addBlankAndSelect,
-    selectedActivity,
-    setSelectedActivity,
-    changeDay,
-    changePosition,
-    closeModal,
-    save,
-    deleteActivity,
-    changeColor,
-  } = usePlannerContext();
+  const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
+    usePlannerContext();
 
   const { title, setTitle } = usePlanTitle(planId, dest);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
-
-  const handleUpdateImage = (id: string, url: string) => {
-    updateActivity(id, { imageUrl: url });
-    setSelectedActivity((prev) => (prev && prev.id === id ? { ...prev, imageUrl: url } : prev));
-  };
-
-  const handleApplyCatalogItem = (id: string, item: CatalogActivity) => {
-    handleUpdateImage(id, item.imageUrl || '');
-  };
 
   useKeyBinds({
     onPlanner: () => setMode('planner'),
@@ -101,7 +68,6 @@ function PlannerClientInner({
   if (!dest) return <p className="p-4">Destination missing in URL.</p>;
   if (!days.length) return <p className="p-4">No catalog found.</p>;
 
-  const stringActiveId = activeId != null ? String(activeId) : null;
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
@@ -169,19 +135,7 @@ function PlannerClientInner({
                 onClick={() => !isActive && setMode(m)}
               >
                 <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
-                  {m === 'planner' && (
-                    <PlannerBoard
-                      activeId={stringActiveId}
-                      sensors={sensors}
-                      collisionDetection={collisionDetection}
-                      handleDragStart={handleDragStart}
-                      handleDragOver={handleDragOver}
-                      handleDragEnd={handleDragEnd}
-                      onUpdateTitle={(id, title) => updateActivity(id, { title })}
-                      onUpdateImage={handleUpdateImage}
-                      onApplyCatalogItem={handleApplyCatalogItem}
-                    />
-                  )}
+                  {m === 'planner' && <PlannerBoard />}
                   {m === 'budget' && <BudgetPanel />}
                   {m === 'map' && <MapView />}
                 </div>

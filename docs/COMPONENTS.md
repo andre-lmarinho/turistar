@@ -430,12 +430,12 @@ This document summarizes each React component in the repository. It follows the 
 - **Responsibility:** Top-level planner page component orchestrating drag-and-drop and budget view.
 - **Props:** none
 - **State:** `isPanelOpen`, `mode`, `showOnboarding`
-- **External Hooks:** `usePlanner`, `usePlanTitle`, `useSelectedActivity`, `useActivitiesById`
+- **External Hooks:** `usePlannerContext`, `usePlanTitle`, `useInputWidth`, `useKeyBinds`
 - **Title:** defaults to the destination name with its first letter capitalized
 - **Side-effects:** none
 - **Accessibility:** input IDs, focus on select, ARIA labels
-- **Interactions:** numerous callbacks: `handleDragStart`, `handleDragEnd`, etc.
-- **Performance notes:** `useMemo` for totals and added ID set
+- **Interactions:** toggles planner/map/budget modes and opens the catalog panel
+- **Performance notes:** none
 
 -### PlannerBoard
 
