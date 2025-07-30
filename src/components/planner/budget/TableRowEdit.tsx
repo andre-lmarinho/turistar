@@ -7,22 +7,29 @@ import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/constants';
 import type { Entry } from '@/types';
 import { normalizeAmount } from '@/utils';
+import { useBudgetContext } from '@/contexts/BudgetContext';
 
 export default function TableRowEdit({
   editEntry,
   setEditEntry,
   editAmountInput,
   setEditAmountInput,
-  onConfirm,
+  index,
   onCancel,
 }: {
   editEntry: Entry;
   setEditEntry: React.Dispatch<React.SetStateAction<Entry | null>>;
   editAmountInput: string;
   setEditAmountInput: (val: string) => void;
-  onConfirm: () => void;
+  index: number;
   onCancel: () => void;
 }) {
+  const { handleUpdateEntry } = useBudgetContext();
+
+  const confirm = () => {
+    handleUpdateEntry(index, editEntry);
+    onCancel();
+  };
   // useId generates a unique suffix for each instance
   const baseId = useId();
 
@@ -102,7 +109,7 @@ export default function TableRowEdit({
           size="icon"
           variant="ghost"
           type="button"
-          onClick={onConfirm}
+          onClick={confirm}
           aria-label="Save entry"
           className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >

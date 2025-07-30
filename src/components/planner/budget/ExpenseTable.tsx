@@ -4,34 +4,23 @@
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
 import { InfoPopup, TableRowEdit, TableRowEntry, TableRowNew } from '@/components';
-import { CategoryKey, BUDGET_INFO } from '@/constants';
+import { BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
+import { useBudgetContext } from '@/contexts/BudgetContext';
 
-interface ExpenseTableProps {
-  entries: Entry[];
-  desc: string;
-  cat: CategoryKey;
-  amount: number;
-  setDesc: (v: string) => void;
-  setCat: (v: CategoryKey) => void;
-  setAmount: (v: number) => void;
-  onAdd: () => void;
-  onUpdate?: (index: number, updated: Entry) => void;
-  onDelete?: (index: number) => void;
-}
-
-export default function ExpenseTable({
-  entries,
-  desc,
-  cat,
-  amount,
-  setDesc,
-  setCat,
-  setAmount,
-  onAdd,
-  onUpdate,
-  onDelete,
-}: ExpenseTableProps) {
+export default function ExpenseTable() {
+  const {
+    entries,
+    desc,
+    cat,
+    amount,
+    setDesc,
+    setCat,
+    setAmount,
+    handleAdd,
+    handleUpdateEntry,
+    handleDeleteEntry,
+  } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
   const [amountInput, setAmountInput] = useState(amount ? String(amount) : '');
@@ -50,13 +39,6 @@ export default function ExpenseTable({
   const cancelEdit = () => {
     setEditIndex(null);
     setEditEntry(null);
-  };
-
-  const confirmEdit = () => {
-    if (editIndex !== null && editEntry && onUpdate) {
-      onUpdate(editIndex, editEntry);
-      cancelEdit();
-    }
   };
 
   return (
@@ -109,27 +91,24 @@ export default function ExpenseTable({
           editIndex === idx && editEntry ? (
             <TableRowEdit
               key={idx}
+              index={idx}
               editEntry={editEntry}
               setEditEntry={setEditEntry}
               editAmountInput={editAmountInput}
               setEditAmountInput={setEditAmountInput}
-              onConfirm={confirmEdit}
               onCancel={cancelEdit}
             />
           ) : (
-            <TableRowEntry key={idx} index={idx} entry={e} onEdit={startEdit} onDelete={onDelete} />
+            <TableRowEntry
+              key={idx}
+              index={idx}
+              entry={e}
+              onEdit={startEdit}
+              onDelete={handleDeleteEntry}
+            />
           )
         )}
-        <TableRowNew
-          desc={desc}
-          cat={cat}
-          amountInput={amountInput}
-          setDesc={setDesc}
-          setCat={setCat}
-          setAmount={setAmount}
-          setAmountInput={setAmountInput}
-          onAdd={onAdd}
-        />
+        <TableRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
       </tbody>
     </table>
   );
