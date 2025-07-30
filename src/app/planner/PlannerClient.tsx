@@ -17,8 +17,7 @@ import {
   PlannerControls,
 } from '@/components';
 import { usePlanTitle, useInputWidth, useKeyBinds } from '@/hooks';
-import { OnboardingProvider } from '@/contexts/OnboardingContext';
-import { PlannerProvider, usePlannerContext } from '@/contexts/PlannerContext';
+import { OnboardingProvider, PlannerProvider, usePlannerContext } from '@/contexts';
 import type { DayPlan } from '@/types';
 import { motion } from 'framer-motion';
 

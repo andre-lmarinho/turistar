@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/react';
 import { closestCenter } from '@dnd-kit/core';
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import { PlannerProvider } from '@/contexts/PlannerContext';
+import { PlannerProvider } from '@/contexts';
 import type { DayPlan, Activity } from '@/types';
 import { vi } from 'vitest';
 

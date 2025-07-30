@@ -6,7 +6,7 @@ import { Info } from 'lucide-react';
 import { InfoPopup, TableRowEdit, TableRowEntry, TableRowNew } from '@/components';
 import { BUDGET_INFO } from '@/constants';
 import type { Entry } from '@/types';
-import { useBudgetContext } from '@/contexts/BudgetContext';
+import { useBudgetContext } from '@/contexts';
 
 export default function ExpenseTable() {
   const {

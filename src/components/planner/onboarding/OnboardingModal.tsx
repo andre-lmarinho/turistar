@@ -4,7 +4,7 @@
 import React from 'react';
 import { OnboardingCarousel, CloseButton, Modal } from '@/components';
 import { useEscapeKey } from '@/hooks';
-import { useOnboardingContext } from '@/contexts/OnboardingContext';
+import { useOnboardingContext } from '@/contexts';
 
 export default function OnboardingModal() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();

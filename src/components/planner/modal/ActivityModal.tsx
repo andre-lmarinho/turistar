@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityModalHeader, ActivityModalForm, Modal } from '@/components';
 import type { Activity, CatalogActivity } from '@/types';
 import { useEscapeKey } from '@/hooks';
-import { usePlannerContext } from '@/contexts/PlannerContext';
+import { usePlannerContext } from '@/contexts';
 
 export default function ActivityModal() {
   const {

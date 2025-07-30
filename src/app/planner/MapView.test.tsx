@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from './MapView';
-import { PlannerProvider } from '@/contexts/PlannerContext';
+import { PlannerProvider } from '@/contexts';
 import type { DayPlan } from '@/types';
 
 // Reuse the same mocks across tests
