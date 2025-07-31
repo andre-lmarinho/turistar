@@ -13,7 +13,9 @@
           "duration": 2,
           "address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg"
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg",
+          "latitude": 48.8584,
+          "longitude": 2.2945
         }
       ]
     },
@@ -26,7 +28,9 @@
           "duration": 3,
           "address": "Rue de Rivoli, 75001 Paris, France",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/af/Louvre_Museum_Wikimedia_Commons.jpg"
+          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/af/Louvre_Museum_Wikimedia_Commons.jpg",
+          "latitude": 48.8606,
+          "longitude": 2.3376
         }
       ]
     }

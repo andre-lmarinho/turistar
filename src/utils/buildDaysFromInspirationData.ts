@@ -19,6 +19,8 @@ export interface InspirationData {
       address: string;
       imageUrl?: string;
       color?: string;
+      latitude?: number;
+      longitude?: number;
     }>;
   }>;
 }
@@ -36,6 +38,8 @@ export function buildDaysFromInspirationData(data: InspirationData): DayPlan[] {
       duration: a.duration,
       address: a.address,
       imageUrl: a.imageUrl ?? '',
+      latitude: a.latitude,
+      longitude: a.longitude,
       color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
     }));
     return { id, label, activities };
