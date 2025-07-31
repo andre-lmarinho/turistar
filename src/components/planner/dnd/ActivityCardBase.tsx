@@ -8,7 +8,6 @@ import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 
 interface ActivityCardBaseProps {
   title: string;
-  address?: string;
   draftTitle?: string;
   onDraftTitleChange?: (value: string) => void;
   onSave?: () => void;
