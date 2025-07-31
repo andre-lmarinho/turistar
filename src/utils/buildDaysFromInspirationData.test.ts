@@ -14,6 +14,8 @@ const sample = {
           startTime: '09:00',
           duration: 2,
           address: 'Street 1',
+          latitude: 1,
+          longitude: 2,
         },
       ],
     },
@@ -29,5 +31,7 @@ describe('buildDaysFromInspirationData', () => {
     const act = day.activities[0] as Activity;
     expect(act.title).toBe('Visit Museum');
     expect(act.startTime).toBe('09:00');
+    expect(act.latitude).toBe(1);
+    expect(act.longitude).toBe(2);
   });
 });

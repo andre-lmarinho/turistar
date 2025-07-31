@@ -13,7 +13,6 @@ vi.mock('@/components', async () => {
     name: 'Stub Place',
     description: 'info',
     imageUrl: 'photo.jpg',
-    address: 'Street',
     category: '',
   };
   function CatalogSearchPopup({
@@ -107,7 +106,6 @@ describe('ActivityCardEditing', () => {
       name: 'Stub Place',
       description: 'info',
       imageUrl: 'photo.jpg',
-      address: 'Street',
       category: '',
     });
     expect(setEditedImageUrl).toHaveBeenCalledWith('photo.jpg');

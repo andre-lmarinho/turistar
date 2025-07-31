@@ -10,6 +10,7 @@ import type { DayPlan } from '@/types';
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
 const markers: Array<{ title?: string }> = [];
+const polylines: Array<unknown> = [];
 let containerProps: { center?: unknown } | undefined;
 
 let mockDays: DayPlan[] = [];
@@ -28,7 +29,10 @@ vi.mock('react-leaflet', () => {
       markers.push(props);
       return null;
     },
-    Polyline: () => null,
+    Polyline: (props: unknown) => {
+      polylines.push(props);
+      return null;
+    },
     useMap: () => map,
   };
 });
@@ -83,6 +87,7 @@ describe('FitAllMarkers effect', () => {
   afterEach(() => {
     map.fitBounds.mockClear();
     markers.length = 0;
+    polylines.length = 0;
     containerProps = undefined;
     mockDestCoords = null;
   });
@@ -126,6 +131,7 @@ describe('FitAllMarkers effect', () => {
 describe('Marker accessibility', () => {
   afterEach(() => {
     markers.length = 0;
+    polylines.length = 0;
     containerProps = undefined;
     mockDestCoords = null;
   });
@@ -146,6 +152,26 @@ describe('Marker accessibility', () => {
       </PlannerProvider>
     );
     expect(markers[0].title).toBe('Walk');
+  });
+
+  it('renders a path for multiple activities', () => {
+    const days: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'A1', color: 'red', latitude: 1, longitude: 1 },
+          { id: 'a2', title: 'A2', color: 'red', latitude: 2, longitude: 2 },
+        ],
+      },
+    ];
+    mockDays = days;
+    render(
+      <PlannerProvider>
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(polylines.length).toBe(1);
   });
 
   it('uses provided center coordinates when no activities', () => {

@@ -9,6 +9,25 @@ import { CategoryProgressBar, Input } from '@/components';
 import { normalizeAmount } from '@/utils';
 import { useBudgetContext } from '@/contexts';
 
+interface SummaryValueProps {
+  amount: number;
+  ariaLabel: string;
+}
+
+function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
+  return (
+    <span
+      className="bg-muted/30 grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border"
+      aria-label={ariaLabel}
+    >
+      <span className="border-r-1 bg-gray-100">
+        <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
+      </span>
+      <span className="w-full px-2 py-1 text-right">{'$' + amount.toFixed(2)}</span>
+    </span>
+  );
+}
+
 export default function BudgetPanelHeader() {
   const { budget, setBudget, totalSpent, difference, categoryTotals } = useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
@@ -58,12 +77,7 @@ export default function BudgetPanelHeader() {
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
-          <span
-            className="px-2 py-1 text-right"
-            aria-label={`Total spent: $${totalSpent.toFixed(2)}`}
-          >
-            {'$' + totalSpent.toFixed(2)}
-          </span>
+          <SummaryValue amount={totalSpent} ariaLabel={`Total spent: $${totalSpent.toFixed(2)}`} />
         </div>
 
         {/* Difference */}
@@ -74,12 +88,7 @@ export default function BudgetPanelHeader() {
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
-          <span
-            className="px-2 py-1 text-right"
-            aria-label={`Difference: $${difference.toFixed(2)}`}
-          >
-            {'$' + difference.toFixed(2)}
-          </span>
+          <SummaryValue amount={difference} ariaLabel={`Difference: $${difference.toFixed(2)}`} />
         </div>
       </div>
 
