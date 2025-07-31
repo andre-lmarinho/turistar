@@ -15,6 +15,7 @@ vi.mock('@/hooks', async () => {
       loading: false,
       error: false,
     }),
+    useDebounce: (v: unknown) => v,
   };
 });
 

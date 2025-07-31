@@ -27,8 +27,11 @@ describe('DestinationInput', () => {
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
-      error: false,
-    });
+       error: false,
+    }),
+    useDebounce: (v: unknown) => v,
+  };
+});
 
     const handleChange = vi.fn();
     render(<DestinationInput value="" onChange={handleChange} />);

@@ -142,7 +142,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Side-effects:** none
 - **Accessibility:** input label, list of suggestions
   - **Interactions:** choose suggestion via click or Tab key; both return `{ name, latitude, longitude }`
-  - **Performance notes:** none
+  - **Performance notes:** input is debounced before querying
 
 ### InspirationLink
 
@@ -349,12 +349,12 @@ This document summarizes each React component in the repository. It follows the 
 - **Responsibility:** Modal for editing an activity (header tools and form).
 - **Props:** none (reads selected activity from context)
 - **State:** `draft` state in modal
-- **External Hooks:** `useEscapeKey`
+- **External Hooks:** `useEscapeKey`, `useDestinationAutocomplete`
 - **Side-effects:** portal rendering, updates draft when activity changes
 - **Accessibility:** focus trap, ARIA labels, keyboard shortcuts
 - **Interactions:** edit fields (title, address, notes), change day/position, pick color
   - Address field provides Geoapify autocomplete suggestions while typing.
-- **Performance notes:** none
+- **Performance notes:** debounces address input before querying
 
 ---
 
