@@ -8,7 +8,7 @@ import { DollarSign, Hourglass } from 'lucide-react';
 import type { Activity } from '@/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/constants';
 import { UpdateButton, Input, Spinner } from '@/components';
-import { useDestinationAutocomplete } from '@/hooks';
+import { useDebounce, useDestinationAutocomplete } from '@/hooks';
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -23,8 +23,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const debouncedAddress = useDebounce(editedAddress);
   const { results: addressResults, loading: addressLoading } =
-    useDestinationAutocomplete(editedAddress);
+    useDestinationAutocomplete(debouncedAddress);
   const [addressOpen, setAddressOpen] = useState(false);
 
   // Update internal state when the activity prop changes

@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Spinner } from '@/components';
-import { useDestinationAutocomplete } from '@/hooks';
+import { useDebounce, useDestinationAutocomplete } from '@/hooks';
 
 interface PlaceSelection {
   name: string;
@@ -17,7 +17,8 @@ interface Props {
 }
 
 export default function DestinationInput({ value, onChange }: Props) {
-  const { results, loading } = useDestinationAutocomplete(value);
+  const debounced = useDebounce(value);
+  const { results, loading } = useDestinationAutocomplete(debounced);
 
   // Track whether the suggestion list is visible
   const [open, setOpen] = React.useState(false);

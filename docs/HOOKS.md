@@ -143,11 +143,34 @@ export function useDestinationAutocomplete(query: string);
   Geoapify `results`, loading and error flags.
 - **Lifecycle**
   Fetches `/api/autocomplete?text=` when the query has at least 3 characters.
+  Results are cached for 1 minute and do not refetch on window focus.
 - **Exceptions**
   Sets an error state when the request fails.
 
 ```ts
-const { results } = useDestinationAutocomplete(search);
+const { results } = useDestinationAutocomplete(query);
+```
+
+### `useDebounce`
+
+_File: `src/hooks/useDebounce.ts`_
+
+```ts
+export function useDebounce<T>(value: T, delay?: number): T;
+```
+
+- **Inputs**
+  - `value`: value to debounce.
+  - `delay` (optional): wait time in milliseconds (defaults to `300`).
+- **Outputs**
+  Debounced value that updates after the delay passes.
+- **Lifecycle**
+  Updates the returned value only after the delay when inputs stop changing.
+- **Exceptions**
+  None.
+
+```ts
+const query = useDebounce(input);
 ```
 
 ### `useGeoapifySearch`
