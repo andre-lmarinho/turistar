@@ -1,0 +1,33 @@
+// src/hooks/catalog/fetchCatalog.test.ts
+
+import { fetchCatalog } from './fetchCatalog';
+
+describe('fetchCatalog', () => {
+  const originalFetch = global.fetch;
+  afterEach(() => {
+    global.fetch = originalFetch;
+    vi.clearAllMocks();
+  });
+
+  test('returns activities on success', async () => {
+    const mockData = { activities: [{ id: '1', name: 'Louvre', category: 'museum' }] };
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockData,
+    } as any);
+
+    const result = await fetchCatalog('paris', ['museum']);
+
+    expect(global.fetch).toHaveBeenCalledWith('/api/catalog?dest=paris&cats=museum');
+    expect(result).toEqual(mockData);
+  });
+
+  test('throws on failure', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+    } as any);
+
+    await expect(fetchCatalog('paris', [])).rejects.toThrow('Failed to fetch catalog: HTTP 404');
+  });
+});
