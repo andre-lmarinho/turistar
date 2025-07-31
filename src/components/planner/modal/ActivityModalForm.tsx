@@ -17,7 +17,7 @@ interface ActivityModalFormProps {
 }
 
 export default function ActivityModalForm({ activity, onSave, color }: ActivityModalFormProps) {
-  const [editedTitle, setEditedTitle] = useState(activity.title);
+  const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [editedAddress, setEditedAddress] = useState(activity.address ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
@@ -30,7 +30,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
 
   // Update internal state when the activity prop changes
   useEffect(() => {
-    setEditedTitle(activity.title);
+    setEditedTitle(activity.title ?? '');
     setEditedDescription(activity.description ?? '');
     setEditedAddress(activity.address ?? '');
     setDuration(activity.duration || 0);
