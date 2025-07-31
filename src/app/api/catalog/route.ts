@@ -15,8 +15,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const categories = cats ? cats.split(',') : undefined;
-    const data = await fetchGeoapifyCatalog(dest, categories);
+    const data = await fetchGeoapifyCatalog(dest);
     return NextResponse.json(data);
   } catch (err) {
     console.error(err);

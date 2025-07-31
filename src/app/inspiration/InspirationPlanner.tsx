@@ -1,6 +1,7 @@
 // src/app/inspiration/InspirationPlanner.tsx
-import dynamic from 'next/dynamic';
+'use client';
 
+import dynamic from 'next/dynamic';
 import type { DayPlan } from '@/types';
 
 interface Props {
