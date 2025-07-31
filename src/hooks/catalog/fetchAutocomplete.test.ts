@@ -14,7 +14,7 @@ describe('fetchAutocomplete', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ results: mockResults }),
-    } as any);
+    } as unknown as Response);
 
     const result = await fetchAutocomplete('paris');
 
@@ -26,7 +26,7 @@ describe('fetchAutocomplete', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
-    } as any);
+    } as unknown as Response);
 
     await expect(fetchAutocomplete('paris')).rejects.toThrow(
       'Failed to fetch suggestions: HTTP 500'

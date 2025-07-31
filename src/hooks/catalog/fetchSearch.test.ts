@@ -14,7 +14,7 @@ describe('fetchSearch', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ activities: mockActivities }),
-    } as any);
+    } as unknown as Response);
 
     const result = await fetchSearch('muse');
 
@@ -26,7 +26,7 @@ describe('fetchSearch', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
-    } as any);
+    } as unknown as Response);
 
     await expect(fetchSearch('muse')).rejects.toThrow('Failed to search: HTTP 500');
   });

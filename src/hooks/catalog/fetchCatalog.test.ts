@@ -14,7 +14,7 @@ describe('fetchCatalog', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => mockData,
-    } as any);
+    } as unknown as Response);
 
     const result = await fetchCatalog('paris', ['museum']);
 
@@ -26,7 +26,7 @@ describe('fetchCatalog', () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 404,
-    } as any);
+    } as unknown as Response);
 
     await expect(fetchCatalog('paris', [])).rejects.toThrow('Failed to fetch catalog: HTTP 404');
   });

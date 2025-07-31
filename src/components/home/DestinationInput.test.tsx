@@ -5,19 +5,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import DestinationInput from './DestinationInput';
 
-const mockUseDestinationAutocomplete = vi.fn();
+const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
+  return {
+    mockUseDestinationAutocomplete: vi.fn(),
+    mockUseDebounce: vi.fn(),
+  };
+});
 
 vi.mock('@/hooks', async () => {
   const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
   return {
     ...actual,
     useDestinationAutocomplete: mockUseDestinationAutocomplete,
+    useDebounce: mockUseDebounce,
   };
 });
 
 describe('DestinationInput', () => {
   beforeEach(() => {
     mockUseDestinationAutocomplete.mockReset();
+    mockUseDebounce.mockImplementation((v: unknown) => v);
   });
 
   it('passes the selected place object when clicking a suggestion', () => {
@@ -27,11 +34,8 @@ describe('DestinationInput', () => {
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
-       error: false,
-    }),
-    useDebounce: (v: unknown) => v,
-  };
-});
+      error: false,
+    });
 
     const handleChange = vi.fn();
     render(<DestinationInput value="" onChange={handleChange} />);
