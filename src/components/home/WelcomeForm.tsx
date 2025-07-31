@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 
-import { Button, DateRangePicker, DestinationInput } from '@/components';
+import { Button, DateRangePicker, DestinationInput, LoadingScreen } from '@/components';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
+import { fetchCatalog } from '@/hooks';
 
 export default function WelcomeForm() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function WelcomeForm() {
 
   // Declare error state
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   function handleRangeChange(r: DateRange | undefined) {
     setRange(r);
@@ -39,7 +41,7 @@ export default function WelcomeForm() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Block submission if dates are missing
     if (!range?.from || !range?.to) {
@@ -53,18 +55,34 @@ export default function WelcomeForm() {
       setError('Please choose a destination.');
       return;
     }
-    const query = new URLSearchParams({
-      dest: destParam,
-      start: range.from.toISOString(),
-      end: range.to.toISOString(),
-    });
-    if (coords) {
-      query.set('lat', String(coords.lat));
-      query.set('lng', String(coords.lng));
+
+    setLoading(true);
+    try {
+      const planId = crypto.randomUUID();
+      const { activities } = await fetchCatalog(destParam, []);
+      localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
+      const query = new URLSearchParams({
+        dest: destParam,
+        start: range.from.toISOString(),
+        end: range.to.toISOString(),
+        plan: planId,
+      });
+      if (coords) {
+        query.set('lat', String(coords.lat));
+        query.set('lng', String(coords.lng));
+      }
+      const queryString = query.toString();
+      router.push(`/planner?${queryString}`);
+    } catch {
+      setError('Failed to load catalog.');
+    } finally {
+      setLoading(false);
     }
-    const queryString = query.toString();
-    router.push(`/planner?${queryString}`);
   };
+
+  if (loading) {
+    return <LoadingScreen text="Loading catalog..." />;
+  }
 
   return (
     <section className="hero relative overflow-hidden p-8 pt-[184px] sm:pt-[92px] md:h-auto md:pt-24 lg:pt-28">
