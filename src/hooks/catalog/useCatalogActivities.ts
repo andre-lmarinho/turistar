@@ -1,21 +1,41 @@
 // src/hooks/useCatalogActivities.ts
+'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { fetchCatalog } from '@/hooks';
+import { useEffect, useState } from 'react';
 import type { CatalogActivity } from '@/types';
 
 /**
- * Hook to load catalog activities for a destination.
- * Provides raw activity data along with React Query state.
+ * Loads catalog activities for the given plan from localStorage.
+ * Returns the raw list along with simple loading and error flags.
  */
-export function useCatalogActivities(dest: string | null, options: { enabled: boolean }) {
-  const query = useQuery({
-    queryKey: ['catalog', dest],
-    queryFn: () => fetchCatalog(dest || '', []),
-    enabled: options.enabled && !!dest,
-  });
+export function useCatalogActivities(planId: string | null, options: { enabled: boolean }) {
+  const [activities, setActivities] = useState<CatalogActivity[]>([]);
+  const [isLoading, setLoading] = useState(true);
+  const [isError, setError] = useState(false);
 
-  const activities: CatalogActivity[] | undefined = query.data?.activities;
+  useEffect(() => {
+    if (!options.enabled || !planId) {
+      setActivities([]);
+      setLoading(false);
+      return;
+    }
 
-  return { activities, ...query };
+    try {
+      const raw = localStorage.getItem(`catalog-${planId}`);
+      if (raw) {
+        setActivities(JSON.parse(raw));
+        setError(false);
+      } else {
+        setActivities([]);
+        setError(true);
+      }
+    } catch {
+      setActivities([]);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [options.enabled, planId]);
+
+  return { activities, isLoading, isError };
 }

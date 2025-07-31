@@ -11,6 +11,9 @@ export async function GET(req: NextRequest) {
   if (!q) {
     return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
   }
+  if (q.length < 4) {
+    return NextResponse.json({ error: 'Query must be at least 4 characters.' }, { status: 400 });
+  }
 
   try {
     const data = await fetchGeoapifySearch(q);

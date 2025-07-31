@@ -16,9 +16,9 @@ describe('fetchCatalog', () => {
       json: async () => mockData,
     } as unknown as Response);
 
-    const result = await fetchCatalog('paris', ['museum']);
+    const result = await fetchCatalog('paris');
 
-    expect(global.fetch).toHaveBeenCalledWith('/api/catalog?dest=paris&cats=museum');
+    expect(global.fetch).toHaveBeenCalledWith('/api/catalog?dest=paris');
     expect(result).toEqual(mockData);
   });
 
@@ -28,6 +28,6 @@ describe('fetchCatalog', () => {
       status: 404,
     } as unknown as Response);
 
-    await expect(fetchCatalog('paris', [])).rejects.toThrow('Failed to fetch catalog: HTTP 404');
+    await expect(fetchCatalog('paris')).rejects.toThrow('Failed to fetch catalog: HTTP 404');
   });
 });

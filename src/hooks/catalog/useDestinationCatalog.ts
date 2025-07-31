@@ -1,40 +1,25 @@
 // src/hooks/useDestinationCatalog.ts
+'use client';
 
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCatalog } from '@/hooks';
+import { useMemo } from 'react';
+import { useCatalogActivities } from './useCatalogActivities';
+import type { CatalogActivity } from '@/types';
 
 /**
- * Hook to fetch and manage the catalog activities.
- * - Loads catalog activities by destination from the API with React Query.
- * - Loads results after the user selects categories.
- * - Handles loading and error states.
+ * Loads catalog activities for the given plan and derives available categories.
  */
+export function useDestinationCatalog(enabled: boolean, planId: string | null) {
+  const { activities = [], isLoading, isError } = useCatalogActivities(planId, { enabled });
 
-export function useDestinationCatalog(enabled: boolean, categories: string[], city: string) {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['catalog', city, categories],
-    queryFn: () => fetchCatalog(city, categories),
-    enabled: enabled && categories.length > 0,
-  });
-  const loading = isLoading;
-  const error = isError ? 'Failed to load catalog.' : null;
-  const [search, setSearch] = useState('');
-
-  /**
-   * Filters activities by search term.
-   */
-  const visibleItems = useMemo(() => {
-    const activities = data?.activities ?? [];
-    const searchLower = search.toLowerCase();
-    return activities.filter((it) => it.name.toLowerCase().includes(searchLower));
-  }, [data?.activities, search]);
+  const categories = useMemo(
+    () => Array.from(new Set(activities.map((a: CatalogActivity) => a.category))).sort(),
+    [activities]
+  );
 
   return {
-    visibleItems,
-    loading,
-    error,
-    search,
-    setSearch,
+    activities,
+    categories,
+    loading: isLoading,
+    error: isError ? 'Failed to load catalog.' : null,
   };
 }

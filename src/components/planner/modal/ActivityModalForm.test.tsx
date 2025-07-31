@@ -25,7 +25,7 @@ describe('ActivityModalForm', () => {
     const onSave = vi.fn();
     render(<ActivityModalForm activity={activity} onSave={onSave} color="" />);
     const addressInput = screen.getByLabelText('Address');
-    fireEvent.change(addressInput, { target: { value: 'Ro' } });
+    fireEvent.change(addressInput, { target: { value: 'Rome' } });
     const option = screen.getByRole('button', { name: 'Rome, Italy' });
     fireEvent.mouseDown(option);
     fireEvent.click(screen.getByRole('button', { name: 'Update' }));

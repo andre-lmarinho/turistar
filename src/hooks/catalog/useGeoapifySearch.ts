@@ -6,13 +6,13 @@ import { fetchSearch } from '@/hooks/catalog/fetchSearch';
 import type { CatalogActivity } from '@/types';
 
 /**
- * Runs a Geoapify place search when the query has 3+ characters.
+ * Runs a Geoapify place search when the query has 4+ characters.
  */
 export function useGeoapifySearch(query: string) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['geoapify-search', query],
     queryFn: () => fetchSearch(query),
-    enabled: query.length >= 3,
+    enabled: query.length >= 4,
   });
 
   return {

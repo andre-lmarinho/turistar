@@ -2,11 +2,11 @@
 
 import { renderHook } from '@testing-library/react';
 
-vi.mock('@/hooks', () => ({
+vi.mock('./useCatalogActivities', () => ({
   useCatalogActivities: vi.fn(),
 }));
 
-import { useCatalogActivities } from '@/hooks';
+import { useCatalogActivities } from './useCatalogActivities';
 import { useCatalog } from './useCatalog';
 
 const mockUseCatalogActivities = vi.mocked(useCatalogActivities);
@@ -29,7 +29,7 @@ describe('useCatalog', () => {
       isError: false,
     });
 
-    const { result } = renderHook(() => useCatalog('Paris', { enabled: true }));
+    const { result } = renderHook(() => useCatalog('p1', { enabled: true }));
 
     expect(result.current.days).toHaveLength(2);
     expect(result.current.days?.[0].activities).toHaveLength(3);
@@ -44,7 +44,7 @@ describe('useCatalog', () => {
       isError: true,
     });
 
-    const { result } = renderHook(() => useCatalog('Paris', { enabled: true }));
+    const { result } = renderHook(() => useCatalog('p1', { enabled: true }));
 
     expect(result.current.days).toBeUndefined();
     expect(result.current.isError).toBe(true);
