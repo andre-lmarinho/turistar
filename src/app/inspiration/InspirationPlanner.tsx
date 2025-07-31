@@ -1,19 +1,17 @@
 // src/app/inspiration/InspirationPlanner.tsx
-'use client';
+import dynamic from 'next/dynamic';
 
-import PlannerClient from '@/app/planner/PlannerClient';
 import type { DayPlan } from '@/types';
-
-/**
- * Interactive planner preloaded with sample days.
- * Used by the city inspiration pages.
- */
 
 interface Props {
   initialDays: DayPlan[];
   dest: string;
   planId: string;
 }
+
+const PlannerClient = dynamic(() => import('@/app/planner/PlannerClient'), {
+  ssr: false,
+});
 
 export default function InspirationPlanner({ initialDays, dest, planId }: Props) {
   return (

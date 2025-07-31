@@ -1,16 +1,17 @@
 // src/app/planner/page.tsx
 'use client';
 
-import { Suspense } from 'react';
-import PlannerClient from './PlannerClient';
+import dynamic from 'next/dynamic';
+
 import { LoadingScreen } from '@/components';
 
 export const dynamic = 'force-dynamic';
 
+const PlannerClient = dynamic(() => import('./PlannerClient'), {
+  ssr: false,
+  loading: () => <LoadingScreen text="Loading planner…" />,
+});
+
 export default function PlannerPage() {
-  return (
-    <Suspense fallback={<LoadingScreen text="Loading planner…" />}>
-      <PlannerClient />
-    </Suspense>
-  );
+  return <PlannerClient />;
 }
