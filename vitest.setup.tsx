@@ -9,10 +9,11 @@ vi.mock('focus-trap-react', () => ({
 
 // Canvas isn't implemented in jsdom. Provide a minimal mock so tests using
 // measureText can run without installing additional packages.
-HTMLCanvasElement.prototype.getContext = vi.fn(
-  () =>
-    ({
-      font: '',
-      measureText: vi.fn(() => ({ width: 0 })),
-    }) as unknown as CanvasRenderingContext2D,
-);
+HTMLCanvasElement.prototype.getContext = vi
+  .fn(
+    () =>
+      ({
+        font: '',
+        measureText: vi.fn(() => ({ width: 0 })),
+      }) as unknown as CanvasRenderingContext2D,
+  ) as unknown as HTMLCanvasElement['getContext'];
