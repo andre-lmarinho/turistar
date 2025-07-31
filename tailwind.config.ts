@@ -6,7 +6,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        'geist-sans': ['var(--font-geist)', 'ui-sans-serif', 'system-ui'],
+        'geist-sans': ['var(--font-geist-sans)', 'ui-sans-serif', 'system-ui'],
         'geist-mono': ['var(--font-geist-mono)', 'ui-monospace', 'SFMono-Regular'],
         'architects-daughter': ['var(--font-architects-daughter)', 'cursive'],
       },

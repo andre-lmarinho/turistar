@@ -1,21 +1,10 @@
 // src/app/layout.tsx
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Architects_Daughter } from 'next/font/google';
 import '@/app/globals.css';
 import 'leaflet/dist/leaflet.css';
 
 import { Providers } from '@/components';
-
-/* fonts */
-const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' });
-const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
-const architectsDaughter = Architects_Daughter({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-architects-daughter',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Travel Planner',
@@ -24,14 +13,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${architectsDaughter.variable}`}
-    >
-      <body
-        suppressHydrationWarning
-        className={`antialiased ${geistSans.className} bg-background text-foreground`}
-      >
+    <html lang="en">
+      <body suppressHydrationWarning className="bg-background text-foreground antialiased">
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
         </a>

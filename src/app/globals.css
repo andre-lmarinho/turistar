@@ -44,6 +44,9 @@
 
 :root {
   --radius: 0.625rem;
+  --font-geist-sans: ui-sans-serif, system-ui;
+  --font-geist-mono: ui-monospace, SFMono-Regular, monospace;
+  --font-architects-daughter: cursive;
   /* Base colors for the general interface */
   --background: oklch(1 0 0);
   --foreground: oklch(0.15 0 0);
