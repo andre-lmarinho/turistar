@@ -3,7 +3,8 @@
 
 import React from 'react';
 import { CloseButton, Spinner, Popup } from '@/components';
-import { useGeoapifySearch } from '@/hooks';
+import { useCatalogActivities } from '@/hooks';
+import { usePlannerContext } from '@/contexts';
 import type { CatalogActivity } from '@/types';
 
 interface CatalogSearchPopupProps {
@@ -20,7 +21,12 @@ export default function CatalogSearchPopup({
   triggerRef,
 }: CatalogSearchPopupProps) {
   const [search, setSearch] = React.useState('');
-  const { results, loading, error } = useGeoapifySearch(search);
+  const { dest } = usePlannerContext();
+  const { activities = [], isLoading, isError } = useCatalogActivities(dest, { enabled: open });
+  const results = React.useMemo(
+    () => activities.filter((a) => a.name.toLowerCase().includes(search.toLowerCase())),
+    [activities, search]
+  );
 
   return (
     <Popup
@@ -49,14 +55,14 @@ export default function CatalogSearchPopup({
           placeholder="Search"
           className="w-full rounded border px-2 py-1 text-sm"
         />
-        {loading && (
+        {isLoading && (
           <div className="flex items-center gap-2 text-sm">
             <Spinner className="size-4" />
             <span>Loading...</span>
           </div>
         )}
-        {error && <p className="text-sm text-red-500">Failed to load results.</p>}
-        {!loading && !error && (
+        {isError && <p className="text-sm text-red-500">Failed to load results.</p>}
+        {!isLoading && !isError && (
           <ul className="max-h-60 space-y-1 overflow-y-auto">
             {results.map((item) => (
               <li key={item.id}>

@@ -6,14 +6,14 @@ import { fetchAutocomplete } from '@/hooks';
 import type { AutocompletePlace } from '@/types';
 
 /**
- * Provides Geoapify autocomplete suggestions when query length is >= 3.
+ * Provides Geoapify autocomplete suggestions when query length is >= 4.
  * Results are cached for one minute and won't refetch on window focus.
  */
 export function useDestinationAutocomplete(query: string) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['autocomplete', query],
     queryFn: () => fetchAutocomplete(query),
-    enabled: query.length >= 3,
+    enabled: query.length >= 4,
     staleTime: 1000 * 60,
     refetchOnWindowFocus: false,
   });

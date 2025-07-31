@@ -2,8 +2,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { DestinationHeader, CategorySelection, DestinationResultsList, Modal } from '@/components';
-import { GEOAPIFY_CATEGORIES } from '@/lib';
+import { DestinationHeader, DestinationResultsList, Modal, CategoryFilterBar } from '@/components';
 import type { CatalogActivity } from '@/types';
 import { useDestinationCatalog, useEscapeKey, useActivitiesById } from '@/hooks';
 import { usePlannerContext } from '@/contexts';
@@ -24,7 +23,10 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
   const activitiesById = useActivitiesById(days);
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
-  const [submitted, setSubmitted] = useState(false);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'name' | 'rating'>('name');
+
+  const { activities, categories, loading, error } = useDestinationCatalog(isOpen, dest);
 
   const toggleCat = (cat: string) =>
     setSelectedCats((prev) => {
@@ -34,11 +36,18 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       return next;
     });
 
-  const { visibleItems, loading, error, search, setSearch } = useDestinationCatalog(
-    isOpen && submitted,
-    Array.from(selectedCats),
-    dest
-  );
+  const visibleItems = useMemo(() => {
+    const searchLower = search.toLowerCase();
+    let items = activities.filter(
+      (it) =>
+        (!selectedCats.size || selectedCats.has(it.category)) &&
+        it.name.toLowerCase().includes(searchLower)
+    );
+    items = items.sort((a, b) =>
+      sort === 'name' ? a.name.localeCompare(b.name) : (b.rating ?? 0) - (a.rating ?? 0)
+    );
+    return items;
+  }, [activities, search, selectedCats, sort]);
 
   useEscapeKey({ onClose, isActive: isOpen });
   // Preserve scroll position so the list doesn't jump after adding/removing
@@ -83,38 +92,30 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       {/* header */}
       <DestinationHeader search={search} onSearchChange={setSearch} onClose={onClose} />
 
-      {!submitted && (
-        <CategorySelection
-          categories={GEOAPIFY_CATEGORIES}
-          active={selectedCats}
-          onToggle={toggleCat}
-          onSearch={() => setSubmitted(true)}
-        />
-      )}
-      {submitted && (
-        <div className="flex items-center gap-2 border-b px-4 py-2">
-          <button
-            type="button"
-            onClick={() => setSubmitted(false)}
-            className="rounded border px-3 py-1 text-sm"
-          >
-            Back
-          </button>
+      <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
+        <div className="flex-1 overflow-x-auto">
+          <CategoryFilterBar categories={categories} active={selectedCats} onToggle={toggleCat} />
         </div>
-      )}
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as 'name' | 'rating')}
+          className="rounded border px-2 py-1 text-sm"
+        >
+          <option value="name">Name</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
 
-      {submitted && (
-        <div ref={scrollRef} className="flex flex-1 overflow-auto">
-          <DestinationResultsList
-            loading={loading}
-            error={error}
-            items={visibleItems}
-            addedIds={addedIds}
-            onAdd={handleAdd}
-            onRemove={handleRemove}
-          />
-        </div>
-      )}
+      <div ref={scrollRef} className="flex flex-1 overflow-auto">
+        <DestinationResultsList
+          loading={loading}
+          error={error}
+          items={visibleItems}
+          addedIds={addedIds}
+          onAdd={handleAdd}
+          onRemove={handleRemove}
+        />
+      </div>
     </Modal>
   );
 }

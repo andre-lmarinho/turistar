@@ -8,7 +8,6 @@ import { fetchGeoapifyCatalog } from '@/lib/geoapify';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const dest = searchParams.get('dest');
-  const cats = searchParams.get('cats');
 
   if (!dest) {
     return NextResponse.json({ error: 'Destination is required.' }, { status: 400 });

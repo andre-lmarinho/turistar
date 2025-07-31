@@ -59,7 +59,7 @@ export default function WelcomeForm() {
     setLoading(true);
     try {
       const planId = crypto.randomUUID();
-      const { activities } = await fetchCatalog(destParam, []);
+      const { activities } = await fetchCatalog(destParam);
       localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
       const query = new URLSearchParams({
         dest: destParam,

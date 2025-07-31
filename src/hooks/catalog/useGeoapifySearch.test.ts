@@ -30,7 +30,7 @@ describe('useGeoapifySearch', () => {
     const mockActivities = [{ id: '1', name: 'Louvre', category: 'museum' }];
     mockFetchSearch.mockResolvedValue(mockActivities);
 
-    const { result } = renderHook(() => useGeoapifySearch('par'), {
+    const { result } = renderHook(() => useGeoapifySearch('pari'), {
       wrapper: createWrapper(),
     });
 
@@ -43,7 +43,7 @@ describe('useGeoapifySearch', () => {
   test('handles errors', async () => {
     mockFetchSearch.mockRejectedValue(new Error('fail'));
 
-    const { result } = renderHook(() => useGeoapifySearch('par'), {
+    const { result } = renderHook(() => useGeoapifySearch('pari'), {
       wrapper: createWrapper(),
     });
 

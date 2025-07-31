@@ -26,30 +26,34 @@ describe('useDestinationCatalog', () => {
     vi.clearAllMocks();
   });
 
-  test('returns visibleItems on success', async () => {
-    const mockActivities = [{ id: '1', name: 'Louvre', category: 'museum' }];
+  test('returns activities and categories on success', async () => {
+    const mockActivities = [
+      { id: '1', name: 'Louvre', category: 'museum' },
+      { id: '2', name: 'Arc', category: 'monument' },
+    ];
     mockFetchCatalog.mockResolvedValue({ activities: mockActivities });
 
-    const { result } = renderHook(() => useDestinationCatalog(true, ['museum'], 'Paris'), {
+    const { result } = renderHook(() => useDestinationCatalog(true, 'Paris'), {
       wrapper: createWrapper(),
     });
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    expect(result.current.visibleItems).toEqual(mockActivities);
+    expect(result.current.activities).toEqual(mockActivities);
+    expect(result.current.categories).toEqual(['monument', 'museum']);
     expect(result.current.error).toBeNull();
   });
 
   test('handles errors', async () => {
     mockFetchCatalog.mockRejectedValue(new Error('fail'));
 
-    const { result } = renderHook(() => useDestinationCatalog(true, ['museum'], 'Paris'), {
+    const { result } = renderHook(() => useDestinationCatalog(true, 'Paris'), {
       wrapper: createWrapper(),
     });
 
     await waitFor(() => expect(result.current.error).toBe('Failed to load catalog.'));
 
-    expect(result.current.visibleItems).toEqual([]);
+    expect(result.current.activities).toEqual([]);
     expect(result.current.loading).toBe(false);
   });
 });

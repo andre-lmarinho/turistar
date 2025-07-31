@@ -3,25 +3,32 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import CatalogSearchPopup from './CatalogSearchPopup';
-import type { CatalogActivity } from '@/types';
+const { mockUseCatalogActivities } = vi.hoisted(() => ({
+  mockUseCatalogActivities: vi.fn(),
+}));
 
 vi.mock('@/hooks', async () => {
   const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
   return {
     ...actual,
-    useGeoapifySearch: (query: string) => ({
-      results:
-        query && query !== 'err'
-          ? ([{ id: '1', name: 'Museum', category: 'sight' }] as CatalogActivity[])
-          : [],
-      loading: false,
-      error: query === 'err',
-    }),
+    useCatalogActivities: mockUseCatalogActivities,
   };
 });
 
+vi.mock('@/contexts', () => ({
+  usePlannerContext: () => ({ dest: 'Paris' }),
+}));
+
 describe('CatalogSearchPopup', () => {
+  beforeEach(() => {
+    mockUseCatalogActivities.mockReset();
+  });
   it('renders search results and handles selection', () => {
+    mockUseCatalogActivities.mockReturnValue({
+      activities: [{ id: '1', name: 'Museum', category: 'sight' }],
+      isLoading: false,
+      isError: false,
+    });
     const handleSelect = vi.fn();
     render(<CatalogSearchPopup open onSelect={handleSelect} onClose={() => {}} />);
 
@@ -35,10 +42,12 @@ describe('CatalogSearchPopup', () => {
   });
 
   it('shows an error message when loading fails', () => {
+    mockUseCatalogActivities.mockReturnValue({
+      activities: [],
+      isLoading: false,
+      isError: true,
+    });
     render(<CatalogSearchPopup open onSelect={() => {}} onClose={() => {}} />);
-
-    const input = screen.getByPlaceholderText('Search');
-    fireEvent.change(input, { target: { value: 'err' } });
 
     expect(screen.getByText('Failed to load results.')).toBeInTheDocument();
   });

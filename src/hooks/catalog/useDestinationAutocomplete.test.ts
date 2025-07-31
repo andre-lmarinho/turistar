@@ -30,7 +30,7 @@ describe('useDestinationAutocomplete', () => {
     const mockResults = [{ name: 'Paris', latitude: 1, longitude: 2 }];
     mockFetchAutocomplete.mockResolvedValue(mockResults);
 
-    const { result } = renderHook(() => useDestinationAutocomplete('par'), {
+    const { result } = renderHook(() => useDestinationAutocomplete('pari'), {
       wrapper: createWrapper(),
     });
 
@@ -43,7 +43,7 @@ describe('useDestinationAutocomplete', () => {
   test('handles errors', async () => {
     mockFetchAutocomplete.mockRejectedValue(new Error('fail'));
 
-    const { result } = renderHook(() => useDestinationAutocomplete('par'), {
+    const { result } = renderHook(() => useDestinationAutocomplete('pari'), {
       wrapper: createWrapper(),
     });
 
