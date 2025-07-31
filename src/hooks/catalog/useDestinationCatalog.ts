@@ -1,23 +1,18 @@
 // src/hooks/useDestinationCatalog.ts
+'use client';
 
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchCatalog } from '@/hooks';
+import { useCatalogActivities } from './useCatalogActivities';
 import type { CatalogActivity } from '@/types';
 
 /**
- * Loads catalog activities for a destination and derives available categories.
+ * Loads catalog activities for the given plan and derives available categories.
  */
-export function useDestinationCatalog(enabled: boolean, city: string) {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['catalog', city],
-    queryFn: () => fetchCatalog(city),
-    enabled,
-  });
+export function useDestinationCatalog(enabled: boolean, planId: string | null) {
+  const { activities = [], isLoading, isError } = useCatalogActivities(planId, { enabled });
 
-  const activities: CatalogActivity[] = useMemo(() => data?.activities ?? [], [data?.activities]);
   const categories = useMemo(
-    () => Array.from(new Set(activities.map((a) => a.category))).sort(),
+    () => Array.from(new Set(activities.map((a: CatalogActivity) => a.category))).sort(),
     [activities]
   );
 

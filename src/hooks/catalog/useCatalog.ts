@@ -1,22 +1,22 @@
 // src/hooks/useCatalog.ts
+'use client';
 
 import { useMemo } from 'react';
 import { Activity, DayPlan } from '@/types';
-import { useCatalogActivities } from '@/hooks';
+import { useCatalogActivities } from './useCatalogActivities';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 /**
- * Hook to fetch and format catalog by destination.
- * @param dest - destination string
- * @param options.enabled - whether to enable the query
- * - Fetches /api/catalog?dest=… when enabled
+ * Hook to format cached catalog activities into day buckets.
+ * @param planId - planner identifier used for the storage key
+ * @param options.enabled - whether to load the cached data
  * - Splits activities into days, 3 per day
- * - Returns both React Query props and `days` as DayPlan[]
+ * - Returns loading and error flags from `useCatalogActivities`
  */
 
-export function useCatalog(dest: string | null, options: { enabled: boolean }) {
+export function useCatalog(planId: string | null, options: { enabled: boolean }) {
   // 1) Load catalog activities using the shared hook
-  const { activities, ...query } = useCatalogActivities(dest, options);
+  const { activities, ...query } = useCatalogActivities(planId, options);
 
   // 2) Memoize transforming raw activities into day-based buckets
   const days: DayPlan[] | undefined = useMemo(() => {

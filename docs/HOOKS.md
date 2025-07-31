@@ -70,39 +70,39 @@ export async function fetchCatalog(dest: string, categories: string[]): Promise<
 _File: `src/hooks/useCatalogActivities.ts`_
 
 ```ts
-export function useCatalogActivities(dest: string | null, options: { enabled: boolean });
+export function useCatalogActivities(planId: string | null, options: { enabled: boolean });
 ```
 
 - **Inputs**
-  - `dest`: destination name.
-  - `options.enabled`: whether the query should execute.
+  - `planId`: planner identifier for the storage key.
+  - `options.enabled`: whether the hook should read from storage.
 - **Outputs**
-  Raw catalog `activities` plus React Query props.
+  Raw catalog `activities` plus loading and error flags.
 - **Lifecycle**
-  Fetches catalog data via `useFetchCatalog` when enabled.
+  Loads `catalog-${planId}` from `localStorage` when enabled.
 
 ### `useCatalog`
 
 _File: `src/hooks/useCatalog.ts`_
 
 ```ts
-export function useCatalog(dest: string | null, options: { enabled: boolean });
+export function useCatalog(planId: string | null, options: { enabled: boolean });
 ```
 
 - **Inputs**
-  - `dest`: destination.
-  - `options.enabled`: whether the query should execute.
+  - `planId`: planner identifier for the storage key.
+  - `options.enabled`: whether the hook should load the cached data.
 - **Outputs**
-  React Query result props plus `days` (activities grouped by day).
+  Loading/error flags plus `days` (activities grouped by day).
 - **Lifecycle**
   - Uses `useCatalogActivities` internally to load activities.
   - Memoizes transformation of activities into `DayPlan[]`.
 - **Exceptions**
-  Throws an `Error` if the HTTP response is not OK.
+  None.
 - **Example**
 
 ```ts
-const { days, isLoading } = useCatalog(dest, { enabled: true });
+const { days, isLoading } = useCatalog(planId, { enabled: true });
 ```
 
 ### `useDestinationCatalog`
@@ -110,23 +110,22 @@ const { days, isLoading } = useCatalog(dest, { enabled: true });
 _File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
-export function useDestinationCatalog(enabled: boolean, categories: string[], city: string);
+export function useDestinationCatalog(enabled: boolean, planId: string | null);
 ```
 
 - **Inputs**
-  - `enabled`: whether fetching is active.
-  - `categories`: list of selected categories.
-  - `city`: destination name.
+  - `enabled`: whether loading is active.
+  - `planId`: planner identifier for the storage key.
 - **Outputs**
-  Filtered `visibleItems`, loading and error flags, search helpers.
+  Catalog `activities`, derived `categories`, loading and error flags.
 - **Lifecycle**
-  Uses `useCatalogActivities` internally when the panel opens and memoizes the filtered list.
+  Loads activities from `useCatalogActivities` when enabled and memoizes category list.
 - **Exceptions**
-  Sets an error state when the fetch fails.
+  Sets an error state when cached data is missing.
 - **Example**
 
 ```ts
-const { visibleItems } = useDestinationCatalog(open, ['outdoors'], 'rome');
+const { activities } = useDestinationCatalog(open, planId);
 ```
 
 ### `useDestinationAutocomplete`
@@ -142,7 +141,7 @@ export function useDestinationAutocomplete(query: string);
 - **Outputs**
   Geoapify `results`, loading and error flags.
 - **Lifecycle**
-  Fetches `/api/autocomplete?text=` when the query has at least 3 characters.
+  Fetches `/api/autocomplete?text=` when the query has at least 4 characters.
   Results are cached for 1 minute and do not refetch on window focus.
 - **Exceptions**
   Sets an error state when the request fails.
@@ -186,7 +185,7 @@ export function useGeoapifySearch(query: string);
 - **Outputs**
   Catalog `results`, loading and error flags.
 - **Lifecycle**
-  Fetches `/api/search?q=` when the query has at least 3 characters.
+  Fetches `/api/search?q=` when the query has at least 4 characters.
   The backend geocodes the text and searches around that point using the default radius.
 - **Exceptions**
   Sets an error state when the request fails.
