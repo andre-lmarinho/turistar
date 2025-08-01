@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 
-import { Button, DateRangePicker } from '@/components';
+import { Button, DateRangePicker, LocationSearch } from '@/components';
 import { STARTER_PLANNER_TITLE } from '@/constants';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
@@ -16,6 +16,7 @@ export default function WelcomeForm() {
     from: new Date(),
     to: addDays(new Date(), 7),
   });
+  const [destination, setDestination] = useState('');
 
   // Declare error state
   const [error, setError] = useState<string>('');
@@ -37,7 +38,7 @@ export default function WelcomeForm() {
     }
 
     setError('');
-    const destParam = STARTER_PLANNER_TITLE;
+    const destParam = destination || STARTER_PLANNER_TITLE;
 
     const query = new URLSearchParams({
       dest: destParam,
@@ -61,10 +62,11 @@ export default function WelcomeForm() {
               </h1>
 
               <form onSubmit={handleSubmit} noValidate>
-                <fieldset className="flex pb-4" aria-labelledby="daterange-label">
-                  <legend id="daterange-label" className="sr-only">
-                    Travel dates
+                <fieldset className="flex flex-col gap-4 pb-4" aria-labelledby="trip-details-label">
+                  <legend id="trip-details-label" className="sr-only">
+                    Trip details
                   </legend>
+                  <LocationSearch value={destination} onChange={setDestination} />
                   <DateRangePicker
                     value={range}
                     onChange={handleRangeChange}

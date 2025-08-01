@@ -12,7 +12,7 @@ export interface CatalogApiResponse {
  */
 export async function fetchCatalog(
   dest: string,
-  categories: string[],
+  categories: string[]
 ): Promise<CatalogApiResponse> {
   const params = new URLSearchParams({ dest });
   if (categories.length > 0) {

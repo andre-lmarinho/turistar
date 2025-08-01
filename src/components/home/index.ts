@@ -2,3 +2,4 @@
 
 export { default as WelcomeForm } from './WelcomeForm';
 export { default as FeaturePreview } from './FeaturePreview';
+export { default as LocationSearch } from './LocationSearch';
