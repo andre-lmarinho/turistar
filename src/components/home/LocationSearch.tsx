@@ -19,7 +19,9 @@ interface NominatimResult {
   place_id: number;
   display_name: string;
   /** granularity of the result returned by Nominatim */
-  addresstype: string;
+  addresstype?: string;
+  /** fallback type when addresstype is missing */
+  type: string;
 }
 
 export default function LocationSearch({ value, onChange }: LocationSearchProps) {
@@ -49,9 +51,8 @@ export default function LocationSearch({ value, onChange }: LocationSearchProps)
           },
         });
         const data: NominatimResult[] = await res.json();
-        const filtered = data.filter((item) =>
-          ['city', 'state', 'country'].includes(item.addresstype)
-        );
+        const allowed = ['city', 'state', 'province', 'region', 'country'];
+        const filtered = data.filter((item) => allowed.includes(item.addresstype ?? item.type));
         setSuggestions(
           filtered.map((item) => {
             const name = item.display_name.split(',').slice(0, 3).join(', ');
@@ -83,13 +84,13 @@ export default function LocationSearch({ value, onChange }: LocationSearchProps)
           setQuery(val);
           onChange(val);
         }}
-        className="border-input bg-background focus-visible:ring-ring w-full rounded-md border p-2 text-sm shadow-sm outline-none focus-visible:ring-2"
+        className="bg-background focus:ring-primary w-full rounded border px-4 py-2 text-sm focus:ring-2 focus:outline-none"
         placeholder="Search city, state or country"
         aria-label="Destination"
         autoComplete="off"
       />
       {suggestions.length > 0 && (
-        <ul className="bg-background absolute top-full right-0 left-0 z-10 mt-1 max-h-60 overflow-auto rounded-md border p-1 shadow-md">
+        <ul className="bg-background absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border p-1 shadow-md">
           {suggestions.map((s) => (
             <li key={s.id}>
               <button
