@@ -67,7 +67,7 @@ function BudgetPanel({ planId, activitiesTotal, days, onUpdateBudget }: Props) {
         <div className="flex items-center justify-between">
           <h3 id="expenses-heading" className="flex items-center gap-1 font-semibold">
             Expenses
-            <InfoPopup content={BUDGET_INFO.expenses} aria-hidden="true">
+            <InfoPopup content={BUDGET_INFO.expenses}>
               <Info size={12} className="text-muted-foreground" aria-hidden="true" />
             </InfoPopup>
           </h3>
