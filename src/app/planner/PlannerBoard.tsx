@@ -39,7 +39,7 @@ export interface PlannerBoardProps {
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
-export default function PlannerBoard({
+function PlannerBoard({
   days,
   activeId,
   sensors,
@@ -113,3 +113,5 @@ export default function PlannerBoard({
     </DndContext>
   );
 }
+
+export default React.memo(PlannerBoard);

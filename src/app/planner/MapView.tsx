@@ -43,7 +43,7 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-export default function MapView({ days, onSelectActivity }: MapViewProps) {
+function MapView({ days, onSelectActivity }: MapViewProps) {
   const dayPaths = useMemo(
     () =>
       days
@@ -133,3 +133,5 @@ export default function MapView({ days, onSelectActivity }: MapViewProps) {
     </div>
   );
 }
+
+export default React.memo(MapView);
