@@ -80,14 +80,17 @@ export default function ActivityModalHeader({
         }}
       >
         {editedImageUrl && (
-          <Image
-            src={editedImageUrl}
-            alt={activity.title}
-            className="absolute top-0 left-0 h-full w-full rounded-t-lg object-cover"
-            width={400}
-            height={200}
-            unoptimized
-          />
+          <>
+            {/* Decorative image: empty alt to prevent repeating the activity title */}
+            <Image
+              src={editedImageUrl}
+              alt=""
+              className="absolute top-0 left-0 h-full w-full rounded-t-lg object-cover"
+              width={400}
+              height={200}
+              unoptimized
+            />
+          </>
         )}
         {editedImageUrl && (
           <Button

@@ -48,14 +48,17 @@ export default function ActivityCardBase({
       >
         {/* Image */}
         {imageUrl && (
-          <Image
-            src={imageUrl}
-            alt={title}
-            width={400}
-            height={200}
-            unoptimized
-            className="h-30 w-full rounded-t-lg object-cover"
-          />
+          <>
+            {/* Decorative image: alt text intentionally empty to avoid repeating the title */}
+            <Image
+              src={imageUrl}
+              alt=""
+              width={400}
+              height={200}
+              unoptimized
+              className="h-30 w-full rounded-t-lg object-cover"
+            />
+          </>
         )}
 
         {/* Title */}

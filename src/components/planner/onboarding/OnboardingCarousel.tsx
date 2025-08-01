@@ -74,7 +74,8 @@ function Slide({
     >
       <div className={round ? 'm-0 p-0' : 'mb-4 h-full p-5'}>
         <div className="relative h-[70%] w-full flex-none">
-          <Image src={step.image} alt={step.title} fill className="object-cover" />
+          {/* Decorative image – empty alt to avoid repeating the step title */}
+          <Image src={step.image} alt="" fill className="object-cover" />
         </div>
         <div className="mt-2 flex-1">
           <h3 className="text-foreground mb-1 text-3xl font-semibold">{step.title}</h3>
