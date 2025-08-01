@@ -17,6 +17,7 @@ type GeoapifyFeature = {
     distance?: number;
     image?: string;
     description?: string;
+    result_type?: string;
   };
 };
 type GeoapifyResponse = { features: GeoapifyFeature[] };
@@ -41,11 +42,14 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
-  return data.features.map((f) => ({
-    name: f.properties.formatted ?? f.properties.name ?? text,
-    latitude: f.properties.lat,
-    longitude: f.properties.lon,
-  }));
+  const allowed = new Set(['city', 'state', 'country']);
+  return data.features
+    .filter((f) => allowed.has(f.properties.result_type ?? ''))
+    .map((f) => ({
+      name: f.properties.formatted ?? f.properties.name ?? text,
+      latitude: f.properties.lat,
+      longitude: f.properties.lon,
+    }));
 }
 
 /* Static‑map thumbnail (fallback) */
