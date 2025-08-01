@@ -21,7 +21,7 @@ interface Props {
   onUpdateBudget: (id: string, amount: number) => void;
 }
 
-export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBudget }: Props) {
+function BudgetPanel({ planId, activitiesTotal, days, onUpdateBudget }: Props) {
   const {
     budget,
     setBudget,
@@ -98,3 +98,5 @@ export default function BudgetPanel({ planId, activitiesTotal, days, onUpdateBud
     </div>
   );
 }
+
+export default React.memo(BudgetPanel);
