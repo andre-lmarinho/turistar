@@ -19,10 +19,12 @@ interface Props {
 export default function DestinationInput({ value, onChange }: Props) {
   const debounced = useDebounce(value);
 
-  const { results, loading, error } = useDestinationAutocomplete(debounced);
-
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(-1);
+
+  const { results, loading, error } = useDestinationAutocomplete(debounced, {
+    enabled: open,
+  });
 
   const handleSelect = (r: PlaceSelection) => {
     onChange({ name: r.name, latitude: r.latitude, longitude: r.longitude });

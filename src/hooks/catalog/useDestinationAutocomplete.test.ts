@@ -52,4 +52,16 @@ describe('useDestinationAutocomplete', () => {
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
   });
+
+  test('does not fetch when disabled', async () => {
+    const { result } = renderHook(() => useDestinationAutocomplete('paris', { enabled: false }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(mockFetchAutocomplete).not.toHaveBeenCalled();
+    expect(result.current.results).toEqual([]);
+    expect(result.current.error).toBe(false);
+  });
 });

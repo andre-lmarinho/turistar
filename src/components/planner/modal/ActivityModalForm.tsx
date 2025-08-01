@@ -23,10 +23,12 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
-  const debouncedAddress = useDebounce(editedAddress);
-  const { results: addressResults, loading: addressLoading } =
-    useDestinationAutocomplete(debouncedAddress);
   const [addressOpen, setAddressOpen] = useState(false);
+  const debouncedAddress = useDebounce(editedAddress);
+  const { results: addressResults, loading: addressLoading } = useDestinationAutocomplete(
+    debouncedAddress,
+    { enabled: addressOpen }
+  );
 
   // Update internal state when the activity prop changes
   useEffect(() => {
