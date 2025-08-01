@@ -19,10 +19,12 @@ interface Props {
 export default function DestinationInput({ value, onChange }: Props) {
   const debounced = useDebounce(value);
 
-  const { results, loading, error } = useDestinationAutocomplete(debounced);
-
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(-1);
+
+  const { results, loading, error } = useDestinationAutocomplete(debounced, {
+    enabled: open,
+  });
 
   const handleSelect = (r: PlaceSelection) => {
     onChange({ name: r.name, latitude: r.latitude, longitude: r.longitude });
@@ -31,7 +33,7 @@ export default function DestinationInput({ value, onChange }: Props) {
   };
 
   return (
-    <>
+    <div className="relative w-64">
       <input
         id="dest-input"
         role="combobox"
@@ -70,7 +72,7 @@ export default function DestinationInput({ value, onChange }: Props) {
           setActive(-1);
         }}
         placeholder="Destination"
-        className="bg-background focus:ring-primary flex w-64 items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
+        className="bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
         autoComplete="off"
       />
       {loading && <Spinner className="absolute top-2 right-2 size-4" />}
@@ -100,6 +102,6 @@ export default function DestinationInput({ value, onChange }: Props) {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }

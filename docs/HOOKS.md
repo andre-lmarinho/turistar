@@ -130,24 +130,28 @@ const { activities } = useDestinationCatalog(open, planId);
 
 ### `useDestinationAutocomplete`
 
-_File: `src/hooks/useDestinationAutocomplete.ts`_
+_File: `src/hooks/catalog/useDestinationAutocomplete.ts`_
 
 ```ts
-export function useDestinationAutocomplete(query: string);
+export function useDestinationAutocomplete(
+  query: string,
+  options?: { enabled?: boolean }
+);
 ```
 
 - **Inputs**
   - `query`: user input text.
+  - `options.enabled` (optional): when `false`, prevents fetching.
 - **Outputs**
   Geoapify `results`, loading and error flags.
 - **Lifecycle**
-  Fetches `/api/autocomplete?text=` when the query has at least 4 characters.
+  Fetches `/api/autocomplete?text=` when the query has at least 4 characters and `enabled` is not `false`.
   Results are cached for 1 minute and do not refetch on window focus.
 - **Exceptions**
   Sets an error state when the request fails.
 
 ```ts
-const { results } = useDestinationAutocomplete(query);
+const { results } = useDestinationAutocomplete(query, { enabled: open });
 ```
 
 ### `useDebounce`
