@@ -62,17 +62,22 @@ export default function WelcomeForm() {
               </h1>
 
               <form onSubmit={handleSubmit} noValidate>
-                <fieldset className="flex flex-col gap-4 pb-4" aria-labelledby="trip-details-label">
+                <fieldset className="flex gap-4 pb-4" aria-labelledby="trip-details-label">
                   <legend id="trip-details-label" className="sr-only">
                     Trip details
                   </legend>
-                  <LocationSearch value={destination} onChange={setDestination} />
-                  <DateRangePicker
-                    value={range}
-                    onChange={handleRangeChange}
-                    aria-describedby={error ? 'date-error' : undefined}
-                    aria-invalid={Boolean(error)}
-                  />
+                  <div className="flex-1">
+                    <LocationSearch value={destination} onChange={setDestination} />
+                  </div>
+                  <div className="flex-1">
+                    <DateRangePicker
+                      className="w-full"
+                      value={range}
+                      onChange={handleRangeChange}
+                      aria-describedby={error ? 'date-error' : undefined}
+                      aria-invalid={Boolean(error)}
+                    />
+                  </div>
                 </fieldset>
 
                 <Button type="submit">Start Your Planning</Button>

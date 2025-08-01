@@ -68,7 +68,7 @@ export default function LocationSearch({ value, onChange }: LocationSearchProps)
   }
 
   return (
-    <div className="w-full" aria-label="Destination search">
+    <div className="relative w-full" aria-label="Destination search">
       <input
         type="text"
         value={query}
@@ -83,7 +83,7 @@ export default function LocationSearch({ value, onChange }: LocationSearchProps)
         autoComplete="off"
       />
       {suggestions.length > 0 && (
-        <ul className="bg-background mt-2 max-h-60 w-full overflow-auto rounded-md border p-1 shadow-md">
+        <ul className="bg-background absolute top-full z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border p-1 shadow-md">
           {suggestions.map((s) => (
             <li key={s.id}>
               <button
