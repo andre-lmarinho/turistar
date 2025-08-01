@@ -50,10 +50,7 @@ export default function SortableItem({
     return (
       <div
         className={cn(
-          'pointer-events-none cursor-grabbing',
-          'origin-bottom rotate-[3deg]',
-          'transition-transform duration-200 ease-out',
-          'bg-background/70 rounded-lg backdrop-blur-md',
+          'bg-background pointer-events-none origin-bottom rotate-[3deg] cursor-grabbing rounded-lg opacity-90 backdrop-blur-md transition-transform duration-200 ease-out',
           className
         )}
       >
