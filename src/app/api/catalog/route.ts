@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data);
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: 'Failed to load catalog.' }, { status: 500 });
+    // Fall back to an empty catalog so the client can continue gracefully.
+    return NextResponse.json({ activities: [] });
   }
 }

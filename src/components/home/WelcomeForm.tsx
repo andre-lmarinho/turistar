@@ -64,8 +64,12 @@ export default function WelcomeForm() {
         range.from.toISOString(),
         range.to.toISOString()
       );
-      const { activities } = await fetchCatalog(destParam);
-      localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
+      try {
+        const { activities } = await fetchCatalog(destParam);
+        localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
+      } catch (err) {
+        console.error(err);
+      }
       const query = new URLSearchParams({
         dest: destParam,
         start: range.from.toISOString(),
@@ -78,7 +82,7 @@ export default function WelcomeForm() {
       const queryString = query.toString();
       router.push(`/planner/${planId}?${queryString}`);
     } catch {
-      setError('Failed to load catalog.');
+      setError('Failed to create plan.');
     } finally {
       setLoading(false);
     }
