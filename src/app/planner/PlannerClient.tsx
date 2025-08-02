@@ -1,8 +1,9 @@
 // src/app/planner/PlannerClient.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
@@ -161,6 +162,15 @@ export default function PlannerClient({
   hideOnboarding = false,
   hideCatalog = false,
 }: PlannerClientProps) {
+  const router = useRouter();
+  const search = useSearchParams();
+
+  useEffect(() => {
+    if (search.toString()) {
+      router.replace(`/planner/${planId}`, { scroll: false });
+    }
+  }, [search, router, planId]);
+
   return (
     <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest}>
       <PlannerClientInner hideOnboarding={hideOnboarding} hideCatalog={hideCatalog} />

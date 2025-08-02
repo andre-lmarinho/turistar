@@ -13,18 +13,11 @@ interface UsePlannerOptions {
   dest?: string;
 }
 export function usePlanner(options: UsePlannerOptions = {}) {
-  /* Plan id + destination from URL */
-  const {
-    dest: urlDest,
-    planId: urlPlanId,
-    destCoords,
-  } = usePlanParams({
-    skipReplace: Boolean(options.dest && options.planId),
-  });
+  const { dest: urlDest, destCoords } = usePlanParams();
   const dest = options.dest ?? urlDest;
-  const planId = options.planId ?? urlPlanId;
+  const planId = options.planId ?? '';
 
-  const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
+  const { tripDays, currentRange, handleRangeChange } = useTripRange(options.initialDays ?? []);
 
   /* DnD state */
   const {

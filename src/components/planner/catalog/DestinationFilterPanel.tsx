@@ -19,14 +19,14 @@ interface DestinationFilterPanelProps {
  * - Works exclusively with CatalogActivity data.
  */
 export default function DestinationFilterPanel({ isOpen, onClose }: DestinationFilterPanelProps) {
-  const { planId, days, addActivity, removeActivity } = usePlannerContext();
+  const { planId, dest, days, addActivity, removeActivity } = usePlannerContext();
   const activitiesById = useActivitiesById(days);
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<'name' | 'rating'>('rating');
 
-  const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId);
+  const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId, dest);
 
   const toggleCat = (cat: string) =>
     setSelectedCats((prev) => {

@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 
 import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData, type InspirationData } from '@/utils';
+import { capitalize } from '@/lib/utils';
 
 type CityParams = { city: string };
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
   params: Promise<CityParams>;
 }): Promise<Metadata> {
   const { city } = await params;
-  return { title: `${city} Inspiration` };
+  return { title: `${capitalize(city)} Inspiration` };
 }
 
 /* page component */

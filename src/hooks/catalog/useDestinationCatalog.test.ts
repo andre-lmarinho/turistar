@@ -27,7 +27,7 @@ describe('useDestinationCatalog', () => {
       isError: false,
     });
 
-    const { result } = renderHook(() => useDestinationCatalog(true, 'p1'));
+    const { result } = renderHook(() => useDestinationCatalog(true, 'p1', 'rome'));
 
     expect(result.current.activities).toEqual(mockActivities);
     expect(result.current.categories).toEqual(['monument', 'museum']);
@@ -41,7 +41,7 @@ describe('useDestinationCatalog', () => {
       isError: true,
     });
 
-    const { result } = renderHook(() => useDestinationCatalog(true, 'p1'));
+    const { result } = renderHook(() => useDestinationCatalog(true, 'p1', 'rome'));
 
     expect(result.current.error).toBe('Failed to load catalog.');
     expect(result.current.activities).toEqual([]);

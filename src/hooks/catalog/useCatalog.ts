@@ -14,9 +14,13 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
  * - Returns loading and error flags from `useCatalogActivities`
  */
 
-export function useCatalog(planId: string | null, options: { enabled: boolean }) {
+export function useCatalog(
+  planId: string | null,
+  dest: string | null,
+  options: { enabled: boolean }
+) {
   // 1) Load catalog activities using the shared hook
-  const { activities, ...query } = useCatalogActivities(planId, options);
+  const { activities, ...query } = useCatalogActivities(planId, dest, options);
 
   // 2) Memoize transforming raw activities into day-based buckets
   const days: DayPlan[] | undefined = useMemo(() => {
