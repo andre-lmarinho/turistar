@@ -22,7 +22,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - **Formatting**: Run `npm run format` before committing. The project uses Prettier with semicolons, single quotes and `printWidth` 100.
 - **Linting**: Ensure `npm run lint` passes.
 - **Tests**: Execute `npm run test` and make sure tests succeed.
-- **Commit style**: Start commits with an appropriate Gitmoji followed by a conventional type and a short imperative description in English (e.g., `✨ Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
+- **Commit style**: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `✨ Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
 
 ## General Conventions for AI Agents
 

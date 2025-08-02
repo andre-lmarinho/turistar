@@ -5,10 +5,18 @@ Thank you for taking the time to contribute to Turistar! This document outlines 
 ## Branches and Gitmoji Commits
 
 - Use short branch names starting with a type, for example `feature/*`, `fix/*` or `chore/*`.
-- Commit messages must follow [Gitmoji](https://gitmoji.dev/) conventions: start with an appropriate Gitmoji followed by a conventional type and a short, imperative description.
+- Commit messages must follow [Gitmoji](https://gitmoji.dev/) conventions: start with an appropriate Gitmoji followed by a short, capitalized description in English.
   - Example: `✨ Add date picker to planner`
-  - A commitlint hook enforces this format.
+  - A commitlint hook enforces this format, and the CI pipeline runs `npm run lint:commit` to verify it on pull requests.
 - Squash commits before merging so the main branch history stays tidy.
+
+### Sample Commit Messages
+
+Examples of valid commit messages:
+
+- `✨ Add date picker to planner`
+- `🐛 Fix timezone calculation`
+- `📝 Update contribution guidelines`
 
 ## Pull Requests
 
