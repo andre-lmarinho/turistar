@@ -9,6 +9,7 @@ Thank you for taking the time to contribute to Turistar! This document outlines 
   - Start with the appropriate emoji, followed by a space and a short, imperative message that begins with an uppercase letter.
   - Example: `✨ Add date picker to planner`
 - Squash commits before merging so the main branch history stays tidy.
+- To verify commit history, run `npx commitlint --from origin/main --to HEAD` before pushing.
 
 ## Linting and Formatting
 
