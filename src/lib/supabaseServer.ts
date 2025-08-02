@@ -4,10 +4,7 @@ import { createServerClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
+// Return a server-side Supabase client bound to Next.js cookies
 export function supabaseServer(): SupabaseClient<Database> {
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies, schema: 'public' }
-  );
+  return createServerClient<Database>({ cookies });
 }

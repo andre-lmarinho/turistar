@@ -1,4 +1,4 @@
-export const createBrowserClient = () => ({
+export const createClientComponentClient = () => ({
   from: () => ({
     select: () => ({
       eq: () => ({
@@ -13,7 +13,7 @@ export const createBrowserClient = () => ({
   auth: { getSession: () => Promise.resolve({}), getUser: () => Promise.resolve({}) },
 });
 
-export const createServerClient = createBrowserClient;
+export const createServerClient = () => createClientComponentClient();
 export const createMiddlewareClient = () => ({
   auth: { getSession: () => Promise.resolve({}) },
   from: () => ({}),

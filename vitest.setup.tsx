@@ -18,6 +18,13 @@ HTMLCanvasElement.prototype.getContext = vi
       }) as unknown as CanvasRenderingContext2D,
   ) as unknown as HTMLCanvasElement['getContext'];
 
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => ({
+    from: vi.fn(),
+    auth: { getSession: vi.fn(), getUser: vi.fn() },
+  }),
+}));
+
 
 vi.mock('@testing-library/react', async () => {
   const actual: typeof import('@testing-library/react') = await vi.importActual(
