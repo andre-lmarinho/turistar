@@ -16,14 +16,15 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   let destination = dest;
   if (!destination) {
     const supabase = supabaseServer();
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('plans')
-      .select('destination, title')
+      .select('destination')
       .eq('id', planId)
-      .single();
-    if (!error)
-      destination =
-        (data as { destination?: string; title?: string } | null)?.destination ?? data?.title;
+      .single()) as unknown as {
+      data: { destination: string | null } | null;
+      error: unknown;
+    };
+    if (!error) destination = data?.destination ?? undefined;
   }
 
   if (!destination) {
