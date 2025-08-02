@@ -162,7 +162,7 @@ export default function PlannerClient({
   hideCatalog = false,
 }: PlannerClientProps) {
   return (
-    <PlannerProvider initialDays={initialDays} planId={planId} dest={dest}>
+    <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest}>
       <PlannerClientInner hideOnboarding={hideOnboarding} hideCatalog={hideCatalog} />
     </PlannerProvider>
   );

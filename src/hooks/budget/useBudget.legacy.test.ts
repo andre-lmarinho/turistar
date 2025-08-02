@@ -1,7 +1,7 @@
 // src/hooks/useBudget.test.ts
 
 import { renderHook, act } from '@testing-library/react';
-import { useBudget } from './useBudget';
+import { useBudget } from './useBudget.legacy';
 
 beforeEach(() => {
   localStorage.clear();

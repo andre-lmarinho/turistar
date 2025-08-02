@@ -11,7 +11,10 @@ This document outlines how planner data moves through the application.
 
 - `usePlanner` orchestrates planner state. It gathers trip range data and initializes drag-and-drop via `useDnDPlanner`.
 - `useDnDPlanner` combines drag handlers from `useDragState` with activity helpers from `useActivityState`.
-- `useLocalStorageSync` persists planner data in `localStorage`. It is called by `usePlanner`, `usePlanTitle` and `useBudget`.
+- Planner data is persisted in Supabase via dedicated hooks:
+  - `usePlanDays` for days and activities
+  - `usePlanTitle` for plan metadata
+  - `useBudget` for budget entries
 
 ## Components
 

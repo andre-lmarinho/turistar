@@ -1,6 +1,6 @@
 # Turistar – Drag-and-Drop Travel Planner
 
-A simple travel planner built with Next.js, React and drag‑and‑drop. Select any city to generate a starter itinerary that you can rearrange and edit as you like. Plans are saved to `localStorage` so they stick around between visits.
+A simple travel planner built with Next.js, React and drag‑and‑drop. Select any city to generate a starter itinerary that you can rearrange and edit as you like. Plans persist via Supabase so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
 _or_ deploy easily to Vercel or Netlify with the same settings.
@@ -59,7 +59,7 @@ While editing an activity, you can search the catalog directly from the modal or
 - **Dynamic Catalog**
   Activities are fetched from Geoapify via `/api/catalog` using your `GEOAPIFY_KEY`.
 - **Persistent Storage**
-  All planner and budget changes are saved to `localStorage` so they stay when you refresh.
+  All planner and budget changes are saved to Supabase so they stay when you refresh.
 - **Accessibility & Responsive Design**
   Fully keyboard-accessible with layouts optimised for mobile and desktop.
 - **Sample Plan**
@@ -146,6 +146,12 @@ You can deploy the same app to Vercel or Netlify.
 4. **Configure environment**
    - Copy `.env.example` to `.env.local`.
    - Set your Geoapify API key in `GEOAPIFY_KEY`.
+   - Add your Supabase project credentials:
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+     - `SUPABASE_SERVICE_ROLE_KEY`
+   - Start a local Supabase instance with `supabase start`.
+   - Generate database types with `npm run gen:types` whenever the schema changes.
 
 ### Development Workflow
 

@@ -17,3 +17,26 @@ HTMLCanvasElement.prototype.getContext = vi
         measureText: vi.fn(() => ({ width: 0 })),
       }) as unknown as CanvasRenderingContext2D,
   ) as unknown as HTMLCanvasElement['getContext'];
+
+vi.mock('@supabase/supabase-js', () => {
+  return {
+    createBrowserClient: () => ({ from: vi.fn(), auth: { getSession: vi.fn() } }),
+    createServerClient: () => ({ from: vi.fn(), auth: { getUser: vi.fn() } }),
+  };
+});
+
+vi.mock('@supabase/auth-helpers-nextjs', () => {
+  return {
+    createBrowserClient: () => ({ from: vi.fn(), auth: { getSession: vi.fn() } }),
+    createServerClient: () => ({ from: vi.fn(), auth: { getUser: vi.fn() } }),
+    createMiddlewareClient: () => ({ auth: { getSession: vi.fn() }, from: vi.fn() }),
+  };
+});
+
+vi.mock('@supabase/auth-helpers-react', () => {
+  return {
+    SessionContextProvider: ({ children }: { children: React.ReactNode }) => (
+      <>{children}</>
+    ),
+  };
+});

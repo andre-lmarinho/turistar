@@ -2,7 +2,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useState } from 'react';
-import { usePlanDaysStorage } from './usePlanDaysStorage';
+import { usePlanDaysStorage } from './usePlanDaysStorage.legacy';
 import type { DayPlan } from '@/types';
 
 function useWrapper(initial: DayPlan[]) {
