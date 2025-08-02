@@ -12,17 +12,15 @@ export async function createPlan(dest: string, start: string, end: string) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthenticated');
 
-  const { data: plan, error: planError } = (await supabase
+  const { data: plans, error: planError } = (await supabase
     .from('plans')
     .insert({ title: dest, destination: dest, user_id: user.id })
-    .select('id')
-    .single()) as unknown as {
-    data: { id: string } | null;
+    .select('id')) as unknown as {
+    data: { id: string }[] | null;
     error: unknown;
   };
-  if (planError) throw planError;
-  const planId = plan?.id;
-  if (!planId) throw new Error('Failed to create plan');
+  if (planError || !plans?.length) throw planError || new Error('Failed to create plan');
+  const planId = plans[0].id;
 
   const tripDays = eachDayOfInterval({ start: new Date(start), end: new Date(end) });
   const days = buildInitialDays(tripDays);
