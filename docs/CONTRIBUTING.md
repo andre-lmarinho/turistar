@@ -2,14 +2,20 @@
 
 Thank you for taking the time to contribute to Turistar! This document outlines the development conventions for the project so that all contributions are consistent and easy to review.
 
-## Branches and Conventional Commits
+## Branches and Gitmoji Commits
 
 - Use short branch names starting with a type, for example `feature/*`, `fix/*` or `chore/*`.
-- Commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) style.
-  - Prefix your commit subject with `feat:`, `fix:`, `chore:` and so on.
-  - Keep messages brief and imperative.
-  - Example: `feat: add date picker to planner`
+- Commit messages must follow [Gitmoji](https://gitmoji.dev/) conventions: start with an appropriate Gitmoji followed by a conventional type and a short, imperative description.
+  - Example: `✨ Add date picker to planner`
+  - A commitlint hook enforces this format.
 - Squash commits before merging so the main branch history stays tidy.
+
+## Pull Requests
+
+- Use the pull request template.
+  - Provide a short overview in **Summary**.
+  - Copy the **Summary** text verbatim into **Description** and expand if needed.
+  - Commit suggestions after merging should also use Gitmoji.
 
 ## Linting and Formatting
 
