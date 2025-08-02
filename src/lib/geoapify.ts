@@ -24,9 +24,24 @@ type GeoapifyResponse = { features: GeoapifyFeature[] };
 
 /* Static config */
 const DEFAULT_RADIUS_METERS = 20_000;
-const CATALOG_LIMIT = 120;
+const CATALOG_LIMIT = 240;
 
-export const GEOAPIFY_CATEGORIES = ['tourism'];
+export const GEOAPIFY_CATEGORIES = [
+  'tourism.attraction',
+  'tourism.sights',
+  'entertainment.museum',
+  'entertainment.culture.gallery',
+  'entertainment.theme_park',
+  'entertainment.cinema',
+  'leisure.park',
+  'natural.protected_area',
+  'catering.restaurant',
+  'catering.cafe',
+  'catering.bar',
+  'catering.pub',
+  'commercial.shopping_mall',
+  'commercial.marketplace',
+];
 const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
 /* Geoapify – Autocomplete */
