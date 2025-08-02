@@ -1,7 +1,7 @@
 // src/components/planner/catalog/DestinationCard.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { RemoveCardButton, DestinationActionButton } from '@/components';
 import type { CatalogActivity } from '@/types';
@@ -30,6 +30,7 @@ export default function DestinationCard({
   onRemove,
 }: DestinationCardProps) {
   const titleId = `destination-title-${name.replace(/\s+/g, '-')}`;
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
     <li
@@ -44,8 +45,16 @@ export default function DestinationCard({
           alt={`Photo of ${name}`}
           width={400}
           height={200}
-          className="h-40 w-full rounded-t object-cover"
+          className={`h-40 w-full rounded-t object-cover transition-opacity duration-300 ${
+            imgLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/woAAgMBgLf3OBAAAAAASUVORK5CYII="
+          onLoadingComplete={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
         />
+        {!imgLoaded && <div className="bg-muted absolute inset-0 z-10 animate-pulse rounded-t" />}
         {/* quick-remove icon (only when added) */}
         <div className="absolute top-2 left-2">
           {added && <RemoveCardButton aria-label={`Remove ${name}`} onClick={onRemove} />}
