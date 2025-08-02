@@ -175,6 +175,13 @@ You can deploy the same app to Vercel or Netlify.
 - `npm run test` — run unit tests
 - `npm run test:watch` — run tests in watch mode
 
+### Local Vercel build
+
+```bash
+npm run vercel:pull
+npm run vercel:build
+```
+
 ## 🧪 Testing
 
 See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
