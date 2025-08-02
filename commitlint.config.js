@@ -1,3 +1,14 @@
+// commitlint.config.cjs
 module.exports = {
-  extends: ['gitmoji'],
+  parserPreset: {
+    parserOpts: {
+      headerPattern: /^(:\w+:|\p{Extended_Pictographic}) (.+)$/u,
+      headerCorrespondence: ['emoji', 'subject'],
+    },
+  },
+  rules: {
+    'subject-empty': [2, 'never'],
+    'type-empty': [0, 'always'],
+    'header-max-length': [2, 'always', 72],
+  },
 };
