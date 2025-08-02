@@ -179,6 +179,15 @@ You can deploy the same app to Vercel or Netlify.
 
 See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
 
+## 🔄 Local Vercel Build
+
+Run a build identical to Vercel locally:
+
+```
+npm run vercel:pull   # download preview environment variables
+npm run vercel:build  # compile using Vercel's build pipeline
+```
+
 ---
 
 ## ☁️ Deployment

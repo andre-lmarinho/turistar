@@ -18,7 +18,13 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "prepare": "husky install",
-    "gen:types": "supabase gen types typescript --project-id YOUR_ID --schema public > src/types/supabase.ts"
+    "gen:types": "supabase gen types typescript --project-id YOUR_ID --schema public > src/types/supabase.ts",
+    "vercel:pull": "vercel pull --yes --environment=preview --token $VERCEL_TOKEN",
+    "vercel:build": "vercel build --debug --no-telemetry",
+    "prepush": "npm run vercel:pull && npm run vercel:build"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
