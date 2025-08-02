@@ -62,7 +62,7 @@ function renderBoard() {
   ];
   render(
     <div style={{ height: '200px' }}>
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <PlannerBoard />
       </PlannerProvider>
     </div>

@@ -8,11 +8,14 @@ export function usePlanTitle(planId: string, defaultTitle = '') {
   const { data: title = defaultTitle } = useQuery({
     queryKey: ['plan_title', planId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = (await supabase
         .from('plans')
         .select('title')
         .eq('id', planId)
-        .single();
+        .single()) as unknown as {
+        data: { title: string } | null;
+        error: unknown;
+      };
       if (error) throw error;
       return data?.title ?? defaultTitle;
     },
@@ -21,7 +24,10 @@ export function usePlanTitle(planId: string, defaultTitle = '') {
 
   const mutation = useMutation({
     mutationFn: async (newTitle: string) => {
-      const { error } = await supabase.from('plans').update({ title: newTitle }).eq('id', planId);
+      const { error } = (await supabase
+        .from('plans')
+        .update({ title: newTitle })
+        .eq('id', planId)) as unknown as { error: unknown };
       if (error) throw error;
       return newTitle;
     },

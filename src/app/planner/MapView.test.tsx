@@ -105,14 +105,14 @@ describe('FitAllMarkers effect', () => {
   it('runs when coordinates change', () => {
     mockDays = buildDays([1, 1]);
     const { rerender } = render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
     rerender(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
@@ -120,7 +120,7 @@ describe('FitAllMarkers effect', () => {
 
     mockDays = buildDays([2, 2]);
     rerender(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
@@ -147,7 +147,7 @@ describe('Marker accessibility', () => {
 
     mockDays = days;
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
@@ -167,7 +167,7 @@ describe('Marker accessibility', () => {
     ];
     mockDays = days;
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
@@ -185,7 +185,7 @@ describe('Marker accessibility', () => {
     mockDays = days;
     mockDestCoords = { lat: 5, lng: 6 };
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );

@@ -9,21 +9,28 @@ export function usePlanDays(planId: string) {
   const days = useQuery({
     queryKey: ['plan_days', planId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = (await supabase
         .from('plan_days')
         .select('*, activities(*)')
         .eq('plan_id', planId)
-        .order('position');
+        .order('position')) as unknown as {
+        data: (PlanDay & { activities: Activity[] })[];
+        error: unknown;
+      };
       if (error) throw error;
-      return data as (PlanDay & { activities: Activity[] })[];
+      return data;
     },
   });
 
   const upsertDay = useMutation({
     mutationFn: async (payload: Partial<PlanDay>) => {
-      const { error, data } = await supabase.from('plan_days').upsert(payload).select().single();
+      const { error, data } = (await supabase
+        .from('plan_days')
+        .upsert(payload)
+        .select()
+        .single()) as unknown as { data: PlanDay; error: unknown };
       if (error) throw error;
-      return data as PlanDay;
+      return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['plan_days', planId] }),
   });

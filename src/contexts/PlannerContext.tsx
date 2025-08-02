@@ -20,7 +20,11 @@ export function PlannerProvider({
   dest?: string;
 }) {
   const { data: storedDays } = usePlanDays(planId);
-  const planner = usePlanner({ initialDays: storedDays ?? initialDays, planId, dest });
+  const planner = usePlanner({
+    initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
+    planId,
+    dest,
+  });
   const selected = useSelectedActivity(planner.days, planner.setDays, {
     addActivity: planner.addActivity,
     removeActivity: planner.removeActivity,
