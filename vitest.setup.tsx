@@ -18,25 +18,26 @@ HTMLCanvasElement.prototype.getContext = vi
       }) as unknown as CanvasRenderingContext2D,
   ) as unknown as HTMLCanvasElement['getContext'];
 
-vi.mock('@supabase/supabase-js', () => {
+
+vi.mock('@testing-library/react', async () => {
+  const actual: typeof import('@testing-library/react') = await vi.importActual(
+    '@testing-library/react'
+  );
+  const { QueryClient, QueryClientProvider } = await vi.importActual<
+    typeof import('@tanstack/react-query')
+  >('@tanstack/react-query');
+
+  function WithClient({ children }: { children: React.ReactNode }) {
+    const client = new QueryClient();
+    return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  }
+
   return {
-    createBrowserClient: () => ({ from: vi.fn(), auth: { getSession: vi.fn() } }),
-    createServerClient: () => ({ from: vi.fn(), auth: { getUser: vi.fn() } }),
+    ...actual,
+    render: (ui: React.ReactElement, options?: Parameters<typeof actual.render>[1]) =>
+      actual.render(ui, { wrapper: WithClient, ...options }),
+    renderHook: <T,>(fn: () => T, options?: Parameters<typeof actual.renderHook>[1]) =>
+      actual.renderHook(fn, { wrapper: WithClient, ...options }),
   };
 });
 
-vi.mock('@supabase/auth-helpers-nextjs', () => {
-  return {
-    createBrowserClient: () => ({ from: vi.fn(), auth: { getSession: vi.fn() } }),
-    createServerClient: () => ({ from: vi.fn(), auth: { getUser: vi.fn() } }),
-    createMiddlewareClient: () => ({ auth: { getSession: vi.fn() }, from: vi.fn() }),
-  };
-});
-
-vi.mock('@supabase/auth-helpers-react', () => {
-  return {
-    SessionContextProvider: ({ children }: { children: React.ReactNode }) => (
-      <>{children}</>
-    ),
-  };
-});

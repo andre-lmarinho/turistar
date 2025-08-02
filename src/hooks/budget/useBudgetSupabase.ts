@@ -20,14 +20,15 @@ export function useBudget(planId: string, activitiesTotal: number) {
 
   useEffect(() => {
     supabase
-      .from<BudgetRow>('budget_entries')
+      .from('budget_entries')
       .select('budget, entries')
       .eq('plan_id', planId)
       .single()
       .then(({ data }) => {
-        if (data) {
-          setBudget(data.budget ?? 0);
-          setEntries(data.entries ?? []);
+        const row = data as BudgetRow | null;
+        if (row) {
+          setBudget(row.budget ?? 0);
+          setEntries(row.entries ?? []);
         }
       });
   }, [planId]);
