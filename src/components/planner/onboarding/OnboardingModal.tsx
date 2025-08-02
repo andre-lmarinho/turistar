@@ -30,7 +30,7 @@ export default function OnboardingModal() {
       </div>
       {/* Carousel */}
       <div className="flex items-center justify-center">
-        <OnboardingCarousel autoplay pauseOnHover baseWidth={384} onFinish={onClose} />
+        <OnboardingCarousel baseWidth={384} onFinish={onClose} />
       </div>
     </Modal>
   );

@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { OnboardingContext } from '@/contexts';
 
 describe('OnboardingModal', () => {
-  it('renders all onboarding steps when open', () => {
+  it('renders all steps when open', () => {
     render(
       <OnboardingContext.Provider value={{ showOnboarding: true, setShowOnboarding: vi.fn() }}>
         <OnboardingModal />

@@ -1,7 +1,7 @@
 // src/components/planner/onboarding/OnboardingCarousel.tsx
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
@@ -10,11 +10,6 @@ import { NavCircleButton } from '@/components';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;
-  autoplay?: boolean;
-  autoplayDelay?: number;
-  pauseOnHover?: boolean;
-  loop?: boolean;
-  round?: boolean;
   onFinish?: () => void;
 }
 
@@ -38,7 +33,6 @@ function Slide({
   itemWidth,
   itemHeight,
   effectiveTransition,
-  round,
 }: {
   step: (typeof ONBOARDING_STEPS)[number];
   idx: number;
@@ -47,7 +41,6 @@ function Slide({
   itemWidth: number;
   itemHeight: number;
   effectiveTransition: Transition;
-  round: boolean;
 }) {
   // Hook call at top level of component
   const rotateY = useTransform(
@@ -59,20 +52,15 @@ function Slide({
 
   return (
     <motion.div
-      className={`bg-card relative flex shrink-0 flex-col border ${
-        round
-          ? 'items-center justify-center border-0 text-center'
-          : 'items-start justify-between rounded-lg'
-      } overflow-hidden`}
+      className="bg-card relative flex shrink-0 flex-col items-start justify-between overflow-hidden rounded-lg border"
       style={{
         width: `${itemWidth}px`,
         height: `${itemHeight}px`,
         rotateY,
-        ...(round ? { borderRadius: '50%' } : {}),
       }}
       transition={effectiveTransition}
     >
-      <div className={round ? 'm-0 p-0' : 'mb-4 h-full p-5'}>
+      <div className="mb-4 h-full p-5">
         <div className="relative h-[70%] w-full flex-none">
           <Image src={step.image} alt={step.title} fill className="object-cover" />
         </div>
@@ -85,73 +73,17 @@ function Slide({
   );
 }
 
-export default function OnboardingCarousel({
-  baseWidth = 300,
-  autoplay = false,
-  autoplayDelay = 3000,
-  pauseOnHover = false,
-  loop = false,
-  round = false,
-  onFinish,
-}: OnboardingCarouselProps) {
+export default function OnboardingCarousel({ baseWidth = 300, onFinish }: OnboardingCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   // explicitly type x as a MotionValue<number>
   const x = useMotionValue<number>(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const containerHeight = (baseWidth * 16) / 9;
   const itemWidth = baseWidth - GAP * 2;
   const itemHeight = (itemWidth * 16) / 9;
   const trackItemOffset = itemWidth + GAP;
-  const steps = loop ? [...ONBOARDING_STEPS, ONBOARDING_STEPS[0]] : ONBOARDING_STEPS;
-
-  // hover to pause autoplay
-  useEffect(() => {
-    if (!pauseOnHover || !containerRef.current) return;
-    const el = containerRef.current;
-    const onEnter = () => setIsHovered(true);
-    const onLeave = () => setIsHovered(false);
-    el.addEventListener('mouseenter', onEnter);
-    el.addEventListener('mouseleave', onLeave);
-    return () => {
-      el.removeEventListener('mouseenter', onEnter);
-      el.removeEventListener('mouseleave', onLeave);
-    };
-  }, [pauseOnHover]);
-
-  // autoplay logic
-  useEffect(() => {
-    if (!autoplay || (pauseOnHover && isHovered)) return;
-    const timer = setInterval(() => {
-      if (currentIndex === steps.length - 1) {
-        loop ? setCurrentIndex((p) => p + 1) : onFinish?.();
-      } else {
-        setCurrentIndex((p) => p + 1);
-      }
-    }, autoplayDelay);
-    return () => clearInterval(timer);
-  }, [
-    autoplay,
-    autoplayDelay,
-    isHovered,
-    pauseOnHover,
-    loop,
-    steps.length,
-    currentIndex,
-    onFinish,
-  ]);
-
-  // reset loop to start
-  const handleAnimationComplete = () => {
-    if (loop && currentIndex === steps.length - 1) {
-      setIsResetting(true);
-      x.set(0);
-      setCurrentIndex(0);
-      setTimeout(() => setIsResetting(false), 50);
-    }
-  };
+  const steps = ONBOARDING_STEPS;
 
   // drag end behavior
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -165,11 +97,11 @@ export default function OnboardingCarousel({
   };
 
   // numeric constraints for drag
-  const dragProps = loop
-    ? {}
-    : { dragConstraints: { left: -trackItemOffset * (steps.length - 1), right: 0 } };
+  const dragProps = {
+    dragConstraints: { left: -trackItemOffset * (steps.length - 1), right: 0 },
+  };
 
-  const effectiveTransition: Transition = isResetting ? { duration: 0 } : SPRING_OPTIONS;
+  const effectiveTransition: Transition = SPRING_OPTIONS;
 
   return (
     <div
@@ -205,7 +137,6 @@ export default function OnboardingCarousel({
         animate={{ x: -(currentIndex * trackItemOffset) }}
         transition={effectiveTransition}
         onDragEnd={handleDragEnd}
-        onAnimationComplete={handleAnimationComplete}
       >
         {steps.map((step, idx) => (
           <Slide
@@ -217,7 +148,6 @@ export default function OnboardingCarousel({
             itemWidth={itemWidth}
             itemHeight={itemHeight}
             effectiveTransition={effectiveTransition}
-            round={round}
           />
         ))}
       </motion.div>
@@ -233,13 +163,7 @@ export default function OnboardingCarousel({
       />
 
       {/* Dots navigation */}
-      <div
-        role="tablist"
-        aria-label="Slide navigation"
-        className={`flex w-full justify-center ${
-          round ? 'absolute bottom-4 left-1/2 z-20 -translate-x-1/2' : 'mt-4'
-        }`}
-      >
+      <div role="tablist" aria-label="Slide navigation" className="mt-4 flex w-full justify-center">
         {ONBOARDING_STEPS.map((_, i) => (
           <button
             key={i}
