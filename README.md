@@ -152,7 +152,7 @@ You can deploy the same app to Vercel or Netlify.
 4. Run the linter via `npm run lint`.
 5. Run the type checker with `npm run typecheck`.
 6. Ensure all tests pass with `npm run test`.
-7. Follow the commit message style: Use short, imperative, English commit messages. Prefix with `feat:`, `fix:`, `chore:`, etc. when applicable.
+7. Follow the commit message style: Start with an appropriate [Gitmoji](https://gitmoji.dev/) emoji, followed by a space and a short, imperative message that begins with an uppercase letter. Example: `✨ Add date picker to planner`.
 
 ---
 

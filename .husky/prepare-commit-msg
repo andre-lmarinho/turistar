@@ -3,8 +3,8 @@
 if npx -v >&/dev/null
 then
   exec < /dev/tty
-  npx -c "gitmoji --hook $1 $2"
+  npx -c "gitmoji -c --hook $1 $2"
 else
   exec < /dev/tty
-  gitmoji --hook $1 $2
+  gitmoji -c --hook $1 $2
 fi

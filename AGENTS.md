@@ -23,7 +23,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - **Linting**: Ensure `npm run lint` passes.
 - **Type checking**: Ensure `npm run typecheck` passes.
 - **Tests**: Execute `npm run test` and make sure tests succeed.
-- **Commit style**: Use short, imperative, English commit messages. Prefix with `feat:`, `fix:`, `chore:`, etc. when applicable.
+- **Commit style**: Start commit messages with the appropriate [Gitmoji](https://gitmoji.dev/) emoji, followed by a space and a short, imperative message that begins with an uppercase letter. Example: `✨ Add date picker to planner`.
 
 ## General Conventions for AI Agents
 
