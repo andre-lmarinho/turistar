@@ -9,6 +9,7 @@ import { Button, DateRangePicker, DestinationInput, LoadingScreen } from '@/comp
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { fetchCatalog } from '@/hooks';
+import { createPlan } from '@/app/planner/actions/createPlan';
 
 export default function WelcomeForm() {
   const router = useRouter();
@@ -58,7 +59,11 @@ export default function WelcomeForm() {
 
     setLoading(true);
     try {
-      const planId = crypto.randomUUID();
+      const { id: planId } = await createPlan(
+        destParam,
+        range.from.toISOString(),
+        range.to.toISOString()
+      );
       const { activities } = await fetchCatalog(destParam);
       localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
       const query = new URLSearchParams({

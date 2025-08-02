@@ -38,14 +38,17 @@ interface PlannerClientProps {
   dest?: string;
   hideOnboarding?: boolean;
   hideCatalog?: boolean;
+  persist?: boolean;
 }
 
 function PlannerClientInner({
   hideOnboarding,
   hideCatalog,
+  persist,
 }: {
   hideOnboarding: boolean;
   hideCatalog: boolean;
+  persist: boolean;
 }) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
@@ -53,7 +56,7 @@ function PlannerClientInner({
   const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
     usePlannerContext();
 
-  const { title, setTitle } = usePlanTitle(planId, dest);
+  const { title, setTitle } = usePlanTitle(planId, dest, persist);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
 
   useKeyBinds({
@@ -161,6 +164,7 @@ export default function PlannerClient({
   dest,
   hideOnboarding = false,
   hideCatalog = false,
+  persist = true,
 }: PlannerClientProps) {
   const router = useRouter();
   const search = useSearchParams();
@@ -172,8 +176,12 @@ export default function PlannerClient({
   }, [search, router, planId]);
 
   return (
-    <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest}>
-      <PlannerClientInner hideOnboarding={hideOnboarding} hideCatalog={hideCatalog} />
+    <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest} persist={persist}>
+      <PlannerClientInner
+        hideOnboarding={hideOnboarding}
+        hideCatalog={hideCatalog}
+        persist={persist}
+      />
     </PlannerProvider>
   );
 }

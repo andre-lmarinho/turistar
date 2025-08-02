@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabaseClient';
 import type { PlanDay, Activity } from '@/types';
 
-export function usePlanDays(planId: string) {
+export function usePlanDays(planId: string, enabled = true) {
   const qc = useQueryClient();
 
   const days = useQuery({
@@ -20,6 +20,7 @@ export function usePlanDays(planId: string) {
       if (error) throw error;
       return data;
     },
+    enabled,
   });
 
   const upsertDay = useMutation({

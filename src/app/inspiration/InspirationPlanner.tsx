@@ -22,6 +22,7 @@ export default function InspirationPlanner({ initialDays, dest, planId }: Props)
       planId={planId}
       hideOnboarding
       hideCatalog
+      persist={false}
     />
   );
 }
