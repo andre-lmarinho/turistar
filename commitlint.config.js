@@ -10,5 +10,6 @@ module.exports = {
     'subject-empty': [0],
     'type-empty': [0, 'always'],
     'header-max-length': [2, 'always', 72],
+    'subject-case': [2, 'always', ['sentence-case']],
   },
 };

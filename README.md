@@ -161,7 +161,7 @@ You can deploy the same app to Vercel or Netlify.
 4. Run the linter via `npm run lint`.
 5. Run the type checker with `npm run typecheck`.
 6. Ensure all tests pass with `npm run test`.
-7. Follow the commit message style: start with an appropriate Gitmoji and conventional type (e.g., `✨`) followed by a short, imperative description in English. Commitlint enforces this format.
+7. Follow the commit message style: start with an appropriate Gitmoji followed by a short, capitalized description in English (see [commit message examples](docs/CONTRIBUTING.md#sample-commit-messages)). Commitlint enforces this format.
 
 ---
 
