@@ -1,19 +1,18 @@
 // src/app/planner/[planId]/page.tsx
 export const dynamic = 'force-dynamic';
 
-import nextDynamic from 'next/dynamic';
-import { LoadingScreen } from '@/components';
+import PlannerClient from '../PlannerClient';
 
 type PageProps = {
-  params: { planId: string };
-  searchParams: { dest?: string };
+  params: Promise<{ planId: string }>;
+  searchParams: Promise<{ dest?: string }>;
 };
 
-const PlannerClient = nextDynamic(() => import('../PlannerClient'), {
-  ssr: false,
-  loading: () => <LoadingScreen text="Loading planner…" />,
-});
-
-export default function PlannerPlanPage({ params, searchParams }: PageProps) {
-  return <PlannerClient planId={params.planId} dest={searchParams.dest} />;
+export default async function PlannerPlanPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const { planId } = await params;
+  const { dest } = await searchParams;
+  return <PlannerClient planId={planId} dest={dest} />;
 }
