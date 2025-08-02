@@ -28,7 +28,6 @@ export async function createPlan(dest: string, start: string, end: string) {
   const days = buildInitialDays(tripDays);
   if (days.length) {
     const scaffold = days.map((d, idx) => ({
-      id: d.id,
       plan_id: planId,
       date: d.id,
       position: idx,
