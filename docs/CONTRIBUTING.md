@@ -6,7 +6,7 @@ Thank you for taking the time to contribute to Turistar! This document outlines 
 
 - Use short branch names starting with a type, for example `feature/*`, `fix/*` or `chore/*`.
 - Commit messages must follow [Gitmoji](https://gitmoji.dev/) conventions: start with an appropriate Gitmoji followed by a conventional type and a short, imperative description.
-  - Example: `✨ feat: add date picker to planner`
+  - Example: `✨ Add date picker to planner`
   - A commitlint hook enforces this format.
 - Squash commits before merging so the main branch history stays tidy.
 
