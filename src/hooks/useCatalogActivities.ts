@@ -11,7 +11,7 @@ import type { CatalogActivity } from '@/types';
 export function useCatalogActivities(
   dest: string | null,
   categories: string[],
-  options: { enabled: boolean },
+  options: { enabled: boolean }
 ) {
   const query = useQuery({
     queryKey: ['catalog', dest, categories],
