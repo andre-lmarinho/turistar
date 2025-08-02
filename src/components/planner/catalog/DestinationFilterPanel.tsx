@@ -24,7 +24,7 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<'name' | 'rating'>('name');
+  const [sort, setSort] = useState<'name' | 'rating'>('rating');
 
   const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId);
 
@@ -90,12 +90,23 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       className="bg-background focus:ring-primary relative flex h-[90vh] w-[95vw] max-w-[1350px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
     >
       {/* header */}
-      <DestinationHeader search={search} onSearchChange={setSearch} onClose={onClose} />
+      <DestinationHeader onClose={onClose} />
 
-      <div className="flex items-center justify-between gap-2 border-b px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b px-4 py-2">
         <div className="flex-1 overflow-x-auto">
           <CategoryFilterBar categories={categories} active={selectedCats} onToggle={toggleCat} />
         </div>
+        <label htmlFor="catalog-search" className="sr-only">
+          Search catalog
+        </label>
+        <input
+          id="catalog-search"
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search"
+          className="w-48 rounded border px-2 py-1 text-sm"
+        />
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as 'name' | 'rating')}
