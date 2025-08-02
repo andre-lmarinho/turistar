@@ -62,7 +62,14 @@ function Slide({
     >
       <div className="mb-4 h-full p-5">
         <div className="relative h-[70%] w-full flex-none">
-          <Image src={step.image} alt={step.title} fill className="object-cover" />
+          <Image
+            src={step.image}
+            alt={step.title}
+            fill
+            className="object-cover"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+          />
         </div>
         <div className="mt-2 flex-1">
           <h3 className="text-foreground mb-1 text-3xl font-semibold">{step.title}</h3>

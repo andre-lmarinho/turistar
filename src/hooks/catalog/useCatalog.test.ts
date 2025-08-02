@@ -8,6 +8,7 @@ vi.mock('./useCatalogActivities', () => ({
 
 import { useCatalogActivities } from './useCatalogActivities';
 import { useCatalog } from './useCatalog';
+import type { CatalogActivity } from '@/types';
 
 const mockUseCatalogActivities = vi.mocked(useCatalogActivities);
 
@@ -39,7 +40,7 @@ describe('useCatalog', () => {
 
   test('propagates error state', () => {
     mockUseCatalogActivities.mockReturnValue({
-      activities: undefined,
+      activities: undefined as unknown as CatalogActivity[],
       isLoading: false,
       isError: true,
     });
