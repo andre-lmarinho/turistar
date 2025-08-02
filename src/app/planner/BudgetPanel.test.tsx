@@ -56,7 +56,7 @@ describe('BudgetPanel', () => {
       },
     ];
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <BudgetPanel />
       </PlannerProvider>
     );

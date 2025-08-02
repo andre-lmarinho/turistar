@@ -65,14 +65,13 @@ export default function WelcomeForm() {
         dest: destParam,
         start: range.from.toISOString(),
         end: range.to.toISOString(),
-        plan: planId,
       });
       if (coords) {
         query.set('lat', String(coords.lat));
         query.set('lng', String(coords.lng));
       }
       const queryString = query.toString();
-      router.push(`/planner?${queryString}`);
+      router.push(`/planner/${planId}?${queryString}`);
     } catch {
       setError('Failed to load catalog.');
     } finally {

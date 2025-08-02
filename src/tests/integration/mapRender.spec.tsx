@@ -94,7 +94,7 @@ describe('map render integration', () => {
     ];
     mockDays = days;
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );
@@ -106,7 +106,7 @@ describe('map render integration', () => {
     mockDays = days;
     mockDestCoords = { lat: 3, lng: 4 };
     render(
-      <PlannerProvider>
+      <PlannerProvider planId="p1">
         <MapView />
       </PlannerProvider>
     );

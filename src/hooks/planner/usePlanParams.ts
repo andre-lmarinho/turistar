@@ -1,38 +1,17 @@
 // src/hooks/usePlanParams.ts
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 /**
- * Reads plan parameters from the URL and ensures a plan id exists.
- * - Returns the normalized destination and plan id.
- * - Updates the URL with a generated plan id if missing.
+ * Reads planner parameters from the URL.
+ * - Returns the normalized destination and optional coordinates.
  */
-export function usePlanParams(options: { skipReplace?: boolean } = {}) {
+export function usePlanParams() {
   const params = useSearchParams();
-  const router = useRouter();
-
-  const paramsString = params.toString();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
   const lat = params.get('lat');
   const lng = params.get('lng');
   const destCoords = lat && lng ? { lat: Number(lat), lng: Number(lng) } : null;
-  const [planId] = useState(() => params.get('plan') ?? crypto.randomUUID());
-
-  useEffect(() => {
-    if (options.skipReplace) {
-      return;
-    }
-    const currentSearch = new URLSearchParams(paramsString);
-    const currentPlan = currentSearch.get('plan');
-    const hasDest = Boolean(currentSearch.get('dest'));
-    if (currentPlan !== planId || (!hasDest && dest)) {
-      const newSearch = new URLSearchParams(paramsString);
-      newSearch.set('plan', planId);
-      router.replace(`/planner?${newSearch.toString()}`, { scroll: false });
-    }
-  }, [planId, paramsString, router, options.skipReplace, dest]);
-
-  return { dest, planId, destCoords };
+  return { dest, destCoords };
 }

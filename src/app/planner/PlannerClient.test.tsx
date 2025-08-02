@@ -51,6 +51,11 @@ vi.mock('@/hooks', async () => {
   };
 });
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('@/app/planner/PlannerBoard', () => ({
   default: () => <div data-testid="board" />,
 }));

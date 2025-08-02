@@ -16,7 +16,7 @@ vi.mock('@/hooks', async () => {
 });
 
 vi.mock('@/contexts', () => ({
-  usePlannerContext: () => ({ planId: 'p1' }),
+  usePlannerContext: () => ({ planId: 'p1', dest: 'rome' }),
 }));
 
 describe('CatalogSearchPopup', () => {

@@ -6,6 +6,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@supabase/auth-helpers-nextjs': resolve(
+        __dirname,
+        'src/__mocks__/supabaseAuthHelpersNext.ts'
+      ),
+      '@supabase/auth-helpers-react': resolve(
+        __dirname,
+        'src/__mocks__/supabaseAuthHelpersReact.ts'
+      ),
     },
   },
   test: {

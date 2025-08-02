@@ -7,10 +7,9 @@ export * from './planner/useActivityState';
 export * from './planner/useDnDPlanner';
 export * from './planner/useDragState';
 export * from './planner/usePlanner';
-export * from './planner/usePlanTitle';
+export * from './planner/usePlanTitleSupabase';
 export * from './planner/useSelectedActivity';
 export * from './planner/usePlanParams';
-export * from './planner/usePlanDaysStorage';
 export * from './planner/useActivityCardEditor';
 
 // catalog
@@ -25,7 +24,7 @@ export { fetchCatalog, type CatalogApiResponse } from './catalog/fetchCatalog';
 export { fetchSearch } from './catalog/fetchSearch';
 
 // budget
-export * from './budget/useBudget';
+export * from './budget/useBudgetSupabase';
 
 // onboarding
 export * from './onboarding/useOnboardingCheck';

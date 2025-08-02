@@ -1,7 +1,12 @@
 // src/hooks/catalog/useCatalogActivities.test.ts
 
 import { renderHook, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import { useCatalogActivities } from './useCatalogActivities';
+
+vi.mock('./fetchCatalog', () => ({
+  fetchCatalog: vi.fn(() => Promise.reject(new Error('fail'))),
+}));
 
 describe('useCatalogActivities', () => {
   beforeEach(() => {
@@ -12,7 +17,7 @@ describe('useCatalogActivities', () => {
     const mockActivities = [{ id: '1', name: 'Louvre', category: 'museum' }];
     localStorage.setItem('catalog-p1', JSON.stringify(mockActivities));
 
-    const { result } = renderHook(() => useCatalogActivities('p1', { enabled: true }));
+    const { result } = renderHook(() => useCatalogActivities('p1', 'rome', { enabled: true }));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -21,7 +26,7 @@ describe('useCatalogActivities', () => {
   });
 
   test('handles missing data', async () => {
-    const { result } = renderHook(() => useCatalogActivities('p1', { enabled: true }));
+    const { result } = renderHook(() => useCatalogActivities('p1', 'rome', { enabled: true }));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 

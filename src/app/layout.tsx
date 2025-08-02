@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { Providers } from '@/components';
+import SupabaseProvider from '@/components/providers/SupabaseProvider';
 
 export const metadata: Metadata = {
   title: 'Travel Planner',
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
-        <Providers>{children}</Providers>
+        <SupabaseProvider>
+          <Providers>{children}</Providers>
+        </SupabaseProvider>
         <SpeedInsights />
       </body>
     </html>

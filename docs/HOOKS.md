@@ -31,22 +31,22 @@ const { budget, setBudget, entries, handleAdd } = useBudget(planId, activitiesTo
 _File: `src/hooks/useTripRange.ts`_
 
 ```ts
-export function useTripRange(dest: string, planId?: string);
+export function useTripRange(initialDays?: DayPlan[]);
 ```
 
 - **Inputs**
-  - `dest`: destination string.
-  - `planId` (optional): used when updating the URL.
+  - `initialDays` (optional): days used to derive the range when no URL params exist.
 - **Outputs**
   Returns `tripDays`, `currentRange`, and `handleRangeChange`.
 - **Lifecycle**
-  Reads `start` and `end` parameters from the URL and updates them on range change.
+  Initializes from `start` and `end` search params once or falls back to `initialDays`.
+  Subsequent changes are kept in client state only.
 - **Exceptions**
   None.
 - **Example**
 
 ```ts
-const { tripDays, handleRangeChange } = useTripRange(dest, planId);
+const { tripDays, handleRangeChange } = useTripRange(initialDays);
 ```
 
 ### `fetchCatalog`
@@ -70,27 +70,37 @@ export async function fetchCatalog(dest: string, categories: string[]): Promise<
 _File: `src/hooks/useCatalogActivities.ts`_
 
 ```ts
-export function useCatalogActivities(planId: string | null, options: { enabled: boolean });
+export function useCatalogActivities(
+  planId: string | null,
+  dest: string | null,
+  options: { enabled: boolean }
+);
 ```
 
 - **Inputs**
   - `planId`: planner identifier for the storage key.
-  - `options.enabled`: whether the hook should read from storage.
+  - `dest`: destination used when fetching from the API.
+  - `options.enabled`: whether the hook should load data.
 - **Outputs**
   Raw catalog `activities` plus loading and error flags.
 - **Lifecycle**
-  Loads `catalog-${planId}` from `localStorage` when enabled.
+  Reads `catalog-${planId}` from `localStorage` and fetches from the API when missing.
 
 ### `useCatalog`
 
 _File: `src/hooks/useCatalog.ts`_
 
 ```ts
-export function useCatalog(planId: string | null, options: { enabled: boolean });
+export function useCatalog(
+  planId: string | null,
+  dest: string | null,
+  options: { enabled: boolean }
+);
 ```
 
 - **Inputs**
   - `planId`: planner identifier for the storage key.
+  - `dest`: destination used when fetching.
   - `options.enabled`: whether the hook should load the cached data.
 - **Outputs**
   Loading/error flags plus `days` (activities grouped by day).
@@ -110,12 +120,17 @@ const { days, isLoading } = useCatalog(planId, { enabled: true });
 _File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
-export function useDestinationCatalog(enabled: boolean, planId: string | null);
+export function useDestinationCatalog(
+  enabled: boolean,
+  planId: string | null,
+  dest: string | null
+);
 ```
 
 - **Inputs**
   - `enabled`: whether loading is active.
   - `planId`: planner identifier for the storage key.
+  - `dest`: destination used when fetching.
 - **Outputs**
   Catalog `activities`, derived `categories`, loading and error flags.
 - **Lifecycle**
@@ -125,7 +140,7 @@ export function useDestinationCatalog(enabled: boolean, planId: string | null);
 - **Example**
 
 ```ts
-const { activities } = useDestinationCatalog(open, planId);
+const { activities } = useDestinationCatalog(open, planId, dest);
 ```
 
 ### `useDestinationAutocomplete`
@@ -271,15 +286,15 @@ export function useDnDPlanner(initialDays: DayPlan[]);
 _File: `src/hooks/usePlanParams.ts`_
 
 ```ts
-export function usePlanParams(options?: { skipReplace?: boolean });
+export function usePlanParams(): { dest: string; destCoords: { lat: number; lng: number } | null };
 ```
 
 - **Outputs**
-  `{ dest, planId, destCoords }` from the URL.
+  Normalized `dest` and optional `destCoords` from the URL search params.
 - **Lifecycle**
-  Generates a plan id when missing and updates the URL unless `skipReplace` is `true`.
-  - **Exceptions**
-    None.
+  Pure; reads parameters once with no side effects.
+- **Exceptions**
+  None.
 
 ### `usePlanDaysStorage`
 

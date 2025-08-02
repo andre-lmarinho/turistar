@@ -1,6 +1,7 @@
 // src/contexts/PlannerContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
 import { usePlanner, useSelectedActivity } from '@/hooks';
+import { usePlanDays } from '@/hooks/planner/usePlanDaysSupabase';
 import type { DayPlan } from '@/types';
 
 type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;
@@ -15,10 +16,15 @@ export function PlannerProvider({
 }: {
   children: ReactNode;
   initialDays?: DayPlan[];
-  planId?: string;
+  planId: string;
   dest?: string;
 }) {
-  const planner = usePlanner({ initialDays, planId, dest });
+  const { data: storedDays } = usePlanDays(planId);
+  const planner = usePlanner({
+    initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
+    planId,
+    dest,
+  });
   const selected = useSelectedActivity(planner.days, planner.setDays, {
     addActivity: planner.addActivity,
     removeActivity: planner.removeActivity,

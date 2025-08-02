@@ -21,8 +21,14 @@ export default function CatalogSearchPopup({
   triggerRef,
 }: CatalogSearchPopupProps) {
   const [search, setSearch] = React.useState('');
-  const { planId } = usePlannerContext();
-  const { activities = [], isLoading, isError } = useCatalogActivities(planId, { enabled: open });
+  const { planId, dest } = usePlannerContext();
+  const {
+    activities = [],
+    isLoading,
+    isError,
+  } = useCatalogActivities(planId, dest, {
+    enabled: open,
+  });
   const results = React.useMemo(
     () => activities.filter((a) => a.name.toLowerCase().includes(search.toLowerCase())),
     [activities, search]

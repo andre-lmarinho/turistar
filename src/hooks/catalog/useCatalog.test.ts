@@ -30,7 +30,7 @@ describe('useCatalog', () => {
       isError: false,
     });
 
-    const { result } = renderHook(() => useCatalog('p1', { enabled: true }));
+    const { result } = renderHook(() => useCatalog('p1', 'rome', { enabled: true }));
 
     expect(result.current.days).toHaveLength(2);
     expect(result.current.days?.[0].activities).toHaveLength(3);
@@ -45,7 +45,7 @@ describe('useCatalog', () => {
       isError: true,
     });
 
-    const { result } = renderHook(() => useCatalog('p1', { enabled: true }));
+    const { result } = renderHook(() => useCatalog('p1', 'rome', { enabled: true }));
 
     expect(result.current.days).toBeUndefined();
     expect(result.current.isError).toBe(true);

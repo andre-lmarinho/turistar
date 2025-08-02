@@ -55,3 +55,13 @@ export interface DayPlan {
   /** List of activities for this day */
   activities: Activity[];
 }
+
+/**
+ * Database row for a planner day persisted in Supabase.
+ */
+export interface PlanDay {
+  id: string;
+  plan_id: string;
+  date: string;
+  position: number;
+}

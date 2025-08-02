@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { closestCenter } from '@dnd-kit/core';
 
-import { useTripRange, useDnDPlanner, usePlanParams, usePlanDaysStorage } from '@/hooks';
+import { useTripRange, useDnDPlanner, usePlanParams } from '@/hooks';
 import { buildInitialDays, syncDaysWithTripRange } from '@/utils';
 import type { DayPlan } from '@/types';
 
@@ -13,18 +13,11 @@ interface UsePlannerOptions {
   dest?: string;
 }
 export function usePlanner(options: UsePlannerOptions = {}) {
-  /* Plan id + destination from URL */
-  const {
-    dest: urlDest,
-    planId: urlPlanId,
-    destCoords,
-  } = usePlanParams({
-    skipReplace: Boolean(options.dest && options.planId),
-  });
+  const { dest: urlDest, destCoords } = usePlanParams();
   const dest = options.dest ?? urlDest;
-  const planId = options.planId ?? urlPlanId;
+  const planId = options.planId ?? '';
 
-  const { tripDays, currentRange, handleRangeChange } = useTripRange(dest, planId);
+  const { tripDays, currentRange, handleRangeChange } = useTripRange(options.initialDays ?? []);
 
   /* DnD state */
   const {
@@ -40,8 +33,6 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     updateActivity,
     addBlankActivity,
   } = useDnDPlanner(options.initialDays ?? buildInitialDays(tripDays));
-
-  usePlanDaysStorage(planId, days, setDays);
 
   /* Sync on range change */
   useEffect(() => {
