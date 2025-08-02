@@ -189,10 +189,10 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/onboarding/OnboardingCarousel.tsx`
 - **Responsibility:** Animated carousel for onboarding steps.
-- **Props:** options for width, autoplay, callbacks
-- **State:** `isHovered`, `isResetting`, `currentIndex`
+- **Props:** `baseWidth?`, `onFinish?`
+- **State:** `currentIndex`
 - **External Hooks:** `useMotionValue`, `useTransform`
-- **Side-effects:** timers for autoplay
+- **Side-effects:** none
 - **Accessibility:** `aria-roledescription="carousel"`, navigation dots
 - **Interactions:** drag to switch slides, previous/next buttons
 - **Performance notes:** uses framer-motion for transitions
