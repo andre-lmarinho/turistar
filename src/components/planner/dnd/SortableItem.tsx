@@ -87,6 +87,7 @@ export default function SortableItem({
       )}
       {...attributes}
       {...listeners}
+      role="listitem"
     >
       <div className={cn(isDragging && 'opacity-0')}>
         <ActivityCard

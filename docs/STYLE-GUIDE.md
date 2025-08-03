@@ -52,3 +52,8 @@ Follow accessible markup practices throughout the codebase.
 - Provide meaningful labels for interactive controls using `aria-label`, `aria-labelledby` or visible text.
 - Ensure keyboard interaction for custom components (e.g. handling `Enter` and `Space` keys when appropriate).
 - Hidden content for assistive technology should use the `.sr-only` utility defined in `globals.css`.
+- Elements labelled through their visible content must include that text in the accessible name.
+- Touch targets for interactive controls should be at least 44×44&nbsp;px with appropriate spacing.
+- Assign valid `role` values and prefer native elements over role overrides.
+- Avoid repeating alternative text in adjacent visible captions or headings.
+- Elements with `aria-hidden="true"` must not contain focusable content and should be removed when used solely for layout.
