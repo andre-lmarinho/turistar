@@ -23,7 +23,7 @@ declare module '@supabase/auth-helpers-nextjs' {
   import type { SupabaseClient } from '@supabase/supabase-js';
   import type { Database } from './supabase';
   export const createClientComponentClient: <DB = Database>() => SupabaseClient<DB>;
-  export const createServerClient: <DB = Database>(opts: {
+  export const createServerComponentClient: <DB = Database>(opts: {
     cookies: unknown;
   }) => SupabaseClient<DB>;
   export const createMiddlewareClient: (opts: unknown) => SupabaseClient<Database>;

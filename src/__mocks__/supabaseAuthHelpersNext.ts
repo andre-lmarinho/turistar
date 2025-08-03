@@ -13,7 +13,7 @@ export const createClientComponentClient = () => ({
   auth: { getSession: () => Promise.resolve({}), getUser: () => Promise.resolve({}) },
 });
 
-export const createServerClient = () => createClientComponentClient();
+export const createServerComponentClient = () => createClientComponentClient();
 export const createMiddlewareClient = () => ({
   auth: { getSession: () => Promise.resolve({}) },
   from: () => ({}),
