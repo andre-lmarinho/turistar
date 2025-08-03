@@ -96,3 +96,5 @@ export function useBudget(planId: string, activitiesTotal: number) {
     handleDeleteEntry,
   };
 }
+
+export { useBudget as useBudgetSupabase };

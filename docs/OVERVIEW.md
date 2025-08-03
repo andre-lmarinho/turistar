@@ -1,7 +1,7 @@
 # Overview
 
-Turistar is a drag‑and‑drop travel planner built with Next.js 15, React, and TypeScript.  
-The application lets users create and organize trip itineraries, persisting data in `localStorage` for easy revisits.
+Turistar is a drag‑and‑drop travel planner built with Next.js 15, React, and TypeScript.
+The application lets users create and organize trip itineraries, with plan data stored in Supabase for easy revisits.
 
 ## Key Features
 
@@ -10,7 +10,7 @@ The application lets users create and organize trip itineraries, persisting data
 - **Catalog Popup** – Browse suggested activities and insert them directly into the board.
   - Search the catalog in real time.
 - **Geoapify Catalog** – Activities are fetched from Geoapify using your `GEOAPIFY_KEY`.
-- **Persistent Storage** – Planner data and budget stay saved in the browser.
+- **Persistent Storage** – Planner data and budget are saved in Supabase.
 - **Map Mode** – View itinerary on an interactive map built with Leaflet.
 - **Sample Inspirations** – Browse pre-built example itineraries for select cities.
 

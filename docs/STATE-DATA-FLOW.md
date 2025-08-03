@@ -14,13 +14,13 @@ This document outlines how planner data moves through the application.
 - Planner data is persisted in Supabase via dedicated hooks:
   - `usePlanDays` for days and activities
   - `usePlanTitle` for plan metadata
-  - `useBudget` for budget entries
+  - `useBudgetSupabase` for budget entries
 
 ## Components
 
 - **PlannerClient** – main client component for `/planner`. It calls `usePlanner` to manage board state while the catalog is loaded by `DestinationFilterPanel` after categories are chosen.
 - **PlannerBoard** – presentation layer for the drag-and-drop board. Receives `days` and DnD callbacks as props.
-- **BudgetPanel** – controls travel expenses through `useBudget` and updates activities when budgets change.
+- **BudgetPanel** – controls travel expenses through `useBudgetSupabase` and updates activities when budgets change.
 - **PlannerControls** – groups mode switching and date range selection UI.
 
 `days` and other planner state flow from `usePlanner` down to these components, keeping the UI consistent and persisted across visits.

@@ -4,14 +4,14 @@ This document covers how to deploy **Turistar** and manage environment variables
 
 ## Environment Variables
 
-The current version does not require any custom variables. If you integrate external services, create a `.env.local` file in the project root and add your keys there. Variables prefixed with `NEXT_PUBLIC_` will be exposed to the browser.
+Copy `.env.example` to `.env.local` and set the following values:
 
-Example:
+- `GEOAPIFY_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-```bash
-MAPS_API_KEY=your-key-here
-NEXT_PUBLIC_ANALYTICS_ID=abcd
-```
+These variables should also be configured in your hosting provider's environment settings (e.g., Vercel or Netlify) so production builds can access them.
 
 ## Build & Hosting
 

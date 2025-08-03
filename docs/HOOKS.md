@@ -2,21 +2,22 @@
 
 This document outlines the available custom hooks in the project. Each section details the signature, expected inputs and outputs, lifecycle behaviors, thrown exceptions, and example usage.
 
-### `useBudget`
+### `useBudgetSupabase`
 
-_File: `src/hooks/useBudget.ts`_
+_File: `src/hooks/budget/useBudgetSupabase.ts`_
 
 ```ts
 export function useBudget(planId: string, activitiesTotal: number);
 ```
 
 - **Inputs**
-  - `planId`: identifier for storage key.
+  - `planId`: identifier for the Supabase row.
   - `activitiesTotal`: initial value for the "Tours & Activities" category.
 - **Outputs**
-  Returns budget state (total, entries, category totals, etc.) and handlers for adding, updating, or deleting entries.
+  Budget state (total, entries, category totals, etc.) and handlers for adding, updating, or deleting entries.
 - **Lifecycle**
-  - Syncs with `localStorage` via `useLocalStorageSync`.
+  - Reads budget data from Supabase on mount.
+  - Persists updates back to Supabase.
   - Calculates totals with `useMemo`.
 - **Exceptions**
   None.
@@ -51,15 +52,14 @@ const { tripDays, handleRangeChange } = useTripRange(initialDays);
 
 ### `fetchCatalog`
 
-_File: `src/hooks/fetchCatalog.ts`_
+_File: `src/hooks/catalog/fetchCatalog.ts`_
 
 ```ts
-export async function fetchCatalog(dest: string, categories: string[]): Promise<CatalogApiResponse>;
+export async function fetchCatalog(dest: string): Promise<CatalogApiResponse>;
 ```
 
 - **Inputs**
   - `dest`: destination name.
-  - `categories`: list of category filters (empty for all).
 - **Outputs**
   Catalog activities from the API.
 - **Lifecycle**
@@ -120,11 +120,7 @@ const { days, isLoading } = useCatalog(planId, { enabled: true });
 _File: `src/hooks/useDestinationCatalog.ts`_
 
 ```ts
-export function useDestinationCatalog(
-  enabled: boolean,
-  planId: string | null,
-  dest: string | null
-);
+export function useDestinationCatalog(enabled: boolean, planId: string | null, dest: string | null);
 ```
 
 - **Inputs**
@@ -148,10 +144,7 @@ const { activities } = useDestinationCatalog(open, planId, dest);
 _File: `src/hooks/catalog/useDestinationAutocomplete.ts`_
 
 ```ts
-export function useDestinationAutocomplete(
-  query: string,
-  options?: { enabled?: boolean }
-);
+export function useDestinationAutocomplete(query: string, options?: { enabled?: boolean });
 ```
 
 - **Inputs**
@@ -296,24 +289,20 @@ export function usePlanParams(): { dest: string; destCoords: { lat: number; lng:
 - **Exceptions**
   None.
 
-### `usePlanDaysStorage`
+### `usePlanDays`
 
-_File: `src/hooks/usePlanDaysStorage.ts`_
+_File: `src/hooks/planner/usePlanDaysSupabase.ts`_
 
 ```ts
-export function usePlanDaysStorage(
-  planId: string,
-  days: DayPlan[],
-  setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>
-);
+export function usePlanDays(planId: string, enabled?: boolean);
 ```
 
 - **Outputs**
-  None (side effects only).
+  Supabase query result plus an `upsertDay` helper.
 - **Lifecycle**
-  Loads days from `localStorage` using the `days-${planId}` key and saves on change.
+  Fetches planner days from Supabase and upserts changes on demand.
 - **Exceptions**
-  None.
+  Throws when Supabase requests fail.
 
 ### `usePlanner`
 
@@ -328,29 +317,29 @@ export function usePlanner();
 - **Outputs**
   Planner state: days, trip range utilities, drag-and-drop handlers, and more.
 - **Lifecycle**
-  - Composes `usePlanParams`, `usePlanDaysStorage`, `useTripRange`,
-    `useDnDPlanner` and `useCatalog`.
+  - Composes `usePlanParams`, `useTripRange`, and `useDnDPlanner`.
   - Updates planner days whenever the trip range changes.
 - **Exceptions**
   None internally; any catalog fetch errors are exposed via `error`.
 
 ### `usePlanTitle`
 
-_File: `src/hooks/usePlanTitle.ts`_
+_File: `src/hooks/planner/usePlanTitleSupabase.ts`_
 
 ```ts
-export function usePlanTitle(planId: string, defaultTitle = '');
+export function usePlanTitle(planId: string, defaultTitle = '', persist = true);
 ```
 
 - **Inputs**
-  - `planId`: key for storage.
-  - `defaultTitle`: initial title.
+  - `planId`: planner identifier.
+  - `defaultTitle`: fallback title.
+  - `persist` (optional): when `false`, disables Supabase writes.
 - **Outputs**
   `{ title, setTitle }`.
 - **Lifecycle**
-  Syncs the title to `localStorage`.
+  Loads and updates the title in Supabase when `persist` is `true`.
 - **Exceptions**
-  None.
+  Propagates Supabase errors.
 
 ### `useOnboardingCheck`
 
@@ -542,5 +531,5 @@ const rect = useElementRect(divRef);
 All hooks are re-exported through their respective `index.ts` files so they can be imported with:
 
 ```ts
-import { usePlanner, useBudget } from '@/hooks';
+import { usePlanner, useBudgetSupabase } from '@/hooks';
 ```

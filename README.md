@@ -85,7 +85,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 📁 Project Structure
 
-- `/docs`: Project notes and guidelines (see `state-data-flow.md` for how data moves)
+- `/docs`: Project notes and guidelines (see [STATE-DATA-FLOW.md](docs/STATE-DATA-FLOW.md) for how data moves)
 - `/public`: Static assets served directly
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
@@ -106,7 +106,7 @@ You can deploy the same app to Vercel or Netlify.
 3. Browse results or use the **Back** button to refine your filters
 4. Drag cards into the planner board by day
 5. Click cards to edit title, image, or move between days
-6. All planner and budget data persist automatically in `localStorage`
+6. All planner and budget data persist automatically in Supabase
 
 ---
 
@@ -210,7 +210,7 @@ _For detailed guides, see:_
 - Modular architecture with `/hooks`, `/lib`, and typed APIs
 - Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
 - Custom components built on top of Radix UI primitives
-- Local persistence using `localStorage` for planner and budget
+- Remote persistence using Supabase for planner and budget
 - UX patterns: inline editing, optimistic updates, responsive layout and accessible components
 - Progressive structure ready to scale with real APIs
 

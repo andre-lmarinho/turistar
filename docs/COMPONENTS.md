@@ -176,7 +176,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Notes:** Forwards `dest` and `planId` to `PlannerClient`; the plan id is used as the route slug.
 - **State:** planner days, selected activity, mode
 - **External Hooks:** `useDnDPlanner`, `useSelectedActivity`, `usePlanTitle`, `useKeyBinds`
-- **Side-effects:** saves title and budget in `localStorage`
+- **Side-effects:** none (persistence disabled)
 - **Accessibility:** keyboard shortcuts via key binds
 - **Interactions:** drag cards, edit details, switch between planner, map and budget
 - **Performance notes:** memoized activity lookup

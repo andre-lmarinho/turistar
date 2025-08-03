@@ -20,6 +20,7 @@ const eslintConfig = [
       '**/build/**',
       '**/public/**',
       '**/.next/**',
+      '**/.vercel/**',
     ],
   },
 
