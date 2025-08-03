@@ -78,13 +78,13 @@ export function useCatalogActivities(
 ```
 
 - **Inputs**
-  - `planId`: planner identifier for the storage key.
-  - `dest`: destination used when fetching from the API.
+  - `planId`: planner identifier used to look up the destination.
+  - `dest`: destination name used when fetching from the API.
   - `options.enabled`: whether the hook should load data.
 - **Outputs**
   Raw catalog `activities` plus loading and error flags.
 - **Lifecycle**
-  Reads `catalog-${planId}` from `localStorage` and fetches from the API when missing.
+  Queries Supabase for cached activities and falls back to the Geoapify API when absent.
 
 ### `useCatalog`
 
@@ -99,7 +99,7 @@ export function useCatalog(
 ```
 
 - **Inputs**
-  - `planId`: planner identifier for the storage key.
+  - `planId`: planner identifier used to look up the destination.
   - `dest`: destination used when fetching.
   - `options.enabled`: whether the hook should load the cached data.
 - **Outputs**
@@ -125,7 +125,7 @@ export function useDestinationCatalog(enabled: boolean, planId: string | null, d
 
 - **Inputs**
   - `enabled`: whether loading is active.
-  - `planId`: planner identifier for the storage key.
+  - `planId`: planner identifier used to look up the destination.
   - `dest`: destination used when fetching.
 - **Outputs**
   Catalog `activities`, derived `categories`, loading and error flags.
@@ -350,7 +350,7 @@ export function useOnboardingCheck(planId: string);
 ```
 
 - **Inputs**
-  - `planId`: planner identifier used for the storage key.
+  - `planId`: planner identifier used for the onboarding key.
 - **Outputs**
   `{ showOnboarding, setShowOnboarding }`.
 - **Lifecycle**

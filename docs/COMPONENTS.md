@@ -125,7 +125,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Location:** `src/components/home/WelcomeForm.tsx`
 - **Responsibility:** Landing form selecting travel dates.
 - **Props:** none
-- **State:** `range`, `dest`, `coords`, `error`
+- **State:** `range`, `dest`, `coords`, `title`, `error`
 - **External Hooks:** `useRouter`
 - **Side-effects:** none
 - **Accessibility:** form labels, validation message
@@ -452,10 +452,10 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/app/planner/PlannerClient.tsx`
 - **Responsibility:** Top-level planner page component orchestrating drag-and-drop and budget view.
-- **Props:** none
+- **Props:** `{ initialDays?, planId?, dest?, title?, hideOnboarding?, hideCatalog?, persist? }`
 - **State:** `isPanelOpen`, `mode`, `showOnboarding`
 - **External Hooks:** `usePlannerContext`, `usePlanTitle`, `useInputWidth`, `useKeyBinds`
-- **Title:** defaults to the destination name with its first letter capitalized
+- **Title:** defaults to the provided `title` or destination name
 - **Side-effects:** none
 - **Accessibility:** input IDs, focus on select, ARIA labels
 - **Interactions:** toggles planner/map/budget modes and opens the catalog panel

@@ -85,7 +85,7 @@ describe('PlannerClient onboarding', () => {
   it('shows onboarding for a new plan id even if another plan was seen', () => {
     localStorage.setItem('planner-onboarding-shown-plan1', 'true');
     mockPlanId = 'plan2';
-    render(<PlannerClient />);
+    render(<PlannerClient title="Trip" />);
     expect(screen.getAllByText('Your planner is ready').length).toBeGreaterThan(0);
     expect(localStorage.getItem('planner-onboarding-shown-plan2')).toBe('true');
   });

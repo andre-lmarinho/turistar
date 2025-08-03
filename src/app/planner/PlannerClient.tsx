@@ -36,6 +36,7 @@ interface PlannerClientProps {
   initialDays?: DayPlan[];
   planId?: string;
   dest?: string;
+  title?: string;
   hideOnboarding?: boolean;
   hideCatalog?: boolean;
   persist?: boolean;
@@ -45,10 +46,12 @@ function PlannerClientInner({
   hideOnboarding,
   hideCatalog,
   persist,
+  title: initialTitle,
 }: {
   hideOnboarding: boolean;
   hideCatalog: boolean;
   persist: boolean;
+  title?: string;
 }) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
@@ -56,7 +59,7 @@ function PlannerClientInner({
   const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
     usePlannerContext();
 
-  const { title, setTitle } = usePlanTitle(planId, dest, persist);
+  const { title, setTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
 
   useKeyBinds({
@@ -162,6 +165,7 @@ export default function PlannerClient({
   initialDays,
   planId,
   dest,
+  title,
   hideOnboarding = false,
   hideCatalog = false,
   persist = true,
@@ -181,6 +185,7 @@ export default function PlannerClient({
         hideOnboarding={hideOnboarding}
         hideCatalog={hideCatalog}
         persist={persist}
+        title={title}
       />
     </PlannerProvider>
   );

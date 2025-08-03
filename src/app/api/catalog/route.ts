@@ -2,6 +2,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchGeoapifyCatalog } from '@/lib/geoapify';
+import { supabaseServer } from '@/lib/supabaseServer';
+
 /**
  * API route that proxies catalog data from Geoapify.
  */
@@ -14,11 +16,40 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const data = await fetchGeoapifyCatalog(dest);
-    return NextResponse.json(data);
+    const { activities } = await fetchGeoapifyCatalog(dest);
+
+    const supabase = supabaseServer();
+
+    const { data: destRow, error: destError } = await supabase
+      .from('destinations')
+      .upsert({ name: dest }, { onConflict: 'name' })
+      .select('id')
+      .single();
+    if (destError || !destRow) throw destError ?? new Error('Failed to upsert destination');
+
+    const destId = destRow.id;
+
+    const rows = activities.map((a) => ({
+      id: a.id,
+      name: a.name,
+      category: a.category,
+      description: a.description,
+      address: a.address,
+      image_url: a.imageUrl,
+      rating: a.rating,
+      latitude: a.latitude,
+      longitude: a.longitude,
+      source: 'geoapify',
+      destination_id: destId,
+    }));
+
+    if (rows.length) {
+      await supabase.from('catalog').upsert(rows, { onConflict: 'id' });
+    }
+
+    return NextResponse.json({ activities });
   } catch (err) {
     console.error(err);
-    // Fall back to an empty catalog so the client can continue gracefully.
     return NextResponse.json({ activities: [] });
   }
 }

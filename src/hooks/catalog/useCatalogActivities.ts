@@ -3,10 +3,11 @@
 
 import { useEffect, useState } from 'react';
 import type { CatalogActivity } from '@/types';
+import { supabase } from '@/lib/supabaseClient';
 import { fetchCatalog } from './fetchCatalog';
 
 /**
- * Loads catalog activities for the given plan from localStorage or the API.
+ * Loads catalog activities for the given plan from Supabase or the API.
  * Falls back to fetching from the Geoapify proxy when not cached.
  */
 export function useCatalogActivities(
@@ -28,14 +29,56 @@ export function useCatalogActivities(
     async function load() {
       setLoading(true);
       try {
-        const raw = localStorage.getItem(`catalog-${planId}`);
-        if (raw) {
-          setActivities(JSON.parse(raw));
+        let destId: string | undefined;
+        const { data: links } = (await supabase
+          .from('plan_destinations')
+          .select('destination_id')
+          .eq('plan_id', planId)
+          .order('position')) as unknown as {
+          data: { destination_id: string }[] | null;
+        };
+        destId = links?.[0]?.destination_id;
+
+        type CatalogRow = {
+          id: string;
+          name: string;
+          category: string;
+          description: string | null;
+          address: string | null;
+          image_url: string | null;
+          rating: number | null;
+          latitude: number | null;
+          longitude: number | null;
+        };
+        let rows: CatalogRow[] = [];
+        if (destId) {
+          const { data } = (await supabase
+            .from('catalog')
+            .select('*')
+            .eq('destination_id', destId)) as unknown as {
+            data: CatalogRow[] | null;
+          };
+          rows = data ?? [];
+        }
+
+        if (rows.length) {
+          setActivities(
+            rows.map((r) => ({
+              id: r.id,
+              name: r.name,
+              category: r.category,
+              description: r.description ?? undefined,
+              address: r.address ?? undefined,
+              imageUrl: r.image_url ?? undefined,
+              rating: r.rating ?? undefined,
+              latitude: r.latitude ?? undefined,
+              longitude: r.longitude ?? undefined,
+            }))
+          );
           setError(false);
         } else {
           const { activities: fetched } = await fetchCatalog(dest!);
           setActivities(fetched);
-          localStorage.setItem(`catalog-${planId}`, JSON.stringify(fetched));
           setError(false);
         }
       } catch {

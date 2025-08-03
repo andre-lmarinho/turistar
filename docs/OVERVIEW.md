@@ -13,6 +13,7 @@ The application lets users create and organize trip itineraries, with plan data 
 - **Persistent Storage** – Planner data and budget are saved in Supabase.
 - **Map Mode** – View itinerary on an interactive map built with Leaflet.
 - **Sample Inspirations** – Browse pre-built example itineraries for select cities.
+- **Multi-destination Ready** – The database supports linking multiple destinations per plan, though the UI currently uses only the first.
 
 ## Tech Stack
 

@@ -2,6 +2,7 @@
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { CookieOptions } from '@supabase/ssr';
 import type { Database } from '@/types/supabase';
 
 export function supabaseServer() {
@@ -30,10 +31,10 @@ export async function supabaseServerAction(): Promise<SupabaseClient<Database>> 
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set(name: string, value: string, options: CookieOptions) {
           cookieStore.set({ name, value, ...options });
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: CookieOptions) {
           cookieStore.set({ name, value: '', ...options, maxAge: 0 });
         },
       },

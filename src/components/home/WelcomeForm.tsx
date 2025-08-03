@@ -8,7 +8,6 @@ import Image from 'next/image';
 import { Button, DateRangePicker, DestinationInput, LoadingScreen } from '@/components';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
-import { fetchCatalog } from '@/hooks';
 import { createPlan } from '@/app/planner/actions/createPlan';
 
 export default function WelcomeForm() {
@@ -19,6 +18,7 @@ export default function WelcomeForm() {
   });
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [title, setTitle] = useState('');
 
   // Declare error state
   const [error, setError] = useState<string>('');
@@ -36,9 +36,11 @@ export default function WelcomeForm() {
     if (typeof val === 'string') {
       setDest(val);
       setCoords(null);
+      setTitle(val);
     } else {
       setDest(val.name);
       setCoords({ lat: val.latitude, lng: val.longitude });
+      setTitle(val.name);
     }
   }
 
@@ -60,16 +62,12 @@ export default function WelcomeForm() {
     setLoading(true);
     try {
       const { id: planId } = await createPlan(
-        destParam,
+        title || destParam,
+        { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
         range.from.toISOString(),
         range.to.toISOString()
       );
-      try {
-        const { activities } = await fetchCatalog(destParam);
-        localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
-      } catch (err) {
-        console.error(err);
-      }
+
       const query = new URLSearchParams({
         dest: destParam,
         start: range.from.toISOString(),

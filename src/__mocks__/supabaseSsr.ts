@@ -1,31 +1,42 @@
 // src/__mocks__/supabaseSsr.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/supabase';
 
-function createBuilder(): any {
-  const builder: any = {};
+type QueryBuilder = {
+  select: (...args: unknown[]) => QueryBuilder;
+  insert: (...args: unknown[]) => QueryBuilder;
+  upsert: (...args: unknown[]) => QueryBuilder;
+  update: (...args: unknown[]) => QueryBuilder;
+  delete: (...args: unknown[]) => QueryBuilder;
+  eq: (...args: unknown[]) => QueryBuilder;
+  order: (...args: unknown[]) => QueryBuilder;
+  single: () => Promise<{ data: null; error: null }>;
+  maybeSingle: () => Promise<{ data: null; error: null }>;
+  returns: () => Promise<{ data: null; error: null }>;
+};
 
-  ['select', 'insert', 'upsert', 'update', 'delete', 'eq', 'order'].forEach(
-    (m) =>
-      (builder[m] = (..._args: any[]) => {
-        return builder;
-      })
-  );
+function createBuilder(): QueryBuilder {
+  const builder = {
+    single: () => Promise.resolve({ data: null, error: null }),
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+    returns: () => Promise.resolve({ data: null, error: null }),
+  } as QueryBuilder;
 
-  builder.single = () => Promise.resolve({ data: null, error: null });
-  builder.maybeSingle = () => Promise.resolve({ data: null, error: null });
-  builder.returns = () => Promise.resolve({ data: null, error: null });
+  (['select', 'insert', 'upsert', 'update', 'delete', 'eq', 'order'] as const).forEach((m) => {
+    (builder as unknown as Record<string, (...args: unknown[]) => QueryBuilder>)[m] = () => builder;
+  });
 
   return builder;
 }
 
-function createMockClient(): SupabaseClient<any> {
+function createMockClient(): SupabaseClient<Database> {
   return {
     from: () => createBuilder(),
     auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null } as any),
-      getUser: () => Promise.resolve({ data: { user: null }, error: null } as any),
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
     },
-  } as unknown as SupabaseClient<any>;
+  } as unknown as SupabaseClient<Database>;
 }
 
 export const createBrowserClient = () => createMockClient();

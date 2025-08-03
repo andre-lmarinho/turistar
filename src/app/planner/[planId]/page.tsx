@@ -14,22 +14,31 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   const { dest } = await searchParams;
 
   let destination = dest;
+  let title: string | undefined;
+
   if (!destination) {
     const supabase = await supabaseServer();
     const { data, error } = (await supabase
       .from('plans')
-      .select('dest')
+      .select('title, plan_destinations(destinations(name))')
       .eq('id', planId)
       .single()) as unknown as {
-      data: { dest: string | null } | null;
+      data: {
+        title: string | null;
+        plan_destinations: { destinations: { name: string } }[] | null;
+      } | null;
       error: unknown;
     };
-    if (!error) destination = data?.dest ?? undefined;
+
+    if (!error && data) {
+      title = data.title ?? undefined;
+      destination = data.plan_destinations?.[0]?.destinations?.name ?? undefined;
+    }
   }
 
   if (!destination) {
     return <p className="p-4">Plan destination not found.</p>;
   }
 
-  return <PlannerClient planId={planId} dest={destination} />;
+  return <PlannerClient planId={planId} dest={destination} title={title ?? destination} />;
 }
