@@ -19,7 +19,7 @@ export async function createPlan(dest: string, start: string, end: string) {
     .from('plans')
     .insert({
       title: dest,
-      destination: dest,
+      dest,
       user_id: user.id,
       start_date: startDate,
       end_date: endDate,
