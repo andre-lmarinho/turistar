@@ -13,13 +13,15 @@ export function PlannerProvider({
   initialDays,
   planId,
   dest,
+  persist = true,
 }: {
   children: ReactNode;
   initialDays?: DayPlan[];
   planId: string;
   dest?: string;
+  persist?: boolean;
 }) {
-  const { data: storedDays } = usePlanDays(planId);
+  const { data: storedDays } = usePlanDays(planId, persist);
   const planner = usePlanner({
     initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
     planId,

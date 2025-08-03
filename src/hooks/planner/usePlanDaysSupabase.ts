@@ -1,9 +1,10 @@
 // src/hooks/planner/usePlanDaysSupabase.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabaseClient';
-import type { PlanDay, Activity } from '@/types';
+import type { PlanDay, Activity, DayPlan } from '@/types';
+import { format, parseISO } from 'date-fns';
 
-export function usePlanDays(planId: string) {
+export function usePlanDays(planId: string, enabled = true) {
   const qc = useQueryClient();
 
   const days = useQuery({
@@ -11,15 +12,20 @@ export function usePlanDays(planId: string) {
     queryFn: async () => {
       const { data, error } = (await supabase
         .from('plan_days')
-        .select('*, activities(*)')
+        .select('date, activities(*)')
         .eq('plan_id', planId)
         .order('position')) as unknown as {
-        data: (PlanDay & { activities: Activity[] })[];
+        data: { date: string; activities: Activity[] }[];
         error: unknown;
       };
       if (error) throw error;
-      return data;
+      return data.map((d) => ({
+        id: d.date,
+        label: format(parseISO(d.date), 'EEE, dd MMM'),
+        activities: d.activities,
+      })) as DayPlan[];
     },
+    enabled,
   });
 
   const upsertDay = useMutation({

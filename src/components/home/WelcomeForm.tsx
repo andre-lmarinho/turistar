@@ -9,6 +9,7 @@ import { Button, DateRangePicker, DestinationInput, LoadingScreen } from '@/comp
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { fetchCatalog } from '@/hooks';
+import { createPlan } from '@/app/planner/actions/createPlan';
 
 export default function WelcomeForm() {
   const router = useRouter();
@@ -58,9 +59,17 @@ export default function WelcomeForm() {
 
     setLoading(true);
     try {
-      const planId = crypto.randomUUID();
-      const { activities } = await fetchCatalog(destParam);
-      localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
+      const { id: planId } = await createPlan(
+        destParam,
+        range.from.toISOString(),
+        range.to.toISOString()
+      );
+      try {
+        const { activities } = await fetchCatalog(destParam);
+        localStorage.setItem(`catalog-${planId}`, JSON.stringify(activities));
+      } catch (err) {
+        console.error(err);
+      }
       const query = new URLSearchParams({
         dest: destParam,
         start: range.from.toISOString(),
@@ -73,7 +82,7 @@ export default function WelcomeForm() {
       const queryString = query.toString();
       router.push(`/planner/${planId}?${queryString}`);
     } catch {
-      setError('Failed to load catalog.');
+      setError('Failed to create plan.');
     } finally {
       setLoading(false);
     }
