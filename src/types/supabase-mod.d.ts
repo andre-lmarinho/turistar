@@ -19,17 +19,22 @@ declare module '@supabase/supabase-js' {
   }
 }
 
-declare module '@supabase/auth-helpers-nextjs' {
+declare module '@supabase/ssr' {
   import type { SupabaseClient } from '@supabase/supabase-js';
   import type { Database } from './supabase';
-  export const createClientComponentClient: <DB = Database>() => SupabaseClient<DB>;
-  export const createServerComponentClient: <DB = Database>(opts: {
-    cookies: () => unknown;
-  }) => SupabaseClient<DB>;
-  export const createServerActionClient: <DB = Database>(opts: {
-    cookies: () => unknown;
-  }) => SupabaseClient<DB>;
-  export const createMiddlewareClient: (opts: unknown) => SupabaseClient<Database>;
+  export const createBrowserClient: <DB = Database>(
+    supabaseUrl: string,
+    supabaseKey: string
+  ) => SupabaseClient<DB>;
+  export const createServerClient: <DB = Database>(
+    supabaseUrl: string,
+    supabaseKey: string,
+    options: unknown
+  ) => SupabaseClient<DB>;
+  export const createMiddlewareClient: <DB = Database>(
+    context: unknown,
+    options: unknown
+  ) => SupabaseClient<DB>;
 }
 
 declare module '@supabase/auth-helpers-react' {

@@ -6,7 +6,7 @@ import { supabaseServerAction } from '@/lib/supabaseServer';
 import { buildInitialDays } from '@/utils';
 
 export async function createPlan(dest: string, start: string, end: string) {
-  const supabase = supabaseServerAction();
+  const supabase = await supabaseServerAction();
   const {
     data: { user },
   } = await supabase.auth.getUser();

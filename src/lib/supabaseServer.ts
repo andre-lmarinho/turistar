@@ -1,20 +1,43 @@
 // src/lib/supabaseServer.ts
 import { cookies } from 'next/headers';
-import {
-  createServerActionClient,
-  createServerComponentClient,
-} from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
 // Return a server-side Supabase client bound to Next.js cookies
-export function supabaseServer(): SupabaseClient<Database> {
-  const cookieStore = cookies();
-  return createServerComponentClient<Database>({ cookies: () => cookieStore });
+export async function supabaseServer(): Promise<SupabaseClient<Database>> {
+  const cookieStore = await cookies();
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
 }
 
 // Return a server-side Supabase client for server actions bound to Next.js cookies
-export function supabaseServerAction(): SupabaseClient<Database> {
-  const cookieStore = cookies();
-  return createServerActionClient<Database>({ cookies: () => cookieStore });
+export async function supabaseServerAction(): Promise<SupabaseClient<Database>> {
+  const cookieStore = await cookies();
+  return createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          cookieStore.set({ name, value, ...options });
+        },
+        remove(name: string, options: any) {
+          cookieStore.set({ name, value: '', ...options, maxAge: 0 });
+        },
+      },
+    }
+  );
 }

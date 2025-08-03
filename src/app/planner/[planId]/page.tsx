@@ -15,7 +15,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
 
   let destination = dest;
   if (!destination) {
-    const supabase = supabaseServer();
+    const supabase = await supabaseServer();
     const { data, error } = (await supabase
       .from('plans')
       .select('dest')
