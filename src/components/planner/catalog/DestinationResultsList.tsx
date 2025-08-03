@@ -23,24 +23,17 @@ export default function DestinationResultsList({
   onRemove,
 }: DestinationResultsListProps) {
   return (
-    <div className="flex flex-1 overflow-auto">
-      <div className="flex-1 p-4">
-        {loading && (
-          <div className="flex items-center gap-2">
-            <Spinner />
-            <span>Loading catalog...</span>
-          </div>
-        )}
-        {error && <p className="text-red-500">{error}</p>}
-        {!loading && !error && (
-          <DestinationCardGrid
-            items={items}
-            addedIds={addedIds}
-            onAdd={onAdd}
-            onRemove={onRemove}
-          />
-        )}
-      </div>
+    <div className="flex-1 p-4">
+      {loading && (
+        <div className="flex items-center gap-2">
+          <Spinner />
+          <span>Loading catalog...</span>
+        </div>
+      )}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && (
+        <DestinationCardGrid items={items} addedIds={addedIds} onAdd={onAdd} onRemove={onRemove} />
+      )}
     </div>
   );
 }
