@@ -34,7 +34,6 @@ export default function ActivityModal() {
       ...prev,
       title: item.name,
       description: item.description,
-      address: item.address,
       imageUrl: item.imageUrl,
       category: item.category,
     }));

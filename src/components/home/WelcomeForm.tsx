@@ -97,7 +97,6 @@ export default function WelcomeForm() {
       <div className="relative container flex flex-col pt-20">
         <div className="relative z-10 flex flex-col-reverse items-center gap-10 lg:flex-row lg:items-start">
           <div className="flex w-full items-start gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-            {/* Text */}
             <div className="flex-1 pb-[5dvh] lg:pb-[15dvh]">
               <h1 className="font-title text-foreground pb-6 text-[32px] leading-[0.9] font-semibold tracking-tight sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px]">
                 Turistar App
@@ -153,7 +152,6 @@ export default function WelcomeForm() {
 
         {/* App Preview */}
         <div className="relative z-10 w-[90%] overflow-hidden rounded-t-md lg:left-0 lg:w-[78.4%]">
-          {/* Imagem */}
           <Image
             src="/previews/preview_01.png"
             alt="Screenshot of the planner interface"
