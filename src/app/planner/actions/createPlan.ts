@@ -15,22 +15,42 @@ export async function createPlan(dest: string, start: string, end: string) {
   const startDate = start.slice(0, 10);
   const endDate = end.slice(0, 10);
 
-  const { data: plan, error: planError } = (await supabase
+  const baseFields = {
+    title: dest,
+    user_id: user.id,
+    start_date: startDate,
+    end_date: endDate,
+  };
+
+  let response = (await supabase
     .from('plans')
-    .insert({
-      title: dest,
-      dest,
-      user_id: user.id,
-      start_date: startDate,
-      end_date: endDate,
-    })
+    .insert({ ...baseFields, dest })
     .select('id')
     .single()) as unknown as {
     data: { id: string } | null;
     error: unknown;
   };
-  if (planError || !plan) throw planError || new Error('Failed to create plan');
-  const planId = plan.id;
+
+  const missingDestColumn =
+    typeof response.error === 'object' &&
+    response.error !== null &&
+    'message' in response.error &&
+    typeof (response.error as { message: string }).message === 'string' &&
+    (response.error as { message: string }).message.includes('column "dest"');
+
+  if (missingDestColumn) {
+    response = (await supabase
+      .from('plans')
+      .insert({ ...baseFields, destination: dest })
+      .select('id')
+      .single()) as unknown as {
+      data: { id: string } | null;
+      error: unknown;
+    };
+  }
+
+  if (response.error || !response.data) throw response.error || new Error('Failed to create plan');
+  const planId = response.data.id;
 
   const tripDays = eachDayOfInterval({ start: new Date(start), end: new Date(end) });
   const days = buildInitialDays(tripDays);
