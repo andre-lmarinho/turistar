@@ -80,3 +80,18 @@ npm run test -- path/to/test-file.test.ts
 # Run tests with coverage
 npm run test -- --coverage
 ```
+
+## Documentation
+
+- [Project Overview](docs/OVERVIEW.md)
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Database Schema](docs/DATABASE.md)
+- [State Data Flow](docs/STATE-DATA-FLOW.md)
+- [Components](docs/COMPONENTS.md)
+- [Hooks](docs/HOOKS.md)
+- [Style Guide](docs/STYLE-GUIDE.md)
+- [Accessibility](docs/ACCESSIBILITY.md)
+- [Testing](docs/TESTING.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Commenting Standards](docs/COMMENTING.md)
+- [Contributing](docs/CONTRIBUTING.md)

@@ -222,6 +222,7 @@ For more details on project conventions, see:
 
 - [Project Overview](docs/OVERVIEW.md)
 - [Architecture Overview](docs/ARCHITECTURE.md)
+- [Database Schema](docs/DATABASE.md)
 - [State Data Flow](docs/STATE-DATA-FLOW.md)
 - [Components](docs/COMPONENTS.md)
 - [Hooks](docs/HOOKS.md)
