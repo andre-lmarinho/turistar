@@ -21,6 +21,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - **Language**: All documentation, inline code comments, commit messages and PR descriptions must be written in English.
 - **Formatting**: Run `npm run format` before committing. The project uses Prettier with semicolons, single quotes and `printWidth` 100.
 - **Linting**: Ensure `npm run lint` passes.
+- **Type checking**: Ensure `npm run typecheck` passes.
 - **Tests**: Execute `npm run test` and make sure tests succeed.
 - **Commit style**: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `✨ Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
 
@@ -71,11 +72,11 @@ Run tests using the following commands:
 
 ```bash
 # Run all tests
-npm test
+npm run test
 
 # Run a specific test file
-npm test -- path/to/test-file.test.ts
+npm run test -- path/to/test-file.test.ts
 
 # Run tests with coverage
-npm test -- --coverage
+npm run test -- --coverage
 ```

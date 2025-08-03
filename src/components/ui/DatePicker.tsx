@@ -31,7 +31,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
             !value?.from && 'text-muted-foreground italic',
             className
           )}
-          aria-label="Pick a date range"
+          aria-label={label}
         >
           <span>{label}</span>
           <CalendarIcon className="text-muted-foreground h-4 w-4" aria-hidden="true" />

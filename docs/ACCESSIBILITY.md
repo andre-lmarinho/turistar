@@ -12,6 +12,15 @@ This project aims to meet WCAG 2.1 AA requirements. Use the checklist below when
 - Use semantic HTML and ARIA roles only when necessary
 - Add `aria-label="Itinerary map"` to `<MapContainer>` components so screen
   readers can identify the map
+- Elements labelled by their content must include that visible text in the
+  accessible name
+- Touch targets for interactive controls should be at least 44×44&nbsp;px with
+  adequate spacing
+- Provide valid `role` values and prefer native elements over overriding roles
+- Do not repeat image alternative text in adjacent visible captions or
+  headings
+- Elements hidden with `aria-hidden="true"` must not contain focusable content
+  and should be removed if used solely for layout
 
 Refer to the official guidelines for details: <https://www.w3.org/WAI/WCAG21/quickref/>
 

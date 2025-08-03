@@ -38,7 +38,7 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-export default function MapView() {
+function MapView() {
   const { days, setSelectedActivity, destCoords } = usePlannerContext();
   const centerCoords = destCoords ?? undefined;
   const dayPaths = useMemo(
@@ -133,3 +133,5 @@ export default function MapView() {
     </div>
   );
 }
+
+export default React.memo(MapView);

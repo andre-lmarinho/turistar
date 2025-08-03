@@ -13,7 +13,7 @@ import {
   ActivitiesBudgetPopup,
 } from '@/components';
 
-export default function BudgetPanel() {
+function BudgetPanel() {
   const { planId, days, updateActivity } = usePlannerContext();
   const activitiesTotal = days.reduce(
     (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
@@ -63,3 +63,5 @@ export default function BudgetPanel() {
     </BudgetProvider>
   );
 }
+
+export default React.memo(BudgetPanel);
