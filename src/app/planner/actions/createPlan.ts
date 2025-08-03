@@ -2,11 +2,11 @@
 'use server';
 
 import { eachDayOfInterval } from 'date-fns';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { supabaseServerAction } from '@/lib/supabaseServer';
 import { buildInitialDays } from '@/utils';
 
 export async function createPlan(dest: string, start: string, end: string) {
-  const supabase = supabaseServer();
+  const supabase = supabaseServerAction();
   const {
     data: { user },
   } = await supabase.auth.getUser();

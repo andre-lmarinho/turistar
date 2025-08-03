@@ -14,6 +14,7 @@ export const createClientComponentClient = () => ({
 });
 
 export const createServerComponentClient = () => createClientComponentClient();
+export const createServerActionClient = () => createClientComponentClient();
 export const createMiddlewareClient = () => ({
   auth: { getSession: () => Promise.resolve({}) },
   from: () => ({}),

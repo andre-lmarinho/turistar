@@ -26,6 +26,9 @@ declare module '@supabase/auth-helpers-nextjs' {
   export const createServerComponentClient: <DB = Database>(opts: {
     cookies: unknown;
   }) => SupabaseClient<DB>;
+  export const createServerActionClient: <DB = Database>(opts: {
+    cookies: unknown;
+  }) => SupabaseClient<DB>;
   export const createMiddlewareClient: (opts: unknown) => SupabaseClient<Database>;
 }
 
