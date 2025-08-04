@@ -67,16 +67,6 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
     }));
 }
 
-/* Static‑map thumbnail (fallback) */
-function staticMapThumbnail(lat: number, lon: number, key: string, width = 400) {
-  const height = Math.round(width * 0.75);
-  const marker = encodeURIComponent(`lonlat:${lon},${lat};size:48`);
-  return (
-    `https://maps.geoapify.com/v1/staticmap?style=osm-carto&width=${width}&height=${height}` +
-    `&center=lonlat:${lon},${lat}&zoom=14&marker=${marker}&apiKey=${key}`
-  );
-}
-
 /*  Catalog – main “places” pipeline */
 export async function fetchGeoapifyCatalog(
   dest: string,
@@ -110,20 +100,19 @@ export async function fetchGeoapifyCatalog(
   const activities = data.features.map((f): CatalogActivity => {
     const p = f.properties;
     const placeId = String(p.place_id);
-
-    const description = p.description;
-    const imageUrl = p.image ?? staticMapThumbnail(p.lat, p.lon, key);
+    const category = p.categories?.[0] ?? 'sight';
+    const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
 
     return {
       id: placeId,
-      name: p.name ?? p.formatted ?? 'Tourist spot',
+      name: p.name ?? categoryLabel,
       address: p.formatted,
-      description,
-      category: p.categories?.[0] ?? 'sight',
+      description: p.description,
+      category,
       rating: p.rank?.popularity,
       latitude: p.lat,
       longitude: p.lon,
-      imageUrl,
+      ...(p.image && { imageUrl: p.image }),
     };
   });
 
@@ -161,20 +150,19 @@ export async function fetchGeoapifySearch(
   const activities = data.features.map((f): CatalogActivity => {
     const p = f.properties;
     const placeId = String(p.place_id);
-
-    const description = p.description;
-    const imageUrl = p.image ?? staticMapThumbnail(p.lat, p.lon, key);
+    const category = p.categories?.[0] ?? 'sight';
+    const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
 
     return {
       id: placeId,
-      name: p.name ?? p.formatted ?? text,
+      name: p.name ?? categoryLabel ?? text,
       address: p.formatted,
-      description,
-      category: p.categories?.[0] ?? 'sight',
+      description: p.description,
+      category,
       rating: p.rank?.popularity,
       latitude: p.lat,
       longitude: p.lon,
-      imageUrl,
+      ...(p.image && { imageUrl: p.image }),
     };
   });
 

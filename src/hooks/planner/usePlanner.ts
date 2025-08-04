@@ -1,6 +1,6 @@
 // src/hooks/usePlanner.ts
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { closestCenter } from '@dnd-kit/core';
 
 import { useTripRange, useDnDPlanner, usePlanParams } from '@/hooks';
@@ -20,6 +20,14 @@ export function usePlanner(options: UsePlannerOptions = {}) {
   const { tripDays, currentRange, handleRangeChange } = useTripRange(options.initialDays ?? []);
 
   /* DnD state */
+  const initialDnDDays = useMemo(
+    () =>
+      options.initialDays && options.initialDays.length > 0
+        ? options.initialDays
+        : buildInitialDays(tripDays),
+    [options.initialDays] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   const {
     days,
     setDays,
@@ -32,14 +40,13 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     removeActivity,
     updateActivity,
     addBlankActivity,
-  } = useDnDPlanner(options.initialDays ?? buildInitialDays(tripDays));
+  } = useDnDPlanner(initialDnDDays);
 
   /* Sync on range change */
   useEffect(() => {
-    if (!options.initialDays) {
-      setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
-    }
-  }, [tripDays, setDays, options.initialDays]);
+    if (tripDays.length === 0) return;
+    setDays((prevDays: DayPlan[]) => syncDaysWithTripRange(prevDays, tripDays));
+  }, [tripDays, setDays]);
 
   return {
     planId,

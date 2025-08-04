@@ -1,7 +1,7 @@
 // src/hooks/useDragState.ts
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   PointerSensor,
   useSensor,
@@ -50,6 +50,14 @@ function getDragTarget(
 
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
+  const prevInitialRef = useRef<DayPlan[]>(initialDays);
+  useEffect(() => {
+    if (initialDays === prevInitialRef.current) return;
+    if (initialDays.length === 0 && days.length) return;
+    prevInitialRef.current = initialDays;
+    setDays(initialDays);
+  }, [initialDays, days.length]);
+
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   // Throttle state updates so drag-over doesn't fire excessively
   const lastTimeRef = useRef<number>(0);

@@ -41,7 +41,7 @@ export default function DestinationCard({
       <div className="relative">
         {/* Image */}
         <Image
-          src={imageUrl || 'https://placehold.co/400x200'}
+          src={imageUrl ?? '/images/placeholder.png'}
           alt={`Photo of ${name}`}
           width={400}
           height={200}
@@ -53,6 +53,7 @@ export default function DestinationCard({
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/woAAgMBgLf3OBAAAAAASUVORK5CYII="
           onLoadingComplete={() => setImgLoaded(true)}
           onError={() => setImgLoaded(true)}
+          unoptimized={!imageUrl}
         />
         {!imgLoaded && <div className="bg-muted absolute inset-0 z-10 animate-pulse rounded-t" />}
         {/* quick-remove icon (only when added) */}
@@ -84,7 +85,11 @@ export default function DestinationCard({
             {rating?.toFixed(1) ?? 'N/A'} 
           </dd>
         </dl>
-        {description && <p className="text-sm text-[var(--muted-foreground)]">{description}</p>}
+        {description ? (
+          <p className="text-sm text-[var(--muted-foreground)]">{description}</p>
+        ) : (
+          <p className="text-sm text-[var(--muted-foreground)]">No description available</p>
+        )}
       </div>
     </li>
   );

@@ -69,4 +69,32 @@ describe('useDnDPlanner', () => {
 
     expect(result.current.activeId).toBeNull();
   });
+
+  test('updates days when initialDays changes', () => {
+    const first: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
+    const second: DayPlan[] = [
+      { id: 'd1', label: 'Day 1', activities: [] },
+      { id: 'd2', label: 'Day 2', activities: [] },
+    ];
+    const { result, rerender } = renderHook(({ init }) => useDnDPlanner(init), {
+      initialProps: { init: first },
+    });
+
+    expect(result.current.days).toEqual(first);
+    rerender({ init: second });
+    expect(result.current.days).toEqual(second);
+  });
+
+  test('ignores empty initialDays updates', () => {
+    const first: DayPlan[] = [
+      { id: 'd1', label: 'Day 1', activities: [] },
+      { id: 'd2', label: 'Day 2', activities: [] },
+    ];
+    const { result, rerender } = renderHook(({ init }) => useDnDPlanner(init), {
+      initialProps: { init: first },
+    });
+
+    rerender({ init: [] });
+    expect(result.current.days).toEqual(first);
+  });
 });

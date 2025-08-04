@@ -131,6 +131,7 @@ This document summarizes each React component in the repository. It follows the 
 - **Accessibility:** form labels, validation message
 - **Interactions:** submits to `/planner` with query params
 - **Performance notes:** none
+- **Notes:** Title derives from the first part of the destination (city or country) to name the plan.
 
 ### DestinationInput
 
@@ -229,13 +230,14 @@ This document summarizes each React component in the repository. It follows the 
 
 - **Location:** `src/components/planner/catalog`
 - **Responsibility:** Card display for catalog items and grid layout.
-- **Props:** card info with optional `imageUrl` and `description`, add/remove callbacks
-- **State:** none
+- **Props:** card info with `imageUrl` and optional `description`, add/remove callbacks
+- **State:** `imgLoaded`
 - **External Hooks:** none
 - **Side-effects:** none
 - **Accessibility:** alt text, ARIA labels
 - **Interactions:** add/remove actions
 - **Performance notes:** none
+- **Fallbacks:** static map image and "No description available" text when data is missing
 
 ### CategorySelection
 

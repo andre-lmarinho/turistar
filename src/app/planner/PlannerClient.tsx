@@ -66,13 +66,11 @@ function PlannerClientInner({
     onPlanner: () => setMode('planner'),
     onMap: () => setMode('map'),
     onBudget: () => setMode('budget'),
-    onNewCard: () => addBlankAndSelect(days[0].id),
+    onNewCard: () => {
+      if (days[0]) addBlankAndSelect(days[0].id);
+    },
     onCatalog: hideCatalog ? () => {} : () => setIsPanelOpen(true),
   });
-
-  /* Guard clauses */
-  if (!dest) return <p className="p-4">Destination missing in URL.</p>;
-  if (!days.length) return <p className="p-4">No catalog found.</p>;
 
   const activeIdx = modeOrder.indexOf(mode);
 

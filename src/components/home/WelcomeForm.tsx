@@ -36,11 +36,11 @@ export default function WelcomeForm() {
     if (typeof val === 'string') {
       setDest(val);
       setCoords(null);
-      setTitle(val);
+      setTitle(val.split(',')[0].trim());
     } else {
       setDest(val.name);
       setCoords({ lat: val.latitude, lng: val.longitude });
-      setTitle(val.name);
+      setTitle(val.name.split(',')[0].trim());
     }
   }
 
@@ -81,7 +81,6 @@ export default function WelcomeForm() {
       router.push(`/planner/${planId}?${queryString}`);
     } catch {
       setError('Failed to create plan.');
-    } finally {
       setLoading(false);
     }
   };
