@@ -2,6 +2,7 @@
 
 import type { DayPlan } from '@/types';
 import { formatDayPlan } from '@/utils/formatDayPlan';
+import { parseISO, isBefore, isAfter } from 'date-fns';
 
 /**
  * Syncs the existing planner with the new trip range.
@@ -16,65 +17,45 @@ import { formatDayPlan } from '@/utils/formatDayPlan';
  * @returns Updated planner days with synced IDs and labels.
  */
 export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]): DayPlan[] {
-  const newTripDays = tripDays.length;
-  if (newTripDays === 0) {
-    return [];
+  if (tripDays.length === 0) return [];
+
+  if (currentDays.length === tripDays.length) {
+    return currentDays.map((day, i) => ({ ...day, ...formatDayPlan(tripDays[i]) }));
   }
 
-  // Early return: no structural change
-  const isSameLength = currentDays.length === newTripDays;
-  const isSameDates =
-    isSameLength &&
-    currentDays.every((day, i) => {
-      const formatted = formatDayPlan(tripDays[i]);
-      return day.id === formatted.id && day.label === formatted.label;
-    });
+  const formattedTrip = tripDays.map((d) => formatDayPlan(d));
+  const map = new Map(currentDays.map((d) => [d.id, d]));
 
-  if (isSameDates) return currentDays;
+  const updated: DayPlan[] = formattedTrip.map((tpl) => {
+    const existing = map.get(tpl.id);
+    return existing ? { ...existing, label: tpl.label } : { ...tpl, activities: [] };
+  });
 
-  // Clone deeply so the original days remain untouched
-  const daysCopy = currentDays.map((day) => ({
-    ...day,
-    activities: [...day.activities],
-  }));
+  const first = tripDays[0];
+  const last = tripDays[tripDays.length - 1];
+  const beforeActs: DayPlan['activities'] = [];
+  const afterActs: DayPlan['activities'] = [];
 
-  // Case 1: Same number of days → just relabel.
-  if (daysCopy.length === newTripDays) {
-    return daysCopy.map((day, index) => ({
-      ...day,
-      ...formatDayPlan(tripDays[index]),
-    }));
+  currentDays.forEach((day) => {
+    if (formattedTrip.some((t) => t.id === day.id)) return;
+    const date = parseISO(day.id);
+    if (isBefore(date, first)) {
+      beforeActs.push(...day.activities);
+    } else if (isAfter(date, last)) {
+      afterActs.push(...day.activities);
+    }
+  });
+
+  if (beforeActs.length) {
+    updated[0] = { ...updated[0], activities: [...beforeActs, ...updated[0].activities] };
   }
-
-  // Case 2: Trip was shortened → move overflow activities to the last remaining day.
-  if (newTripDays < daysCopy.length) {
-    const keptDays = daysCopy.slice(0, newTripDays);
-    const overflowDays = daysCopy.slice(newTripDays);
-
-    const overflowActivities = overflowDays.flatMap((day) => day.activities);
-
-    const lastDay = keptDays[keptDays.length - 1];
-    keptDays[keptDays.length - 1] = {
-      ...lastDay,
-      activities: [...lastDay.activities, ...overflowActivities],
+  if (afterActs.length) {
+    const lastIdx = updated.length - 1;
+    updated[lastIdx] = {
+      ...updated[lastIdx],
+      activities: [...updated[lastIdx].activities, ...afterActs],
     };
-
-    return keptDays.map((day, index) => ({
-      ...day,
-      ...formatDayPlan(tripDays[index]),
-    }));
   }
 
-  // Case 3: Trip was extended → add extra empty days.
-  for (let i = daysCopy.length; i < newTripDays; i++) {
-    daysCopy.push({
-      ...formatDayPlan(tripDays[i]),
-      activities: [],
-    });
-  }
-
-  return daysCopy.map((day, index) => ({
-    ...day,
-    ...formatDayPlan(tripDays[index]),
-  }));
+  return updated;
 }

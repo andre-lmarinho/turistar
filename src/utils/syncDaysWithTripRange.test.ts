@@ -15,9 +15,9 @@ describe('syncDaysWithTripRange immutability', () => {
     const c1 = buildActivity('c1');
 
     const days: DayPlan[] = [
-      { id: 'd1', label: 'Day 1', activities: [a1] },
-      { id: 'd2', label: 'Day 2', activities: [b1] },
-      { id: 'd3', label: 'Day 3', activities: [c1] },
+      { id: '2023-01-01', label: 'Day 1', activities: [a1] },
+      { id: '2023-01-02', label: 'Day 2', activities: [b1] },
+      { id: '2023-01-03', label: 'Day 3', activities: [c1] },
     ];
     const snapshot = JSON.parse(JSON.stringify(days));
     const trip = [new Date('2023-01-01'), new Date('2023-01-02')];
@@ -81,5 +81,48 @@ describe('syncDaysWithTripRange relabeling', () => {
       label: 'Thu, 02 Feb',
     });
     expect(result[1].activities.map((a) => a.id)).toEqual(['b1']);
+  });
+
+  it('adds new day at the start when trip extends earlier', () => {
+    const a1 = buildActivity('a1');
+    const b1 = buildActivity('b1');
+
+    const current: DayPlan[] = [
+      { ...formatDayPlan(parseISO('2023-01-02')), activities: [a1] },
+      { ...formatDayPlan(parseISO('2023-01-03')), activities: [b1] },
+    ];
+
+    const trip = [
+      parseISO('2023-01-01T00:00:00Z'),
+      parseISO('2023-01-02T00:00:00Z'),
+      parseISO('2023-01-03T00:00:00Z'),
+    ];
+
+    const result = syncDaysWithTripRange(current, trip);
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toMatchObject({ id: '2023-01-01', activities: [] });
+    expect(result[1].activities.map((a) => a.id)).toEqual(['a1']);
+    expect(result[2].activities.map((a) => a.id)).toEqual(['b1']);
+  });
+
+  it('moves activities from removed start days to the new first day', () => {
+    const a1 = buildActivity('a1');
+    const b1 = buildActivity('b1');
+    const c1 = buildActivity('c1');
+
+    const current: DayPlan[] = [
+      { ...formatDayPlan(parseISO('2023-01-01')), activities: [a1] },
+      { ...formatDayPlan(parseISO('2023-01-02')), activities: [b1] },
+      { ...formatDayPlan(parseISO('2023-01-03')), activities: [c1] },
+    ];
+
+    const trip = [parseISO('2023-01-02T00:00:00Z'), parseISO('2023-01-03T00:00:00Z')];
+
+    const result = syncDaysWithTripRange(current, trip);
+
+    expect(result).toHaveLength(2);
+    expect(result[0].activities.map((a) => a.id)).toEqual(['a1', 'b1']);
+    expect(result[1].activities.map((a) => a.id)).toEqual(['c1']);
   });
 });

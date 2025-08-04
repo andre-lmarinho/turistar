@@ -1,5 +1,6 @@
 // src/hooks/usePlanner.ts
 'use client';
+
 import { useEffect, useMemo } from 'react';
 import { closestCenter } from '@dnd-kit/core';
 
@@ -25,7 +26,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
       options.initialDays && options.initialDays.length > 0
         ? options.initialDays
         : buildInitialDays(tripDays),
-    [options.initialDays] // eslint-disable-line react-hooks/exhaustive-deps
+    [options.initialDays, tripDays]
   );
 
   const {
