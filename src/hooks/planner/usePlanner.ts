@@ -29,10 +29,14 @@ export function usePlanner(options: UsePlannerOptions = {}) {
   } = useTripRange(options.initialDays ?? []);
 
   /* DnD state */
+  function dedupeDays(days: DayPlan[]): DayPlan[] {
+    return Array.from(new Map(days.map((d) => [d.id, d])).values());
+  }
+
   const initialDnDDays = useMemo(
     () =>
       options.initialDays && options.initialDays.length > 0
-        ? options.initialDays
+        ? dedupeDays(options.initialDays)
         : buildInitialDays(tripDays),
     [options.initialDays, tripDays]
   );
@@ -69,7 +73,8 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     }
     const newTripDays = eachDayOfInterval({ start: r.from, end: r.to });
     setDays((prev: DayPlan[]) => {
-      const updated = syncDaysWithTripRange(prev, newTripDays);
+      const cleaned = dedupeDays(prev);
+      const updated = syncDaysWithTripRange(cleaned, newTripDays);
       options.persistDays?.mutate(updated);
       return updated;
     });
