@@ -51,11 +51,21 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     addBlankActivity,
   } = useDnDPlanner(initialDnDDays);
 
-  function handleRangeChange(r: DateRange | undefined) {
+  /**
+   * Updates the planner when the trip range changes.
+   *
+   * - Persists the new start and end dates to the database.
+   * - Syncs the local day plan state with the new range and persists it.
+   */
+  async function handleRangeChange(r: DateRange | undefined) {
     setRange(r);
     if (!r?.from || !r?.to) return;
     if (options.planId) {
-      setPlanDateRange(options.planId, r.from, r.to);
+      try {
+        await setPlanDateRange(options.planId, r.from, r.to);
+      } catch (err) {
+        console.error(err);
+      }
     }
     const newTripDays = eachDayOfInterval({ start: r.from, end: r.to });
     setDays((prev: DayPlan[]) => {

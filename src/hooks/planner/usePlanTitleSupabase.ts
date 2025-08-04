@@ -1,12 +1,11 @@
 // src/hooks/planner/usePlanTitleSupabase.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { capitalize } from '@/lib/utils';
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
   const initialTitle = capitalize(defaultTitle);
-  const [localTitle, setLocalTitle] = useState(initialTitle);
 
   const qc = useQueryClient();
 
@@ -28,6 +27,12 @@ export function usePlanTitle(planId: string, defaultTitle = '', persist = true) 
     enabled: persist,
   });
 
+  const [localTitle, setLocalTitle] = useState(fetchedTitle);
+
+  useEffect(() => {
+    setLocalTitle(fetchedTitle);
+  }, [fetchedTitle]);
+
   const mutation = useMutation({
     mutationFn: async (newTitle: string) => {
       const { error } = (await supabase
@@ -40,9 +45,7 @@ export function usePlanTitle(planId: string, defaultTitle = '', persist = true) 
     onSuccess: (t) => qc.setQueryData(['plan_title', planId], t),
   });
 
-  if (!persist) {
-    return { title: localTitle, setTitle: setLocalTitle };
-  }
+  const saveTitle = persist ? () => mutation.mutate(localTitle) : () => {};
 
-  return { title: fetchedTitle, setTitle: (t: string) => mutation.mutate(t) };
+  return { title: localTitle, setTitle: setLocalTitle, saveTitle };
 }

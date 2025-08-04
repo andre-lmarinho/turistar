@@ -59,7 +59,7 @@ function PlannerClientInner({
   const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
     usePlannerContext();
 
-  const { title, setTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
+  const { title, setTitle, saveTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
   const { ref: titleRef, width: titleWidth } = useInputWidth(title);
 
   useKeyBinds({
@@ -93,6 +93,7 @@ function PlannerClientInner({
               ref={titleRef}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onBlur={saveTitle}
               style={{ width: `${titleWidth}px` }}
               onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
               className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"

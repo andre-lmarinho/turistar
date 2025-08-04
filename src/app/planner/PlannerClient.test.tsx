@@ -36,7 +36,7 @@ vi.mock('@/hooks', async () => {
       updateActivity: vi.fn(),
       addBlankActivity: vi.fn(),
     }),
-    usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn() }),
+    usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
     useSelectedActivity: () => ({
       selectedActivity: null,
       setSelectedActivity: vi.fn(),

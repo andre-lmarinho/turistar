@@ -326,18 +326,23 @@ export function usePlanner();
 
 _File: `src/hooks/planner/usePlanTitleSupabase.ts`_
 
-```ts
-export function usePlanTitle(planId: string, defaultTitle = '', persist = true);
-```
+````ts
+export function usePlanTitle(
+  planId: string,
+  defaultTitle = '',
+  persist = true
+);```
 
 - **Inputs**
   - `planId`: planner identifier.
   - `defaultTitle`: fallback title.
   - `persist` (optional): when `false`, disables Supabase writes.
 - **Outputs**
-  `{ title, setTitle }`.
+  `{ title, setTitle, saveTitle }`.
 - **Lifecycle**
-  Loads and updates the title in Supabase when `persist` is `true`.
+  - Fetches the title from Supabase (unless `persist` is `false`).
+  - Maintains a local `title` state updated via `setTitle`.
+  - Persists changes only when `saveTitle` is called and `persist` is `true`.
 - **Exceptions**
   Propagates Supabase errors.
 
@@ -347,7 +352,7 @@ _File: `src/hooks/useOnboardingCheck.ts`_
 
 ```ts
 export function useOnboardingCheck(planId: string);
-```
+````
 
 - **Inputs**
   - `planId`: planner identifier used for the onboarding key.
