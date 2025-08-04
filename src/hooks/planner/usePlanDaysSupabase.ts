@@ -20,6 +20,8 @@ export function usePlanDays(planId: string, enabled = true) {
           activities: {
             id: string;
             title: string;
+            color: string | null;
+            address: string | null;
             category: string;
             description: string | null;
             start_time: string | null;
@@ -39,6 +41,8 @@ export function usePlanDays(planId: string, enabled = true) {
         activities: d.activities.map((a) => ({
           id: a.id,
           title: a.title,
+          color: a.color ?? undefined,
+          address: a.address ?? undefined,
           category: a.category,
           description: a.description ?? undefined,
           startTime: a.start_time ?? undefined,
@@ -134,6 +138,8 @@ export function usePlanDays(planId: string, enabled = true) {
             const base = {
               day_id: dayId!,
               title: a.title,
+              color: a.color,
+              address: a.address,
               category: a.category,
               description: a.description,
               start_time: a.startTime,

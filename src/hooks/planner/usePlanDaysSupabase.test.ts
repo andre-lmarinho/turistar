@@ -24,6 +24,8 @@ describe('usePlanDaysSupabase', () => {
               id: 'a1',
               title: 't',
               category: 'c',
+              color: 'red',
+              address: 'addr',
               description: null,
               start_time: '09:00',
               duration: 60,
@@ -52,6 +54,8 @@ describe('usePlanDaysSupabase', () => {
     expect(result.current.data?.[0].activities[0]).toEqual({
       id: 'a1',
       title: 't',
+      color: 'red',
+      address: 'addr',
       category: 'c',
       description: undefined,
       startTime: '09:00',

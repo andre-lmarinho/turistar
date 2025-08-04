@@ -16,6 +16,8 @@ longitude double precision,
 budget numeric,
 image_url text,
 catalog_id text,
+color text,
+address text,
 CONSTRAINT activities_pkey PRIMARY KEY (id),
 CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id),
 CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id)

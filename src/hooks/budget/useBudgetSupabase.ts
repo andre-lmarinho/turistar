@@ -19,10 +19,13 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const [amount, setAmount] = useState(0);
 
   const [hasLoaded, setHasLoaded] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   useEffect(() => {
+    hasLoadedRef.current = false;
+    setHasLoaded(false);
     supabase
-      .from('budget_entries')
+      .from('budget')
       .select('budget, entries')
       .eq('plan_id', planId)
       .single()
@@ -34,15 +37,22 @@ export function useBudget(planId: string, activitiesTotal: number) {
         }
       })
       .finally(() => {
+        hasLoadedRef.current = true;
         setHasLoaded(true);
       });
   }, [planId]);
 
   useEffect(() => {
-    if (!hasLoaded) return;
-
-    supabase.from('budget_entries').upsert({ plan_id: planId, budget, entries });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!hasLoadedRef.current) return;
+    const persist = async () => {
+      const { error } = await supabase
+        .from('budget')
+        .upsert({ plan_id: planId, budget, entries }, { onConflict: 'plan_id' })
+        .select()
+        .single();
+      if (error) console.error('Failed to persist budget', error);
+    };
+    void persist();
   }, [planId, budget, entries, hasLoaded]);
 
   const categoryTotals = useMemo(() => {
