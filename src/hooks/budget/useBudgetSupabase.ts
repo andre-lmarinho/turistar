@@ -1,5 +1,5 @@
 // src/hooks/budget/useBudgetSupabase.ts
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import type { CategoryKey } from '@/constants';
 import type { Entry } from '@/types/budget';
@@ -18,6 +18,8 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const [cat, setCat] = useState<CategoryKey>('transport');
   const [amount, setAmount] = useState(0);
 
+  const [hasLoaded, setHasLoaded] = useState(false);
+
   useEffect(() => {
     supabase
       .from('budget_entries')
@@ -30,12 +32,18 @@ export function useBudget(planId: string, activitiesTotal: number) {
           setBudget(row.budget ?? 0);
           setEntries(row.entries ?? []);
         }
+      })
+      .finally(() => {
+        setHasLoaded(true);
       });
   }, [planId]);
 
   useEffect(() => {
+    if (!hasLoaded) return;
+
     supabase.from('budget_entries').upsert({ plan_id: planId, budget, entries });
-  }, [planId, budget, entries]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planId, budget, entries, hasLoaded]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {

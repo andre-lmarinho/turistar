@@ -38,7 +38,7 @@ export function PlannerProvider({
       hasSyncedRef.current = true;
       lastSerialized.current = serialized;
     }
-  }, [debounced, persist, persistDays, planner.days]);
+  }, [serialized, storedDays]);
 
   useEffect(() => {
     if (!persist || !hasSyncedRef.current) return;
@@ -46,7 +46,7 @@ export function PlannerProvider({
     if (debounced === lastSerialized.current) return;
     lastSerialized.current = debounced;
     persistDays.mutate(planner.days);
-  }, [planner.days, persist, persistDays, storedDays]);
+  }, [debounced, planner.days, persist, persistDays, storedDays]);
 
   const selected = useSelectedActivity(planner.days, planner.setDays, {
     addActivity: planner.addActivity,
