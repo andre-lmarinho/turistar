@@ -1,6 +1,6 @@
 // src/contexts/PlannerContext.tsx
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
-import { usePlanner, useSelectedActivity } from '@/hooks';
+import { usePlanner, useSelectedActivity, useDebounce } from '@/hooks';
 import { usePlanDays } from '@/hooks/planner/usePlanDaysSupabase';
 import type { DayPlan } from '@/types';
 
@@ -26,15 +26,25 @@ export function PlannerProvider({
     initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
     planId,
     dest,
+    persistDays,
   });
   const hasSyncedRef = React.useRef(false);
+  const lastSerialized = React.useRef('');
+  const serialized = JSON.stringify(planner.days);
+  const debounced = useDebounce(serialized, 500);
+
   useEffect(() => {
-    if (!persist || storedDays === undefined) return;
-    if (!hasSyncedRef.current) {
+    if (storedDays !== undefined && !hasSyncedRef.current) {
       hasSyncedRef.current = true;
-      return;
+      lastSerialized.current = serialized;
     }
+  }, [debounced, persist, persistDays, planner.days]);
+
+  useEffect(() => {
+    if (!persist || !hasSyncedRef.current) return;
     if (planner.days.length === 0) return;
+    if (debounced === lastSerialized.current) return;
+    lastSerialized.current = debounced;
     persistDays.mutate(planner.days);
   }, [planner.days, persist, persistDays, storedDays]);
 

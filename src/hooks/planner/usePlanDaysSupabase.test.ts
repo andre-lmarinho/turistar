@@ -82,14 +82,14 @@ describe('usePlanDaysSupabase', () => {
       }
       if (table === 'activities') {
         return {
-          delete: () => ({ eq: () => deleteMock() }),
+          delete: () => ({ eq: () => deleteMock(), in: () => deleteMock() }),
           insert: () => insertMock(),
         } as unknown;
       }
       return {} as unknown;
     });
 
-    const { result } = renderHook(() => usePlanDays('p1'));
+    const { result } = renderHook(() => usePlanDays('p1', false));
     await act(async () => {
       await result.current.persistDays.mutateAsync([
         { id: '2023-01-01', label: 'Sun, 01 Jan', activities: [] },
@@ -112,6 +112,7 @@ describe('usePlanDaysSupabase', () => {
         return {
           select: () => ({ eq: () => selectMock() }),
           insert: () => ({ select: () => ({ single: () => insertMock() }) }),
+          delete: () => ({ in: () => ({ error: null }) }),
         } as unknown;
       }
       if (table === 'plan_destinations') {
@@ -123,19 +124,17 @@ describe('usePlanDaysSupabase', () => {
       }
       if (table === 'activities') {
         return {
-          delete: () => ({ eq: () => ({ error: null }) }),
+          delete: () => ({ eq: () => ({ error: null }), in: () => ({ error: null }) }),
           insert: () => ({ error: null }),
         } as unknown;
       }
       return {} as unknown;
     });
 
-    const { result } = renderHook(() => usePlanDays('p1'));
-    await act(async () => {
-      await result.current.persistDays.mutateAsync([
-        { id: '2023-01-01', label: 'Sun, 01 Jan', activities: [] },
-      ]);
-    });
+    const { result } = renderHook(() => usePlanDays('p1', false));
+    await result.current.persistDays.mutateAsync([
+      { id: '2023-01-01', label: 'Sun, 01 Jan', activities: [] },
+    ]);
     expect(planDestSelect).toHaveBeenCalled();
     expect(insertMock).toHaveBeenCalled();
   });

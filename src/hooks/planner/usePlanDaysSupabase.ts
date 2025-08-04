@@ -77,6 +77,20 @@ export function usePlanDays(planId: string, enabled = true) {
       };
       if (error) throw error;
 
+      const incoming = new Set(state.map((d) => d.id));
+      const toRemove = existing.filter((d) => !incoming.has(d.date));
+      if (toRemove.length) {
+        const ids = toRemove.map((d) => d.id);
+        const { error: delActsErr } = (await (supabase.from('activities') as any)
+          .delete()
+          .in('day_id', ids)) as { error: unknown };
+        if (delActsErr) throw delActsErr;
+        const { error: delDaysErr } = (await (supabase.from('plan_days') as any)
+          .delete()
+          .in('id', ids)) as { error: unknown };
+        if (delDaysErr) throw delDaysErr;
+      }
+
       let destinationId: string | undefined = existing[0]?.destination_id;
       if (!destinationId) {
         const { data: destRows, error: destErr } = (await supabase
@@ -138,6 +152,7 @@ export function usePlanDays(planId: string, enabled = true) {
         }
       }
     },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['plan_days', planId] }),
   });
 
   return { ...days, upsertDay, persistDays };

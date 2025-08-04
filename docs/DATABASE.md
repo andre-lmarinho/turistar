@@ -17,8 +17,8 @@ budget numeric,
 image_url text,
 catalog_id text,
 CONSTRAINT activities_pkey PRIMARY KEY (id),
-CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id),
-CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id)
+CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id),
+CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id)
 );
 CREATE TABLE public.budget_entries (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -51,7 +51,7 @@ CONSTRAINT catalog_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES p
 );
 CREATE TABLE public.destinations (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
-name text NOT NULL,
+name text NOT NULL UNIQUE,
 country text,
 latitude double precision,
 longitude double precision,

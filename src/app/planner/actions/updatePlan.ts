@@ -2,6 +2,7 @@
 'use server';
 
 import { supabaseServer } from '@/lib/supabaseServer';
+import { format } from 'date-fns';
 
 export async function setPlanTitle(planId: string, title: string) {
   const supabase = supabaseServer();
@@ -44,4 +45,16 @@ export async function setPlanDestination(planId: string, dest: PlaceSelection) {
     .update({ destination_id: destId })
     .eq('plan_id', planId);
   if (daysError) throw daysError;
+}
+
+export async function setPlanDateRange(planId: string, from: Date, to: Date) {
+  const supabase = supabaseServer();
+  const { error } = await supabase
+    .from('plans')
+    .update({
+      start_date: format(from, 'yyyy-MM-dd'),
+      end_date: format(to, 'yyyy-MM-dd'),
+    })
+    .eq('id', planId);
+  if (error) throw error;
 }

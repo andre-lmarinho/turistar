@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 
 import PlannerClient from '../PlannerClient';
 import { supabaseServer } from '@/lib/supabaseServer';
+import type { DayPlan } from '@/types';
+import { format, parseISO } from 'date-fns';
 
 type PageProps = {
   params: Promise<{ planId: string }>;
@@ -15,9 +17,10 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
 
   let destination = dest;
   let title: string | undefined;
+  let initialDays: DayPlan[] | undefined;
 
+  const supabase = await supabaseServer();
   if (!destination) {
-    const supabase = await supabaseServer();
     const { data, error } = (await supabase
       .from('plans')
       .select('title, plan_destinations(destinations(name))')
@@ -36,9 +39,58 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
     }
   }
 
+  const { data: dayRows, error: dayErr } = (await supabase
+    .from('plan_days')
+    .select('date, activities(*)')
+    .eq('plan_id', planId)
+    .order('position')) as unknown as {
+    data: {
+      date: string;
+      activities: {
+        id: string;
+        title: string;
+        category: string;
+        description: string | null;
+        start_time: string | null;
+        duration: number | null;
+        latitude: number | null;
+        longitude: number | null;
+        budget: number | null;
+        image_url: string | null;
+      }[];
+    }[];
+    error: unknown;
+  };
+
+  if (!dayErr && dayRows) {
+    initialDays = dayRows.map((d) => ({
+      id: d.date,
+      label: format(parseISO(d.date), 'EEE, dd MMM'),
+      activities: d.activities.map((a) => ({
+        id: a.id,
+        title: a.title,
+        category: a.category,
+        description: a.description ?? undefined,
+        startTime: a.start_time ?? undefined,
+        duration: a.duration ?? undefined,
+        latitude: a.latitude ?? undefined,
+        longitude: a.longitude ?? undefined,
+        budget: a.budget ?? undefined,
+        imageUrl: a.image_url ?? undefined,
+      })),
+    })) as DayPlan[];
+  }
+
   if (!destination) {
     return <p className="p-4">Plan destination not found.</p>;
   }
 
-  return <PlannerClient planId={planId} dest={destination} title={title ?? destination} />;
+  return (
+    <PlannerClient
+      initialDays={initialDays}
+      planId={planId}
+      dest={destination}
+      title={title ?? destination}
+    />
+  );
 }
