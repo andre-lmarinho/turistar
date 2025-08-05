@@ -1,5 +1,7 @@
 // src/contexts/PlannerContext.tsx
-import React, { createContext, useContext, ReactNode, useEffect } from 'react';
+'use client';
+
+import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
 import { usePlanner, useSelectedActivity, useDebounce } from '@/hooks';
 import { usePlanDays } from '@/hooks/planner/usePlanDaysSupabase';
 import type { DayPlan } from '@/types';
@@ -28,10 +30,16 @@ export function PlannerProvider({
     dest,
     persistDays,
   });
-  const hasSyncedRef = React.useRef(false);
-  const lastSerialized = React.useRef('');
+  const hasSyncedRef = useRef(false);
+  const lastSerialized = useRef('');
   const serialized = JSON.stringify(planner.days);
   const debounced = useDebounce(serialized, 500);
+  const queueRef = useRef<DayPlan[] | null>(null);
+  const prevDaysRef = useRef(planner.days);
+
+  useEffect(() => {
+    prevDaysRef.current = planner.days;
+  }, [planner.days]);
 
   useEffect(() => {
     if (storedDays !== undefined && !hasSyncedRef.current) {
@@ -40,13 +48,28 @@ export function PlannerProvider({
     }
   }, [serialized, storedDays]);
 
+  const flush = React.useCallback(async () => {
+    if (persistDays.isPending || !queueRef.current) return;
+    const state = queueRef.current;
+    queueRef.current = null;
+    try {
+      await persistDays.mutateAsync(state);
+      lastSerialized.current = JSON.stringify(state);
+      prevDaysRef.current = state;
+    } catch {
+      planner.setDays(prevDaysRef.current);
+    } finally {
+      if (queueRef.current) flush();
+    }
+  }, [persistDays, planner]);
+
   useEffect(() => {
     if (!persist || !hasSyncedRef.current) return;
     if (planner.days.length === 0) return;
     if (debounced === lastSerialized.current) return;
-    lastSerialized.current = debounced;
-    persistDays.mutate(planner.days);
-  }, [debounced, planner.days, persist, persistDays, storedDays]);
+    queueRef.current = planner.days;
+    flush();
+  }, [debounced, planner.days, persist, persistDays.isPending, flush]);
 
   const selected = useSelectedActivity(planner.days, planner.setDays, {
     addActivity: planner.addActivity,

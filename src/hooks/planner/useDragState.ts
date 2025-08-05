@@ -50,7 +50,6 @@ function getDragTarget(
 
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
-  const prevInitialRef = useRef<DayPlan[]>(initialDays);
   useEffect(() => {
     if (!initialDays.length) return;
     setDays(initialDays);

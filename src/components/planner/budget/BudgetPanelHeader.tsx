@@ -29,11 +29,17 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
 }
 
 export default function BudgetPanelHeader() {
-  const { budget, setBudget, totalSpent, difference, categoryTotals } = useBudgetContext();
+  const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } =
+    useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {persistError && (
+        <p role="alert" className="text-destructive text-sm md:col-span-3">
+          {persistError}
+        </p>
+      )}
       <div
         role="region"
         aria-labelledby="budget-summary-heading"

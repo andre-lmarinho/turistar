@@ -43,7 +43,11 @@ describe('usePlanDaysSupabase', () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === 'plan_days') {
         return {
-          select: () => ({ eq: () => ({ order: () => selectMock() }) }),
+          select: () => ({
+            eq: () => ({
+              order: () => ({ order: () => selectMock() }),
+            }),
+          }),
         } as unknown;
       }
       return {} as unknown;
@@ -68,26 +72,46 @@ describe('usePlanDaysSupabase', () => {
   });
 
   test('persists days and activities', async () => {
-    const selectMock = vi.fn().mockResolvedValue({
+    const selectDays = vi.fn().mockResolvedValue({
       data: [{ id: 'd1', date: '2023-01-01', destination_id: 'dest1' }],
       error: null,
     });
-    const insertMock = vi.fn().mockResolvedValue({ data: { id: 'd2' }, error: null });
-    const updateMock = vi.fn().mockResolvedValue({ error: null });
-    const deleteMock = vi.fn().mockResolvedValue({ error: null });
+    const selectActs = vi.fn().mockResolvedValue({ data: [], error: null });
+    const upsertActs = vi.fn().mockResolvedValue({ error: null });
+    const insertActs = vi.fn().mockResolvedValue({ error: null });
+    const deleteActs = vi.fn().mockResolvedValue({ error: null });
+    const updateDay = vi.fn().mockResolvedValue({ error: null });
 
     mockFrom.mockImplementation((table: string) => {
       if (table === 'plan_days') {
         return {
-          select: () => ({ eq: () => selectMock() }),
-          insert: () => ({ select: () => ({ single: () => insertMock() }) }),
-          update: () => ({ eq: () => updateMock() }),
+          select: () => ({ eq: () => ({ abortSignal: () => selectDays() }) }),
+          update: () => ({ eq: () => ({ abortSignal: () => updateDay() }) }),
+          insert: () => ({
+            select: () => ({
+              single: () => ({ abortSignal: () => ({ data: { id: 'd1' }, error: null }) }),
+            }),
+          }),
+          delete: () => ({ in: () => ({ abortSignal: () => deleteActs() }) }),
         } as unknown;
       }
       if (table === 'activities') {
         return {
-          delete: () => ({ eq: () => deleteMock(), in: () => deleteMock() }),
-          insert: () => insertMock(),
+          select: () => ({ in: () => ({ abortSignal: () => selectActs() }) }),
+          upsert: () => ({ abortSignal: () => upsertActs() }),
+          insert: () => ({ abortSignal: () => insertActs() }),
+          delete: () => ({ in: () => ({ abortSignal: () => deleteActs() }) }),
+        } as unknown;
+      }
+      if (table === 'plan_destinations') {
+        return {
+          select: () => ({
+            eq: () => ({
+              order: () => ({
+                abortSignal: () => ({ data: [{ destination_id: 'dest1' }], error: null }),
+              }),
+            }),
+          }),
         } as unknown;
       }
       return {} as unknown;
@@ -96,40 +120,57 @@ describe('usePlanDaysSupabase', () => {
     const { result } = renderHook(() => usePlanDays('p1', false));
     await act(async () => {
       await result.current.persistDays.mutateAsync([
-        { id: '2023-01-01', label: 'Sun, 01 Jan', activities: [] },
+        {
+          id: '2023-01-01',
+          label: 'Sun, 01 Jan',
+          activities: [
+            {
+              id: '11111111-1111-1111-1111-111111111111',
+              title: 't',
+              category: 'c',
+              color: 'red',
+            },
+          ],
+        },
       ]);
     });
-    expect(mockFrom).toHaveBeenCalledWith('plan_days');
-    expect(mockFrom).toHaveBeenCalledWith('activities');
-    expect(updateMock).toHaveBeenCalled();
+    expect(upsertActs).toHaveBeenCalled();
+    expect(insertActs).not.toHaveBeenCalled();
   });
 
   test('fetches destination_id when none exist', async () => {
-    const selectMock = vi.fn().mockResolvedValue({ data: [], error: null });
+    const selectDays = vi.fn().mockResolvedValue({ data: [], error: null });
     const planDestSelect = vi
       .fn()
       .mockResolvedValue({ data: [{ destination_id: 'dest1' }], error: null });
-    const insertMock = vi.fn().mockResolvedValue({ data: { id: 'd2' }, error: null });
+    const insertDay = vi.fn().mockResolvedValue({ data: { id: 'd2' }, error: null });
+    const selectActs = vi.fn().mockResolvedValue({ data: [], error: null });
 
     mockFrom.mockImplementation((table: string) => {
       if (table === 'plan_days') {
         return {
-          select: () => ({ eq: () => selectMock() }),
-          insert: () => ({ select: () => ({ single: () => insertMock() }) }),
-          delete: () => ({ in: () => ({ error: null }) }),
+          select: () => ({ eq: () => ({ abortSignal: () => selectDays() }) }),
+          insert: () => ({
+            select: () => ({ single: () => ({ abortSignal: () => insertDay() }) }),
+          }),
+          delete: () => ({ in: () => ({ abortSignal: () => ({ error: null }) }) }),
         } as unknown;
       }
       if (table === 'plan_destinations') {
         return {
           select: () => ({
-            eq: () => ({ order: () => planDestSelect() }),
+            eq: () => ({ order: () => ({ abortSignal: () => planDestSelect() }) }),
           }),
         } as unknown;
       }
       if (table === 'activities') {
         return {
-          delete: () => ({ eq: () => ({ error: null }), in: () => ({ error: null }) }),
-          insert: () => ({ error: null }),
+          select: () => ({ in: () => ({ abortSignal: () => selectActs() }) }),
+          delete: () => ({
+            eq: () => ({ abortSignal: () => ({ error: null }) }),
+            in: () => ({ abortSignal: () => ({ error: null }) }),
+          }),
+          insert: () => ({ abortSignal: () => ({ error: null }) }),
         } as unknown;
       }
       return {} as unknown;
@@ -140,6 +181,6 @@ describe('usePlanDaysSupabase', () => {
       { id: '2023-01-01', label: 'Sun, 01 Jan', activities: [] },
     ]);
     expect(planDestSelect).toHaveBeenCalled();
-    expect(insertMock).toHaveBeenCalled();
+    expect(insertDay).toHaveBeenCalled();
   });
 });

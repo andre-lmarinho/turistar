@@ -1,5 +1,8 @@
 // src/types/supabase.ts
 // Generated via `supabase gen types`
+
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
+
 export interface Database {
   public: {
     Tables: {
@@ -67,6 +70,31 @@ export interface Database {
           },
         ];
       };
+      budget: {
+        Row: {
+          plan_id: string;
+          budget: number | null;
+          entries: Json | null;
+        };
+        Insert: {
+          plan_id: string;
+          budget?: number | null;
+          entries?: Json | null;
+        };
+        Update: {
+          plan_id?: string;
+          budget?: number | null;
+          entries?: Json | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'budget_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       [key: string]: unknown;
     };
     Views: Record<string, unknown>;
@@ -75,3 +103,5 @@ export interface Database {
     CompositeTypes: Record<string, unknown>;
   };
 }
+
+export {};

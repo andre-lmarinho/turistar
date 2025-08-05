@@ -5,12 +5,16 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
 import { usePlannerContext } from '@/contexts';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
-const getCssColor = (cls: string): string => {
+const getCssColor = (cls?: string): string | undefined => {
+  if (!cls) return undefined;
   const m = cls.match(/^bg-\[([^]+)\]$/);
   return m ? m[1] : cls;
 };
+
+const DEFAULT_BG_COLOR = getCssColor(DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg)!;
 
 // Fit map view to all markers whenever coordinates change
 function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
@@ -75,7 +79,7 @@ function MapView() {
               <Polyline
                 positions={coords}
                 pathOptions={{
-                  color: getCssColor(acts[0].color),
+                  color: getCssColor(acts[0].color) ?? DEFAULT_BG_COLOR,
                   weight: 3,
                 }}
               />
@@ -83,7 +87,7 @@ function MapView() {
 
             {coords.map((pos, i) => {
               const act = acts[i];
-              const bg = getCssColor(act.color);
+              const bg = getCssColor(act.color) ?? DEFAULT_BG_COLOR;
               const number = dayIdx + 1;
               const icon = L.divIcon({
                 html: `

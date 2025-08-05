@@ -64,7 +64,9 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
       latitude: a.latitude,
       longitude: a.longitude,
       color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-      startTime: '',
+      category: a.category,
+      description: a.description,
+      startTime: undefined,
     });
   };
 

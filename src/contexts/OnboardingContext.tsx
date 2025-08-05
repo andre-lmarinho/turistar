@@ -1,4 +1,6 @@
 // src/contexts/OnboardingContext.tsx
+'use client';
+
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useOnboardingCheck } from '@/hooks';
 

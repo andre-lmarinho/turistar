@@ -1,4 +1,6 @@
 // src/contexts/BudgetContext.tsx
+'use client';
+
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useBudget } from '@/hooks';
 

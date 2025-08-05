@@ -3,12 +3,9 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import type { CategoryKey } from '@/constants';
 import type { Entry } from '@/types/budget';
+import type { Database } from '@/types/supabase';
 
-interface BudgetRow {
-  plan_id: string;
-  budget: number;
-  entries: Entry[];
-}
+type BudgetTableRow = Database['public']['Tables']['budget']['Row'];
 
 export function useBudget(planId: string, activitiesTotal: number) {
   const [budget, setBudget] = useState(0);
@@ -20,37 +17,41 @@ export function useBudget(planId: string, activitiesTotal: number) {
 
   const [hasLoaded, setHasLoaded] = useState(false);
   const hasLoadedRef = useRef(false);
+  const [persistError, setPersistError] = useState<string | null>(null);
 
   useEffect(() => {
     hasLoadedRef.current = false;
     setHasLoaded(false);
-    supabase
-      .from('budget')
-      .select('budget, entries')
-      .eq('plan_id', planId)
-      .single()
-      .then(({ data }) => {
-        const row = data as BudgetRow | null;
-        if (row) {
-          setBudget(row.budget ?? 0);
-          setEntries(row.entries ?? []);
-        }
-      })
-      .finally(() => {
-        hasLoadedRef.current = true;
-        setHasLoaded(true);
-      });
+    const load = async () => {
+      const sb = supabase as any;
+      const { data } = (await sb
+        .from('budget')
+        .select('budget, entries')
+        .eq('plan_id', planId)
+        .single()) as { data: BudgetTableRow | null };
+      if (data) {
+        setBudget(data.budget ?? 0);
+        setEntries((data.entries as Entry[] | null) ?? []);
+      }
+      hasLoadedRef.current = true;
+      setHasLoaded(true);
+    };
+    void load();
   }, [planId]);
 
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     const persist = async () => {
-      const { error } = await supabase
+      setPersistError(null);
+      const sb = supabase as any;
+      const { error } = (await sb
         .from('budget')
-        .upsert({ plan_id: planId, budget, entries }, { onConflict: 'plan_id' })
-        .select()
-        .single();
-      if (error) console.error('Failed to persist budget', error);
+        .upsert({ plan_id: planId, budget, entries }, { onConflict: 'plan_id' })) as {
+        error: unknown;
+      };
+      if (error) {
+        setPersistError('Failed to persist budget');
+      }
     };
     void persist();
   }, [planId, budget, entries, hasLoaded]);
@@ -101,6 +102,8 @@ export function useBudget(planId: string, activitiesTotal: number) {
     categoryTotals,
     totalSpent,
     difference: budget - totalSpent,
+    persistError,
+    hasLoaded,
 
     desc,
     setDesc,

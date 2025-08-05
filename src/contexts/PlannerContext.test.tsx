@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
 
 import { PlannerProvider, usePlannerContext } from '@/contexts';
 import type { DayPlan } from '@/types';
@@ -65,7 +65,10 @@ vi.mock('@/hooks', () => {
 });
 
 // Mock usePlanDays hook
-const persistDays = { mutate: vi.fn() };
+let persistDays: { mutateAsync: Mock<() => Promise<unknown>>; isPending: boolean } = {
+  mutateAsync: vi.fn(),
+  isPending: false,
+};
 let storedDays: DayPlan[] | undefined = undefined;
 
 vi.mock('@/hooks/planner/usePlanDaysSupabase', () => ({
@@ -76,6 +79,15 @@ describe('PlannerProvider synchronization', () => {
   const initialDays: DayPlan[] = [{ id: '2023-01-01', label: 'Day 1', activities: [] }];
 
   it('syncs after storedDays load and activity addition', async () => {
+    persistDays = {
+      mutateAsync: vi.fn(() => {
+        persistDays.isPending = true;
+        return Promise.resolve().finally(() => {
+          persistDays.isPending = false;
+        });
+      }),
+      isPending: false,
+    };
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <PlannerProvider planId="p1" initialDays={initialDays}>
         {children}
@@ -86,7 +98,7 @@ describe('PlannerProvider synchronization', () => {
 
     // Modify before stored days are loaded
     act(() => result.current.addBlankActivity(0));
-    expect(persistDays.mutate).not.toHaveBeenCalled();
+    expect(persistDays.mutateAsync).not.toHaveBeenCalled();
 
     // Simulate stored days arriving
     storedDays = initialDays;
@@ -94,6 +106,31 @@ describe('PlannerProvider synchronization', () => {
 
     // Subsequent changes should trigger persistence
     act(() => result.current.addBlankActivity(0));
-    await waitFor(() => expect(persistDays.mutate).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(persistDays.mutateAsync).toHaveBeenCalledTimes(1));
+  });
+
+  it('reverts local state when persistence fails', async () => {
+    persistDays = {
+      mutateAsync: vi.fn(() => {
+        persistDays.isPending = true;
+        return Promise.reject(new Error('fail')).finally(() => {
+          persistDays.isPending = false;
+        });
+      }),
+      isPending: false,
+    };
+    storedDays = initialDays;
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <PlannerProvider planId="p1" initialDays={initialDays}>
+        {children}
+      </PlannerProvider>
+    );
+
+    const { result } = renderHook(() => usePlannerContext(), { wrapper });
+
+    act(() => result.current.addBlankActivity(0));
+    await waitFor(() => persistDays.mutateAsync.mock.calls.length === 1);
+    await waitFor(() => result.current.days[0].activities.length === 0);
   });
 });
