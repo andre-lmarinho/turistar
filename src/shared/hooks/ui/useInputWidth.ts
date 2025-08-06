@@ -2,7 +2,7 @@
 'use client';
 
 import { useRef, useLayoutEffect, useState } from 'react';
-import { measureTextWidth } from '@/shared/lib';
+import { measureTextWidth } from '@/shared/utils';
 
 /**
  * Calculates the pixel width needed to display an input's value

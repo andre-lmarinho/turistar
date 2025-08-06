@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 
 import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData, type InspirationData } from '@/features/planner/services';
-import { capitalize } from '@/shared/lib/utils';
+import { capitalize } from '@/shared/utils';
 
 type CityParams = { city: string };
 

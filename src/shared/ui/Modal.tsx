@@ -4,7 +4,7 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/utils';
 
 interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Control visibility and FocusTrap activation */

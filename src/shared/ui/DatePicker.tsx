@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Popover, PopoverContent, PopoverTrigger, Calendar, Button } from '@/shared/ui';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/utils';
 
 interface Props {
   className?: string;

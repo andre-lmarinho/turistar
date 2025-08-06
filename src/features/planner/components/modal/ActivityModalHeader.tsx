@@ -6,7 +6,7 @@ import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import Image from 'next/image';
 import { useCardPopups, useFlexibleRef } from '@/hooks';
 import { ChevronDown } from 'lucide-react';
-import { isTouchDevice } from '@/shared/lib';
+import { isTouchDevice } from '@/shared/utils';
 
 import {
   Button,
