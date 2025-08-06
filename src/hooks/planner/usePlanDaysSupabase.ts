@@ -1,12 +1,74 @@
 // src/hooks/planner/usePlanDaysSupabase.ts
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
+import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
 import type { PlanDay, DayPlan } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 import { format, parseISO } from 'date-fns';
+
+interface PlanDayRow {
+  id: string;
+  plan_id: string;
+  date: string;
+  position: number | null;
+  destination_id: string;
+}
+
+interface ActivityRow {
+  id: string;
+  day_id: string;
+  title: string | null;
+  color: string | null;
+  address: string | null;
+  category: string | null;
+  description: string | null;
+  start_time: string | null;
+  duration: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  budget: number | null;
+  image_url: string | null;
+  catalog_id: string | null;
+  position: number | null;
+}
+
+interface QueryBuilder extends SupabaseQueryBuilder {
+  select: (...args: unknown[]) => QueryBuilder;
+  insert: (...args: unknown[]) => QueryBuilder;
+  upsert: (...args: unknown[]) => QueryBuilder;
+  update: (...args: unknown[]) => QueryBuilder;
+  delete: (...args: unknown[]) => QueryBuilder;
+  eq: (...args: unknown[]) => QueryBuilder;
+  order: (...args: unknown[]) => QueryBuilder;
+  in: (...args: unknown[]) => QueryBuilder;
+  abortSignal: (signal: AbortSignal) => QueryBuilder;
+  single: () => Promise<{ data: unknown; error: unknown }>;
+}
+
+interface PlanDayWithActivities {
+  date: string;
+  activities: ActivityRow[];
+}
+
+interface ActivityUpsert {
+  id?: string;
+  day_id: string;
+  title: string | null;
+  color: string | null;
+  address: string | null;
+  category: string | null;
+  description: string | null;
+  start_time: string | null;
+  duration: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  budget: number | null;
+  image_url: string | null;
+  position: number;
+  catalog_id: string | null;
+}
 
 export function usePlanDays(planId: string, enabled = true) {
   const qc = useQueryClient();
@@ -20,23 +82,7 @@ export function usePlanDays(planId: string, enabled = true) {
         .eq('plan_id', planId)
         .order('position')
         .order('position', { foreignTable: 'activities' })) as unknown as {
-        data: {
-          date: string;
-          activities: {
-            id: string;
-            title: string;
-            color: string | null;
-            address: string | null;
-            category: string;
-            description: string | null;
-            start_time: string | null;
-            duration: number | null;
-            latitude: number | null;
-            longitude: number | null;
-            budget: number | null;
-            image_url: string | null;
-          }[];
-        }[];
+        data: PlanDayWithActivities[];
         error: unknown;
       };
       if (error) throw error;
@@ -68,7 +114,7 @@ export function usePlanDays(planId: string, enabled = true) {
         .from('plan_days')
         .upsert(payload)
         .select()
-        .single()) as unknown as { data: PlanDay; error: unknown };
+        .single()) as { data: PlanDay; error: unknown };
       if (error) throw error;
       return data;
     },
@@ -82,11 +128,11 @@ export function usePlanDays(planId: string, enabled = true) {
       abortRef.current = new AbortController();
       const { signal } = abortRef.current;
 
-      const { data: existing, error } = (await (supabase.from('plan_days') as any)
+      const { data: existing, error } = (await (supabase.from('plan_days') as QueryBuilder)
         .select('id, date, destination_id')
         .eq('plan_id', planId)
         .abortSignal(signal)) as unknown as {
-        data: { id: string; date: string; destination_id: string }[];
+        data: Pick<PlanDayRow, 'id' | 'date' | 'destination_id'>[];
         error: unknown;
       };
       if (error) throw error;
@@ -96,22 +142,22 @@ export function usePlanDays(planId: string, enabled = true) {
 
       if (toRemove.length) {
         const ids = toRemove.map((d) => d.id);
-        const { error: delActsErr } = (await (supabase.from('activities') as any)
+        const { error: delActsErr } = (await (supabase.from('activities') as QueryBuilder)
           .delete()
           .in('day_id', ids)
-          .abortSignal(signal)) as { error: unknown };
+          .abortSignal(signal)) as unknown as { error: unknown };
         if (delActsErr) throw delActsErr;
-        const { error: delDaysErr } = (await (supabase.from('plan_days') as any)
+        const { error: delDaysErr } = (await (supabase.from('plan_days') as QueryBuilder)
           .delete()
           .in('id', ids)
-          .abortSignal(signal)) as { error: unknown };
+          .abortSignal(signal)) as unknown as { error: unknown };
         if (delDaysErr) throw delDaysErr;
       }
 
       let destinationId: string | undefined = existing[0]?.destination_id;
       if (!destinationId) {
         const { data: destRows, error: destErr } = (await (
-          supabase.from('plan_destinations') as any
+          supabase.from('plan_destinations') as QueryBuilder
         )
           .select('destination_id')
           .eq('plan_id', planId)
@@ -125,7 +171,7 @@ export function usePlanDays(planId: string, enabled = true) {
       }
 
       const { data: existingActsRows, error: existingActsErr } = (await (
-        supabase.from('activities') as any
+        supabase.from('activities') as QueryBuilder
       )
         .select('id, day_id')
         .in(
@@ -133,7 +179,7 @@ export function usePlanDays(planId: string, enabled = true) {
           existing.map((d) => d.id)
         )
         .abortSignal(signal)) as unknown as {
-        data: { id: string; day_id: string }[] | null;
+        data: Pick<ActivityRow, 'id' | 'day_id'>[] | null;
         error: unknown;
       };
       if (existingActsErr) throw existingActsErr;
@@ -150,10 +196,11 @@ export function usePlanDays(planId: string, enabled = true) {
         let destId = found?.destination_id ?? destinationId;
         if (!destId) throw new Error('destination_id missing');
         if (!dayId) {
-          const inserted = (await (supabase.from('plan_days') as any)
+          const inserted = (await (supabase.from('plan_days') as QueryBuilder)
             .insert({ plan_id: planId, date: day.id, position: i, destination_id: destId })
             .select('id')
             .single()
+            // @ts-expect-error abortSignal exists on the returned object
             .abortSignal(signal)) as unknown as {
             data: { id: string } | null;
             error: unknown;
@@ -161,7 +208,7 @@ export function usePlanDays(planId: string, enabled = true) {
           if (inserted.error || !inserted.data) throw inserted.error;
           dayId = inserted.data.id;
         } else {
-          const { error: updErr } = (await (supabase.from('plan_days') as any)
+          const { error: updErr } = (await (supabase.from('plan_days') as QueryBuilder)
             .update({ position: i, date: day.id })
             .eq('id', dayId)
             .abortSignal(signal)) as unknown as { error: unknown };
@@ -170,50 +217,51 @@ export function usePlanDays(planId: string, enabled = true) {
 
         const existingActs = actMap.get(dayId) ?? new Set();
         const incomingIds = new Set<string>();
-        const updates: any[] = [];
-        const inserts: any[] = [];
+        const updates: ActivityUpsert[] = [];
+        const inserts: ActivityUpsert[] = [];
 
         for (let j = 0; j < day.activities.length; j++) {
           const a = day.activities[j];
           incomingIds.add(a.id);
-          const base = {
+          const base: ActivityUpsert = {
             day_id: dayId!,
             title: a.title,
-            color: a.color,
-            address: a.address,
-            category: a.category,
-            description: a.description,
-            start_time: a.startTime,
-            duration: a.duration,
-            latitude: a.latitude,
-            longitude: a.longitude,
-            budget: a.budget,
-            image_url: a.imageUrl,
+            color: a.color ?? null,
+            address: a.address ?? null,
+            category: a.category ?? null,
+            description: a.description ?? null,
+            start_time: a.startTime ?? null,
+            duration: a.duration ?? null,
+            latitude: a.latitude ?? null,
+            longitude: a.longitude ?? null,
+            budget: a.budget ?? null,
+            image_url: a.imageUrl ?? null,
             position: j,
+            catalog_id: null,
           };
           if (/^[0-9a-fA-F-]{36}$/.test(a.id)) updates.push({ ...base, id: a.id });
           else inserts.push(base);
         }
 
         if (updates.length) {
-          const { error: upErr } = (await (supabase.from('activities') as any)
+          const { error: upErr } = (await (supabase.from('activities') as QueryBuilder)
             .upsert(updates)
-            .abortSignal(signal)) as { error: unknown };
+            .abortSignal(signal)) as unknown as { error: unknown };
           if (upErr) throw upErr;
         }
         if (inserts.length) {
-          const { error: insErr } = (await (supabase.from('activities') as any)
+          const { error: insErr } = (await (supabase.from('activities') as QueryBuilder)
             .insert(inserts)
-            .abortSignal(signal)) as { error: unknown };
+            .abortSignal(signal)) as unknown as { error: unknown };
           if (insErr) throw insErr;
         }
 
         const toDeleteActs = [...existingActs].filter((id) => !incomingIds.has(id));
         if (toDeleteActs.length) {
-          const { error: delErr } = (await (supabase.from('activities') as any)
+          const { error: delErr } = (await (supabase.from('activities') as QueryBuilder)
             .delete()
             .in('id', toDeleteActs)
-            .abortSignal(signal)) as { error: unknown };
+            .abortSignal(signal)) as unknown as { error: unknown };
           if (delErr) throw delErr;
         }
       }
