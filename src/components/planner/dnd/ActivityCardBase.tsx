@@ -35,26 +35,21 @@ export default function ActivityCardBase({
 }: ActivityCardBaseProps) {
   return (
     <div
-      className="group relative flex w-full cursor-grab items-stretch rounded-lg border bg-[var(--background)] text-left transition"
+      className={`group bg-[var(--background)]text-left relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 transition ${borderColorClass} ${twBg ?? ''}`}
       style={{ zIndex: editing ? 50 : undefined }}
     >
-      {/* Content */}
-      <div
-        className={`flex w-40 flex-1 flex-col rounded-lg border border-b-3 px-3 pt-2 pb-1 ${
-          borderColorClass
-        } overflow-hidden ${twBg ?? ''}`}
-      >
-        {/* Image */}
-        {imageUrl && (
-          <Image
-            src={imageUrl}
-            alt={title}
-            width={400}
-            height={200}
-            className="h-30 w-full rounded-t-lg object-cover"
-          />
-        )}
+      {/* Image */}
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          alt={title}
+          width={400}
+          height={200}
+          className="h-30 w-full rounded-t-lg object-cover"
+        />
+      )}
 
+      <div className="px-3 pt-2 pb-1">
         {/* Title */}
         {editing ? (
           <textarea
@@ -79,9 +74,7 @@ export default function ActivityCardBase({
             style={{ verticalAlign: 'top' }}
           />
         ) : (
-          <>
-            <h4 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
-          </>
+          <h4 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
         )}
 
         {/* Meta */}
