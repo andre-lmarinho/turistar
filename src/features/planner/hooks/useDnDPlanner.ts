@@ -2,7 +2,8 @@
 'use client';
 
 import type { DayPlan } from '@/shared/types';
-import { useDragState, useActivityState } from '@/hooks';
+import { useDragState } from './useDragState';
+import { useActivityState } from './useActivityState';
 
 /**
  * Combines drag state and activity helpers for the planner.

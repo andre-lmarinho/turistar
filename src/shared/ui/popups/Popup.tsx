@@ -5,7 +5,8 @@ import React, { useRef } from 'react';
 import FocusTrap from 'focus-trap-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils';
-import { usePopupOutsideHandler, useEscapeKey } from '@/hooks';
+import { usePopupOutsideHandler } from '@/shared/hooks/ui/usePopupOutsideHandler';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 /** Popup style variants */
 export const popupVariants = cva(

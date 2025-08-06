@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { NavCircleButton } from '@/components';
+import { NavCircleButton } from '@/shared/ui';
 
 /**
  * Horizontal scrollable pill list.

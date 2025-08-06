@@ -11,14 +11,15 @@ const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 import {
   ActivityModal,
   DestinationFilterPanel,
-  DateRangePickerIcon,
-  OpenPanelButton,
-  OpenPanelIcon,
-  OnboardingModal,
   PlannerControls,
-} from '@/components';
-import { usePlanTitle, useInputWidth, useKeyBinds } from '@/hooks';
-import { OnboardingProvider, PlannerProvider, usePlannerContext } from '@/contexts';
+  PlannerProvider,
+  usePlannerContext,
+  usePlanTitle,
+} from '@/features/planner';
+import { OnboardingModal, OnboardingProvider } from '@/features/onboarding';
+import { DateRangePickerIcon, OpenPanelButton, OpenPanelIcon } from '@/shared/ui';
+import { useInputWidth } from '@/shared/hooks/ui/useInputWidth';
+import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
 import { motion } from 'framer-motion';
 

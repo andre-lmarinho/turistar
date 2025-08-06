@@ -14,8 +14,8 @@ interface MockOpenPanelButtonProps {
   days?: DayPlan[];
 }
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     usePlanner: () => ({
@@ -48,8 +48,15 @@ vi.mock('@/hooks', async () => {
       changeColor: vi.fn(),
     }),
     useActivitiesById: () => ({}),
+    DestinationFilterPanel: () => null,
+    PlannerControls: () => <div data-testid="planner-controls" />, // though not used
+    ActivityModal: () => null,
   };
 });
+
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
+}));
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
@@ -62,18 +69,28 @@ vi.mock('@/app/planner/PlannerBoard', () => ({
 vi.mock('@/app/planner/BudgetPanel', () => ({
   default: () => <div data-testid="budget" />,
 }));
-vi.mock('@/components', async () => {
-  const actual = await vi.importActual<typeof import('@/components')>('@/components');
+vi.mock('@/features/onboarding', () => ({
+  OnboardingModal: () => {
+    React.useEffect(() => {
+      localStorage.setItem(`planner-onboarding-shown-${mockPlanId}`, 'true');
+    }, []);
+    return <div>Your planner is ready</div>;
+  },
+  OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock('@/shared/ui', async () => {
+  const actual = await vi.importActual<typeof import('@/shared/ui')>('@/shared/ui');
   return {
     ...actual,
-    DestinationFilterPanel: () => null,
-    DateRangePicker: () => <div data-testid="date-picker" />,
+    DateRangePickerIcon: () => <div data-testid="date-picker" />,
     OpenPanelButton: ({ onClick }: MockOpenPanelButtonProps) => (
       <button onClick={onClick}>Open</button>
     ),
+    OpenPanelIcon: ({ onClick }: { onClick: () => void }) => (
+      <button onClick={onClick}>Open</button>
+    ),
     ModeToggleButton: () => <div data-testid="mode-toggle" />,
-    ActivityModal: () => null,
-    LoadingScreen: () => <div>Loading...</div>,
   };
 });
 

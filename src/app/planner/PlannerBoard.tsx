@@ -5,9 +5,7 @@ import React from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import { DayColumn, SortableItem } from '@/components';
-import { useActivitiesById } from '@/hooks';
-import { usePlannerContext } from '@/contexts';
+import { DayColumn, SortableItem, useActivitiesById, usePlannerContext } from '@/features/planner';
 import type { CatalogActivity } from '@/shared/types';
 
 /**

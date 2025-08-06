@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { CloseButton } from '@/components';
+import { CloseButton } from '@/shared/ui';
 
 interface DestinationHeaderProps {
   onClose: () => void;

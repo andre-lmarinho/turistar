@@ -4,7 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import Image from 'next/image';
-import { useCardPopups, useFlexibleRef } from '@/hooks';
+import { useCardPopups } from '@/shared/hooks/ui/useCardPopups';
+import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
 import { ChevronDown } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils';
 
@@ -17,7 +18,7 @@ import {
   DayPickerPopup,
   CatalogSearchPopup,
   SearchCatalogButton,
-} from '@/components';
+} from '@/shared/ui';
 
 /**
  * Color strip shown at the very top of ActivityModal.

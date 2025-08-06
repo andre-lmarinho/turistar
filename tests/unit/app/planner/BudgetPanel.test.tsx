@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
-import { PlannerProvider } from '@/contexts';
+import { PlannerProvider } from '@/features/planner';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/shared/types';
 
@@ -14,8 +14,8 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     usePlanner: () => ({
@@ -50,6 +50,10 @@ vi.mock('@/hooks', async () => {
     }),
   };
 });
+
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
+}));
 
 describe('BudgetPanel', () => {
   beforeEach(() => {

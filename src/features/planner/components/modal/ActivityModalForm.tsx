@@ -7,7 +7,7 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/shared/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants';
-import { UpdateButton, Input } from '@/components';
+import { UpdateButton, Input } from '@/shared/ui';
 
 interface ActivityModalFormProps {
   activity: Activity;

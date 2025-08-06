@@ -2,10 +2,11 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { DestinationHeader, DestinationResultsList, Modal, CategoryFilterBar } from '@/components';
+import { DestinationHeader, DestinationResultsList, CategoryFilterBar } from '@/features/planner';
+import { Modal } from '@/shared/ui';
 import type { CatalogActivity } from '@/shared/types';
-import { useDestinationCatalog, useEscapeKey, useActivitiesById } from '@/hooks';
-import { usePlannerContext } from '@/contexts';
+import { useDestinationCatalog, useActivitiesById, usePlannerContext } from '@/features/planner';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 
 interface DestinationFilterPanelProps {

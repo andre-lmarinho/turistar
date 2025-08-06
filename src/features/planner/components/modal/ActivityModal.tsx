@@ -2,10 +2,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ActivityModalHeader, ActivityModalForm, Modal } from '@/components';
+import { ActivityModalHeader, ActivityModalForm, usePlannerContext } from '@/features/planner';
+import { Modal } from '@/shared/ui';
 import type { Activity, CatalogActivity } from '@/shared/types';
-import { useEscapeKey } from '@/hooks';
-import { usePlannerContext } from '@/contexts';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function ActivityModal() {
   const {

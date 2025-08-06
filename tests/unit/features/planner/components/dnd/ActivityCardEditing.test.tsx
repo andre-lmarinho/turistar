@@ -6,8 +6,8 @@ import { vi } from 'vitest';
 import ActivityCardEditing from '@/features/planner/components/dnd/ActivityCardEditing';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 
-vi.mock('@/components', async () => {
-  const actual = await vi.importActual<typeof import('@/components')>('@/components');
+vi.mock('@/shared/ui', async () => {
+  const actual = await vi.importActual<typeof import('@/shared/ui')>('@/shared/ui');
   const stubItem: CatalogActivity = {
     id: 'c1',
     name: 'Stub Place',

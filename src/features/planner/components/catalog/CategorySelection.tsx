@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { CategoryFilterBar } from '@/components';
+import { CategoryFilterBar } from '@/features/planner';
 
 interface CategorySelectionProps {
   categories: string[];

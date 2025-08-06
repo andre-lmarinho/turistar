@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Spinner } from '@/components';
+import { Spinner } from '@/shared/ui';
 
 interface LoadingScreenProps {
   text?: string;

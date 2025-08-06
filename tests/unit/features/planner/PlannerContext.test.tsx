@@ -4,13 +4,15 @@ import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import { PlannerProvider, usePlannerContext } from '@/contexts';
+import { PlannerProvider, usePlannerContext } from '@/features/planner';
 import type { DayPlan } from '@/shared/types';
 
 // Mock hooks used inside PlannerContext
-vi.mock('@/hooks', () => {
+vi.mock('@/features/planner', async () => {
   const React = require('react');
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
+    ...actual,
     usePlanner: ({ initialDays }: { initialDays?: DayPlan[] }) => {
       const [days, setDays] = React.useState(initialDays ?? []);
       return {
@@ -60,10 +62,18 @@ vi.mock('@/hooks', () => {
       deleteActivity: vi.fn(),
       changeColor: vi.fn(),
     }),
-    useDebounce: (v: string) => v,
-    usePlanDays: () => ({ data: storedDays, persistDays }),
+    usePlanParams: () => ({ dest: 'rome', destCoords: null }),
   };
 });
+vi.mock('@/features/planner/hooks/usePlanDaysSupabase', () => ({
+  usePlanDays: () => ({ data: storedDays, persistDays }),
+}));
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
+}));
+vi.mock('@/shared/hooks/useDebounce', () => ({
+  useDebounce: (v: string) => v,
+}));
 // Mock usePlanDays hook state
 let persistDays: { mutateAsync: Mock<() => Promise<unknown>>; isPending: boolean } = {
   mutateAsync: vi.fn(),

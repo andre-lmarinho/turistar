@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { RemoveCardButton, DestinationActionButton } from '@/components';
+import { RemoveCardButton, DestinationActionButton } from '@/shared/ui';
 import type { CatalogActivity } from '@/shared/types';
 
 /**

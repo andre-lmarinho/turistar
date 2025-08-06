@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 
-import { Button, DateRangePicker, DestinationInput, LoadingScreen } from '@/components';
+import { Button, DateRangePicker } from '@/shared/ui';
+import { DestinationInput } from '@/features/home';
+import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlan } from '@/app/planner/actions/createPlan';

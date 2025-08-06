@@ -12,14 +12,12 @@ const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
-  return {
-    ...actual,
-    useDestinationAutocomplete: mockUseDestinationAutocomplete,
-    useDebounce: mockUseDebounce,
-  };
-});
+vi.mock('@/features/planner', () => ({
+  useDestinationAutocomplete: mockUseDestinationAutocomplete,
+}));
+vi.mock('@/shared/hooks/useDebounce', () => ({
+  useDebounce: mockUseDebounce,
+}));
 
 describe('DestinationInput', () => {
   beforeEach(() => {

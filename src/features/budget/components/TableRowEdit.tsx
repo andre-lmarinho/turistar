@@ -3,11 +3,11 @@
 
 import React, { useId } from 'react';
 import { Check, X, DollarSign } from 'lucide-react';
-import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
-import { normalizeAmount } from '@/features/planner/services';
-import { useBudgetContext } from '@/contexts';
+import { normalizeAmount } from '@/features/planner';
+import { useBudgetContext } from '@/features/budget';
+import { Button, Input } from '@/shared/ui';
 
 export default function TableRowEdit({
   editEntry,

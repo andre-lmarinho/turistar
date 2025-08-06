@@ -4,9 +4,9 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
 
-import { Input, CloseButton, Modal } from '@/components';
-import { useEscapeKey } from '@/hooks';
-import { normalizeAmount } from '@/features/planner/services';
+import { Input, CloseButton, Modal } from '@/shared/ui';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
+import { normalizeAmount } from '@/features/planner';
 import type { DayPlan } from '@/shared/types';
 
 interface ActivitiesBudgetProps {

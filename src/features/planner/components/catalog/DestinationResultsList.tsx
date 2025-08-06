@@ -2,7 +2,8 @@
 'use client';
 
 import React from 'react';
-import { Spinner, DestinationCardGrid } from '@/components';
+import { DestinationCardGrid } from '@/features/planner';
+import { Spinner } from '@/shared/ui';
 import type { CatalogActivity } from '@/shared/types';
 
 interface DestinationResultsListProps {

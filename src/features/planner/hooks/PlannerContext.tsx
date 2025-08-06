@@ -2,7 +2,8 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
-import { usePlanner, useSelectedActivity, useDebounce, usePlanDays } from '@/hooks';
+import { usePlanner, useSelectedActivity, usePlanDays } from '@/features/planner';
+import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { DayPlan } from '@/shared/types';
 
 type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;

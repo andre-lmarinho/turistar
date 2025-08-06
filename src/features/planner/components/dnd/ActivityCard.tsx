@@ -3,14 +3,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { isTouchDevice } from '@/shared/utils';
-import { useActivityCardEditor, useCardColors } from '@/hooks';
+import { useActivityCardEditor } from '@/features/planner';
+import { useCardColors } from '@/shared/hooks/ui/useCardColors';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import {
   ActivityCardBase,
   ActivityCardEditing,
-  EditCardButton,
   ActivityCardEditorOverlay,
-} from '@/components';
+} from '@/features/planner';
+import { EditCardButton } from '@/shared/ui';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };

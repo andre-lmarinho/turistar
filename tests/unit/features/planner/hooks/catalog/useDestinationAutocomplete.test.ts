@@ -4,12 +4,12 @@ import React from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-vi.mock('@/hooks', () => ({
-  fetchAutocomplete: vi.fn(),
-}));
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
+  return { ...actual, fetchAutocomplete: vi.fn() };
+});
 
-import { fetchAutocomplete } from '@/hooks';
-import { useDestinationAutocomplete } from '@/features/planner/hooks/catalog/useDestinationAutocomplete';
+import { fetchAutocomplete, useDestinationAutocomplete } from '@/features/planner';
 
 const mockFetchAutocomplete = vi.mocked(fetchAutocomplete);
 

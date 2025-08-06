@@ -3,10 +3,10 @@
 
 import React, { useId } from 'react';
 import { Plus, DollarSign } from 'lucide-react';
-import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/shared/constants';
-import { normalizeAmount } from '@/features/planner/services';
-import { useBudgetContext } from '@/contexts';
+import { normalizeAmount } from '@/features/planner';
+import { useBudgetContext } from '@/features/budget';
+import { Button, Input } from '@/shared/ui';
 
 export default function TableRowNew({
   amountInput,

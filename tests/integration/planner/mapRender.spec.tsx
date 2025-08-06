@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/app/planner/MapView';
-import { PlannerProvider } from '@/contexts';
+import { PlannerProvider } from '@/features/planner';
 import type { DayPlan } from '@/shared/types';
 
 const map = { fitBounds: vi.fn() };
@@ -38,8 +38,12 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
+}));
+
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     usePlanner: () => ({
@@ -72,6 +76,7 @@ vi.mock('@/hooks', async () => {
       deleteActivity: vi.fn(),
       changeColor: vi.fn(),
     }),
+    usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
   };
 });
 
