@@ -5,7 +5,7 @@ import React from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import { DayColumn, SortableItem, DragOverlayFallback } from '@/components';
+import { DayColumn, SortableItem } from '@/components';
 import { useActivitiesById } from '@/hooks';
 import { usePlannerContext } from '@/contexts';
 import type { CatalogActivity } from '@/types';
@@ -49,6 +49,7 @@ function PlannerBoard() {
 
   return (
     <DndContext
+      id="planner-dnd"
       sensors={sensors}
       collisionDetection={collisionDetection}
       onDragStart={handleDragStart}
@@ -81,7 +82,7 @@ function PlannerBoard() {
         ))}
       </div>
       <DragOverlay aria-label={active ? `Dragging ${active.title}` : undefined}>
-        {active ? (
+        {active && (
           <SortableItem
             dragOverlay
             id={active.id}
@@ -97,10 +98,6 @@ function PlannerBoard() {
             aria-grabbed="true"
             aria-label={`Dragging ${active.title}`}
           />
-        ) : (
-          <div aria-live="assertive">
-            <DragOverlayFallback />
-          </div>
         )}
       </DragOverlay>
     </DndContext>

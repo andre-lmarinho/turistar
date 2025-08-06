@@ -218,7 +218,6 @@ export function usePlanDays(planId: string, enabled = true) {
         }
       }
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['plan_days', planId] }),
   });
 
   return { ...days, upsertDay, persistDays };

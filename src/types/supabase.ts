@@ -74,21 +74,49 @@ export interface Database {
         Row: {
           plan_id: string;
           budget: number | null;
-          entries: Json | null;
         };
         Insert: {
           plan_id: string;
           budget?: number | null;
-          entries?: Json | null;
         };
         Update: {
           plan_id?: string;
           budget?: number | null;
-          entries?: Json | null;
         };
         Relationships: [
           {
             foreignKeyName: 'budget_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      budget_entries: {
+        Row: {
+          id: string;
+          plan_id: string;
+          description: string | null;
+          category: string | null;
+          amount: number | null;
+        };
+        Insert: {
+          id?: string;
+          plan_id: string;
+          description?: string | null;
+          category?: string | null;
+          amount?: number | null;
+        };
+        Update: {
+          id?: string;
+          plan_id?: string;
+          description?: string | null;
+          category?: string | null;
+          amount?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'budget_entries_plan_id_fkey';
             columns: ['plan_id'];
             referencedRelation: 'plans';
             referencedColumns: ['id'];

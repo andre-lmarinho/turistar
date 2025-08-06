@@ -1,7 +1,7 @@
 // src/components/planner/dnd/DayColumn.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
@@ -40,6 +40,13 @@ export default function DayColumn({
   onApplyCatalogItem,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (day.activities.length <= 1) {
+      scrollRef.current?.scrollTo(0, 0);
+    }
+  }, [day.activities.length]);
 
   return (
     <section
@@ -56,7 +63,7 @@ export default function DayColumn({
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div data-testid="day-scroll" className="overflow-y-auto pr-1">
+        <div ref={scrollRef} data-testid="day-scroll" className="overflow-y-auto pr-1">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
               <SortableItem

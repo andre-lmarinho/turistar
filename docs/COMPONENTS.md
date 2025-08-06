@@ -315,18 +315,6 @@ This document summarizes each React component in the repository. It follows the 
 - **Interactions:** add card buttons, drag-and-drop
 - **Performance notes:** none
 
-### DragOverlayFallback
-
-- **Location:** `src/components/planner/dnd/DragOverlayFallback.tsx`
-- **Responsibility:** Placeholder shown when an item is dragged but not rendered.
-- **Props:** none
-- **State:** none
-- **External Hooks:** none
-- **Side-effects:** none
-- **Accessibility:** visually hidden text
-- **Interactions:** none
-- **Performance notes:** none
-
 ### SortableItem
 
 - **Location:** `src/components/planner/dnd/SortableItem.tsx`
@@ -471,7 +459,7 @@ This document summarizes each React component in the repository. It follows the 
 - **State:** none
 - **External Hooks:** `useActivitiesById`
 - **Side-effects:** none
-- **Accessibility:** `role="list"` and `DragOverlay` with labels
+- **Accessibility:** `role="list"`, explicit `DndContext` id to stabilize `aria-describedby`, and `DragOverlay` with labels
 - **Interactions:** drag start/over/end events
 - **Performance notes:** memoizes activity lookups
 

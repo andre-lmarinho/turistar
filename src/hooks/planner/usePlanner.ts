@@ -2,7 +2,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { closestCenter } from '@dnd-kit/core';
+import { pointerWithin } from '@dnd-kit/core';
 import { DateRange } from 'react-day-picker';
 import { eachDayOfInterval } from 'date-fns';
 
@@ -90,7 +90,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     currentRange,
     activeId,
     sensors,
-    collisionDetection: closestCenter,
+    collisionDetection: pointerWithin,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
