@@ -1,11 +1,10 @@
 // src/hooks/budget/useBudgetSupabase.ts
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database, Json } from '@/types/supabase';
 import type { CategoryKey } from '@/constants';
 import type { Entry } from '@/types/budget';
-import type { Database } from '@/types/supabase';
-
-type BudgetTableRow = Database['public']['Tables']['budget']['Row'];
 
 export function useBudget(planId: string, activitiesTotal: number) {
   const [budget, setBudget] = useState(0);
@@ -18,35 +17,40 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const [hasLoaded, setHasLoaded] = useState(false);
   const hasLoadedRef = useRef(false);
   const [persistError, setPersistError] = useState<string | null>(null);
+  const sb: SupabaseClient<Database> = supabase;
 
   useEffect(() => {
     hasLoadedRef.current = false;
     setHasLoaded(false);
     const load = async () => {
-      const sb = supabase as any;
+      type BudgetRow = Database['public']['Tables']['budget']['Row'];
       const { data } = (await sb
         .from('budget')
         .select('budget, entries')
         .eq('plan_id', planId)
-        .single()) as { data: BudgetTableRow | null };
+        .single()) as { data: BudgetRow | null };
       if (data) {
         setBudget(data.budget ?? 0);
-        setEntries((data.entries as Entry[] | null) ?? []);
+        setEntries((data.entries as unknown as Entry[] | null) ?? []);
       }
       hasLoadedRef.current = true;
       setHasLoaded(true);
     };
     void load();
-  }, [planId]);
+  }, [planId, sb]);
 
   useEffect(() => {
     if (!hasLoadedRef.current) return;
     const persist = async () => {
       setPersistError(null);
-      const sb = supabase as any;
+      const payload: Database['public']['Tables']['budget']['Insert'] = {
+        plan_id: planId,
+        budget,
+        entries: entries as unknown as Json,
+      };
       const { error } = (await sb
         .from('budget')
-        .upsert({ plan_id: planId, budget, entries }, { onConflict: 'plan_id' })) as {
+        .upsert(payload, { onConflict: 'plan_id' })) as unknown as {
         error: unknown;
       };
       if (error) {
@@ -54,7 +58,7 @@ export function useBudget(planId: string, activitiesTotal: number) {
       }
     };
     void persist();
-  }, [planId, budget, entries, hasLoaded]);
+  }, [planId, budget, entries, hasLoaded, sb]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {

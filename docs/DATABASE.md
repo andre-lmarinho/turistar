@@ -23,14 +23,12 @@ CONSTRAINT activities_pkey PRIMARY KEY (id),
 CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id),
 CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id)
 );
-CREATE TABLE public.budget_entries (
-id uuid NOT NULL DEFAULT uuid_generate_v4(),
+CREATE TABLE public.budget (
 plan_id uuid NOT NULL,
-description text,
-category text,
-amount numeric,
-CONSTRAINT budget_entries_pkey PRIMARY KEY (id),
-CONSTRAINT budget_entries_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
+budget numeric,
+entries jsonb,
+CONSTRAINT budget_pkey PRIMARY KEY (plan_id),
+CONSTRAINT budget_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
 );
 CREATE TABLE public.catalog (
 id text NOT NULL,

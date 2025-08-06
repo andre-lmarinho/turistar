@@ -14,25 +14,17 @@ describe('useBudgetSupabase', () => {
     mockFrom.mockReset();
   });
 
-  test('sets persistError when Supabase fails', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
+  test('sets persistError when upsert fails', async () => {
+    const selectBudget = vi
+      .fn()
+      .mockResolvedValue({ data: { budget: 0, entries: [] }, error: null });
     const upsertBudget = vi.fn().mockResolvedValue({ error: new Error('boom') });
-    const deleteEntries = vi.fn().mockResolvedValue({ error: null });
-    const insertEntries = vi.fn().mockResolvedValue({ error: null });
 
     mockFrom.mockImplementation((table: string) => {
       if (table === 'budget') {
         return {
           select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
           upsert: () => upsertBudget(),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-          delete: () => ({ eq: () => deleteEntries() }),
-          insert: () => insertEntries(),
         } as unknown;
       }
       return {} as unknown;
