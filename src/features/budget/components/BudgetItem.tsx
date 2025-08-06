@@ -1,4 +1,4 @@
-// src/components/planner/budget/BudgetItem.tsx
+// src/features/budget/components/BudgetItem.tsx
 'use client';
 
 import React from 'react';

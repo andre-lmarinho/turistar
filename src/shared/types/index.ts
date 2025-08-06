@@ -1,7 +1,5 @@
 // src/types/index.ts
 
-export * from './budget';
-
 /**
  * A single activity/item in the catalog.
  */

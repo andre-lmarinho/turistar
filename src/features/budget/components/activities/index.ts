@@ -1,3 +1,3 @@
-// src/components/planner/budget/activities/index.ts
+// src/features/budget/components/activities/index.ts
 
 export { default as ActivitiesBudgetPopup } from './ActivitiesBudget';

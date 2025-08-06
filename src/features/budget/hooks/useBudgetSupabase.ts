@@ -1,10 +1,10 @@
-// src/hooks/budget/useBudgetSupabase.ts
+// src/features/budget/hooks/useBudgetSupabase.ts
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/types/supabase';
 import type { CategoryKey } from '@/shared/constants';
-import type { Entry } from '@/shared/types/budget';
+import type { Entry } from '@/features/budget/types';
 
 export function useBudget(planId: string, activitiesTotal: number) {
   const [budget, setBudget] = useState(0);

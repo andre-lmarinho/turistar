@@ -2,7 +2,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useBudget } from '@/features/budget/hooks/useBudgetSupabase';
+import { useBudget } from '@/features/budget/hooks';
 
 const mockFrom = vi.fn();
 vi.mock('@/shared/lib/supabaseClient', () => ({

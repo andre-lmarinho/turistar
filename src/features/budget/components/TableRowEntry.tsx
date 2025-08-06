@@ -1,11 +1,11 @@
-// src/components/planner/budget/TableRowEntry.tsx
+// src/features/budget/components/TableRowEntry.tsx
 'use client';
 
 import React from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components';
 import { CATEGORIES } from '@/shared/constants';
-import type { Entry } from '@/shared/types';
+import type { Entry } from '@/features/budget/types';
 
 export default function TableRowEntry({
   entry,
