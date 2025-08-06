@@ -3,4 +3,3 @@
 export * from './geoapify';
 export * from './http';
 export * from './supabaseClient';
-export * from './supabaseServer';
