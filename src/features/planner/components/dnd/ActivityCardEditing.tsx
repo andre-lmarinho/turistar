@@ -7,7 +7,7 @@ import { Palette, ArrowLeftRight, Trash2, Search } from 'lucide-react';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import { Button, CardColorsPopup, DayPickerPopup, CatalogSearchPopup } from '@/components';
 import { useCardPopups, useElementRect, useFlexibleRef, useEscapeKey } from '@/hooks';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/utils';
 
 interface Props {
   activity: Activity & { dayId?: string };

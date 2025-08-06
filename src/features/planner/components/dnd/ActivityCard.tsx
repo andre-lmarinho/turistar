@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { isTouchDevice } from '@/shared/lib';
+import { isTouchDevice } from '@/shared/utils';
 import { useActivityCardEditor, useCardColors } from '@/hooks';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import {

@@ -3,7 +3,7 @@
 
 import React, { useId } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/utils';
 
 /* Variants ------------------------------------------------------------ */
 const inputVariants = cva('grid grid-cols-[auto_1fr] items-center overflow-hidden rounded border', {
