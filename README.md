@@ -145,11 +145,13 @@ You can deploy the same app to Vercel or Netlify.
 
 4. **Configure environment**
    - Copy `.env.example` to `.env.local`.
-   - Set your Geoapify API key in `GEOAPIFY_KEY`.
-   - Add your Supabase project credentials:
+   - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts)):
+     - `GEOAPIFY_KEY`
      - `NEXT_PUBLIC_SUPABASE_URL`
      - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
      - `SUPABASE_SERVICE_ROLE_KEY`
+   - In Vercel, add the same values in **Project Settings → Environment Variables**.
+   - In Supabase, copy the URL and keys from your project dashboard.
    - Start a local Supabase instance with `supabase start`.
    - Generate database types with `npm run gen:types` whenever the schema changes.
 
@@ -194,7 +196,10 @@ Deploy easily to **Vercel** or **Netlify**:
 
 1. Push your code to GitHub.
 2. Import the repository in your hosting service (https://vercel.com/new or https://app.netlify.com/start).
-3. Set `GEOAPIFY_KEY` with your API key.
+3. Add the required environment variables:
+   - `GEOAPIFY_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Click "Deploy" — the platform will build and preview automatically.
 
 _For detailed guides, see:_

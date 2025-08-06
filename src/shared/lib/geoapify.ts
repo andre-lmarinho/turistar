@@ -3,6 +3,7 @@
 // Helpers for fetching POIs from the Geoapify API.
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
+import { env } from './env';
 
 /* Types */
 type GeoapifyFeature = {
@@ -46,9 +47,7 @@ const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
 /* Helpers */
 export function getGeoapifyKey(): string {
-  const key = process.env.GEOAPIFY_KEY;
-  if (!key) throw new Error('GEOAPIFY_KEY not set');
-  return key;
+  return env.GEOAPIFY_KEY;
 }
 
 export function mapGeoapifyFeature(f: GeoapifyFeature, fallbackName?: string): CatalogActivity {
@@ -71,8 +70,7 @@ export function mapGeoapifyFeature(f: GeoapifyFeature, fallbackName?: string): C
 
 /* Geoapify – Autocomplete */
 export async function fetchGeoapifyAutocomplete(text: string): Promise<AutocompletePlace[]> {
-  const key = process.env.GEOAPIFY_KEY;
-  if (!key) throw new Error('GEOAPIFY_KEY not set');
+  const key = getGeoapifyKey();
 
   const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
     text
