@@ -44,6 +44,31 @@ export const GEOAPIFY_CATEGORIES = [
 ];
 const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
+/* Helpers */
+export function getGeoapifyKey(): string {
+  const key = process.env.GEOAPIFY_KEY;
+  if (!key) throw new Error('GEOAPIFY_KEY not set');
+  return key;
+}
+
+export function mapGeoapifyFeature(f: GeoapifyFeature, fallbackName?: string): CatalogActivity {
+  const p = f.properties;
+  const category = p.categories?.[0] ?? 'sight';
+  const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
+
+  return {
+    id: String(p.place_id),
+    name: p.name ?? categoryLabel ?? fallbackName ?? 'Point of interest',
+    address: p.formatted,
+    description: p.description,
+    category,
+    rating: p.rank?.popularity,
+    latitude: p.lat,
+    longitude: p.lon,
+    ...(p.image && { imageUrl: p.image }),
+  };
+}
+
 /* Geoapify – Autocomplete */
 export async function fetchGeoapifyAutocomplete(text: string): Promise<AutocompletePlace[]> {
   const key = process.env.GEOAPIFY_KEY;
@@ -72,8 +97,7 @@ export async function fetchGeoapifyCatalog(
   dest: string,
   categories: string[] = GEOAPIFY_CATEGORIES
 ): Promise<{ activities: CatalogActivity[] }> {
-  const key = process.env.GEOAPIFY_KEY;
-  if (!key) throw new Error('GEOAPIFY_KEY not set');
+  const key = getGeoapifyKey();
 
   // 1) geocode / autocomplete the destination
   const auto = await fetchGeoapifyAutocomplete(dest);
@@ -94,27 +118,8 @@ export async function fetchGeoapifyCatalog(
 
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
-
   const data = (await res.json()) as GeoapifyResponse;
-
-  const activities = data.features.map((f): CatalogActivity => {
-    const p = f.properties;
-    const placeId = String(p.place_id);
-    const category = p.categories?.[0] ?? 'sight';
-    const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
-
-    return {
-      id: placeId,
-      name: p.name ?? categoryLabel,
-      address: p.formatted,
-      description: p.description,
-      category,
-      rating: p.rank?.popularity,
-      latitude: p.lat,
-      longitude: p.lon,
-      ...(p.image && { imageUrl: p.image }),
-    };
-  });
+  const activities = data.features.map((f) => mapGeoapifyFeature(f));
 
   return { activities };
 }
@@ -123,8 +128,7 @@ export async function fetchGeoapifyCatalog(
 export async function fetchGeoapifySearch(
   text: string
 ): Promise<{ activities: CatalogActivity[] }> {
-  const key = process.env.GEOAPIFY_KEY;
-  if (!key) throw new Error('GEOAPIFY_KEY not set');
+  const key = getGeoapifyKey();
 
   // Geocode the text first to obtain coordinates
   const auto = await fetchGeoapifyAutocomplete(text);
@@ -133,7 +137,6 @@ export async function fetchGeoapifySearch(
     return { activities: [] };
   }
   const { latitude: lat, longitude: lon } = auto[0];
-
   const baseUrl = 'https://api.geoapify.com/v2/places';
   const url =
     `${baseUrl}?name=${encodeURIComponent(text)}` +
@@ -144,27 +147,8 @@ export async function fetchGeoapifySearch(
 
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
-
   const data = (await res.json()) as GeoapifyResponse;
-
-  const activities = data.features.map((f): CatalogActivity => {
-    const p = f.properties;
-    const placeId = String(p.place_id);
-    const category = p.categories?.[0] ?? 'sight';
-    const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
-
-    return {
-      id: placeId,
-      name: p.name ?? categoryLabel ?? text,
-      address: p.formatted,
-      description: p.description,
-      category,
-      rating: p.rank?.popularity,
-      latitude: p.lat,
-      longitude: p.lon,
-      ...(p.image && { imageUrl: p.image }),
-    };
-  });
+  const activities = data.features.map((f) => mapGeoapifyFeature(f, text));
 
   return { activities };
 }

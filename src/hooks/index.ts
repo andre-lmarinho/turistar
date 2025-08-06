@@ -11,7 +11,6 @@ export * from './planner/usePlanner';
 export * from './planner/usePlanTitleSupabase';
 export * from './planner/useSelectedActivity';
 export * from './planner/usePlanParams';
-export * from './planner/useActivityCardEditor';
 
 // catalog
 export * from './catalog/useCatalog';

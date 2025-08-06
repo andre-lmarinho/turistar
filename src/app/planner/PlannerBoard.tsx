@@ -64,7 +64,7 @@ function PlannerBoard() {
         className="bg-background flex h-full flex-1 gap-4 overflow-x-auto overflow-y-hidden rounded-xl border p-4"
       >
         {days.map((d) => (
-          <div key={d.id} role="listitem" className="min-w-[250px] flex-shrink-0">
+          <div key={d.id} role="listitem" className="w-[234px] flex-shrink-0">
             <DayColumn
               day={d}
               days={days}

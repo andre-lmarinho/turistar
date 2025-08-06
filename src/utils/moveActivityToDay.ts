@@ -1,13 +1,14 @@
 // src/utils/moveActivityToDay.ts
 
 import type { DayPlan } from '@/types';
+import { cloneDays } from '@/utils';
 
 export function moveActivityToDay(
   days: DayPlan[],
   activityId: string,
   newDayId: string
 ): DayPlan[] {
-  const copy = days.map((d) => ({ ...d, activities: [...d.activities] }));
+  const copy = cloneDays(days);
 
   let moved: ReturnType<typeof Array.prototype.splice>[0] | undefined;
   let srcIndex = -1;

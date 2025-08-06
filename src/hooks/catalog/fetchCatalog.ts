@@ -1,6 +1,7 @@
 // src/hooks/fetchCatalog.ts
 
 import type { CatalogActivity } from '@/types';
+import { fetchJson } from '@/lib';
 
 export interface CatalogApiResponse {
   activities: CatalogActivity[];
@@ -11,10 +12,5 @@ export interface CatalogApiResponse {
  * Throws if the request fails.
  */
 export async function fetchCatalog(dest: string): Promise<CatalogApiResponse> {
-  const params = new URLSearchParams({ dest });
-  const res = await fetch(`/api/catalog?${params.toString()}`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch catalog: HTTP ${res.status}`);
-  }
-  return res.json();
+  return fetchJson<CatalogApiResponse>('/api/catalog', { dest }, 'Failed to fetch catalog');
 }

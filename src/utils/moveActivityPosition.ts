@@ -1,6 +1,7 @@
 // src/utils/moveActivityPosition.ts
 
 import type { DayPlan } from '@/types';
+import { cloneDays } from '@/utils';
 
 /**
  * Moves an activity to a new index within its current day.
@@ -11,7 +12,7 @@ export function moveActivityPosition(
   activityId: string,
   newIndex: number
 ): DayPlan[] {
-  const copy = days.map((d) => ({ ...d, activities: [...d.activities] }));
+  const copy = cloneDays(days);
 
   for (const day of copy) {
     const idx = day.activities.findIndex((a) => a.id === activityId);

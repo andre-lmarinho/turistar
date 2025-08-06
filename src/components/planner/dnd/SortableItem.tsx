@@ -77,7 +77,7 @@ export default function SortableItem({
   };
 
   return (
-    <li
+    <div
       ref={setNodeRef}
       style={style}
       className={cn(
@@ -107,6 +107,6 @@ export default function SortableItem({
       {isDragging && (
         <div className="bg-background absolute inset-0 rounded-lg border-2 border-dashed border-gray-300" />
       )}
-    </li>
+    </div>
   );
 }
