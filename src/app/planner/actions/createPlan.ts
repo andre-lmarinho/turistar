@@ -2,8 +2,8 @@
 'use server';
 
 import { eachDayOfInterval } from 'date-fns';
-import { supabaseServer } from '@/lib/supabaseServer';
-import { buildInitialDays } from '@/utils';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { buildInitialDays } from '@/features/planner/services';
 
 interface DestinationInfo {
   name: string;

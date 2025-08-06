@@ -1,6 +1,6 @@
 // src/__mocks__/supabaseSsr.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/types/supabase';
+import type { Database } from '@/shared/types/supabase';
 
 type QueryBuilder = {
   select: (...args: unknown[]) => QueryBuilder;

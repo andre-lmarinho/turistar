@@ -19,7 +19,7 @@ import {
 } from '@/components';
 import { usePlanTitle, useInputWidth, useKeyBinds } from '@/hooks';
 import { OnboardingProvider, PlannerProvider, usePlannerContext } from '@/contexts';
-import type { DayPlan } from '@/types';
+import type { DayPlan } from '@/shared/types';
 import { motion } from 'framer-motion';
 
 /**

@@ -2,7 +2,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { DayPlan } from '@/types';
+import type { DayPlan } from '@/shared/types';
 
 interface Props {
   initialDays: DayPlan[];

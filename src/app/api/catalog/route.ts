@@ -1,8 +1,8 @@
 // src/app/api/catalog/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchGeoapifyCatalog } from '@/lib/geoapify';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 /**
  * API route that proxies catalog data from Geoapify.

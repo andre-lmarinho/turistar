@@ -2,10 +2,10 @@
 export const dynamic = 'force-dynamic';
 
 import PlannerClient from '../PlannerClient';
-import { supabaseServer } from '@/lib/supabaseServer';
-import type { DayPlan } from '@/types';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
+import type { DayPlan } from '@/shared/types';
 import { format, parseISO } from 'date-fns';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 
 type PageProps = {
   params: Promise<{ planId: string }>;

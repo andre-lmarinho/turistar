@@ -1,5 +1,5 @@
 // src/contexts/index.ts
 
-export * from './BudgetContext';
-export * from './OnboardingContext';
-export * from './PlannerContext';
+export * from '@/features/budget/hooks/BudgetContext';
+export * from '@/features/onboarding/hooks/OnboardingContext';
+export * from '@/features/planner/hooks/PlannerContext';

@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/types';
+import type { DayPlan } from '@/shared/types';
 import PlannerClient from './PlannerClient';
 
 let mockPlanId = 'plan1';

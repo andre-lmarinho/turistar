@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import InspirationPlanner from '../InspirationPlanner';
-import { buildDaysFromInspirationData, type InspirationData } from '@/utils';
-import { capitalize } from '@/lib/utils';
+import { buildDaysFromInspirationData, type InspirationData } from '@/features/planner/services';
+import { capitalize } from '@/shared/lib/utils';
 
 type CityParams = { city: string };
 

@@ -8,7 +8,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { DayColumn, SortableItem } from '@/components';
 import { useActivitiesById } from '@/hooks';
 import { usePlannerContext } from '@/contexts';
-import type { CatalogActivity } from '@/types';
+import type { CatalogActivity } from '@/shared/types';
 
 /**
  * Presentation component to render the DnD board.

@@ -1,43 +1,46 @@
 // src/hooks/index.ts
 
 // planner
-export * from './planner/useActivityCardEditor';
-export * from './planner/useTripRange';
-export * from './planner/useActivitiesById';
-export * from './planner/useActivityState';
-export * from './planner/useDnDPlanner';
-export * from './planner/useDragState';
-export * from './planner/usePlanner';
-export * from './planner/usePlanTitleSupabase';
-export * from './planner/useSelectedActivity';
-export * from './planner/usePlanParams';
+export * from '@/features/planner/hooks/useActivityCardEditor';
+export * from '@/features/planner/hooks/useTripRange';
+export * from '@/features/planner/hooks/useActivitiesById';
+export * from '@/features/planner/hooks/useActivityState';
+export * from '@/features/planner/hooks/useDnDPlanner';
+export * from '@/features/planner/hooks/useDragState';
+export * from '@/features/planner/hooks/usePlanner';
+export * from '@/features/planner/hooks/usePlanTitleSupabase';
+export * from '@/features/planner/hooks/useSelectedActivity';
+export * from '@/features/planner/hooks/usePlanParams';
+export * from '@/features/planner/hooks/usePlanDaysSupabase';
 
 // catalog
-export * from './catalog/useCatalog';
-export * from './catalog/useDestinationCatalog';
-export * from './catalog/useCatalogActivities';
-export * from './catalog/useDestinationAutocomplete';
-export * from './catalog/useGeoapifySearch';
-
-export { fetchAutocomplete } from './catalog/fetchAutocomplete';
-export { fetchCatalog, type CatalogApiResponse } from './catalog/fetchCatalog';
-export { fetchSearch } from './catalog/fetchSearch';
+export * from '@/features/planner/hooks/catalog/useCatalog';
+export * from '@/features/planner/hooks/catalog/useDestinationCatalog';
+export * from '@/features/planner/hooks/catalog/useCatalogActivities';
+export * from '@/features/planner/hooks/catalog/useDestinationAutocomplete';
+export * from '@/features/planner/hooks/catalog/useGeoapifySearch';
+export { fetchAutocomplete } from '@/features/planner/hooks/catalog/fetchAutocomplete';
+export {
+  fetchCatalog,
+  type CatalogApiResponse,
+} from '@/features/planner/hooks/catalog/fetchCatalog';
+export { fetchSearch } from '@/features/planner/hooks/catalog/fetchSearch';
 
 // budget
-export * from './budget/useBudgetSupabase';
+export * from '@/features/budget/hooks/useBudgetSupabase';
 
 // onboarding
-export * from './onboarding/useOnboardingCheck';
+export * from '@/features/onboarding/hooks/useOnboardingCheck';
 
 // ui
-export * from './ui/useCardPopups';
-export * from './ui/useEscapeKey';
-export * from './ui/useFlexibleRef';
-export * from './ui/useKeyBinds';
-export * from './ui/usePopupOutsideHandler';
-export * from './ui/useElementRect';
-export * from './ui/useCardColors';
-export * from './ui/useInputWidth';
+export * from '@/shared/hooks/ui/useCardPopups';
+export * from '@/shared/hooks/ui/useEscapeKey';
+export * from '@/shared/hooks/ui/useFlexibleRef';
+export * from '@/shared/hooks/ui/useKeyBinds';
+export * from '@/shared/hooks/ui/usePopupOutsideHandler';
+export * from '@/shared/hooks/ui/useElementRect';
+export * from '@/shared/hooks/ui/useCardColors';
+export * from '@/shared/hooks/ui/useInputWidth';
 
 // shared
-export * from './useDebounce';
+export * from '@/shared/hooks/useDebounce';
