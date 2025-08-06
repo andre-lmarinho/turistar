@@ -7,17 +7,14 @@ const { mockUseCatalogActivities } = vi.hoisted(() => ({
   mockUseCatalogActivities: vi.fn(),
 }));
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     useCatalogActivities: mockUseCatalogActivities,
+    usePlannerContext: () => ({ planId: 'p1', dest: 'rome' }),
   };
 });
-
-vi.mock('@/contexts', () => ({
-  usePlannerContext: () => ({ planId: 'p1', dest: 'rome' }),
-}));
 
 describe('CatalogSearchPopup', () => {
   beforeEach(() => {

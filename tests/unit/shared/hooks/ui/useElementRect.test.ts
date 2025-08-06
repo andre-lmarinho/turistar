@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { useElementRect } from '@/hooks';
+import { useElementRect } from '@/shared/hooks/ui/useElementRect';
 import { vi } from 'vitest';
 
 afterEach(() => {

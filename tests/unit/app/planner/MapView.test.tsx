@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/app/planner/MapView';
-import { PlannerProvider } from '@/contexts';
+import { PlannerProvider } from '@/features/planner';
 import type { DayPlan } from '@/shared/types';
 
 // Reuse the same mocks across tests
@@ -37,8 +37,8 @@ vi.mock('react-leaflet', () => {
   };
 });
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     usePlanner: () => ({
@@ -73,6 +73,10 @@ vi.mock('@/hooks', async () => {
     }),
   };
 });
+
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
+}));
 
 // Simplify Leaflet utilities
 vi.mock('leaflet', () => ({

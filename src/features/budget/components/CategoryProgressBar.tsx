@@ -3,7 +3,7 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 import { CategoryKey, CATEGORIES, CHART_COLORS, BUDGET_INFO } from '@/shared/constants';
-import { InfoPopup } from '@/components';
+import { InfoPopup } from '@/shared/ui';
 
 interface Props {
   category: CategoryKey;

@@ -89,13 +89,9 @@ You can deploy the same app to Vercel or Netlify.
 - `/public`: Static assets served directly
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
-  - `/components`: React components that should follow the guidelines in this document
-  - `/constants`: Shared configuration values
+  - `/features`: Feature modules such as home, planner, budget and onboarding
+  - `/shared`: Shared UI components, hooks, utilities and types
   - `/data`: Local JSON used for demo itineraries
-  - `/hooks`: Custom React hooks
-  - `/lib`: Internal utilities
-  - `/types`: Shared TypeScript definitions
-  - `/utils`: Planner-specific helpers
 
 ---
 
@@ -144,13 +140,13 @@ You can deploy the same app to Vercel or Netlify.
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 4. **Configure environment**
-   - Copy `.env.example` to `.env.local`.
-   - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts)):
-     - `GEOAPIFY_KEY`
-     - `NEXT_PUBLIC_SUPABASE_URL`
-     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - `SUPABASE_SERVICE_ROLE_KEY`
-   - In Vercel, add the same values in **Project Settings → Environment Variables**.
+  - Copy `.env.example` to `.env.local`.
+  - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts)):
+    - `GEOAPIFY_KEY`
+    - `NEXT_PUBLIC_SUPABASE_URL`
+    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - Optionally set `SUPABASE_SERVICE_ROLE_KEY` for local type generation.
+  - In Vercel, add the same values in **Project Settings → Environment Variables**.
    - In Supabase, copy the URL and keys from your project dashboard.
    - Start a local Supabase instance with `supabase start`.
    - Generate database types with `npm run gen:types` whenever the schema changes.

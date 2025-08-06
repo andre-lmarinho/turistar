@@ -1,6 +1,6 @@
 // src/app/page.tsx
 
-import { WelcomeForm } from '@/components';
+import { WelcomeForm } from '@/features/home';
 
 export default function Home() {
   return (

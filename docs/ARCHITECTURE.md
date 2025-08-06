@@ -5,8 +5,8 @@ This document outlines the structure of Turistar and highlights important design
 ## Directory Overview
 
 - `src/app` – Next.js **App Router** pages and API routes. It includes the root layout, the planner screens and the `/api/catalog` endpoint used during development.
-- `src/components` – Reusable React components grouped by feature such as the planner board, budget views, onboarding flows and UI primitives.
-- `src/hooks` – Custom React hooks for catalog queries, drag‑and‑drop helpers and shared UI logic.
+- `src/features` – Feature-specific modules with their own components, hooks and services.
+- `src/shared` – Shared UI components, hooks, utilities and types used across features.
 - `src/constants` – Shared configuration values like color palettes, budget categories and onboarding copy.
 - `src/data` – Inspiration JSON files for sample itineraries loaded via the dynamic loader.
 - `src/lib` – Generic utilities including Supabase client helpers and local storage utilities.

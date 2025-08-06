@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/react';
 import { closestCenter } from '@dnd-kit/core';
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import { PlannerProvider } from '@/contexts';
+import { PlannerProvider } from '@/features/planner';
 import type { DayPlan, Activity } from '@/shared/types';
 import { vi } from 'vitest';
 
@@ -18,8 +18,8 @@ function buildActivities(prefix: string, count: number): Activity[] {
 
 let mockDays: DayPlan[] = [];
 
-vi.mock('@/hooks', async () => {
-  const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
+vi.mock('@/features/planner', async () => {
+  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
     ...actual,
     usePlanner: () => ({
@@ -54,6 +54,10 @@ vi.mock('@/hooks', async () => {
     }),
   };
 });
+
+vi.mock('@/features/planner/hooks/usePlanParams', () => ({
+  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
+}));
 
 function renderBoard() {
   mockDays = [

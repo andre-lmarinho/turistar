@@ -2,8 +2,8 @@
 'use client';
 
 import React from 'react';
-import { ModeToggleButton, DateRangePicker } from '@/components';
-import { usePlannerContext } from '@/contexts';
+import { DateRangePicker, ModeToggleButton } from '@/shared/ui';
+import { usePlannerContext } from '@/features/planner';
 
 type Mode = 'planner' | 'map' | 'budget';
 

@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { DestinationCard } from '@/components';
+import { DestinationCard } from '@/features/planner';
 import type { CatalogActivity } from '@/shared/types';
 
 interface Props {

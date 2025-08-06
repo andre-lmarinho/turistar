@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useFlexibleRef } from '@/hooks';
+import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
 
 /**
  * Manages state for card popups such as the color picker and date picker.

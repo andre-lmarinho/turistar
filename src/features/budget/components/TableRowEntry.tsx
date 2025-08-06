@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
-import { Button } from '@/components';
+import { Button } from '@/shared/ui';
 import { CATEGORIES } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
 

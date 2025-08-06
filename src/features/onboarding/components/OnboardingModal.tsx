@@ -2,9 +2,9 @@
 'use client';
 
 import React from 'react';
-import { OnboardingCarousel, CloseButton, Modal } from '@/components';
-import { useEscapeKey } from '@/hooks';
-import { useOnboardingContext } from '@/contexts';
+import { OnboardingCarousel, useOnboardingContext } from '@/features/onboarding';
+import { CloseButton, Modal } from '@/shared/ui';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function OnboardingModal() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();

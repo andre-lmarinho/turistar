@@ -6,7 +6,7 @@ import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
 import { ONBOARDING_STEPS } from '@/shared/constants';
-import { NavCircleButton } from '@/components';
+import { NavCircleButton } from '@/shared/ui';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;

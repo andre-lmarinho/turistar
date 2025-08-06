@@ -7,5 +7,4 @@ export { default as ExpenseTable } from './ExpenseTable';
 export { default as TableRowEdit } from './TableRowEdit';
 export { default as TableRowEntry } from './TableRowEntry';
 export { default as TableRowNew } from './TableRowNew';
-
-export * from './activities';
+export { ActivitiesBudgetPopup } from './activities';

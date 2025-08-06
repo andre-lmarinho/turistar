@@ -3,8 +3,7 @@
 
 import React from 'react';
 import { CloseButton, Spinner, Popup } from '@/shared/ui';
-import { useCatalogActivities } from '@/hooks';
-import { usePlannerContext } from '@/contexts';
+import { useCatalogActivities, usePlannerContext } from '@/features/planner';
 import type { CatalogActivity } from '@/shared/types';
 
 interface CatalogSearchPopupProps {

@@ -4,14 +4,14 @@
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/shared/constants';
-import { usePlannerContext, BudgetProvider } from '@/contexts';
+import { usePlannerContext } from '@/features/planner';
 import {
+  BudgetProvider,
   BudgetPanelHeader,
-  InfoPopup,
   ExpenseTable,
-  Button,
   ActivitiesBudgetPopup,
-} from '@/components';
+} from '@/features/budget';
+import { InfoPopup, Button } from '@/shared/ui';
 
 function BudgetPanel() {
   const { planId, days, updateActivity } = usePlannerContext();

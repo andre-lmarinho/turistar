@@ -2,7 +2,7 @@
 'use client';
 
 import nextDynamic from 'next/dynamic';
-import { LoadingScreen } from '@/components';
+import LoadingScreen from '@/shared/components/LoadingScreen';
 
 export const dynamic = 'force-dynamic';
 

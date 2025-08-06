@@ -2,7 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useOnboardingCheck } from '@/hooks';
+import { useOnboardingCheck } from './useOnboardingCheck';
 
 export const OnboardingContext = createContext<ReturnType<typeof useOnboardingCheck> | null>(null);
 

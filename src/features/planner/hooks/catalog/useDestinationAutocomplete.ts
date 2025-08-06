@@ -2,7 +2,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchAutocomplete } from '@/hooks';
+import { fetchAutocomplete } from '@/features/planner';
 import type { AutocompletePlace } from '@/shared/types';
 
 /**

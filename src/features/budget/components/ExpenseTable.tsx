@@ -3,10 +3,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
-import { InfoPopup, TableRowEdit, TableRowEntry, TableRowNew } from '@/components';
 import { BUDGET_INFO } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
-import { useBudgetContext } from '@/contexts';
+import { TableRowEdit, TableRowEntry, TableRowNew, useBudgetContext } from '@/features/budget';
+import { InfoPopup } from '@/shared/ui';
 
 export default function ExpenseTable() {
   const { entries, amount, handleAdd, handleDeleteEntry } = useBudgetContext();

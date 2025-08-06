@@ -2,8 +2,9 @@
 'use client';
 
 import React from 'react';
-import { Spinner } from '@/components';
-import { useDebounce, useDestinationAutocomplete } from '@/hooks';
+import { Spinner } from '@/shared/ui';
+import { useDebounce } from '@/shared/hooks/useDebounce';
+import { useDestinationAutocomplete } from '@/features/planner';
 
 interface PlaceSelection {
   name: string;
