@@ -1,4 +1,4 @@
-// tests/unit/features/planner/tests/PlannerContext.test.tsx
+// tests/unit/features/planner/PlannerContext.test.tsx
 
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';

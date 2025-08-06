@@ -1,11 +1,11 @@
-// src/components/planner/budget/TableRowEdit.tsx
+// src/features/budget/components/TableRowEdit.tsx
 'use client';
 
 import React, { useId } from 'react';
 import { Check, X, DollarSign } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CATEGORIES, CategoryKey } from '@/shared/constants';
-import type { Entry } from '@/shared/types';
+import type { Entry } from '@/features/budget/types';
 import { normalizeAmount } from '@/features/planner/services';
 import { useBudgetContext } from '@/contexts';
 

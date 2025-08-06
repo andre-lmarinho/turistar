@@ -1,4 +1,4 @@
-// src/components/planner/budget/index.ts
+// src/features/budget/components/index.ts
 
 export { default as BudgetItem } from './BudgetItem';
 export { default as BudgetPanelHeader } from './BudgetPanelHeader';

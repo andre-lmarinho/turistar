@@ -1,19 +1,15 @@
-// src/lib/env.ts
+// src/shared/lib/env.ts
 
-const vars = {
-  NODE_ENV: process.env.NODE_ENV ?? 'development',
-  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  GEOAPIFY_KEY: process.env.GEOAPIFY_KEY,
-};
+import { z } from 'zod';
 
-for (const [key, value] of Object.entries(vars)) {
-  if (!value) throw new Error(`Missing environment variable: ${key}`);
-}
+const envSchema = z.object({
+  NODE_ENV: z.string().default('development'),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
+  GEOAPIFY_KEY: z.string(),
+});
 
-export const env = vars as {
-  NODE_ENV: string;
-  NEXT_PUBLIC_SUPABASE_URL: string;
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
-  GEOAPIFY_KEY: string;
-};
+export const env = envSchema.parse(process.env);
+
+type Env = z.infer<typeof envSchema>;
+export type { Env };

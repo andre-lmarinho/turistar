@@ -1,8 +1,8 @@
-// src/contexts/BudgetContext.tsx
+// src/features/budget/hooks/BudgetContext.tsx
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useBudget } from '@/hooks';
+import { useBudget } from './useBudgetSupabase';
 
 export const BudgetContext = createContext<ReturnType<typeof useBudget> | null>(null);
 

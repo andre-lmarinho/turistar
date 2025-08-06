@@ -1,4 +1,4 @@
-// src/types/budget.ts
+// src/features/budget/types/budget.ts
 
 import type { CategoryKey } from '@/shared/constants';
 export type { CategoryKey } from '@/shared/constants';

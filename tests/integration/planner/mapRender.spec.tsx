@@ -1,4 +1,4 @@
-// src/tests/integration/mapRender.spec.tsx
+// tests/integration/planner/mapRender.spec.tsx
 
 import React from 'react';
 import { render } from '@testing-library/react';

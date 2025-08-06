@@ -27,7 +27,7 @@ export {
 export { fetchSearch } from '@/features/planner/hooks/catalog/fetchSearch';
 
 // budget
-export * from '@/features/budget/hooks/useBudgetSupabase';
+export * from '@/features/budget/hooks';
 
 // onboarding
 export * from '@/features/onboarding/hooks/useOnboardingCheck';
