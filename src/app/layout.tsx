@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { Providers } from '@/components';
-import SupabaseProvider from '@/components/providers/SupabaseProvider';
+import SupabaseProvider from '@/shared/components/providers/SupabaseProvider';
 
 export const metadata: Metadata = {
   title: 'Travel Planner',

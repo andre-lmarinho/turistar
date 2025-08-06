@@ -1,6 +1,6 @@
 // src/app/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchGeoapifySearch } from '@/lib/geoapify';
+import { fetchGeoapifySearch } from '@/shared/lib/geoapify';
 
 /**
  * API route that proxies Geoapify place search results.

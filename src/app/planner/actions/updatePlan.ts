@@ -1,7 +1,7 @@
 // src/app/planner/actions/updatePlan.ts
 'use server';
 
-import { supabaseServer } from '@/lib/supabaseServer';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { format } from 'date-fns';
 
 export async function setPlanTitle(planId: string, title: string) {

@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from './MapView';
 import { PlannerProvider } from '@/contexts';
-import type { DayPlan } from '@/types';
+import type { DayPlan } from '@/shared/types';
 
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };

@@ -5,12 +5,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 import { PlannerProvider } from '@/contexts';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/types';
+import type { DayPlan } from '@/shared/types';
 
 let mockDays: DayPlan[] = [];
 
 const mockFrom = vi.fn();
-vi.mock('@/lib/supabaseClient', () => ({
+vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 

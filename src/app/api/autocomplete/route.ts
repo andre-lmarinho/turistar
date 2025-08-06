@@ -1,6 +1,6 @@
 // src/app/api/autocomplete/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchGeoapifyAutocomplete } from '@/lib/geoapify';
+import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify';
 
 /**
  * API route that proxies Geoapify autocomplete results.
