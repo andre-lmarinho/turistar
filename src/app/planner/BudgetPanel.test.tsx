@@ -1,13 +1,18 @@
 // src/app/planner/BudgetPanel.test.tsx
 
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 import { PlannerProvider } from '@/contexts';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/types';
 
 let mockDays: DayPlan[] = [];
+
+const mockFrom = vi.fn();
+vi.mock('@/lib/supabaseClient', () => ({
+  supabase: { from: (table: string) => mockFrom(table) },
+}));
 
 vi.mock('@/hooks', async () => {
   const actual = await vi.importActual<typeof import('@/hooks')>('@/hooks');
@@ -47,7 +52,36 @@ vi.mock('@/hooks', async () => {
 });
 
 describe('BudgetPanel', () => {
-  it('adds expenses and updates totals', () => {
+  beforeEach(() => {
+    mockFrom.mockReset();
+  });
+
+  it('adds expenses and updates totals', async () => {
+    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
+    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
+    const upsertBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
+    const insertEntry = vi.fn().mockResolvedValue({ data: { id: 'e1' }, error: null });
+    const updateEntry = vi.fn().mockResolvedValue({ error: null });
+    const deleteEntry = vi.fn().mockResolvedValue({ error: null });
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'budget') {
+        return {
+          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
+          upsert: () => upsertBudget(),
+        } as unknown;
+      }
+      if (table === 'budget_entries') {
+        return {
+          select: () => ({ eq: () => selectEntries() }),
+          insert: () => ({ select: () => ({ single: () => insertEntry() }) }),
+          update: () => ({ eq: () => updateEntry() }),
+          delete: () => ({ eq: () => deleteEntry() }),
+        } as unknown;
+      }
+      return {} as unknown;
+    });
+
     mockDays = [
       {
         id: 'd1',
@@ -60,6 +94,9 @@ describe('BudgetPanel', () => {
         <BudgetPanel />
       </PlannerProvider>
     );
+    await waitFor(() => expect(screen.getAllByText(/\$\s*25\.00/).length).toBeGreaterThan(0));
+    expect(upsertBudget).not.toHaveBeenCalled();
+    expect(screen.queryByText('Failed to persist budget')).not.toBeInTheDocument();
     fireEvent.change(screen.getByPlaceholderText('Description'), {
       target: { value: 'Taxi' },
     });
@@ -67,6 +104,6 @@ describe('BudgetPanel', () => {
       target: { value: '50' },
     });
     fireEvent.click(screen.getByLabelText('Add expense'));
-    expect(screen.getByText(/\$\s*75\.00/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/\$\s*75\.00/)).toBeInTheDocument());
   });
 });
