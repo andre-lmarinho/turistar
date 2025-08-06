@@ -8,15 +8,15 @@ This project uses **Vitest** with React Testing Library for unit tests.
 - **Path alias:** `@` resolves to the `src` directory, matching `tsconfig.json`.
 - **Setup file:** [`vitest.setup.tsx`](../vitest.setup.tsx) sets global mocks and utilities. It imports `@testing-library/jest-dom`, mocks `focus-trap-react`, and sets the timezone to UTC.
 
-Tests are discovered from `src/**/*.{test,spec}.{ts,tsx}`.
+Tests are discovered from `tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}`.
 
 ## Current strategy
 
-Only component unit tests exist today. Future work may add integration or e2e coverage once the app stabilises.
+Only component unit tests exist today. Future work may add integration or e2e coverage once the app stabilises. Integration tests will live under `tests/integration`.
 
 ## Folder and file naming
 
-Test files use the `*.test.tsx` pattern and live next to the source they cover. This keeps implementation and tests close together.
+Test files use the `*.test.ts` or `*.test.tsx` pattern and live under `tests/unit`, mirroring the source directory structure.
 
 ## Mocking guidelines
 
