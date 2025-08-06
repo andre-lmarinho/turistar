@@ -5,6 +5,7 @@ import PlannerClient from '../PlannerClient';
 import { supabaseServer } from '@/lib/supabaseServer';
 import type { DayPlan } from '@/types';
 import { format, parseISO } from 'date-fns';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 
 type PageProps = {
   params: Promise<{ planId: string }>;
@@ -49,6 +50,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
       activities: {
         id: string;
         title: string;
+        color: string | null;
         category: string;
         description: string | null;
         start_time: string | null;
@@ -69,6 +71,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
       activities: d.activities.map((a) => ({
         id: a.id,
         title: a.title,
+        color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
         category: a.category,
         description: a.description ?? undefined,
         startTime: a.start_time ?? undefined,
