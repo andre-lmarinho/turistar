@@ -64,41 +64,56 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         </legend>
 
         {/* Duration */}
-        <Input
-          labelId="duration"
-          value={duration === 0 ? '' : String(duration)}
-          onValueChange={(val) => setDuration(Number(val))}
-          aria-label="Duration in hours"
-          inputSize="sm"
-          background="default"
-          type="number"
-          placeholder="Hrs"
-          icon={<Hourglass size={14} aria-hidden="true" className="text-muted-foreground" />}
-          className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          autoComplete="off"
-          min={0}
-        />
-
+        <div>
+          <label
+            htmlFor="activity-notes"
+            className="mb-1 flex items-center gap-1 text-xs font-bold"
+          >
+            <Hourglass size={12} aria-hidden="true" />
+            <span>Duration</span>
+          </label>
+          <Input
+            labelId="duration"
+            value={duration === 0 ? '' : String(duration)}
+            onValueChange={(val) => setDuration(Number(val))}
+            aria-label="Duration in hours"
+            inputSize="sm"
+            background="default"
+            type="number"
+            placeholder="Hrs"
+            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            autoComplete="off"
+            min={0}
+          />
+        </div>
         {/* Budget */}
-        <Input
-          labelId="budget"
-          value={budget === 0 ? '' : String(budget)}
-          onValueChange={(val) => setBudget(Number(val))}
-          aria-label="Budget amount"
-          type="number"
-          inputSize="default"
-          background="default"
-          icon={<DollarSign size={14} aria-hidden="true" className="text-muted-foreground" />}
-          placeholder="Budget"
-          min={0}
-          autoComplete="off"
-          className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
+        <div>
+          <label
+            htmlFor="activity-notes"
+            className="mb-1 flex items-center gap-1 text-xs font-bold"
+          >
+            <DollarSign size={12} aria-hidden="true" />
+            <span>Budget</span>
+          </label>
+          <Input
+            labelId="budget"
+            value={budget === 0 ? '' : String(budget)}
+            onValueChange={(val) => setBudget(Number(val))}
+            aria-label="Budget amount"
+            type="number"
+            inputSize="sm"
+            background="default"
+            placeholder="Budget"
+            min={0}
+            autoComplete="off"
+            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          />
+        </div>
       </fieldset>
 
       {/* Notes */}
-      <div className="px-4">
-        <label htmlFor="activity-notes" className="flex items-center gap-1 text-xs font-bold">
+      <div className="mb-2 px-4">
+        <label htmlFor="activity-notes" className="mb-1 flex items-center gap-1 text-xs font-bold">
           <AlignLeft size={12} aria-hidden="true" />
           <span>Notes</span>
         </label>
@@ -109,12 +124,12 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           onChange={(e) => setEditedDescription(e.target.value)}
           placeholder="Add a more detailed description."
           rows={3}
-          className="focus:ring-primary w-full resize-none rounded p-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          className="focus:ring-primary w-full resize-none rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </div>
 
       {/* Update */}
-      <div className="flex justify-center gap-2 px-4 py-3">
+      <div className="flex justify-center gap-2 pb-4">
         <UpdateButton
           type="button"
           ready={Boolean(editedTitle.trim())}
