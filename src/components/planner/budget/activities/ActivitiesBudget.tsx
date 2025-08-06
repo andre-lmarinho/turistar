@@ -1,7 +1,7 @@
 // src/components/planner/budget/activities/ActivitiesBudget.tsx
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
 
 import { Input, CloseButton, Modal } from '@/components';
@@ -26,17 +26,19 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
 
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
+  const prevOpen = useRef(open);
 
   useEffect(() => {
-    if (!open) return;
-    const init: Record<string, string> = {};
-    for (const act of activities) {
-      init[act.id] = act.budget ? String(act.budget) : '';
+    if (open && !prevOpen.current) {
+      const init: Record<string, string> = {};
+      for (const act of activities) {
+        init[act.id] = act.budget ? String(act.budget) : '';
+      }
+      setInputs(init);
+      setShouldAutoFocus(true);
     }
-    setInputs(init);
-    setShouldAutoFocus(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+    prevOpen.current = open;
+  }, [open, activities]);
 
   const handleClose = () => {
     for (const [id, val] of Object.entries(inputs)) {

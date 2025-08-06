@@ -64,4 +64,35 @@ describe('ActivitiesBudget', () => {
     expect(onUpdate).toHaveBeenCalledWith('a1', 20);
     expect(onUpdate).toHaveBeenCalledWith('a2', 30);
   });
+
+  it('does not reset inputs when activities change while open', () => {
+    const onClose = vi.fn();
+    const initial: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [{ id: 'a1', title: 'Museum', color: '', budget: 10 }],
+      },
+    ];
+    const { rerender } = render(
+      <ActivitiesBudget open days={initial} onUpdate={() => {}} onClose={onClose} />
+    );
+    const input = screen.getByPlaceholderText('Budget') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '20' } });
+
+    const updated: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'Museum', color: '', budget: 10 },
+          { id: 'a2', title: 'Park', color: '', budget: 5 },
+        ],
+      },
+    ];
+    rerender(<ActivitiesBudget open days={updated} onUpdate={() => {}} onClose={onClose} />);
+    const inputs = screen.getAllByPlaceholderText('Budget') as HTMLInputElement[];
+    expect(inputs[0].value).toBe('20');
+    expect(inputs[1].value).toBe('');
+  });
 });
