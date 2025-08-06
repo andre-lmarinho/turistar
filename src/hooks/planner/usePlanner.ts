@@ -55,6 +55,11 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     addBlankActivity,
   } = useDnDPlanner(initialDnDDays);
 
+  function persistOnDragEnd() {
+    handleDragEnd();
+    options.persistDays?.mutate(days);
+  }
+
   /**
    * Updates the planner when the trip range changes.
    *
@@ -93,7 +98,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     collisionDetection: pointerWithin,
     handleDragStart,
     handleDragOver,
-    handleDragEnd,
+    handleDragEnd: persistOnDragEnd,
     handleRangeChange,
     addActivity,
     removeActivity,

@@ -71,6 +71,21 @@ export function PlannerProvider({
     flush();
   }, [debounced, planner.days, persist, persistDays.isPending, flush]);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (queueRef.current) flush();
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && queueRef.current) flush();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [flush]);
+
   const selected = useSelectedActivity(planner.days, planner.setDays, {
     addActivity: planner.addActivity,
     removeActivity: planner.removeActivity,
