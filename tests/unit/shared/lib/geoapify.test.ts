@@ -1,13 +1,15 @@
 // tests/unit/shared/lib/geoapify.test.ts
 import { vi } from 'vitest';
-import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify';
 
 const originalFetch = global.fetch;
 const originalKey = process.env.GEOAPIFY_KEY;
+let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
 
 describe('fetchGeoapifyAutocomplete', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    vi.resetModules();
     process.env.GEOAPIFY_KEY = 'test-key';
+    ({ fetchGeoapifyAutocomplete } = await import('@/shared/lib/geoapify'));
   });
 
   afterEach(() => {
