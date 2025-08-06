@@ -1,6 +1,7 @@
 // src/hooks/index.ts
 
 // planner
+export * from './planner/useActivityCardEditor';
 export * from './planner/useTripRange';
 export * from './planner/useActivitiesById';
 export * from './planner/useActivityState';

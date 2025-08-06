@@ -7,14 +7,7 @@ import { supabase } from '@/lib/supabaseClient';
 import type { PlanDay, DayPlan } from '@/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/constants';
 import { format, parseISO } from 'date-fns';
-
-interface PlanDayRow {
-  id: string;
-  plan_id: string;
-  date: string;
-  position: number | null;
-  destination_id: string;
-}
+import { fetchExistingDays, deleteRemovedDays, upsertDayActivities } from './persistDaysHelpers';
 
 interface ActivityRow {
   id: string;
@@ -50,24 +43,6 @@ interface QueryBuilder extends SupabaseQueryBuilder {
 interface PlanDayWithActivities {
   date: string;
   activities: ActivityRow[];
-}
-
-interface ActivityUpsert {
-  id?: string;
-  day_id: string;
-  title: string | null;
-  color: string | null;
-  address: string | null;
-  category: string | null;
-  description: string | null;
-  start_time: string | null;
-  duration: number | null;
-  latitude: number | null;
-  longitude: number | null;
-  budget: number | null;
-  image_url: string | null;
-  position: number;
-  catalog_id: string | null;
 }
 
 export function usePlanDays(planId: string, enabled = true) {
@@ -128,31 +103,8 @@ export function usePlanDays(planId: string, enabled = true) {
       abortRef.current = new AbortController();
       const { signal } = abortRef.current;
 
-      const { data: existing, error } = (await (supabase.from('plan_days') as QueryBuilder)
-        .select('id, date, destination_id')
-        .eq('plan_id', planId)
-        .abortSignal(signal)) as unknown as {
-        data: Pick<PlanDayRow, 'id' | 'date' | 'destination_id'>[];
-        error: unknown;
-      };
-      if (error) throw error;
-
-      const incoming = new Set(state.map((d) => d.id));
-      const toRemove = existing.filter((d) => !incoming.has(d.date));
-
-      if (toRemove.length) {
-        const ids = toRemove.map((d) => d.id);
-        const { error: delActsErr } = (await (supabase.from('activities') as QueryBuilder)
-          .delete()
-          .in('day_id', ids)
-          .abortSignal(signal)) as unknown as { error: unknown };
-        if (delActsErr) throw delActsErr;
-        const { error: delDaysErr } = (await (supabase.from('plan_days') as QueryBuilder)
-          .delete()
-          .in('id', ids)
-          .abortSignal(signal)) as unknown as { error: unknown };
-        if (delDaysErr) throw delDaysErr;
-      }
+      const existing = await fetchExistingDays(planId, signal);
+      await deleteRemovedDays(existing, state, signal);
 
       let destinationId: string | undefined = existing[0]?.destination_id;
       if (!destinationId) {
@@ -216,54 +168,7 @@ export function usePlanDays(planId: string, enabled = true) {
         }
 
         const existingActs = actMap.get(dayId) ?? new Set();
-        const incomingIds = new Set<string>();
-        const updates: ActivityUpsert[] = [];
-        const inserts: ActivityUpsert[] = [];
-
-        for (let j = 0; j < day.activities.length; j++) {
-          const a = day.activities[j];
-          incomingIds.add(a.id);
-          const base: ActivityUpsert = {
-            day_id: dayId!,
-            title: a.title,
-            color: a.color ?? null,
-            address: a.address ?? null,
-            category: a.category ?? null,
-            description: a.description ?? null,
-            start_time: a.startTime ?? null,
-            duration: a.duration ?? null,
-            latitude: a.latitude ?? null,
-            longitude: a.longitude ?? null,
-            budget: a.budget ?? null,
-            image_url: a.imageUrl ?? null,
-            position: j,
-            catalog_id: null,
-          };
-          if (/^[0-9a-fA-F-]{36}$/.test(a.id)) updates.push({ ...base, id: a.id });
-          else inserts.push(base);
-        }
-
-        if (updates.length) {
-          const { error: upErr } = (await (supabase.from('activities') as QueryBuilder)
-            .upsert(updates)
-            .abortSignal(signal)) as unknown as { error: unknown };
-          if (upErr) throw upErr;
-        }
-        if (inserts.length) {
-          const { error: insErr } = (await (supabase.from('activities') as QueryBuilder)
-            .insert(inserts)
-            .abortSignal(signal)) as unknown as { error: unknown };
-          if (insErr) throw insErr;
-        }
-
-        const toDeleteActs = [...existingActs].filter((id) => !incomingIds.has(id));
-        if (toDeleteActs.length) {
-          const { error: delErr } = (await (supabase.from('activities') as QueryBuilder)
-            .delete()
-            .in('id', toDeleteActs)
-            .abortSignal(signal)) as unknown as { error: unknown };
-          if (delErr) throw delErr;
-        }
+        await upsertDayActivities(dayId!, day.activities, existingActs, signal);
       }
     },
   });
