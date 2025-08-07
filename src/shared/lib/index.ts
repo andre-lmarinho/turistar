@@ -10,5 +10,5 @@ export {
 } from './geoapify';
 export { fetchJson } from './http';
 export { supabase } from './supabaseClient';
-export { env } from './env';
-export type { Env } from './env';
+export { clientEnv } from './clientEnv';
+export type { ClientEnv } from './clientEnv';

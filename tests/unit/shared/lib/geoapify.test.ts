@@ -2,19 +2,19 @@
 import { vi } from 'vitest';
 
 const originalFetch = global.fetch;
-const originalKey = process.env.GEOAPIFY_KEY;
+const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
 
 describe('fetchGeoapifyAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
-    process.env.GEOAPIFY_KEY = 'test-key';
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
     ({ fetchGeoapifyAutocomplete } = await import('@/shared/lib/geoapify'));
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
-    process.env.GEOAPIFY_KEY = originalKey;
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
   });
 
   it('filters out non city/state/country results', async () => {

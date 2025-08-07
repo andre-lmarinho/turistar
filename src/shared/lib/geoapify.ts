@@ -3,7 +3,7 @@
 // Helpers for fetching POIs from the Geoapify API.
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
-import { env } from './env';
+import { clientEnv } from './clientEnv';
 
 /* Types */
 type GeoapifyFeature = {
@@ -47,7 +47,7 @@ const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
 /* Helpers */
 export function getGeoapifyKey(): string {
-  return env.GEOAPIFY_KEY;
+  return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
 }
 
 export function mapGeoapifyFeature(f: GeoapifyFeature, fallbackName?: string): CatalogActivity {

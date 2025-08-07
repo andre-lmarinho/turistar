@@ -6,7 +6,7 @@ This document covers how to deploy **Turistar** and manage environment variables
 
 Copy `.env.example` to `.env.local` and set the following values:
 
-- `GEOAPIFY_KEY`
+- `NEXT_PUBLIC_GEOAPIFY_KEY`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
@@ -34,4 +34,4 @@ npm start
 
 ## Catalog API Key
 
-Set the `GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify.
+Set the `NEXT_PUBLIC_GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify.
