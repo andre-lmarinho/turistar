@@ -1,6 +1,14 @@
 // src/shared/lib/index.ts
 
-export * from './geoapify';
-export * from './http';
-export * from './supabaseClient';
-export * from './env';
+export {
+  GEOAPIFY_CATEGORIES,
+  getGeoapifyKey,
+  mapGeoapifyFeature,
+  fetchGeoapifyAutocomplete,
+  fetchGeoapifyCatalog,
+  fetchGeoapifySearch,
+} from './geoapify';
+export { fetchJson } from './http';
+export { supabase } from './supabaseClient';
+export { env } from './env';
+export type { Env } from './env';

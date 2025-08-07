@@ -1,7 +1,22 @@
 // src/features/planner/components/index.ts
 
-export * from './catalog';
-export * from './dnd';
-export * from './modal';
+export {
+  CategoryFilterBar,
+  DestinationCard,
+  DestinationCardGrid,
+  DestinationResultsList,
+  DestinationFilterPanel,
+  DestinationHeader,
+  CategorySelection,
+} from './catalog';
+export {
+  SortableItem,
+  DayColumn,
+  ActivityCard,
+  ActivityCardBase,
+  ActivityCardEditing,
+  ActivityCardEditorOverlay,
+} from './dnd';
+export { ActivityModal, ActivityModalForm, ActivityModalHeader } from './modal';
 
 export { default as PlannerControls } from './PlannerControls';
