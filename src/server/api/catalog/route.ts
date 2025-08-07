@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       category: a.category,
       description: a.description,
       address: a.address,
-      image_url: a.imageUrl,
+      image_url: a.imageUrl ?? null,
       rating: a.rating,
       latitude: a.latitude,
       longitude: a.longitude,

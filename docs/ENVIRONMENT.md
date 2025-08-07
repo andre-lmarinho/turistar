@@ -9,6 +9,8 @@ Turistar reads environment variables through [`src/shared/lib/env.ts`](../src/sh
 - `NEXT_PUBLIC_GEOAPIFY_KEY` – API key for Geoapify requests.
 - `NODE_ENV` – environment name (defaults to `development`).
 
+The catalog also queries the public Wikimedia API for fallback images. This service requires no API key.
+
 These values configure:
 
 - Supabase clients in [`supabaseClient.ts`](../src/shared/lib/supabaseClient.ts) and [`supabaseServer.ts`](../src/shared/lib/supabaseServer.ts).
