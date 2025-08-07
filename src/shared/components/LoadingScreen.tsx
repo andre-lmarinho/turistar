@@ -23,6 +23,7 @@ export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProp
           src="/images/mascot_1_.webp"
           alt=""
           role="presentation"
+          aria-hidden="true"
           fill
           className="object-contain"
           priority

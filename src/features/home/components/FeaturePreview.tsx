@@ -88,6 +88,7 @@ export default function FeaturePreview() {
                       alt=""
                       role="presentation"
                       width={styles.width}
+                      aria-hidden="true"
                       height={260}
                       className="h-auto w-full"
                     />

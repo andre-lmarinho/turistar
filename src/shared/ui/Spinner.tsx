@@ -15,7 +15,9 @@ export default function Spinner({ className }: SpinnerProps) {
         'border-primary inline-block size-5 animate-spin rounded-full border-2 border-t-transparent',
         className
       )}
+      role="status"
       aria-label="Loading"
+      aria-live="polite"
     />
   );
 }

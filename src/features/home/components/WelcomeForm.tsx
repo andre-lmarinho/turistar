@@ -142,6 +142,7 @@ export default function WelcomeForm() {
               src="/images/mascot_1_.webp"
               alt=""
               role="presentation"
+              aria-hidden="true"
               width={800}
               height={600}
               className="h-auto w-full -scale-x-100 transform"

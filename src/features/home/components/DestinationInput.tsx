@@ -35,6 +35,9 @@ export default function DestinationInput({ value, onChange }: Props) {
 
   return (
     <div className="relative w-64">
+      <label htmlFor="dest-input" className="sr-only">
+        Destination
+      </label>
       <input
         id="dest-input"
         role="combobox"
@@ -77,7 +80,11 @@ export default function DestinationInput({ value, onChange }: Props) {
         autoComplete="off"
       />
       {loading && <Spinner className="absolute top-2 right-2 size-4" />}
-      {error && <p className="mt-1 text-sm text-red-500">Failed to load suggestions.</p>}
+      {error && (
+        <p className="mt-1 text-sm text-red-500" role="alert" aria-live="assertive">
+          Failed to load suggestions.
+        </p>
+      )}
       {open && results.length > 0 && !error && (
         <ul
           id="dest-suggestions"
