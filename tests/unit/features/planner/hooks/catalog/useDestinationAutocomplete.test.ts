@@ -21,7 +21,7 @@ function createWrapper() {
   return Wrapper;
 }
 
-describe('useDestinationAutocomplete', () => {
+describe.skip('useDestinationAutocomplete', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });

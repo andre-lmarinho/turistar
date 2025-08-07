@@ -13,6 +13,8 @@ Copy `.env.example` to `.env.local` and set the following values:
 
 These variables should also be configured in your hosting provider's environment settings (e.g., Vercel or Netlify) so production builds can access them.
 
+See [Environment](ENVIRONMENT.md) for how these variables are validated and how authentication works.
+
 ## Build & Hosting
 
 1. Install dependencies and build the project:

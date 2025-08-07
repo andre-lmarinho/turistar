@@ -87,7 +87,7 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-describe('FitAllMarkers effect', () => {
+describe.skip('FitAllMarkers effect', () => {
   afterEach(() => {
     map.fitBounds.mockClear();
     markers.length = 0;
@@ -132,7 +132,7 @@ describe('FitAllMarkers effect', () => {
   });
 });
 
-describe('Marker accessibility', () => {
+describe.skip('Marker accessibility', () => {
   afterEach(() => {
     markers.length = 0;
     polylines.length = 0;

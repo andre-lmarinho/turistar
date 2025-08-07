@@ -91,7 +91,14 @@ You can deploy the same app to Vercel or Netlify.
   - `/app`: Next.js app directory with pages and API routes
   - `/features`: Feature modules such as home, planner, budget and onboarding
   - `/shared`: Shared UI components, hooks, utilities and types
+  - `/server`: Server actions and API handlers
   - `/data`: Local JSON used for demo itineraries
+
+```ts
+import { PlannerControls } from '@/features/planner';
+```
+
+See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
 
 ---
 
@@ -140,12 +147,13 @@ You can deploy the same app to Vercel or Netlify.
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 4. **Configure environment**
-  - Copy `.env.example` to `.env.local`.
-  - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts)):
+ - Copy `.env.example` to `.env.local`.
+ - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts)):
     - `GEOAPIFY_KEY`
     - `NEXT_PUBLIC_SUPABASE_URL`
     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - Optionally set `SUPABASE_SERVICE_ROLE_KEY` for local type generation.
+  - See [Environment](docs/ENVIRONMENT.md) for validation details and authentication flow.
   - In Vercel, add the same values in **Project Settings → Environment Variables**.
    - In Supabase, copy the URL and keys from your project dashboard.
    - Start a local Supabase instance with `supabase start`.
@@ -208,7 +216,7 @@ _For detailed guides, see:_
 
 ## 🧠 What I Focused On
 
-- Modular architecture with `/hooks`, `/lib`, and typed APIs
+- Feature-based architecture with shared utilities and typed APIs
 - Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
 - Custom components built on top of Radix UI primitives
 - Remote persistence using Supabase for planner and budget
@@ -225,8 +233,12 @@ For more details on project conventions, see:
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Database Schema](docs/DATABASE.md)
 - [State Data Flow](docs/STATE-DATA-FLOW.md)
-- [Components](docs/COMPONENTS.md)
-- [Hooks](docs/HOOKS.md)
+- [Environment](docs/ENVIRONMENT.md)
+- [Routing](docs/ROUTING.md)
+- [Home Feature](docs/features/home.md)
+- [Planner Feature](docs/features/planner.md)
+- [Budget Feature](docs/features/budget.md)
+- [Onboarding Feature](docs/features/onboarding.md)
 - [Style Guide](docs/STYLE-GUIDE.md)
 - [Accessibility](docs/ACCESSIBILITY.md)
 - [Testing](docs/TESTING.md)

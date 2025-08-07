@@ -4,20 +4,22 @@ This document outlines the structure of Turistar and highlights important design
 
 ## Directory Overview
 
-- `src/app` – Next.js **App Router** pages and API routes. It includes the root layout, the planner screens and the `/api/catalog` endpoint used during development.
-- `src/features` – Feature-specific modules with their own components, hooks and services.
+- `src/app` – Next.js **App Router** pages and API routes. It includes the root layout, planner screens and API endpoints used during development. See [Routing](ROUTING.md) for detailed structure.
+- `src/features` – Feature modules with their own components, hooks and services.
 - `src/shared` – Shared UI components, hooks, utilities and types used across features.
-- `src/constants` – Shared configuration values like color palettes, budget categories and onboarding copy.
-- `src/data` – Inspiration JSON files for sample itineraries loaded via the dynamic loader.
-- `src/lib` – Generic utilities including Supabase client helpers and local storage utilities.
-- `src/types` – TypeScript definitions for planner data and budget items.
-- `src/utils` – Planner‑specific helpers for manipulating day plans and activities.
+- `src/server` – Server actions and API handlers that interact with external services.
+- `src/data` – Inspiration JSON files for sample itineraries.
 - `public` – Static assets and preview images served directly by Next.js.
+
+```ts
+import { PlannerControls } from '@/features/planner';
+```
+
+For deeper feature details see [home](features/home.md), [planner](features/planner.md), [budget](features/budget.md) and [onboarding](features/onboarding.md).
 
 ## Key Design Decisions
 
-- **Next.js App Router** – Leveraged for file based routing and built‑in API endpoints. The planner resides under `/planner` while the catalog is served from `src/app/api/catalog`.
-- **Drag‑and‑drop with DnD Kit** – Activities are moved by sensors and sortable logic encapsulated in hooks within `src/hooks/planner`.
-- **Geoapify Integration** – The catalog is fetched from Geoapify through `/api/catalog` using the `GEOAPIFY_KEY`.
-- **State management** – Planner and budget data live in React state and synchronize to Supabase through custom hooks. Catalog queries are fetched using React Query.
-- **Dynamic inspiration** – Sample trips in `src/data` are loaded at runtime using [`src/utils/inspirationLoader.ts`](../src/utils/inspirationLoader.ts).
+- **Next.js App Router** – Provides file based routing and server actions. Planner routes live under `/planner` while API helpers reside in `src/server`.
+- **Drag‑and‑drop with DnD Kit** – Activities move via sensors and sortable logic encapsulated in hooks within `src/features/planner`.
+- **Geoapify Integration** – Catalog data is fetched from Geoapify through `src/server/api/catalog` using the `GEOAPIFY_KEY`.
+- **State management** – Planner and budget data live in feature contexts and synchronize to Supabase through shared hooks.
