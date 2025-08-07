@@ -4,7 +4,7 @@
 import { createContext, useContext, useMemo } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/shared/types/supabase';
-import { env } from '@/shared/lib/env';
+import { clientEnv } from '@/shared/lib/clientEnv';
 
 // Context
 type Supabase = ReturnType<typeof createBrowserClient<Database>>;
@@ -14,8 +14,8 @@ export default function SupabaseProvider({ children }: { children: React.ReactNo
   const supabase = useMemo(
     () =>
       createBrowserClient<Database>(
-        env.NEXT_PUBLIC_SUPABASE_URL,
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        clientEnv.NEXT_PUBLIC_SUPABASE_URL,
+        clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
       ),
     []
   );

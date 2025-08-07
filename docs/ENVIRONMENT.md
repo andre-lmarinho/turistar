@@ -1,12 +1,12 @@
 # Environment Variables
 
-Turistar reads environment variables through [`src/shared/lib/env.ts`](../src/shared/lib/env.ts). The module uses Zod to validate required values at runtime and throws when they are missing.
+Turistar reads environment variables through [`src/shared/lib/env.ts`](../src/shared/lib/env.ts) on the server and [`src/shared/lib/clientEnv.ts`](../src/shared/lib/clientEnv.ts) on the client. These modules use Zod to validate required values at runtime and throw when they are missing.
 
 ## Required Variables
 
 - `NEXT_PUBLIC_SUPABASE_URL` – URL of your Supabase project.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` – public anon key for client access.
-- `GEOAPIFY_KEY` – API key for Geoapify requests.
+- `NEXT_PUBLIC_GEOAPIFY_KEY` – API key for Geoapify requests.
 - `NODE_ENV` – environment name (defaults to `development`).
 
 These values configure:
