@@ -4,6 +4,7 @@
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
 import { clientEnv } from './clientEnv';
+import { enrichWithWikimediaImages } from './wikimedia';
 
 /* Types */
 type GeoapifyFeature = {
@@ -117,7 +118,9 @@ export async function fetchGeoapifyCatalog(
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
-  const activities = data.features.map((f) => mapGeoapifyFeature(f));
+  const activities = await enrichWithWikimediaImages(
+    data.features.map((f) => mapGeoapifyFeature(f))
+  );
 
   return { activities };
 }
@@ -146,7 +149,9 @@ export async function fetchGeoapifySearch(
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
-  const activities = data.features.map((f) => mapGeoapifyFeature(f, text));
+  const activities = await enrichWithWikimediaImages(
+    data.features.map((f) => mapGeoapifyFeature(f, text))
+  );
 
   return { activities };
 }
