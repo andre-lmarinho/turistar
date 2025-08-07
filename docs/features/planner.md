@@ -423,7 +423,7 @@ import { PlannerControls } from '@/features/planner';
 - **Responsibility:** Reorders an activity within a day.
 
 ### normalizeAmount
-- **Location:** [`src/features/planner/services/normalizeAmount.ts`](../../src/features/planner/services/normalizeAmount.ts)
+- **Location:** [`src/shared/utils/normalizeAmount.ts`](../../src/shared/utils/normalizeAmount.ts)
 - **Responsibility:** Parses currency strings into numbers.
 
 ### syncDaysWithTripRange

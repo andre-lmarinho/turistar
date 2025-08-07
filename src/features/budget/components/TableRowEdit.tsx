@@ -5,7 +5,7 @@ import React, { useId } from 'react';
 import { Check, X, DollarSign } from 'lucide-react';
 import { CATEGORIES, CategoryKey } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
-import { normalizeAmount } from '@/features/planner';
+import { normalizeAmount } from '@/shared/utils';
 import { useBudgetContext } from '@/features/budget';
 import { Button, Input } from '@/shared/ui';
 

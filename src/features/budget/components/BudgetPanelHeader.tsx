@@ -6,7 +6,7 @@ import { Info, DollarSign } from 'lucide-react';
 import { CATEGORIES, BUDGET_INFO } from '@/shared/constants';
 import { CategoryProgressBar, useBudgetContext } from '@/features/budget';
 import { InfoPopup, Input } from '@/shared/ui';
-import { normalizeAmount } from '@/features/planner';
+import { normalizeAmount } from '@/shared/utils';
 
 interface SummaryValueProps {
   amount: number;

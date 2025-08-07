@@ -1,4 +1,4 @@
-// src/features/planner/services/normalizeAmount.ts
+// src/shared/utils/normalizeAmount.ts
 
 /**
  * Parses a currency string into a numeric value.

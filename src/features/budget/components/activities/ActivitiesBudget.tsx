@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 
 import { Input, CloseButton, Modal } from '@/shared/ui';
 import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
-import { normalizeAmount } from '@/features/planner';
+import { normalizeAmount } from '@/shared/utils';
 import type { DayPlan } from '@/shared/types';
 
 interface ActivitiesBudgetProps {
