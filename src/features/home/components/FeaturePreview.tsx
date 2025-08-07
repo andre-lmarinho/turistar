@@ -1,4 +1,4 @@
-// src/components/home/FeaturePreview.tsx
+// src/features/home/components/FeaturePreview.tsx
 'use client';
 
 import React from 'react';

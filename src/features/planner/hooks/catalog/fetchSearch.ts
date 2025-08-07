@@ -1,4 +1,4 @@
-// src/hooks/fetchSearch.ts
+// src/features/planner/hooks/catalog/fetchSearch.ts
 import type { CatalogActivity } from '@/shared/types';
 import { fetchJson } from '@/shared/lib';
 

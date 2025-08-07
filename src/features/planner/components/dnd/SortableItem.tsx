@@ -1,4 +1,4 @@
-// src/components/planner/dnd/SortableItem.tsx
+// src/features/planner/components/dnd/SortableItem.tsx
 'use client';
 
 import React from 'react';

@@ -1,4 +1,4 @@
-// src/constants/onboarding.ts
+// src/shared/constants/onboarding.ts
 
 export interface OnboardingStep {
   title: string;

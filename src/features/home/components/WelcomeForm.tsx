@@ -1,4 +1,4 @@
-// src/components/home/WelcomeForm.tsx
+// src/features/home/components/WelcomeForm.tsx
 'use client';
 
 import { useState } from 'react';

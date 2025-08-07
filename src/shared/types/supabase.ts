@@ -1,4 +1,4 @@
-// src/types/supabase.ts
+// src/shared/types/supabase.ts
 // Generated via `supabase gen types`
 
 export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];

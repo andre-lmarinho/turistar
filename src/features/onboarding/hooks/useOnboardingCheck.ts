@@ -1,4 +1,4 @@
-// src/hooks/useOnboardingCheck.ts
+// src/features/onboarding/hooks/useOnboardingCheck.ts
 'use client';
 
 import { useState, useEffect } from 'react';

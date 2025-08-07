@@ -1,4 +1,4 @@
-// src/utils/index.ts
+// src/features/planner/services/index.ts
 
 export * from './buildDaysFromInspirationData';
 export * from './formatDayPlan';

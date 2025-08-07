@@ -1,4 +1,4 @@
-// src/hooks/useDebounce.ts
+// src/shared/hooks/useDebounce.ts
 'use client';
 
 import { useEffect, useState } from 'react';

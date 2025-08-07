@@ -1,4 +1,4 @@
-// src/components/planner/onboarding/OnboardingCarousel.tsx
+// src/features/onboarding/components/OnboardingCarousel.tsx
 'use client';
 
 import React, { useState, useRef } from 'react';

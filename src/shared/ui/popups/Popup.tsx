@@ -1,4 +1,4 @@
-// src/components/ui/popups/Popup.tsx
+// src/shared/ui/popups/Popup.tsx
 'use client';
 
 import React, { useRef } from 'react';

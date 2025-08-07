@@ -1,4 +1,4 @@
-// src/components/planner/modal/index.ts
+// src/features/planner/components/modal/index.ts
 
 export { default as ActivityModal } from './ActivityModal';
 export { default as ActivityModalForm } from './ActivityModalForm';

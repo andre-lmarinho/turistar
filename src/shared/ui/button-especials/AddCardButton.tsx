@@ -1,4 +1,4 @@
-// src/components/ui/button-especials/AddCardButton.tsx
+// src/shared/ui/button-especials/AddCardButton.tsx
 'use client';
 
 import React from 'react';

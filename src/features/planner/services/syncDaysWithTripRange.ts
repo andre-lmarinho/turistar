@@ -1,4 +1,4 @@
-// src/utils/syncDaysWithTripRange.ts
+// src/features/planner/services/syncDaysWithTripRange.ts
 
 import type { DayPlan } from '@/shared/types';
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';

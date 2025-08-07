@@ -1,4 +1,4 @@
-// src/components/home/InspirationLink.tsx
+// src/features/home/components/InspirationLink.tsx
 'use client';
 
 import Link from 'next/link';

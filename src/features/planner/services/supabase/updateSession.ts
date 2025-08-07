@@ -1,4 +1,4 @@
-// src/utils/supabase/updateSession.ts
+// src/features/planner/services/supabase/updateSession.ts
 
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';

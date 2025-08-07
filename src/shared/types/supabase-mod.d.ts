@@ -1,4 +1,4 @@
-// src/types/supabase-mod.d.ts
+// src/shared/types/supabase-mod.d.ts
 
 // Supabase core
 declare module '@supabase/supabase-js' {

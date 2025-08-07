@@ -4,7 +4,7 @@ This document outlines how planner data moves through the application.
 
 ## Initial Days
 
-- `buildInitialDays` in `src/utils/initialDays.ts` creates the `DayPlan[]` used when the planner loads.
+  - `buildInitialDays` in `src/features/planner/services/initialDays.ts` creates the `DayPlan[]` used when the planner loads.
 - Each trip date becomes a day object with a unique `id`, a formatted label and an empty `activities` list.
 
 ## Hooks

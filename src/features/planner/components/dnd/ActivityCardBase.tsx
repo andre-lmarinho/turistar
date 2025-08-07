@@ -1,4 +1,4 @@
-// src/components/planner/dnd/ActivityCardBase.tsx
+// src/features/planner/components/dnd/ActivityCardBase.tsx
 'use client';
 
 import React from 'react';

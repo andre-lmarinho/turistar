@@ -1,4 +1,4 @@
-// src/components/planner/modal/ActivityModal.tsx
+// src/features/planner/components/modal/ActivityModal.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

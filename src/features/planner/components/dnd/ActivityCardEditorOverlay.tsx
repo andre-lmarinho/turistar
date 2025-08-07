@@ -1,4 +1,4 @@
-// src/components/planner/dnd/ActivityCardEditorOverlay.tsx
+// src/features/planner/components/dnd/ActivityCardEditorOverlay.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

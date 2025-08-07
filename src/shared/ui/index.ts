@@ -1,4 +1,4 @@
-// src/components/ui/index.ts
+// src/shared/ui/index.ts
 
 export { Button, buttonVariants } from './button';
 export { Input, inputVariants } from './input';

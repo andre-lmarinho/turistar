@@ -1,4 +1,4 @@
-// src/components/ui/calendar.tsx
+// src/shared/ui/calendar.tsx
 'use client';
 
 import * as React from 'react';

@@ -1,4 +1,4 @@
-// src/components/planner/index.ts
+// src/features/planner/components/index.ts
 
 export * from './catalog';
 export * from './dnd';

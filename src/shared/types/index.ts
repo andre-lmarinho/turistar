@@ -1,4 +1,4 @@
-// src/types/index.ts
+// src/shared/types/index.ts
 
 /**
  * A single activity/item in the catalog.

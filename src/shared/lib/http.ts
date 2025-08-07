@@ -1,4 +1,4 @@
-// src/lib/http.ts
+// src/shared/lib/http.ts
 
 /**
  * Performs a GET request to an API endpoint and parses the JSON response.

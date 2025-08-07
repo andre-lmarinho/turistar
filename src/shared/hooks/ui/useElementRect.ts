@@ -1,4 +1,4 @@
-// src/hooks/useElementRect.ts
+// src/shared/hooks/ui/useElementRect.ts
 
 import { useState, useEffect, RefObject } from 'react';
 

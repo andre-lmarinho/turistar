@@ -1,4 +1,4 @@
-// src/components/planner/dnd/index.ts
+// src/features/planner/components/dnd/index.ts
 
 export { default as SortableItem } from './SortableItem';
 export { default as DayColumn } from './DayColumn';

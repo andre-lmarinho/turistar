@@ -1,4 +1,4 @@
-// src/components/planner/PlannerControls.tsx
+// src/features/planner/components/PlannerControls.tsx
 'use client';
 
 import React from 'react';

@@ -1,4 +1,4 @@
-// src/hooks/usePlanParams.ts
+// src/features/planner/hooks/usePlanParams.ts
 'use client';
 
 import { useSearchParams } from 'next/navigation';

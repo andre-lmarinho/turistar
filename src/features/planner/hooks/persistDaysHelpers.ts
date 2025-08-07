@@ -1,4 +1,4 @@
-// src/hooks/planner/persistDaysHelpers.ts
+// src/features/planner/hooks/persistDaysHelpers.ts
 
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';

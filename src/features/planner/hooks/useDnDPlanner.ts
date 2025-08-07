@@ -1,4 +1,4 @@
-// src/hooks/useDnDPlanner.ts
+// src/features/planner/hooks/useDnDPlanner.ts
 'use client';
 
 import type { DayPlan } from '@/shared/types';

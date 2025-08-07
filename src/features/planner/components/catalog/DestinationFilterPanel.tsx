@@ -1,4 +1,4 @@
-// src/components/planner/catalog/DestinationFilterPanel.tsx
+// src/features/planner/components/catalog/DestinationFilterPanel.tsx
 'use client';
 
 import React, { useRef, useEffect, useState, useMemo } from 'react';

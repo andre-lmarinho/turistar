@@ -1,4 +1,4 @@
-// src/hooks/fetchAutocomplete.ts
+// src/features/planner/hooks/catalog/fetchAutocomplete.ts
 
 import type { AutocompletePlace } from '@/shared/types';
 import { fetchJson } from '@/shared/lib';

@@ -1,4 +1,4 @@
-// src/components/ui/button-icons/NavCircleButton.tsx
+// src/shared/ui/button-icons/NavCircleButton.tsx
 'use client';
 
 import React from 'react';

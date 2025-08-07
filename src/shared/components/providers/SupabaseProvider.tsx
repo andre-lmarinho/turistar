@@ -1,4 +1,4 @@
-// src/components/providers/SupabaseProvider.tsx
+// src/shared/components/providers/SupabaseProvider.tsx
 'use client';
 
 import { createContext, useContext, useMemo } from 'react';

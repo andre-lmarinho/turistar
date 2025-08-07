@@ -1,4 +1,4 @@
-// src/components/ui/input.tsx
+// src/shared/ui/input.tsx
 'use client';
 
 import React, { useId } from 'react';

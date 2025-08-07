@@ -1,4 +1,4 @@
-// src/components/ui/button-icons/index.ts
+// src/shared/ui/button-icons/index.ts
 
 export { default as CardColorButton } from './CardColorButton';
 export { default as CloseButton } from './CloseButton';

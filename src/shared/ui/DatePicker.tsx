@@ -1,4 +1,4 @@
-// src/components/ui/DatePicker.tsx
+// src/shared/ui/DatePicker.tsx
 
 import * as React from 'react';
 import { format } from 'date-fns';

@@ -1,4 +1,4 @@
-// src/components/TooltipKeyHint.tsx
+// src/shared/ui/TooltipKeyHint.tsx
 'use client';
 
 import React from 'react';
