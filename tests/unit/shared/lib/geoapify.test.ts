@@ -5,6 +5,71 @@ const originalFetch = global.fetch;
 const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
 let fetchGeoapifyCatalog: typeof import('@/shared/lib/geoapify').fetchGeoapifyCatalog;
+let mapGeoapifyFeature: typeof import('@/shared/lib/geoapify').mapGeoapifyFeature;
+
+describe('mapGeoapifyFeature', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    ({ mapGeoapifyFeature } = await import('@/shared/lib/geoapify'));
+  });
+
+  it('uses the provided name even if generic', () => {
+    const feature: Parameters<typeof mapGeoapifyFeature>[0] = {
+      properties: {
+        place_id: 1,
+        name: 'building',
+        lat: 1,
+        lon: 2,
+        categories: ['tourism.museum'],
+      },
+    };
+
+    const result = mapGeoapifyFeature(feature);
+
+    expect(result.name).toBe('building');
+  });
+
+  it('finds description or falls back to address_line2', () => {
+    const withDesc: Parameters<typeof mapGeoapifyFeature>[0] = {
+      properties: {
+        place_id: 1,
+        name: 'Place',
+        lat: 1,
+        lon: 2,
+        description: 'A spot',
+        address_line2: 'Addr',
+        categories: ['tourism.museum'],
+      },
+    };
+
+    const nestedDesc = {
+      properties: {
+        place_id: 2,
+        name: 'Place',
+        lat: 1,
+        lon: 2,
+        details: { description: 'Nested' },
+        address_line2: 'Addr',
+        categories: ['tourism.museum'],
+      },
+    } as unknown as Parameters<typeof mapGeoapifyFeature>[0];
+
+    const noDesc: Parameters<typeof mapGeoapifyFeature>[0] = {
+      properties: {
+        place_id: 3,
+        name: 'Place',
+        lat: 1,
+        lon: 2,
+        address_line2: 'Addr',
+        categories: ['tourism.museum'],
+      },
+    };
+
+    expect(mapGeoapifyFeature(withDesc).description).toBe('A spot');
+    expect(mapGeoapifyFeature(nestedDesc).description).toBe('Nested');
+    expect(mapGeoapifyFeature(noDesc).description).toBe('Addr');
+  });
+});
 
 describe('fetchGeoapifyAutocomplete', () => {
   beforeEach(async () => {
@@ -146,5 +211,38 @@ describe('fetchGeoapifyCatalog images', () => {
 
     expect(activities[0].imageUrl).toBeUndefined();
     expect(global.fetch).toHaveBeenCalledTimes(4);
+  });
+
+  it('filters out features missing a name', async () => {
+    const placesResp = {
+      features: [
+        {
+          properties: {
+            place_id: 1,
+            lat: 1,
+            lon: 2,
+            categories: ['tourism.museum'],
+          },
+        },
+        {
+          properties: {
+            place_id: 2,
+            name: 'Louvre',
+            lat: 1,
+            lon: 2,
+            categories: ['tourism.museum'],
+          },
+        },
+      ],
+    };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp });
+
+    const { activities } = await fetchGeoapifyCatalog('paris');
+
+    expect(activities).toHaveLength(1);
+    expect(activities[0].name).toBe('Louvre');
   });
 });

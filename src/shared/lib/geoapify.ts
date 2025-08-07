@@ -19,6 +19,7 @@ type GeoapifyFeature = {
     distance?: number;
     image?: string;
     description?: string;
+    address_line2?: string;
     result_type?: string;
   };
 };
@@ -51,16 +52,34 @@ export function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
 }
 
-export function mapGeoapifyFeature(f: GeoapifyFeature, fallbackName?: string): CatalogActivity {
+function findDescription(obj: unknown): string | undefined {
+  if (!obj || typeof obj !== 'object') return undefined;
+  if ('description' in obj && typeof (obj as { description: unknown }).description === 'string') {
+    return (obj as { description: string }).description;
+  }
+  for (const value of Object.values(obj)) {
+    if (typeof value === 'object') {
+      const found = findDescription(value);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
+export function mapGeoapifyFeature(f: GeoapifyFeature): CatalogActivity {
   const p = f.properties;
   const category = p.categories?.[0] ?? 'sight';
-  const categoryLabel = category.split('.').pop()?.replace(/_/g, ' ') ?? 'Point of interest';
+  const name = p.name?.trim();
+  if (!name) {
+    throw new Error('Geoapify feature is missing a name');
+  }
+  const description = findDescription(p) ?? p.address_line2;
 
   return {
     id: String(p.place_id),
-    name: p.name ?? categoryLabel ?? fallbackName ?? 'Point of interest',
+    name,
     address: p.formatted,
-    description: p.description,
+    description,
     category,
     rating: p.rank?.popularity,
     latitude: p.lat,
@@ -118,8 +137,9 @@ export async function fetchGeoapifyCatalog(
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
+  const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
   const activities = await enrichWithWikimediaImages(
-    data.features.map((f) => mapGeoapifyFeature(f))
+    featuresWithName.map((f) => mapGeoapifyFeature(f))
   );
 
   return { activities };
@@ -149,8 +169,9 @@ export async function fetchGeoapifySearch(
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
+  const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
   const activities = await enrichWithWikimediaImages(
-    data.features.map((f) => mapGeoapifyFeature(f, text))
+    featuresWithName.map((f) => mapGeoapifyFeature(f))
   );
 
   return { activities };
