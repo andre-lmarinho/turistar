@@ -5,9 +5,7 @@ export {
   BudgetPanelHeader,
   CategoryProgressBar,
   ExpenseTable,
-  TableRowEdit,
-  TableRowEntry,
-  TableRowNew,
+  BudgetRow,
   ActivitiesBudgetPopup,
 } from './components';
 

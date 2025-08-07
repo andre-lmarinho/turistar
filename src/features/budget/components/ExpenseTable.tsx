@@ -5,11 +5,11 @@ import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
-import { TableRowEdit, TableRowEntry, TableRowNew, useBudgetContext } from '@/features/budget';
+import { BudgetRow, useBudgetContext } from '@/features/budget';
 import { InfoPopup } from '@/shared/ui';
 
 export default function ExpenseTable() {
-  const { entries, amount, handleAdd, handleDeleteEntry } = useBudgetContext();
+  const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
   const [amountInput, setAmountInput] = useState(amount ? String(amount) : '');
@@ -78,18 +78,24 @@ export default function ExpenseTable() {
       <tbody role="rowgroup">
         {entries.map((e, idx) =>
           editIndex === idx && editEntry ? (
-            <TableRowEdit
+            <BudgetRow
               key={idx}
+              mode="edit"
               index={idx}
               editEntry={editEntry}
               setEditEntry={setEditEntry}
               editAmountInput={editAmountInput}
               setEditAmountInput={setEditAmountInput}
+              onSave={(index, entry) => {
+                handleUpdateEntry(index, entry);
+                cancelEdit();
+              }}
               onCancel={cancelEdit}
             />
           ) : (
-            <TableRowEntry
+            <BudgetRow
               key={idx}
+              mode="view"
               index={idx}
               entry={e}
               onEdit={startEdit}
@@ -97,7 +103,12 @@ export default function ExpenseTable() {
             />
           )
         )}
-        <TableRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
+        <BudgetRow
+          mode="new"
+          amountInput={amountInput}
+          setAmountInput={setAmountInput}
+          onAdd={handleAdd}
+        />
       </tbody>
     </table>
   );
