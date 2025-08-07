@@ -1,4 +1,4 @@
 // src/features/budget/hooks/index.ts
 
-export * from './BudgetContext';
-export * from './useBudgetSupabase';
+export { BudgetContext, BudgetProvider, useBudgetContext } from './BudgetContext';
+export { useBudget, useBudgetSupabase } from './useBudgetSupabase';

@@ -1,10 +1,10 @@
 // src/features/planner/services/index.ts
 
-export * from './buildDaysFromInspirationData';
-export * from './formatDayPlan';
-export * from './initialDays';
-export * from './cloneDays';
-export * from './moveActivityToDay';
-export * from './moveActivityPosition';
-export * from './normalizeAmount';
-export * from './syncDaysWithTripRange';
+export { buildDaysFromInspirationData, type InspirationData } from './buildDaysFromInspirationData';
+export { formatDayPlan } from './formatDayPlan';
+export { buildInitialDays } from './initialDays';
+export { cloneDays } from './cloneDays';
+export { moveActivityToDay } from './moveActivityToDay';
+export { moveActivityPosition } from './moveActivityPosition';
+export { normalizeAmount } from './normalizeAmount';
+export { syncDaysWithTripRange } from './syncDaysWithTripRange';

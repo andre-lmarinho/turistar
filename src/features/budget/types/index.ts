@@ -1,3 +1,3 @@
 // src/features/budget/types/index.ts
 
-export * from './budget';
+export type { Entry, CategoryKey } from './budget';
