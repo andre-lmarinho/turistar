@@ -21,5 +21,5 @@ For deeper feature details see [home](features/home.md), [planner](features/plan
 
 - **Next.js App Router** – Provides file based routing and server actions. Planner routes live under `/planner` while API helpers reside in `src/server`.
 - **Drag‑and‑drop with DnD Kit** – Activities move via sensors and sortable logic encapsulated in hooks within `src/features/planner`.
-- **Geoapify Integration** – Catalog data is fetched from Geoapify through `src/server/api/catalog` using the `GEOAPIFY_KEY`.
+- **Geoapify Integration** – Catalog data is fetched from Geoapify through `src/server/api/catalog` using the `NEXT_PUBLIC_GEOAPIFY_KEY`.
 - **State management** – Planner and budget data live in feature contexts and synchronize to Supabase through shared hooks.
