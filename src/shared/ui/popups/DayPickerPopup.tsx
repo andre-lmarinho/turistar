@@ -1,4 +1,4 @@
-// src/components/ui/popups/DayPickerPopup.tsx
+// src/shared/ui/popups/DayPickerPopup.tsx
 'use client';
 
 import React from 'react';

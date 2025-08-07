@@ -1,4 +1,4 @@
-// src/utils/moveActivityToDay.ts
+// src/features/planner/services/moveActivityToDay.ts
 
 import type { DayPlan } from '@/shared/types';
 import { cloneDays } from '@/features/planner/services';

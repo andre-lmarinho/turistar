@@ -1,4 +1,4 @@
-// src/components/planner/dnd/ActivityCardEditing.tsx
+// src/features/planner/components/dnd/ActivityCardEditing.tsx
 'use client';
 
 import React, { useState, useRef } from 'react';

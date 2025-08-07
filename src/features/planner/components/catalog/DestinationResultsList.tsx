@@ -1,4 +1,4 @@
-// src/components/planner/catalog/DestinationResultsList.tsx
+// src/features/planner/components/catalog/DestinationResultsList.tsx
 'use client';
 
 import React from 'react';

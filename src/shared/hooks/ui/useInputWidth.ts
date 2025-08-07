@@ -1,4 +1,4 @@
-// src/hooks/useInputWidth.ts
+// src/shared/hooks/ui/useInputWidth.ts
 'use client';
 
 import { useRef, useLayoutEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-// src/utils/initialDays.ts
+// src/features/planner/services/initialDays.ts
 
 import { formatDayPlan } from '@/features/planner/services';
 import type { DayPlan } from '@/shared/types';

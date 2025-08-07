@@ -1,4 +1,4 @@
-// src/components/planner/catalog/DestinationCard.tsx
+// src/features/planner/components/catalog/DestinationCard.tsx
 'use client';
 
 import React, { useState } from 'react';

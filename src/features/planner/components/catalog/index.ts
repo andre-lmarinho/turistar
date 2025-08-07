@@ -1,4 +1,4 @@
-// src/components/planner/catalog/index.ts
+// src/features/planner/components/catalog/index.ts
 
 export { default as CategoryFilterBar } from './CategoryFilterBar';
 export { default as DestinationCard } from './DestinationCard';

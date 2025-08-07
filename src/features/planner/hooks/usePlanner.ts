@@ -1,4 +1,4 @@
-// src/hooks/usePlanner.ts
+// src/features/planner/hooks/usePlanner.ts
 'use client';
 
 import { useMemo } from 'react';

@@ -1,4 +1,4 @@
-// src/constants/index.ts
+// src/shared/constants/index.ts
 
 export * from './colors';
 export * from './ui';

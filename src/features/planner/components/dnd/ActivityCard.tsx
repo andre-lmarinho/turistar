@@ -1,4 +1,4 @@
-// src/components/planner/dnd/ActivityCard.tsx
+// src/features/planner/components/dnd/ActivityCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

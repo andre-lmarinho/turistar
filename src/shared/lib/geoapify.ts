@@ -1,4 +1,4 @@
-// src/lib/geoapify.ts
+// src/shared/lib/geoapify.ts
 
 // Helpers for fetching POIs from the Geoapify API.
 

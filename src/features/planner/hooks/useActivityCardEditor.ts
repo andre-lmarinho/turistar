@@ -1,4 +1,4 @@
-// src/hooks/useActivityCardEditor.ts
+// src/features/planner/hooks/useActivityCardEditor.ts
 
 import { useState, useRef } from 'react';
 import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';

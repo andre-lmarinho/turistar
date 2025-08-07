@@ -1,4 +1,4 @@
-// src/constants/colors.ts
+// src/shared/constants/colors.ts
 
 /**
  * Index of the default new card color

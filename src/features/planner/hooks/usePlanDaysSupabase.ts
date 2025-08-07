@@ -1,4 +1,4 @@
-// src/hooks/planner/usePlanDaysSupabase.ts
+// src/features/planner/hooks/usePlanDaysSupabase.ts
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';

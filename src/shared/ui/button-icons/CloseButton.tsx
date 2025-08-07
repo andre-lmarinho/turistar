@@ -1,4 +1,4 @@
-// src/components/ui/button-icons/CloseButton.tsx
+// src/shared/ui/button-icons/CloseButton.tsx
 'use client';
 
 import React from 'react';

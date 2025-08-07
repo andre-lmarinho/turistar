@@ -1,4 +1,4 @@
-// src/hooks/useCatalog.ts
+// src/features/planner/hooks/catalog/useCatalog.ts
 'use client';
 
 import { useMemo } from 'react';

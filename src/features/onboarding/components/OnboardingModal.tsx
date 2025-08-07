@@ -1,4 +1,4 @@
-// src/components/planner/onboarding/OnboardingModal.tsx
+// src/features/onboarding/components/OnboardingModal.tsx
 'use client';
 
 import React from 'react';

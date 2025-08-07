@@ -1,4 +1,4 @@
-// src/components/planner/dnd/DayColumn.tsx
+// src/features/planner/components/dnd/DayColumn.tsx
 'use client';
 
 import React, { useEffect, useRef } from 'react';

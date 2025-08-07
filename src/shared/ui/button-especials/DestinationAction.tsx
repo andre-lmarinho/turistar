@@ -1,4 +1,4 @@
-// src/components/ui/button-especials/DestinationAction.tsx
+// src/shared/ui/button-especials/DestinationAction.tsx
 'use client';
 
 import React from 'react';

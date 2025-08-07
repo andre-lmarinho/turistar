@@ -1,4 +1,4 @@
-// src/components/home/DestinationInput.tsx
+// src/features/home/components/DestinationInput.tsx
 'use client';
 
 import React from 'react';

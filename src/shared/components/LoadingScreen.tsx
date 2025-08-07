@@ -1,4 +1,4 @@
-// src/components/LoadingScreen.tsx
+// src/shared/components/LoadingScreen.tsx
 'use client';
 
 import React from 'react';

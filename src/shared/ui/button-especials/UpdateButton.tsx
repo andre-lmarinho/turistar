@@ -1,4 +1,4 @@
-// src/components/ui/button-especials/UpdateButton.tsx
+// src/shared/ui/button-especials/UpdateButton.tsx
 'use client';
 
 import React from 'react';

@@ -1,4 +1,4 @@
-// src/components/planner/modal/ActivityModalForm.tsx
+// src/features/planner/components/modal/ActivityModalForm.tsx
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';

@@ -1,4 +1,4 @@
-// src/components/planner/catalog/DestinationCardGrid.tsx
+// src/features/planner/components/catalog/DestinationCardGrid.tsx
 'use client';
 
 import React from 'react';

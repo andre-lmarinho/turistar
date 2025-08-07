@@ -1,4 +1,4 @@
-// src/utils/buildDaysFromInspirationData.ts
+// src/features/planner/services/buildDaysFromInspirationData.ts
 
 import { formatDayPlan } from '@/features/planner/services';
 import type { Activity, DayPlan } from '@/shared/types';

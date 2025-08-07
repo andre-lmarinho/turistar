@@ -1,4 +1,4 @@
-// src/lib/index.ts
+// src/shared/lib/index.ts
 
 export * from './geoapify';
 export * from './http';

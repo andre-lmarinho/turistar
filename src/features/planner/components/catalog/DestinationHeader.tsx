@@ -1,4 +1,4 @@
-// src/components/planner/catalog/DestinationHeader.tsx
+// src/features/planner/components/catalog/DestinationHeader.tsx
 'use client';
 
 import React from 'react';

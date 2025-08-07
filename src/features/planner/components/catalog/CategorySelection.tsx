@@ -1,4 +1,4 @@
-// src/components/planner/catalog/CategorySelection.tsx
+// src/features/planner/components/catalog/CategorySelection.tsx
 'use client';
 
 import React from 'react';

@@ -1,4 +1,4 @@
-// src/hooks/useCatalogActivities.ts
+// src/features/planner/hooks/catalog/useCatalogActivities.ts
 'use client';
 
 import { useEffect, useState } from 'react';

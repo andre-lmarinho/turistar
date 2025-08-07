@@ -1,4 +1,4 @@
-// src/components/planner/catalog/CategoryFilterBar.tsx
+// src/features/planner/components/catalog/CategoryFilterBar.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';

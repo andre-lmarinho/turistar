@@ -1,4 +1,4 @@
-// src/utils/formatDayPlan.ts
+// src/features/planner/services/formatDayPlan.ts
 
 import { formatISO, format } from 'date-fns';
 import type { DayPlan } from '@/shared/types';

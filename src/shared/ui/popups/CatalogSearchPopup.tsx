@@ -1,4 +1,4 @@
-// src/components/ui/popups/CatalogSearchPopup.tsx
+// src/shared/ui/popups/CatalogSearchPopup.tsx
 'use client';
 
 import React from 'react';

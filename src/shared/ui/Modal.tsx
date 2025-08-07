@@ -1,4 +1,4 @@
-// src/components/ui/Modal.tsx
+// src/shared/ui/Modal.tsx
 'use client';
 
 import React, { useRef } from 'react';

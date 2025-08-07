@@ -1,4 +1,4 @@
-// src/hooks/useDestinationAutocomplete.ts
+// src/features/planner/hooks/catalog/useDestinationAutocomplete.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
