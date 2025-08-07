@@ -11,6 +11,6 @@ export {
   ActivitiesBudgetPopup,
 } from './components';
 
-export { BudgetContext, BudgetProvider, useBudgetContext, useBudgetSupabase } from './hooks';
+export { BudgetProvider, useBudgetContext, useBudgetSupabase } from './hooks';
 
 export type { Entry, CategoryKey } from './types';

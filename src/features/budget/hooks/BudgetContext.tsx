@@ -1,10 +1,13 @@
 // src/features/budget/hooks/BudgetContext.tsx
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { createStrictContext } from '@/shared/context/createStrictContext';
 import { useBudget } from './useBudgetSupabase';
 
-export const BudgetContext = createContext<ReturnType<typeof useBudget> | null>(null);
+const [BudgetContextProvider, useBudgetContext] = createStrictContext<ReturnType<typeof useBudget>>(
+  'useBudgetContext must be inside BudgetProvider'
+);
 
 export function BudgetProvider({
   children,
@@ -16,11 +19,7 @@ export function BudgetProvider({
   activitiesTotal: number;
 }) {
   const value = useBudget(planId, activitiesTotal);
-  return <BudgetContext.Provider value={value}>{children}</BudgetContext.Provider>;
+  return <BudgetContextProvider value={value}>{children}</BudgetContextProvider>;
 }
 
-export function useBudgetContext() {
-  const ctx = useContext(BudgetContext);
-  if (!ctx) throw new Error('useBudgetContext must be inside BudgetProvider');
-  return ctx;
-}
+export { useBudgetContext };

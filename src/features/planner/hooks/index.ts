@@ -24,4 +24,4 @@ export {
   type CatalogApiResponse,
 } from './catalog';
 
-export { PlannerContext, PlannerProvider, usePlannerContext } from './PlannerContext';
+export { PlannerProvider, usePlannerContext } from './PlannerContext';
