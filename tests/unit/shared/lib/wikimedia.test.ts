@@ -1,0 +1,49 @@
+// tests/unit/shared/lib/wikimedia.test.ts
+import { vi, type Mock } from 'vitest';
+
+const originalFetch = global.fetch;
+let fetchWikimediaImage: typeof import('@/shared/lib/wikimedia').fetchWikimediaImage;
+
+describe('fetchWikimediaImage', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    ({ fetchWikimediaImage } = await import('@/shared/lib/wikimedia'));
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  it('returns image for exact title match', async () => {
+    const wikiResp = { query: { pages: { 1: { thumbnail: { source: 'exact.jpg' } } } } };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => wikiResp } as unknown as Response);
+
+    const url = await fetchWikimediaImage('Eiffel Tower');
+
+    expect(url).toBe('exact.jpg');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    const fetchMock = global.fetch as unknown as Mock;
+    const calledUrl = fetchMock.mock.calls[0][0] as string;
+    expect(calledUrl).toContain('titles=Eiffel+Tower');
+  });
+
+  it('falls back to search when title has no image', async () => {
+    const missingResp = { query: { pages: { '-1': { missing: true } } } };
+    const wikiResp = { query: { pages: { a: { thumbnail: { source: 'search.jpg' } } } } };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => missingResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp } as unknown as Response);
+
+    const url = await fetchWikimediaImage('Some Place');
+
+    expect(url).toBe('search.jpg');
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    const fetchMock = global.fetch as unknown as Mock;
+    const [firstUrl, secondUrl] = fetchMock.mock.calls.map((c) => c[0] as string);
+    expect(firstUrl).toContain('titles=Some+Place');
+    expect(secondUrl).toContain('gsrsearch=intitle%3ASome+Place');
+  });
+});
