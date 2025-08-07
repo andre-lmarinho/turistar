@@ -37,6 +37,97 @@ interface NewProps {
 
 export type BudgetRowProps = ViewProps | EditProps | NewProps;
 
+// Common table cells -------------------------------------------------------
+interface DescriptionCellProps {
+  id: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoFocus?: boolean;
+  placeholder?: string;
+}
+
+function DescriptionCell({ id, value, onChange, autoFocus, placeholder }: DescriptionCellProps) {
+  return (
+    <td role="gridcell" className="p-2">
+      <label htmlFor={id} className="sr-only">
+        Description
+      </label>
+      <input
+        id={id}
+        name="description"
+        value={value}
+        autoComplete="off"
+        autoFocus={autoFocus}
+        placeholder={placeholder}
+        onChange={onChange}
+        aria-label="Description"
+        className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
+      />
+    </td>
+  );
+}
+
+interface CategoryCellProps {
+  id: string;
+  value: CategoryKey;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+function CategoryCell({ id, value, onChange }: CategoryCellProps) {
+  return (
+    <td role="gridcell" className="p-2">
+      <label htmlFor={id} className="sr-only">
+        Category
+      </label>
+      <select
+        id={id}
+        name="category"
+        value={value}
+        onChange={onChange}
+        className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
+      >
+        {CATEGORIES.map(({ key, label }) => (
+          <option key={key} value={key}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </td>
+  );
+}
+
+interface AmountCellProps {
+  id: string;
+  value: string;
+  onValueChange: (val: string) => void;
+  onBlur: () => void;
+  placeholder?: string;
+}
+
+function AmountCell({ id, value, onValueChange, onBlur, placeholder }: AmountCellProps) {
+  return (
+    <td role="gridcell" className="p-2 text-right">
+      <label htmlFor={id} className="sr-only">
+        Amount
+      </label>
+      <Input
+        id={id}
+        value={value}
+        onValueChange={onValueChange}
+        onBlur={onBlur}
+        inputSize="default"
+        background="default"
+        inputMode="decimal"
+        autoComplete="off"
+        aria-label="Amount"
+        placeholder={placeholder}
+        icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+        className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
+      />
+    </td>
+  );
+}
+
 export default function BudgetRow(props: BudgetRowProps) {
   const { desc, setDesc, cat, setCat, setAmount } = useBudgetContext();
   const baseId = useId();
@@ -96,75 +187,41 @@ export default function BudgetRow(props: BudgetRowProps) {
     } = props;
     return (
       <tr role="row" className="border-t">
-        <td role="gridcell" className="p-2">
-          <label htmlFor={`edit-description-${baseId}`} className="sr-only">
-            Description
-          </label>
-          <input
-            id={`edit-description-${baseId}`}
-            name="description"
-            value={editEntry.description}
-            autoComplete="off"
-            autoFocus
-            onChange={(ev) =>
-              setEditEntry((prev) => prev && { ...prev, description: ev.target.value })
-            }
-            aria-label="Description"
-            className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          />
-        </td>
-        <td role="gridcell" className="p-2">
-          <label htmlFor={`edit-category-${baseId}`} className="sr-only">
-            Category
-          </label>
-          <select
-            id={`edit-category-${baseId}`}
-            name="category"
-            value={editEntry.category}
-            onChange={(ev) =>
-              setEditEntry(
-                (prev) =>
-                  prev && {
-                    ...prev,
-                    category: ev.target.value as CategoryKey,
-                  }
-              )
-            }
-            className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          >
-            {CATEGORIES.map(({ key, label }) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </td>
-        <td role="gridcell" className="p-2 text-right">
-          <label htmlFor={`edit-amount-${baseId}`} className="sr-only">
-            Amount
-          </label>
-          <Input
-            id={`edit-amount-${baseId}`}
-            value={editAmountInput}
-            onValueChange={setEditAmountInput}
-            onBlur={() =>
-              setEditEntry(
-                (prev) =>
-                  prev && {
-                    ...prev,
-                    amount: normalizeAmount(editAmountInput),
-                  }
-              )
-            }
-            inputSize="default"
-            background="default"
-            inputMode="decimal"
-            autoComplete="off"
-            aria-label="Amount"
-            icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-            className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          />
-        </td>
+        <DescriptionCell
+          id={`edit-description-${baseId}`}
+          value={editEntry.description}
+          onChange={(ev) =>
+            setEditEntry((prev) => prev && { ...prev, description: ev.target.value })
+          }
+          autoFocus
+        />
+        <CategoryCell
+          id={`edit-category-${baseId}`}
+          value={editEntry.category}
+          onChange={(ev) =>
+            setEditEntry(
+              (prev) =>
+                prev && {
+                  ...prev,
+                  category: ev.target.value as CategoryKey,
+                }
+            )
+          }
+        />
+        <AmountCell
+          id={`edit-amount-${baseId}`}
+          value={editAmountInput}
+          onValueChange={setEditAmountInput}
+          onBlur={() =>
+            setEditEntry(
+              (prev) =>
+                prev && {
+                  ...prev,
+                  amount: normalizeAmount(editAmountInput),
+                }
+            )
+          }
+        />
         <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
           <Button
             size="icon"
@@ -195,65 +252,31 @@ export default function BudgetRow(props: BudgetRowProps) {
   const { amountInput, setAmountInput, onAdd } = props;
   return (
     <tr role="row" className="border-t">
-      <td role="gridcell" className="p-2">
-        <label htmlFor={`new-description-${baseId}`} className="sr-only">
-          Description
-        </label>
-        <input
-          id={`new-description-${baseId}`}
-          name="description"
-          value={desc}
-          autoComplete="off"
-          onChange={(e) => setDesc(e.target.value)}
-          placeholder="Description"
-          aria-label="Description"
-          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
-      </td>
-      <td role="gridcell" className="p-2">
-        <label htmlFor={`new-category-${baseId}`} className="sr-only">
-          Category
-        </label>
-        <select
-          id={`new-category-${baseId}`}
-          name="category"
-          value={cat}
-          onChange={(e) => setCat(e.target.value as CategoryKey)}
-          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        >
-          {CATEGORIES.map(({ key, label }) => (
-            <option key={key} value={key}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </td>
-      <td role="gridcell" className="p-2">
-        <label htmlFor={`new-amount-${baseId}`} className="sr-only">
-          Amount
-        </label>
-        <Input
-          id={`new-amount-${baseId}`}
-          value={amountInput}
-          onValueChange={(val) => {
-            setAmountInput(val);
-            setAmount(normalizeAmount(val));
-          }}
-          onBlur={() => {
-            const val = normalizeAmount(amountInput);
-            setAmount(val);
-            setAmountInput(val ? String(val) : '0');
-          }}
-          inputSize="default"
-          background="default"
-          inputMode="decimal"
-          autoComplete="off"
-          placeholder="Amount"
-          aria-label="Amount"
-          icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
-      </td>
+      <DescriptionCell
+        id={`new-description-${baseId}`}
+        value={desc}
+        onChange={(e) => setDesc(e.target.value)}
+        placeholder="Description"
+      />
+      <CategoryCell
+        id={`new-category-${baseId}`}
+        value={cat}
+        onChange={(e) => setCat(e.target.value as CategoryKey)}
+      />
+      <AmountCell
+        id={`new-amount-${baseId}`}
+        value={amountInput}
+        onValueChange={(val) => {
+          setAmountInput(val);
+          setAmount(normalizeAmount(val));
+        }}
+        onBlur={() => {
+          const val = normalizeAmount(amountInput);
+          setAmount(val);
+          setAmountInput(val ? String(val) : '0');
+        }}
+        placeholder="Amount"
+      />
       <td role="gridcell" className="p-2 text-right">
         <Button
           variant="icon"
