@@ -90,6 +90,7 @@ npm run test -- --coverage
 - [Planner Feature](docs/features/planner.md)
 - [Budget Feature](docs/features/budget.md)
 - [Onboarding Feature](docs/features/onboarding.md)
+- [Shared Utilities](docs/shared/utils.md)
 - [Style Guide](docs/STYLE-GUIDE.md)
 - [Accessibility](docs/ACCESSIBILITY.md)
 - [Testing](docs/TESTING.md)

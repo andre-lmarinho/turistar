@@ -53,6 +53,5 @@ export {
   cloneDays,
   moveActivityToDay,
   moveActivityPosition,
-  normalizeAmount,
   syncDaysWithTripRange,
 } from './services';
