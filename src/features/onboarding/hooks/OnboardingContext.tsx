@@ -1,18 +1,17 @@
 // src/features/onboarding/hooks/OnboardingContext.tsx
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { createStrictContext } from '@/shared/context/createStrictContext';
 import { useOnboardingCheck } from './useOnboardingCheck';
 
-export const OnboardingContext = createContext<ReturnType<typeof useOnboardingCheck> | null>(null);
+const [OnboardingContextProvider, useOnboardingContext] = createStrictContext<
+  ReturnType<typeof useOnboardingCheck>
+>('useOnboardingContext must be inside OnboardingProvider');
 
 export function OnboardingProvider({ planId, children }: { planId: string; children: ReactNode }) {
   const value = useOnboardingCheck(planId);
-  return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
+  return <OnboardingContextProvider value={value}>{children}</OnboardingContextProvider>;
 }
 
-export function useOnboardingContext() {
-  const ctx = useContext(OnboardingContext);
-  if (!ctx) throw new Error('useOnboardingContext must be inside OnboardingProvider');
-  return ctx;
-}
+export { useOnboardingContext };

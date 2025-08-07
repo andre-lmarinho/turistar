@@ -40,7 +40,6 @@ export {
   fetchAutocomplete,
   fetchCatalog,
   fetchSearch,
-  PlannerContext,
   PlannerProvider,
   usePlannerContext,
 } from './hooks';

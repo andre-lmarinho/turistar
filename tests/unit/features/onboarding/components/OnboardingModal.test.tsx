@@ -5,14 +5,23 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
 import { ONBOARDING_STEPS } from '@/shared/constants';
 import { vi } from 'vitest';
-import { OnboardingContext } from '@/features/onboarding';
+import { OnboardingProvider } from '@/features/onboarding';
+
+const mockSetShowOnboarding = vi.fn();
+vi.mock('@/features/onboarding/hooks/useOnboardingCheck', () => ({
+  useOnboardingCheck: () => ({ showOnboarding: true, setShowOnboarding: mockSetShowOnboarding }),
+}));
 
 describe('OnboardingModal', () => {
+  beforeEach(() => {
+    mockSetShowOnboarding.mockClear();
+  });
+
   it('renders all steps when open', () => {
     render(
-      <OnboardingContext.Provider value={{ showOnboarding: true, setShowOnboarding: vi.fn() }}>
+      <OnboardingProvider planId="p1">
         <OnboardingModal />
-      </OnboardingContext.Provider>
+      </OnboardingProvider>
     );
     ONBOARDING_STEPS.forEach((step) => {
       expect(screen.getAllByText(step.title).length).toBeGreaterThan(0);
@@ -20,13 +29,12 @@ describe('OnboardingModal', () => {
   });
 
   it('calls onClose when close button clicked', () => {
-    const handleClose = vi.fn();
     render(
-      <OnboardingContext.Provider value={{ showOnboarding: true, setShowOnboarding: handleClose }}>
+      <OnboardingProvider planId="p1">
         <OnboardingModal />
-      </OnboardingContext.Provider>
+      </OnboardingProvider>
     );
     fireEvent.click(screen.getByLabelText('Close'));
-    expect(handleClose).toHaveBeenCalled();
+    expect(mockSetShowOnboarding).toHaveBeenCalled();
   });
 });
