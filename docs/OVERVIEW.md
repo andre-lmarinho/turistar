@@ -29,12 +29,16 @@ The application lets users create and organize trip itineraries, with plan data 
 ## Project Structure
 
 /src
-├─ components/ – React components
-├─ hooks/ – Custom hooks
-├─ lib/ – Shared helpers
-├─ types/ – Shared TypeScript definitions
-└─ utils/ – Planner utilities
+├─ app/ – Next.js routes and API endpoints (see [Routing](ROUTING.md))
+├─ features/ – Feature modules like home, planner, budget and onboarding
+├─ shared/ – Reusable components, hooks, utilities and types
+├─ server/ – Server actions and API handlers
+└─ data/ – Sample itinerary JSON
 /public – Static assets
+
+```ts
+import { PlannerControls } from '@/features/planner';
+```
 
 ## Development
 

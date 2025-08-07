@@ -6,14 +6,11 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 - `/docs`: Project notes and guidelines (see `STATE-DATA-FLOW.md` for how data moves)
 - `/src`: Source code to be analyzed and maintained by AI agents
-  - `/components`: React components that should follow the guidelines in this document
   - `/app`: Next.js app directory with pages and API routes
-  - `/constants`: Shared configuration values
+  - `/features`: Feature modules such as planner, budget and onboarding
+  - `/shared`: Shared UI components, hooks, utilities and types
+  - `/server`: Server actions and API handlers
   - `/data`: Local JSON used for demo itineraries
-  - `/hooks`: Custom React hooks
-  - `/lib`: Shared helper functions
-  - `/types`: TypeScript types
-  - `/utils`: Planner utilities
 - `/public`: Static assets served directly
 
 ## Coding Conventions
@@ -87,8 +84,12 @@ npm run test -- --coverage
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Database Schema](docs/DATABASE.md)
 - [State Data Flow](docs/STATE-DATA-FLOW.md)
-- [Components](docs/COMPONENTS.md)
-- [Hooks](docs/HOOKS.md)
+- [Environment](docs/ENVIRONMENT.md)
+- [Routing](docs/ROUTING.md)
+- [Home Feature](docs/features/home.md)
+- [Planner Feature](docs/features/planner.md)
+- [Budget Feature](docs/features/budget.md)
+- [Onboarding Feature](docs/features/onboarding.md)
 - [Style Guide](docs/STYLE-GUIDE.md)
 - [Accessibility](docs/ACCESSIBILITY.md)
 - [Testing](docs/TESTING.md)
