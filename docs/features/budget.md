@@ -52,37 +52,15 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Interactions:** Add, edit, and remove expense rows
 - **Performance notes:** none
 
-### TableRowEntry
-- **Location:** [`src/features/budget/components/TableRowEntry.tsx`](../../src/features/budget/components/TableRowEntry.tsx)
-- **Responsibility:** Static row showing a single expense.
-- **Props:** `{ entry: BudgetEntry; onEdit: () => void }`
-- **State:** none
-- **External hooks:** none
-- **Side-effects:** none
-- **Accessibility:** Row with descriptive labels
-- **Interactions:** Edit button triggers row editing
-- **Performance notes:** none
-
-### TableRowEdit
-- **Location:** [`src/features/budget/components/TableRowEdit.tsx`](../../src/features/budget/components/TableRowEdit.tsx)
-- **Responsibility:** Row for editing an existing expense.
-- **Props:** `{ entry: BudgetEntry; onSave: (e: BudgetEntry) => void; onCancel: () => void }`
-- **State:** local inputs for category, label and amount
-- **External hooks:** none
-- **Side-effects:** Calls `onSave` with updated values
-- **Accessibility:** Inputs labeled via `aria-labelledby`
-- **Interactions:** Users edit fields then save or cancel
-- **Performance notes:** none
-
-### TableRowNew
-- **Location:** [`src/features/budget/components/TableRowNew.tsx`](../../src/features/budget/components/TableRowNew.tsx)
-- **Responsibility:** Form row for adding a new expense.
-- **Props:** `{ onAdd: (e: BudgetEntry) => void }`
-- **State:** local inputs for new entry
-- **External hooks:** none
-- **Side-effects:** Emits new entry on submit
-- **Accessibility:** Inputs labeled with placeholder text
-- **Interactions:** User fills fields and submits to add
+### BudgetRow
+- **Location:** [`src/features/budget/components/BudgetRow.tsx`](../../src/features/budget/components/BudgetRow.tsx)
+- **Responsibility:** Reusable table row for viewing, editing or creating an expense.
+- **Props:** Mode-specific props such as `entry`, `onEdit`, `onSave`, or `onAdd`.
+- **State:** Form inputs provided via props or context
+- **External hooks:** `useBudgetContext`
+- **Side-effects:** Invokes callbacks to modify budget entries
+- **Accessibility:** Uses table row semantics with labeled inputs
+- **Interactions:** View, edit, add and delete expense entries
 - **Performance notes:** none
 
 ### ActivitiesBudgetPopup
