@@ -46,9 +46,9 @@ export function useCatalogActivities(
           description: string | null;
           address: string | null;
           image_url: string | null;
-          rating: number | null;
           latitude: number | null;
           longitude: number | null;
+          metadata: Record<string, unknown> | null;
         };
         let rows: CatalogRow[] = [];
         if (destId) {
@@ -70,9 +70,9 @@ export function useCatalogActivities(
               description: r.description ?? undefined,
               address: r.address ?? undefined,
               imageUrl: r.image_url ?? undefined,
-              rating: r.rating ?? undefined,
               latitude: r.latitude ?? undefined,
               longitude: r.longitude ?? undefined,
+              metadata: r.metadata ?? undefined,
             }))
           );
           setError(false);

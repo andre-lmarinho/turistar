@@ -25,9 +25,9 @@ export function useBudget(planId: string, activitiesTotal: number) {
     setHasLoaded(false);
     const load = async () => {
       const budgetRes = (await sb
-        .from('budget')
+        .from('plans')
         .select('budget')
-        .eq('plan_id', planId)
+        .eq('id', planId)
         .single()) as unknown as { data: { budget: number | null } | null };
       const entryRes = (await sb
         .from('budget_entries')
@@ -64,9 +64,7 @@ export function useBudget(planId: string, activitiesTotal: number) {
     if (budget === initialBudgetRef.current) return;
     const persist = async () => {
       setPersistError(null);
-      const { error } = (await sb
-        .from('budget')
-        .upsert({ plan_id: planId, budget }, { onConflict: 'plan_id' })) as unknown as {
+      const { error } = (await sb.from('plans').update({ budget }).eq('id', planId)) as unknown as {
         error: unknown;
       };
       if (error) {

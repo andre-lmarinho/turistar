@@ -36,10 +36,10 @@ export async function GET(req: NextRequest) {
       description: a.description,
       address: a.address,
       image_url: a.imageUrl ?? null,
-      rating: a.rating,
       latitude: a.latitude,
       longitude: a.longitude,
       source: 'geoapify',
+      metadata: a.metadata ?? null,
       destination_id: destId,
     }));
 

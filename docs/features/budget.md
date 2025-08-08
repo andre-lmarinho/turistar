@@ -2,6 +2,8 @@
 
 Tracks trip expenses and category totals.
 
+The overall plan budget persists to the `plans` table while individual expense entries remain in the `budget_entries` table.
+
 ```ts
 import { BudgetPanelHeader } from '@/features/budget';
 ```
@@ -9,6 +11,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 ## Components
 
 ### BudgetPanelHeader
+
 - **Location:** [`src/features/budget/components/BudgetPanelHeader.tsx`](../../src/features/budget/components/BudgetPanelHeader.tsx)
 - **Responsibility:** Displays total budget and progress by category.
 - **Props:** `{ totals: Record<string, number> }`
@@ -20,6 +23,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Performance notes:** none
 
 ### BudgetItem
+
 - **Location:** [`src/features/budget/components/BudgetItem.tsx`](../../src/features/budget/components/BudgetItem.tsx)
 - **Responsibility:** Shows or edits a single budget value.
 - **Props:** `{ id: string; label: string; amount: number; editable?: boolean }`
@@ -31,6 +35,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Performance notes:** none
 
 ### CategoryProgressBar
+
 - **Location:** [`src/features/budget/components/CategoryProgressBar.tsx`](../../src/features/budget/components/CategoryProgressBar.tsx)
 - **Responsibility:** Visual progress indicator for a category.
 - **Props:** `{ amount: number; limit: number }`
@@ -42,6 +47,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Performance notes:** none
 
 ### ExpenseTable
+
 - **Location:** [`src/features/budget/components/ExpenseTable.tsx`](../../src/features/budget/components/ExpenseTable.tsx)
 - **Responsibility:** Editable table of expense entries.
 - **Props:** `{ entries: BudgetEntry[]; onChange: (e: BudgetEntry[]) => void }`
@@ -53,6 +59,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Performance notes:** none
 
 ### BudgetRow
+
 - **Location:** [`src/features/budget/components/BudgetRow.tsx`](../../src/features/budget/components/BudgetRow.tsx)
 - **Responsibility:** Renders an expense table row in view, edit or new modes.
 - **Props:** `mode: 'view' | 'edit' | 'new'` and callbacks like `onEdit`, `onDelete`, `onSave`, `onAdd`.
@@ -64,6 +71,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 - **Performance notes:** none
 
 ### ActivitiesBudgetPopup
+
 - **Location:** [`src/features/budget/components/activities/ActivitiesBudget.tsx`](../../src/features/budget/components/activities/ActivitiesBudget.tsx)
 - **Responsibility:** Batch-edit budget amounts for planner activities.
 - **Props:** `{ open: boolean; onClose: () => void }`
@@ -77,6 +85,7 @@ import { BudgetPanelHeader } from '@/features/budget';
 ## Hooks
 
 ### BudgetContext
+
 - **Location:** [`src/features/budget/hooks/BudgetContext.tsx`](../../src/features/budget/hooks/BudgetContext.tsx)
 - **Responsibility:** React context provider storing budget state and handlers.
 - **Signature:** `BudgetProvider` wraps children and exposes context via `useBudgetContext()`
@@ -92,6 +101,7 @@ import { BudgetPanelHeader } from '@/features/budget';
   ```
 
 ### useBudgetSupabase
+
 - **Location:** [`src/features/budget/hooks/useBudgetSupabase.ts`](../../src/features/budget/hooks/useBudgetSupabase.ts)
 - **Responsibility:** Loads and persists budget data to Supabase.
 - **Signature:** `useBudgetSupabase(planId: string, activitiesTotal: number)`
@@ -107,4 +117,3 @@ import { BudgetPanelHeader } from '@/features/budget';
 ## Services
 
 This feature uses Supabase via `useBudgetSupabase` and exposes no standalone service modules.
-

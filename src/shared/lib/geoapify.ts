@@ -15,7 +15,6 @@ type GeoapifyFeature = {
     lat: number;
     lon: number;
     categories?: string[];
-    rank?: { popularity?: number };
     distance?: number;
     image?: string;
     description?: string;
@@ -81,10 +80,10 @@ export function mapGeoapifyFeature(f: GeoapifyFeature): CatalogActivity {
     address: p.formatted,
     description,
     category,
-    rating: p.rank?.popularity,
     latitude: p.lat,
     longitude: p.lon,
     ...(p.image && { imageUrl: p.image }),
+    metadata: p,
   };
 }
 

@@ -20,8 +20,8 @@ color text,
 address text,
 position integer,
 CONSTRAINT activities_pkey PRIMARY KEY (id),
-CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id),
-CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id)
+CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id),
+CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id)
 );
 CREATE TABLE public.budget_entries (
 id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -39,8 +39,6 @@ category text NOT NULL,
 description text,
 address text,
 image_url text,
-rating numeric,
-popularity integer NOT NULL DEFAULT 0,
 latitude double precision NOT NULL,
 longitude double precision NOT NULL,
 source text NOT NULL,
@@ -85,6 +83,7 @@ title text,
 start_date date,
 end_date date,
 created_at timestamp with time zone DEFAULT now(),
+budget numeric,
 CONSTRAINT plans_pkey PRIMARY KEY (id),
 CONSTRAINT plans_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
 );

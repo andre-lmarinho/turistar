@@ -63,16 +63,16 @@ describe.skip('BudgetPanel', () => {
   it('adds expenses and updates totals', async () => {
     const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
     const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const upsertBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
+    const updateBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
     const insertEntry = vi.fn().mockResolvedValue({ data: { id: 'e1' }, error: null });
     const updateEntry = vi.fn().mockResolvedValue({ error: null });
     const deleteEntry = vi.fn().mockResolvedValue({ error: null });
 
     mockFrom.mockImplementation((table: string) => {
-      if (table === 'budget') {
+      if (table === 'plans') {
         return {
           select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          upsert: () => upsertBudget(),
+          update: () => ({ eq: () => updateBudget() }),
         } as unknown;
       }
       if (table === 'budget_entries') {
@@ -99,7 +99,7 @@ describe.skip('BudgetPanel', () => {
       </PlannerProvider>
     );
     await waitFor(() => expect(screen.getAllByText(/\$\s*25\.00/).length).toBeGreaterThan(0));
-    expect(upsertBudget).not.toHaveBeenCalled();
+    expect(updateBudget).not.toHaveBeenCalled();
     expect(screen.queryByText('Failed to persist budget')).not.toBeInTheDocument();
     fireEvent.change(screen.getByPlaceholderText('Description'), {
       target: { value: 'Taxi' },

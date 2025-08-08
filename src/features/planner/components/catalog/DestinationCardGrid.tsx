@@ -34,7 +34,6 @@ export default function DestinationCardGrid({ items, addedIds, onAdd, onRemove }
             imageUrl={item.imageUrl}
             description={item.description}
             category={item.category}
-            rating={item.rating}
             added={isAdded}
             onAdd={() => onAdd(item)}
             onRemove={() => onRemove(item.id)}

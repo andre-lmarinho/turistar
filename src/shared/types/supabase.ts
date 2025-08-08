@@ -70,28 +70,6 @@ export interface Database {
           },
         ];
       };
-      budget: {
-        Row: {
-          plan_id: string;
-          budget: number | null;
-        };
-        Insert: {
-          plan_id: string;
-          budget?: number | null;
-        };
-        Update: {
-          plan_id?: string;
-          budget?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'budget_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
       budget_entries: {
         Row: {
           id: string;
@@ -119,6 +97,43 @@ export interface Database {
             foreignKeyName: 'budget_entries_plan_id_fkey';
             columns: ['plan_id'];
             referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      plans: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          title: string | null;
+          start_date: string | null;
+          end_date: string | null;
+          budget: number | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          title?: string | null;
+          start_date?: string | null;
+          end_date?: string | null;
+          budget?: number | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          title?: string | null;
+          start_date?: string | null;
+          end_date?: string | null;
+          budget?: number | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plans_user_id_fkey';
+            columns: ['user_id'];
+            referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
         ];

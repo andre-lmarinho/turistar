@@ -28,9 +28,9 @@ export interface CatalogActivity {
   description?: string;
   address?: string;
   imageUrl?: string;
-  rating?: number;
   latitude?: number;
   longitude?: number;
+  metadata?: Record<string, unknown>;
 }
 
 /**

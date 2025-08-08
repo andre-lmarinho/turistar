@@ -25,8 +25,6 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<'name' | 'rating'>('rating');
-
   const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId, dest);
 
   const toggleCat = (cat: string) =>
@@ -44,11 +42,9 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
         (!selectedCats.size || selectedCats.has(it.category)) &&
         it.name.toLowerCase().includes(searchLower)
     );
-    items = items.sort((a, b) =>
-      sort === 'name' ? a.name.localeCompare(b.name) : (b.rating ?? 0) - (a.rating ?? 0)
-    );
+    items = items.sort((a, b) => a.name.localeCompare(b.name));
     return items;
-  }, [activities, search, selectedCats, sort]);
+  }, [activities, search, selectedCats]);
 
   useEscapeKey({ onClose, isActive: isOpen });
   // Preserve scroll position so the list doesn't jump after adding/removing
@@ -110,14 +106,7 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
           placeholder="Search"
           className="w-48 rounded border px-2 py-1 text-sm"
         />
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as 'name' | 'rating')}
-          className="rounded border px-2 py-1 text-sm"
-        >
-          <option value="name">Name</option>
-          <option value="rating">Rating</option>
-        </select>
+        {/* Sorting removed; default alphabetical order */}
       </div>
 
       <div ref={scrollRef} className="flex flex-1 overflow-auto">

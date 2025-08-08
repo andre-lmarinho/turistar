@@ -17,13 +17,13 @@ describe('useBudgetSupabase', () => {
   test('does not persist budget on initial load', async () => {
     const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 100 }, error: null });
     const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const upsertBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
+    const updateBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
 
     mockFrom.mockImplementation((table: string) => {
-      if (table === 'budget') {
+      if (table === 'plans') {
         return {
           select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          upsert: () => upsertBudget(),
+          update: () => ({ eq: () => updateBudget() }),
         } as unknown;
       }
       if (table === 'budget_entries') {
@@ -36,7 +36,7 @@ describe('useBudgetSupabase', () => {
 
     const { result } = renderHook(() => useBudget('p1', 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
-    expect(upsertBudget).not.toHaveBeenCalled();
+    expect(updateBudget).not.toHaveBeenCalled();
     expect(result.current.persistError).toBeNull();
   });
 
@@ -46,16 +46,16 @@ describe('useBudgetSupabase', () => {
       data: [{ id: 'e1', description: 'Lunch', category: 'food', amount: 10 }],
       error: null,
     });
-    const upsertBudget = vi.fn().mockResolvedValue({ error: null });
+    const updateBudget = vi.fn().mockResolvedValue({ error: null });
     const insertEntry = vi.fn().mockResolvedValue({ data: { id: 'e2' }, error: null });
     const updateEntry = vi.fn().mockResolvedValue({ error: null });
     const deleteEntry = vi.fn().mockResolvedValue({ error: null });
 
     mockFrom.mockImplementation((table: string) => {
-      if (table === 'budget') {
+      if (table === 'plans') {
         return {
           select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          upsert: () => upsertBudget(),
+          update: () => ({ eq: () => updateBudget() }),
         } as unknown;
       }
       if (table === 'budget_entries') {
@@ -99,14 +99,14 @@ describe('useBudgetSupabase', () => {
   test('sets persistError when Supabase insert fails', async () => {
     const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
     const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const upsertBudget = vi.fn().mockResolvedValue({ error: null });
+    const updateBudget = vi.fn().mockResolvedValue({ error: null });
     const insertEntry = vi.fn().mockResolvedValue({ data: null, error: new Error('boom') });
 
     mockFrom.mockImplementation((table: string) => {
-      if (table === 'budget') {
+      if (table === 'plans') {
         return {
           select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          upsert: () => upsertBudget(),
+          update: () => ({ eq: () => updateBudget() }),
         } as unknown;
       }
       if (table === 'budget_entries') {

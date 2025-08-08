@@ -24,7 +24,6 @@ export default function DestinationCard({
   name,
   imageUrl,
   description,
-  rating,
   added,
   onAdd,
   onRemove,
@@ -74,17 +73,11 @@ export default function DestinationCard({
 
       <div className="p-2 leading-tight">
         {/* Title */}
-        <h3 id={titleId} className="mb-2 font-bold">
+        <h3 id={titleId} className="mb-1 font-bold">
           {name}
         </h3>
 
-        {/* Duration | Price chips */}
-        <dl className="mb-1 flex items-center space-x-2 text-sm text-[var(--muted-foreground)]">
-          <dt className="sr-only">Avaliação</dt>
-          <dd aria-label={rating != null ? `${rating.toFixed(1)} de 5 stars, ` : 'Sem avaliação'}>
-            {rating?.toFixed(1) ?? 'N/A'} 
-          </dd>
-        </dl>
+        {/* Description */}
         {description ? (
           <p className="text-sm text-[var(--muted-foreground)]">{description}</p>
         ) : (

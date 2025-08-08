@@ -1,7 +1,7 @@
 // src/features/budget/components/BudgetPanelHeader.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Info, DollarSign } from 'lucide-react';
 import { CATEGORIES, BUDGET_INFO } from '@/shared/constants';
 import { CategoryProgressBar, useBudgetContext } from '@/features/budget';
@@ -31,6 +31,10 @@ export default function BudgetPanelHeader() {
   const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } =
     useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
+
+  useEffect(() => {
+    setBudgetInput(budget ? String(budget) : '');
+  }, [budget]);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
