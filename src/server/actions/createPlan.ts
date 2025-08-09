@@ -31,8 +31,9 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
   console.log(`createPlan RPC total ${totalMs.toFixed(1)}ms`);
 
   if (error || !data) throw error ?? new Error('Failed to create plan');
+  const row = Array.isArray(data) ? data[0] : data;
 
-  const { plan_id, public_slug, edit_token } = data as {
+  const { plan_id, public_slug, edit_token } = row as {
     plan_id: string;
     public_slug: string;
     edit_token: string;
