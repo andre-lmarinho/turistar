@@ -36,6 +36,7 @@ const modeOrder: Mode[] = ['planner', 'map', 'budget'];
 interface PlannerClientProps {
   initialDays?: DayPlan[];
   planId?: string;
+  slug?: string;
   dest?: string;
   title?: string;
   hideOnboarding?: boolean;
@@ -164,6 +165,7 @@ function PlannerClientInner({
 export default function PlannerClient({
   initialDays,
   planId,
+  slug,
   dest,
   title,
   hideOnboarding = false,
@@ -175,9 +177,9 @@ export default function PlannerClient({
 
   useEffect(() => {
     if (search.toString()) {
-      router.replace(`/planner/${planId}`, { scroll: false });
+      router.replace(`/planner/${slug ?? planId}`, { scroll: false });
     }
-  }, [search, router, planId]);
+  }, [search, router, slug, planId]);
 
   return (
     <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest} persist={persist}>

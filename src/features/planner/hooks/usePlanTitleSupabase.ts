@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { capitalize } from '@/shared/utils';
+import { getEditToken } from '@/shared/lib/planEditToken';
+import { updatePlanTitle } from '@/app/planner/actions/updatePlanTitle';
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
   const initialTitle = capitalize(defaultTitle);
@@ -35,11 +37,9 @@ export function usePlanTitle(planId: string, defaultTitle = '', persist = true) 
 
   const mutation = useMutation({
     mutationFn: async (newTitle: string) => {
-      const { error } = (await supabase
-        .from('plans')
-        .update({ title: newTitle })
-        .eq('id', planId)) as unknown as { error: unknown };
-      if (error) throw error;
+      const token = getEditToken(planId);
+      if (!token) throw new Error('Missing edit token');
+      await updatePlanTitle(planId, token, newTitle);
       return newTitle;
     },
     onSuccess: (t) => qc.setQueryData(['plan_title', planId], t),

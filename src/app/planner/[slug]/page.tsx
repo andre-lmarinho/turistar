@@ -1,4 +1,4 @@
-// src/app/planner/[planId]/page.tsx
+// src/app/planner/[slug]/page.tsx
 export const dynamic = 'force-dynamic';
 
 import PlannerClient from '../PlannerClient';
@@ -8,12 +8,12 @@ import { format, parseISO } from 'date-fns';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 
 type PageProps = {
-  params: Promise<{ planId: string }>;
+  params: Promise<{ slug: string }>;
   searchParams: Promise<{ dest?: string }>;
 };
 
 export default async function PlannerPlanPage({ params, searchParams }: PageProps) {
-  const { planId } = await params;
+  const { slug } = await params;
   const { dest } = await searchParams;
 
   let destination = dest;
@@ -21,24 +21,27 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   let initialDays: DayPlan[] | undefined;
 
   const supabase = await supabaseServer();
-  if (!destination) {
-    const { data, error } = (await supabase
-      .from('plans')
-      .select('title, plan_destinations(destinations(name))')
-      .eq('id', planId)
-      .single()) as unknown as {
-      data: {
-        title: string | null;
-        plan_destinations: { destinations: { name: string } }[] | null;
-      } | null;
-      error: unknown;
-    };
+  const { data: planRow, error: planErr } = (await supabase
+    .from('plans')
+    .select('id, title, plan_destinations(destinations(name))')
+    .eq('public_slug', slug)
+    .eq('is_public', true)
+    .single()) as unknown as {
+    data: {
+      id: string;
+      title: string | null;
+      plan_destinations: { destinations: { name: string } }[] | null;
+    } | null;
+    error: unknown;
+  };
 
-    if (!error && data) {
-      title = data.title ?? undefined;
-      destination = data.plan_destinations?.[0]?.destinations?.name ?? undefined;
-    }
+  if (planErr || !planRow) {
+    return <p className="p-4">Plan not found.</p>;
   }
+
+  const planId = planRow.id;
+  title = planRow.title ?? undefined;
+  destination = destination ?? planRow.plan_destinations?.[0]?.destinations?.name ?? undefined;
 
   const { data: dayRows, error: dayErr } = (await supabase
     .from('plan_days')
@@ -92,6 +95,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
     <PlannerClient
       initialDays={initialDays}
       planId={planId}
+      slug={slug}
       dest={destination}
       title={title ?? destination}
     />
