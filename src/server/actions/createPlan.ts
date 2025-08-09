@@ -18,7 +18,7 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
 
   const totalStart = performance.now();
   console.time('create_full_plan');
-  const { data: planId, error } = await supabase.rpc('create_full_plan', {
+  const { data, error } = await supabase.rpc('create_full_plan', {
     _title: title,
     _dest_name: dest.name,
     _dest_lat: dest.latitude ?? null,
@@ -30,7 +30,18 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
   const totalMs = performance.now() - totalStart;
   console.log(`createPlan RPC total ${totalMs.toFixed(1)}ms`);
 
-  if (error || !planId) throw error ?? new Error('Failed to create plan');
+  if (error || !data) throw error ?? new Error('Failed to create plan');
 
-  return { id: planId };
+  const { plan_id, public_slug, edit_token } = data as {
+    plan_id: string;
+    public_slug: string;
+    edit_token: string;
+  };
+  // Persist the token locally (do not expose it in the URL)
+  try {
+    // On the client, save it in localStorage the first time it's received.
+    // If this action runs on the server, return it to the client for persistence.
+  } catch {}
+
+  return { id: plan_id, publicSlug: public_slug, editToken: edit_token };
 }

@@ -11,6 +11,7 @@ import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlan } from '@/app/planner/actions/createPlan';
+import { saveEditToken } from '@/shared/lib/planEditToken';
 
 export default function WelcomeForm() {
   const router = useRouter();
@@ -63,12 +64,18 @@ export default function WelcomeForm() {
 
     setLoading(true);
     try {
-      const { id: planId } = await createPlan(
+      const {
+        id: planId,
+        publicSlug,
+        editToken,
+      } = await createPlan(
         title || destParam,
         { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
         range.from.toISOString(),
         range.to.toISOString()
       );
+
+      saveEditToken(planId, editToken);
 
       const query = new URLSearchParams({
         dest: destParam,
@@ -80,7 +87,7 @@ export default function WelcomeForm() {
         query.set('lng', String(coords.lng));
       }
       const queryString = query.toString();
-      router.push(`/planner/${planId}?${queryString}`);
+      router.push(`/planner/${publicSlug}?${queryString}`);
     } catch {
       setError('Failed to create plan.');
       setLoading(false);
