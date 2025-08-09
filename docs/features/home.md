@@ -14,7 +14,7 @@ import { WelcomeForm } from '@/features/home';
 - **Props:** none
 - **State:** `range`, `dest`, `coords`, `title`, `error`, `loading`
 - **External hooks:** `useRouter`
-- **Side-effects:** Navigates to `/planner` after server action `createPlan`
+- **Side-effects:** Navigates to `/planner` after server action `createPlan` (Supabase RPC `create_full_plan`)
 - **Accessibility:** Fieldsets with legends, error messaging via `role="alert"`
 - **Interactions:** Users select dates and destination then submit to start planning
 - **Performance notes:** none

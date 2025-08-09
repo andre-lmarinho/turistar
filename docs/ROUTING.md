@@ -39,6 +39,7 @@ src/app
 - **page.tsx** – Client entry that dynamically loads `PlannerClient` for the planner experience.
 - **PlannerClient.tsx**, **PlannerBoard.tsx**, **MapView.tsx**, **BudgetPanel.tsx** – Route-level wrappers that consume modules from `src/features/planner` and `src/features/budget`.
 - **actions/** – Server actions `createPlan` and `updatePlan` re-exported from `src/server/actions`.
+  `createPlan` calls Supabase RPC `create_full_plan` to set up the plan, destination and days in a single transaction.
 - **[planId]/page.tsx** – Loads an existing plan and passes it to `InspirationPlanner`.
 
 ### inspiration/
