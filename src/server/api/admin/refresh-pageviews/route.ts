@@ -17,7 +17,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('catalog')
-    .select('id, name, latitude, longitude, rank_score, wikimedia_fetched_at')
+    .select('id, name, category, latitude, longitude, rank_score, wikimedia_fetched_at')
     .or(`wikimedia_fetched_at.is.null,wikimedia_fetched_at.lt.${cutoff.toISOString()}`)
     .limit(50);
 
@@ -32,6 +32,7 @@ export async function GET() {
   type Row = {
     id: string;
     name: string;
+    category: string;
     latitude: number;
     longitude: number;
     rank_score: number | null;
@@ -48,7 +49,13 @@ export async function GET() {
         });
         if (wiki) {
           await persistWikimediaEnrichment({
-            catalogId: row.id,
+            item: {
+              id: row.id,
+              name: row.name,
+              category: row.category,
+              latitude: row.latitude,
+              longitude: row.longitude,
+            },
             wiki: { ...wiki, rankScore: row.rank_score ?? undefined },
           });
           updated += 1;
