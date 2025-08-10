@@ -129,7 +129,7 @@ export async function fetchGeoapifyCatalog(
     }` +
     `&filter=circle:${longitude},${latitude},${DEFAULT_RADIUS_METERS}` +
     `&bias=proximity:${longitude},${latitude}` +
-    `&limit=${CATALOG_LIMIT}&lang=pt&apiKey=${key}`;
+    `&limit=${CATALOG_LIMIT}&lang=en&apiKey=${key}`;
 
   const res = await fetch(url, {
     cache: 'force-cache',
@@ -162,7 +162,7 @@ export async function fetchGeoapifySearch(
     `&categories=${encodeURIComponent(DEFAULT_CATEGORIES)}` +
     `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
     `&bias=proximity:${lon},${lat}` +
-    `&limit=10&lang=pt&apiKey=${key}`;
+    `&limit=10&lang=en&apiKey=${key}`;
 
   const res = await fetch(url, {
     cache: 'force-cache',

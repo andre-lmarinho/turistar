@@ -8,6 +8,7 @@ import type { CatalogActivity } from '@/shared/types';
 import { useDestinationCatalog, useActivitiesById, usePlannerContext } from '@/features/planner';
 import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
+import { computeCatalogScore } from '@/shared/lib';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'name' | 'score'>('score');
   const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId, dest);
 
   const toggleCat = (cat: string) =>
@@ -42,9 +44,16 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
         (!selectedCats.size || selectedCats.has(it.category)) &&
         it.name.toLowerCase().includes(searchLower)
     );
-    items = items.sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === 'name') {
+      items = items.sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      items = items
+        .map((it) => ({ it, score: computeCatalogScore(it, it.wiki, { lat: 0, lon: 0 }) }))
+        .sort((a, b) => b.score - a.score)
+        .map((r) => r.it);
+    }
     return items;
-  }, [activities, search, selectedCats]);
+  }, [activities, search, selectedCats, sort]);
 
   useEscapeKey({ onClose, isActive: isOpen });
   // Preserve scroll position so the list doesn't jump after adding/removing
@@ -106,7 +115,14 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
           placeholder="Search"
           className="w-48 rounded border px-2 py-1 text-sm"
         />
-        {/* Sorting removed; default alphabetical order */}
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as 'name' | 'score')}
+          className="rounded border px-2 py-1 text-sm"
+        >
+          <option value="score">Top</option>
+          <option value="name">Name</option>
+        </select>
       </div>
 
       <div ref={scrollRef} className="flex flex-1 overflow-auto">
