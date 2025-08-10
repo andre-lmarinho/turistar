@@ -1,55 +1,52 @@
 // src/server/api/catalog/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { pLimit } from '@/shared/lib/pLimit';
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 
 /**
  * API route that proxies catalog data from Geoapify.
  */
 export async function GET(req: NextRequest) {
+  const t0 = Date.now();
   const { searchParams } = new URL(req.url);
   const dest = searchParams.get('dest');
+  const latParam = searchParams.get('lat');
+  const lonParam = searchParams.get('lon');
 
-  if (!dest) {
-    return NextResponse.json({ error: 'Destination is required.' }, { status: 400 });
+  if (!dest && !(latParam && lonParam)) {
+    return NextResponse.json({ error: 'Missing dest or lat/lon' }, { status: 400 });
   }
 
+  const lat = latParam ? Number(latParam) : undefined;
+  const lon = lonParam ? Number(lonParam) : undefined;
+  const hadCoords = lat != null && lon != null;
+
   try {
-    const { activities } = await fetchGeoapifyCatalog(dest);
+    const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon);
 
-    const supabase = supabaseServer();
+    const limit = pLimit(6);
+    const enriched = await Promise.all(
+      activities.map((p) =>
+        limit(async () => {
+          const wiki = await fetchWikimediaSignals({
+            title: p.name,
+            lat: p.latitude,
+            lon: p.longitude,
+            lang: 'pt',
+          });
+          return { ...p, wiki };
+        })
+      )
+    );
 
-    const { data: destRow, error: destError } = await supabase
-      .from('destinations')
-      .upsert({ name: dest }, { onConflict: 'name' })
-      .select('id')
-      .single();
-    if (destError || !destRow) throw destError ?? new Error('Failed to upsert destination');
+    console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
 
-    const destId = destRow.id;
-
-    const rows = activities.map((a) => ({
-      id: a.id,
-      name: a.name,
-      category: a.category,
-      description: a.description,
-      address: a.address,
-      image_url: a.imageUrl ?? null,
-      latitude: a.latitude,
-      longitude: a.longitude,
-      source: 'geoapify',
-      metadata: a.metadata ?? null,
-      destination_id: destId,
-    }));
-
-    if (rows.length) {
-      await supabase.from('catalog').upsert(rows, { onConflict: 'id' });
-    }
-
-    return NextResponse.json({ activities });
+    return NextResponse.json({ activities: enriched });
   } catch (err) {
     console.error(err);
+    console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
     return NextResponse.json({ activities: [] });
   }
 }

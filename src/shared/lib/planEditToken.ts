@@ -1,3 +1,5 @@
+// src/shared/lib/planEditToken.ts
+
 const KEY = 'plan_edit_tokens'; // map of plan_id -> token
 
 export function saveEditToken(planId: string, token: string) {

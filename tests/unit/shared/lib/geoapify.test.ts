@@ -110,7 +110,7 @@ describe('fetchGeoapifyAutocomplete', () => {
   });
 });
 
-describe('fetchGeoapifyCatalog images', () => {
+describe('fetchGeoapifyCatalog', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
@@ -156,7 +156,7 @@ describe('fetchGeoapifyCatalog images', () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
-  it('falls back to Wikimedia image', async () => {
+  it('leaves image undefined when Geoapify has none', async () => {
     const placesResp = {
       features: [
         {
@@ -170,48 +170,15 @@ describe('fetchGeoapifyCatalog images', () => {
         },
       ],
     };
-    const wikiResp = {
-      query: { pages: { a: { thumbnail: { source: 'wiki.jpg' } } } },
-    };
     global.fetch = vi
       .fn()
       .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => placesResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp });
-
-    const { activities } = await fetchGeoapifyCatalog('paris');
-
-    expect(activities[0].imageUrl).toBe('wiki.jpg');
-    expect(global.fetch).toHaveBeenCalledTimes(4);
-  });
-
-  it('leaves image undefined when no source provides one', async () => {
-    const placesResp = {
-      features: [
-        {
-          properties: {
-            place_id: 1,
-            name: 'Louvre',
-            lat: 1,
-            lon: 2,
-            categories: ['tourism.museum'],
-          },
-        },
-      ],
-    };
-    const wikiResp = { query: { pages: {} } };
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => placesResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp })
-      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp });
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp });
 
     const { activities } = await fetchGeoapifyCatalog('paris');
 
     expect(activities[0].imageUrl).toBeUndefined();
-    expect(global.fetch).toHaveBeenCalledTimes(4);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
   it('filters out features missing a name', async () => {
@@ -245,5 +212,14 @@ describe('fetchGeoapifyCatalog images', () => {
 
     expect(activities).toHaveLength(1);
     expect(activities[0].name).toBe('Louvre');
+  });
+
+  it('skips autocomplete when coordinates provided', async () => {
+    const placesResp = { features: [] };
+    global.fetch = vi.fn().mockResolvedValueOnce({ ok: true, json: async () => placesResp });
+
+    await fetchGeoapifyCatalog('paris', 1, 2);
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 });

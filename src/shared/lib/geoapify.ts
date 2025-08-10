@@ -33,16 +33,7 @@ export const GEOAPIFY_CATEGORIES = [
   'tourism.sights',
   'entertainment.museum',
   'entertainment.culture.gallery',
-  'entertainment.theme_park',
-  'entertainment.cinema',
-  'leisure.park',
   'natural.protected_area',
-  'catering.restaurant',
-  'catering.cafe',
-  'catering.bar',
-  'catering.pub',
-  'commercial.shopping_mall',
-  'commercial.marketplace',
 ];
 const DEFAULT_CATEGORIES = GEOAPIFY_CATEGORIES.join(',');
 
@@ -95,7 +86,10 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
     text
   )}&limit=5&apiKey=${key}`;
 
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, {
+    cache: 'force-cache',
+    next: { revalidate: 86400 },
+  });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
@@ -112,34 +106,39 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
 /*  Catalog – main “places” pipeline */
 export async function fetchGeoapifyCatalog(
   dest: string,
+  lat?: number,
+  lon?: number,
   categories: string[] = GEOAPIFY_CATEGORIES
 ): Promise<{ activities: CatalogActivity[] }> {
   const key = getGeoapifyKey();
 
-  // 1) geocode / autocomplete the destination
-  const auto = await fetchGeoapifyAutocomplete(dest);
-  if (!auto.length) {
-    throw new Error(`Destination “${dest}” not found`);
+  let latitude = lat;
+  let longitude = lon;
+  if (latitude == null || longitude == null) {
+    const auto = await fetchGeoapifyAutocomplete(dest);
+    if (!auto.length) {
+      throw new Error(`Destination “${dest}” not found`);
+    }
+    ({ latitude, longitude } = auto[0]);
   }
-  const { latitude: lat, longitude: lon } = auto[0];
 
-  // 2) fetch POIs around that point
   const url =
     `https://api.geoapify.com/v2/places?` +
     `categories=${
       categories.length ? encodeURIComponent(categories.join(',')) : DEFAULT_CATEGORIES
     }` +
-    `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
-    `&bias=proximity:${lon},${lat}` +
+    `&filter=circle:${longitude},${latitude},${DEFAULT_RADIUS_METERS}` +
+    `&bias=proximity:${longitude},${latitude}` +
     `&limit=${CATALOG_LIMIT}&lang=pt&apiKey=${key}`;
 
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, {
+    cache: 'force-cache',
+    next: { revalidate: 86400 },
+  });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
-  const activities = await enrichWithWikimediaImages(
-    featuresWithName.map((f) => mapGeoapifyFeature(f))
-  );
+  const activities = featuresWithName.map((f) => mapGeoapifyFeature(f));
 
   return { activities };
 }
@@ -165,7 +164,10 @@ export async function fetchGeoapifySearch(
     `&bias=proximity:${lon},${lat}` +
     `&limit=10&lang=pt&apiKey=${key}`;
 
-  const res = await fetch(url, { cache: 'no-store' });
+  const res = await fetch(url, {
+    cache: 'force-cache',
+    next: { revalidate: 86400 },
+  });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());

@@ -3,6 +3,7 @@
 // Keeps fetchWikimediaImage() wrapper for compatibility.
 
 import type { CatalogActivity } from '@/shared/types';
+import { pLimit } from './pLimit';
 
 export type WikimediaSignals = {
   pageid?: number;
@@ -24,11 +25,11 @@ type ApiPage = {
 };
 
 const REVALIDATE_6H = 21600;
-const DEFAULT_LANG = 'pt';
+const DEFAULT_LANG = 'en';
 const DEFAULT_RADIUS = 500; // in meters
 
 function wapiBase(lang: string) {
-  // Example: 'https://pt.wikipedia.org/w/api.php'
+  // Example: 'https://en.wikipedia.org/w/api.php'
   return `https://${lang}.wikipedia.org/w/api.php`;
 }
 
@@ -55,16 +56,18 @@ function pickImageFromPage(p: ApiPage): string | undefined {
   return p?.thumbnail?.source ?? p?.original?.source;
 }
 
-function pageFromQuery(query: any): ApiPage | undefined {
+type QueryWithPages = { pages?: Record<string, ApiPage> } | undefined;
+
+function pageFromQuery(query: QueryWithPages): ApiPage | undefined {
   if (!query?.pages) return undefined;
-  const pages: Record<string, ApiPage> = query.pages;
+  const pages = query.pages;
   // Pick the first page with a thumbnail/original image
   const first = Object.values(pages).find((pg) => pickImageFromPage(pg));
   // If none have images, return the first page anyway
   return first ?? Object.values(pages)[0];
 }
 
-function pageFromGenerator(query: any): ApiPage | undefined {
+function pageFromGenerator(query: QueryWithPages): ApiPage | undefined {
   // When using generator=*, pages are also found in query.pages
   return pageFromQuery(query);
 }
@@ -218,15 +221,23 @@ export async function fetchWikimediaImage(
 
 // Helper to enrich activities with Wikimedia images. Retained for compatibility.
 export async function enrichWithWikimediaImages(
-  activities: CatalogActivity[]
+  activities: CatalogActivity[],
+  opts?: { concurrency?: number; lang?: string }
 ): Promise<CatalogActivity[]> {
+  const limit = pLimit(opts?.concurrency ?? 8);
+  const lang = opts?.lang;
   return Promise.all(
-    activities.map(async (a) => {
-      if (a.imageUrl) return a;
-      const wikiImage =
-        (await fetchWikimediaImage(a.name)) ??
-        (a.address ? await fetchWikimediaImage(a.address) : undefined);
-      return wikiImage ? { ...a, imageUrl: wikiImage } : a;
-    })
+    activities.map((a) =>
+      limit(async () => {
+        if (a.imageUrl) return a;
+        const wiki = await fetchWikimediaSignals({
+          title: a.name,
+          lat: a.latitude,
+          lon: a.longitude,
+          lang,
+        });
+        return wiki?.imageUrl ? { ...a, imageUrl: wiki.imageUrl } : a;
+      })
+    )
   );
 }
