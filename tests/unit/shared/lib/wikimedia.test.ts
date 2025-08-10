@@ -15,18 +15,31 @@ describe('fetchWikimediaImage', () => {
   });
 
   it('returns image for exact title match', async () => {
-    const wikiResp = { query: { pages: { 1: { thumbnail: { source: 'exact.jpg' } } } } };
+    const titleResp = {
+      query: { pages: { 1: { thumbnail: { source: 'exact.jpg' } } } },
+    };
+    const searchResp = {
+      query: { pages: { 2: { thumbnail: { source: 'search.jpg' } } } },
+    };
     global.fetch = vi
       .fn()
-      .mockResolvedValue({ ok: true, json: async () => wikiResp } as unknown as Response);
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => titleResp,
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => searchResp,
+      } as unknown as Response);
 
     const url = await fetchWikimediaImage('Eiffel Tower');
 
     expect(url).toBe('exact.jpg');
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
     const fetchMock = global.fetch as unknown as Mock;
-    const calledUrl = fetchMock.mock.calls[0][0] as string;
-    expect(calledUrl).toContain('titles=Eiffel+Tower');
+    const [firstUrl, secondUrl] = fetchMock.mock.calls.map((c) => c[0] as string);
+    expect(firstUrl).toContain('titles=Eiffel+Tower');
+    expect(secondUrl).toContain('gsrsearch=Eiffel+Tower');
   });
 
   it('falls back to search when title has no image', async () => {
@@ -44,6 +57,6 @@ describe('fetchWikimediaImage', () => {
     const fetchMock = global.fetch as unknown as Mock;
     const [firstUrl, secondUrl] = fetchMock.mock.calls.map((c) => c[0] as string);
     expect(firstUrl).toContain('titles=Some+Place');
-    expect(secondUrl).toContain('gsrsearch=intitle%3ASome+Place');
+    expect(secondUrl).toContain('gsrsearch=Some+Place');
   });
 });

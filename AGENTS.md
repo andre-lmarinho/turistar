@@ -15,7 +15,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 ## Coding Conventions
 
-- **Language**: All documentation, inline code comments, commit messages and PR descriptions must be written in English.
+- **Language**: All documentation, inline code comments, commit messages and PR descriptions must be written in English. Do not use any other language.
 - **Formatting**: Run `npm run format` before committing. The project uses Prettier with semicolons, single quotes and `printWidth` 100.
 - **Linting**: Ensure `npm run lint` passes.
 - **Type checking**: Ensure `npm run typecheck` passes.

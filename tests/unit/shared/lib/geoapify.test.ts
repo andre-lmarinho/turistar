@@ -177,12 +177,13 @@ describe('fetchGeoapifyCatalog images', () => {
       .fn()
       .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
       .mockResolvedValueOnce({ ok: true, json: async () => placesResp })
+      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp })
       .mockResolvedValueOnce({ ok: true, json: async () => wikiResp });
 
     const { activities } = await fetchGeoapifyCatalog('paris');
 
     expect(activities[0].imageUrl).toBe('wiki.jpg');
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(4);
   });
 
   it('leaves image undefined when no source provides one', async () => {
