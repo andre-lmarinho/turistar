@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { pLimit } from '@/shared/lib/pLimit';
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
 import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
+import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
 
 /**
  * API route that proxies catalog data from Geoapify.
@@ -36,6 +37,10 @@ export async function GET(req: NextRequest) {
             lon: p.longitude,
             lang: 'pt',
           });
+
+          // Persist Wikimedia data; failures are logged but ignored
+          await persistWikimediaEnrichment({ catalogId: p.id, wiki });
+
           return { ...p, wiki };
         })
       )

@@ -45,6 +45,12 @@ CREATE TABLE public.catalog (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   destination_id uuid NOT NULL,
   coords point DEFAULT point(longitude, latitude),
+  wikidata_qid text,
+  wikimedia_title text,
+  wikimedia_source text,
+  pageviews_30d integer,
+  image_confidence numeric,
+  wikimedia_fetched_at timestamp with time zone,
   CONSTRAINT catalog_pkey PRIMARY KEY (id),
   CONSTRAINT catalog_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
 );
