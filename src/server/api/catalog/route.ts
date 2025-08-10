@@ -55,7 +55,13 @@ export async function GET(req: NextRequest) {
 
           // Persist Wikimedia data with rank score; failures are logged but ignored.
           await persistWikimediaEnrichment({
-            catalogId: p.id,
+            item: {
+              id: p.id,
+              name: p.name,
+              category: p.category,
+              latitude: p.latitude,
+              longitude: p.longitude,
+            },
             wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
           });
 

@@ -3,8 +3,8 @@ import { describe, expect, it, beforeAll, vi } from 'vitest';
 import { GET } from '@/server/api/admin/refresh-pageviews/route';
 
 const rows = [
-  { id: '1', name: 'A', latitude: 0, longitude: 0, rank_score: 0.5 },
-  { id: '2', name: 'B', latitude: 1, longitude: 1, rank_score: null },
+  { id: '1', name: 'A', category: 'sight', latitude: 0, longitude: 0, rank_score: 0.5 },
+  { id: '2', name: 'B', category: 'sight', latitude: 1, longitude: 1, rank_score: null },
 ];
 
 vi.mock('@/shared/lib/supabaseServer', () => ({

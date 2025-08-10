@@ -6,9 +6,9 @@ import { GET } from '@/server/api/catalog/route';
 vi.mock('@/shared/lib/geoapify', () => ({
   fetchGeoapifyCatalog: vi.fn().mockResolvedValue({
     activities: [
-      { id: '1', name: 'A', latitude: 0, longitude: 0 },
-      { id: '2', name: 'B', latitude: 0, longitude: 0 },
-      { id: '3', name: 'C', latitude: 0, longitude: 0 },
+      { id: '1', name: 'A', category: 'sight', latitude: 0, longitude: 0 },
+      { id: '2', name: 'B', category: 'sight', latitude: 0, longitude: 0 },
+      { id: '3', name: 'C', category: 'sight', latitude: 0, longitude: 0 },
     ],
   }),
 }));
