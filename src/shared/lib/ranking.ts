@@ -6,17 +6,14 @@ import type { WikimediaSignals } from './wikimedia';
 /** 90th percentile of 30 day Wikipedia page views used for normalization. */
 export const PV_P90 = 40000;
 
-/** Categories that are considered essential and get a small boost. */
-export const WIKI_ESSENTIAL_CATS = [
-  'tourism.attraction',
-  'tourism.sights',
-  'entertainment.museum',
-  'entertainment.culture.gallery',
-  'natural.protected_area',
-];
-
-/** Extra boost added when a place matches an essential category. */
-export const SUBCLASS_BOOST = 0.1;
+/** Extra boost added when a place matches a specific subclass. */
+export const SUBCLASS_BOOST: Record<string, number> = {
+  'tourism.attraction': 0.2,
+  'tourism.sights': 0.15,
+  'entertainment.museum': 0.1,
+  'entertainment.culture.gallery': 0.05,
+  'natural.protected_area': 0.05,
+};
 
 export function clamp01(n: number): number {
   return Math.min(1, Math.max(0, n));
@@ -66,11 +63,10 @@ export function computeCatalogScore(
   // Base weighted combination.
   let score = pvScore * 0.6 + distScore * 0.3 + rankScore * 0.1;
 
-  // Boost if the place belongs to an essential category.
+  // Boost if the place belongs to a boosted subclass.
   const categories = (meta?.categories ?? []).concat(place.category ? [place.category] : []);
-  if (categories.some((c) => WIKI_ESSENTIAL_CATS.includes(c))) {
-    score += SUBCLASS_BOOST;
-  }
+  const boost = categories.reduce((max, c) => Math.max(max, SUBCLASS_BOOST[c] ?? 0), 0);
+  score += boost;
 
   return clamp01(score);
 }
