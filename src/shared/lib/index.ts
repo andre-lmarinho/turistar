@@ -8,7 +8,12 @@ export {
   fetchGeoapifyCatalog,
   fetchGeoapifySearch,
 } from './geoapify';
-export { fetchWikimediaImage, fetchWikimediaSignals, enrichWithWikimediaImages } from './wikimedia';
+export {
+  fetchWikimediaImage,
+  fetchWikimediaSignals,
+  enrichWithWikimediaImages,
+  withPageviews,
+} from './wikimedia';
 export { fetchJson } from './http';
 export { pLimit } from './pLimit';
 export { supabase } from './supabaseClient';

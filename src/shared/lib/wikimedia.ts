@@ -150,6 +150,38 @@ function normalizeSignals(
 }
 
 /**
+ * Attach 30-day pageviews from the Wikimedia Pageviews API.
+ * Falls back to 0 when data is unavailable.
+ */
+export async function withPageviews(sig: WikimediaSignals): Promise<WikimediaSignals> {
+  if (!sig.title || !sig.lang) return { ...sig, pageviews30d: 0 };
+
+  const end = new Date();
+  end.setUTCDate(end.getUTCDate() - 1); // yesterday
+  const start = new Date(end);
+  start.setUTCDate(start.getUTCDate() - 29); // 30 days inclusive
+
+  const fmt = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
+  const title = encodeURIComponent(sig.title.replace(/ /g, '_'));
+  const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${sig.lang}.wikipedia/all-access/all-agents/${title}/daily/${fmt(start)}/${fmt(end)}`;
+
+  try {
+    const res = await fetch(url, {
+      cache: 'force-cache',
+      next: { revalidate: REVALIDATE_6H },
+    });
+    if (!res.ok) throw new Error('Pageviews fetch failed');
+    const data = await res.json();
+    const views = Array.isArray(data?.items)
+      ? data.items.reduce((sum: number, item: { views?: number }) => sum + (item.views ?? 0), 0)
+      : 0;
+    return { ...sig, pageviews30d: views };
+  } catch {
+    return { ...sig, pageviews30d: 0 };
+  }
+}
+
+/**
  * Main API to resolve Wikimedia signals.
  * - Parallelizes geosearch (if coordinates), title and search.
  * - Returns the first result with an image; otherwise the first fulfilled result.
@@ -200,7 +232,7 @@ export async function fetchWikimediaSignals(input: {
     /* noop */
   }
 
-  return chosen;
+  return chosen ? await withPageviews(chosen) : undefined;
 }
 
 /**

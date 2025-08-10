@@ -16,11 +16,12 @@ describe('fetchWikimediaImage', () => {
 
   it('returns image for exact title match', async () => {
     const titleResp = {
-      query: { pages: { 1: { thumbnail: { source: 'exact.jpg' } } } },
+      query: { pages: { 1: { title: 'Eiffel Tower', thumbnail: { source: 'exact.jpg' } } } },
     };
     const searchResp = {
-      query: { pages: { 2: { thumbnail: { source: 'search.jpg' } } } },
+      query: { pages: { 2: { title: 'Eiffel Tower', thumbnail: { source: 'search.jpg' } } } },
     };
+    const pageviewsResp = { items: [{ views: 42 }] };
     global.fetch = vi
       .fn()
       .mockResolvedValueOnce({
@@ -30,12 +31,16 @@ describe('fetchWikimediaImage', () => {
       .mockResolvedValueOnce({
         ok: true,
         json: async () => searchResp,
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => pageviewsResp,
       } as unknown as Response);
 
     const url = await fetchWikimediaImage('Eiffel Tower');
 
     expect(url).toBe('exact.jpg');
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     const fetchMock = global.fetch as unknown as Mock;
     const [firstUrl, secondUrl] = fetchMock.mock.calls.map((c) => c[0] as string);
     expect(firstUrl).toContain('titles=Eiffel+Tower');
@@ -44,16 +49,22 @@ describe('fetchWikimediaImage', () => {
 
   it('falls back to search when title has no image', async () => {
     const missingResp = { query: { pages: { '-1': { missing: true } } } };
-    const wikiResp = { query: { pages: { a: { thumbnail: { source: 'search.jpg' } } } } };
+    const wikiResp = {
+      query: { pages: { a: { title: 'Some Place', thumbnail: { source: 'search.jpg' } } } },
+    };
     global.fetch = vi
       .fn()
       .mockResolvedValueOnce({ ok: true, json: async () => missingResp } as unknown as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp } as unknown as Response);
+      .mockResolvedValueOnce({ ok: true, json: async () => wikiResp } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ items: [] }),
+      } as unknown as Response);
 
     const url = await fetchWikimediaImage('Some Place');
 
     expect(url).toBe('search.jpg');
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     const fetchMock = global.fetch as unknown as Mock;
     const [firstUrl, secondUrl] = fetchMock.mock.calls.map((c) => c[0] as string);
     expect(firstUrl).toContain('titles=Some+Place');
