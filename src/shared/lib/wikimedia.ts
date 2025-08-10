@@ -13,6 +13,8 @@ export type WikimediaSignals = {
   lang?: string;
   wikidataQid?: string; // pageprops.wikibase_item
   source?: 'geosearch' | 'title' | 'search';
+  pageviews30d?: number;
+  rankScore?: number;
 };
 
 type ApiPage = {

@@ -13,7 +13,8 @@ export async function persistWikimediaEnrichment(params: {
 }) {
   if (!params?.wiki || !params.catalogId) return;
 
-  const { title, imageUrl, description, wikidataQid, source } = params.wiki;
+  const { title, imageUrl, description, wikidataQid, source, pageid, pageviews30d, rankScore } =
+    params.wiki;
 
   const supabase = supabaseServer(); // TODO: consider service role for RLS bypass
 
@@ -25,7 +26,9 @@ export async function persistWikimediaEnrichment(params: {
       wikimedia_source: source ?? null,
       image_url: imageUrl ?? null,
       description: description ?? null,
-      // pageviews_30d: will be populated in a future commit
+      wikimedia_pageid: pageid != null ? String(pageid) : null,
+      pageviews_30d: pageviews30d ?? null,
+      rank_score: rankScore ?? null,
       wikimedia_fetched_at: new Date().toISOString(),
       // image_confidence: left null for future "confidence gate" work
     })

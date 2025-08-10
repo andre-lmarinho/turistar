@@ -18,8 +18,8 @@ CREATE TABLE public.activities (
   address text,
   position integer,
   CONSTRAINT activities_pkey PRIMARY KEY (id),
-  CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id),
-  CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id)
+  CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id),
+  CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id)
 );
 CREATE TABLE public.budget_entries (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -51,6 +51,9 @@ CREATE TABLE public.catalog (
   pageviews_30d integer,
   image_confidence numeric,
   wikimedia_fetched_at timestamp with time zone,
+  geoapify_id text,
+  wikimedia_pageid text,
+  rank_score numeric,
   CONSTRAINT catalog_pkey PRIMARY KEY (id),
   CONSTRAINT catalog_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
 );
