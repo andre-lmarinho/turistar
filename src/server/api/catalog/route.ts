@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { pLimit } from '@/shared/lib/pLimit';
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
 import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
+import { computeCatalogScore } from '@/shared/lib';
 import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
 
 /**
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest) {
   try {
     const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon);
 
+    const center = { lat: lat ?? 0, lon: lon ?? 0 };
     const limit = pLimit(6);
     const enriched = await Promise.all(
       activities.map((p) =>
@@ -38,13 +40,21 @@ export async function GET(req: NextRequest) {
             lang: 'en',
           });
 
-          // Persist Wikimedia data; failures are logged but ignored
-          await persistWikimediaEnrichment({ catalogId: p.id, wiki });
+          // Compute score combining popularity, distance and category boosts.
+          const score = computeCatalogScore(p, wiki, center);
 
-          return { ...p, wiki };
+          // Persist Wikimedia data with rank score; failures are logged but ignored.
+          await persistWikimediaEnrichment({
+            catalogId: p.id,
+            wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
+          });
+
+          return { ...p, wiki, score };
         })
       )
     );
+
+    enriched.sort((a, b) => b.score - a.score);
 
     console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
 
