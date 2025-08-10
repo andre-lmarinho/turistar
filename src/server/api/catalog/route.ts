@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
             title: p.name,
             lat: p.latitude,
             lon: p.longitude,
-            lang: 'pt',
+            lang: 'en',
           });
 
           // Persist Wikimedia data; failures are logged but ignored

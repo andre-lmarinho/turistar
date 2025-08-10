@@ -14,6 +14,7 @@ export {
   enrichWithWikimediaImages,
   withPageviews,
 } from './wikimedia';
+export { computeCatalogScore } from './ranking';
 export { fetchJson } from './http';
 export { pLimit } from './pLimit';
 export { supabase } from './supabaseClient';
