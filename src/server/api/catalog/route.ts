@@ -6,6 +6,7 @@ import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
 import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 import { computeCatalogScore } from '@/shared/lib';
 import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
+import { clientEnv } from '@/shared/lib/clientEnv';
 
 /**
  * API route that proxies catalog data from Geoapify.
@@ -27,6 +28,11 @@ export async function GET(req: NextRequest) {
 
   try {
     const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon);
+
+    if (!clientEnv.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT) {
+      console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
+      return NextResponse.json({ activities });
+    }
 
     const center = { lat: lat ?? 0, lon: lon ?? 0 };
     const limit = pLimit(6);
