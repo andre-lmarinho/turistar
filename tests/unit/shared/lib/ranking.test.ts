@@ -30,4 +30,24 @@ describe('computeCatalogScore', () => {
     const score = computeCatalogScore(place, wiki, { lat: 0, lon: 0 });
     expect(score).toBe(1);
   });
+
+  it('returns debug components when requested', () => {
+    const place: CatalogActivity = {
+      id: '1',
+      name: 'Place',
+      category: 'tourism.attraction',
+      latitude: 0,
+      longitude: 0,
+      metadata: { distance: 0 },
+    } as unknown as CatalogActivity;
+    const wiki = { pageviews30d: PV_P90, rankScore: 0.5 };
+    const result = computeCatalogScore(place, wiki, { lat: 0, lon: 0 }, { debug: true });
+    expect(result).toMatchObject({
+      value: expect.any(Number),
+      pvScore: expect.any(Number),
+      distScore: expect.any(Number),
+      rankScore: expect.any(Number),
+      boost: expect.any(Number),
+    });
+  });
 });

@@ -43,7 +43,33 @@ export function computeCatalogScore(
   place: CatalogActivity,
   wiki: WikimediaSignals | undefined,
   center: { lat: number; lon: number }
-): number {
+): number;
+export function computeCatalogScore(
+  place: CatalogActivity,
+  wiki: WikimediaSignals | undefined,
+  center: { lat: number; lon: number },
+  opts: { debug: true }
+): {
+  value: number;
+  pvScore: number;
+  distScore: number;
+  rankScore: number;
+  boost: number;
+};
+export function computeCatalogScore(
+  place: CatalogActivity,
+  wiki: WikimediaSignals | undefined,
+  center: { lat: number; lon: number },
+  opts?: { debug?: boolean }
+):
+  | number
+  | {
+      value: number;
+      pvScore: number;
+      distScore: number;
+      rankScore: number;
+      boost: number;
+    } {
   // Popularity score from Wikipedia pageviews.
   const pvScore = norm(wiki?.pageviews30d ?? 0, PV_P90);
 
@@ -68,5 +94,11 @@ export function computeCatalogScore(
   const boost = categories.reduce((max, c) => Math.max(max, SUBCLASS_BOOST[c] ?? 0), 0);
   score += boost;
 
-  return clamp01(score);
+  const value = clamp01(score);
+
+  if (opts?.debug) {
+    return { value, pvScore, distScore, rankScore, boost };
+  }
+
+  return value;
 }

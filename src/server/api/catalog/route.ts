@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
   const dest = searchParams.get('dest');
   const latParam = searchParams.get('lat');
   const lonParam = searchParams.get('lon');
+  const debug = searchParams.get('debug') === 'true';
 
   if (!dest && !(latParam && lonParam)) {
     return NextResponse.json({ error: 'Missing dest or lat/lon' }, { status: 400 });
@@ -47,7 +48,10 @@ export async function GET(req: NextRequest) {
           });
 
           // Compute score combining popularity, distance and category boosts.
-          const score = computeCatalogScore(p, wiki, center);
+          const scoreResult = debug
+            ? computeCatalogScore(p, wiki, center, { debug: true })
+            : computeCatalogScore(p, wiki, center);
+          const score = typeof scoreResult === 'number' ? scoreResult : scoreResult.value;
 
           // Persist Wikimedia data with rank score; failures are logged but ignored.
           await persistWikimediaEnrichment({
@@ -55,7 +59,21 @@ export async function GET(req: NextRequest) {
             wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
           });
 
-          return { ...p, wiki, score };
+          return {
+            ...p,
+            wiki,
+            score,
+            ...(typeof scoreResult === 'number'
+              ? {}
+              : {
+                  debugScore: {
+                    pvScore: scoreResult.pvScore,
+                    distScore: scoreResult.distScore,
+                    rankScore: scoreResult.rankScore,
+                    boost: scoreResult.boost,
+                  },
+                }),
+          };
         })
       )
     );

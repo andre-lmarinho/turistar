@@ -19,7 +19,21 @@ vi.mock('@/shared/lib/wikimedia', () => ({
 
 const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5 };
 vi.mock('@/shared/lib', () => ({
-  computeCatalogScore: (p: { id: string }) => scores[p.id],
+  computeCatalogScore: (
+    p: { id: string },
+    _wiki: unknown,
+    _center: unknown,
+    opts?: { debug?: boolean }
+  ) =>
+    opts?.debug
+      ? {
+          value: scores[p.id],
+          pvScore: 0.1,
+          distScore: 0.2,
+          rankScore: 0.3,
+          boost: 0.4,
+        }
+      : scores[p.id],
 }));
 
 vi.mock('@/server/repos/catalog.persist', () => ({
@@ -41,5 +55,19 @@ describe('GET /api/catalog', () => {
     expect(data.activities.map((a: { id: string }) => a.id)).toEqual(['2', '3', '1']);
     const cacheControl = res.headers.get('cache-control');
     expect(cacheControl).toBeNull();
+  });
+
+  it('returns debug scores when requested', async () => {
+    const req = new NextRequest('http://localhost/api/catalog?dest=test&debug=true');
+    const res = await GET(req);
+    const data = await res.json();
+    for (const a of data.activities) {
+      expect(a.debugScore).toEqual({
+        pvScore: 0.1,
+        distScore: 0.2,
+        rankScore: 0.3,
+        boost: 0.4,
+      });
+    }
   });
 });
