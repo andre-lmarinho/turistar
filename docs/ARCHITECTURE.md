@@ -23,3 +23,10 @@ For deeper feature details see [home](features/home.md), [planner](features/plan
 - **Drag‑and‑drop with DnD Kit** – Activities move via sensors and sortable logic encapsulated in hooks within `src/features/planner`.
 - **Geoapify Integration** – Catalog data is fetched from Geoapify through `src/server/api/catalog` using the `NEXT_PUBLIC_GEOAPIFY_KEY`.
 - **State management** – Planner and budget data live in feature contexts and synchronize to Supabase through shared hooks.
+- **Catalog ranking** – The `SUBCLASS_BOOST` record in `src/shared/lib/ranking.ts` assigns extra weight to specific subclasses. Weights range from 0 to 0.2:
+  - `tourism.attraction` – 0.2
+  - `tourism.sights` – 0.15
+  - `entertainment.museum` – 0.1
+  - `entertainment.culture.gallery` – 0.05
+  - `natural.protected_area` – 0.05
+  - Subclasses not listed default to 0
