@@ -11,6 +11,10 @@ Turistar reads environment variables through [`src/shared/lib/env.ts`](../src/sh
 
 The catalog also queries the public Wikimedia API for fallback images. This service requires no API key.
 
+## Optional Variables
+
+- `NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT` – set to `false` to skip Wikimedia enrichment and scoring in `/api/catalog`, returning raw Geoapify data (defaults to `true`).
+
 These values configure:
 
 - Supabase clients in [`supabaseClient.ts`](../src/shared/lib/supabaseClient.ts) and [`supabaseServer.ts`](../src/shared/lib/supabaseServer.ts).
