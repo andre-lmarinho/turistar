@@ -10,25 +10,25 @@ afterEach(() => {
 });
 
 describe('fetchWikimediaSignals', () => {
-  it('prioritizes geosearch over title and search', async () => {
+  it('prioritizes geosearch over title and search when titles match', async () => {
     const geoResp = {
       query: {
         pages: {
-          1: { pageid: 1, title: 'Geo', thumbnail: { source: 'geo.jpg' } },
+          1: { pageid: 1, title: 'Foo', thumbnail: { source: 'geo.jpg' } },
         },
       },
     };
     const titleResp = {
       query: {
         pages: {
-          2: { pageid: 2, title: 'Title', thumbnail: { source: 'title.jpg' } },
+          2: { pageid: 2, title: 'Foo', thumbnail: { source: 'title.jpg' } },
         },
       },
     };
     const searchResp = {
       query: {
         pages: {
-          3: { pageid: 3, title: 'Search', thumbnail: { source: 'search.jpg' } },
+          3: { pageid: 3, title: 'Foo', thumbnail: { source: 'search.jpg' } },
         },
       },
     };
@@ -43,7 +43,12 @@ describe('fetchWikimediaSignals', () => {
 
     const sig = await fetchWikimediaSignals({ title: 'Foo', lat: 1, lon: 2 });
 
-    expect(sig).toMatchObject({ source: 'geosearch', imageUrl: 'geo.jpg', pageviews30d: 10 });
+    expect(sig).toMatchObject({
+      source: 'geosearch',
+      imageUrl: 'geo.jpg',
+      title: 'Foo',
+      pageviews30d: 10,
+    });
     const calls = (global.fetch as unknown as Mock).mock.calls.map((c) => c[0] as string);
     expect(calls[0]).toContain('generator=geosearch');
     expect(calls[1]).toContain('titles=Foo');
@@ -71,5 +76,50 @@ describe('fetchWikimediaSignals', () => {
     const sig = await fetchWikimediaSignals({ title: 'Foo', lat: 1, lon: 2 });
 
     expect(sig).toMatchObject({ source: 'search', imageUrl: 'search.jpg', pageviews30d: 0 });
+  });
+
+  it('ignores geosearch when title does not match and returns full signals from the correct page', async () => {
+    const geoResp = {
+      query: {
+        pages: {
+          1: { pageid: 1, title: 'Nearby Landmark', thumbnail: { source: 'near.jpg' } },
+        },
+      },
+    };
+    const titleResp = {
+      query: {
+        pages: {
+          2: {
+            pageid: 2,
+            title: 'Correct Place',
+            extract: 'Extract',
+            pageprops: { wikibase_item: 'Q1' },
+            thumbnail: { source: 'correct.jpg' },
+          },
+        },
+      },
+    };
+    const searchResp = { query: { pages: {} } };
+    const pageviewsResp = { items: [{ views: 5 }] };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => geoResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Correct Place', lat: 1, lon: 2 });
+
+    expect(sig).toMatchObject({
+      source: 'title',
+      pageid: 2,
+      title: 'Correct Place',
+      imageUrl: 'correct.jpg',
+      description: 'Extract',
+      wikidataQid: 'Q1',
+      pageviews30d: 5,
+    });
+    expect(sig?.pageUrl).toContain('Correct_Place');
   });
 });
