@@ -4,7 +4,7 @@
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
 import { clientEnv } from './clientEnv';
-import { enrichWithWikimediaImages } from './wikimedia';
+import { enrichWithWikimediaSignals } from './wikimedia';
 
 /* Types */
 type GeoapifyFeature = {
@@ -173,7 +173,7 @@ export async function fetchGeoapifySearch(
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
-  const activities = await enrichWithWikimediaImages(
+  const activities = await enrichWithWikimediaSignals(
     featuresWithName.map((f) => mapGeoapifyFeature(f)),
     { lang }
   );

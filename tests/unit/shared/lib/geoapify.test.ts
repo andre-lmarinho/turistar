@@ -230,8 +230,12 @@ describe('fetchGeoapifySearch', () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
     vi.mock('@/shared/lib/wikimedia', () => ({
-      enrichWithWikimediaImages: vi.fn(async (acts: any) =>
-        acts.map((a: any) => ({ ...a, imageUrl: 'pt.jpg' }))
+      enrichWithWikimediaSignals: vi.fn(async (acts: any) =>
+        acts.map((a: any) => ({
+          ...a,
+          wiki: { lang: 'pt', title: a.name, description: 'Resumo', imageUrl: 'pt.jpg' },
+          imageUrl: 'pt.jpg',
+        }))
       ),
     }));
     ({ fetchGeoapifySearch } = await import('@/shared/lib/geoapify'));
@@ -266,11 +270,12 @@ describe('fetchGeoapifySearch', () => {
       .fn()
       .mockResolvedValueOnce({ ok: true, json: async () => autoResp } as unknown as Response)
       .mockResolvedValueOnce({ ok: true, json: async () => placesResp } as unknown as Response);
-    const { enrichWithWikimediaImages } = await import('@/shared/lib/wikimedia');
+    const { enrichWithWikimediaSignals } = await import('@/shared/lib/wikimedia');
     const res = await fetchGeoapifySearch('torre', 'pt');
     const fetchCalls = (global.fetch as any).mock.calls;
     expect(fetchCalls[1][0]).toContain('&lang=pt');
-    expect(enrichWithWikimediaImages).toHaveBeenCalledWith(expect.any(Array), { lang: 'pt' });
+    expect(enrichWithWikimediaSignals).toHaveBeenCalledWith(expect.any(Array), { lang: 'pt' });
+    expect(res.activities[0].wiki?.lang).toBe('pt');
     expect(res.activities[0].imageUrl).toBe('pt.jpg');
   });
 });
