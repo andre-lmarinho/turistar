@@ -108,7 +108,8 @@ export async function fetchGeoapifyCatalog(
   dest: string,
   lat?: number,
   lon?: number,
-  categories: string[] = GEOAPIFY_CATEGORIES
+  categories: string[] = GEOAPIFY_CATEGORIES,
+  lang = 'en'
 ): Promise<{ activities: CatalogActivity[] }> {
   const key = getGeoapifyKey();
 
@@ -129,7 +130,7 @@ export async function fetchGeoapifyCatalog(
     }` +
     `&filter=circle:${longitude},${latitude},${DEFAULT_RADIUS_METERS}` +
     `&bias=proximity:${longitude},${latitude}` +
-    `&limit=${CATALOG_LIMIT}&lang=en&apiKey=${key}`;
+    `&limit=${CATALOG_LIMIT}&lang=${encodeURIComponent(lang)}&apiKey=${key}`;
 
   const res = await fetch(url, {
     cache: 'force-cache',
@@ -145,7 +146,8 @@ export async function fetchGeoapifyCatalog(
 
 /* Text search – fallback “quick search” */
 export async function fetchGeoapifySearch(
-  text: string
+  text: string,
+  lang = 'en'
 ): Promise<{ activities: CatalogActivity[] }> {
   const key = getGeoapifyKey();
 
@@ -162,7 +164,7 @@ export async function fetchGeoapifySearch(
     `&categories=${encodeURIComponent(DEFAULT_CATEGORIES)}` +
     `&filter=circle:${lon},${lat},${DEFAULT_RADIUS_METERS}` +
     `&bias=proximity:${lon},${lat}` +
-    `&limit=10&lang=en&apiKey=${key}`;
+    `&limit=10&lang=${encodeURIComponent(lang)}&apiKey=${key}`;
 
   const res = await fetch(url, {
     cache: 'force-cache',
@@ -172,7 +174,8 @@ export async function fetchGeoapifySearch(
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
   const activities = await enrichWithWikimediaImages(
-    featuresWithName.map((f) => mapGeoapifyFeature(f))
+    featuresWithName.map((f) => mapGeoapifyFeature(f)),
+    { lang }
   );
 
   return { activities };

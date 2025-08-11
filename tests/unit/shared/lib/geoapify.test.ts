@@ -6,6 +6,7 @@ const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
 let fetchGeoapifyCatalog: typeof import('@/shared/lib/geoapify').fetchGeoapifyCatalog;
 let mapGeoapifyFeature: typeof import('@/shared/lib/geoapify').mapGeoapifyFeature;
+let fetchGeoapifySearch: typeof import('@/shared/lib/geoapify').fetchGeoapifySearch;
 
 describe('mapGeoapifyFeature', () => {
   beforeEach(async () => {
@@ -221,5 +222,55 @@ describe('fetchGeoapifyCatalog', () => {
     await fetchGeoapifyCatalog('paris', 1, 2);
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('fetchGeoapifySearch', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
+    vi.mock('@/shared/lib/wikimedia', () => ({
+      enrichWithWikimediaImages: vi.fn(async (acts: any) =>
+        acts.map((a: any) => ({ ...a, imageUrl: 'pt.jpg' }))
+      ),
+    }));
+    ({ fetchGeoapifySearch } = await import('@/shared/lib/geoapify'));
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
+    vi.clearAllMocks();
+  });
+
+  it('passes lang to API and enrichment', async () => {
+    const autoResp = {
+      features: [
+        { properties: { formatted: 'Lisbon, Portugal', result_type: 'city', lat: 1, lon: 2 } },
+      ],
+    };
+    const placesResp = {
+      features: [
+        {
+          properties: {
+            place_id: 1,
+            name: 'Torre de Belém',
+            lat: 1,
+            lon: 2,
+            categories: ['tourism.sights'],
+          },
+        },
+      ],
+    };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => autoResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp } as unknown as Response);
+    const { enrichWithWikimediaImages } = await import('@/shared/lib/wikimedia');
+    const res = await fetchGeoapifySearch('torre', 'pt');
+    const fetchCalls = (global.fetch as any).mock.calls;
+    expect(fetchCalls[1][0]).toContain('&lang=pt');
+    expect(enrichWithWikimediaImages).toHaveBeenCalledWith(expect.any(Array), { lang: 'pt' });
+    expect(res.activities[0].imageUrl).toBe('pt.jpg');
   });
 });

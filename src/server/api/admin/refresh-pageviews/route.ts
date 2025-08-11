@@ -1,6 +1,6 @@
 // src/server/api/admin/refresh-pageviews/route.ts
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { pLimit } from '@/shared/lib/pLimit';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
@@ -10,7 +10,9 @@ import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
  * Cron/admin route that refreshes Wikimedia pageviews when data is stale.
  * Re-fetches signals for catalog items whose `wikimedia_fetched_at` exceeds 7 days.
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const lang = searchParams.get('lang') ?? 'en';
   const supabase = supabaseServer();
   const cutoff = new Date();
   cutoff.setUTCDate(cutoff.getUTCDate() - 7);
@@ -49,7 +51,7 @@ export async function GET() {
           title: row.name,
           lat: row.latitude,
           lon: row.longitude,
-          lang: 'en',
+          lang,
         });
         if (wiki) {
           await persistWikimediaEnrichment({

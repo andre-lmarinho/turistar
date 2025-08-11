@@ -70,4 +70,25 @@ describe('fetchWikimediaImage', () => {
     expect(firstUrl).toContain('titles=Some+Place');
     expect(secondUrl).toContain('gsrsearch=Some+Place');
   });
+
+  it('respects provided language', async () => {
+    const titleResp = {
+      query: { pages: { 1: { title: 'Cristo Redentor', thumbnail: { source: 'pt.jpg' } } } },
+    };
+    const searchResp = { query: { pages: {} } };
+    const pageviewsResp = { items: [] };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+
+    const url = await fetchWikimediaImage('Cristo Redentor', { lang: 'pt' });
+
+    expect(url).toBe('pt.jpg');
+    const fetchMock = global.fetch as unknown as Mock;
+    const calls = fetchMock.mock.calls.map((c) => c[0] as string);
+    expect(calls[0]).toContain('pt.wikipedia.org');
+    expect(calls[1]).toContain('pt.wikipedia.org');
+  });
 });

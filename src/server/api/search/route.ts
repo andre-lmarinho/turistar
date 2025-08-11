@@ -8,6 +8,7 @@ import { fetchGeoapifySearch } from '@/shared/lib/geoapify';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const q = searchParams.get('q');
+  const lang = searchParams.get('lang') ?? 'en';
   if (!q) {
     return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
   }
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const data = await fetchGeoapifySearch(q);
+    const data = await fetchGeoapifySearch(q, lang);
     return NextResponse.json(data);
   } catch (err) {
     console.error(err);
