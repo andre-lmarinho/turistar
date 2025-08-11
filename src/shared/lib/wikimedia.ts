@@ -76,8 +76,37 @@ function pageFromGenerator(query: QueryWithPages): ApiPage | undefined {
   return pageFromQuery(query);
 }
 
-/** Geo-first: uses generator=geosearch to fetch properties and images in one request. */
-async function byGeoSearch(lang: string, lat: number, lon: number, radius: number) {
+const TITLE_SIMILARITY_THRESHOLD = 0.5;
+
+function normalizeTitle(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/\s*\(.*?\)\s*/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function titleSimilarity(a: string, b: string): number {
+  const setA = new Set(a.split(' ').filter(Boolean));
+  const setB = new Set(b.split(' ').filter(Boolean));
+  const intersection = [...setA].filter((w) => setB.has(w)).length;
+  const union = new Set([...setA, ...setB]).size;
+  return union > 0 ? intersection / union : 0;
+}
+
+/**
+ * Geo-first: uses generator=geosearch to fetch nearby pages.
+ * Evaluates all candidates against the provided query title and picks the
+ * best match if it clears a similarity threshold. Otherwise returns undefined
+ * so that other strategies (exact title, text search) can resolve the page.
+ */
+async function byGeoSearch(
+  lang: string,
+  queryTitle: string,
+  lat: number,
+  lon: number,
+  radius: number
+) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
     prop: 'pageimages|pageprops|description|extracts',
@@ -94,9 +123,20 @@ async function byGeoSearch(lang: string, lat: number, lon: number, radius: numbe
     redirects: 1,
   })}`;
   const data = await fetchJson(url);
-  const page = pageFromGenerator(data?.query);
-  if (!page) return undefined;
-  return normalizeSignals(page, lang, 'geosearch');
+  const pages = data?.query?.pages;
+  if (!pages) return undefined;
+
+  const normQuery = normalizeTitle(queryTitle);
+  let best: { page: ApiPage; score: number } | undefined;
+
+  for (const page of Object.values(pages) as ApiPage[]) {
+    const score = titleSimilarity(normQuery, normalizeTitle(page.title));
+    if (!best || score > best.score) best = { page, score };
+  }
+
+  if (!best || best.score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+
+  return normalizeSignals(best.page, lang, 'geosearch');
 }
 
 /** Try an exact title lookup (with redirects). */
@@ -211,7 +251,7 @@ export async function fetchWikimediaSignals(input: {
   const tasks: Array<Promise<WikimediaSignals | undefined>> = [];
 
   if (input.lat != null && input.lon != null) {
-    tasks.push(byGeoSearch(lang, input.lat, input.lon, radius).catch(() => undefined));
+    tasks.push(byGeoSearch(lang, input.title, input.lat, input.lon, radius).catch(() => undefined));
   }
   tasks.push(byExactTitle(lang, input.title).catch(() => undefined));
   tasks.push(bySearch(lang, input.title).catch(() => undefined));
