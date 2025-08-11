@@ -71,13 +71,16 @@ function pageFromQuery(query: QueryWithPages): ApiPage | undefined {
   return first ?? Object.values(pages)[0];
 }
 
-const DEFAULT_TITLE_SIMILARITY_THRESHOLD = 0.3;
+const DEFAULT_TITLE_SIMILARITY_THRESHOLD = 0.5;
 
 function normalizeTitle(str: string): string {
   return str
     .toLowerCase()
     .replace(/\s*\(.*?\)\s*/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
+    .split(' ')
+    .filter((w) => w.length > 2)
+    .join(' ')
     .trim();
 }
 

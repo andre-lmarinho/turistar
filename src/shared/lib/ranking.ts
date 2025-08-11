@@ -94,6 +94,9 @@ export function computeCatalogScore(
   const boost = categories.reduce((max, c) => Math.max(max, SUBCLASS_BOOST[c] ?? 0), 0);
   score += boost;
 
+  // Severely downrank places with no Wikimedia match.
+  if (!wiki) score *= 0.1;
+
   const value = clamp01(score);
 
   if (opts?.debug) {

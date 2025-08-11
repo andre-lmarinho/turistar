@@ -50,4 +50,16 @@ describe('computeCatalogScore', () => {
       boost: expect.any(Number),
     });
   });
+
+  it('downranks places without Wikimedia data', () => {
+    const place: CatalogActivity = {
+      id: '1',
+      name: 'Place',
+      latitude: 0,
+      longitude: 0,
+      metadata: { distance: 0 },
+    } as unknown as CatalogActivity;
+    const score = computeCatalogScore(place, undefined, { lat: 0, lon: 0 });
+    expect(score).toBeCloseTo(0.03, 5);
+  });
 });
