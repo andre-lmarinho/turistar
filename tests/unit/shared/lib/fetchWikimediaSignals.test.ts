@@ -203,4 +203,26 @@ describe('fetchWikimediaSignals', () => {
 
     expect(sig).toBeUndefined();
   });
+
+  it('rejects results that share only a single word when threshold is high', async () => {
+    const titleResp = {
+      query: {
+        pages: { 1: { pageid: 1, title: 'Bar Sign', thumbnail: { source: 'bar.jpg' } } },
+      },
+    };
+    const searchResp = {
+      query: {
+        pages: { 2: { pageid: 2, title: 'Baz Sign', thumbnail: { source: 'baz.jpg' } } },
+      },
+    };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo Sign', similarityThreshold: 0.7 });
+
+    expect(sig).toBeUndefined();
+  });
 });

@@ -71,7 +71,7 @@ function pageFromQuery(query: QueryWithPages): ApiPage | undefined {
   return first ?? Object.values(pages)[0];
 }
 
-const TITLE_SIMILARITY_THRESHOLD = 0.3;
+const DEFAULT_TITLE_SIMILARITY_THRESHOLD = 0.3;
 
 function normalizeTitle(str: string): string {
   return str
@@ -106,7 +106,8 @@ async function byGeoSearch(
   queryTitle: string,
   lat: number,
   lon: number,
-  radius: number
+  radius: number,
+  threshold: number
 ) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
@@ -135,7 +136,7 @@ async function byGeoSearch(
     if (!best || score > best.score) best = { page, score };
   }
 
-  if (!best || best.score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+  if (!best || best.score < threshold) return undefined;
 
   return normalizeSignals(best.page, lang, 'geosearch');
 }
@@ -145,7 +146,7 @@ async function byGeoSearch(
  * Only returns a page if the resolved title is sufficiently similar
  * to the requested one.
  */
-async function byExactTitle(lang: string, queryTitle: string) {
+async function byExactTitle(lang: string, queryTitle: string, threshold: number) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
     prop: 'pageimages|pageprops|description|extracts',
@@ -163,7 +164,7 @@ async function byExactTitle(lang: string, queryTitle: string) {
   if (!page) return undefined;
 
   const score = titleSimilarity(normalizeTitle(queryTitle), normalizeTitle(page.title));
-  if (score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+  if (score < threshold) return undefined;
 
   return normalizeSignals(page, lang, 'title');
 }
@@ -173,7 +174,7 @@ async function byExactTitle(lang: string, queryTitle: string) {
  * Evaluates all search results and returns the best match above the
  * similarity threshold.
  */
-async function bySearch(lang: string, queryTitle: string) {
+async function bySearch(lang: string, queryTitle: string, threshold: number) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
     prop: 'pageimages|pageprops|description|extracts',
@@ -199,7 +200,7 @@ async function bySearch(lang: string, queryTitle: string) {
     if (!best || score > best.score) best = { page, score };
   }
 
-  if (!best || best.score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+  if (!best || best.score < threshold) return undefined;
 
   return normalizeSignals(best.page, lang, 'search');
 }
@@ -266,18 +267,22 @@ export async function fetchWikimediaSignals(input: {
   lon?: number;
   lang?: string;
   radius?: number;
+  similarityThreshold?: number;
 }): Promise<WikimediaSignals | undefined> {
   const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now();
   const lang = input.lang ?? DEFAULT_LANG;
   const radius = input.radius ?? DEFAULT_RADIUS;
+  const threshold = input.similarityThreshold ?? DEFAULT_TITLE_SIMILARITY_THRESHOLD;
 
   const tasks: Array<Promise<WikimediaSignals | undefined>> = [];
 
   if (input.lat != null && input.lon != null) {
-    tasks.push(byGeoSearch(lang, input.title, input.lat, input.lon, radius).catch(() => undefined));
+    tasks.push(
+      byGeoSearch(lang, input.title, input.lat, input.lon, radius, threshold).catch(() => undefined)
+    );
   }
-  tasks.push(byExactTitle(lang, input.title).catch(() => undefined));
-  tasks.push(bySearch(lang, input.title).catch(() => undefined));
+  tasks.push(byExactTitle(lang, input.title, threshold).catch(() => undefined));
+  tasks.push(bySearch(lang, input.title, threshold).catch(() => undefined));
 
   const settled = await Promise.allSettled(tasks);
 
@@ -315,7 +320,13 @@ export async function fetchWikimediaSignals(input: {
  */
 export async function fetchWikimediaImage(
   text: string,
-  opts?: { lat?: number; lon?: number; lang?: string; radius?: number }
+  opts?: {
+    lat?: number;
+    lon?: number;
+    lang?: string;
+    radius?: number;
+    similarityThreshold?: number;
+  }
 ): Promise<string | undefined> {
   const res = await fetchWikimediaSignals({
     title: text,
@@ -323,6 +334,7 @@ export async function fetchWikimediaImage(
     lon: opts?.lon,
     lang: opts?.lang,
     radius: opts?.radius,
+    similarityThreshold: opts?.similarityThreshold,
   });
   return res?.imageUrl;
 }
@@ -330,10 +342,11 @@ export async function fetchWikimediaImage(
 // Helper to enrich activities with Wikimedia images. Retained for compatibility.
 export async function enrichWithWikimediaSignals(
   activities: CatalogActivity[],
-  opts?: { concurrency?: number; lang?: string }
+  opts?: { concurrency?: number; lang?: string; similarityThreshold?: number }
 ): Promise<CatalogActivity[]> {
   const limit = pLimit(opts?.concurrency ?? 8);
   const lang = opts?.lang;
+  const threshold = opts?.similarityThreshold;
   return Promise.all(
     activities.map((a) =>
       limit(async () => {
@@ -342,6 +355,7 @@ export async function enrichWithWikimediaSignals(
           lat: a.latitude,
           lon: a.longitude,
           lang,
+          similarityThreshold: threshold,
         });
         return wiki
           ? {
