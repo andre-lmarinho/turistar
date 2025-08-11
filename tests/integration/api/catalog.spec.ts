@@ -40,6 +40,18 @@ vi.mock('@/server/repos/catalog.persist', () => ({
   persistWikimediaEnrichment: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock('@/shared/lib/supabaseService', () => ({
+  supabaseService: () => ({
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: () => Promise.resolve({ data: { id: 'dest-1' }, error: null }),
+        }),
+      }),
+    }),
+  }),
+}));
+
 describe('GET /api/catalog', () => {
   beforeAll(() => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.com';

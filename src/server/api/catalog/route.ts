@@ -7,6 +7,7 @@ import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 import { computeCatalogScore } from '@/shared/lib';
 import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
 import { clientEnv } from '@/shared/lib/clientEnv';
+import { supabaseService } from '@/shared/lib/supabaseService';
 
 /**
  * API route that proxies catalog data from Geoapify.
@@ -28,6 +29,40 @@ export async function GET(req: NextRequest) {
   const hadCoords = lat != null && lon != null;
 
   try {
+    let destinationId: string | undefined;
+    if (dest) {
+      try {
+        const sb = supabaseService();
+        const { data: existing, error: lookupErr } = (await (sb
+          .from('destinations')
+          .select('id')
+          .eq('name', dest) as any).maybeSingle()) as {
+          data: { id: string } | null;
+          error: unknown;
+        };
+        if (lookupErr) {
+          console.error('destinations lookup failed', { dest, error: lookupErr });
+        } else if (existing?.id) {
+          destinationId = existing.id;
+        } else {
+          const { data: inserted, error: insertErr } = (await (sb
+            .from('destinations')
+            .insert({ name: dest })
+            .select('id') as any).single()) as {
+            data: { id: string } | null;
+            error: unknown;
+          };
+          if (insertErr) {
+            console.error('destinations insert failed', { dest, error: insertErr });
+          } else {
+            destinationId = inserted?.id;
+          }
+        }
+      } catch (err) {
+        console.error('destinations lookup failed', { dest, error: err });
+      }
+    }
+
     const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon);
 
     if (!clientEnv.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT) {
@@ -55,24 +90,26 @@ export async function GET(req: NextRequest) {
 
           // Persist Wikimedia data with rank score. Errors are caught so catalog
           // responses aren't disrupted.
-          try {
-            await persistWikimediaEnrichment({
-              item: {
+          if (destinationId) {
+            try {
+              await persistWikimediaEnrichment({
+                item: {
+                  id: p.id,
+                  name: p.name,
+                  category: p.category,
+                  latitude: p.latitude,
+                  longitude: p.longitude,
+                  destination_id: destinationId,
+                  source: 'geoapify',
+                },
+                wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
+              });
+            } catch (err) {
+              console.error('persistWikimediaEnrichment failed', {
                 id: p.id,
-                name: p.name,
-                category: p.category,
-                latitude: p.latitude,
-                longitude: p.longitude,
-                destination_id: dest ?? '',
-                source: 'geoapify',
-              },
-              wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
-            });
-          } catch (err) {
-            console.error('persistWikimediaEnrichment failed', {
-              id: p.id,
-              error: err,
-            });
+                error: err,
+              });
+            }
           }
 
           return {

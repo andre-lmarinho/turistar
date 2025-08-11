@@ -1,6 +1,6 @@
 // src/server/repos/catalog.persist.ts
 
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { supabaseService } from '@/shared/lib/supabaseService';
 import type { CatalogActivity } from '@/shared/types';
 import type { WikimediaSignals } from '@/shared/lib/wikimedia';
 
@@ -29,15 +29,24 @@ export async function persistWikimediaEnrichment(params: {
     source: itemSource,
   } = params.item;
 
-  const supabase = supabaseServer(); // TODO: consider service role for RLS bypass
+  if (!destination_id || !itemSource) {
+    console.warn('persistWikimediaEnrichment missing destination_id or source', {
+      id,
+      destination_id,
+      source: itemSource,
+    });
+    return;
+  }
 
-  const { data, error } = await supabase
+  const supabase = supabaseService();
+
+  const { data, error } = (await supabase
     .from('catalog')
     .upsert(
       {
         id,
-        destination_id: destination_id ?? '',
-        source: itemSource ?? '',
+        destination_id,
+        source: itemSource,
         name,
         category,
         latitude,
@@ -55,7 +64,7 @@ export async function persistWikimediaEnrichment(params: {
       },
       { onConflict: 'id' }
     )
-    .select('id');
+    .select('id')) as unknown as { data: { id: string }[] | null; error: unknown };
 
   if (error) {
     throw error;
