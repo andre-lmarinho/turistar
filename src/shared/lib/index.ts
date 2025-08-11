@@ -11,7 +11,7 @@ export {
 export {
   fetchWikimediaImage,
   fetchWikimediaSignals,
-  enrichWithWikimediaImages,
+  enrichWithWikimediaSignals,
   withPageviews,
 } from './wikimedia';
 export { computeCatalogScore } from './ranking';

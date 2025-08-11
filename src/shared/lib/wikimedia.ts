@@ -10,6 +10,7 @@ export type WikimediaSignals = {
   title?: string;
   imageUrl?: string;
   description?: string;
+  pageUrl?: string;
   lang?: string;
   wikidataQid?: string; // pageprops.wikibase_item
   source?: 'geosearch' | 'title' | 'search';
@@ -23,6 +24,7 @@ type ApiPage = {
   thumbnail?: { source: string; width: number; height: number };
   original?: { source: string; width: number; height: number };
   description?: string;
+  extract?: string;
   pageprops?: { wikibase_item?: string };
 };
 
@@ -78,7 +80,7 @@ function pageFromGenerator(query: QueryWithPages): ApiPage | undefined {
 async function byGeoSearch(lang: string, lat: number, lon: number, radius: number) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
-    prop: 'pageimages|pageprops|description',
+    prop: 'pageimages|pageprops|description|extracts',
     generator: 'geosearch',
     ggscoord: `${lat}|${lon}`,
     ggsradius: radius,
@@ -87,6 +89,8 @@ async function byGeoSearch(lang: string, lat: number, lon: number, radius: numbe
     pithumbsize: 640,
     pilicense: 'any',
     ppprop: 'wikibase_item',
+    exintro: 1,
+    explaintext: 1,
     redirects: 1,
   })}`;
   const data = await fetchJson(url);
@@ -99,12 +103,14 @@ async function byGeoSearch(lang: string, lat: number, lon: number, radius: numbe
 async function byExactTitle(lang: string, title: string) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
-    prop: 'pageimages|pageprops|description',
+    prop: 'pageimages|pageprops|description|extracts',
     titles: title,
     piprop: 'thumbnail|original',
     pithumbsize: 640,
     pilicense: 'any',
     ppprop: 'wikibase_item',
+    exintro: 1,
+    explaintext: 1,
     redirects: 1,
   })}`;
   const data = await fetchJson(url);
@@ -117,7 +123,7 @@ async function byExactTitle(lang: string, title: string) {
 async function bySearch(lang: string, title: string) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
-    prop: 'pageimages|pageprops|description',
+    prop: 'pageimages|pageprops|description|extracts',
     generator: 'search',
     gsrlimit: 5,
     gsrsearch: title,
@@ -125,6 +131,8 @@ async function bySearch(lang: string, title: string) {
     pithumbsize: 640,
     pilicense: 'any',
     ppprop: 'wikibase_item',
+    exintro: 1,
+    explaintext: 1,
     redirects: 1,
   })}`;
   const data = await fetchJson(url);
@@ -142,7 +150,10 @@ function normalizeSignals(
     pageid: page.pageid,
     title: page.title,
     imageUrl: pickImageFromPage(page),
-    description: page.description,
+    description: page.extract ?? page.description,
+    pageUrl: `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(
+      page.title.replace(/ /g, '_')
+    )}`,
     lang,
     wikidataQid: page.pageprops?.wikibase_item,
     source,
@@ -254,7 +265,7 @@ export async function fetchWikimediaImage(
 }
 
 // Helper to enrich activities with Wikimedia images. Retained for compatibility.
-export async function enrichWithWikimediaImages(
+export async function enrichWithWikimediaSignals(
   activities: CatalogActivity[],
   opts?: { concurrency?: number; lang?: string }
 ): Promise<CatalogActivity[]> {
@@ -263,14 +274,19 @@ export async function enrichWithWikimediaImages(
   return Promise.all(
     activities.map((a) =>
       limit(async () => {
-        if (a.imageUrl) return a;
         const wiki = await fetchWikimediaSignals({
           title: a.name,
           lat: a.latitude,
           lon: a.longitude,
           lang,
         });
-        return wiki?.imageUrl ? { ...a, imageUrl: wiki.imageUrl } : a;
+        return wiki
+          ? {
+              ...a,
+              ...(wiki.imageUrl && !a.imageUrl ? { imageUrl: wiki.imageUrl } : {}),
+              wiki,
+            }
+          : a;
       })
     )
   );
