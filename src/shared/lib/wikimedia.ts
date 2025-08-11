@@ -71,12 +71,7 @@ function pageFromQuery(query: QueryWithPages): ApiPage | undefined {
   return first ?? Object.values(pages)[0];
 }
 
-function pageFromGenerator(query: QueryWithPages): ApiPage | undefined {
-  // When using generator=*, pages are also found in query.pages
-  return pageFromQuery(query);
-}
-
-const TITLE_SIMILARITY_THRESHOLD = 0.5;
+const TITLE_SIMILARITY_THRESHOLD = 0.3;
 
 function normalizeTitle(str: string): string {
   return str
@@ -145,12 +140,16 @@ async function byGeoSearch(
   return normalizeSignals(best.page, lang, 'geosearch');
 }
 
-/** Try an exact title lookup (with redirects). */
-async function byExactTitle(lang: string, title: string) {
+/**
+ * Try an exact title lookup (with redirects).
+ * Only returns a page if the resolved title is sufficiently similar
+ * to the requested one.
+ */
+async function byExactTitle(lang: string, queryTitle: string) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
     prop: 'pageimages|pageprops|description|extracts',
-    titles: title,
+    titles: queryTitle,
     piprop: 'thumbnail|original',
     pithumbsize: 640,
     pilicense: 'any',
@@ -162,17 +161,25 @@ async function byExactTitle(lang: string, title: string) {
   const data = await fetchJson(url);
   const page = pageFromQuery(data?.query);
   if (!page) return undefined;
+
+  const score = titleSimilarity(normalizeTitle(queryTitle), normalizeTitle(page.title));
+  if (score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+
   return normalizeSignals(page, lang, 'title');
 }
 
-/** Text search fallback. */
-async function bySearch(lang: string, title: string) {
+/**
+ * Text search fallback.
+ * Evaluates all search results and returns the best match above the
+ * similarity threshold.
+ */
+async function bySearch(lang: string, queryTitle: string) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
     prop: 'pageimages|pageprops|description|extracts',
     generator: 'search',
     gsrlimit: 5,
-    gsrsearch: title,
+    gsrsearch: queryTitle,
     piprop: 'thumbnail|original',
     pithumbsize: 640,
     pilicense: 'any',
@@ -182,9 +189,19 @@ async function bySearch(lang: string, title: string) {
     redirects: 1,
   })}`;
   const data = await fetchJson(url);
-  const page = pageFromGenerator(data?.query);
-  if (!page) return undefined;
-  return normalizeSignals(page, lang, 'search');
+  const pages = data?.query?.pages;
+  if (!pages) return undefined;
+
+  const normQuery = normalizeTitle(queryTitle);
+  let best: { page: ApiPage; score: number } | undefined;
+  for (const page of Object.values(pages) as ApiPage[]) {
+    const score = titleSimilarity(normQuery, normalizeTitle(page.title));
+    if (!best || score > best.score) best = { page, score };
+  }
+
+  if (!best || best.score < TITLE_SIMILARITY_THRESHOLD) return undefined;
+
+  return normalizeSignals(best.page, lang, 'search');
 }
 
 function normalizeSignals(

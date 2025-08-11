@@ -55,13 +55,13 @@ describe('fetchWikimediaSignals', () => {
     expect(calls[2]).toContain('gsrsearch=Foo');
   });
 
-  it('falls back to title then search and sets pageviews to 0 on failure', async () => {
+  it('falls back to search when geosearch and title do not match and sets pageviews to 0 on failure', async () => {
     const geoResp = { query: { pages: { 1: { pageid: 1, title: 'Geo' } } } };
     const titleResp = { query: { pages: { 2: { pageid: 2, title: 'Title' } } } };
     const searchResp = {
       query: {
         pages: {
-          3: { pageid: 3, title: 'Search', thumbnail: { source: 'search.jpg' } },
+          3: { pageid: 3, title: 'Foo', thumbnail: { source: 'search.jpg' } },
         },
       },
     };
@@ -153,5 +153,54 @@ describe('fetchWikimediaSignals', () => {
       'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen'
     );
     expect(sig?.description?.split(/\s+/)).toHaveLength(16);
+  });
+
+  it('falls back to search when exact title result does not match', async () => {
+    const titleResp = {
+      query: {
+        pages: { 1: { pageid: 1, title: 'Wrong Page', thumbnail: { source: 'wrong.jpg' } } },
+      },
+    };
+    const searchResp = {
+      query: { pages: { 2: { pageid: 2, title: 'Foo', thumbnail: { source: 'search.jpg' } } } },
+    };
+    const pageviewsResp = { items: [{ views: 7 }] };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo' });
+
+    expect(sig).toMatchObject({
+      source: 'search',
+      pageid: 2,
+      imageUrl: 'search.jpg',
+      pageviews30d: 7,
+    });
+  });
+
+  it('returns undefined when neither title nor search match', async () => {
+    const titleResp = {
+      query: {
+        pages: { 1: { pageid: 1, title: 'Wrong Page', thumbnail: { source: 'wrong.jpg' } } },
+      },
+    };
+    const searchResp = {
+      query: {
+        pages: { 2: { pageid: 2, title: 'Also Wrong', thumbnail: { source: 'search.jpg' } } },
+      },
+    };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo' });
+
+    expect(sig).toBeUndefined();
   });
 });
