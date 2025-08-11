@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import type { CatalogActivity } from '@/shared/types';
+import type { Database } from '@/shared/types/supabase';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { fetchCatalog } from './fetchCatalog';
 
@@ -29,35 +30,19 @@ export function useCatalogActivities(
     async function load() {
       setLoading(true);
       try {
-        let destId: string | undefined;
         const { data: links } = (await supabase
           .from('plan_destinations')
           .select('destination_id')
           .eq('plan_id', planId)
-          .order('position')) as unknown as {
-          data: { destination_id: string }[] | null;
-        };
-        destId = links?.[0]?.destination_id;
+          .order('position')) as any;
+        const destId = links?.[0]?.destination_id as string | undefined;
 
-        type CatalogRow = {
-          id: string;
-          name: string;
-          category: string;
-          description: string | null;
-          address: string | null;
-          image_url: string | null;
-          latitude: number | null;
-          longitude: number | null;
-          metadata: Record<string, unknown> | null;
-        };
-        let rows: CatalogRow[] = [];
+        let rows: Database['public']['Tables']['catalog']['Row'][] = [];
         if (destId) {
           const { data } = (await supabase
             .from('catalog')
             .select('*')
-            .eq('destination_id', destId)) as unknown as {
-            data: CatalogRow[] | null;
-          };
+            .eq('destination_id', destId)) as any;
           rows = data ?? [];
         }
 
@@ -72,7 +57,7 @@ export function useCatalogActivities(
               imageUrl: r.image_url ?? undefined,
               latitude: r.latitude ?? undefined,
               longitude: r.longitude ?? undefined,
-              metadata: r.metadata ?? undefined,
+              metadata: (r.metadata as Record<string, unknown> | null) ?? undefined,
             }))
           );
           setError(false);

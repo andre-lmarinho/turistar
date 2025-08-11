@@ -53,17 +53,27 @@ export async function GET(req: NextRequest) {
             : computeCatalogScore(p, wiki, center);
           const score = typeof scoreResult === 'number' ? scoreResult : scoreResult.value;
 
-          // Persist Wikimedia data with rank score; failures are logged but ignored.
-          await persistWikimediaEnrichment({
-            item: {
+          // Persist Wikimedia data with rank score. Errors are caught so catalog
+          // responses aren't disrupted.
+          try {
+            await persistWikimediaEnrichment({
+              item: {
+                id: p.id,
+                name: p.name,
+                category: p.category,
+                latitude: p.latitude,
+                longitude: p.longitude,
+                destination_id: dest ?? '',
+                source: 'geoapify',
+              },
+              wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
+            });
+          } catch (err) {
+            console.error('persistWikimediaEnrichment failed', {
               id: p.id,
-              name: p.name,
-              category: p.category,
-              latitude: p.latitude,
-              longitude: p.longitude,
-            },
-            wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
-          });
+              error: err,
+            });
+          }
 
           return {
             ...p,
