@@ -122,4 +122,36 @@ describe('fetchWikimediaSignals', () => {
     });
     expect(sig?.pageUrl).toContain('Correct_Place');
   });
+
+  it('caps description at 16 words', async () => {
+    const longText =
+      'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen';
+    const titleResp = {
+      query: {
+        pages: {
+          1: {
+            pageid: 1,
+            title: 'Foo',
+            extract: longText,
+            thumbnail: { source: 'img.jpg' },
+          },
+        },
+      },
+    };
+    const searchResp = { query: { pages: {} } };
+    const pageviewsResp = { items: [] };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo' });
+
+    expect(sig?.description).toBe(
+      'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen'
+    );
+    expect(sig?.description?.split(/\s+/)).toHaveLength(16);
+  });
 });

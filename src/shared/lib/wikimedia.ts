@@ -94,6 +94,12 @@ function titleSimilarity(a: string, b: string): number {
   return union > 0 ? intersection / union : 0;
 }
 
+function truncateWords(str: string | undefined, max = 16): string | undefined {
+  if (!str) return undefined;
+  const words = str.trim().split(/\s+/);
+  return words.length > max ? words.slice(0, max).join(' ') : str.trim();
+}
+
 /**
  * Geo-first: uses generator=geosearch to fetch nearby pages.
  * Evaluates all candidates against the provided query title and picks the
@@ -190,7 +196,7 @@ function normalizeSignals(
     pageid: page.pageid,
     title: page.title,
     imageUrl: pickImageFromPage(page),
-    description: page.extract ?? page.description,
+    description: truncateWords(page.extract ?? page.description),
     pageUrl: `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(
       page.title.replace(/ /g, '_')
     )}`,
