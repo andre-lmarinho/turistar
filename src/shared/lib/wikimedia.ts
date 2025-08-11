@@ -26,6 +26,7 @@ type ApiPage = {
   description?: string;
   extract?: string;
   pageprops?: { wikibase_item?: string };
+  coordinates?: { lat: number; lon: number }[];
 };
 
 const REVALIDATE_6H = 21600;
@@ -98,6 +99,18 @@ function truncateWords(str: string | undefined, max = 16): string | undefined {
   return words.length > max ? words.slice(0, max).join(' ') : str.trim();
 }
 
+function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371e3; // metres
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 /**
  * Geo-first: uses generator=geosearch to fetch nearby pages.
  * Evaluates all candidates against the provided query title and picks the
@@ -149,10 +162,17 @@ async function byGeoSearch(
  * Only returns a page if the resolved title is sufficiently similar
  * to the requested one.
  */
-async function byExactTitle(lang: string, queryTitle: string, threshold: number) {
+async function byExactTitle(
+  lang: string,
+  queryTitle: string,
+  threshold: number,
+  lat?: number,
+  lon?: number,
+  radius?: number
+) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
-    prop: 'pageimages|pageprops|description|extracts',
+    prop: 'pageimages|pageprops|description|extracts|coordinates',
     titles: queryTitle,
     piprop: 'thumbnail|original',
     pithumbsize: 640,
@@ -169,6 +189,11 @@ async function byExactTitle(lang: string, queryTitle: string, threshold: number)
   const score = titleSimilarity(normalizeTitle(queryTitle), normalizeTitle(page.title));
   if (score < threshold) return undefined;
 
+  if (lat != null && lon != null && radius != null && page.coordinates?.[0]) {
+    const dist = haversine(lat, lon, page.coordinates[0].lat, page.coordinates[0].lon);
+    if (dist > radius) return undefined;
+  }
+
   return normalizeSignals(page, lang, 'title');
 }
 
@@ -177,13 +202,20 @@ async function byExactTitle(lang: string, queryTitle: string, threshold: number)
  * Evaluates all search results and returns the best match above the
  * similarity threshold.
  */
-async function bySearch(lang: string, queryTitle: string, threshold: number) {
+async function bySearch(
+  lang: string,
+  queryTitle: string,
+  threshold: number,
+  lat?: number,
+  lon?: number,
+  radius?: number
+) {
   const url = `${wapiBase(lang)}?${paramsToQS({
     action: 'query',
-    prop: 'pageimages|pageprops|description|extracts',
+    prop: 'pageimages|pageprops|description|extracts|coordinates',
     generator: 'search',
     gsrlimit: 5,
-    gsrsearch: queryTitle,
+    gsrsearch: lat != null && lon != null ? `${queryTitle} nearcoord:${lat},${lon}` : queryTitle,
     piprop: 'thumbnail|original',
     pithumbsize: 640,
     pilicense: 'any',
@@ -199,6 +231,12 @@ async function bySearch(lang: string, queryTitle: string, threshold: number) {
   const normQuery = normalizeTitle(queryTitle);
   let best: { page: ApiPage; score: number } | undefined;
   for (const page of Object.values(pages) as ApiPage[]) {
+    if (lat != null && lon != null && radius != null) {
+      const coord = page.coordinates?.[0];
+      if (!coord) continue;
+      const dist = haversine(lat, lon, coord.lat, coord.lon);
+      if (dist > radius) continue;
+    }
     const score = titleSimilarity(normQuery, normalizeTitle(page.title));
     if (!best || score > best.score) best = { page, score };
   }
@@ -284,8 +322,12 @@ export async function fetchWikimediaSignals(input: {
       byGeoSearch(lang, input.title, input.lat, input.lon, radius, threshold).catch(() => undefined)
     );
   }
-  tasks.push(byExactTitle(lang, input.title, threshold).catch(() => undefined));
-  tasks.push(bySearch(lang, input.title, threshold).catch(() => undefined));
+  tasks.push(
+    byExactTitle(lang, input.title, threshold, input.lat, input.lon, radius).catch(() => undefined)
+  );
+  tasks.push(
+    bySearch(lang, input.title, threshold, input.lat, input.lon, radius).catch(() => undefined)
+  );
 
   const settled = await Promise.allSettled(tasks);
 

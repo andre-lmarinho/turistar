@@ -28,7 +28,12 @@ describe('fetchWikimediaSignals', () => {
     const searchResp = {
       query: {
         pages: {
-          3: { pageid: 3, title: 'Foo', thumbnail: { source: 'search.jpg' } },
+          3: {
+            pageid: 3,
+            title: 'Foo',
+            thumbnail: { source: 'search.jpg' },
+            coordinates: [{ lat: 1, lon: 2 }],
+          },
         },
       },
     };
@@ -52,7 +57,7 @@ describe('fetchWikimediaSignals', () => {
     const calls = (global.fetch as unknown as Mock).mock.calls.map((c) => c[0] as string);
     expect(calls[0]).toContain('generator=geosearch');
     expect(calls[1]).toContain('titles=Foo');
-    expect(calls[2]).toContain('gsrsearch=Foo');
+    expect(calls[2]).toContain('gsrsearch=Foo+nearcoord%3A1%2C2');
   });
 
   it('falls back to search when geosearch and title do not match and sets pageviews to 0 on failure', async () => {
@@ -61,7 +66,12 @@ describe('fetchWikimediaSignals', () => {
     const searchResp = {
       query: {
         pages: {
-          3: { pageid: 3, title: 'Foo', thumbnail: { source: 'search.jpg' } },
+          3: {
+            pageid: 3,
+            title: 'Foo',
+            thumbnail: { source: 'search.jpg' },
+            coordinates: [{ lat: 1, lon: 2 }],
+          },
         },
       },
     };
@@ -141,11 +151,24 @@ describe('fetchWikimediaSignals', () => {
     const searchResp = { query: { pages: {} } };
     const pageviewsResp = { items: [] };
 
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+    global.fetch = vi.fn((url: string) => {
+      if (url.includes('titles=Foo')) {
+        return Promise.resolve({ ok: true, json: async () => titleResp } as unknown as Response);
+      }
+      if (url.includes('generator=search')) {
+        return Promise.resolve({ ok: true, json: async () => searchResp } as unknown as Response);
+      }
+      if (url.includes('pageviews')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => pageviewsResp,
+        } as unknown as Response);
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ query: { pages: {} } }),
+      } as unknown as Response);
+    });
 
     const sig = await fetchWikimediaSignals({ title: 'Foo' });
 
@@ -153,33 +176,6 @@ describe('fetchWikimediaSignals', () => {
       'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen'
     );
     expect(sig?.description?.split(/\s+/)).toHaveLength(16);
-  });
-
-  it('falls back to search when exact title result does not match', async () => {
-    const titleResp = {
-      query: {
-        pages: { 1: { pageid: 1, title: 'Wrong Page', thumbnail: { source: 'wrong.jpg' } } },
-      },
-    };
-    const searchResp = {
-      query: { pages: { 2: { pageid: 2, title: 'Foo', thumbnail: { source: 'search.jpg' } } } },
-    };
-    const pageviewsResp = { items: [{ views: 7 }] };
-
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
-      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
-
-    const sig = await fetchWikimediaSignals({ title: 'Foo' });
-
-    expect(sig).toMatchObject({
-      source: 'search',
-      pageid: 2,
-      imageUrl: 'search.jpg',
-      pageviews30d: 7,
-    });
   });
 
   it('returns undefined when neither title nor search match', async () => {
@@ -224,5 +220,84 @@ describe('fetchWikimediaSignals', () => {
     const sig = await fetchWikimediaSignals({ title: 'Foo Sign', similarityThreshold: 0.7 });
 
     expect(sig).toBeUndefined();
+  });
+
+  it('rejects search results that are outside the radius', async () => {
+    const searchResp = {
+      query: {
+        pages: {
+          1: {
+            pageid: 1,
+            title: 'Foo',
+            thumbnail: { source: 'far.jpg' },
+            coordinates: [{ lat: 10, lon: 10 }],
+          },
+        },
+      },
+    };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ query: { pages: {} } }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ query: { pages: {} } }),
+      } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo', lat: 1, lon: 2, radius: 500 });
+
+    expect(sig).toBeUndefined();
+  });
+
+  it('falls back to search when exact title coordinates are far away', async () => {
+    const titleResp = {
+      query: {
+        pages: {
+          1: {
+            pageid: 1,
+            title: 'Foo',
+            thumbnail: { source: 'far.jpg' },
+            coordinates: [{ lat: 10, lon: 10 }],
+          },
+        },
+      },
+    };
+    const searchResp = {
+      query: {
+        pages: {
+          2: {
+            pageid: 2,
+            title: 'Foo',
+            thumbnail: { source: 'near.jpg' },
+            coordinates: [{ lat: 1, lon: 2 }],
+          },
+        },
+      },
+    };
+    const pageviewsResp = { items: [{ views: 5 }] };
+
+    global.fetch = vi.fn((url: string) => {
+      if (url.includes('generator=geosearch')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ query: { pages: {} } }),
+        } as unknown as Response);
+      }
+      if (url.includes('titles=Foo')) {
+        return Promise.resolve({ ok: true, json: async () => titleResp } as unknown as Response);
+      }
+      if (url.includes('generator=search')) {
+        return Promise.resolve({ ok: true, json: async () => searchResp } as unknown as Response);
+      }
+      return Promise.resolve({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+    });
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo', lat: 1, lon: 2, radius: 500 });
+
+    expect(sig).toMatchObject({ source: 'search', pageid: 2, imageUrl: 'near.jpg' });
   });
 });
