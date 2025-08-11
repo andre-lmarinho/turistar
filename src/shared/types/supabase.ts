@@ -101,6 +101,143 @@ export interface Database {
           },
         ];
       };
+      catalog: {
+        Row: {
+          id: string;
+          name: string;
+          category: string;
+          description: string | null;
+          address: string | null;
+          image_url: string | null;
+          latitude: number;
+          longitude: number;
+          source: string;
+          metadata: Json | null;
+          inserted_at: string;
+          updated_at: string;
+          destination_id: string;
+          coords: unknown;
+          wikidata_qid: string | null;
+          wikimedia_title: string | null;
+          wikimedia_source: string | null;
+          image_confidence: number | null;
+          wikimedia_pageid: string | null;
+          pageviews_30d: number | null;
+          rank_score: number | null;
+          wikimedia_fetched_at: string | null;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          category: string;
+          description?: string | null;
+          address?: string | null;
+          image_url?: string | null;
+          latitude: number;
+          longitude: number;
+          source: string;
+          metadata?: Json | null;
+          inserted_at?: string;
+          updated_at?: string;
+          destination_id: string;
+          coords?: unknown;
+          wikidata_qid?: string | null;
+          wikimedia_title?: string | null;
+          wikimedia_source?: string | null;
+          image_confidence?: number | null;
+          wikimedia_pageid?: string | null;
+          pageviews_30d?: number | null;
+          rank_score?: number | null;
+          wikimedia_fetched_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          category?: string;
+          description?: string | null;
+          address?: string | null;
+          image_url?: string | null;
+          latitude?: number;
+          longitude?: number;
+          source?: string;
+          metadata?: Json | null;
+          inserted_at?: string;
+          updated_at?: string;
+          destination_id?: string;
+          coords?: unknown;
+          wikidata_qid?: string | null;
+          wikimedia_title?: string | null;
+          wikimedia_source?: string | null;
+          image_confidence?: number | null;
+          wikimedia_pageid?: string | null;
+          pageviews_30d?: number | null;
+          rank_score?: number | null;
+          wikimedia_fetched_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'catalog_destination_id_fkey';
+            columns: ['destination_id'];
+            referencedRelation: 'destinations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      destinations: {
+        Row: {
+          id: string;
+          name: string;
+          country: string | null;
+          latitude: number | null;
+          longitude: number | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          country?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          country?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+        };
+        Relationships: [];
+      };
+      plan_destinations: {
+        Row: {
+          plan_id: string;
+          destination_id: string;
+          position: number;
+        };
+        Insert: {
+          plan_id: string;
+          destination_id: string;
+          position?: number;
+        };
+        Update: {
+          plan_id?: string;
+          destination_id?: string;
+          position?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_destinations_destination_id_fkey';
+            columns: ['destination_id'];
+            referencedRelation: 'destinations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'plan_destinations_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       plans: {
         Row: {
           id: string;

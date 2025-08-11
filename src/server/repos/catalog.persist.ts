@@ -1,30 +1,52 @@
 // src/server/repos/catalog.persist.ts
 
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { supabaseService } from '@/shared/lib/supabaseService';
 import type { CatalogActivity } from '@/shared/types';
 import type { WikimediaSignals } from '@/shared/lib/wikimedia';
 
 /**
  * Persist Wikimedia signals for a catalog item.
- * Errors are logged but do not throw to keep API responses reliable.
+ * Throws on Supabase errors so callers can handle failures.
  */
 export async function persistWikimediaEnrichment(params: {
-  item: Pick<CatalogActivity, 'id' | 'name' | 'category' | 'latitude' | 'longitude'>;
+  item: Pick<CatalogActivity, 'id' | 'name' | 'category' | 'latitude' | 'longitude'> & {
+    destination_id?: string | null;
+    source?: string | null;
+  };
   wiki: WikimediaSignals | undefined;
 }) {
   if (!params?.wiki || !params.item?.id) return;
 
   const { title, imageUrl, description, wikidataQid, source, pageid, pageviews30d, rankScore } =
     params.wiki;
-  const { id, name, category, latitude, longitude } = params.item;
+  const {
+    id,
+    name,
+    category,
+    latitude,
+    longitude,
+    destination_id,
+    source: itemSource,
+  } = params.item;
 
-  const supabase = supabaseServer(); // TODO: consider service role for RLS bypass
+  if (!destination_id || !itemSource) {
+    console.warn('persistWikimediaEnrichment missing destination_id or source', {
+      id,
+      destination_id,
+      source: itemSource,
+    });
+    return;
+  }
 
-  const { data, error } = await supabase
+  const supabase = supabaseService();
+
+  const { data, error } = (await supabase
     .from('catalog')
     .upsert(
       {
         id,
+        destination_id,
+        source: itemSource,
         name,
         category,
         latitude,
@@ -42,11 +64,10 @@ export async function persistWikimediaEnrichment(params: {
       },
       { onConflict: 'id' }
     )
-    .select('id');
+    .select('id')) as unknown as { data: { id: string }[] | null; error: unknown };
 
   if (error) {
-    // Fail silently; enrichment persistence should not break catalog reads
-    console.warn('persistWikimediaEnrichment error', error);
+    throw error;
   } else if (!data?.length) {
     console.warn('persistWikimediaEnrichment affected 0 rows');
   }

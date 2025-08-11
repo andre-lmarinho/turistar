@@ -17,7 +17,9 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('catalog')
-    .select('id, name, category, latitude, longitude, rank_score, wikimedia_fetched_at')
+    .select(
+      'id, name, category, latitude, longitude, destination_id, source, rank_score, wikimedia_fetched_at'
+    )
     .or(`wikimedia_fetched_at.is.null,wikimedia_fetched_at.lt.${cutoff.toISOString()}`)
     .limit(50);
 
@@ -35,6 +37,8 @@ export async function GET() {
     category: string;
     latitude: number;
     longitude: number;
+    destination_id: string;
+    source: string;
     rank_score: number | null;
   };
 
@@ -55,6 +59,8 @@ export async function GET() {
               category: row.category,
               latitude: row.latitude,
               longitude: row.longitude,
+              destination_id: row.destination_id,
+              source: row.source,
             },
             wiki: { ...wiki, rankScore: row.rank_score ?? undefined },
           });
