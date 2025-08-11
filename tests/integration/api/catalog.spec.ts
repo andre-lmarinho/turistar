@@ -17,6 +17,9 @@ vi.mock('@/shared/lib/wikimedia', () => ({
   fetchWikimediaSignals: vi.fn().mockResolvedValue(undefined),
 }));
 
+import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
+import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
+
 const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5 };
 vi.mock('@/shared/lib', () => ({
   computeCatalogScore: (
@@ -81,5 +84,24 @@ describe('GET /api/catalog', () => {
         boost: 0.4,
       });
     }
+  });
+
+  it('passes language to downstream services', async () => {
+    vi.mocked(fetchGeoapifyCatalog).mockClear();
+    vi.mocked(fetchWikimediaSignals).mockClear();
+    vi.mocked(fetchWikimediaSignals).mockResolvedValue({ description: 'Descrição', lang: 'pt' });
+    const req = new NextRequest('http://localhost/api/catalog?dest=test&lang=pt');
+    const res = await GET(req);
+    expect(fetchGeoapifyCatalog).toHaveBeenCalledWith(
+      'test',
+      undefined,
+      undefined,
+      undefined,
+      'pt'
+    );
+    const wikiCalls = vi.mocked(fetchWikimediaSignals).mock.calls;
+    expect(wikiCalls.every((c) => c[0].lang === 'pt')).toBe(true);
+    const data = await res.json();
+    expect(data.activities[0].wiki.description).toBe('Descrição');
   });
 });

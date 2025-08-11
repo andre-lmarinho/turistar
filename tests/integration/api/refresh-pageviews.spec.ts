@@ -1,5 +1,6 @@
 // tests/integration/api/refresh-pageviews.spec.ts
 import { describe, expect, it, beforeAll, vi } from 'vitest';
+import { NextRequest } from 'next/server.js';
 import { GET } from '@/server/api/admin/refresh-pageviews/route';
 
 const rows = [
@@ -37,12 +38,14 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 vi.mock('@/shared/lib/wikimedia', () => ({
   fetchWikimediaSignals: vi.fn().mockResolvedValue({
     title: 'X',
-    lang: 'en',
+    lang: 'pt',
     pageid: 1,
     source: 'search',
     pageviews30d: 10,
   }),
 }));
+
+import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 
 const { persistSpy } = vi.hoisted(() => ({
   persistSpy: vi.fn(),
@@ -58,9 +61,12 @@ describe('GET /api/admin/refresh-pageviews', () => {
   });
 
   it('updates stale entries', async () => {
-    const res = await GET();
+    const req = new NextRequest('http://localhost/api/admin/refresh-pageviews?lang=pt');
+    const res = await GET(req);
     const body = await res.json();
     expect(body.updated).toBe(2);
+    const wikiCalls = vi.mocked(fetchWikimediaSignals).mock.calls;
+    expect(wikiCalls.every((c) => c[0].lang === 'pt')).toBe(true);
     expect(persistSpy).toHaveBeenCalledTimes(2);
   });
 });

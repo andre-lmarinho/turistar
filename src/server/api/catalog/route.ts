@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   const latParam = searchParams.get('lat');
   const lonParam = searchParams.get('lon');
   const debug = searchParams.get('debug') === 'true';
+  const lang = searchParams.get('lang') ?? 'en';
 
   if (!dest && !(latParam && lonParam)) {
     return NextResponse.json({ error: 'Missing dest or lat/lon' }, { status: 400 });
@@ -33,10 +34,9 @@ export async function GET(req: NextRequest) {
     if (dest) {
       try {
         const sb = supabaseService();
-        const { data: existing, error: lookupErr } = (await (sb
-          .from('destinations')
-          .select('id')
-          .eq('name', dest) as any).maybeSingle()) as {
+        const { data: existing, error: lookupErr } = (await (
+          sb.from('destinations').select('id').eq('name', dest) as any
+        ).maybeSingle()) as {
           data: { id: string } | null;
           error: unknown;
         };
@@ -45,10 +45,9 @@ export async function GET(req: NextRequest) {
         } else if (existing?.id) {
           destinationId = existing.id;
         } else {
-          const { data: inserted, error: insertErr } = (await (sb
-            .from('destinations')
-            .insert({ name: dest })
-            .select('id') as any).single()) as {
+          const { data: inserted, error: insertErr } = (await (
+            sb.from('destinations').insert({ name: dest }).select('id') as any
+          ).single()) as {
             data: { id: string } | null;
             error: unknown;
           };
@@ -63,7 +62,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon);
+    const { activities } = await fetchGeoapifyCatalog(dest ?? '', lat, lon, undefined, lang);
 
     if (!clientEnv.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT) {
       console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
@@ -79,7 +78,7 @@ export async function GET(req: NextRequest) {
             title: p.name,
             lat: p.latitude,
             lon: p.longitude,
-            lang: 'en',
+            lang,
           });
 
           // Compute score combining popularity, distance and category boosts.
