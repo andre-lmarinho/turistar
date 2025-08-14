@@ -27,7 +27,11 @@ describe('fetchWikimediaSignals language support', () => {
   });
 
   it('uses domain for non-English articles', async () => {
-    const sig = await fetchWikimediaSignals({ title: 'Eiffel Tower', lang: 'fr' });
+    const sig = await fetchWikimediaSignals({
+      title: 'Eiffel Tower',
+      lang: 'fr',
+      similarityThreshold: 0.3,
+    });
     expect(sig?.title).toBe('Tour Eiffel');
     expect(sig?.description).toContain('tour Eiffel');
     expect(sig?.imageUrl).toBe('https://upload.wikimedia.org/fr.jpg');
