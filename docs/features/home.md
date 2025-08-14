@@ -3,13 +3,24 @@
 Landing experience for starting a trip and previewing capabilities.
 
 ```ts
-import { WelcomeForm } from '@/features/home';
+import { Hero, PlanForm } from '@/features/home';
 ```
 
 ## Components
 
-### WelcomeForm
-- **Location:** [`src/features/home/components/WelcomeForm.tsx`](../../src/features/home/components/WelcomeForm.tsx)
+### Hero
+- **Location:** [`src/features/home/components/Hero.tsx`](../../src/features/home/components/Hero.tsx)
+- **Responsibility:** Highlights the Rome inspiration itinerary.
+- **Props:** none
+- **State:** none
+- **External hooks:** none
+- **Side-effects:** none
+- **Accessibility:** Uses semantic heading and link button
+- **Interactions:** Users click to view the Rome inspiration plan
+- **Performance notes:** none
+
+### PlanForm
+- **Location:** [`src/features/home/components/PlanForm.tsx`](../../src/features/home/components/PlanForm.tsx)
 - **Responsibility:** Captures destination and dates to create a new plan.
 - **Props:** none
 - **State:** `range`, `dest`, `coords`, `title`, `error`, `loading`

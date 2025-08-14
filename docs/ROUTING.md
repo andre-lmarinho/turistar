@@ -32,7 +32,7 @@ src/app
 - **Notes:** Wraps children with Supabase and React Query providers.
 
 ### page.tsx
-- **Responsibility:** Home page rendering the `WelcomeForm` from the home feature.
+- **Responsibility:** Home page rendering the `Hero` and `PlanForm` from the home feature.
 - **Notes:** Imports only from `src/features/home`.
 
 ### planner/
