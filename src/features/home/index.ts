@@ -1,3 +1,3 @@
 // src/features/home/index.ts
 
-export { WelcomeForm, FeaturePreview, DestinationInput, InspirationLink } from './components';
+export { Hero, PlanForm, FeaturePreview, DestinationInput, InspirationLink } from './components';
