@@ -20,3 +20,4 @@ export { pLimit } from './pLimit';
 export { supabase } from './supabaseClient';
 export { clientEnv } from './clientEnv';
 export type { ClientEnv } from './clientEnv';
+export { logger } from './logger';

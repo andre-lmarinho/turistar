@@ -3,6 +3,7 @@
 
 import { performance } from 'node:perf_hooks';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { logger } from '@/shared/lib/logger';
 
 interface DestinationInfo {
   name: string;
@@ -17,7 +18,7 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
   const endDate = end.slice(0, 10);
 
   const totalStart = performance.now();
-  console.time('create_full_plan');
+  logger.time('create_full_plan');
   const { data, error } = await supabase.rpc('create_full_plan', {
     _title: title,
     _dest_name: dest.name,
@@ -26,9 +27,9 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
     _start_date: startDate,
     _end_date: endDate,
   });
-  console.timeEnd('create_full_plan');
+  logger.timeEnd('create_full_plan');
   const totalMs = performance.now() - totalStart;
-  console.log(`createPlan RPC total ${totalMs.toFixed(1)}ms`);
+  logger.log(`createPlan RPC total ${totalMs.toFixed(1)}ms`);
 
   if (error || !data) throw error ?? new Error('Failed to create plan');
   const row = Array.isArray(data) ? data[0] : data;

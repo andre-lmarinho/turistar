@@ -151,7 +151,8 @@ describe('fetchWikimediaSignals', () => {
     const searchResp = { query: { pages: {} } };
     const pageviewsResp = { items: [] };
 
-    global.fetch = vi.fn((url: string) => {
+    global.fetch = vi.fn((input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
       if (url.includes('titles=Foo')) {
         return Promise.resolve({ ok: true, json: async () => titleResp } as unknown as Response);
       }
@@ -280,7 +281,8 @@ describe('fetchWikimediaSignals', () => {
     };
     const pageviewsResp = { items: [{ views: 5 }] };
 
-    global.fetch = vi.fn((url: string) => {
+    global.fetch = vi.fn((input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
       if (url.includes('generator=geosearch')) {
         return Promise.resolve({
           ok: true,
