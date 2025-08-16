@@ -21,7 +21,7 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
     <>
       <div className="z-30 flex items-center justify-between">
         <div className="ml-1 flex items-center gap-2">
-          <Icon size={16} aria-hidden="true" />
+          <Icon size={12} aria-hidden="true" />
           <span className="flex items-center gap-1 text-sm">
             {label}
             <InfoPopup content={BUDGET_INFO[category]}>

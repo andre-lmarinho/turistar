@@ -22,7 +22,7 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
       <span className="border-r-1 bg-gray-100">
         <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
       </span>
-      <span className="w-full px-2 py-1 text-right">{'$' + amount.toFixed(2)}</span>
+      <span className="w-full px-2 py-1 text-right">{amount.toFixed(2)}</span>
     </span>
   );
 }
@@ -37,7 +37,7 @@ export default function BudgetPanelHeader() {
   }, [budget]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="">
       {persistError && (
         <p role="alert" className="text-destructive text-sm md:col-span-3">
           {persistError}
@@ -46,15 +46,15 @@ export default function BudgetPanelHeader() {
       <div
         role="region"
         aria-labelledby="budget-summary-heading"
-        className="flex flex-col gap-2 md:col-span-1"
+        className="mb-2 flex flex-col gap-2"
       >
-        <h4 id="budget-summary-heading" className="font-semibold">
+        <h3 id="budget-summary-heading" className="font-semibold">
           Summary
-        </h4>
+        </h3>
 
         {/* Total Budget */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-medium">
-          <label htmlFor="budget-input" className="flex items-center gap-1 font-medium">
+        <div className="flex flex-wrap items-center justify-between">
+          <label htmlFor="budget-input" className="flex items-center gap-1 text-sm">
             Total Budget
             <InfoPopup content={BUDGET_INFO.totalBudget}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
@@ -79,8 +79,8 @@ export default function BudgetPanelHeader() {
         </div>
 
         {/* Total Spend */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-medium">
-          <span className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center justify-between">
+          <span className="flex items-center gap-1 text-sm">
             Total Spent
             <InfoPopup content={BUDGET_INFO.totalSpent}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
@@ -90,8 +90,8 @@ export default function BudgetPanelHeader() {
         </div>
 
         {/* Difference */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-medium">
-          <span className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center justify-between">
+          <span className="flex items-center gap-1 text-sm">
             Difference
             <InfoPopup content={BUDGET_INFO.difference}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
@@ -101,14 +101,10 @@ export default function BudgetPanelHeader() {
         </div>
       </div>
 
-      <div
-        role="region"
-        aria-labelledby="budget-categories-heading"
-        className="flex flex-col md:col-span-2"
-      >
-        <h4 id="budget-categories-heading" className="font-semibold">
+      <div role="region" aria-labelledby="budget-categories-heading" className="flex flex-col">
+        <h3 id="budget-categories-heading" className="pt-4 pb-2 font-semibold">
           Categories
-        </h4>
+        </h3>
         {CATEGORIES.map(({ key }, idx) => (
           <CategoryProgressBar
             key={key}

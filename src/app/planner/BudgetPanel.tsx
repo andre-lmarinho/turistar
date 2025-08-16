@@ -36,23 +36,22 @@ function BudgetPanel() {
             Budget Your Activities
           </Button>
         </div>
-        <BudgetPanelHeader />
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          <BudgetPanelHeader />
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h3 id="expenses-heading" className="flex items-center gap-1 font-semibold">
+          <div className="col-span-2 md:ml-12">
+            <h3 id="expenses-heading" className="flex items-center gap-1 pb-2 font-semibold">
               Expenses
               <InfoPopup content={BUDGET_INFO.expenses} aria-hidden="true">
                 <Info size={12} className="text-muted-foreground" aria-hidden="true" />
               </InfoPopup>
             </h3>
-          </div>
 
-          <div aria-labelledby="expenses-heading">
-            <ExpenseTable />
+            <div aria-labelledby="expenses-heading">
+              <ExpenseTable />
+            </div>
           </div>
         </div>
-
         <ActivitiesBudgetPopup
           open={editActivities}
           days={days}

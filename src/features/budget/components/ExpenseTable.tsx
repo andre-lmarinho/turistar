@@ -39,10 +39,10 @@ export default function ExpenseTable() {
       <caption id="expense-table-caption" className="sr-only">
         Expenses table showing description, category, amount, and actions
       </caption>
-      <thead role="rowgroup" className="bg-muted">
+      <thead role="rowgroup" className="bg-card">
         <tr role="row">
           <th scope="col" className="p-2 text-left">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 font-normal">
               Description
               <InfoPopup content={BUDGET_INFO.description}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
@@ -50,7 +50,7 @@ export default function ExpenseTable() {
             </span>
           </th>
           <th scope="col" className="p-2 text-left">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 font-normal">
               Category
               <InfoPopup content={BUDGET_INFO.category}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
@@ -58,7 +58,7 @@ export default function ExpenseTable() {
             </span>
           </th>
           <th scope="col" className="w-32 p-2 text-right">
-            <span className="flex items-center justify-end gap-1">
+            <span className="flex items-center justify-end gap-1 font-normal">
               Amount
               <InfoPopup content={BUDGET_INFO.amount}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
@@ -66,7 +66,7 @@ export default function ExpenseTable() {
             </span>
           </th>
           <th scope="col" className="p-2 text-right">
-            <span className="flex items-center justify-end gap-1">
+            <span className="flex items-center justify-end gap-1 font-normal">
               Actions
               <InfoPopup content={BUDGET_INFO.actions}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
