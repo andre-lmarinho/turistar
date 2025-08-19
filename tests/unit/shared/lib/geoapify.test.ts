@@ -1,6 +1,10 @@
 // tests/unit/shared/lib/geoapify.test.ts
 import { vi } from 'vitest';
 
+vi.mock('@/shared/lib/wikimedia', () => ({
+  enrichWithWikimediaSignals: vi.fn(),
+}));
+
 const originalFetch = global.fetch;
 const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
@@ -154,11 +158,14 @@ describe('fetchGeoapifyCatalog', () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
     ({ fetchGeoapifyCatalog } = await import('@/shared/lib/geoapify'));
+    const { enrichWithWikimediaSignals } = await import('@/shared/lib/wikimedia');
+    vi.mocked(enrichWithWikimediaSignals).mockImplementation(async (acts: any) => acts);
   });
 
   afterEach(() => {
     global.fetch = originalFetch;
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
+    vi.clearAllMocks();
   });
 
   const autoResp = {
@@ -329,22 +336,45 @@ describe('fetchGeoapifyCatalog', () => {
     expect(url).toContain('filter=circle:4,3');
     expect(url).toContain('bias=proximity:4,3');
   });
+
+  it('passes lang to Wikimedia enrichment', async () => {
+    const placesResp = {
+      features: [
+        {
+          properties: {
+            place_id: 1,
+            name: 'Louvre',
+            lat: 1,
+            lon: 2,
+            categories: ['tourism.museum'],
+          },
+        },
+      ],
+    };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp });
+
+    const { enrichWithWikimediaSignals } = await import('@/shared/lib/wikimedia');
+    await fetchGeoapifyCatalog('paris', undefined, undefined, undefined, 'pt');
+    expect(enrichWithWikimediaSignals).toHaveBeenCalledWith(expect.any(Array), { lang: 'pt' });
+  });
 });
 
 describe('fetchGeoapifySearch', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    vi.mock('@/shared/lib/wikimedia', () => ({
-      enrichWithWikimediaSignals: vi.fn(async (acts: any) =>
-        acts.map((a: any) => ({
-          ...a,
-          wiki: { lang: 'pt', title: a.name, description: 'Resumo', imageUrl: 'pt.jpg' },
-          imageUrl: 'pt.jpg',
-        }))
-      ),
-    }));
     ({ fetchGeoapifySearch } = await import('@/shared/lib/geoapify'));
+    const { enrichWithWikimediaSignals } = await import('@/shared/lib/wikimedia');
+    vi.mocked(enrichWithWikimediaSignals).mockImplementation(async (acts: any) =>
+      acts.map((a: any) => ({
+        ...a,
+        wiki: { lang: 'pt', title: a.name, description: 'Resumo', imageUrl: 'pt.jpg' },
+        imageUrl: 'pt.jpg',
+      }))
+    );
   });
 
   afterEach(() => {

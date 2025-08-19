@@ -10,7 +10,7 @@ describe('fetchWikimediaSignals language support', () => {
       pageid: 1,
       title: 'Tour Eiffel',
       extract: 'La tour Eiffel est une tour...',
-      original: { source: 'https://upload.wikimedia.org/fr.jpg', width: 1, height: 1 },
+      original: { source: 'https://upload.wikimedia.org/fr.jpg', width: 400, height: 400 },
       pageprops: { wikibase_item: 'Q243' },
     };
     const response = { query: { pages: { '1': page } } };

@@ -3,7 +3,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { pLimit } from '@/shared/lib/pLimit';
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
-import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 import { computeCatalogScore } from '@/shared/lib';
 import { persistWikimediaEnrichment } from '@/server/repos/catalog.persist';
 import { clientEnv } from '@/shared/lib/clientEnv';
@@ -74,17 +73,10 @@ export async function GET(req: NextRequest) {
     const enriched = await Promise.all(
       activities.map((p) =>
         limit(async () => {
-          const wiki = await fetchWikimediaSignals({
-            title: p.name,
-            lat: p.latitude,
-            lon: p.longitude,
-            lang,
-          });
-
           // Compute score combining popularity, distance and category boosts.
           const scoreResult = debug
-            ? computeCatalogScore(p, wiki, center, { debug: true })
-            : computeCatalogScore(p, wiki, center);
+            ? computeCatalogScore(p, p.wiki, center, { debug: true })
+            : computeCatalogScore(p, p.wiki, center);
           const score = typeof scoreResult === 'number' ? scoreResult : scoreResult.value;
 
           // Persist Wikimedia data with rank score. Errors are caught so catalog
@@ -101,7 +93,7 @@ export async function GET(req: NextRequest) {
                   destination_id: destinationId,
                   source: 'geoapify',
                 },
-                wiki: wiki ? { ...wiki, rankScore: score } : { rankScore: score },
+                wiki: p.wiki ? { ...p.wiki, rankScore: score } : { rankScore: score },
               });
             } catch (err) {
               console.error('persistWikimediaEnrichment failed', {
@@ -113,7 +105,6 @@ export async function GET(req: NextRequest) {
 
           return {
             ...p,
-            wiki,
             score,
             ...(typeof scoreResult === 'number'
               ? {}

@@ -55,7 +55,20 @@ async function fetchJson(url: string) {
 
 function isValidImage(url: string, width?: number, height?: number): boolean {
   const lower = url.toLowerCase();
-  const banned = ['logo', 'icon', 'map', 'flag', 'sign', 'coat_of_arms'];
+  const banned = [
+    'logo',
+    'icon',
+    'map',
+    'flag',
+    'sign',
+    'coat_of_arms',
+    'portrait',
+    'person',
+    'people',
+    'profile',
+    'selfie',
+    'avatar',
+  ];
   if (banned.some((b) => lower.includes(b))) return false;
   if (width && height && (width < 200 || height < 200)) return false;
   return true;
@@ -66,7 +79,7 @@ function pickImageFromPage(p: ApiPage): string | undefined {
   if (p?.thumbnail) candidates.push(p.thumbnail);
   if (p?.original) candidates.push(p.original);
   const valid = candidates.find((c) => isValidImage(c.source, c.width, c.height));
-  return (valid ?? candidates[0])?.source;
+  return valid?.source;
 }
 
 type QueryWithPages = { pages?: Record<string, ApiPage> } | undefined;

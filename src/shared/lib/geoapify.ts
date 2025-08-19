@@ -163,7 +163,10 @@ export async function fetchGeoapifyCatalog(
     const name = f.properties.name!.trim().toLowerCase();
     if (!unique.has(name)) unique.set(name, f);
   }
-  const activities = Array.from(unique.values()).map((f) => mapGeoapifyFeature(f));
+  const activities = await enrichWithWikimediaSignals(
+    Array.from(unique.values()).map((f) => mapGeoapifyFeature(f)),
+    { lang }
+  );
 
   return { activities };
 }

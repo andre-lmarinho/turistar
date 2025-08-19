@@ -115,6 +115,32 @@ describe('fetchWikimediaSignals', () => {
     expect(sig?.imageUrl).toBe('real.jpg');
   });
 
+  it('rejects portrait images of people', async () => {
+    const titleResp = {
+      query: {
+        pages: {
+          1: {
+            pageid: 1,
+            title: 'Foo',
+            thumbnail: { source: 'portrait.jpg', width: 400, height: 400 },
+          },
+        },
+      },
+    };
+    const searchResp = { query: { pages: {} } };
+    const pageviewsResp = { items: [] };
+
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => titleResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => searchResp } as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, json: async () => pageviewsResp } as unknown as Response);
+
+    const sig = await fetchWikimediaSignals({ title: 'Foo' });
+
+    expect(sig?.imageUrl).toBeUndefined();
+  });
+
   it('ignores geosearch when title does not match and returns full signals from the correct page', async () => {
     const geoResp = {
       query: {

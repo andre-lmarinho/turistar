@@ -6,19 +6,14 @@ import { GET } from '@/server/api/catalog/route';
 vi.mock('@/shared/lib/geoapify', () => ({
   fetchGeoapifyCatalog: vi.fn().mockResolvedValue({
     activities: [
-      { id: '1', name: 'A', category: 'sight', latitude: 0, longitude: 0 },
-      { id: '2', name: 'B', category: 'sight', latitude: 0, longitude: 0 },
-      { id: '3', name: 'C', category: 'sight', latitude: 0, longitude: 0 },
+      { id: '1', name: 'A', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
+      { id: '2', name: 'B', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
+      { id: '3', name: 'C', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
     ],
   }),
 }));
 
-vi.mock('@/shared/lib/wikimedia', () => ({
-  fetchWikimediaSignals: vi.fn().mockResolvedValue(undefined),
-}));
-
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
-import { fetchWikimediaSignals } from '@/shared/lib/wikimedia';
 
 const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5 };
 vi.mock('@/shared/lib', () => ({
@@ -88,8 +83,18 @@ describe('GET /api/catalog', () => {
 
   it('passes language to downstream services', async () => {
     vi.mocked(fetchGeoapifyCatalog).mockClear();
-    vi.mocked(fetchWikimediaSignals).mockClear();
-    vi.mocked(fetchWikimediaSignals).mockResolvedValue({ description: 'Descrição', lang: 'pt' });
+    vi.mocked(fetchGeoapifyCatalog).mockResolvedValueOnce({
+      activities: [
+        {
+          id: '1',
+          name: 'A',
+          category: 'sight',
+          latitude: 0,
+          longitude: 0,
+          wiki: { description: 'Descrição', lang: 'pt' },
+        },
+      ],
+    });
     const req = new NextRequest('http://localhost/api/catalog?dest=test&lang=pt');
     const res = await GET(req);
     expect(fetchGeoapifyCatalog).toHaveBeenCalledWith(
@@ -99,8 +104,6 @@ describe('GET /api/catalog', () => {
       undefined,
       'pt'
     );
-    const wikiCalls = vi.mocked(fetchWikimediaSignals).mock.calls;
-    expect(wikiCalls.every((c) => c[0].lang === 'pt')).toBe(true);
     const data = await res.json();
     expect(data.activities[0].wiki.description).toBe('Descrição');
   });
