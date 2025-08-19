@@ -94,7 +94,7 @@ export default function PlanForm() {
   };
 
   if (loading) {
-    return <LoadingScreen text="Loading catalog..." />;
+    return <LoadingScreen text="Creating plan…" />;
   }
 
   return (
