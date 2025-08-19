@@ -38,13 +38,21 @@ vi.mock('@/shared/lib/geoapify', () => ({
         longitude: 0,
         wiki: { pageviews30d: 10 },
       },
+      {
+        id: '5',
+        name: 'E',
+        category: 'sight',
+        latitude: 0,
+        longitude: 0,
+        wiki: { pageviews30d: 0 },
+      },
     ],
   }),
 }));
 
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
 
-const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5, '4': 0.7 };
+const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5, '4': 0.7, '5': 0.4 };
 vi.mock('@/shared/lib', () => ({
   computeCatalogScore: (
     p: { id: string },
@@ -91,7 +99,7 @@ describe('GET /api/catalog', () => {
     const req = new NextRequest('http://localhost/api/catalog?dest=test');
     const res = await GET(req);
     const data = await res.json();
-    expect(data.activities.map((a: { id: string }) => a.id)).toEqual(['2', '3', '1']);
+    expect(data.activities.map((a: { id: string }) => a.id)).toEqual(['2', '3', '5', '1']);
     const cacheControl = res.headers.get('cache-control');
     expect(cacheControl).toBeNull();
   });
@@ -101,6 +109,7 @@ describe('GET /api/catalog', () => {
     const res = await GET(req);
     const data = await res.json();
     expect(data.activities.find((a: { id: string }) => a.id === '4')).toBeUndefined();
+    expect(data.activities.find((a: { id: string }) => a.id === '5')).toBeDefined();
   });
 
   it('returns debug scores when requested', async () => {

@@ -121,7 +121,10 @@ export async function GET(req: NextRequest) {
         })
       )
     );
-    const filtered = enriched.filter((p) => (p.wiki?.pageviews30d ?? 0) >= MIN_PAGEVIEWS);
+    const filtered = enriched.filter((p) => {
+      const pv = p.wiki?.pageviews30d;
+      return pv == null || pv === 0 || pv >= MIN_PAGEVIEWS;
+    });
     filtered.sort((a, b) => b.score - a.score);
 
     console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));

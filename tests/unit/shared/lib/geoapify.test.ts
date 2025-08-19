@@ -101,6 +101,14 @@ describe('fetchGeoapifyAutocomplete', () => {
             properties: { formatted: 'Boipeba, Brazil', result_type: 'island', lat: 5, lon: 6 },
           },
           {
+            properties: {
+              formatted: 'Boipeba Municipality, Brazil',
+              result_type: 'municipality',
+              lat: 11,
+              lon: 12,
+            },
+          },
+          {
             properties: { formatted: 'Texas, United States', result_type: 'state', lat: 7, lon: 8 },
           },
           { properties: { formatted: 'France', result_type: 'country', lat: 9, lon: 10 } },
@@ -113,6 +121,7 @@ describe('fetchGeoapifyAutocomplete', () => {
     expect(results).toEqual([
       { name: 'Paris, France', latitude: 1, longitude: 2 },
       { name: 'Boipeba, Brazil', latitude: 5, longitude: 6 },
+      { name: 'Boipeba Municipality, Brazil', latitude: 11, longitude: 12 },
       { name: 'Texas, United States', latitude: 7, longitude: 8 },
       { name: 'France', latitude: 9, longitude: 10 },
     ]);

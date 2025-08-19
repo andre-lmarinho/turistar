@@ -85,8 +85,17 @@ function isValidImage(url: string, width?: number, height?: number): boolean {
     'sheep',
     'pig',
     'owl',
+    'plane',
+    'airplane',
+    'aircraft',
+    'jet',
+    'airliner',
+    'boeing',
+    'airbus',
+    'fighter',
   ];
   if (banned.some((b) => lower.includes(b))) return false;
+  if (lower.endsWith('.svg')) return false;
   if (width && height && (width < 200 || height < 200)) return false;
   return true;
 }
