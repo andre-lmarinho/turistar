@@ -109,6 +109,40 @@ describe('fetchGeoapifyAutocomplete', () => {
       { name: 'France', latitude: 7, longitude: 8 },
     ]);
   });
+
+  it('prioritizes city results over state or country', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        features: [
+          {
+            properties: {
+              formatted: 'New York, United States',
+              result_type: 'state',
+              lat: 1,
+              lon: 2,
+            },
+          },
+          {
+            properties: {
+              formatted: 'New York, NY, United States',
+              result_type: 'city',
+              lat: 3,
+              lon: 4,
+            },
+          },
+        ],
+      }),
+    } as unknown as Response);
+
+    const results = await fetchGeoapifyAutocomplete('new york');
+
+    expect(results[0]).toEqual({
+      name: 'New York, NY, United States',
+      latitude: 3,
+      longitude: 4,
+    });
+  });
 });
 
 describe('fetchGeoapifyCatalog', () => {
@@ -222,6 +256,40 @@ describe('fetchGeoapifyCatalog', () => {
     await fetchGeoapifyCatalog('paris', 1, 2);
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses city coordinates when autocomplete returns state and city', async () => {
+    const autoResp = {
+      features: [
+        {
+          properties: {
+            formatted: 'New York, United States',
+            result_type: 'state',
+            lat: 1,
+            lon: 2,
+          },
+        },
+        {
+          properties: {
+            formatted: 'New York, NY, United States',
+            result_type: 'city',
+            lat: 3,
+            lon: 4,
+          },
+        },
+      ],
+    };
+    const placesResp = { features: [] };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp });
+
+    await fetchGeoapifyCatalog('new york');
+
+    const url = (global.fetch as any).mock.calls[1][0] as string;
+    expect(url).toContain('filter=circle:4,3');
+    expect(url).toContain('bias=proximity:4,3');
   });
 });
 
