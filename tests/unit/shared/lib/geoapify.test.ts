@@ -84,7 +84,7 @@ describe('fetchGeoapifyAutocomplete', () => {
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
   });
 
-  it('filters out non city/state/country results', async () => {
+  it('filters out street results and keeps allowed place types', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -94,9 +94,12 @@ describe('fetchGeoapifyAutocomplete', () => {
             properties: { formatted: 'Some Street, Paris', result_type: 'street', lat: 3, lon: 4 },
           },
           {
-            properties: { formatted: 'Texas, United States', result_type: 'state', lat: 5, lon: 6 },
+            properties: { formatted: 'Boipeba, Brazil', result_type: 'island', lat: 5, lon: 6 },
           },
-          { properties: { formatted: 'France', result_type: 'country', lat: 7, lon: 8 } },
+          {
+            properties: { formatted: 'Texas, United States', result_type: 'state', lat: 7, lon: 8 },
+          },
+          { properties: { formatted: 'France', result_type: 'country', lat: 9, lon: 10 } },
         ],
       }),
     } as unknown as Response);
@@ -105,8 +108,9 @@ describe('fetchGeoapifyAutocomplete', () => {
 
     expect(results).toEqual([
       { name: 'Paris, France', latitude: 1, longitude: 2 },
-      { name: 'Texas, United States', latitude: 5, longitude: 6 },
-      { name: 'France', latitude: 7, longitude: 8 },
+      { name: 'Boipeba, Brazil', latitude: 5, longitude: 6 },
+      { name: 'Texas, United States', latitude: 7, longitude: 8 },
+      { name: 'France', latitude: 9, longitude: 10 },
     ]);
   });
 
@@ -247,6 +251,40 @@ describe('fetchGeoapifyCatalog', () => {
 
     expect(activities).toHaveLength(1);
     expect(activities[0].name).toBe('Louvre');
+  });
+
+  it('dedupes features with identical names', async () => {
+    const placesResp = {
+      features: [
+        {
+          properties: {
+            place_id: 1,
+            name: 'Rock Art',
+            lat: 1,
+            lon: 2,
+            categories: ['tourism.sights'],
+          },
+        },
+        {
+          properties: {
+            place_id: 2,
+            name: 'Rock Art',
+            lat: 3,
+            lon: 4,
+            categories: ['tourism.sights'],
+          },
+        },
+      ],
+    };
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => autoResp })
+      .mockResolvedValueOnce({ ok: true, json: async () => placesResp });
+
+    const { activities } = await fetchGeoapifyCatalog('vegas');
+
+    expect(activities).toHaveLength(1);
+    expect(activities[0].id).toBe('1');
   });
 
   it('skips autocomplete when coordinates provided', async () => {

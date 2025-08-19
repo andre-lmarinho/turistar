@@ -29,7 +29,6 @@ type ApiPage = {
   coordinates?: { lat: number; lon: number }[];
 };
 
-const REVALIDATE_6H = 21600;
 const DEFAULT_LANG = 'en';
 const DEFAULT_RADIUS = 500; // in meters
 
@@ -49,16 +48,25 @@ function paramsToQS(p: Record<string, string | number | boolean | undefined>) {
 }
 
 async function fetchJson(url: string) {
-  const res = await fetch(url, {
-    cache: 'force-cache',
-    next: { revalidate: REVALIDATE_6H },
-  });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Wikimedia fetch failed: ${res.status} ${res.statusText}`);
   return res.json();
 }
 
+function isValidImage(url: string, width?: number, height?: number): boolean {
+  const lower = url.toLowerCase();
+  const banned = ['logo', 'icon', 'map', 'flag', 'sign', 'coat_of_arms'];
+  if (banned.some((b) => lower.includes(b))) return false;
+  if (width && height && (width < 200 || height < 200)) return false;
+  return true;
+}
+
 function pickImageFromPage(p: ApiPage): string | undefined {
-  return p?.thumbnail?.source ?? p?.original?.source;
+  const candidates = [];
+  if (p?.thumbnail) candidates.push(p.thumbnail);
+  if (p?.original) candidates.push(p.original);
+  const valid = candidates.find((c) => isValidImage(c.source, c.width, c.height));
+  return (valid ?? candidates[0])?.source;
 }
 
 type QueryWithPages = { pages?: Record<string, ApiPage> } | undefined;
@@ -282,10 +290,7 @@ export async function withPageviews(sig: WikimediaSignals): Promise<WikimediaSig
   const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${sig.lang}.wikipedia/all-access/all-agents/${title}/daily/${fmt(start)}/${fmt(end)}`;
 
   try {
-    const res = await fetch(url, {
-      cache: 'force-cache',
-      next: { revalidate: REVALIDATE_6H },
-    });
+    const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error('Pageviews fetch failed');
     const data = await res.json();
     const views = Array.isArray(data?.items)

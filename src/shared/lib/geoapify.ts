@@ -86,20 +86,37 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
     text
   )}&limit=5&apiKey=${key}`;
 
-  const res = await fetch(url, {
-    cache: 'force-cache',
-    next: { revalidate: 86400 },
-  });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
-  const allowed = new Set(['city', 'state', 'country']);
-  const priority: Record<string, number> = { city: 0, state: 1, country: 2 };
+  const allowed = new Set([
+    'city',
+    'town',
+    'village',
+    'hamlet',
+    'locality',
+    'island',
+    'state',
+    'province',
+    'country',
+  ]);
+  const priority: Record<string, number> = {
+    city: 0,
+    town: 1,
+    village: 1,
+    island: 1,
+    hamlet: 2,
+    locality: 2,
+    state: 3,
+    province: 3,
+    country: 4,
+  };
   const filtered = data.features.filter((f) => allowed.has(f.properties.result_type ?? ''));
   filtered.sort(
     (a, b) =>
-      (priority[a.properties.result_type ?? ''] ?? 3) -
-      (priority[b.properties.result_type ?? ''] ?? 3)
+      (priority[a.properties.result_type ?? ''] ?? 5) -
+      (priority[b.properties.result_type ?? ''] ?? 5)
   );
   return filtered.map((f) => ({
     name: f.properties.formatted ?? f.properties.name ?? text,
@@ -137,14 +154,16 @@ export async function fetchGeoapifyCatalog(
     `&bias=proximity:${longitude},${latitude}` +
     `&limit=${CATALOG_LIMIT}&lang=${encodeURIComponent(lang)}&apiKey=${key}`;
 
-  const res = await fetch(url, {
-    cache: 'force-cache',
-    next: { revalidate: 86400 },
-  });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
-  const activities = featuresWithName.map((f) => mapGeoapifyFeature(f));
+  const unique = new Map<string, GeoapifyFeature>();
+  for (const f of featuresWithName) {
+    const name = f.properties.name!.trim().toLowerCase();
+    if (!unique.has(name)) unique.set(name, f);
+  }
+  const activities = Array.from(unique.values()).map((f) => mapGeoapifyFeature(f));
 
   return { activities };
 }
@@ -171,10 +190,7 @@ export async function fetchGeoapifySearch(
     `&bias=proximity:${lon},${lat}` +
     `&limit=10&lang=${encodeURIComponent(lang)}&apiKey=${key}`;
 
-  const res = await fetch(url, {
-    cache: 'force-cache',
-    next: { revalidate: 86400 },
-  });
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());

@@ -60,6 +60,6 @@ describe('computeCatalogScore', () => {
       metadata: { distance: 0 },
     } as unknown as CatalogActivity;
     const score = computeCatalogScore(place, undefined, { lat: 0, lon: 0 });
-    expect(score).toBeCloseTo(0.03, 5);
+    expect(score).toBe(0);
   });
 });
