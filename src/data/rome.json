@@ -13,7 +13,7 @@
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+          "imageUrl": "/images/inspirations/rome/Rome City Walking Tour.jpg",
           "latitude": 41.8902,
           "longitude": 12.4922
         },
@@ -23,7 +23,7 @@
           "duration": 3,
           "address": "Cortile della Pigna, 00120 Vatican City",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg",
+          "imageUrl": "/images/inspirations/rome/Tour of the Vatican, Sistine Chapel & St. Peter's Basilica.jpg",
           "latitude": 41.9065,
           "longitude": 12.4533
         },
@@ -33,7 +33,7 @@
           "duration": 2,
           "address": "Via dei Vascellari, 29, 00153 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://i0.wp.com/planejandoaviagem.com/wp-content/uploads/2015/07/da-enzo-700x466.jpg",
+          "imageUrl": "/images/inspirations/rome/Trattoria da Enzo al 29.jpg",
           "latitude": 41.8896,
           "longitude": 12.4744
         }
@@ -48,7 +48,7 @@
           "duration": 2,
           "address": "Via della Salara Vecchia, 5/6, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/5b/76/08/the-forum-was-originally.jpg",
+          "imageUrl": "/images/inspirations/rome/Roman Forum.jpg",
           "latitude": 41.8925,
           "longitude": 12.4853
         },
@@ -58,7 +58,7 @@
           "duration": 1,
           "address": "Via Labicana, 125, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://res.cloudinary.com/tf-lab/image/upload/restaurant/abdb2f83-6064-4d86-a43c-618f82024713/478b5ce2-f3d8-4a7b-9c41-ae30217c1811.jpg",
+          "imageUrl": "/images/inspirations/rome/Ristorante Aroma.jpg",
           "latitude": 41.8911,
           "longitude": 12.4954
         },
@@ -68,7 +68,7 @@
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/960px-Colosseo_2020.jpg",
+          "imageUrl": "/images/inspirations/rome/Rome City Walking Tour.jpg",
           "latitude": 41.8902,
           "longitude": 12.4922
         },
@@ -78,7 +78,7 @@
           "duration": 2,
           "address": "Via delle Coppelle, 16/17, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/45/b2/d8/locale.jpg",
+          "imageUrl": "/images/inspirations/rome/Spaghetteria L'Archeologia.jpg",
           "latitude": 41.9002,
           "longitude": 12.4769
         }
@@ -93,7 +93,7 @@
           "duration": 1.5,
           "address": "Piazza della Rotonda, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Rome_Pantheon_front.jpg",
+          "imageUrl": "/images/inspirations/rome/Pantheon.jpg",
           "latitude": 41.8986,
           "longitude": 12.4769
         },
@@ -103,7 +103,7 @@
           "duration": 1.5,
           "address": "Piazza Navona, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://www.archeoroma.org/wp-content/uploads/2020/02/piazza-navona-roma-558x400.jpg",
+          "imageUrl": "/images/inspirations/rome/Piazza Navona.jpg",
           "latitude": 41.8992,
           "longitude": 12.4731
         },
@@ -113,7 +113,7 @@
           "duration": 1,
           "address": "Piazza Navona, 28, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Restaurant_Tre_Scalini_at_Piazza_Navona_in_Rome.jpg/960px-Restaurant_Tre_Scalini_at_Piazza_Navona_in_Rome.jpg",
+          "imageUrl": "/images/inspirations/rome/Ristorante Tre Scalini.jpg",
           "latitude": 41.8993,
           "longitude": 12.4733
         },
@@ -123,7 +123,7 @@
           "duration": 1,
           "address": "Piazza di Trevi, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg/960px-Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg",
+          "imageUrl": "/images/inspirations/rome/Trevi Fountain.jpg",
           "latitude": 41.9009,
           "longitude": 12.4833
         },
@@ -133,7 +133,7 @@
           "duration": 2,
           "address": "Via del Corso, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/72/c4/56/via-del-corso.jpg",
+          "imageUrl": "/images/inspirations/rome/Via del Corso.jpg",
           "latitude": 41.9022,
           "longitude": 12.4797
         },
@@ -143,7 +143,7 @@
           "duration": 2,
           "address": "Via del Boschetto, 73, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://media-cdn.tripadvisor.com/media/photo-s/12/b3/3f/14/hosteria-romana-roma.jpg",
+          "imageUrl": "/images/inspirations/rome/Hostaria Romana.jpg",
           "latitude": 41.8972,
           "longitude": 12.4889
         }
@@ -158,7 +158,7 @@
           "duration": 2,
           "address": "Piazzale Napoleone I, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://www.villaborghesetours.com/info/wp-content/uploads/Fontana-della-Venere.jpg",
+          "imageUrl": "/images/inspirations/rome/Villa Borghese Gardens.jpg",
           "latitude": 41.9142,
           "longitude": 12.486
         },
@@ -168,7 +168,7 @@
           "duration": 1,
           "address": "Piazza di Spagna, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://romesite.com/images/spanish_steps.jpg",
+          "imageUrl": "/images/inspirations/rome/Spanish Steps.jpg",
           "latitude": 41.9058,
           "longitude": 12.4824
         },
@@ -178,7 +178,7 @@
           "duration": 1.5,
           "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://www.vamosparaitalia.com.br/wp-content/uploads/2018/05/greco.jpg",
+          "imageUrl": "/images/inspirations/rome/Caffè Greco.jpg",
           "latitude": 41.9052,
           "longitude": 12.482
         },
@@ -188,7 +188,7 @@
           "duration": 2,
           "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "https://cdn-imgix.headout.com/media/images/47fe6d9a07be8f43794b424e0dfb8ffc-Borghese-Gallery.jpg",
+          "imageUrl": "/images/inspirations/rome/Borghese Gallery.jpg",
           "latitude": 41.9145,
           "longitude": 12.4922
         },
@@ -198,7 +198,7 @@
           "duration": 2,
           "address": "Via Garibaldi, 5, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/7c/2c/dc/tramonto-in-riva-all.jpg",
+          "imageUrl": "/images/inspirations/rome/Osteria Antica.jpg",
           "latitude": 41.8881,
           "longitude": 12.4669
         }
