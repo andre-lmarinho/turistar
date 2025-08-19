@@ -168,7 +168,7 @@ describe('fetchWikimediaSignals', () => {
         ok: true,
         json: async () => ({ query: { pages: {} } }),
       } as unknown as Response);
-    });
+    }) as unknown as typeof fetch;
 
     const sig = await fetchWikimediaSignals({ title: 'Foo' });
 
@@ -294,7 +294,7 @@ describe('fetchWikimediaSignals', () => {
         return Promise.resolve({ ok: true, json: async () => searchResp } as unknown as Response);
       }
       return Promise.resolve({ ok: true, json: async () => pageviewsResp } as unknown as Response);
-    });
+    }) as unknown as typeof fetch;
 
     const sig = await fetchWikimediaSignals({ title: 'Foo', lat: 1, lon: 2, radius: 500 });
 
