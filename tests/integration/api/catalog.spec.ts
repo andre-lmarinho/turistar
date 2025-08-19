@@ -6,16 +6,45 @@ import { GET } from '@/server/api/catalog/route';
 vi.mock('@/shared/lib/geoapify', () => ({
   fetchGeoapifyCatalog: vi.fn().mockResolvedValue({
     activities: [
-      { id: '1', name: 'A', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
-      { id: '2', name: 'B', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
-      { id: '3', name: 'C', category: 'sight', latitude: 0, longitude: 0, wiki: undefined },
+      {
+        id: '1',
+        name: 'A',
+        category: 'sight',
+        latitude: 0,
+        longitude: 0,
+        wiki: { pageviews30d: 5000 },
+      },
+      {
+        id: '2',
+        name: 'B',
+        category: 'sight',
+        latitude: 0,
+        longitude: 0,
+        wiki: { pageviews30d: 3000 },
+      },
+      {
+        id: '3',
+        name: 'C',
+        category: 'sight',
+        latitude: 0,
+        longitude: 0,
+        wiki: { pageviews30d: 2000 },
+      },
+      {
+        id: '4',
+        name: 'D',
+        category: 'sight',
+        latitude: 0,
+        longitude: 0,
+        wiki: { pageviews30d: 10 },
+      },
     ],
   }),
 }));
 
 import { fetchGeoapifyCatalog } from '@/shared/lib/geoapify';
 
-const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5 };
+const scores: Record<string, number> = { '1': 0.2, '2': 0.9, '3': 0.5, '4': 0.7 };
 vi.mock('@/shared/lib', () => ({
   computeCatalogScore: (
     p: { id: string },
@@ -67,6 +96,13 @@ describe('GET /api/catalog', () => {
     expect(cacheControl).toBeNull();
   });
 
+  it('filters out low pageview activities', async () => {
+    const req = new NextRequest('http://localhost/api/catalog?dest=test');
+    const res = await GET(req);
+    const data = await res.json();
+    expect(data.activities.find((a: { id: string }) => a.id === '4')).toBeUndefined();
+  });
+
   it('returns debug scores when requested', async () => {
     const req = new NextRequest('http://localhost/api/catalog?dest=test&debug=true');
     const res = await GET(req);
@@ -91,7 +127,7 @@ describe('GET /api/catalog', () => {
           category: 'sight',
           latitude: 0,
           longitude: 0,
-          wiki: { description: 'Descrição', lang: 'pt' },
+          wiki: { description: 'Descrição', lang: 'pt', pageviews30d: 5000 },
         },
       ],
     });

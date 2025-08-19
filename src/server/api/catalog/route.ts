@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
   const lonParam = searchParams.get('lon');
   const debug = searchParams.get('debug') === 'true';
   const lang = searchParams.get('lang') ?? 'en';
+  const MIN_PAGEVIEWS = 1000;
 
   if (!dest && !(latParam && lonParam)) {
     return NextResponse.json({ error: 'Missing dest or lat/lon' }, { status: 400 });
@@ -120,12 +121,12 @@ export async function GET(req: NextRequest) {
         })
       )
     );
-
-    enriched.sort((a, b) => b.score - a.score);
+    const filtered = enriched.filter((p) => (p.wiki?.pageviews30d ?? 0) >= MIN_PAGEVIEWS);
+    filtered.sort((a, b) => b.score - a.score);
 
     console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
 
-    return NextResponse.json({ activities: enriched });
+    return NextResponse.json({ activities: filtered });
   } catch (err) {
     console.error(err);
     console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));

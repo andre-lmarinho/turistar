@@ -65,9 +65,26 @@ function isValidImage(url: string, width?: number, height?: number): boolean {
     'portrait',
     'person',
     'people',
+    'human',
+    'man',
+    'woman',
+    'boy',
+    'girl',
+    'child',
     'profile',
     'selfie',
     'avatar',
+    'robot',
+    'android',
+    'animal',
+    'bird',
+    'dog',
+    'cat',
+    'horse',
+    'cow',
+    'sheep',
+    'pig',
+    'owl',
   ];
   if (banned.some((b) => lower.includes(b))) return false;
   if (width && height && (width < 200 || height < 200)) return false;
@@ -93,7 +110,7 @@ function pageFromQuery(query: QueryWithPages): ApiPage | undefined {
   return first ?? Object.values(pages)[0];
 }
 
-const DEFAULT_TITLE_SIMILARITY_THRESHOLD = 0.5;
+const DEFAULT_TITLE_SIMILARITY_THRESHOLD = 0.3;
 
 function normalizeTitle(str: string): string {
   return str
