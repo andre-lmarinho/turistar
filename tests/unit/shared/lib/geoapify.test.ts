@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 
 vi.mock('@/shared/lib/wikimedia', () => ({
   enrichWithWikimediaSignals: vi.fn(),
+  isValidImage: (url: string) => !url.includes('logo'),
 }));
 
 const originalFetch = global.fetch;
@@ -74,6 +75,23 @@ describe('mapGeoapifyFeature', () => {
     expect(mapGeoapifyFeature(nestedDesc).description).toBe('Nested');
     expect(mapGeoapifyFeature(noDesc).description).toBe('Addr');
   });
+
+  it('filters out invalid Geoapify images', () => {
+    const feature: Parameters<typeof mapGeoapifyFeature>[0] = {
+      properties: {
+        place_id: 1,
+        name: 'Place',
+        lat: 1,
+        lon: 2,
+        categories: ['tourism.museum'],
+        image: 'logo.svg',
+      },
+    } as any;
+
+    const result = mapGeoapifyFeature(feature);
+
+    expect(result.imageUrl).toBeUndefined();
+  });
 });
 
 describe('fetchGeoapifyAutocomplete', () => {
@@ -109,6 +127,14 @@ describe('fetchGeoapifyAutocomplete', () => {
             },
           },
           {
+            properties: {
+              formatted: 'Downtown, Paris',
+              result_type: 'neighbourhood',
+              lat: 13,
+              lon: 14,
+            },
+          },
+          {
             properties: { formatted: 'Texas, United States', result_type: 'state', lat: 7, lon: 8 },
           },
           { properties: { formatted: 'France', result_type: 'country', lat: 9, lon: 10 } },
@@ -122,6 +148,7 @@ describe('fetchGeoapifyAutocomplete', () => {
       { name: 'Paris, France', latitude: 1, longitude: 2 },
       { name: 'Boipeba, Brazil', latitude: 5, longitude: 6 },
       { name: 'Boipeba Municipality, Brazil', latitude: 11, longitude: 12 },
+      { name: 'Downtown, Paris', latitude: 13, longitude: 14 },
       { name: 'Texas, United States', latitude: 7, longitude: 8 },
       { name: 'France', latitude: 9, longitude: 10 },
     ]);

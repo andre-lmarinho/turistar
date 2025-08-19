@@ -53,7 +53,7 @@ async function fetchJson(url: string) {
   return res.json();
 }
 
-function isValidImage(url: string, width?: number, height?: number): boolean {
+export function isValidImage(url: string, width?: number, height?: number): boolean {
   const lower = url.toLowerCase();
   const banned = [
     'logo',

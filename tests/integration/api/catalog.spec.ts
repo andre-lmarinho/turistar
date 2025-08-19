@@ -112,6 +112,60 @@ describe('GET /api/catalog', () => {
     expect(data.activities.find((a: { id: string }) => a.id === '5')).toBeDefined();
   });
 
+  it('filters activities with banned terms in the name', async () => {
+    vi.mocked(fetchGeoapifyCatalog).mockResolvedValueOnce({
+      activities: [
+        {
+          id: '1',
+          name: 'Robot Museum',
+          category: 'sight',
+          latitude: 0,
+          longitude: 0,
+          wiki: { pageviews30d: 5000 },
+        },
+        {
+          id: '2',
+          name: 'Central Park',
+          category: 'sight',
+          latitude: 0,
+          longitude: 0,
+          wiki: { pageviews30d: 5000 },
+        },
+      ],
+    });
+    const req = new NextRequest('http://localhost/api/catalog?dest=test');
+    const res = await GET(req);
+    const data = await res.json();
+    expect(data.activities.map((a: { name: string }) => a.name)).toEqual(['Central Park']);
+  });
+
+  it('falls back to unfiltered results when all have low pageviews', async () => {
+    vi.mocked(fetchGeoapifyCatalog).mockResolvedValueOnce({
+      activities: [
+        {
+          id: '1',
+          name: 'Small Park',
+          category: 'sight',
+          latitude: 0,
+          longitude: 0,
+          wiki: { pageviews30d: 100 },
+        },
+        {
+          id: '2',
+          name: 'Tiny Museum',
+          category: 'sight',
+          latitude: 0,
+          longitude: 0,
+          wiki: { pageviews30d: 200 },
+        },
+      ],
+    });
+    const req = new NextRequest('http://localhost/api/catalog?dest=test');
+    const res = await GET(req);
+    const data = await res.json();
+    expect(data.activities).toHaveLength(2);
+  });
+
   it('returns debug scores when requested', async () => {
     const req = new NextRequest('http://localhost/api/catalog?dest=test&debug=true');
     const res = await GET(req);

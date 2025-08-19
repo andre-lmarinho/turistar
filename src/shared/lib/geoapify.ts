@@ -4,7 +4,7 @@
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
 import { clientEnv } from './clientEnv';
-import { enrichWithWikimediaSignals } from './wikimedia';
+import { enrichWithWikimediaSignals, isValidImage } from './wikimedia';
 
 /* Types */
 type GeoapifyFeature = {
@@ -73,7 +73,7 @@ export function mapGeoapifyFeature(f: GeoapifyFeature): CatalogActivity {
     category,
     latitude: p.lat,
     longitude: p.lon,
-    ...(p.image && { imageUrl: p.image }),
+    ...(p.image && isValidImage(p.image) ? { imageUrl: p.image } : {}),
     metadata: p,
   };
 }
@@ -84,7 +84,7 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
 
   const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
     text
-  )}&limit=5&apiKey=${key}`;
+  )}&limit=10&apiKey=${key}`;
 
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
@@ -101,6 +101,11 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
     'archipelago',
     'municipality',
     'district',
+    'city_district',
+    'state_district',
+    'borough',
+    'suburb',
+    'neighbourhood',
     'county',
     'region',
     'state',
@@ -118,7 +123,12 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
     hamlet: 2,
     locality: 2,
     district: 2,
+    city_district: 2,
+    borough: 2,
+    suburb: 2,
+    neighbourhood: 2,
     county: 2,
+    state_district: 3,
     state: 3,
     province: 3,
     region: 3,
