@@ -55,46 +55,6 @@ async function fetchJson(url: string) {
 
 export function isValidImage(url: string, width?: number, height?: number): boolean {
   const lower = url.toLowerCase();
-  const banned = [
-    'logo',
-    'icon',
-    'map',
-    'flag',
-    'sign',
-    'coat_of_arms',
-    'portrait',
-    'person',
-    'people',
-    'human',
-    'man',
-    'woman',
-    'boy',
-    'girl',
-    'child',
-    'profile',
-    'selfie',
-    'avatar',
-    'robot',
-    'android',
-    'animal',
-    'bird',
-    'dog',
-    'cat',
-    'horse',
-    'cow',
-    'sheep',
-    'pig',
-    'owl',
-    'plane',
-    'airplane',
-    'aircraft',
-    'jet',
-    'airliner',
-    'boeing',
-    'airbus',
-    'fighter',
-  ];
-  if (banned.some((b) => lower.includes(b))) return false;
   if (lower.endsWith('.svg')) return false;
   if (width && height && (width < 200 || height < 200)) return false;
   return true;

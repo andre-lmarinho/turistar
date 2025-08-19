@@ -121,31 +121,12 @@ export async function GET(req: NextRequest) {
         })
       )
     );
-    const nameBanned = [
-      'robot',
-      'android',
-      'logo',
-      'owl',
-      'bird',
-      'aircraft',
-      'airplane',
-      'plane',
-      'jet',
-      'airport',
-      'airline',
-      'person',
-      'people',
-      'human',
-    ];
-    const nameFiltered = enriched.filter(
-      (p) => !nameBanned.some((b) => p.name.toLowerCase().includes(b))
-    );
-    let filtered = nameFiltered.filter((p) => {
+    let filtered = enriched.filter((p) => {
       const pv = p.wiki?.pageviews30d;
       return pv == null || pv === 0 || pv >= MIN_PAGEVIEWS;
     });
     if (filtered.length === 0) {
-      filtered = nameFiltered;
+      filtered = enriched;
     }
     filtered.sort((a, b) => b.score - a.score);
 
