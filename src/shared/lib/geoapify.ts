@@ -94,13 +94,18 @@ export async function fetchGeoapifyAutocomplete(text: string): Promise<Autocompl
 
   const data = (await res.json()) as GeoapifyResponse;
   const allowed = new Set(['city', 'state', 'country']);
-  return data.features
-    .filter((f) => allowed.has(f.properties.result_type ?? ''))
-    .map((f) => ({
-      name: f.properties.formatted ?? f.properties.name ?? text,
-      latitude: f.properties.lat,
-      longitude: f.properties.lon,
-    }));
+  const priority: Record<string, number> = { city: 0, state: 1, country: 2 };
+  const filtered = data.features.filter((f) => allowed.has(f.properties.result_type ?? ''));
+  filtered.sort(
+    (a, b) =>
+      (priority[a.properties.result_type ?? ''] ?? 3) -
+      (priority[b.properties.result_type ?? ''] ?? 3)
+  );
+  return filtered.map((f) => ({
+    name: f.properties.formatted ?? f.properties.name ?? text,
+    latitude: f.properties.lat,
+    longitude: f.properties.lon,
+  }));
 }
 
 /*  Catalog – main “places” pipeline */

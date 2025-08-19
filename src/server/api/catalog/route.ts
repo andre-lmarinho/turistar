@@ -138,6 +138,6 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error(err);
     console.info('catalog_route_ms', Date.now() - t0, JSON.stringify({ hadCoords }));
-    return NextResponse.json({ activities: [] });
+    return NextResponse.json({ error: 'Failed to load catalog' }, { status: 500 });
   }
 }
