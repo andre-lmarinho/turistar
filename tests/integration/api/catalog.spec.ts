@@ -104,4 +104,13 @@ describe('GET /api/catalog', () => {
     const data = await res.json();
     expect(data.activities[0].wiki.description).toBe('Descrição');
   });
+
+  it('returns 500 when Geoapify fails', async () => {
+    vi.mocked(fetchGeoapifyCatalog).mockRejectedValueOnce(new Error('boom'));
+    const req = new NextRequest('http://localhost/api/catalog?dest=bad');
+    const res = await GET(req);
+    expect(res.status).toBe(500);
+    const body = await res.json();
+    expect(body).toEqual({ error: 'Failed to load catalog' });
+  });
 });
