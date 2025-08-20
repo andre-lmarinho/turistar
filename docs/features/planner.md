@@ -153,11 +153,11 @@ import { PlannerControls } from '@/features/planner';
 
 ### ActivityModalForm
 - **Location:** [`src/features/planner/components/modal/ActivityModalForm.tsx`](../../src/features/planner/components/modal/ActivityModalForm.tsx)
-- **Responsibility:** Form to edit title, budget and image.
-- **Props:** `{ draft: ActivityDraft; onSubmit: () => void }`
-- **State:** internal draft fields
+- **Responsibility:** Form to edit activity details including title, notes, budget, image and optional location (address or coordinates).
+- **Props:** `{ activity: Activity; onSave: (draft: Partial<Activity>) => void; color: string }`
+- **State:** internal draft fields for text, budget, duration, image and location
 - **External hooks:** none
-- **Side-effects:** Calls `onSubmit` on form submission
+- **Side-effects:** Geocodes entered address on save and calls `onSave`
 - **Accessibility:** Inputs labelled and grouped
 - **Interactions:** Users update fields then submit
 - **Performance notes:** none

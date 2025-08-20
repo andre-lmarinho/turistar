@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { AlignLeft } from 'lucide-react';
+import { AlignLeft, MapPin } from 'lucide-react';
 import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/shared/types';
@@ -21,6 +21,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+  const [address, setAddress] = useState(activity.address ?? '');
+  const [latitude, setLatitude] = useState<number | undefined>(activity.latitude);
+  const [longitude, setLongitude] = useState<number | undefined>(activity.longitude);
 
   // Update internal state when the activity prop changes
   useEffect(() => {
@@ -29,6 +32,9 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     setDuration(activity.duration || 0);
     setBudget(activity.budget || 0);
     setEditedImageUrl(activity.imageUrl ?? '');
+    setAddress(activity.address ?? '');
+    setLatitude(activity.latitude);
+    setLongitude(activity.longitude);
   }, [activity]);
 
   // Automatically focus the title input only when the activity title is empty.
@@ -38,6 +44,39 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       titleInputRef.current.focus();
     }
   });
+
+  async function handleSave() {
+    let lat = latitude;
+    let lng = longitude;
+    const addr = address.trim();
+
+    if (addr) {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}`
+        );
+        const data: Array<{ lat: string; lon: string }> = await res.json();
+        if (data[0]) {
+          lat = parseFloat(data[0].lat);
+          lng = parseFloat(data[0].lon);
+        }
+      } catch {
+        // Geocoding failures are non-blocking; coordinates remain as provided
+      }
+    }
+
+    onSave({
+      title: editedTitle.trim(),
+      description: editedDescription,
+      color,
+      duration: Number(duration),
+      budget,
+      imageUrl: editedImageUrl,
+      address: addr || undefined,
+      latitude: lat,
+      longitude: lng,
+    });
+  }
 
   return (
     <>
@@ -128,22 +167,69 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         />
       </div>
 
+      {/* Location */}
+      <div className="mb-2 px-4">
+        <label
+          htmlFor="activity-address"
+          className="mb-1 flex items-center gap-1 text-xs font-bold"
+        >
+          <MapPin size={12} aria-hidden="true" />
+          <span>Address</span>
+        </label>
+        <input
+          id="activity-address"
+          name="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Search address"
+          className="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+        />
+      </div>
+      <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="coords-legend">
+        <legend id="coords-legend" className="sr-only">
+          Coordinates
+        </legend>
+        <div>
+          <label htmlFor="latitude" className="mb-1 flex items-center gap-1 text-xs font-bold">
+            <span>Latitude</span>
+          </label>
+          <Input
+            labelId="latitude"
+            value={latitude == null ? '' : String(latitude)}
+            onValueChange={(val) => setLatitude(val ? Number(val) : undefined)}
+            aria-label="Latitude"
+            type="number"
+            inputSize="sm"
+            background="default"
+            placeholder="Lat"
+            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          />
+        </div>
+        <div>
+          <label htmlFor="longitude" className="mb-1 flex items-center gap-1 text-xs font-bold">
+            <span>Longitude</span>
+          </label>
+          <Input
+            labelId="longitude"
+            value={longitude == null ? '' : String(longitude)}
+            onValueChange={(val) => setLongitude(val ? Number(val) : undefined)}
+            aria-label="Longitude"
+            type="number"
+            inputSize="sm"
+            background="default"
+            placeholder="Lng"
+            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          />
+        </div>
+      </fieldset>
+
       {/* Update */}
       <div className="flex justify-center gap-2 pb-4">
         <UpdateButton
           type="button"
           ready={Boolean(editedTitle.trim())}
           aria-disabled={!Boolean(editedTitle.trim())}
-          onClick={() =>
-            onSave({
-              title: editedTitle.trim(),
-              description: editedDescription,
-              color,
-              duration: Number(duration),
-              budget,
-              imageUrl: editedImageUrl,
-            })
-          }
+          onClick={handleSave}
           className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           Update

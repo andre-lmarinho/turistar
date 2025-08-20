@@ -50,7 +50,9 @@ function MapView() {
       days
         .map((day, dayIdx) => {
           const acts = day.activities.filter((a) => a.latitude != null && a.longitude != null);
-          const coords = acts.map((a) => [a.latitude!, a.longitude!] as LatLngExpression);
+          const coords = acts.map(
+            (a) => [Number(a.latitude), Number(a.longitude)] as LatLngExpression
+          );
           return { day, dayIdx, coords, acts };
         })
         .filter((d) => d.coords.length > 0),
