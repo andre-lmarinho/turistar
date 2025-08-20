@@ -1,20 +1,5 @@
 // src/shared/lib/index.ts
 
-export {
-  GEOAPIFY_CATEGORIES,
-  getGeoapifyKey,
-  mapGeoapifyFeature,
-  fetchGeoapifyAutocomplete,
-  fetchGeoapifyCatalog,
-  fetchGeoapifySearch,
-} from './geoapify';
-export {
-  fetchWikimediaImage,
-  fetchWikimediaSignals,
-  enrichWithWikimediaSignals,
-  withPageviews,
-} from './wikimedia';
-export { computeCatalogScore } from './ranking';
 export { fetchJson } from './http';
 export { pLimit } from './pLimit';
 export { supabase } from './supabaseClient';

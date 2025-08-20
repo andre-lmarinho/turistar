@@ -333,28 +333,15 @@ import { PlannerControls } from '@/features/planner';
 
 ### useDestinationAutocomplete
 - **Location:** [`src/features/planner/hooks/catalog/useDestinationAutocomplete.ts`](../../src/features/planner/hooks/catalog/useDestinationAutocomplete.ts)
-- **Responsibility:** Autocomplete search for destinations using Geoapify.
+- **Responsibility:** Autocomplete search for destinations via the API.
 - **Signature:** `useDestinationAutocomplete(query: string, options?: { enabled: boolean })`
 - **Inputs:** query string
 - **Outputs:** `{ results, loading, error }`
-- **Lifecycle:** Calls Geoapify API when enabled
+- **Lifecycle:** Calls the API when enabled
 - **Exceptions:** none
 - **Example:**
   ```ts
   const { results } = useDestinationAutocomplete(text);
-  ```
-
-### useGeoapifySearch
-- **Location:** [`src/features/planner/hooks/catalog/useGeoapifySearch.ts`](../../src/features/planner/hooks/catalog/useGeoapifySearch.ts)
-- **Responsibility:** Low-level helper for invoking Geoapify APIs.
-- **Signature:** `useGeoapifySearch()`
-- **Inputs:** none
-- **Outputs:** `{ search: (url: string) => Promise<any> }`
-- **Lifecycle:** Provides memoized fetch wrapper
-- **Exceptions:** none
-- **Example:**
-  ```ts
-  const { search } = useGeoapifySearch();
   ```
 
 ### fetchCatalog
@@ -385,7 +372,7 @@ import { PlannerControls } from '@/features/planner';
 
 ### fetchSearch
 - **Location:** [`src/features/planner/hooks/catalog/fetchSearch.ts`](../../src/features/planner/hooks/catalog/fetchSearch.ts)
-- **Responsibility:** Performs a Geoapify search request.
+- **Responsibility:** Performs a catalog search request.
 - **Signature:** `fetchSearch(url: string)`
 - **Inputs:** request URL
 - **Outputs:** Promise of search results

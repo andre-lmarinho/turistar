@@ -8,10 +8,6 @@ The `src/app` directory provides Next.js routing and shared page layout. It keep
 src/app
 ├─ layout.tsx
 ├─ page.tsx
-├─ api/
-│  ├─ autocomplete/route.ts
-│  ├─ catalog/route.ts
-│  └─ search/route.ts
 ├─ planner/
 │  ├─ page.tsx
 │  ├─ PlannerClient.tsx
@@ -45,10 +41,6 @@ src/app
 ### inspiration/
 - **InspirationPlanner.tsx** – Wrapper that renders `PlannerClient` with sample data.
 - **[city]/page.tsx** – Dynamic route reading inspiration JSON from `src/data`.
-
-### api/
-- Each `route.ts` re-exports handlers from `src/server/api/<route>/route.ts`.
-- Keeps all business logic in `src/server`, leaving the app layer as a thin routing shell.
 
 ## Conventions
 

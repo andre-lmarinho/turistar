@@ -32,7 +32,7 @@ import { Hero, PlanForm } from '@/features/home';
 
 ### DestinationInput
 - **Location:** [`src/features/home/components/DestinationInput.tsx`](../../src/features/home/components/DestinationInput.tsx)
-- **Responsibility:** Autocomplete field for destination search using Geoapify.
+- **Responsibility:** Autocomplete field for destination search.
 - **Props:** `{ value: string; onChange: (val: string | PlaceSelection) => void }`
 - **State:** `open`, `active`
 - **External hooks:** `useDebounce`, `useDestinationAutocomplete`

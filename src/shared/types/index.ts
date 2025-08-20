@@ -1,7 +1,5 @@
 // src/shared/types/index.ts
 
-import type { WikimediaSignals } from '@/shared/lib/wikimedia';
-
 /**
  * A single activity/item in the catalog.
  */
@@ -33,11 +31,10 @@ export interface CatalogActivity {
   latitude?: number;
   longitude?: number;
   metadata?: Record<string, unknown>;
-  wiki?: WikimediaSignals;
 }
 
 /**
- * Autocomplete location returned by Geoapify.
+ * Autocomplete location returned by a places API.
  */
 export interface AutocompletePlace {
   name: string;

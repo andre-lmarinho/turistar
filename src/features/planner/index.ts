@@ -36,7 +36,6 @@ export {
   useDestinationCatalog,
   useCatalogActivities,
   useDestinationAutocomplete,
-  useGeoapifySearch,
   fetchAutocomplete,
   fetchCatalog,
   fetchSearch,

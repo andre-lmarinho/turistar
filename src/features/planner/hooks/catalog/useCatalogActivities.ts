@@ -9,7 +9,7 @@ import { fetchCatalog } from './fetchCatalog';
 
 /**
  * Loads catalog activities for the given plan from Supabase or the API.
- * Falls back to fetching from the Geoapify proxy when not cached.
+ * Falls back to fetching from the catalog endpoint when not cached.
  */
 export function useCatalogActivities(
   planId: string | null,

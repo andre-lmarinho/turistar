@@ -56,12 +56,10 @@ While editing an activity, you can search the catalog directly from the modal or
     Quickly filter activities by typing a query.
 - **Map View**
   View all your planned attractions on an interactive map.
-- **Dynamic Catalog**
-  Activities are fetched from Geoapify via `/api/catalog` using your `NEXT_PUBLIC_GEOAPIFY_KEY`.
-- **Persistent Storage**
-  All planner and budget changes are saved to Supabase so they stay when you refresh.
-- **Accessibility & Responsive Design**
-  Fully keyboard-accessible with layouts optimised for mobile and desktop.
+ - **Persistent Storage**
+   All planner and budget changes are saved to Supabase so they stay when you refresh.
+ - **Accessibility & Responsive Design**
+   Fully keyboard-accessible with layouts optimised for mobile and desktop.
 - **Sample Plan**
   Try the interactive sample itineraries from the home page links.
 
@@ -149,7 +147,6 @@ See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
 4. **Configure environment**
  - Copy `.env.example` to `.env.local`.
  - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts) and [`clientEnv.ts`](src/shared/lib/clientEnv.ts)):
-    - `NEXT_PUBLIC_GEOAPIFY_KEY`
     - `NEXT_PUBLIC_SUPABASE_URL`
     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - Optionally set `SUPABASE_SERVICE_ROLE_KEY` for local type generation.
@@ -201,7 +198,6 @@ Deploy easily to **Vercel** or **Netlify**:
 1. Push your code to GitHub.
 2. Import the repository in your hosting service (https://vercel.com/new or https://app.netlify.com/start).
 3. Add the required environment variables:
-   - `NEXT_PUBLIC_GEOAPIFY_KEY`
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Click "Deploy" — the platform will build and preview automatically.

@@ -6,10 +6,9 @@ This document covers how to deploy **Turistar** and manage environment variables
 
 Copy `.env.example` to `.env.local` and set the following values:
 
-- `NEXT_PUBLIC_GEOAPIFY_KEY`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+ - `NEXT_PUBLIC_SUPABASE_URL`
+ - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+ - `SUPABASE_SERVICE_ROLE_KEY`
 
 These variables should also be configured in your hosting provider's environment settings (e.g., Vercel or Netlify) so production builds can access them.
 
@@ -32,8 +31,3 @@ You can also run the production build locally with:
 npm start
 ```
 
-## Catalog API Key
-
-Set the `NEXT_PUBLIC_GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify.
-
-Catalog images are stored as direct links from Geoapify or Wikimedia and are not uploaded to your hosting provider. Ensure outbound access to these domains is permitted.

@@ -9,7 +9,6 @@ The application lets users create and organize trip itineraries, with plan data 
 - **Planner Board** – Rearrange activities between days using drag‑and‑drop.
 - **Catalog Popup** – Browse suggested activities and insert them directly into the board.
   - Search the catalog in real time.
-- **Geoapify Catalog** – Activities are fetched from Geoapify using your `NEXT_PUBLIC_GEOAPIFY_KEY`.
 - **Persistent Storage** – Planner data and budget are saved in Supabase.
 - **Map Mode** – View itinerary on an interactive map built with Leaflet.
 - **Sample Inspirations** – Browse pre-built example itineraries for select cities.
