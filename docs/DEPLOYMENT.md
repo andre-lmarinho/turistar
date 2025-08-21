@@ -13,7 +13,7 @@ Copy `.env.example` to `.env.local` and set the following values:
 
 These variables should also be configured in your hosting provider's environment settings (e.g., Vercel or Netlify) so production builds can access them.
 
-See [Environment](ENVIRONMENT.md) for how these variables are validated and how authentication works.
+See [Developer Guide](DEVELOPER_GUIDE.md#environment) for how these variables are validated and how authentication works.
 
 ## Build & Hosting
 
@@ -34,6 +34,6 @@ npm start
 
 ## Catalog API Key
 
-Set the `NEXT_PUBLIC_GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify.
+Set the `NEXT_PUBLIC_GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify. The catalog integration is under development, so this API may change.
 
 Catalog images are stored as direct links from Geoapify or Wikimedia and are not uploaded to your hosting provider. Ensure outbound access to these domains is permitted.

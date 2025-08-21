@@ -4,7 +4,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 ## Project Structure
 
-- `/docs`: Project notes and guidelines (see `STATE-DATA-FLOW.md` for how data moves)
+- `/docs`: Project notes and guidelines
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
   - `/features`: Feature modules such as planner, budget and onboarding
@@ -28,7 +28,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Follow the existing code style in each file.
 - Write meaningful variable and function names.
 - Add comments for complex logic.
-- Follow the commenting conventions in [docs/COMMENTING.md](docs/COMMENTING.md).
+- Follow the commenting conventions in [docs/DEVELOPER_GUIDE.md#commenting](docs/DEVELOPER_GUIDE.md#commenting).
 - Keep all documentation up to date after each interaction so changes stay synchronized with the codebase.
 
 ## React Components Guidelines
@@ -80,20 +80,8 @@ npm run test -- --coverage
 
 ## Documentation
 
-- [Project Overview](docs/OVERVIEW.md)
 - [Architecture Overview](docs/ARCHITECTURE.md)
-- [Database Schema](docs/DATABASE.md)
-- [State Data Flow](docs/STATE-DATA-FLOW.md)
-- [Environment](docs/ENVIRONMENT.md)
-- [Routing](docs/ROUTING.md)
-- [Home Feature](docs/features/home.md)
-- [Planner Feature](docs/features/planner.md)
-- [Budget Feature](docs/features/budget.md)
-- [Onboarding Feature](docs/features/onboarding.md)
-- [Shared Utilities](docs/shared/utils.md)
-- [Style Guide](docs/STYLE-GUIDE.md)
-- [Accessibility](docs/ACCESSIBILITY.md)
 - [Testing](docs/TESTING.md)
 - [Deployment](docs/DEPLOYMENT.md)
-- [Commenting Standards](docs/COMMENTING.md)
+- [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [Contributing](docs/CONTRIBUTING.md)

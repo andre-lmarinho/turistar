@@ -3,7 +3,6 @@
 A simple travel planner built with Next.js, React and drag‑and‑drop. Select any city to generate a starter itinerary that you can rearrange and edit as you like. Plans persist via Supabase so they stick around between visits.
 
 🔗 [Live Demo](https://travel-planner-orpin.vercel.app/)
-_or_ deploy easily to Vercel or Netlify with the same settings.
 
 ## Table of Contents
 
@@ -50,14 +49,8 @@ While editing an activity, you can search the catalog directly from the modal or
   Enter your trip dates to start a new plan.
 - **Planner Board**
   Drag activities between days or add blank cards to build your schedule.
-- **Catalog Popup**
-  Browse suggested activities and insert them directly into the board.
-  - **Search Catalog**
-    Quickly filter activities by typing a query.
 - **Map View**
   View all your planned attractions on an interactive map.
-- **Dynamic Catalog**
-  Activities are fetched from Geoapify via `/api/catalog` using your `NEXT_PUBLIC_GEOAPIFY_KEY`.
 - **Persistent Storage**
   All planner and budget changes are saved to Supabase so they stay when you refresh.
 - **Accessibility & Responsive Design**
@@ -102,17 +95,6 @@ See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
 
 ---
 
-## 🧭 User Flow
-
-1. Start by selecting your trip dates
-2. Choose destination categories and search the catalog
-3. Browse results or use the **Back** button to refine your filters
-4. Drag cards into the planner board by day
-5. Click cards to edit title, image, or move between days
-6. All planner and budget data persist automatically in Supabase
-
----
-
 ## 💻 Getting Started
 
 **Prerequisites**: Node.js v18+, npm
@@ -134,30 +116,19 @@ See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
    pnpm install
    ```
 
-3. **Run the development server**
+3. **Configure environment**
+   Copy `.env.example` to `.env.local` and set:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_GEOAPIFY_KEY`
 
+   See [Developer Guide](docs/DEVELOPER_GUIDE.md#environment) for details.
+
+4. **Start the dev server**
    ```bash
    npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
    ```
-
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-4. **Configure environment**
- - Copy `.env.example` to `.env.local`.
- - Set the following variables (validated in [`env.ts`](src/shared/lib/env.ts) and [`clientEnv.ts`](src/shared/lib/clientEnv.ts)):
-    - `NEXT_PUBLIC_GEOAPIFY_KEY`
-    - `NEXT_PUBLIC_SUPABASE_URL`
-    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-  - Optionally set `SUPABASE_SERVICE_ROLE_KEY` for local type generation.
-  - See [Environment](docs/ENVIRONMENT.md) for validation details and authentication flow.
-  - In Vercel, add the same values in **Project Settings → Environment Variables**.
-   - In Supabase, copy the URL and keys from your project dashboard.
-   - Start a local Supabase instance with `supabase start`.
-   - Generate database types with `npm run gen:types` whenever the schema changes.
+   Visit <http://localhost:3000> in your browser.
 
 ### Development Workflow
 
@@ -179,7 +150,6 @@ See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
 - `npm run lint` — run ESLint
 - `npm run format` — run Prettier
 - `npm run test` — run unit tests
-- `npm run test:watch` — run tests in watch mode
 
 ### Local Vercel build
 
@@ -212,16 +182,11 @@ _For detailed guides, see:_
 - Vercel Docs: https://vercel.com/docs
 - Netlify Docs: https://docs.netlify.com/
 
----
+## Contributing
 
-## 🧠 What I Focused On
+Please read [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) before submitting pull requests.
 
-- Feature-based architecture with shared utilities and typed APIs
-- Clean and maintainable drag‑and‑drop logic using `@dnd-kit`
-- Custom components built on top of Radix UI primitives
-- Remote persistence using Supabase for planner and budget
-- UX patterns: inline editing, optimistic updates, responsive layout and accessible components
-- Progressive structure ready to scale with real APIs
+Additional docs: [Architecture](docs/ARCHITECTURE.md), [Testing](docs/TESTING.md), [Deployment](docs/DEPLOYMENT.md), [Developer Guide](docs/DEVELOPER_GUIDE.md).
 
 ---
 
@@ -229,21 +194,10 @@ _For detailed guides, see:_
 
 For more details on project conventions, see:
 
-- [Project Overview](docs/OVERVIEW.md)
 - [Architecture Overview](docs/ARCHITECTURE.md)
-- [Database Schema](docs/DATABASE.md)
-- [State Data Flow](docs/STATE-DATA-FLOW.md)
-- [Environment](docs/ENVIRONMENT.md)
-- [Routing](docs/ROUTING.md)
-- [Home Feature](docs/features/home.md)
-- [Planner Feature](docs/features/planner.md)
-- [Budget Feature](docs/features/budget.md)
-- [Onboarding Feature](docs/features/onboarding.md)
-- [Style Guide](docs/STYLE-GUIDE.md)
-- [Accessibility](docs/ACCESSIBILITY.md)
 - [Testing](docs/TESTING.md)
 - [Deployment](docs/DEPLOYMENT.md)
-- [Commenting Standards](docs/COMMENTING.md)
+- [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [Contributing](docs/CONTRIBUTING.md)
 
 ---

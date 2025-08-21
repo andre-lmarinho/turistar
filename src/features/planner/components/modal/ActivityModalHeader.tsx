@@ -17,7 +17,6 @@ import {
   CardColorsPopup,
   DayPickerPopup,
   CatalogSearchPopup,
-  SearchCatalogButton,
 } from '@/shared/ui';
 
 /**
@@ -125,15 +124,6 @@ export default function ActivityModalHeader({
           <div className="flex items-center gap-2">
             <RemoveCardButton onClick={onDelete} />
             <CardColorButton ref={colorButtonRef} onClick={handleColorButtonClick} />
-
-            <SearchCatalogButton
-              ref={searchButtonRef}
-              onClick={() => {
-                setIsCatalogOpen((p) => !p);
-                setActivePopup(null);
-              }}
-            ></SearchCatalogButton>
-
             <CloseButton onClick={onClose} />
           </div>
         </div>

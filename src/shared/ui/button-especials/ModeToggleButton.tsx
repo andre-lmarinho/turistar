@@ -79,7 +79,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
           <motion.div
             initial={false}
             style={{ x: highlightX, width: highlightW }}
-            className="absolute inset-1 rounded-[calc(var(--radius)-0.25rem)] bg-[var(--accent)]"
+            className="absolute inset-1 rounded-[calc(var(--radius)-0.25rem)] bg-[var(--primary)]"
           />
         )}
 
@@ -96,8 +96,8 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
               aria-selected={selected}
               className={`relative z-10 flex-1 cursor-pointer px-2 py-1 text-sm font-medium transition-colors ${
                 selected
-                  ? 'text-[var(--accent-foreground)]'
-                  : 'text-[var(--foreground)] hover:text-[var(--accent)]'
+                  ? 'text-[var(--primary-foreground)]'
+                  : 'text-[var(--foreground)] hover:text-black'
               } `}
             >
               <div className="flex h-full w-full items-center justify-center gap-2 p-2">

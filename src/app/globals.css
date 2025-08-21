@@ -49,23 +49,21 @@
   --font-architects-daughter: cursive;
   /* Base colors for the general interface */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.15 0 0);
+  --foreground: oklch(0.28 0 0);
 
   /* Card components and popovers */
   --card: oklch(0.985 0.02 80);
-  --card-foreground: oklch(0.15 0 0);
+  --card-foreground: oklch(0.28 0 0);
 
   --popover: oklch(0.985 0.02 80);
-  --popover-foreground: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.28 0 0);
 
   /* Action colors - primary buttons, secondary buttons, and accents */
   --primary: oklch(0.7 0.15 190);
   --primary-foreground: oklch(1 0 0);
-
   --secondary: oklch(0.92 0.02 80);
-  --secondary-foreground: oklch(0.15 0 0);
-
-  --accent: oklch(0.6 0.25 70);
+  --secondary-foreground: oklch(0.28 0 0);
+  --accent: oklch(0.8193 0.1332 74);
   --accent-foreground: oklch(1 0 0);
 
   /* Muted elements and disabled states */
@@ -73,12 +71,19 @@
   --muted-foreground: oklch(0.5 0 0);
 
   /* Destructive actions */
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: oklch(0.54 0.24 27);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.62 0.18 150);
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.78 0.15 85);
+  --warning-foreground: oklch(0.14 0 0);
+  --info: oklch(0.64 0.15 210);
+  --info-foreground: oklch(1 0 0);
 
   /* Structure - borders, inputs, focus rings */
   --border: oklch(0.9 0.02 80);
   --input: oklch(0.9 0.02 80);
-  --ring: oklch(0.7 0.02 80);
+  --ring: oklch(0.58 0.17 200);
 
   /* Budget Chart colors for data visualization */
   --chart-1: oklch(0.7 0.15 190);
@@ -89,22 +94,22 @@
 
   /* Special Cards Base Colors */
   --color-0: oklch(1 0 0); /* branco */
-  --color-0-border: oklch(0.7 0 0); /* borda suave */
+  --color-0-border: oklch(0.7 0 0);
 
   --color-1: oklch(0.98 0.05 75); /* pastel orange */
-  --color-1-border: oklch(0.8 0.1 75); /* laranja mais suave */
+  --color-1-border: oklch(0.8 0.1 75);
 
   --color-2: oklch(0.98 0.05 100); /* pastel yellow */
-  --color-2-border: oklch(0.8 0.1 100); /* amarelo suave */
+  --color-2-border: oklch(0.8 0.1 100);
 
   --color-3: oklch(0.98 0.05 145); /* pastel green */
-  --color-3-border: oklch(0.8 0.1 145); /* verde suave */
+  --color-3-border: oklch(0.8 0.1 145);
 
   --color-4: oklch(0.98 0.05 260); /* pastel blue */
-  --color-4-border: oklch(0.8 0.1 260); /* azul suave */
+  --color-4-border: oklch(0.8 0.1 260);
 
   --color-5: oklch(0.98 0.05 320); /* pastel pink */
-  --color-5-border: oklch(0.8 0.1 320); /* magenta suave */
+  --color-5-border: oklch(0.8 0.1 320);
 }
 
 @layer base {

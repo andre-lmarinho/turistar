@@ -150,23 +150,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
         </div>
       </fieldset>
 
-      {/* Notes */}
-      <div className="mb-2 px-4">
-        <label htmlFor="activity-notes" className="mb-1 flex items-center gap-1 text-xs font-bold">
-          <AlignLeft size={12} aria-hidden="true" />
-          <span>Notes</span>
-        </label>
-        <textarea
-          id="activity-notes"
-          name="notes"
-          value={editedDescription}
-          onChange={(e) => setEditedDescription(e.target.value)}
-          placeholder="Add a more detailed description."
-          rows={3}
-          className="focus:ring-primary w-full resize-none rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
-      </div>
-
       {/* Location */}
       <div className="mb-2 px-4">
         <label
@@ -185,43 +168,23 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           className="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
         />
       </div>
-      <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="coords-legend">
-        <legend id="coords-legend" className="sr-only">
-          Coordinates
-        </legend>
-        <div>
-          <label htmlFor="latitude" className="mb-1 flex items-center gap-1 text-xs font-bold">
-            <span>Latitude</span>
-          </label>
-          <Input
-            labelId="latitude"
-            value={latitude == null ? '' : String(latitude)}
-            onValueChange={(val) => setLatitude(val ? Number(val) : undefined)}
-            aria-label="Latitude"
-            type="number"
-            inputSize="sm"
-            background="default"
-            placeholder="Lat"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          />
-        </div>
-        <div>
-          <label htmlFor="longitude" className="mb-1 flex items-center gap-1 text-xs font-bold">
-            <span>Longitude</span>
-          </label>
-          <Input
-            labelId="longitude"
-            value={longitude == null ? '' : String(longitude)}
-            onValueChange={(val) => setLongitude(val ? Number(val) : undefined)}
-            aria-label="Longitude"
-            type="number"
-            inputSize="sm"
-            background="default"
-            placeholder="Lng"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          />
-        </div>
-      </fieldset>
+
+      {/* Notes */}
+      <div className="mb-2 px-4">
+        <label htmlFor="activity-notes" className="mb-1 flex items-center gap-1 text-xs font-bold">
+          <AlignLeft size={12} aria-hidden="true" />
+          <span>Notes</span>
+        </label>
+        <textarea
+          id="activity-notes"
+          name="notes"
+          value={editedDescription}
+          onChange={(e) => setEditedDescription(e.target.value)}
+          placeholder="Add a more detailed description."
+          rows={3}
+          className="focus:ring-primary w-full resize-none rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+        />
+      </div>
 
       {/* Update */}
       <div className="flex justify-center gap-2 pb-4">

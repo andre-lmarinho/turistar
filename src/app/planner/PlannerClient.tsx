@@ -17,7 +17,7 @@ import {
   usePlanTitle,
 } from '@/features/planner';
 import { OnboardingModal, OnboardingProvider } from '@/features/onboarding';
-import { DateRangePickerIcon, OpenPanelButton, OpenPanelIcon } from '@/shared/ui';
+import { DateRangePickerIcon } from '@/shared/ui';
 import { useInputWidth } from '@/shared/hooks/ui/useInputWidth';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
@@ -105,10 +105,6 @@ function PlannerClientInner({
             <>
               <div className="flex gap-2 md:hidden">
                 <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
-                <OpenPanelIcon onClick={() => setIsPanelOpen(true)} />
-              </div>
-              <div className="hidden md:flex">
-                <OpenPanelButton days={days} onClick={() => setIsPanelOpen(true)} />
               </div>
             </>
           )}

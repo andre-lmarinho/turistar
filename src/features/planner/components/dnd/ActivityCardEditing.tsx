@@ -1,14 +1,13 @@
 // src/features/planner/components/dnd/ActivityCardEditing.tsx
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { Palette, ArrowLeftRight, Trash2, Search } from 'lucide-react';
+import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
-import { Button, CardColorsPopup, DayPickerPopup, CatalogSearchPopup } from '@/shared/ui';
+import { Button, CardColorsPopup, DayPickerPopup } from '@/shared/ui';
 import { useCardPopups } from '@/shared/hooks/ui/useCardPopups';
 import { useElementRect } from '@/shared/hooks/ui/useElementRect';
-import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
 import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { cn } from '@/shared/utils';
 
@@ -40,7 +39,6 @@ export default function ActivityCardEditing({
   onDelete,
   editedImageUrl,
   setEditedImageUrl,
-  onApplyCatalogItem,
   cardRef,
 }: Props) {
   const {
@@ -53,8 +51,6 @@ export default function ActivityCardEditing({
   } = useCardPopups();
   const isColorPickerOpen = activePopup === 'color';
   const isDatePickerOpen = activePopup === 'date';
-  const searchButtonRef = useFlexibleRef();
-  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const cardRect = useElementRect(cardRef);
   const buttonRect = useElementRect(buttonContainerRef);
@@ -153,36 +149,6 @@ export default function ActivityCardEditing({
                   }}
                   onClose={() => setActivePopup(null)}
                   triggerRef={colorButtonRef}
-                />
-              </div>
-            )}
-          </div>
-
-          <Button
-            ref={searchButtonRef}
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={() => {
-              setIsCatalogOpen((p) => !p);
-              setActivePopup(null);
-            }}
-          >
-            <Search className="size-4" aria-hidden="true" />
-            Search Catalog
-          </Button>
-          <div className="relative mb-1">
-            {isCatalogOpen && (
-              <div className="absolute top-1 left-full z-50">
-                <CatalogSearchPopup
-                  open={isCatalogOpen}
-                  onSelect={(item) => {
-                    onApplyCatalogItem?.(item);
-                    setEditedImageUrl(item.imageUrl || '');
-                    setIsCatalogOpen(false);
-                  }}
-                  onClose={() => setIsCatalogOpen(false)}
-                  triggerRef={searchButtonRef}
                 />
               </div>
             )}
