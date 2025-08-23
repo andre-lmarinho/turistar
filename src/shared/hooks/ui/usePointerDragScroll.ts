@@ -24,12 +24,14 @@ export function usePointerDragScroll(
     const nearestIndex = () => {
       const items = Array.from(el.children) as HTMLElement[];
       if (!items.length) return 0;
-      const center = el.scrollLeft + el.clientWidth / 2;
+      const parentRect = el.getBoundingClientRect();
+      const center = parentRect.left + parentRect.width / 2;
       let i = 0;
       let best = Infinity;
       items.forEach((it, idx) => {
-        const c = it.offsetLeft + it.offsetWidth / 2;
-        const d = Math.abs(center - c);
+        const rect = it.getBoundingClientRect();
+        const itemCenter = rect.left + rect.width / 2;
+        const d = Math.abs(center - itemCenter);
         if (d < best) {
           best = d;
           i = idx;
