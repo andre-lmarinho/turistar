@@ -25,7 +25,6 @@ vi.mock('react-leaflet', () => {
       markers.push(props);
       return null;
     },
-    Polyline: () => null,
     useMap: () => map,
   };
 });

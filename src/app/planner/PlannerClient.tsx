@@ -21,6 +21,7 @@ import { DateRangePickerIcon } from '@/shared/ui';
 import { useInputWidth } from '@/shared/hooks/ui/useInputWidth';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
+import type { Entry } from '@/features/budget';
 import { motion } from 'framer-motion';
 
 /**
@@ -42,6 +43,8 @@ interface PlannerClientProps {
   hideOnboarding?: boolean;
   hideCatalog?: boolean;
   persist?: boolean;
+  initialBudget?: number;
+  initialEntries?: Entry[];
 }
 
 function PlannerClientInner({
@@ -49,11 +52,15 @@ function PlannerClientInner({
   hideCatalog,
   persist,
   title: initialTitle,
+  initialBudget,
+  initialEntries,
 }: {
   hideOnboarding: boolean;
   hideCatalog: boolean;
   persist: boolean;
   title?: string;
+  initialBudget?: number;
+  initialEntries?: Entry[];
 }) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
@@ -139,7 +146,13 @@ function PlannerClientInner({
               >
                 <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
                   {m === 'planner' && <PlannerBoard />}
-                  {m === 'budget' && <BudgetPanel />}
+                  {m === 'budget' && (
+                    <BudgetPanel
+                      initialBudget={initialBudget}
+                      initialEntries={initialEntries}
+                      persist={persist}
+                    />
+                  )}
                   {m === 'map' && <MapView />}
                 </div>
               </motion.div>
@@ -167,6 +180,8 @@ export default function PlannerClient({
   hideOnboarding = false,
   hideCatalog = false,
   persist = true,
+  initialBudget,
+  initialEntries,
 }: PlannerClientProps) {
   const router = useRouter();
   const search = useSearchParams();
@@ -184,6 +199,8 @@ export default function PlannerClient({
         hideCatalog={hideCatalog}
         persist={persist}
         title={title}
+        initialBudget={initialBudget}
+        initialEntries={initialEntries}
       />
     </PlannerProvider>
   );

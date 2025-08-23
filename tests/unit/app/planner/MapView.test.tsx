@@ -158,7 +158,7 @@ describe.skip('Marker accessibility', () => {
     expect(markers[0].title).toBe('Walk');
   });
 
-  it('renders a path for multiple activities', () => {
+  it('does not render a path for multiple activities', () => {
     const days: DayPlan[] = [
       {
         id: 'd1',
@@ -175,7 +175,7 @@ describe.skip('Marker accessibility', () => {
         <MapView />
       </PlannerProvider>
     );
-    expect(polylines.length).toBe(1);
+    expect(polylines.length).toBe(0);
   });
 
   it('uses provided center coordinates when no activities', () => {

@@ -3,6 +3,7 @@
 import { formatDayPlan } from '@/features/planner/services';
 import type { Activity, DayPlan } from '@/shared/types';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
+import type { CategoryKey } from '@/shared/constants';
 
 /**
  * Converts raw inspiration JSON data into a DayPlan array.
@@ -10,6 +11,15 @@ import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants
  */
 export interface InspirationData {
   destination: string;
+  budget?: {
+    currency: string;
+    amount: number;
+  };
+  expenses?: Array<{
+    description: string;
+    category: CategoryKey;
+    amount: number;
+  }>;
   itinerary: Array<{
     day: number;
     activities: Array<{
@@ -17,6 +27,7 @@ export interface InspirationData {
       startTime: string;
       duration: number;
       address: string;
+      budget?: number;
       imageUrl?: string;
       color?: string;
       latitude?: number;
@@ -41,6 +52,7 @@ export function buildDaysFromInspirationData(data: InspirationData): DayPlan[] {
       latitude: a.latitude,
       longitude: a.longitude,
       color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      budget: a.budget,
     }));
     return { id, label, activities };
   });

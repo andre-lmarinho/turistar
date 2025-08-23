@@ -8,9 +8,18 @@ export function scrollToChild(
   const { smooth = true, disableSnap = true } = opts;
   const target = el.children[idx] as HTMLElement | undefined;
   if (!target) return;
-
   if (disableSnap) el.classList.add('no-snap');
-  el.scrollTo({ left: target.offsetLeft, behavior: smooth ? 'smooth' : 'auto' });
+
+  // Use bounding boxes to derive the scroll offset. This avoids relying on
+  // `offsetLeft`, which can misreport values when flex gaps or transforms are
+  // involved. Clamp the offset so the last slide sits flush with the container.
+  const parentRect = el.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const rawLeft = targetRect.left - parentRect.left + el.scrollLeft;
+  const max = el.scrollWidth - el.clientWidth;
+  const left = Math.min(rawLeft, max);
+
+  el.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
 
   if (disableSnap) {
     let raf: number | null = null;

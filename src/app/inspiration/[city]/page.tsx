@@ -34,9 +34,20 @@ export default async function InspirationPage({ params }: { params: Promise<City
     const data = JSON.parse(raw) as InspirationData;
 
     const initialDays = buildDaysFromInspirationData(data);
+    const initialBudget = data.budget?.amount ?? 0;
+    const initialEntries = (data.expenses ?? []).map((e, i) => ({
+      id: `exp-${i}`,
+      ...e,
+    }));
 
     return (
-      <InspirationPlanner initialDays={initialDays} dest={city} planId={`${city}-inspiration`} />
+      <InspirationPlanner
+        initialDays={initialDays}
+        dest={city}
+        planId={`${city}-inspiration`}
+        initialBudget={initialBudget}
+        initialEntries={initialEntries}
+      />
     );
   } catch {
     notFound();

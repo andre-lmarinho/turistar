@@ -12,8 +12,15 @@ import {
   ActivitiesBudgetPopup,
 } from '@/features/budget';
 import { InfoPopup, Button } from '@/shared/ui';
+import type { Entry } from '@/features/budget';
 
-function BudgetPanel() {
+interface Props {
+  initialBudget?: number;
+  initialEntries?: Entry[];
+  persist?: boolean;
+}
+
+function BudgetPanel({ initialBudget, initialEntries, persist = true }: Props) {
   const { planId, days, updateActivity } = usePlannerContext();
   const activitiesTotal = days.reduce(
     (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
@@ -23,7 +30,13 @@ function BudgetPanel() {
   const [editActivities, setEditActivities] = useState(false);
 
   return (
-    <BudgetProvider planId={planId} activitiesTotal={activitiesTotal}>
+    <BudgetProvider
+      planId={planId}
+      activitiesTotal={activitiesTotal}
+      initialBudget={initialBudget}
+      initialEntries={initialEntries}
+      persist={persist}
+    >
       <div
         role="region"
         aria-label="Budget panel"

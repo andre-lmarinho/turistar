@@ -5,6 +5,18 @@
   "destination": "Rome",
   "board_image": "/images/inspirations/rome/Rome_Board.webp",
   "description": "",
+  "budget": {
+    "currency": "USD",
+    "amount": 4000
+  },
+  "expenses": [
+    { "description": "Flights", "category": "transport", "amount": 1110 },
+    { "description": "Lodging", "category": "lodging", "amount": 666 },
+    { "description": "Local transport", "category": "transport", "amount": 44 },
+    { "description": "Airport transfers", "category": "transport", "amount": 133 },
+    { "description": "Coffee and breakfasts", "category": "food", "amount": 88 },
+    { "description": "Meals", "category": "food", "amount": 754 }
+  ],
   "itinerary": [
     {
       "day": 1,
@@ -17,7 +29,8 @@
           "color": "bg-[var(--color-3)]",
           "imageUrl": "/images/inspirations/rome/Rome City Walking Tour.jpg",
           "latitude": 41.8902,
-          "longitude": 12.4922
+          "longitude": 12.4922,
+          "budget": 112
         },
         {
           "title": "Skip-the-Line Group Tour of the Vatican, Sistine Chapel & St. Peter's Basilica",
@@ -27,7 +40,8 @@
           "color": "bg-[var(--color-3)]",
           "imageUrl": "/images/inspirations/rome/Tour of the Vatican, Sistine Chapel & St. Peter's Basilica.jpg",
           "latitude": 41.9065,
-          "longitude": 12.4533
+          "longitude": 12.4533,
+          "budget": 134
         },
         {
           "title": "Dinner at Trattoria da Enzo al 29",
@@ -37,7 +51,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Trattoria da Enzo al 29.jpg",
           "latitude": 41.8896,
-          "longitude": 12.4744
+          "longitude": 12.4744,
+          "budget": 66
         }
       ]
     },
@@ -62,7 +77,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Ristorante Aroma.jpg",
           "latitude": 41.8911,
-          "longitude": 12.4954
+          "longitude": 12.4954,
+          "budget": 278
         },
         {
           "title": "Colosseum, Roman Forum & Palatine Hill Guided Tour",
@@ -72,7 +88,8 @@
           "color": "bg-[var(--color-3)]",
           "imageUrl": "/images/inspirations/rome/Rome City Walking Tour.jpg",
           "latitude": 41.8902,
-          "longitude": 12.4922
+          "longitude": 12.4922,
+          "budget": 86
         },
         {
           "title": "Dinner at Spaghetteria L'Archeologia",
@@ -82,7 +99,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Spaghetteria L'Archeologia.jpg",
           "latitude": 41.9002,
-          "longitude": 12.4769
+          "longitude": 12.4769,
+          "budget": 134
         }
       ]
     },
@@ -97,7 +115,8 @@
           "color": "bg-[var(--color-3)]",
           "imageUrl": "/images/inspirations/rome/Pantheon.jpg",
           "latitude": 41.8986,
-          "longitude": 12.4769
+          "longitude": 12.4769,
+          "budget": 12
         },
         {
           "title": "Explore Piazza Navona",
@@ -117,7 +136,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Ristorante Tre Scalini.jpg",
           "latitude": 41.8993,
-          "longitude": 12.4733
+          "longitude": 12.4733,
+          "budget": 66
         },
         {
           "title": "Visit the Trevi Fountain",
@@ -147,7 +167,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Hostaria Romana.jpg",
           "latitude": 41.8972,
-          "longitude": 12.4889
+          "longitude": 12.4889,
+          "budget": 78
         }
       ]
     },
@@ -182,7 +203,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Caffè Greco.jpg",
           "latitude": 41.9052,
-          "longitude": 12.482
+          "longitude": 12.482,
+          "budget": 44
         },
         {
           "title": "Tour of the Borghese Gallery",
@@ -192,7 +214,8 @@
           "color": "bg-[var(--color-3)]",
           "imageUrl": "/images/inspirations/rome/Borghese Gallery.jpg",
           "latitude": 41.9145,
-          "longitude": 12.4922
+          "longitude": 12.4922,
+          "budget": 34
         },
         {
           "title": "Farewell Dinner at Osteria Antica",
@@ -202,7 +225,8 @@
           "color": "bg-[var(--color-4)]",
           "imageUrl": "/images/inspirations/rome/Osteria Antica.jpg",
           "latitude": 41.8881,
-          "longitude": 12.4669
+          "longitude": 12.4669,
+          "budget": 88
         }
       ]
     }

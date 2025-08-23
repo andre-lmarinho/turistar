@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useRef, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
 import { usePlannerContext } from '@/features/planner';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
@@ -74,19 +74,20 @@ function MapView() {
         aria-label="Itinerary map"
       >
         <FitAllMarkers coords={allCoords} />
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
+          subdomains={['a', 'b', 'c', 'd']}
+          attribution="&copy; OpenStreetMap contributors &copy; CARTO"
+          opacity={1}
+        />
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
+          subdomains={['a', 'b', 'c', 'd']}
+          attribution="&copy; OpenStreetMap contributors &copy; CARTO"
+          opacity={0.9}
+        />
         {dayPaths.map(({ day, dayIdx, coords, acts }) => (
           <React.Fragment key={day.id}>
-            {coords.length > 1 && (
-              <Polyline
-                positions={coords}
-                pathOptions={{
-                  color: getCssColor(acts[0].color) ?? DEFAULT_BG_COLOR,
-                  weight: 3,
-                }}
-              />
-            )}
-
             {coords.map((pos, i) => {
               const act = acts[i];
               const bg = getCssColor(act.color) ?? DEFAULT_BG_COLOR;
@@ -96,18 +97,18 @@ function MapView() {
                   <div style="
                     background: ${bg};
                     color: var(--foreground);
-                    width: 28px; height: 28px;
-                    border: 2px solid white;
+                    width: 32px; height: 32px;
+                    border: 2px solid var(--background);
                     border-radius: 50%;
-                    line-height: 28px;
+                    line-height: 32px;
                     text-align: center;
                     font-weight: bold;
-                    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+                    box-shadow: 0 0 4px rgba(0,0,0,0.5);
                   ">${number}</div>
                 `,
                 className: '',
-                iconSize: [28, 28],
-                iconAnchor: [14, 14],
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
               });
 
               return (

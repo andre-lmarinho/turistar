@@ -6,9 +6,14 @@ import type { Database } from '@/shared/types/supabase';
 import type { CategoryKey } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
 
-export function useBudget(planId: string, activitiesTotal: number) {
-  const [budget, setBudget] = useState(0);
-  const [entries, setEntries] = useState<Entry[]>([]);
+export function useBudget(
+  planId: string,
+  activitiesTotal: number,
+  options: { initialBudget?: number; initialEntries?: Entry[]; persist?: boolean } = {}
+) {
+  const { initialBudget = 0, initialEntries, persist = true } = options;
+  const [budget, setBudget] = useState(initialBudget);
+  const [entries, setEntries] = useState<Entry[]>(initialEntries ?? []);
 
   const [desc, setDesc] = useState('');
   const [cat, setCat] = useState<CategoryKey>('transport');
@@ -23,6 +28,14 @@ export function useBudget(planId: string, activitiesTotal: number) {
   useEffect(() => {
     hasLoadedRef.current = false;
     setHasLoaded(false);
+    if (!persist) {
+      initialBudgetRef.current = initialBudget;
+      setBudget(initialBudget);
+      setEntries(initialEntries ?? []);
+      hasLoadedRef.current = true;
+      setHasLoaded(true);
+      return;
+    }
     const load = async () => {
       const budgetRes = (await sb
         .from('plans')
@@ -57,12 +70,13 @@ export function useBudget(planId: string, activitiesTotal: number) {
       setHasLoaded(true);
     };
     void load();
-  }, [planId, sb]);
+  }, [planId, sb, persist, initialBudget, initialEntries]);
 
   useEffect(() => {
+    if (!persist) return;
     if (!hasLoadedRef.current) return;
     if (budget === initialBudgetRef.current) return;
-    const persist = async () => {
+    const persistBudget = async () => {
       setPersistError(null);
       const { error } = (await sb.from('plans').update({ budget }).eq('id', planId)) as unknown as {
         error: unknown;
@@ -73,8 +87,8 @@ export function useBudget(planId: string, activitiesTotal: number) {
       }
       initialBudgetRef.current = budget;
     };
-    void persist();
-  }, [planId, budget, hasLoaded, sb]);
+    void persistBudget();
+  }, [planId, budget, hasLoaded, sb, persist]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {
@@ -99,17 +113,22 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const handleAdd = async () => {
     if (!desc || amount <= 0) return;
     setPersistError(null);
-    const res = (await sb
-      .from('budget_entries')
-      .insert({ plan_id: planId, description: desc, category: cat, amount })
-      .select('id')
-      .single()) as unknown as { data: { id: string } | null; error: unknown };
-    if (res.error || !res.data) {
-      setPersistError('Failed to persist budget');
-      return;
+    if (persist) {
+      const res = (await sb
+        .from('budget_entries')
+        .insert({ plan_id: planId, description: desc, category: cat, amount })
+        .select('id')
+        .single()) as unknown as { data: { id: string } | null; error: unknown };
+      if (res.error || !res.data) {
+        setPersistError('Failed to persist budget');
+        return;
+      }
+      const newId = res.data!.id;
+      setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
+    } else {
+      const newId = crypto.randomUUID();
+      setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
     }
-    const newId = res.data!.id;
-    setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
     setDesc('');
     setAmount(0);
   };
@@ -120,6 +139,7 @@ export function useBudget(planId: string, activitiesTotal: number) {
       copy[index] = updated;
       return copy;
     });
+    if (!persist) return;
     const { error } = (await sb
       .from('budget_entries')
       .update({
@@ -136,6 +156,7 @@ export function useBudget(planId: string, activitiesTotal: number) {
   const handleDeleteEntry = async (index: number) => {
     const entry = entries[index];
     setEntries((prev) => prev.filter((_, i) => i !== index));
+    if (!persist) return;
     const { error } = (await sb
       .from('budget_entries')
       // @ts-expect-error Supabase typings omit delete, but runtime supports it
