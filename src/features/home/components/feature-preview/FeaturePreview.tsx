@@ -10,8 +10,6 @@ import NavDots from './NavDots';
 import { features } from './data/features';
 import './styles.css';
 
-const SLIDE_GAP_REM = 1; // visual gap width between slides
-
 export default function FeaturePreview() {
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -86,22 +84,14 @@ export default function FeaturePreview() {
               ))}
             </ul>
 
-            {/* Mobile/tablet: full-width slides without gap */}
+            {/* Mobile/tablet: full-width slides with gap */}
             <ul
               ref={cardsRef}
-              className="no-scrollbar m-0 flex w-full cursor-pointer snap-x snap-proximity overflow-x-auto p-0 md:hidden"
+              className="no-scrollbar m-0 flex w-full cursor-pointer snap-x snap-proximity gap-4 overflow-x-auto p-0 md:hidden"
             >
               {features.map((f, idx) => (
-                <li key={f.title} className="relative min-w-full shrink-0 basis-full snap-start">
+                <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
                   <FeatureCard feature={f} isActive={idx === activeIdx} asButton={false} />
-                  {/* visual separator on the right (no width change) */}
-                  {idx < features.length - 1 && (
-                    <span
-                      aria-hidden
-                      className="bg-background pointer-events-none absolute top-0 right-0 h-full"
-                      style={{ width: `${SLIDE_GAP_REM}rem` }}
-                    />
-                  )}
                 </li>
               ))}
             </ul>
@@ -125,15 +115,15 @@ export default function FeaturePreview() {
               className="mb-3 hidden justify-end md:flex"
             />
 
-            {/* Image carousel with full width; absolute separator without affecting width */}
+            {/* Image carousel with full width and gap */}
             <ul
               ref={imagesRef}
               tabIndex={-1}
               aria-hidden="true"
-              className="no-scrollbar m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity overflow-x-auto p-0"
+              className="no-scrollbar m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
             >
               {features.map((f, idx) => (
-                <li key={f.title} className="relative min-w-full shrink-0 basis-full snap-start">
+                <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
                   <div className="pointer-events-none select-none">
                     <Image
                       src={f.imgSrc}
@@ -145,14 +135,6 @@ export default function FeaturePreview() {
                       priority={idx === activeIdx}
                     />
                   </div>
-                  {/* visual separator on the right (no width change) */}
-                  {idx < features.length - 1 && (
-                    <span
-                      aria-hidden
-                      className="bg-background pointer-events-none absolute top-0 right-0 h-full"
-                      style={{ width: `${SLIDE_GAP_REM}rem` }}
-                    />
-                  )}
                 </li>
               ))}
             </ul>
