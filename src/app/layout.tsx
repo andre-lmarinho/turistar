@@ -9,7 +9,7 @@ import Providers from '@/shared/components/Providers';
 import SupabaseProvider from '@/shared/components/providers/SupabaseProvider';
 
 export const metadata: Metadata = {
-  title: 'Travel Planner',
+  title: 'Turistar App',
   description: 'Plan trips with drag-and-drop cards and budget tracking',
 };
 

@@ -9,17 +9,28 @@ describe('fetchAutocomplete', () => {
     vi.clearAllMocks();
   });
 
-  test('returns suggestions on success', async () => {
+  test('returns suggestions with bias coordinates', async () => {
     const mockResults = [{ name: 'Paris', latitude: 1, longitude: 2 }];
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ results: mockResults }),
     } as unknown as Response);
 
-    const result = await fetchAutocomplete('paris');
+    const result = await fetchAutocomplete('paris', 10, 20);
+
+    expect(global.fetch).toHaveBeenCalledWith('/api/autocomplete?text=paris&lat=10&lon=20');
+    expect(result).toEqual(mockResults);
+  });
+
+  test('returns suggestions without coordinates', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ results: [] }),
+    } as unknown as Response);
+
+    await fetchAutocomplete('paris');
 
     expect(global.fetch).toHaveBeenCalledWith('/api/autocomplete?text=paris');
-    expect(result).toEqual(mockResults);
   });
 
   test('throws on failure', async () => {

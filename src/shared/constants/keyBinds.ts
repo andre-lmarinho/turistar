@@ -8,7 +8,7 @@ export const KEY_BINDS = {
   map: 'm', // ModeToggleButton.tsx
   budget: 'b', // ModeToggleButton.tsx
   newCard: 'n', // AddCardButton.tsx
-  catalog: 'c', // OpenCatalog.tsx
+  catalog: 'ç', // OpenCatalog.tsx
 } as const;
 
 export type KeyBind = (typeof KEY_BINDS)[keyof typeof KEY_BINDS];

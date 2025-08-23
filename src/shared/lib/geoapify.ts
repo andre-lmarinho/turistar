@@ -79,12 +79,19 @@ export function mapGeoapifyFeature(f: GeoapifyFeature): CatalogActivity {
 }
 
 /* Geoapify – Autocomplete */
-export async function fetchGeoapifyAutocomplete(text: string): Promise<AutocompletePlace[]> {
+export async function fetchGeoapifyAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
   const key = getGeoapifyKey();
 
-  const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
+  let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
     text
   )}&limit=5&apiKey=${key}`;
+  if (lat != null && lon != null) {
+    url += `&bias=proximity:${lon},${lat}`;
+  }
 
   const res = await fetch(url, {
     cache: 'force-cache',

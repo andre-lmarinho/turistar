@@ -7,7 +7,8 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/shared/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants';
-import { UpdateButton, Input } from '@/shared/ui';
+import { UpdateButton, Input, LocationSearchInput } from '@/shared/ui';
+import { usePlannerContext } from '@/features/planner';
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -24,6 +25,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [address, setAddress] = useState(activity.address ?? '');
   const [latitude, setLatitude] = useState<number | undefined>(activity.latitude);
   const [longitude, setLongitude] = useState<number | undefined>(activity.longitude);
+  const { destCoords } = usePlannerContext();
 
   // Update internal state when the activity prop changes
   useEffect(() => {
@@ -37,20 +39,22 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     setLongitude(activity.longitude);
   }, [activity]);
 
-  // Automatically focus the title input only when the activity title is empty.
+  // Automatically focus the title input only once when the initial title is empty.
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const initialTitle = useRef(editedTitle);
+
   useEffect(() => {
-    if (titleInputRef.current && !editedTitle.trim()) {
-      titleInputRef.current.focus();
+    if (!initialTitle.current.trim()) {
+      titleInputRef.current?.focus();
     }
-  });
+  }, []);
 
   async function handleSave() {
     let lat = latitude;
     let lng = longitude;
     const addr = address.trim();
 
-    if (addr) {
+    if (addr && (lat === undefined || lng === undefined)) {
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}`
@@ -159,13 +163,25 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           <MapPin size={12} aria-hidden="true" />
           <span>Address</span>
         </label>
-        <input
+        <LocationSearchInput
           id="activity-address"
-          name="address"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(val) => {
+            if (typeof val === 'string') {
+              setAddress(val);
+              setLatitude(undefined);
+              setLongitude(undefined);
+            } else {
+              setAddress(val.name);
+              setLatitude(val.latitude);
+              setLongitude(val.longitude);
+            }
+          }}
           placeholder="Search address"
-          className="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          className="w-full"
+          inputClassName="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          latitude={destCoords?.lat}
+          longitude={destCoords?.lng}
         />
       </div>
 

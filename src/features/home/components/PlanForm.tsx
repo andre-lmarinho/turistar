@@ -98,35 +98,33 @@ export default function PlanForm() {
   }
 
   return (
-    <section className="container p-8">
-      <h2 className="font-title mb-6 text-3xl">Create Your Plan</h2>
-      <form onSubmit={handleSubmit} noValidate>
-        <fieldset className="flex pb-4" aria-labelledby="dest-label">
-          <legend id="dest-label" className="sr-only">
-            Destination
-          </legend>
-          <DestinationInput value={dest} onChange={handleDestChange} />
-        </fieldset>
-        <fieldset className="flex pb-4" aria-labelledby="daterange-label">
-          <legend id="daterange-label" className="sr-only">
-            Travel dates
-          </legend>
-          <DateRangePicker
-            value={range}
-            onChange={handleRangeChange}
-            aria-describedby={error ? 'date-error' : undefined}
-            aria-invalid={Boolean(error)}
-          />
-        </fieldset>
+    <form onSubmit={handleSubmit} noValidate className="flex w-full max-w-md flex-col items-center">
+      <fieldset className="flex w-full justify-center pb-4" aria-labelledby="dest-label">
+        <legend id="dest-label" className="sr-only">
+          Destination
+        </legend>
+        <DestinationInput value={dest} onChange={handleDestChange} />
+      </fieldset>
 
-        <Button type="submit">Start Your Planning</Button>
+      <fieldset className="flex w-full justify-center pb-4" aria-labelledby="daterange-label">
+        <legend id="daterange-label" className="sr-only">
+          Travel dates
+        </legend>
+        <DateRangePicker
+          value={range}
+          onChange={handleRangeChange}
+          aria-describedby={error ? 'date-error' : undefined}
+          aria-invalid={Boolean(error)}
+        />
+      </fieldset>
 
-        {error && (
-          <p id="date-error" role="alert" className="mt-2 text-sm text-[var(--destructive)]">
-            {error}
-          </p>
-        )}
-      </form>
-    </section>
+      <Button type="submit">Start Your Planning</Button>
+
+      {error && (
+        <p id="date-error" role="alert" className="mt-2 text-sm text-[var(--destructive)]">
+          {error}
+        </p>
+      )}
+    </form>
   );
 }

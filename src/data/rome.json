@@ -3,6 +3,8 @@
   "title_inspiration": "A 4 day trip to Rome",
   "duration_days": 4,
   "destination": "Rome",
+  "board_image": "/images/inspirations/rome/Rome_Board.webp",
+  "description": "",
   "itinerary": [
     {
       "day": 1,

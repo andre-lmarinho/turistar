@@ -10,6 +10,7 @@ export { default as Tooltip } from './Tooltip';
 export { default as TooltipKeyHint } from './TooltipKeyHint';
 export { default as Spinner } from './Spinner';
 export { default as Modal } from './Modal';
+export { default as LocationSearchInput } from './LocationSearchInput';
 
 // Icons components
 export { default as CardColorButton } from './button-icons/CardColorButton';
