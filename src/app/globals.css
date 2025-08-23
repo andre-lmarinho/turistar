@@ -121,6 +121,16 @@
   }
 }
 
+@layer components {
+  .section-title {
+    @apply pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px];
+  }
+
+  .section-description {
+    @apply pb-4 text-xl;
+  }
+}
+
 /* ========================
    Accessibility
 ======================== */
