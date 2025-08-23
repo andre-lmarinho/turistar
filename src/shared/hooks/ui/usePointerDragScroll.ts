@@ -14,6 +14,8 @@ export function usePointerDragScroll(
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
   const startScrollRef = useRef(0);
+  const startIdxRef = useRef(0);
+  const overshootRef = useRef(0);
 
   useEffect(() => {
     const el = ref.current;
@@ -42,6 +44,9 @@ export function usePointerDragScroll(
       el.setPointerCapture?.(e.pointerId);
       startXRef.current = e.clientX;
       startScrollRef.current = el.scrollLeft;
+      startIdxRef.current = nearestIndex();
+      overshootRef.current = 0;
+      el.style.transform = '';
       el.classList.add('is-dragging');
       opts?.onDragStart?.();
     };
@@ -49,7 +54,20 @@ export function usePointerDragScroll(
     const move = (e: PointerEvent) => {
       if (!draggingRef.current) return;
       e.preventDefault();
-      el.scrollLeft = startScrollRef.current - (e.clientX - startXRef.current);
+      const delta = e.clientX - startXRef.current;
+      let next = startScrollRef.current - delta;
+      const max = el.scrollWidth - el.clientWidth;
+      if (next < 0 || next > max) {
+        const overshoot = next < 0 ? next : next - max;
+        // Move with the drag direction so the bounce feels natural.
+        overshootRef.current = -overshoot * 0.35;
+        el.style.transform = `translateX(${overshootRef.current}px)`;
+        next = next < 0 ? 0 : max;
+      } else {
+        overshootRef.current = 0;
+        el.style.transform = '';
+      }
+      el.scrollLeft = next;
       opts?.onScrollPreview?.(nearestIndex());
     };
 
@@ -61,8 +79,27 @@ export function usePointerDragScroll(
       } catch {}
       el.classList.remove('is-dragging');
 
-      const idx = nearestIndex();
-      scrollToChild(el, idx, { smooth: true, disableSnap: true });
+      if (overshootRef.current !== 0) {
+        el.style.transition = 'transform 200ms ease-out';
+        el.style.transform = 'translateX(0)';
+        const clear = () => {
+          el.style.transition = '';
+          el.removeEventListener('transitionend', clear);
+        };
+        el.addEventListener('transitionend', clear);
+      }
+
+      const delta = e.clientX - startXRef.current;
+      const threshold = 40;
+      const maxIdx = el.children.length - 1;
+      let idx = nearestIndex();
+
+      if (Math.abs(delta) > threshold) {
+        const direction = delta < 0 ? 1 : -1;
+        idx = Math.min(Math.max(startIdxRef.current + direction, 0), maxIdx);
+      }
+
+      scrollToChild(el, idx, { smooth: true, disableSnap: true, duration: 600 });
       opts?.onRelease?.(idx);
     };
 

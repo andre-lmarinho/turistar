@@ -24,9 +24,7 @@ export default function NavDots({
             onClick={() => onSelect(i)}
             className={cn(
               'h-2 cursor-pointer rounded-full transition-[width] duration-200 ease-out',
-              active
-                ? 'w-[3.75rem] bg-[var(--muted-foreground)]'
-                : 'w-2 bg-[var(--card-foreground)]'
+              active ? 'w-[3.75rem] bg-[var(--secondary)]' : 'w-2 bg-[var(--card-foreground)]'
             )}
             aria-label={`Go to slide ${i + 1}`}
             aria-current={active ? 'true' : 'false'}

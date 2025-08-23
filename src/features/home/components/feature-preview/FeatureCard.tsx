@@ -35,10 +35,10 @@ export default function FeatureCard({
   );
 
   const content = (
-    <p className="sm:text-15 leading-snug font-light md:leading-[1.2]">
-      <span className="font-medium">{feature.title} </span>
-      {feature.description}
-    </p>
+    <>
+      <h3 className="pb-4 text-xl font-medium md:leading-[1.2]">{feature.title}</h3>
+      <p>{feature.description}</p>
+    </>
   );
 
   return asButton ? (

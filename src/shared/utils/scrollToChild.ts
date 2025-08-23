@@ -3,9 +3,9 @@
 export function scrollToChild(
   el: HTMLUListElement,
   idx: number,
-  opts: { smooth?: boolean; disableSnap?: boolean } = {}
+  opts: { smooth?: boolean; disableSnap?: boolean; duration?: number } = {}
 ) {
-  const { smooth = true, disableSnap = true } = opts;
+  const { smooth = true, disableSnap = true, duration = 600 } = opts;
   const target = el.children[idx] as HTMLElement | undefined;
   if (!target) return;
   if (disableSnap) el.classList.add('no-snap');
@@ -19,22 +19,23 @@ export function scrollToChild(
   const max = el.scrollWidth - el.clientWidth;
   const left = Math.min(rawLeft, max);
 
-  el.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
-
-  if (disableSnap) {
-    let raf: number | null = null;
-    let last = -1;
-    const tick = () => {
-      const cur = el.scrollLeft;
-      if (Math.abs(cur - last) < 0.5) {
+  if (smooth) {
+    const start = el.scrollLeft;
+    const change = left - start;
+    const startTime = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = t * (2 - t); // easeOutQuad
+      el.scrollLeft = start + change * eased;
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else if (disableSnap) {
         el.classList.remove('no-snap');
-        if (raf) cancelAnimationFrame(raf);
-        raf = null;
-        return;
       }
-      last = cur;
-      raf = requestAnimationFrame(tick);
     };
-    tick();
+    requestAnimationFrame(step);
+  } else {
+    el.scrollLeft = left;
+    if (disableSnap) el.classList.remove('no-snap');
   }
 }

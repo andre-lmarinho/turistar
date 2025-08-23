@@ -59,14 +59,17 @@ export default function FeaturePreview() {
 
   return (
     <section className="p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
-      <div className="container md:max-w-3xl lg:max-w-[960px]">
-        <h2 className="font-title text-foreground pb-6 text-[32px] leading-[0.9] font-semibold sm:text-[40px] md:text-[56px] lg:text-[72px] xl:text-[84px]">
-          What can you do?
-        </h2>
-        <p className="mt-6 max-w-[705px] leading-tight sm:mt-3 sm:max-w-lg lg:mt-5">
-          Turistar is a personal project focused on clean architecture, drag-and-drop logic, and
-          real-world UX.
-        </p>
+      <div className="container max-w-3xl sm:max-w-lg lg:max-w-[960px]">
+        <div className="max-w-[100%] md:max-w-[60%]">
+          <h2 className="pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px]">
+            Planner. Map. Budget.
+          </h2>
+          <p className="pb-4 text-xl">
+            Great trips start with a plan you can see, a map that makes sense, and a budget that
+            keeps choices real. Turistar brings these together so decisions are faster and planning
+            feels simple.
+          </p>
+        </div>
 
         <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Cards */}
@@ -124,15 +127,17 @@ export default function FeaturePreview() {
             >
               {features.map((f, idx) => (
                 <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
-                  <div className="pointer-events-none select-none">
+                  <div className="select-none">
                     <Image
                       src={f.imgSrc}
                       alt=""
                       role="presentation"
                       width={1600}
                       height={900}
-                      className="block h-auto w-full rounded-xl object-contain"
+                      className="block h-auto w-full overflow-hidden rounded-xl object-contain"
                       priority={idx === activeIdx}
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
                     />
                   </div>
                 </li>
