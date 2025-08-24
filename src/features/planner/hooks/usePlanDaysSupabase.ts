@@ -1,6 +1,6 @@
 // src/features/planner/hooks/usePlanDaysSupabase.ts
 
-import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
+import { usePlanResource } from '@/shared/hooks/usePlanResource';
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { PlanDay, DayPlan } from '@/shared/types';
@@ -44,12 +44,13 @@ interface PlanDayWithActivities {
 }
 
 export function usePlanDays(planId: string, enabled = true) {
-  const days = useSupabaseResource<DayPlan[]>({
-    queryKey: ['plan_days', planId],
-    fetcher: async () => {
+  const days = usePlanResource<DayPlan[]>({
+    planId,
+    resource: 'plan_days',
+    fetcher: async (id) => {
       const { data, error } = (await (supabase.from('plan_days') as QueryBuilder)
         .select('date, activities(*)')
-        .eq('plan_id', planId)
+        .eq('plan_id', id)
         .order('position')
         .order('position', { foreignTable: 'activities' })) as unknown as {
         data: PlanDayWithActivities[];
@@ -78,22 +79,25 @@ export function usePlanDays(planId: string, enabled = true) {
     enabled,
   });
 
-  const upsertDay = useSupabaseResource<PlanDay, Partial<PlanDay>>({
-    queryKey: ['plan_days', planId],
-    persistFn: async (payload) => {
+  const upsertDay = usePlanResource<PlanDay, Partial<PlanDay>>({
+    planId,
+    resource: 'plan_days',
+    persistFn: async (id, payload, signal) => {
       const { error, data } = (await (supabase.from('plan_days') as QueryBuilder)
         .upsert(payload)
         .select()
+        .abortSignal(signal)
         .single()) as { data: PlanDay; error: unknown };
       if (error) throw error;
       return data;
     },
   });
 
-  const persistDays = useSupabaseResource<unknown, DayPlan[]>({
-    queryKey: ['plan_days', planId],
-    persistFn: async (state, signal) => {
-      const existing = await fetchExistingDays(planId, signal);
+  const persistDays = usePlanResource<unknown, DayPlan[]>({
+    planId,
+    resource: 'plan_days',
+    persistFn: async (id, state, signal) => {
+      const existing = await fetchExistingDays(id, signal);
       await deleteRemovedDays(existing, state, signal);
 
       let destinationId: string | undefined = existing[0]?.destination_id;
@@ -102,7 +106,7 @@ export function usePlanDays(planId: string, enabled = true) {
           supabase.from('plan_destinations') as QueryBuilder
         )
           .select('destination_id')
-          .eq('plan_id', planId)
+          .eq('plan_id', id)
           .order('position')
           .abortSignal(signal)) as unknown as {
           data: { destination_id: string }[] | null;
@@ -139,7 +143,7 @@ export function usePlanDays(planId: string, enabled = true) {
         if (!destId) throw new Error('destination_id missing');
         if (!dayId) {
           const inserted = (await (supabase.from('plan_days') as QueryBuilder)
-            .insert({ plan_id: planId, date: day.id, position: i, destination_id: destId })
+            .insert({ plan_id: id, date: day.id, position: i, destination_id: destId })
             .select('id')
             .single()
             // @ts-expect-error abortSignal exists on the returned object
