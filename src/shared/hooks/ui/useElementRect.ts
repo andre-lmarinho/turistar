@@ -4,14 +4,15 @@ import { useState, useEffect, RefObject } from 'react';
 
 /**
  * Hook that tracks the bounding client rect of a DOM element.
- * It updates the rect on window resize or when the element changes.
+ * It updates the rect on element resize and scroll to track position.
  */
 
 export function useElementRect<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>) {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = ref.current;
+    if (!element) return;
 
     const updateRect = () => {
       if (ref.current) {
@@ -21,10 +22,13 @@ export function useElementRect<T extends HTMLElement = HTMLElement>(ref: RefObje
 
     updateRect();
 
-    window.addEventListener('resize', updateRect);
+    const resizeObserver = new ResizeObserver(updateRect);
+    resizeObserver.observe(element);
+
     window.addEventListener('scroll', updateRect, true);
+
     return () => {
-      window.removeEventListener('resize', updateRect);
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', updateRect, true);
     };
   }, [ref]);
