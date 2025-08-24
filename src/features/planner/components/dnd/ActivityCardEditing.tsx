@@ -1,13 +1,13 @@
 // src/features/planner/components/dnd/ActivityCardEditing.tsx
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan } from '@/shared/types';
 import { Button } from '@/shared/ui';
 import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
-import { useElementRect } from '@/shared/hooks/ui/useElementRect';
+import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import { cn } from '@/shared/utils';
 
@@ -58,9 +58,10 @@ export default function ActivityCardEditing({
     onChangeImage: (url: string) => setEditedImageUrl(url),
     onClearImage: () => setEditedImageUrl(''),
   });
-  const buttonContainerRef = useRef<HTMLDivElement>(null);
-  const cardRect = useElementRect(cardRef);
-  const buttonRect = useElementRect(buttonContainerRef);
+  const { rect: cardRect } = useElementMeasure({ ref: cardRef, rect: true });
+  const { ref: buttonContainerRef, rect: buttonRect } = useElementMeasure<HTMLDivElement>({
+    rect: true,
+  });
 
   usePopupDismiss({ popupRef: buttonContainerRef, triggerRef: cardRef, onClose: onCancel });
 

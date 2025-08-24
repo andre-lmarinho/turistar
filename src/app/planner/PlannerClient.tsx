@@ -17,7 +17,7 @@ import {
 } from '@/features/planner';
 import { OnboardingModal, OnboardingProvider } from '@/features/onboarding';
 import { DateRangePickerIcon } from '@/shared/ui';
-import { useInputWidth } from '@/shared/hooks/ui/useInputWidth';
+import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
 import type { Entry } from '@/features/budget';
@@ -64,7 +64,10 @@ function PlannerClientInner({
     usePlannerContext();
 
   const { title, setTitle, saveTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
-  const { ref: titleRef, width: titleWidth } = useInputWidth(title);
+  const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
+    width: true,
+    text: title,
+  });
 
   useKeyBinds({
     onPlanner: () => setMode('planner'),

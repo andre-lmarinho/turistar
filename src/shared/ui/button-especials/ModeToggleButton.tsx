@@ -7,7 +7,7 @@ import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
 import { TooltipKeyHint } from '@/shared/ui';
 import { KEY_BINDS } from '@/shared/constants';
-import { useElementRect } from '@/shared/hooks/ui/useElementRect';
+import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 
 type Mode = 'planner' | 'map' | 'budget';
 const modes: Mode[] = ['planner', 'map', 'budget'];
@@ -24,8 +24,9 @@ interface ModeToggleButtonProps {
 }
 
 export default function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const containerRect = useElementRect(containerRef);
+  const { ref: containerRef, rect: containerRect } = useElementMeasure<HTMLDivElement>({
+    rect: true,
+  });
   const highlightX = useMotionValue(0);
   const highlightW = useMotionValue(0);
   const isFirst = useRef(true);
@@ -62,7 +63,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
       animate(highlightX, newX, spring);
       animate(highlightW, newW, spring);
     }
-  }, [value, containerRect, highlightX, highlightW]);
+  }, [value, containerRect, highlightX, highlightW, containerRef]);
 
   return (
     <div className="inline-flex">
