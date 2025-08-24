@@ -1,10 +1,9 @@
 // src/features/budget/hooks/useBudgetSupabase.ts
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/shared/types/supabase';
 import type { CategoryKey } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
+import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
 
 export function useBudget(
   planId: string,
@@ -23,26 +22,16 @@ export function useBudget(
   const hasLoadedRef = useRef(false);
   const initialBudgetRef = useRef(0);
   const [persistError, setPersistError] = useState<string | null>(null);
-  const sb: SupabaseClient<Database> = supabase;
 
-  useEffect(() => {
-    hasLoadedRef.current = false;
-    setHasLoaded(false);
-    if (!persist) {
-      initialBudgetRef.current = initialBudget;
-      setBudget(initialBudget);
-      setEntries(initialEntries ?? []);
-      hasLoadedRef.current = true;
-      setHasLoaded(true);
-      return;
-    }
-    const load = async () => {
-      const budgetRes = (await sb
+  const { data: loaded } = useSupabaseResource<{ budget: number; entries: Entry[] }>({
+    queryKey: ['budget', planId],
+    fetcher: async (signal) => {
+      const budgetRes = (await supabase
         .from('plans')
         .select('budget')
         .eq('id', planId)
         .single()) as unknown as { data: { budget: number | null } | null };
-      const entryRes = (await sb
+      const entryRes = (await supabase
         .from('budget_entries')
         .select('*')
         .eq('plan_id', planId)) as unknown as {
@@ -55,40 +44,63 @@ export function useBudget(
             }[]
           | null;
       };
-      const loadedBudget = budgetRes.data?.budget ?? 0;
-      setBudget(loadedBudget);
-      initialBudgetRef.current = loadedBudget;
-      setEntries(
-        entryRes.data?.map((e) => ({
-          id: e.id,
-          description: e.description ?? '',
-          category: (e.category as CategoryKey) ?? 'transport',
-          amount: e.amount ?? 0,
-        })) ?? []
-      );
+      return {
+        budget: budgetRes.data?.budget ?? 0,
+        entries:
+          entryRes.data?.map((e) => ({
+            id: e.id,
+            description: e.description ?? '',
+            category: (e.category as CategoryKey) ?? 'transport',
+            amount: e.amount ?? 0,
+          })) ?? [],
+      };
+    },
+    enabled: persist,
+  });
+
+  const { mutate: saveBudget } = useSupabaseResource<number, number>({
+    queryKey: ['budget', planId],
+    persistFn: async (b, _signal) => {
+      const { error } = (await supabase
+        .from('plans')
+        .update({ budget: b })
+        .eq('id', planId)) as unknown as { error: unknown };
+      if (error) throw error;
+      return b;
+    },
+    onSuccess: (b) => {
+      initialBudgetRef.current = b as number;
+    },
+    onError: () => setPersistError('Failed to persist budget'),
+  });
+
+  useEffect(() => {
+    hasLoadedRef.current = false;
+    setHasLoaded(false);
+    if (!persist) {
+      initialBudgetRef.current = initialBudget;
+      setBudget(initialBudget);
+      setEntries(initialEntries ?? []);
       hasLoadedRef.current = true;
       setHasLoaded(true);
-    };
-    void load();
-  }, [planId, sb, persist, initialBudget, initialEntries]);
+      return;
+    }
+    if (loaded) {
+      setBudget(loaded.budget);
+      initialBudgetRef.current = loaded.budget;
+      setEntries(loaded.entries);
+      hasLoadedRef.current = true;
+      setHasLoaded(true);
+    }
+  }, [persist, initialBudget, initialEntries, loaded]);
 
   useEffect(() => {
     if (!persist) return;
     if (!hasLoadedRef.current) return;
     if (budget === initialBudgetRef.current) return;
-    const persistBudget = async () => {
-      setPersistError(null);
-      const { error } = (await sb.from('plans').update({ budget }).eq('id', planId)) as unknown as {
-        error: unknown;
-      };
-      if (error) {
-        setPersistError('Failed to persist budget');
-        return;
-      }
-      initialBudgetRef.current = budget;
-    };
-    void persistBudget();
-  }, [planId, budget, hasLoaded, sb, persist]);
+    setPersistError(null);
+    saveBudget(budget);
+  }, [budget, planId, persist]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {
@@ -110,21 +122,46 @@ export function useBudget(
     [categoryTotals]
   );
 
+  const { mutateAsync: addEntryMut } = useSupabaseResource<
+    string,
+    {
+      description: string;
+      category: CategoryKey;
+      amount: number;
+    }
+  >({
+    queryKey: ['budget', planId],
+    persistFn: async (payload, _signal) => {
+      const res = (await supabase
+        .from('budget_entries')
+        .insert({
+          plan_id: planId,
+          description: payload.description,
+          category: payload.category,
+          amount: payload.amount,
+        })
+        .select('id')
+        .single()) as unknown as { data: { id: string } | null; error: unknown };
+      if (res.error || !res.data) throw res.error;
+      return res.data.id;
+    },
+    onError: () => setPersistError('Failed to persist budget'),
+  });
+
   const handleAdd = async () => {
     if (!desc || amount <= 0) return;
     setPersistError(null);
     if (persist) {
-      const res = (await sb
-        .from('budget_entries')
-        .insert({ plan_id: planId, description: desc, category: cat, amount })
-        .select('id')
-        .single()) as unknown as { data: { id: string } | null; error: unknown };
-      if (res.error || !res.data) {
-        setPersistError('Failed to persist budget');
+      try {
+        const newId = (await addEntryMut({
+          description: desc,
+          category: cat,
+          amount,
+        })) as string;
+        setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
+      } catch {
         return;
       }
-      const newId = res.data!.id;
-      setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
     } else {
       const newId = crypto.randomUUID();
       setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
@@ -133,6 +170,22 @@ export function useBudget(
     setAmount(0);
   };
 
+  const { mutateAsync: updateEntryMut } = useSupabaseResource<void, Entry>({
+    queryKey: ['budget', planId],
+    persistFn: async (updated, _signal) => {
+      const { error } = (await supabase
+        .from('budget_entries')
+        .update({
+          description: updated.description,
+          category: updated.category,
+          amount: updated.amount,
+        })
+        .eq('id', updated.id)) as unknown as { error: unknown };
+      if (error) throw error;
+    },
+    onError: () => setPersistError('Failed to persist budget'),
+  });
+
   const handleUpdateEntry = async (index: number, updated: Entry) => {
     setEntries((prev) => {
       const copy = [...prev];
@@ -140,31 +193,27 @@ export function useBudget(
       return copy;
     });
     if (!persist) return;
-    const { error } = (await sb
-      .from('budget_entries')
-      .update({
-        description: updated.description,
-        category: updated.category,
-        amount: updated.amount,
-      })
-      .eq('id', updated.id)) as unknown as { error: unknown };
-    if (error) {
-      setPersistError('Failed to persist budget');
-    }
+    await updateEntryMut(updated);
   };
+
+  const { mutateAsync: deleteEntryMut } = useSupabaseResource<void, string>({
+    queryKey: ['budget', planId],
+    persistFn: async (id, _signal) => {
+      const { error } = (await supabase
+        .from('budget_entries')
+        // @ts-expect-error Supabase typings omit delete, but runtime supports it
+        .delete()
+        .eq('id', id)) as unknown as { error: unknown };
+      if (error) throw error;
+    },
+    onError: () => setPersistError('Failed to persist budget'),
+  });
 
   const handleDeleteEntry = async (index: number) => {
     const entry = entries[index];
     setEntries((prev) => prev.filter((_, i) => i !== index));
     if (!persist) return;
-    const { error } = (await sb
-      .from('budget_entries')
-      // @ts-expect-error Supabase typings omit delete, but runtime supports it
-      .delete()
-      .eq('id', entry.id)) as unknown as { error: unknown };
-    if (error) {
-      setPersistError('Failed to persist budget');
-    }
+    await deleteEntryMut(entry.id);
   };
 
   return {

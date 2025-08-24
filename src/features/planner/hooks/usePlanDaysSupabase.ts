@@ -1,7 +1,6 @@
 // src/features/planner/hooks/usePlanDaysSupabase.ts
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { PlanDay, DayPlan } from '@/shared/types';
@@ -46,13 +45,10 @@ interface PlanDayWithActivities {
 }
 
 export function usePlanDays(planId: string, enabled = true) {
-  const qc = useQueryClient();
-
-  const days = useQuery({
+  const days = useSupabaseResource<DayPlan[]>({
     queryKey: ['plan_days', planId],
-    queryFn: async () => {
-      const { data, error } = (await supabase
-        .from('plan_days')
+    fetcher: async (signal) => {
+      const { data, error } = (await (supabase.from('plan_days') as QueryBuilder)
         .select('date, activities(*)')
         .eq('plan_id', planId)
         .order('position')
@@ -83,26 +79,21 @@ export function usePlanDays(planId: string, enabled = true) {
     enabled,
   });
 
-  const upsertDay = useMutation({
-    mutationFn: async (payload: Partial<PlanDay>) => {
-      const { error, data } = (await supabase
-        .from('plan_days')
+  const upsertDay = useSupabaseResource<PlanDay, Partial<PlanDay>>({
+    queryKey: ['plan_days', planId],
+    persistFn: async (payload, _signal) => {
+      const { error, data } = (await (supabase.from('plan_days') as QueryBuilder)
         .upsert(payload)
         .select()
         .single()) as { data: PlanDay; error: unknown };
       if (error) throw error;
       return data;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['plan_days', planId] }),
   });
-  const abortRef = useRef<AbortController | null>(null);
 
-  const persistDays = useMutation({
-    mutationFn: async (state: DayPlan[]) => {
-      abortRef.current?.abort();
-      abortRef.current = new AbortController();
-      const { signal } = abortRef.current;
-
+  const persistDays = useSupabaseResource<unknown, DayPlan[]>({
+    queryKey: ['plan_days', planId],
+    persistFn: async (state, signal) => {
       const existing = await fetchExistingDays(planId, signal);
       await deleteRemovedDays(existing, state, signal);
 
