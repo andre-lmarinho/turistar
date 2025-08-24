@@ -1,7 +1,7 @@
 // src/features/onboarding/hooks/useOnboardingCheck.ts
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 /**
@@ -10,14 +10,26 @@ import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
  */
 export function useOnboardingCheck(planId: string) {
   const key = `planner-onboarding-shown-${planId}`;
-  const [seen, setSeen] = useLocalStorage<boolean>(key, false);
-  const [showOnboarding, setShowOnboarding] = useState(!seen);
+  const [seen, setSeen, ready] = useLocalStorage<boolean>(key, false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const initialized = useRef(false);
+  const prevKey = useRef(key);
 
   useEffect(() => {
-    setShowOnboarding(!seen);
-    if (!seen) setSeen(true);
+    if (prevKey.current !== key) {
+      initialized.current = false;
+      prevKey.current = key;
+    }
+    if (!ready || initialized.current) return;
+    if (!seen) {
+      setShowOnboarding(true);
+      setSeen(true);
+    } else {
+      setShowOnboarding(false);
+    }
+    initialized.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId]);
+  }, [ready, seen, key]);
 
   return { showOnboarding, setShowOnboarding };
 }

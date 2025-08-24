@@ -1,6 +1,7 @@
 // src/features/home/components/ContinuePlanningBanner.tsx
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { differenceInCalendarDays } from 'date-fns';
 
