@@ -3,13 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { capitalize } from '@/shared/utils';
-import { getEditToken } from '@/shared/lib/planEditToken';
+import { usePlanEditTokens } from '@/shared/lib/planEditToken';
 import { updatePlanTitle } from '@/app/planner/actions/updatePlanTitle';
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
   const initialTitle = capitalize(defaultTitle);
 
   const qc = useQueryClient();
+  const { getEditToken } = usePlanEditTokens();
 
   const { data: fetchedTitle = initialTitle } = useQuery({
     queryKey: ['plan_title', planId],
