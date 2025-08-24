@@ -1,10 +1,10 @@
 // src/features/home/components/InspirationCard.tsx
 'use client';
 
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
 
-const DEFAULT_INTERVAL_MS = 2000;
+const DEFAULT_INTERVAL_MS = 1000;
 
 export type InspirationCardProps = {
   title: string;
@@ -56,7 +56,7 @@ export default function InspirationCard({
   return (
     <div
       tabIndex={0}
-      className="block w-56 cursor-pointer rounded-lg border bg-white p-6 text-center shadow-sm transition hover:shadow focus:shadow"
+      className="bg-background block w-76 cursor-pointer rounded-md border pb-4 text-center shadow-sm transition hover:shadow focus:shadow"
       onMouseEnter={startCycle}
       onMouseLeave={stopCycle}
       onFocus={startCycle}
@@ -67,9 +67,9 @@ export default function InspirationCard({
       <Image
         src={imageUrls[index]}
         alt={title}
-        width={200}
+        width={228}
         height={120}
-        className="mx-auto mb-4 h-40 w-full rounded object-cover"
+        className="mx-auto mb-2 h-40 w-full rounded-t-md object-cover"
       />
       <h3 className="text-lg font-semibold">{title}</h3>
     </div>

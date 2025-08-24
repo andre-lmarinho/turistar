@@ -1,9 +1,11 @@
 // src/features/home/components/InspirationLink.tsx
 'use client';
 
+import React from 'react';
 import InspirationCard from './InspirationCard';
 import rome from '@/data/rome.json';
 import paris from '@/data/paris.json';
+import boipeba from '@/data/boipeba.json';
 
 export default function InspirationLink() {
   const destinations = [
@@ -16,6 +18,13 @@ export default function InspirationLink() {
       city: 'paris',
       label: paris.title_inspiration,
       images: paris.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl)),
+    },
+    {
+      city: 'boipeba',
+      label: boipeba.title_inspiration,
+      images: boipeba.itinerary.flatMap((day) =>
+        day.activities.map((activity) => activity.imageUrl)
+      ),
     },
   ];
 
