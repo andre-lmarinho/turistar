@@ -20,6 +20,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - **Linting**: Ensure `npm run lint` passes.
 - **Type checking**: Ensure `npm run typecheck` passes.
 - **Tests**: Execute `npm run test` and make sure tests succeed.
+- **Warnings**: Warnings from linting, type checking, testing or any other tools are undesirable and should be resolved.
 - **Commit style**: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `✨ Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
 
 ## General Conventions for AI Agents
