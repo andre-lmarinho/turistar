@@ -1,8 +1,9 @@
 // src/features/planner/components/dnd/ActivityCardEditorOverlay.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import { useElementRect } from '@/shared/hooks/ui/useElementRect';
 
 interface Props {
   open: boolean;
@@ -19,21 +20,7 @@ export default function ActivityCardEditorOverlay({
   onClose,
   children,
 }: Props) {
-  const [rect, setRect] = useState<DOMRect | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const update = () => {
-      if (cardRef.current) setRect(cardRef.current.getBoundingClientRect());
-    };
-    update();
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
-    return () => {
-      window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update, true);
-    };
-  }, [open, cardRef]);
+  const rect = useElementRect(cardRef, true);
 
   if (!open || !rect) return null;
 
