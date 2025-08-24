@@ -11,6 +11,7 @@ export { default as TooltipKeyHint } from './TooltipKeyHint';
 export { default as Spinner } from './Spinner';
 export { default as Modal } from './Modal';
 export { default as LocationSearchInput } from './LocationSearchInput';
+export { default as OverlayContainer } from './OverlayContainer';
 
 // Icons components
 export { default as CardColorButton } from './button-icons/CardColorButton';
