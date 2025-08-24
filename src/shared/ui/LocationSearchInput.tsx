@@ -5,16 +5,11 @@ import React from 'react';
 import Spinner from './Spinner';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useDestinationAutocomplete } from '@/features/planner';
+import type { AutocompletePlace } from '@/shared/types';
 
-export interface PlaceSelection {
-  name: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface Props {
+export interface LocationSearchInputProps {
   value: string;
-  onChange: (val: string | PlaceSelection) => void;
+  onChange: (val: string | AutocompletePlace) => void;
   id?: string;
   placeholder?: string;
   label?: string;
@@ -34,7 +29,7 @@ export default function LocationSearchInput({
   inputClassName,
   latitude,
   longitude,
-}: Props) {
+}: LocationSearchInputProps) {
   const debounced = useDebounce(value);
 
   const [open, setOpen] = React.useState(false);
@@ -46,7 +41,7 @@ export default function LocationSearchInput({
     longitude,
   });
 
-  const handleSelect = (r: PlaceSelection) => {
+  const handleSelect = (r: AutocompletePlace) => {
     onChange({ name: r.name, latitude: r.latitude, longitude: r.longitude });
     setOpen(false);
     setActive(-1);

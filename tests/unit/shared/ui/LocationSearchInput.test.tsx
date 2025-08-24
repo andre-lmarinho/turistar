@@ -1,9 +1,9 @@
-// tests/unit/features/home/components/DestinationInput.test.tsx
+// tests/unit/shared/ui/LocationSearchInput.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import DestinationInput from '@/features/home/components/DestinationInput';
+import { LocationSearchInput } from '@/shared/ui';
 
 const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   return {
@@ -19,7 +19,7 @@ vi.mock('@/shared/hooks/useDebounce', () => ({
   useDebounce: mockUseDebounce,
 }));
 
-describe('DestinationInput', () => {
+describe('LocationSearchInput', () => {
   beforeEach(() => {
     mockUseDestinationAutocomplete.mockReset();
     mockUseDebounce.mockImplementation((v: unknown) => v);
@@ -36,7 +36,7 @@ describe('DestinationInput', () => {
     });
 
     const handleChange = vi.fn();
-    render(<DestinationInput value="" onChange={handleChange} />);
+    render(<LocationSearchInput value="" onChange={handleChange} />);
 
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Rome' } });
@@ -62,7 +62,7 @@ describe('DestinationInput', () => {
     });
 
     const handleChange = vi.fn();
-    render(<DestinationInput value="" onChange={handleChange} />);
+    render(<LocationSearchInput value="" onChange={handleChange} />);
 
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Ro' } });
@@ -85,7 +85,7 @@ describe('DestinationInput', () => {
       error: true,
     });
 
-    render(<DestinationInput value="Paris" onChange={() => {}} />);
+    render(<LocationSearchInput value="Paris" onChange={() => {}} />);
 
     expect(screen.getByText('Failed to load suggestions.')).toBeInTheDocument();
   });

@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 
-import { Button, DateRangePicker } from '@/shared/ui';
-import { DestinationInput } from '@/features/home';
+import { Button, DateRangePicker, LocationSearchInput } from '@/shared/ui';
+import type { AutocompletePlace } from '@/shared/types';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
@@ -35,7 +35,7 @@ export default function PlanForm() {
     }
   }
 
-  function handleDestChange(val: string | { name: string; latitude: number; longitude: number }) {
+  function handleDestChange(val: string | AutocompletePlace) {
     if (typeof val === 'string') {
       setDest(val);
       setCoords(null);
@@ -113,7 +113,13 @@ export default function PlanForm() {
             <legend id="dest-label" className="sr-only">
               Destination
             </legend>
-            <DestinationInput value={dest} onChange={handleDestChange} />
+            <LocationSearchInput
+              id="dest-input"
+              value={dest}
+              onChange={handleDestChange}
+              placeholder="Destination"
+              className="w-64"
+            />
           </fieldset>
 
           <fieldset className="flex w-full justify-center pb-4" aria-labelledby="daterange-label">
