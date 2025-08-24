@@ -4,8 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
 import Image from 'next/image';
-import { useCardPopups } from '@/shared/hooks/ui/useCardPopups';
 import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
+import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
 import { ChevronDown } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils';
 
@@ -14,8 +14,6 @@ import {
   RemoveCardButton,
   CloseButton,
   CardColorButton,
-  CardColorsPopup,
-  DayPickerPopup,
   CatalogSearchPopup,
 } from '@/shared/ui';
 
@@ -46,19 +44,34 @@ export default function ActivityModalHeader({
   onCatalogSelect: (item: CatalogActivity) => void;
   onImageChange: (url: string) => void;
 }) {
+  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
+
   const {
     colorButtonRef,
     dateButtonRef,
-    activePopup,
-    setActivePopup,
     handleColorButtonClick,
     handleDateButtonClick,
-  } = useCardPopups();
-  const isColorPickerOpen = activePopup === 'color';
-  const isDatePickerOpen = activePopup === 'date';
+    ColorPopup,
+    DayPopup,
+  } = useActivityPopupControls({
+    activity,
+    availableDays,
+    bgColor,
+    imageUrl: editedImageUrl,
+    onChangeColor: onColorChange,
+    onChangeDay,
+    onChangePosition,
+    onChangeImage: (url: string) => {
+      setEditedImageUrl(url);
+      onImageChange(url);
+    },
+    onClearImage: () => {
+      setEditedImageUrl('');
+      onImageChange('');
+    },
+  });
   const searchButtonRef = useFlexibleRef();
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const [showRemove, setShowRemove] = useState(false);
 
   // Keep local image state in sync with the selected activity
@@ -67,8 +80,6 @@ export default function ActivityModalHeader({
   }, [activity.imageUrl]);
 
   const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
-  const currentDay = availableDays.find((d) => d.id === activity.dayId);
-  const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
 
   return (
     <>
@@ -128,44 +139,8 @@ export default function ActivityModalHeader({
           </div>
         </div>
 
-        {isColorPickerOpen && (
-          <div className="absolute top-[3rem] right-[1rem] z-50">
-            <CardColorsPopup
-              imageUrl={editedImageUrl}
-              onChangeImage={(url: string) => {
-                setEditedImageUrl(url);
-                onImageChange(url);
-              }}
-              onClearImage={() => {
-                setEditedImageUrl('');
-                onImageChange('');
-              }}
-              selectedColor={bgColor}
-              onChangeColor={(selectedColor: string) => {
-                onColorChange(selectedColor);
-                setActivePopup(null);
-              }}
-              onClose={() => setActivePopup(null)}
-              triggerRef={colorButtonRef}
-            />
-          </div>
-        )}
-        {isDatePickerOpen && availableDays?.length > 0 && (
-          <div className="absolute top-[3rem] left-[1rem] z-50">
-            <DayPickerPopup
-              days={availableDays}
-              selected={activity.dayId}
-              selectedIndex={currentIndex}
-              onSelect={(dayId: string) => {
-                onChangeDay(dayId);
-                setActivePopup(null);
-              }}
-              onSelectIndex={(idx: number) => onChangePosition(idx)}
-              onClose={() => setActivePopup(null)}
-              triggerRef={dateButtonRef}
-            />
-          </div>
-        )}
+        {ColorPopup && <div className="absolute top-[3rem] right-[1rem] z-50">{ColorPopup}</div>}
+        {DayPopup && <div className="absolute top-[3rem] left-[1rem] z-50">{DayPopup}</div>}
         {isCatalogOpen && (
           <div className="absolute top-[3rem] right-[3rem] z-50">
             <CatalogSearchPopup

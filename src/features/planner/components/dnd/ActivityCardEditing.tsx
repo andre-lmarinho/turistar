@@ -5,8 +5,8 @@ import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
-import { Button, CardColorsPopup, DayPickerPopup } from '@/shared/ui';
-import { useCardPopups } from '@/shared/hooks/ui/useCardPopups';
+import { Button } from '@/shared/ui';
+import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
 import { useElementRect } from '@/shared/hooks/ui/useElementRect';
 import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { cn } from '@/shared/utils';
@@ -44,13 +44,21 @@ export default function ActivityCardEditing({
   const {
     colorButtonRef,
     dateButtonRef,
-    activePopup,
-    setActivePopup,
     handleColorButtonClick,
     handleDateButtonClick,
-  } = useCardPopups();
-  const isColorPickerOpen = activePopup === 'color';
-  const isDatePickerOpen = activePopup === 'date';
+    ColorPopup,
+    DayPopup,
+  } = useActivityPopupControls({
+    activity,
+    availableDays,
+    bgColor,
+    imageUrl: editedImageUrl,
+    onChangeColor,
+    onChangeDay,
+    onChangePosition,
+    onChangeImage: (url: string) => setEditedImageUrl(url),
+    onClearImage: () => setEditedImageUrl(''),
+  });
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   const cardRect = useElementRect(cardRef);
   const buttonRect = useElementRect(buttonContainerRef);
@@ -59,9 +67,6 @@ export default function ActivityCardEditing({
 
   const gap = 8;
   const buttonGroupWidth = buttonRect?.width ?? 160;
-
-  const currentDay = availableDays.find((d) => d.id === activity.dayId);
-  const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
 
   const position =
     cardRect && window.innerWidth - cardRect.right - gap >= buttonGroupWidth ? 'right' : 'left';
@@ -107,22 +112,7 @@ export default function ActivityCardEditing({
             Move
           </Button>
           <div className="relative mb-1">
-            {isDatePickerOpen && availableDays?.length > 0 && (
-              <div className="absolute top-1 left-full z-50">
-                <DayPickerPopup
-                  days={availableDays}
-                  selected={activity.dayId}
-                  selectedIndex={currentIndex}
-                  onSelect={(dayId: string) => {
-                    onChangeDay(dayId);
-                    setActivePopup(null);
-                  }}
-                  onSelectIndex={(idx: number) => onChangePosition(idx)}
-                  onClose={() => setActivePopup(null)}
-                  triggerRef={dateButtonRef}
-                />
-              </div>
-            )}
+            {DayPopup && <div className="absolute top-1 left-full z-50">{DayPopup}</div>}
           </div>
 
           <Button
@@ -136,22 +126,7 @@ export default function ActivityCardEditing({
             Card Colors
           </Button>
           <div className="relative mb-1">
-            {isColorPickerOpen && (
-              <div className="absolute top-1 left-full z-50">
-                <CardColorsPopup
-                  imageUrl={editedImageUrl}
-                  onChangeImage={(url: string) => setEditedImageUrl(url)}
-                  onClearImage={() => setEditedImageUrl('')}
-                  selectedColor={bgColor}
-                  onChangeColor={(selectedColor: string) => {
-                    onChangeColor(selectedColor);
-                    setActivePopup(null);
-                  }}
-                  onClose={() => setActivePopup(null)}
-                  triggerRef={colorButtonRef}
-                />
-              </div>
-            )}
+            {ColorPopup && <div className="absolute top-1 left-full z-50">{ColorPopup}</div>}
           </div>
 
           <Button size="sm" variant="icon" type="button" onClick={onDelete}>
