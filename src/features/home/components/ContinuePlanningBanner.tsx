@@ -16,14 +16,11 @@ export default function ContinuePlanningBanner() {
   const query = new URLSearchParams({ dest, start, end }).toString();
 
   return (
-    <section className="bg-card p-4 text-center">
-      <p className="pb-2">
+    <section className="bg-card flex justify-center gap-10 p-4 text-center">
+      <p className="my-auto">
         Continue your {tripLength} {tripLength === 1 ? 'day' : 'days'} trip to {dest}
       </p>
-      <Button
-        asChild
-        className="bg-[var(--accent)] text-[var(--accent-foreground)] hover:bg-[var(--accent)]/90"
-      >
+      <Button variant="accent" size="sm">
         <Link href={`/planner/${slug}?${query}`}>Continue Planning</Link>
       </Button>
     </section>

@@ -13,6 +13,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
+        accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-xs',
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
         icon: 'bg-background border-bg-gray-200 border backdrop-blur-sm hover:bg-gray-200',
         iconrd: 'bg-background rounded-full',
