@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { CategoryKey } from '@/shared/constants';
 import type { Entry } from '@/features/budget/types';
-import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
+import { usePlanResource } from '@/shared/hooks/usePlanResource';
 
 export function useBudget(
   planId: string,
@@ -23,18 +23,19 @@ export function useBudget(
   const initialBudgetRef = useRef(0);
   const [persistError, setPersistError] = useState<string | null>(null);
 
-  const { data: loaded } = useSupabaseResource<{ budget: number; entries: Entry[] }>({
-    queryKey: ['budget', planId],
-    fetcher: async () => {
+  const { data: loaded } = usePlanResource<{ budget: number; entries: Entry[] }>({
+    planId,
+    resource: 'budget',
+    fetcher: async (id) => {
       const budgetRes = (await supabase
         .from('plans')
         .select('budget')
-        .eq('id', planId)
+        .eq('id', id)
         .single()) as unknown as { data: { budget: number | null } | null };
       const entryRes = (await supabase
         .from('budget_entries')
         .select('*')
-        .eq('plan_id', planId)) as unknown as {
+        .eq('plan_id', id)) as unknown as {
         data:
           | {
               id: string;
@@ -58,16 +59,11 @@ export function useBudget(
     enabled: persist,
   });
 
-  const { mutate: saveBudget } = useSupabaseResource<number, number>({
-    queryKey: ['budget', planId],
-    persistFn: async (b) => {
-      const { error } = (await supabase
-        .from('plans')
-        .update({ budget: b })
-        .eq('id', planId)) as unknown as { error: unknown };
-      if (error) throw error;
-      return b;
-    },
+  const { mutate: saveBudget } = usePlanResource<number, number>({
+    planId,
+    resource: 'budget',
+    table: 'plans',
+    column: 'budget',
     onSuccess: (b) => {
       initialBudgetRef.current = b as number;
     },
@@ -122,7 +118,7 @@ export function useBudget(
     [categoryTotals]
   );
 
-  const { mutateAsync: addEntryMut } = useSupabaseResource<
+  const { mutateAsync: addEntryMut } = usePlanResource<
     string,
     {
       description: string;
@@ -130,18 +126,22 @@ export function useBudget(
       amount: number;
     }
   >({
-    queryKey: ['budget', planId],
-    persistFn: async (payload) => {
+    planId,
+    resource: 'budget',
+    persistFn: async (id, payload) => {
       const res = (await supabase
         .from('budget_entries')
         .insert({
-          plan_id: planId,
+          plan_id: id,
           description: payload.description,
           category: payload.category,
           amount: payload.amount,
         })
         .select('id')
-        .single()) as unknown as { data: { id: string } | null; error: unknown };
+        .single()) as unknown as {
+        data: { id: string } | null;
+        error: unknown;
+      };
       if (res.error || !res.data) throw res.error;
       return res.data.id;
     },
@@ -170,9 +170,10 @@ export function useBudget(
     setAmount(0);
   };
 
-  const { mutateAsync: updateEntryMut } = useSupabaseResource<void, Entry>({
-    queryKey: ['budget', planId],
-    persistFn: async (updated) => {
+  const { mutateAsync: updateEntryMut } = usePlanResource<void, Entry>({
+    planId,
+    resource: 'budget',
+    persistFn: async (_id, updated) => {
       const { error } = (await supabase
         .from('budget_entries')
         .update({
@@ -196,9 +197,10 @@ export function useBudget(
     await updateEntryMut(updated);
   };
 
-  const { mutateAsync: deleteEntryMut } = useSupabaseResource<void, string>({
-    queryKey: ['budget', planId],
-    persistFn: async (id) => {
+  const { mutateAsync: deleteEntryMut } = usePlanResource<void, string>({
+    planId,
+    resource: 'budget',
+    persistFn: async (_id, id) => {
       const { error } = (await supabase
         .from('budget_entries')
         // @ts-expect-error Supabase typings omit delete, but runtime supports it
