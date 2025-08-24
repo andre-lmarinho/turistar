@@ -1,4 +1,4 @@
-// src/features/planner/hooks/catalog/useGeoapifySearch.ts
+// src/features/planner/hooks/search/useGeoapifySearch.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
