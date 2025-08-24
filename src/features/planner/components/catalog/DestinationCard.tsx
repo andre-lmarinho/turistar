@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { RemoveCardButton, DestinationActionButton } from '@/shared/ui';
+import { IconButton, DestinationActionButton } from '@/shared/ui';
+import { Trash2 } from 'lucide-react';
 import type { CatalogActivity } from '@/shared/types';
 
 /**
@@ -57,7 +58,13 @@ export default function DestinationCard({
         {!imgLoaded && <div className="bg-muted absolute inset-0 z-10 animate-pulse rounded-t" />}
         {/* quick-remove icon (only when added) */}
         <div className="absolute top-2 left-2">
-          {added && <RemoveCardButton aria-label={`Remove ${name}`} onClick={onRemove} />}
+          {added && (
+            <IconButton
+              ariaLabel={`Remove ${name}`}
+              icon={<Trash2 aria-hidden="true" />}
+              onClick={onRemove}
+            />
+          )}
         </div>
         {/* Action button */}
         <div className="absolute right-2 bottom-2">
