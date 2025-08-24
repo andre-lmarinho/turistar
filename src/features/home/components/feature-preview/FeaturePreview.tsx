@@ -58,10 +58,12 @@ export default function FeaturePreview() {
   const handleSelect = (idx: number) => setActiveIdx(idx);
 
   return (
-    <section className="container max-w-3xl p-8 pt-40 sm:max-w-lg sm:pt-16 md:max-w-[960px] md:pt-24 lg:pt-32">
+    <section className="mx-auto w-full max-w-screen-lg p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
       <div className="max-w-[100%] md:max-w-[60%]">
-        <h2 className="section-title">Planner. Map. Budget.</h2>
-        <p className="section-description">
+        <h2 className="pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px]">
+          Planner. Map. Budget.
+        </h2>
+        <p className="pb-4 text-xl">
           Great trips start with a plan you can see, a map that makes sense, and a budget that keeps
           choices real. Turistar brings these together so decisions are faster and planning feels
           simple.
@@ -87,7 +89,7 @@ export default function FeaturePreview() {
           {/* Mobile/tablet: full-width slides with gap */}
           <ul
             ref={cardsRef}
-            className="no-scrollbar m-0 flex w-full cursor-pointer snap-x snap-proximity gap-4 overflow-x-auto p-0 md:hidden"
+            className="scrollbar-hidden m-0 flex w-full cursor-pointer snap-x snap-proximity gap-4 overflow-x-auto p-0 md:hidden"
           >
             {features.map((f, idx) => (
               <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
@@ -120,7 +122,7 @@ export default function FeaturePreview() {
             ref={imagesRef}
             tabIndex={-1}
             aria-hidden="true"
-            className="no-scrollbar m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
+            className="scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
           >
             {features.map((f, idx) => (
               <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">

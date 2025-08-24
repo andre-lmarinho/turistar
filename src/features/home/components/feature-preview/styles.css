@@ -1,12 +1,3 @@
-/* src/features/home/components/feature-preview/styles.css */
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
 .is-dragging {
   user-select: none;
   scroll-snap-type: none !important;
