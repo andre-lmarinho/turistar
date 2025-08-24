@@ -1,31 +1,25 @@
 // src/features/planner/hooks/PlannerContext.tsx
 'use client';
 
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { usePlanner, useSelectedActivity, usePlanDays } from '@/features/planner';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { createStrictContext } from '@/shared/context/createStrictContext';
+import { createContextProvider } from '@/shared/context/createContextProvider';
 import type { DayPlan } from '@/shared/types';
 
 type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;
 
-const [PlannerContextProvider, usePlannerContext] = createStrictContext<PlannerCtx>(
-  'usePlannerContext must be inside PlannerProvider'
-);
-
-export function PlannerProvider({
-  children,
+function usePlannerContextValue({
   initialDays,
   planId,
   dest,
   persist = true,
 }: {
-  children: ReactNode;
   initialDays?: DayPlan[];
   planId: string;
   dest?: string;
   persist?: boolean;
-}) {
+}): PlannerCtx {
   const { data: storedDays, persistDays } = usePlanDays(planId, persist);
   const planner = usePlanner({
     initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
@@ -95,9 +89,13 @@ export function PlannerProvider({
     updateActivity: planner.updateActivity,
     addBlankActivity: planner.addBlankActivity,
   });
-  return (
-    <PlannerContextProvider value={{ ...planner, ...selected }}>{children}</PlannerContextProvider>
-  );
+
+  return { ...planner, ...selected };
 }
 
-export { usePlannerContext };
+const [PlannerProvider, usePlannerContext] = createContextProvider(
+  usePlannerContextValue,
+  'usePlannerContext must be inside PlannerProvider'
+);
+
+export { PlannerProvider, usePlannerContext };

@@ -12,6 +12,7 @@ export { default as Spinner } from './Spinner';
 export { default as Modal } from './Modal';
 export { default as LocationSearchInput } from './LocationSearchInput';
 export { default as IconButton } from './IconButton';
+export { default as OverlayContainer } from './OverlayContainer';
 
 // Icons components
 export { default as CloseButton } from './button-icons/CloseButton';
