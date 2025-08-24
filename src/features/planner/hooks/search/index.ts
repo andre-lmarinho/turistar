@@ -1,4 +1,4 @@
-// src/features/planner/hooks/catalog/index.ts
+// src/features/planner/hooks/search/index.ts
 
 export { useDestinationAutocomplete } from './useDestinationAutocomplete';
 export { useGeoapifySearch } from './useGeoapifySearch';
