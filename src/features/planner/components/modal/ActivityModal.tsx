@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { ActivityModalHeader, ActivityModalForm, usePlannerContext } from '@/features/planner';
 import { Modal } from '@/shared/ui';
 import type { Activity, CatalogActivity } from '@/shared/types';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function ActivityModal() {
   const {
@@ -19,7 +18,6 @@ export default function ActivityModal() {
     changePosition,
   } = usePlannerContext();
   const open = Boolean(activity);
-  useEscapeKey({ onClose: closeModal, isActive: open });
 
   const [draft, setDraft] = useState(activity ?? ({} as Activity));
 

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button, CloseButton, Modal } from '@/shared/ui';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
@@ -21,7 +20,6 @@ export default function Hero() {
   }, []);
   const openForm = () => setOpen(true);
   const closeForm = () => setOpen(false);
-  useEscapeKey({ onClose: closeForm, isActive: open });
   return (
     <section className="relative mx-auto w-full max-w-screen-lg overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
       {/* Left column */}

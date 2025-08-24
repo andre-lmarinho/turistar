@@ -4,6 +4,7 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
+import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { cn } from '@/shared/utils';
 
 interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -13,6 +14,8 @@ interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   withOverlay?: boolean;
   /** Called when the user requests to close the modal */
   onClose?: () => void;
+  /** Close the modal when the Escape key is pressed */
+  closeOnEscape?: boolean;
   /** Additional classes for the backdrop element */
   overlayClassName?: string;
   /** Classes for the wrapper that centers the modal */
@@ -23,6 +26,7 @@ export default function Modal({
   open = true,
   withOverlay = true,
   onClose,
+  closeOnEscape = true,
   overlayClassName,
   wrapperClassName,
   className,
@@ -30,6 +34,11 @@ export default function Modal({
   ...props
 }: ModalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEscapeKey({
+    onClose: onClose ?? (() => {}),
+    isActive: Boolean(open && onClose && closeOnEscape),
+  });
 
   if (!open) return null;
 

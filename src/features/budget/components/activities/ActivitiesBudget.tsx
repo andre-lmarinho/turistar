@@ -5,7 +5,6 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
 
 import { Input, CloseButton, Modal } from '@/shared/ui';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { normalizeAmount } from '@/shared/utils';
 import type { DayPlan } from '@/shared/types';
 
@@ -17,8 +16,6 @@ interface ActivitiesBudgetProps {
 }
 
 export default function ActivitiesBudget({ open, days, onUpdate, onClose }: ActivitiesBudgetProps) {
-  useEscapeKey({ onClose, isActive: open });
-
   const activities = useMemo(
     () => days.flatMap((day) => day.activities.map((a) => ({ ...a, dayLabel: day.label }))),
     [days]

@@ -4,12 +4,10 @@
 import React from 'react';
 import { OnboardingCarousel, useOnboardingContext } from '@/features/onboarding';
 import { CloseButton, Modal } from '@/shared/ui';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function OnboardingModal() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();
   const onClose = () => setShowOnboarding(false);
-  useEscapeKey({ onClose, isActive: open });
 
   return (
     <Modal
