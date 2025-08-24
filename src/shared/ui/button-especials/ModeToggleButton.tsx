@@ -1,12 +1,13 @@
 // src/shared/ui/button-especials/ModeToggleButton.tsx
 'use client';
 
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
 import { TooltipKeyHint } from '@/shared/ui';
 import { KEY_BINDS } from '@/shared/constants';
+import { useElementRect } from '@/shared/hooks/ui/useElementRect';
 
 type Mode = 'planner' | 'map' | 'budget';
 const modes: Mode[] = ['planner', 'map', 'budget'];
@@ -24,48 +25,44 @@ interface ModeToggleButtonProps {
 
 export default function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const containerRect = useElementRect(containerRef, true);
   const highlightX = useMotionValue(0);
   const highlightW = useMotionValue(0);
   const isFirst = useRef(true);
   const [ready, setReady] = useState(false);
 
+  useEffect(() => {
+    if (containerRect) setReady(true);
+  }, [containerRect]);
+
   useLayoutEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || !containerRect) return;
 
-    const positionIndicator = () => {
-      const btns = Array.from(el.querySelectorAll<HTMLButtonElement>('button'));
-      const idx = modes.indexOf(value);
-      const btn = btns[idx];
-      if (!btn) return;
+    const btns = Array.from(el.querySelectorAll<HTMLButtonElement>('button'));
+    const idx = modes.indexOf(value);
+    const btn = btns[idx];
+    if (!btn) return;
 
-      const { left: cLeft } = el.getBoundingClientRect();
-      const { left: bLeft, width: bWidth } = btn.getBoundingClientRect();
-      const newX = bLeft - cLeft;
-      const newW = bWidth - 8;
+    const { left: bLeft, width: bWidth } = btn.getBoundingClientRect();
+    const newX = bLeft - containerRect.left;
+    const newW = bWidth - 8;
 
-      const spring: ValueAnimationTransition<number> = {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      };
-
-      if (isFirst.current) {
-        highlightX.set(newX);
-        highlightW.set(newW);
-        isFirst.current = false;
-      } else {
-        animate(highlightX, newX, spring);
-        animate(highlightW, newW, spring);
-      }
+    const spring: ValueAnimationTransition<number> = {
+      type: 'spring',
+      stiffness: 300,
+      damping: 30,
     };
 
-    positionIndicator();
-    setReady(true);
-
-    window.addEventListener('resize', positionIndicator);
-    return () => window.removeEventListener('resize', positionIndicator);
-  }, [value, highlightX, highlightW]);
+    if (isFirst.current) {
+      highlightX.set(newX);
+      highlightW.set(newW);
+      isFirst.current = false;
+    } else {
+      animate(highlightX, newX, spring);
+      animate(highlightW, newW, spring);
+    }
+  }, [value, containerRect, highlightX, highlightW]);
 
   return (
     <div className="inline-flex">
