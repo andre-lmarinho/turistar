@@ -32,7 +32,6 @@ export default function InspirationPlanner({
       initialBudget={initialBudget}
       initialEntries={initialEntries}
       hideOnboarding
-      hideCatalog
       persist={false}
     />
   );

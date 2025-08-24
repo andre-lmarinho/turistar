@@ -6,7 +6,6 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn, SortableItem, useActivitiesById, usePlannerContext } from '@/features/planner';
-import type { CatalogActivity } from '@/shared/types';
 
 /**
  * Presentation component to render the DnD board.
@@ -41,10 +40,6 @@ function PlannerBoard() {
     }
   };
 
-  const handleApplyCatalogItem = (id: string, item: CatalogActivity) => {
-    handleUpdateImage(id, item.imageUrl || '');
-  };
-
   return (
     <DndContext
       id="planner-dnd"
@@ -74,7 +69,6 @@ function PlannerBoard() {
               onChangeColor={(activityId, color) => changeColor(activityId, color)}
               onDelete={removeActivity}
               onUpdateImage={handleUpdateImage}
-              onApplyCatalogItem={(activityId, item) => handleApplyCatalogItem(activityId, item)}
             />
           </div>
         ))}
@@ -92,7 +86,6 @@ function PlannerBoard() {
             bgColor={active.color}
             onDelete={() => removeActivity(active.id)}
             onUpdateImage={(url) => handleUpdateImage(active.id, url)}
-            onApplyCatalogItem={(item) => handleApplyCatalogItem(active.id, item)}
             aria-grabbed="true"
             aria-label={`Dragging ${active.title}`}
           />

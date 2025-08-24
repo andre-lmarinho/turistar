@@ -3,16 +3,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/shared/types';
 import PlannerClient from '@/app/planner/PlannerClient';
 
 let mockPlanId = 'plan1';
-
-interface MockOpenPanelButtonProps {
-  onClick: () => void;
-  title?: string;
-  days?: DayPlan[];
-}
 
 vi.mock('@/features/planner', async () => {
   const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
@@ -48,7 +41,6 @@ vi.mock('@/features/planner', async () => {
       changeColor: vi.fn(),
     }),
     useActivitiesById: () => ({}),
-    DestinationFilterPanel: () => null,
     PlannerControls: () => <div data-testid="planner-controls" />, // though not used
     ActivityModal: () => null,
   };
@@ -84,12 +76,6 @@ vi.mock('@/shared/ui', async () => {
   return {
     ...actual,
     DateRangePickerIcon: () => <div data-testid="date-picker" />,
-    OpenPanelButton: ({ onClick }: MockOpenPanelButtonProps) => (
-      <button onClick={onClick}>Open</button>
-    ),
-    OpenPanelIcon: ({ onClick }: { onClick: () => void }) => (
-      <button onClick={onClick}>Open</button>
-    ),
     ModeToggleButton: () => <div data-testid="mode-toggle" />,
   };
 });

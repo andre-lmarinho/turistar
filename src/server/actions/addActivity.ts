@@ -9,7 +9,6 @@ interface AddActivityInput {
   title: string;
   startTime?: string; // "HH:mm:ss"
   duration?: number;
-  catalogId?: string;
   budget?: number;
   imageUrl?: string;
   color?: string;
@@ -25,7 +24,6 @@ export async function addActivity(input: AddActivityInput) {
     _title: input.title,
     _start_time: input.startTime ?? null,
     _duration: input.duration ?? null,
-    _catalog_id: input.catalogId ?? null,
     _budget: input.budget ?? null,
     _image_url: input.imageUrl ?? null,
     _color: input.color ?? null,

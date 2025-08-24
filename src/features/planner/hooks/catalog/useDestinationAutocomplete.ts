@@ -2,8 +2,23 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchAutocomplete } from '@/features/planner';
 import type { AutocompletePlace } from '@/shared/types';
+
+async function fetchAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
+  const params = new URLSearchParams({ text });
+  if (lat != null && lon != null) {
+    params.set('lat', String(lat));
+    params.set('lon', String(lon));
+  }
+  const res = await fetch(`/api/autocomplete?${params.toString()}`);
+  if (!res.ok) throw new Error('Failed to load suggestions');
+  const data = (await res.json()) as { results: AutocompletePlace[] };
+  return data.results;
+}
 
 /**
  * Provides Geoapify autocomplete suggestions when query length is >= 4.

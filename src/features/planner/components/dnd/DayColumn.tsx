@@ -7,7 +7,7 @@ import { useDroppable } from '@dnd-kit/core';
 
 import { SortableItem } from '@/features/planner';
 import { AddCardButton } from '@/shared/ui';
-import type { DayPlan, Activity, CatalogActivity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/shared/types';
 
 interface DayColumnProps {
   day: DayPlan;
@@ -20,7 +20,6 @@ interface DayColumnProps {
   onChangeColor: (activityId: string, color: string) => void;
   onDelete: (activityId: string) => void;
   onUpdateImage?: (activityId: string, url: string) => void;
-  onApplyCatalogItem?: (activityId: string, item: CatalogActivity) => void;
 }
 
 /**
@@ -38,7 +37,6 @@ export default function DayColumn({
   onChangeColor,
   onDelete,
   onUpdateImage,
-  onApplyCatalogItem,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -78,7 +76,6 @@ export default function DayColumn({
                 onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
                 onDelete={() => onDelete(activity.id)}
                 onUpdateImage={(url) => onUpdateImage?.(activity.id, url)}
-                onApplyCatalogItem={(item) => onApplyCatalogItem?.(activity.id, item)}
                 bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (

@@ -21,7 +21,6 @@ export interface Database {
           longitude: number | null;
           budget: number | null;
           image_url: string | null;
-          catalog_id: string | null;
         };
         Insert: {
           id?: string;
@@ -37,7 +36,6 @@ export interface Database {
           longitude?: number | null;
           budget?: number | null;
           image_url?: string | null;
-          catalog_id?: string | null;
         };
         Update: {
           id?: string;
@@ -53,19 +51,12 @@ export interface Database {
           longitude?: number | null;
           budget?: number | null;
           image_url?: string | null;
-          catalog_id?: string | null;
         };
         Relationships: [
           {
             foreignKeyName: 'activities_day_id_fkey';
             columns: ['day_id'];
             referencedRelation: 'plan_days';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'activities_catalog_id_fkey';
-            columns: ['catalog_id'];
-            referencedRelation: 'catalog';
             referencedColumns: ['id'];
           },
         ];
@@ -97,88 +88,6 @@ export interface Database {
             foreignKeyName: 'budget_entries_plan_id_fkey';
             columns: ['plan_id'];
             referencedRelation: 'plans';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      catalog: {
-        Row: {
-          id: string;
-          name: string;
-          category: string;
-          description: string | null;
-          address: string | null;
-          image_url: string | null;
-          latitude: number;
-          longitude: number;
-          source: string;
-          metadata: Json | null;
-          inserted_at: string;
-          updated_at: string;
-          destination_id: string;
-          coords: unknown;
-          wikidata_qid: string | null;
-          wikimedia_title: string | null;
-          wikimedia_source: string | null;
-          image_confidence: number | null;
-          wikimedia_pageid: string | null;
-          pageviews_30d: number | null;
-          rank_score: number | null;
-          wikimedia_fetched_at: string | null;
-        };
-        Insert: {
-          id: string;
-          name: string;
-          category: string;
-          description?: string | null;
-          address?: string | null;
-          image_url?: string | null;
-          latitude: number;
-          longitude: number;
-          source: string;
-          metadata?: Json | null;
-          inserted_at?: string;
-          updated_at?: string;
-          destination_id: string;
-          coords?: unknown;
-          wikidata_qid?: string | null;
-          wikimedia_title?: string | null;
-          wikimedia_source?: string | null;
-          image_confidence?: number | null;
-          wikimedia_pageid?: string | null;
-          pageviews_30d?: number | null;
-          rank_score?: number | null;
-          wikimedia_fetched_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          category?: string;
-          description?: string | null;
-          address?: string | null;
-          image_url?: string | null;
-          latitude?: number;
-          longitude?: number;
-          source?: string;
-          metadata?: Json | null;
-          inserted_at?: string;
-          updated_at?: string;
-          destination_id?: string;
-          coords?: unknown;
-          wikidata_qid?: string | null;
-          wikimedia_title?: string | null;
-          wikimedia_source?: string | null;
-          image_confidence?: number | null;
-          wikimedia_pageid?: string | null;
-          pageviews_30d?: number | null;
-          rank_score?: number | null;
-          wikimedia_fetched_at?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'catalog_destination_id_fkey';
-            columns: ['destination_id'];
-            referencedRelation: 'destinations';
             referencedColumns: ['id'];
           },
         ];

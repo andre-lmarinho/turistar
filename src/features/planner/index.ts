@@ -2,13 +2,6 @@
 
 export {
   PlannerControls,
-  CategoryFilterBar,
-  DestinationCard,
-  DestinationCardGrid,
-  DestinationResultsList,
-  DestinationFilterPanel,
-  DestinationHeader,
-  CategorySelection,
   SortableItem,
   DayColumn,
   ActivityCard,
@@ -32,19 +25,12 @@ export {
   useSelectedActivity,
   usePlanParams,
   usePlanDays,
-  useCatalog,
-  useDestinationCatalog,
-  useCatalogActivities,
   useDestinationAutocomplete,
   useGeoapifySearch,
-  fetchAutocomplete,
-  fetchCatalog,
   fetchSearch,
   PlannerProvider,
   usePlannerContext,
 } from './hooks';
-
-export type { CatalogApiResponse } from './hooks';
 
 export {
   buildDaysFromInspirationData,

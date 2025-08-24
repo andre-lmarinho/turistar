@@ -25,15 +25,11 @@ Turistar is a UX-focused travel planner designed to showcase front-end architect
 
 A new **Map View** lets you preview your itinerary locations on an interactive map.
 
-While editing an activity, you can search the catalog directly from the modal or by right-clicking a card to quickly swap in a new suggestion.
-
 ---
 
 ## 📷 Snapshots of the project
 
 ![Turistar Planner Screenshot](./public/previews/preview_01.png)
-
-![Catalog of Attractions Screenshot](./public/previews/preview_02.png)
 
 ![Attractions Card Screenshot](./public/previews/preview_03.png)
 
@@ -49,6 +45,8 @@ While editing an activity, you can search the catalog directly from the modal or
   Enter your trip dates to start a new plan.
 - **Planner Board**
   Drag activities between days or add blank cards to build your schedule.
+- **Destination Search**
+  Quickly find attractions with Geoapify-powered search and autocomplete.
 - **Map View**
   View all your planned attractions on an interactive map.
 - **Persistent Storage**

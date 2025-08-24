@@ -7,7 +7,7 @@ import { useSortable } from '@dnd-kit/sortable';
 
 import { cn } from '@/shared/utils';
 import { ActivityCard } from '@/features/planner';
-import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
+import type { Activity, DayPlan } from '@/shared/types';
 
 export interface SortableItemProps {
   id: string;
@@ -23,7 +23,6 @@ export interface SortableItemProps {
   bgColor: string;
   onDelete: () => void;
   onUpdateImage?: (url: string) => void;
-  onApplyCatalogItem?: (item: CatalogActivity) => void;
 }
 
 export default function SortableItem({
@@ -37,7 +36,6 @@ export default function SortableItem({
   onChangeColor,
   onDelete,
   onUpdateImage,
-  onApplyCatalogItem,
   bgColor,
   dragOverlay = false,
   className,
@@ -64,7 +62,6 @@ export default function SortableItem({
           onChangeColor={onChangeColor}
           onDelete={onDelete}
           onUpdateImage={onUpdateImage}
-          onApplyCatalogItem={onApplyCatalogItem}
           bgColor={bgColor}
         />
       </div>
@@ -100,7 +97,6 @@ export default function SortableItem({
           onChangeColor={onChangeColor}
           onDelete={onDelete}
           onUpdateImage={onUpdateImage}
-          onApplyCatalogItem={onApplyCatalogItem}
           bgColor={bgColor}
         />
       </div>

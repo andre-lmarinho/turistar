@@ -1,12 +1,12 @@
 // src/features/planner/hooks/catalog/fetchSearch.ts
-import type { CatalogActivity } from '@/shared/types';
+import type { SearchActivity } from '@/shared/types';
 import { fetchJson } from '@/shared/lib';
 
 /**
- * Fetches catalog search results via the local API.
+ * Fetches place search results via the local API.
  */
-export async function fetchSearch(query: string): Promise<CatalogActivity[]> {
-  const data = await fetchJson<{ activities: CatalogActivity[] }>(
+export async function fetchSearch(query: string): Promise<SearchActivity[]> {
+  const data = await fetchJson<{ activities: SearchActivity[] }>(
     '/api/search',
     { q: query },
     'Failed to search'

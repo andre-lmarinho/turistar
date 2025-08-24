@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { isTouchDevice } from '@/shared/utils';
 import { useActivityCardEditor } from '@/features/planner';
 import { useCardColors } from '@/shared/hooks/ui/useCardColors';
-import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
+import type { Activity, DayPlan } from '@/shared/types';
 import {
   ActivityCardBase,
   ActivityCardEditing,
@@ -24,7 +24,6 @@ export interface ActivityCardProps {
   bgColor: string;
   onChangeColor: (color: string) => void;
   onDelete: () => void;
-  onApplyCatalogItem?: (item: CatalogActivity) => void;
   onUpdateImage?: (url: string) => void;
 }
 
@@ -38,7 +37,6 @@ export default function ActivityCard({
   onDelete,
   bgColor,
   onChangeColor,
-  onApplyCatalogItem,
   onUpdateImage,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
@@ -153,10 +151,6 @@ export default function ActivityCard({
           }}
           onCancel={cancel}
           onDelete={onDelete}
-          onApplyCatalogItem={(item) => {
-            onApplyCatalogItem?.(item);
-            setEditedImageUrl(item.imageUrl || '');
-          }}
           editedImageUrl={editedImageUrl}
           setEditedImageUrl={setEditedImageUrl}
         />

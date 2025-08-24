@@ -23,11 +23,9 @@ export { default as AddCardButton } from './button-especials/AddCardButton';
 export { default as DestinationActionButton } from './button-especials/DestinationAction';
 export { default as ModeToggleButton } from './button-especials/ModeToggleButton';
 export { default as UpdateButton } from './button-especials/UpdateButton';
-export { OpenPanelButton, OpenPanelIcon } from './button-especials/OpenCatalog';
 
 // Popups components
 export { default as CardColorsPopup } from './popups/CardColorsPopup';
 export { default as DayPickerPopup } from './popups/DayPickerPopup';
 export { default as InfoPopup } from './popups/InfoPopup';
-export { default as CatalogSearchPopup } from './popups/CatalogSearchPopup';
 export { default as Popup, popupVariants } from './popups/Popup';
