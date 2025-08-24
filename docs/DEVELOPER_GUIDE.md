@@ -1,6 +1,6 @@
 # Developer Guide
 
-This guide condenses environment, routing, style and accessibility notes for Turistar. The catalog integration is dormant and under development.
+This guide condenses environment, routing, style and accessibility notes for Turistar.
 
 ## Environment
 
@@ -9,9 +9,8 @@ Set these variables in `.env.local` and your hosting platform:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_GEOAPIFY_KEY`
-- `NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT` – optional boolean to disable Wikimedia enrichment (defaults to `true`)
 
-Supabase clients live in `src/shared/lib/supabaseClient.ts` and `supabaseServer.ts`. Catalog requests use Geoapify helpers in `src/shared/lib/geoapify.ts` and may change while the feature is developed.
+Supabase clients live in `src/shared/lib/supabaseClient.ts` and `supabaseServer.ts`.
 
 ## Routing
 

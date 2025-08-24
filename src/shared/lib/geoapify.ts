@@ -4,7 +4,6 @@
 
 import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
 import { clientEnv } from './clientEnv';
-import { enrichWithWikimediaSignals } from './wikimedia';
 
 /* Types */
 type GeoapifyFeature = {
@@ -26,7 +25,6 @@ type GeoapifyResponse = { features: GeoapifyFeature[] };
 
 /* Static config */
 const DEFAULT_RADIUS_METERS = 20_000;
-const CATALOG_LIMIT = 240;
 
 export const GEOAPIFY_CATEGORIES = [
   'tourism.attraction',
@@ -115,47 +113,6 @@ export async function fetchGeoapifyAutocomplete(
   }));
 }
 
-/*  Catalog – main “places” pipeline */
-export async function fetchGeoapifyCatalog(
-  dest: string,
-  lat?: number,
-  lon?: number,
-  categories: string[] = GEOAPIFY_CATEGORIES,
-  lang = 'en'
-): Promise<{ activities: CatalogActivity[] }> {
-  const key = getGeoapifyKey();
-
-  let latitude = lat;
-  let longitude = lon;
-  if (latitude == null || longitude == null) {
-    const auto = await fetchGeoapifyAutocomplete(dest);
-    if (!auto.length) {
-      throw new Error(`Destination “${dest}” not found`);
-    }
-    ({ latitude, longitude } = auto[0]);
-  }
-
-  const url =
-    `https://api.geoapify.com/v2/places?` +
-    `categories=${
-      categories.length ? encodeURIComponent(categories.join(',')) : DEFAULT_CATEGORIES
-    }` +
-    `&filter=circle:${longitude},${latitude},${DEFAULT_RADIUS_METERS}` +
-    `&bias=proximity:${longitude},${latitude}` +
-    `&limit=${CATALOG_LIMIT}&lang=${encodeURIComponent(lang)}&apiKey=${key}`;
-
-  const res = await fetch(url, {
-    cache: 'force-cache',
-    next: { revalidate: 86400 },
-  });
-  if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
-  const data = (await res.json()) as GeoapifyResponse;
-  const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
-  const activities = featuresWithName.map((f) => mapGeoapifyFeature(f));
-
-  return { activities };
-}
-
 /* Text search – fallback “quick search” */
 export async function fetchGeoapifySearch(
   text: string,
@@ -185,10 +142,7 @@ export async function fetchGeoapifySearch(
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
   const data = (await res.json()) as GeoapifyResponse;
   const featuresWithName = data.features.filter((f) => f.properties.name?.trim());
-  const activities = await enrichWithWikimediaSignals(
-    featuresWithName.map((f) => mapGeoapifyFeature(f)),
-    { lang }
-  );
+  const activities = featuresWithName.map((f) => mapGeoapifyFeature(f));
 
   return { activities };
 }

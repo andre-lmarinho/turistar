@@ -7,7 +7,6 @@ import { Modal } from '@/shared/ui';
 import type { CatalogActivity } from '@/shared/types';
 import { useDestinationCatalog, useActivitiesById, usePlannerContext } from '@/features/planner';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
-import { computeCatalogScore } from '@/shared/lib';
 
 interface DestinationFilterPanelProps {
   isOpen: boolean;
@@ -25,7 +24,6 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
   const addedIds = useMemo(() => new Set<string>(Object.keys(activitiesById)), [activitiesById]);
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<'name' | 'score'>('score');
   const { activities, categories, loading, error } = useDestinationCatalog(isOpen, planId, dest);
 
   const toggleCat = (cat: string) =>
@@ -38,21 +36,14 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
 
   const visibleItems = useMemo(() => {
     const searchLower = search.toLowerCase();
-    let items = activities.filter(
-      (it) =>
-        (!selectedCats.size || selectedCats.has(it.category)) &&
-        it.name.toLowerCase().includes(searchLower)
-    );
-    if (sort === 'name') {
-      items = items.sort((a, b) => a.name.localeCompare(b.name));
-    } else {
-      items = items
-        .map((it) => ({ it, score: computeCatalogScore(it, it.wiki, { lat: 0, lon: 0 }) }))
-        .sort((a, b) => b.score - a.score)
-        .map((r) => r.it);
-    }
-    return items;
-  }, [activities, search, selectedCats, sort]);
+    return activities
+      .filter(
+        (it) =>
+          (!selectedCats.size || selectedCats.has(it.category)) &&
+          it.name.toLowerCase().includes(searchLower)
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [activities, search, selectedCats]);
 
   // Preserve scroll position so the list doesn't jump after adding/removing
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -113,14 +104,6 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
           placeholder="Search"
           className="w-48 rounded border px-2 py-1 text-sm"
         />
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as 'name' | 'score')}
-          className="rounded border px-2 py-1 text-sm"
-        >
-          <option value="score">Top</option>
-          <option value="name">Name</option>
-        </select>
       </div>
 
       <div ref={scrollRef} className="flex flex-1 overflow-auto">

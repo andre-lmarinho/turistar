@@ -38,7 +38,6 @@ interface ActivityUpsert {
   budget: number | null;
   image_url: string | null;
   position: number;
-  catalog_id: string | null;
 }
 
 export async function fetchExistingDays(planId: string, signal: AbortSignal) {
@@ -103,7 +102,6 @@ export async function upsertDayActivities(
       budget: a.budget ?? null,
       image_url: a.imageUrl ?? null,
       position: j,
-      catalog_id: null,
     };
     if (/^[0-9a-fA-F-]{36}$/.test(a.id)) updates.push({ ...base, id: a.id });
     else inserts.push(base);

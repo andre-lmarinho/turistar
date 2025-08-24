@@ -32,8 +32,3 @@ You can also run the production build locally with:
 npm start
 ```
 
-## Catalog API Key
-
-Set the `NEXT_PUBLIC_GEOAPIFY_KEY` environment variable in your hosting platform so the catalog endpoint can request data from Geoapify. The catalog integration is under development, so this API may change.
-
-Catalog images are stored as direct links from Geoapify or Wikimedia and are not uploaded to your hosting provider. Ensure outbound access to these domains is permitted.

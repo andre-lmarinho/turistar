@@ -1,7 +1,5 @@
 // src/shared/types/index.ts
 
-import type { WikimediaSignals } from '@/shared/lib/wikimedia';
-
 /**
  * A single activity/item in the catalog.
  */
@@ -33,7 +31,6 @@ export interface CatalogActivity {
   latitude?: number;
   longitude?: number;
   metadata?: Record<string, unknown>;
-  wiki?: WikimediaSignals;
 }
 
 /**

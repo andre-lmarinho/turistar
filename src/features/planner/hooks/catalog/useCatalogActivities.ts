@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import type { CatalogActivity } from '@/shared/types';
-import type { Database } from '@/shared/types/supabase';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { fetchCatalog } from './fetchCatalog';
 
@@ -37,7 +36,7 @@ export function useCatalogActivities(
           .order('position')) as any;
         const destId = links?.[0]?.destination_id as string | undefined;
 
-        let rows: Database['public']['Tables']['catalog']['Row'][] = [];
+        let rows: any[] = [];
         if (destId) {
           const { data } = (await supabase
             .from('catalog')

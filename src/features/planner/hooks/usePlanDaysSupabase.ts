@@ -22,7 +22,6 @@ interface ActivityRow {
   longitude: number | null;
   budget: number | null;
   image_url: string | null;
-  catalog_id: string | null;
   position: number | null;
 }
 

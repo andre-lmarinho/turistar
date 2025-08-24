@@ -13,12 +13,10 @@ CREATE TABLE public.activities (
   longitude double precision,
   budget numeric,
   image_url text,
-  catalog_id text,
   color text,
   address text,
   position integer,
   CONSTRAINT activities_pkey PRIMARY KEY (id),
-  CONSTRAINT activities_catalog_id_fkey FOREIGN KEY (catalog_id) REFERENCES public.catalog(id),
   CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id)
 );
 CREATE TABLE public.budget_entries (
@@ -29,33 +27,6 @@ CREATE TABLE public.budget_entries (
   amount numeric,
   CONSTRAINT budget_entries_pkey PRIMARY KEY (id),
   CONSTRAINT budget_entries_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
-);
-CREATE TABLE public.catalog (
-  id text NOT NULL,
-  name text NOT NULL,
-  category text NOT NULL,
-  description text,
-  address text,
-  image_url text,
-  latitude double precision NOT NULL,
-  longitude double precision NOT NULL,
-  source text NOT NULL,
-  metadata jsonb,
-  inserted_at timestamp with time zone NOT NULL DEFAULT now(),
-  updated_at timestamp with time zone NOT NULL DEFAULT now(),
-  destination_id uuid NOT NULL,
-  coords point DEFAULT point(longitude, latitude),
-  wikidata_qid text,
-  wikimedia_title text,
-  wikimedia_source text,
-  pageviews_30d integer,
-  image_confidence numeric,
-  wikimedia_fetched_at timestamp with time zone,
-  geoapify_id text,
-  wikimedia_pageid text,
-  rank_score numeric,
-  CONSTRAINT catalog_pkey PRIMARY KEY (id),
-  CONSTRAINT catalog_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
 );
 CREATE TABLE public.destinations (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
