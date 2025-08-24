@@ -96,7 +96,7 @@ describe.skip('FitAllMarkers effect', () => {
     mockDestCoords = null;
   });
 
-  const baseActivity = { id: 'a1', title: 'A1', color: 'red' };
+  const baseActivity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
 
   const buildDays = ([lat, lng]: [number, number]): DayPlan[] => [
     {
@@ -145,7 +145,9 @@ describe.skip('Marker accessibility', () => {
       {
         id: 'd1',
         label: 'Day 1',
-        activities: [{ id: 'a1', title: 'Walk', color: 'red', latitude: 1, longitude: 1 }],
+        activities: [
+          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
+        ],
       },
     ];
 
@@ -164,8 +166,8 @@ describe.skip('Marker accessibility', () => {
         id: 'd1',
         label: 'Day 1',
         activities: [
-          { id: 'a1', title: 'A1', color: 'red', latitude: 1, longitude: 1 },
-          { id: 'a2', title: 'A2', color: 'red', latitude: 2, longitude: 2 },
+          { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
+          { id: 'a2', title: 'A2', color: 'bg-[var(--color-1)]', latitude: 2, longitude: 2 },
         ],
       },
     ];

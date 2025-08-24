@@ -5,7 +5,7 @@ import { parseISO } from 'date-fns';
 import type { DayPlan, Activity } from '@/shared/types';
 
 function buildActivity(id: string): Activity {
-  return { id, title: id.toUpperCase(), color: 'red' };
+  return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };
 }
 
 describe('syncDaysWithTripRange immutability', () => {

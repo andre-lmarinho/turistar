@@ -30,7 +30,7 @@ describe('usePlanner', () => {
       {
         id: '2023-01-01',
         label: 'Sun, 01 Jan',
-        activities: [{ id: 'a1', title: 'A1', color: 'red' }],
+        activities: [{ id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' }],
       },
       { id: '2023-01-02', label: 'Mon, 02 Jan', activities: [] },
     ];

@@ -8,7 +8,7 @@ import type { Activity, DayPlan } from '@/shared/types';
 const baseActivity: Activity & { dayId?: string } = {
   id: 'a1',
   title: 'Visit museum',
-  color: 'red',
+  color: 'bg-[var(--color-1)]',
   duration: 0,
   budget: 0,
 };

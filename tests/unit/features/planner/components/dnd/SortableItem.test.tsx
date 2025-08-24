@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import type { DayPlan } from '@/shared/types';
 
 describe('SortableItem', () => {
-  const activity = { id: 'x', title: 'Hello', color: 'red' } as const;
+  const activity = { id: 'x', title: 'Hello', color: 'bg-[var(--color-1)]' } as const;
 
   // minimum props required by SortableItem
   const defaultProps = {

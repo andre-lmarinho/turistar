@@ -100,7 +100,7 @@ export default function LocationSearchInput({
       />
       {loading && <Spinner className="absolute top-2 right-2 size-4" />}
       {error && (
-        <p className="mt-1 text-sm text-red-500" role="alert" aria-live="assertive">
+        <p className="text-destructive mt-1 text-sm" role="alert" aria-live="assertive">
           Failed to load suggestions.
         </p>
       )}

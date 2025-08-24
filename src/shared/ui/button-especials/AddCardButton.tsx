@@ -58,7 +58,7 @@ export default function AddCardButton({
         aria-hidden="true"
         className={`bg-background z-20 h-5 w-6 rounded opacity-0 shadow-md transition-opacity group-hover:opacity-100`}
       />
-      <span className="absolute w-[90%] border-t-2 border-dashed border-gray-300 opacity-0 transition group-hover:opacity-100"></span>
+      <span className="border-border absolute w-[90%] border-t-2 border-dashed opacity-0 transition group-hover:opacity-100"></span>
     </button>
   );
 }

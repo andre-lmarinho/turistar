@@ -50,7 +50,7 @@ function Input({
 
   return (
     <div className={cn(inputVariants({ inputSize, background }), className)}>
-      <label htmlFor={inputId} className="border-r-1 bg-gray-100">
+      <label htmlFor={inputId} className="bg-muted border-r-1">
         {icon && <div className="text-muted-foreground m-2">{icon}</div>}
       </label>
       <input

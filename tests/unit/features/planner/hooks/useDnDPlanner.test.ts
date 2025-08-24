@@ -7,9 +7,9 @@ import type { DayPlan, Activity } from '@/shared/types';
 
 describe('useDnDPlanner', () => {
   function setup(initial?: DayPlan[]) {
-    const a1: Activity = { id: 'a1', title: 'A1', color: 'red' };
-    const a2: Activity = { id: 'a2', title: 'A2', color: 'red' };
-    const b1: Activity = { id: 'b1', title: 'B1', color: 'red' };
+    const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
+    const a2: Activity = { id: 'a2', title: 'A2', color: 'bg-[var(--color-1)]' };
+    const b1: Activity = { id: 'b1', title: 'B1', color: 'bg-[var(--color-1)]' };
     const initialDays: DayPlan[] = initial ?? [
       { id: 'day1', label: 'Day 1', activities: [a1, a2] },
       { id: 'day2', label: 'Day 2', activities: [b1] },

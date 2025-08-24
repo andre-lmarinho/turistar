@@ -52,7 +52,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
       onClose={handleClose}
       overlayClassName="backdrop-overlay"
       aria-labelledby="activities-budget-title"
-      className="focus:ring-primary w-[95%] max-w-md rounded-lg bg-white shadow-xl focus:ring-2 focus:outline-none"
+      className="focus:ring-primary bg-background w-[95%] max-w-md rounded-lg shadow-xl focus:ring-2 focus:outline-none"
     >
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="activities-budget-title" className="font-bold">

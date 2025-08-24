@@ -95,7 +95,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
               className={`relative z-10 flex-1 cursor-pointer px-2 py-1 text-sm font-medium transition-colors ${
                 selected
                   ? 'text-[var(--primary-foreground)]'
-                  : 'text-[var(--foreground)] hover:text-black'
+                  : 'text-[var(--foreground)] hover:text-[var(--foreground)]'
               } `}
             >
               <div className="flex h-full w-full items-center justify-center gap-2 p-2">

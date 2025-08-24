@@ -12,7 +12,7 @@ function buildActivities(prefix: string, count: number): Activity[] {
   return Array.from({ length: count }).map((_, i) => ({
     id: `${prefix}${i}`,
     title: `${prefix.toUpperCase()} ${i}`,
-    color: 'red',
+    color: 'bg-[var(--color-1)]',
   }));
 }
 

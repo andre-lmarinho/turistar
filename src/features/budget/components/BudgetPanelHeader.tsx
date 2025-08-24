@@ -19,7 +19,7 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
       className="bg-muted/30 grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border"
       aria-label={ariaLabel}
     >
-      <span className="border-r-1 bg-gray-100">
+      <span className="bg-muted border-r-1">
         <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
       </span>
       <span className="w-full px-2 py-1 text-right">{amount.toFixed(2)}</span>

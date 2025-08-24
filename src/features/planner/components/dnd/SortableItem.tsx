@@ -101,7 +101,7 @@ export default function SortableItem({
         />
       </div>
       {isDragging && (
-        <div className="bg-background absolute inset-0 rounded-lg border-2 border-dashed border-gray-300" />
+        <div className="bg-background border-border absolute inset-0 rounded-lg border-2 border-dashed" />
       )}
     </div>
   );
