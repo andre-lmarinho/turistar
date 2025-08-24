@@ -1,0 +1,58 @@
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot, type Root } from 'react-dom/client';
+import { screen, act } from '@testing-library/react';
+
+import ContinuePlanningBanner from '@/features/home/components/ContinuePlanningBanner';
+
+vi.mock('next/link', () => ({
+  default: ({ href, children }: { href: string; children: React.ReactNode }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
+
+describe('ContinuePlanningBanner hydration', () => {
+  afterEach(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.clear();
+    }
+    document.body.innerHTML = '';
+  });
+
+  it('hydrates without warnings and loads banner after effect', async () => {
+    const plan = {
+      id: '1',
+      slug: 'trip',
+      dest: 'Paris',
+      start: '2023-01-01',
+      end: '2023-01-02',
+    };
+
+    const originalWindow = globalThis.window;
+    // @ts-ignore simulate server environment
+    globalThis.window = undefined;
+    const serverHtml = renderToString(<ContinuePlanningBanner />);
+    globalThis.window = originalWindow;
+
+    document.body.innerHTML = `<div id="root">${serverHtml}</div>`;
+    const container = document.getElementById('root')!;
+
+    window.localStorage.setItem('recent_plan', JSON.stringify(plan));
+
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    let root: Root;
+    await act(() => {
+      root = hydrateRoot(container, <ContinuePlanningBanner />);
+      expect(serverHtml).not.toContain('Continue your');
+      expect(container.innerHTML).toBe(serverHtml);
+    });
+
+    expect(await screen.findByText(/Continue your 2 days trip to Paris/)).toBeInTheDocument();
+
+    expect(consoleError).not.toHaveBeenCalled();
+
+    consoleError.mockRestore();
+    act(() => root.unmount());
+  });
+});
