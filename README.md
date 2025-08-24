@@ -76,7 +76,7 @@ You can deploy the same app to Vercel or Netlify.
 
 ## 📁 Project Structure
 
-- `/docs`: Project notes and guidelines (see [STATE-DATA-FLOW.md](docs/STATE-DATA-FLOW.md) for how data moves)
+- `/docs`: Project notes and guidelines (see [ARCHITECTURE.md](docs/ARCHITECTURE.md) for how data moves)
 - `/public`: Static assets served directly
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
@@ -89,7 +89,7 @@ You can deploy the same app to Vercel or Netlify.
 import { PlannerControls } from '@/features/planner';
 ```
 
-See [Routing](docs/ROUTING.md) for a breakdown of the `src/app` directory.
+See the [Developer Guide](docs/DEVELOPER_GUIDE.md#routing) for a breakdown of the `src/app` directory.
 
 ---
 
