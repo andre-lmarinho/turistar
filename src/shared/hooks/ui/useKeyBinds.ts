@@ -10,7 +10,6 @@ interface KeyBindOptions {
   onMap: () => void;
   onBudget: () => void;
   onNewCard: () => void;
-  onCatalog: () => void;
   isActive?: boolean;
 }
 
@@ -24,7 +23,6 @@ export function useKeyBinds({
   onMap,
   onBudget,
   onNewCard,
-  onCatalog,
   isActive = true,
 }: KeyBindOptions) {
   const handlers = useMemo(
@@ -33,9 +31,8 @@ export function useKeyBinds({
       [KEY_BINDS.map]: onMap,
       [KEY_BINDS.budget]: onBudget,
       [KEY_BINDS.newCard]: onNewCard,
-      [KEY_BINDS.catalog]: onCatalog,
     }),
-    [onPlanner, onMap, onBudget, onNewCard, onCatalog]
+    [onPlanner, onMap, onBudget, onNewCard]
   );
 
   const filter = useCallback((e: KeyboardEvent) => {

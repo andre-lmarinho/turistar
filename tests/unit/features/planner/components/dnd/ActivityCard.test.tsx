@@ -21,7 +21,6 @@ const defaultProps = {
   bgColor: '',
   onChangeColor: vi.fn(),
   onDelete: vi.fn(),
-  onApplyCatalogItem: vi.fn(),
 };
 
 describe('ActivityCard', () => {

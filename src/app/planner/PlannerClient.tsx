@@ -10,7 +10,6 @@ const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 
 import {
   ActivityModal,
-  DestinationFilterPanel,
   PlannerControls,
   PlannerProvider,
   usePlannerContext,
@@ -41,7 +40,6 @@ interface PlannerClientProps {
   dest?: string;
   title?: string;
   hideOnboarding?: boolean;
-  hideCatalog?: boolean;
   persist?: boolean;
   initialBudget?: number;
   initialEntries?: Entry[];
@@ -49,20 +47,17 @@ interface PlannerClientProps {
 
 function PlannerClientInner({
   hideOnboarding,
-  hideCatalog,
   persist,
   title: initialTitle,
   initialBudget,
   initialEntries,
 }: {
   hideOnboarding: boolean;
-  hideCatalog: boolean;
   persist: boolean;
   title?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
 }) {
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [mode, setMode] = useState<Mode>('planner');
 
   const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
@@ -78,7 +73,6 @@ function PlannerClientInner({
     onNewCard: () => {
       if (days[0]) addBlankAndSelect(days[0].id);
     },
-    onCatalog: hideCatalog ? () => {} : () => setIsPanelOpen(true),
   });
 
   const activeIdx = modeOrder.indexOf(mode);
@@ -108,13 +102,9 @@ function PlannerClientInner({
               className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
             />
           </h1>
-          {!hideCatalog && (
-            <>
-              <div className="flex gap-2 md:hidden">
-                <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
-              </div>
-            </>
-          )}
+          <div className="flex gap-2 md:hidden">
+            <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
+          </div>
         </div>
 
         <PlannerControls mode={mode} onModeChange={setMode} />
@@ -163,9 +153,6 @@ function PlannerClientInner({
         <ActivityModal />
 
         {!hideOnboarding && <OnboardingModal />}
-        {!hideCatalog && (
-          <DestinationFilterPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
-        )}
       </main>
     </OnboardingProvider>
   );
@@ -178,7 +165,6 @@ export default function PlannerClient({
   dest,
   title,
   hideOnboarding = false,
-  hideCatalog = false,
   persist = true,
   initialBudget,
   initialEntries,
@@ -196,7 +182,6 @@ export default function PlannerClient({
     <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest} persist={persist}>
       <PlannerClientInner
         hideOnboarding={hideOnboarding}
-        hideCatalog={hideCatalog}
         persist={persist}
         title={title}
         initialBudget={initialBudget}

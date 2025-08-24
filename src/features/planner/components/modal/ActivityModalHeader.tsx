@@ -2,15 +2,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
+import type { Activity, DayPlan } from '@/shared/types';
 import Image from 'next/image';
-import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
 import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Trash2, X, Palette } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils';
 
-import { Button, IconButton, CatalogSearchPopup } from '@/shared/ui';
-import { Trash2, X, Palette } from 'lucide-react';
+import { Button, IconButton } from '@/shared/ui';
 
 /**
  * Color strip shown at the very top of ActivityModal.
@@ -25,7 +23,6 @@ export default function ActivityModalHeader({
   availableDays,
   onChangeDay,
   onChangePosition,
-  onCatalogSelect,
   onImageChange,
 }: {
   activity: Activity & { dayId?: string };
@@ -36,7 +33,6 @@ export default function ActivityModalHeader({
   availableDays: DayPlan[];
   onChangeDay: (dayId: string) => void;
   onChangePosition: (index: number) => void;
-  onCatalogSelect: (item: CatalogActivity) => void;
   onImageChange: (url: string) => void;
 }) {
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
@@ -65,8 +61,6 @@ export default function ActivityModalHeader({
       onImageChange('');
     },
   });
-  const searchButtonRef = useFlexibleRef();
-  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
 
   // Keep local image state in sync with the selected activity
@@ -149,22 +143,6 @@ export default function ActivityModalHeader({
 
         {ColorPopup && <div className="absolute top-[3rem] right-[1rem] z-50">{ColorPopup}</div>}
         {DayPopup && <div className="absolute top-[3rem] left-[1rem] z-50">{DayPopup}</div>}
-        {isCatalogOpen && (
-          <div className="absolute top-[3rem] right-[3rem] z-50">
-            <CatalogSearchPopup
-              open={isCatalogOpen}
-              onSelect={(item) => {
-                onCatalogSelect(item);
-                const url = item.imageUrl || '';
-                setEditedImageUrl(url);
-                onImageChange(url);
-                setIsCatalogOpen(false);
-              }}
-              onClose={() => setIsCatalogOpen(false)}
-              triggerRef={searchButtonRef}
-            />
-          </div>
-        )}
       </div>
     </>
   );

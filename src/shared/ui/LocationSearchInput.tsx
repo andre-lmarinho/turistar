@@ -110,7 +110,7 @@ export default function LocationSearchInput({
           role="listbox"
           className="bg-background absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded border text-sm shadow"
         >
-          {results.map((r, idx) => (
+          {results.map((r: AutocompletePlace, idx: number) => (
             <li key={`${r.latitude}-${r.longitude}`}>
               <button
                 id={`${id}-option-${idx}`}

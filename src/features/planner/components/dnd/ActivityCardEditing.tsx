@@ -4,7 +4,7 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
-import type { Activity, DayPlan, CatalogActivity } from '@/shared/types';
+import type { Activity, DayPlan } from '@/shared/types';
 import { Button } from '@/shared/ui';
 import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
 import { useElementRect } from '@/shared/hooks/ui/useElementRect';
@@ -21,7 +21,6 @@ interface Props {
   onSave: (imageUrl: string) => void;
   onCancel: () => void;
   onDelete: () => void;
-  onApplyCatalogItem?: (item: CatalogActivity) => void;
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
   cardRef: React.RefObject<HTMLDivElement | null>;

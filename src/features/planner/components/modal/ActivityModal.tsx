@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityModalHeader, ActivityModalForm, usePlannerContext } from '@/features/planner';
 import { Modal } from '@/shared/ui';
-import type { Activity, CatalogActivity } from '@/shared/types';
+import type { Activity } from '@/shared/types';
 
 export default function ActivityModal() {
   const {
@@ -26,16 +26,6 @@ export default function ActivityModal() {
   }, [activity]);
 
   if (!activity) return null;
-
-  function handleCatalogSelect(item: CatalogActivity) {
-    setDraft((prev) => ({
-      ...prev,
-      title: item.name,
-      description: item.description,
-      imageUrl: item.imageUrl,
-      category: item.category,
-    }));
-  }
 
   function handleImageChange(url: string) {
     setDraft((prev) => ({ ...prev, imageUrl: url }));
@@ -61,7 +51,6 @@ export default function ActivityModal() {
         availableDays={days}
         onChangeDay={(dayId) => changeDay(activity.id, dayId)}
         onChangePosition={(idx) => changePosition(activity.id, idx)}
-        onCatalogSelect={handleCatalogSelect}
         onImageChange={handleImageChange}
       />
       <ActivityModalForm activity={draft} onSave={save} color={activity.color} />

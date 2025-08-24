@@ -12,16 +12,6 @@ export { useSelectedActivity } from './useSelectedActivity';
 export { usePlanParams } from './usePlanParams';
 export { usePlanDays } from './usePlanDaysSupabase';
 
-export {
-  useCatalog,
-  useDestinationCatalog,
-  useCatalogActivities,
-  useDestinationAutocomplete,
-  useGeoapifySearch,
-  fetchAutocomplete,
-  fetchCatalog,
-  fetchSearch,
-  type CatalogApiResponse,
-} from './catalog';
+export { useDestinationAutocomplete, useGeoapifySearch, fetchSearch } from './catalog';
 
 export { PlannerProvider, usePlannerContext } from './PlannerContext';
