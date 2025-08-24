@@ -3,7 +3,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { useElementRect } from '@/shared/hooks/ui/useElementRect';
+import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 
 interface Props {
   open: boolean;
@@ -20,7 +20,7 @@ export default function ActivityCardEditorOverlay({
   onClose,
   children,
 }: Props) {
-  const rect = useElementRect(cardRef);
+  const { rect } = useElementMeasure({ ref: cardRef, rect: true });
 
   if (!open || !rect) return null;
 

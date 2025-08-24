@@ -2,3 +2,4 @@
 
 export { usePointerDragScroll } from './usePointerDragScroll';
 export { usePopupDismiss } from './usePopupDismiss';
+export { useElementMeasure } from './useElementMeasure';
