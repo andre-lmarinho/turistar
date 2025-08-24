@@ -93,7 +93,7 @@
   --chart-5: oklch(0.5 0.05 330);
 
   /* Special Cards Base Colors */
-  --color-0: oklch(1 0 0); /* branco */
+  --color-0: oklch(1 0 0); /* white */
   --color-0-border: oklch(0.7 0 0);
 
   --color-1: oklch(0.98 0.05 75); /* pastel orange */
@@ -112,12 +112,25 @@
   --color-5-border: oklch(0.8 0.1 320);
 }
 
+/* CSS Reset */
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *,
+  *::before,
+  *::after {
+    @apply border-border outline-ring/50 m-0 box-border p-0;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px];
+  }
+
+  .section-description {
+    @apply pb-4 text-xl;
   }
 }
 

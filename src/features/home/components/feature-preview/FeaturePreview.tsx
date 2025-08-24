@@ -58,92 +58,88 @@ export default function FeaturePreview() {
   const handleSelect = (idx: number) => setActiveIdx(idx);
 
   return (
-    <section className="p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
-      <div className="container max-w-3xl sm:max-w-lg lg:max-w-[960px]">
-        <div className="max-w-[100%] md:max-w-[60%]">
-          <h2 className="pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px]">
-            Planner. Map. Budget.
-          </h2>
-          <p className="pb-4 text-xl">
-            Great trips start with a plan you can see, a map that makes sense, and a budget that
-            keeps choices real. Turistar brings these together so decisions are faster and planning
-            feels simple.
-          </p>
+    <section className="container px-8 pt-40 pb-8 sm:pt-16 md:pt-24 lg:pt-32">
+      <div className="md:max-w-[60%]">
+        <h2 className="section-title">Planner. Map. Budget.</h2>
+        <p className="section-description">
+          Great trips start with a plan you can see, a map that makes sense, and a budget that keeps
+          choices real. Turistar brings these together so decisions are faster and planning feels
+          simple.
+        </p>
+      </div>
+
+      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {/* Cards */}
+        <div className="order-2 md:order-1">
+          {/* Desktop: clickable list */}
+          <ul className="hidden flex-col gap-4 md:flex">
+            {features.map((f, idx) => (
+              <li key={f.title}>
+                <FeatureCard
+                  feature={f}
+                  isActive={idx === activeIdx}
+                  onClick={() => handleSelect(idx)}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {/* Mobile/tablet: full-width slides with gap */}
+          <ul
+            ref={cardsRef}
+            className="no-scrollbar m-0 flex w-full cursor-pointer snap-x snap-proximity gap-4 overflow-x-auto p-0 md:hidden"
+          >
+            {features.map((f, idx) => (
+              <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
+                <FeatureCard feature={f} isActive={idx === activeIdx} asButton={false} />
+              </li>
+            ))}
+          </ul>
+
+          {/* Mobile: dots below the cards */}
+          <NavDots
+            total={features.length}
+            current={activeIdx}
+            onSelect={handleSelect}
+            className="mt-4 justify-center md:hidden"
+          />
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {/* Cards */}
-          <div className="order-2 md:order-1">
-            {/* Desktop: clickable list */}
-            <ul className="hidden flex-col gap-4 md:flex">
-              {features.map((f, idx) => (
-                <li key={f.title}>
-                  <FeatureCard
-                    feature={f}
-                    isActive={idx === activeIdx}
-                    onClick={() => handleSelect(idx)}
+        {/* Images */}
+        <div className="order-1 md:order-2 md:col-span-2">
+          {/* Desktop: dots above the image to the right */}
+          <NavDots
+            total={features.length}
+            current={activeIdx}
+            onSelect={handleSelect}
+            className="mb-3 hidden justify-end md:flex"
+          />
+
+          {/* Image carousel with full width and gap */}
+          <ul
+            ref={imagesRef}
+            tabIndex={-1}
+            aria-hidden="true"
+            className="no-scrollbar m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
+          >
+            {features.map((f, idx) => (
+              <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
+                <div className="select-none">
+                  <Image
+                    src={f.imgSrc}
+                    alt=""
+                    role="presentation"
+                    width={1600}
+                    height={900}
+                    className="block h-auto w-full overflow-hidden rounded-xl object-contain"
+                    priority={idx === activeIdx}
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
                   />
-                </li>
-              ))}
-            </ul>
-
-            {/* Mobile/tablet: full-width slides with gap */}
-            <ul
-              ref={cardsRef}
-              className="no-scrollbar m-0 flex w-full cursor-pointer snap-x snap-proximity gap-4 overflow-x-auto p-0 md:hidden"
-            >
-              {features.map((f, idx) => (
-                <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
-                  <FeatureCard feature={f} isActive={idx === activeIdx} asButton={false} />
-                </li>
-              ))}
-            </ul>
-
-            {/* Mobile: dots below the cards */}
-            <NavDots
-              total={features.length}
-              current={activeIdx}
-              onSelect={handleSelect}
-              className="mt-4 justify-center md:hidden"
-            />
-          </div>
-
-          {/* Images */}
-          <div className="order-1 md:order-2 md:col-span-2">
-            {/* Desktop: dots above the image to the right */}
-            <NavDots
-              total={features.length}
-              current={activeIdx}
-              onSelect={handleSelect}
-              className="mb-3 hidden justify-end md:flex"
-            />
-
-            {/* Image carousel with full width and gap */}
-            <ul
-              ref={imagesRef}
-              tabIndex={-1}
-              aria-hidden="true"
-              className="no-scrollbar m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
-            >
-              {features.map((f, idx) => (
-                <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
-                  <div className="select-none">
-                    <Image
-                      src={f.imgSrc}
-                      alt=""
-                      role="presentation"
-                      width={1600}
-                      height={900}
-                      className="block h-auto w-full overflow-hidden rounded-xl object-contain"
-                      priority={idx === activeIdx}
-                      draggable={false}
-                      onDragStart={(e) => e.preventDefault()}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
