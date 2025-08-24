@@ -39,13 +39,13 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     setLongitude(activity.longitude);
   }, [activity]);
 
-  // Automatically focus the title input only once when the initial title is empty.
+  // Automatically scroll to the title input only once when the initial title is empty.
   const titleInputRef = useRef<HTMLInputElement>(null);
   const initialTitle = useRef(editedTitle);
 
   useEffect(() => {
     if (!initialTitle.current.trim()) {
-      titleInputRef.current?.focus();
+      titleInputRef.current?.scrollIntoView({ block: 'center' });
     }
   }, []);
 
