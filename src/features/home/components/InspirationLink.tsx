@@ -1,14 +1,22 @@
 // src/features/home/components/InspirationLink.tsx
 'use client';
 
-import Link from 'next/link';
+import InspirationCard from './InspirationCard';
 import rome from '@/data/rome.json';
 import paris from '@/data/paris.json';
 
 export default function InspirationLink() {
   const destinations = [
-    { city: 'rome', label: rome.title_inspiration },
-    { city: 'paris', label: paris.title_inspiration },
+    {
+      city: 'rome',
+      label: rome.title_inspiration,
+      images: rome.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl)),
+    },
+    {
+      city: 'paris',
+      label: paris.title_inspiration,
+      images: paris.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl)),
+    },
   ];
 
   return (
@@ -26,12 +34,7 @@ export default function InspirationLink() {
         <ul className="mx-auto flex flex-wrap justify-center gap-6">
           {destinations.map((d) => (
             <li key={d.city}>
-              <Link
-                href={`/inspiration/${d.city}`}
-                className="block w-56 rounded-lg border bg-white p-6 text-center shadow-sm transition hover:shadow"
-              >
-                {d.label}
-              </Link>
+              <InspirationCard title={d.label} imageUrls={d.images} />
             </li>
           ))}
         </ul>
