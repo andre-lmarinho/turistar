@@ -10,12 +10,12 @@ import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
  */
 export function useOnboardingCheck(planId: string) {
   const key = `planner-onboarding-shown-${planId}`;
-  const [stored, setStored] = useLocalStorage<boolean>(key, false);
-  const [showOnboarding, setShowOnboarding] = useState(!stored);
+  const [seen, setSeen] = useLocalStorage<boolean>(key, false);
+  const [showOnboarding, setShowOnboarding] = useState(!seen);
 
   useEffect(() => {
-    setShowOnboarding(!stored);
-    if (!stored) setStored(true);
+    setShowOnboarding(!seen);
+    if (!seen) setSeen(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId]);
 

@@ -21,3 +21,4 @@ export { supabase } from './supabaseClient';
 export { clientEnv } from './clientEnv';
 export type { ClientEnv } from './clientEnv';
 export { usePlanEditTokens } from './planEditToken';
+export { useRecentPlan } from '../hooks/useRecentPlan';

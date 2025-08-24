@@ -11,7 +11,7 @@ import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlan } from '@/app/planner/actions/createPlan';
-import { usePlanEditTokens } from '@/shared/lib/planEditToken';
+import { usePlanEditTokens, useRecentPlan } from '@/shared/lib';
 
 export default function PlanForm() {
   const router = useRouter();
@@ -23,6 +23,7 @@ export default function PlanForm() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [title, setTitle] = useState('');
   const { saveEditToken } = usePlanEditTokens();
+  const { saveRecentPlan } = useRecentPlan();
 
   // Declare error state
   const [error, setError] = useState<string>('');
@@ -77,6 +78,13 @@ export default function PlanForm() {
       );
 
       saveEditToken(planId, editToken);
+      saveRecentPlan({
+        id: planId,
+        slug: publicSlug,
+        dest: destParam,
+        start: range.from.toISOString(),
+        end: range.to.toISOString(),
+      });
 
       const query = new URLSearchParams({
         dest: destParam,
