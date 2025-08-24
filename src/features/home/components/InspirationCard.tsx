@@ -55,8 +55,7 @@ export default function InspirationCard({
 
   return (
     <div
-      tabIndex={0}
-      className="bg-background block w-76 cursor-pointer rounded-md border pb-4 text-center shadow-sm transition hover:shadow focus:shadow"
+      className="bg-background block w-76 rounded-md border pb-4 text-center shadow-sm transition hover:shadow focus:shadow"
       onMouseEnter={startCycle}
       onMouseLeave={stopCycle}
       onFocus={startCycle}

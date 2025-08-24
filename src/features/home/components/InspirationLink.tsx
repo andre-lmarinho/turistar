@@ -2,6 +2,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import InspirationCard from './InspirationCard';
 import rome from '@/data/rome.json';
 import paris from '@/data/paris.json';
@@ -43,7 +44,9 @@ export default function InspirationLink() {
         <ul className="mx-auto flex flex-wrap justify-center gap-6">
           {destinations.map((d) => (
             <li key={d.city}>
-              <InspirationCard title={d.label} imageUrls={d.images} />
+              <Link href={`/inspiration/${d.city}`} className="block">
+                <InspirationCard title={d.label} imageUrls={d.images} />
+              </Link>
             </li>
           ))}
         </ul>
