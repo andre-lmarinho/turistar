@@ -1,7 +1,7 @@
 // src/features/planner/hooks/useActivityCardEditor.ts
 
 import { useState, useRef } from 'react';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
+import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 
 export function useActivityCardEditor({
   title,
@@ -17,7 +17,12 @@ export function useActivityCardEditor({
   const cardRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  useEscapeKey({ onClose: () => editing && cancel(), isActive: editing });
+  usePopupDismiss({
+    popupRef: overlayRef,
+    triggerRef: cardRef,
+    onClose: () => editing && cancel(),
+    isOpen: editing,
+  });
 
   function start() {
     setEditing(true);

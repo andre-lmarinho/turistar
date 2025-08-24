@@ -4,7 +4,7 @@
 import React, { useRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils';
-import { usePopupOutsideHandler } from '@/shared/hooks/ui/usePopupOutsideHandler';
+import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import OverlayContainer from '../OverlayContainer';
 
 /** Popup style variants */
@@ -41,7 +41,7 @@ export default function Popup({
 }: PopupProps) {
   const popupRef = useRef<HTMLDivElement>(null);
 
-  usePopupOutsideHandler({ popupRef, triggerRef, onClose: onClose ?? (() => {}), isOpen: open });
+  usePopupDismiss({ popupRef, triggerRef, onClose: onClose ?? (() => {}), isOpen: open });
 
   return (
     <OverlayContainer
