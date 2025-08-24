@@ -11,13 +11,10 @@ export { default as TooltipKeyHint } from './TooltipKeyHint';
 export { default as Spinner } from './Spinner';
 export { default as Modal } from './Modal';
 export { default as LocationSearchInput } from './LocationSearchInput';
+export { default as IconButton } from './IconButton';
 
 // Icons components
-export { default as CardColorButton } from './button-icons/CardColorButton';
 export { default as CloseButton } from './button-icons/CloseButton';
-export { default as RemoveCardButton } from './button-icons/DeleteCardButton';
-export { default as EditCardButton } from './button-icons/EditCardButton';
-export { default as SearchCatalogButton } from './button-icons/SearchCatalogButton';
 export { default as NavCircleButton } from './button-icons/NavCircleButton';
 
 // Unique buttons

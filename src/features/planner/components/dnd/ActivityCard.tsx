@@ -11,7 +11,8 @@ import {
   ActivityCardEditing,
   ActivityCardEditorOverlay,
 } from '@/features/planner';
-import { EditCardButton } from '@/shared/ui';
+import { IconButton } from '@/shared/ui';
+import { Pencil } from 'lucide-react';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };
@@ -102,7 +103,10 @@ export default function ActivityCard({
         </button>
 
         {!editing && (
-          <EditCardButton
+          <IconButton
+            icon={<Pencil aria-hidden="true" />}
+            ariaLabel="Edit Card"
+            position="bottom"
             type="button"
             className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
             onClick={(e) => {

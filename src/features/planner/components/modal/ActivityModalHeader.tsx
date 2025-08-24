@@ -9,13 +9,8 @@ import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupCont
 import { ChevronDown } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils';
 
-import {
-  Button,
-  RemoveCardButton,
-  CloseButton,
-  CardColorButton,
-  CatalogSearchPopup,
-} from '@/shared/ui';
+import { Button, IconButton, CatalogSearchPopup } from '@/shared/ui';
+import { Trash2, X, Palette } from 'lucide-react';
 
 /**
  * Color strip shown at the very top of ActivityModal.
@@ -133,9 +128,22 @@ export default function ActivityModalHeader({
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <RemoveCardButton onClick={onDelete} />
-            <CardColorButton ref={colorButtonRef} onClick={handleColorButtonClick} />
-            <CloseButton onClick={onClose} />
+            <IconButton
+              ariaLabel="Delete"
+              icon={<Trash2 aria-hidden="true" />}
+              onClick={onDelete}
+            />
+            <IconButton
+              ref={colorButtonRef}
+              ariaLabel="Card Color"
+              icon={<Palette aria-hidden="true" className="group-hover/icon:-rotate-45" />}
+              onClick={handleColorButtonClick}
+            />
+            <IconButton
+              ariaLabel="Close"
+              icon={<X aria-hidden="true" className="group-hover/icon:rotate-90" />}
+              onClick={onClose}
+            />
           </div>
         </div>
 
