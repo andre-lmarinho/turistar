@@ -25,7 +25,7 @@ export function useBudget(
 
   const { data: loaded } = useSupabaseResource<{ budget: number; entries: Entry[] }>({
     queryKey: ['budget', planId],
-    fetcher: async (signal) => {
+    fetcher: async () => {
       const budgetRes = (await supabase
         .from('plans')
         .select('budget')
@@ -60,7 +60,7 @@ export function useBudget(
 
   const { mutate: saveBudget } = useSupabaseResource<number, number>({
     queryKey: ['budget', planId],
-    persistFn: async (b, _signal) => {
+    persistFn: async (b) => {
       const { error } = (await supabase
         .from('plans')
         .update({ budget: b })
@@ -100,7 +100,7 @@ export function useBudget(
     if (budget === initialBudgetRef.current) return;
     setPersistError(null);
     saveBudget(budget);
-  }, [budget, planId, persist]);
+  }, [budget, planId, persist, saveBudget]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {
@@ -131,7 +131,7 @@ export function useBudget(
     }
   >({
     queryKey: ['budget', planId],
-    persistFn: async (payload, _signal) => {
+    persistFn: async (payload) => {
       const res = (await supabase
         .from('budget_entries')
         .insert({
@@ -172,7 +172,7 @@ export function useBudget(
 
   const { mutateAsync: updateEntryMut } = useSupabaseResource<void, Entry>({
     queryKey: ['budget', planId],
-    persistFn: async (updated, _signal) => {
+    persistFn: async (updated) => {
       const { error } = (await supabase
         .from('budget_entries')
         .update({
@@ -198,7 +198,7 @@ export function useBudget(
 
   const { mutateAsync: deleteEntryMut } = useSupabaseResource<void, string>({
     queryKey: ['budget', planId],
-    persistFn: async (id, _signal) => {
+    persistFn: async (id) => {
       const { error } = (await supabase
         .from('budget_entries')
         // @ts-expect-error Supabase typings omit delete, but runtime supports it

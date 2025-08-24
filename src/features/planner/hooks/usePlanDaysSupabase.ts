@@ -46,7 +46,7 @@ interface PlanDayWithActivities {
 export function usePlanDays(planId: string, enabled = true) {
   const days = useSupabaseResource<DayPlan[]>({
     queryKey: ['plan_days', planId],
-    fetcher: async (signal) => {
+    fetcher: async () => {
       const { data, error } = (await (supabase.from('plan_days') as QueryBuilder)
         .select('date, activities(*)')
         .eq('plan_id', planId)
@@ -80,7 +80,7 @@ export function usePlanDays(planId: string, enabled = true) {
 
   const upsertDay = useSupabaseResource<PlanDay, Partial<PlanDay>>({
     queryKey: ['plan_days', planId],
-    persistFn: async (payload, _signal) => {
+    persistFn: async (payload) => {
       const { error, data } = (await (supabase.from('plan_days') as QueryBuilder)
         .upsert(payload)
         .select()
