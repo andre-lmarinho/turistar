@@ -22,3 +22,4 @@ For deeper feature details see the source files within `src/features`.
 - **Next.js App Router** – Provides file based routing and server actions. Planner routes live under `/planner` while API helpers reside in `src/server`.
 - **Drag‑and‑drop with DnD Kit** – Activities move via sensors and sortable logic encapsulated in hooks within `src/features/planner`.
 - **State management** – Planner and budget data live in feature contexts and synchronize to Supabase through shared hooks.
+- **Geoapify search** – Destination search and autocomplete run through `/api/search` and client hooks.

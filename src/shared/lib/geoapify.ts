@@ -2,7 +2,7 @@
 
 // Helpers for fetching POIs from the Geoapify API.
 
-import type { CatalogActivity, AutocompletePlace } from '@/shared/types';
+import type { SearchActivity, AutocompletePlace } from '@/shared/types';
 import { clientEnv } from './clientEnv';
 
 /* Types */
@@ -54,7 +54,7 @@ function findDescription(obj: unknown): string | undefined {
   return undefined;
 }
 
-export function mapGeoapifyFeature(f: GeoapifyFeature): CatalogActivity {
+export function mapGeoapifyFeature(f: GeoapifyFeature): SearchActivity {
   const p = f.properties;
   const category = p.categories?.[0] ?? 'sight';
   const name = p.name?.trim();
@@ -117,7 +117,7 @@ export async function fetchGeoapifyAutocomplete(
 export async function fetchGeoapifySearch(
   text: string,
   lang = 'en'
-): Promise<{ activities: CatalogActivity[] }> {
+): Promise<{ activities: SearchActivity[] }> {
   const key = getGeoapifyKey();
 
   // Geocode the text first to obtain coordinates

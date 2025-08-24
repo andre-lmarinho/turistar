@@ -1,7 +1,7 @@
 // src/shared/types/index.ts
 
 /**
- * A single activity/item in the catalog.
+ * A single activity within a plan.
  */
 export interface Activity {
   id: string;
@@ -19,9 +19,9 @@ export interface Activity {
 }
 
 /**
- * Catalog item as fetched from the API.
+ * Result item returned by Geoapify place search.
  */
-export interface CatalogActivity {
+export interface SearchActivity {
   id: string;
   name: string;
   category: string;

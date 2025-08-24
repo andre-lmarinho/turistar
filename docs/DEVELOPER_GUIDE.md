@@ -18,6 +18,7 @@ The `src/app` directory wires pages and API routes. It should stay thin:
 
 - Pages import UI logic from `src/features`
 - API routes and server actions re-export handlers from `src/server`
+- `/api/search` proxies Geoapify for destination lookup
 
 ## Style
 

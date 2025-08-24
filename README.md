@@ -45,6 +45,8 @@ A new **Map View** lets you preview your itinerary locations on an interactive m
   Enter your trip dates to start a new plan.
 - **Planner Board**
   Drag activities between days or add blank cards to build your schedule.
+- **Destination Search**
+  Quickly find attractions with Geoapify-powered search and autocomplete.
 - **Map View**
   View all your planned attractions on an interactive map.
 - **Persistent Storage**

@@ -3,7 +3,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchSearch } from './fetchSearch';
-import type { CatalogActivity } from '@/shared/types';
+import type { SearchActivity } from '@/shared/types';
 
 /**
  * Runs a Geoapify place search when the query has 4+ characters.
@@ -16,7 +16,7 @@ export function useGeoapifySearch(query: string) {
   });
 
   return {
-    results: data ?? ([] as CatalogActivity[]),
+    results: data ?? ([] as SearchActivity[]),
     loading: isLoading,
     error: isError,
   };
