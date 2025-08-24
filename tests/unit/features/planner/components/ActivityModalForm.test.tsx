@@ -32,7 +32,7 @@ describe('ActivityModalForm address autocomplete', () => {
     mockUseDestinationAutocomplete.mockReturnValue({
       results: [{ name: '1 Infinite Loop, CA', latitude: 10, longitude: 20 }],
       loading: false,
-      error: false,
+      error: null,
     });
 
     const activity: Activity = { id: '1', title: 'Test', color: 'bg-[var(--color-0)]' };

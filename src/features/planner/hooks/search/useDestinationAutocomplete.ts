@@ -15,7 +15,16 @@ async function fetchAutocomplete(
     params.set('lon', String(lon));
   }
   const res = await fetch(`/api/autocomplete?${params.toString()}`);
-  if (!res.ok) throw new Error('Failed to load suggestions');
+  if (!res.ok) {
+    let message = 'Failed to load suggestions.';
+    try {
+      const err = (await res.json()) as { error?: string };
+      if (err.error) message = err.error;
+    } catch {
+      // ignore JSON parsing errors
+    }
+    throw new Error(message);
+  }
   const data = (await res.json()) as { results: AutocompletePlace[] };
   return data.results;
 }
@@ -30,7 +39,7 @@ export function useDestinationAutocomplete(
 ) {
   const isEnabled = (options.enabled ?? true) && query.length >= 4;
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, error } = useQuery<AutocompletePlace[], Error>({
     queryKey: ['autocomplete', query, options.latitude, options.longitude],
     queryFn: () => fetchAutocomplete(query, options.latitude, options.longitude),
     enabled: isEnabled,
@@ -41,6 +50,6 @@ export function useDestinationAutocomplete(
   return {
     results: data ?? ([] as AutocompletePlace[]),
     loading: isLoading,
-    error: isError,
+    error: error ? error.message : null,
   };
 }

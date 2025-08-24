@@ -32,7 +32,7 @@ describe('LocationSearchInput', () => {
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
-      error: false,
+      error: null,
     });
 
     const handleChange = vi.fn();
@@ -58,7 +58,7 @@ describe('LocationSearchInput', () => {
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
-      error: false,
+      error: null,
     });
 
     const handleChange = vi.fn();
@@ -82,7 +82,7 @@ describe('LocationSearchInput', () => {
     mockUseDestinationAutocomplete.mockReturnValue({
       results: [],
       loading: false,
-      error: true,
+      error: 'Failed to load suggestions.',
     });
 
     render(<LocationSearchInput value="Paris" onChange={() => {}} />);
