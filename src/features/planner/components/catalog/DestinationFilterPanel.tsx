@@ -6,7 +6,6 @@ import { DestinationHeader, DestinationResultsList, CategoryFilterBar } from '@/
 import { Modal } from '@/shared/ui';
 import type { CatalogActivity } from '@/shared/types';
 import { useDestinationCatalog, useActivitiesById, usePlannerContext } from '@/features/planner';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 import { computeCatalogScore } from '@/shared/lib';
 
@@ -55,7 +54,6 @@ export default function DestinationFilterPanel({ isOpen, onClose }: DestinationF
     return items;
   }, [activities, search, selectedCats, sort]);
 
-  useEscapeKey({ onClose, isActive: isOpen });
   // Preserve scroll position so the list doesn't jump after adding/removing
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const scrollPosRef = useRef(0);
