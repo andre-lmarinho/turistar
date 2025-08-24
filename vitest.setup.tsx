@@ -7,6 +7,15 @@ process.env.NEXT_PUBLIC_GEOAPIFY_KEY =
 import '@testing-library/jest-dom';
 import React from 'react';
 
+class ResizeObserverMock {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserverMock }).ResizeObserver =
+  ResizeObserverMock;
+
 vi.mock('focus-trap-react', () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
