@@ -100,8 +100,8 @@ export default function PlanForm() {
 
   return (
     <>
-      <div className="pb-12">
-        <h2 className="pb-12 text-center text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
+      <div>
+        <h2 className="pb-4 text-center text-4xl leading-[1.1] font-semibold tracking-tight">
           Turistar App
         </h2>
         <form
@@ -128,7 +128,9 @@ export default function PlanForm() {
             />
           </fieldset>
 
-          <Button type="submit">Start Your Planning</Button>
+          <Button className="flex w-full" type="submit">
+            Start Your Planning
+          </Button>
 
           {error && (
             <p id="date-error" role="alert" className="mt-2 text-sm text-[var(--destructive)]">
@@ -137,25 +139,23 @@ export default function PlanForm() {
           )}
         </form>
       </div>
-      <div className="fixed right-0 bottom-0">
+      <div className="pointer-events-none hidden w-full sm:block" aria-hidden="true">
         <Image
           src="/images/mascot_1_.webp"
           alt=""
           aria-hidden="true"
-          width={800}
-          height={600}
-          className="h-auto w-full max-w-[420px] select-none"
+          width={744}
+          height={923}
+          className="pointer-events-none fixed right-12 bottom-0 h-auto w-[min(280px,20vw)] select-none"
           priority
         />
-      </div>
-      <div className="fixed bottom-0 left-0">
         <Image
           src="/images/background_1_.webp"
           alt=""
           aria-hidden="true"
-          width={800}
-          height={600}
-          className="h-auto w-full max-w-[920px] select-none"
+          width={828}
+          height={466}
+          className="pointer-events-none fixed bottom-0 left-4 h-auto w-[min(380px,25vw)] select-none"
           priority
         />
       </div>

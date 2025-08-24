@@ -1,7 +1,7 @@
 // src/features/home/components/Hero.tsx
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button, CloseButton, Modal } from '@/shared/ui';
@@ -9,6 +9,16 @@ import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPosition({
+        x: Math.random() * 20 - 10,
+        y: Math.random() * 20 - 10,
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   const openForm = () => setOpen(true);
   const closeForm = () => setOpen(false);
   useEscapeKey({ onClose: closeForm, isActive: open });
@@ -35,6 +45,10 @@ export default function Hero() {
             width={800}
             height={600}
             className="h-auto w-full max-w-[420px] select-none"
+            style={{
+              transform: `translate(${position.x}px, ${position.y}px)`,
+              transition: 'transform 5s ease-in-out',
+            }}
             priority
           />
         </div>
@@ -44,10 +58,10 @@ export default function Hero() {
         open={open}
         onClose={closeForm}
         overlayClassName="backdrop-overlay"
-        wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4"
+        wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
         className="w-full max-w-md p-6"
       >
-        <div className="flex w-full justify-end pb-4">
+        <div className="flex w-full justify-end">
           <CloseButton onClick={closeForm} />
         </div>
         <PlanForm />
