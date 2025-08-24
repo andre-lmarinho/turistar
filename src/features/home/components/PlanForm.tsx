@@ -11,7 +11,7 @@ import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlan } from '@/app/planner/actions/createPlan';
-import { saveEditToken } from '@/shared/lib/planEditToken';
+import { usePlanEditTokens } from '@/shared/lib/planEditToken';
 
 export default function PlanForm() {
   const router = useRouter();
@@ -22,6 +22,7 @@ export default function PlanForm() {
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [title, setTitle] = useState('');
+  const { saveEditToken } = usePlanEditTokens();
 
   // Declare error state
   const [error, setError] = useState<string>('');
