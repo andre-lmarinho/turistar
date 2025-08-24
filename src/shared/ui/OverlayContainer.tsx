@@ -3,7 +3,7 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import FocusTrap from 'focus-trap-react';
 import { cn } from '@/shared/utils';
-import { useEscapeKey } from '@/shared/hooks/ui/useEscapeKey';
+import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 
 interface OverlayContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Control visibility and FocusTrap activation */
@@ -41,10 +41,11 @@ const OverlayContainer = forwardRef<HTMLDivElement, OverlayContainerProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => containerRef.current!);
 
-    useEscapeKey({
-      onClose: onClose ?? (() => {}),
-      isActive: Boolean(open && onClose && closeOnEscape),
+    usePopupDismiss({
+      popupRef: containerRef,
       triggerRef,
+      onClose: onClose ?? (() => {}),
+      isOpen: Boolean(open && onClose && closeOnEscape),
     });
 
     if (!open) return null;
