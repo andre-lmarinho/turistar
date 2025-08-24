@@ -20,7 +20,7 @@ export default function ActivityCardEditorOverlay({
   onClose,
   children,
 }: Props) {
-  const rect = useElementRect(cardRef, true);
+  const rect = useElementRect(cardRef);
 
   if (!open || !rect) return null;
 

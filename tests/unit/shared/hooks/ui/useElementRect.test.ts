@@ -31,7 +31,7 @@ test('returns bounding rect and updates on resize', () => {
   expect(result.current).toEqual(second);
 });
 
-test('updates on scroll when enabled', () => {
+test('updates on scroll', () => {
   const ref = React.createRef<HTMLDivElement>();
   const first = new DOMRect(0, 0, 100, 100);
   const second = new DOMRect(0, 0, 150, 120);
@@ -40,7 +40,7 @@ test('updates on scroll when enabled', () => {
     .mockReturnValueOnce(first)
     .mockReturnValue(second);
 
-  const { result } = renderHook(() => useElementRect(ref, true), {
+  const { result } = renderHook(() => useElementRect(ref), {
     wrapper: ({ children }) => React.createElement('div', { ref }, children),
   });
 

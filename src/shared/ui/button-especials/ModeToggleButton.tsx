@@ -25,7 +25,7 @@ interface ModeToggleButtonProps {
 
 export default function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const containerRect = useElementRect(containerRef, true);
+  const containerRect = useElementRect(containerRef);
   const highlightX = useMotionValue(0);
   const highlightW = useMotionValue(0);
   const isFirst = useRef(true);
