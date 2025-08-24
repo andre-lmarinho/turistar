@@ -58,9 +58,9 @@ export default function FeaturePreview() {
   const handleSelect = (idx: number) => setActiveIdx(idx);
 
   return (
-    <section className="mx-auto w-full max-w-screen-lg p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
-      <div className="max-w-[100%] md:max-w-[60%]">
-        <h2 className="pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px]">
+    <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
+      <div className="md:max-w-[60%]">
+        <h2 className="pb-6 text-2xl leading-[1.1] font-semibold tracking-tight md:text-4xl">
           Planner. Map. Budget.
         </h2>
         <p className="pb-4 text-xl">

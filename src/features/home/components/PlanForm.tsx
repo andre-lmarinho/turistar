@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import Image from 'next/image';
 
 import { Button, DateRangePicker } from '@/shared/ui';
 import { DestinationInput } from '@/features/home';
@@ -98,33 +99,66 @@ export default function PlanForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex w-full max-w-md flex-col items-center">
-      <fieldset className="flex w-full justify-center pb-4" aria-labelledby="dest-label">
-        <legend id="dest-label" className="sr-only">
-          Destination
-        </legend>
-        <DestinationInput value={dest} onChange={handleDestChange} />
-      </fieldset>
+    <>
+      <div className="pb-12">
+        <h2 className="pb-12 text-center text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
+          Turistar App
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex w-full max-w-md flex-col items-center"
+        >
+          <fieldset className="flex w-full justify-center pb-4" aria-labelledby="dest-label">
+            <legend id="dest-label" className="sr-only">
+              Destination
+            </legend>
+            <DestinationInput value={dest} onChange={handleDestChange} />
+          </fieldset>
 
-      <fieldset className="flex w-full justify-center pb-4" aria-labelledby="daterange-label">
-        <legend id="daterange-label" className="sr-only">
-          Travel dates
-        </legend>
-        <DateRangePicker
-          value={range}
-          onChange={handleRangeChange}
-          aria-describedby={error ? 'date-error' : undefined}
-          aria-invalid={Boolean(error)}
+          <fieldset className="flex w-full justify-center pb-4" aria-labelledby="daterange-label">
+            <legend id="daterange-label" className="sr-only">
+              Travel dates
+            </legend>
+            <DateRangePicker
+              value={range}
+              onChange={handleRangeChange}
+              aria-describedby={error ? 'date-error' : undefined}
+              aria-invalid={Boolean(error)}
+            />
+          </fieldset>
+
+          <Button type="submit">Start Your Planning</Button>
+
+          {error && (
+            <p id="date-error" role="alert" className="mt-2 text-sm text-[var(--destructive)]">
+              {error}
+            </p>
+          )}
+        </form>
+      </div>
+      <div className="fixed right-0 bottom-0">
+        <Image
+          src="/images/mascot_1_.webp"
+          alt=""
+          aria-hidden="true"
+          width={800}
+          height={600}
+          className="h-auto w-full max-w-[420px] select-none"
+          priority
         />
-      </fieldset>
-
-      <Button type="submit">Start Your Planning</Button>
-
-      {error && (
-        <p id="date-error" role="alert" className="mt-2 text-sm text-[var(--destructive)]">
-          {error}
-        </p>
-      )}
-    </form>
+      </div>
+      <div className="fixed bottom-0 left-0">
+        <Image
+          src="/images/background_1_.webp"
+          alt=""
+          aria-hidden="true"
+          width={800}
+          height={600}
+          className="h-auto w-full max-w-[920px] select-none"
+          priority
+        />
+      </div>
+    </>
   );
 }

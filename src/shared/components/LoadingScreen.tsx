@@ -15,7 +15,7 @@ export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProp
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className="flex min-h-screen flex-col items-center justify-center bg-[var(--background)]"
+      className="bg-background/60 fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-lg"
     >
       {/* Mascot */}
       <div className="relative mb-6 h-32 w-32">

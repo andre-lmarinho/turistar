@@ -13,9 +13,9 @@ export default function InspirationLink() {
 
   return (
     <section className="bg-card w-full">
-      <div className="mx-auto max-w-screen-lg p-8 pt-40 sm:pt-16 md:pt-24 lg:pt-32">
+      <div className="mx-auto max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
         <div className="relative flex flex-col items-center pb-4 text-center">
-          <h2 className="pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px]">
+          <h2 className="pb-6 text-2xl leading-[1.1] font-semibold tracking-tight md:text-4xl">
             Be inspired by fellow travellers
           </h2>
           <p className="pb-4 text-xl">
