@@ -4,7 +4,7 @@ import { moveActivityPosition } from '@/features/planner/services/moveActivityPo
 import type { DayPlan, Activity } from '@/shared/types';
 
 function build(id: string): Activity {
-  return { id, title: id.toUpperCase(), color: 'red' };
+  return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };
 }
 
 describe('moveActivityPosition', () => {

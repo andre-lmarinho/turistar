@@ -93,7 +93,9 @@ describe.skip('map render integration', () => {
       {
         id: 'd1',
         label: 'Day 1',
-        activities: [{ id: 'a1', title: 'Walk', color: 'red', latitude: 1, longitude: 1 }],
+        activities: [
+          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
+        ],
       },
     ];
     mockDays = days;

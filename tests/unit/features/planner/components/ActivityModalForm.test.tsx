@@ -35,11 +35,13 @@ describe('ActivityModalForm address autocomplete', () => {
       error: false,
     });
 
-    const activity: Activity = { id: '1', title: 'Test', color: '#fff' };
+    const activity: Activity = { id: '1', title: 'Test', color: 'bg-[var(--color-0)]' };
     const handleSave = vi.fn();
     const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({} as Response);
 
-    render(<ActivityModalForm activity={activity} onSave={handleSave} color="#fff" />);
+    render(
+      <ActivityModalForm activity={activity} onSave={handleSave} color="bg-[var(--color-0)]" />
+    );
 
     const input = screen.getByLabelText('Address');
     fireEvent.change(input, { target: { value: '1 In' } });

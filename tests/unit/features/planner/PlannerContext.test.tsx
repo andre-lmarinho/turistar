@@ -44,7 +44,7 @@ vi.mock('@/features/planner', async () => {
                   id: Math.random().toString(),
                   title: 'New',
                   category: 'general',
-                  color: 'red',
+                  color: 'bg-[var(--color-1)]',
                 },
               ],
             };

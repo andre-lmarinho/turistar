@@ -76,13 +76,13 @@ describe('persistDaysHelpers', () => {
       {
         id: '11111111-1111-1111-1111-111111111111',
         title: 't1',
-        color: 'red',
+        color: 'bg-[var(--color-1)]',
         category: 'c1',
       },
       {
         id: 'temp',
         title: 't2',
-        color: 'blue',
+        color: 'bg-[var(--color-2)]',
         category: 'c2',
       },
     ];

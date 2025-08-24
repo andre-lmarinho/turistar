@@ -90,7 +90,7 @@ describe.skip('BudgetPanel', () => {
       {
         id: 'd1',
         label: 'Day 1',
-        activities: [{ id: 'a1', title: 'Act', color: 'red', budget: 25 }],
+        activities: [{ id: 'a1', title: 'Act', color: 'bg-[var(--color-1)]', budget: 25 }],
       },
     ];
     render(
