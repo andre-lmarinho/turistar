@@ -27,11 +27,13 @@ export function usePopupDismiss({
     prevFocusedRef.current = triggerRef?.current ?? (document.activeElement as HTMLElement) ?? null;
 
     function handleMouseDown(e: MouseEvent) {
-      const target = e.target as Node;
-      const clickedOutside = popupRef.current && !popupRef.current.contains(target);
-      const clickedTrigger = triggerRef?.current?.contains?.(target);
+      const path = e.composedPath();
+      const popupEl = popupRef.current;
+      const triggerEl = triggerRef?.current;
+      const clickedInside = popupEl ? path.includes(popupEl) : false;
+      const clickedTrigger = triggerEl ? path.includes(triggerEl) : false;
 
-      if (clickedOutside && !clickedTrigger) {
+      if (!clickedInside && !clickedTrigger) {
         onClose();
       }
     }
