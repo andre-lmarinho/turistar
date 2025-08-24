@@ -1,7 +1,8 @@
 // src/shared/hooks/ui/useEscapeKey.ts
 'use client';
 
-import { useEffect, useRef, RefObject } from 'react';
+import { useEffect, useRef, RefObject, useMemo } from 'react';
+import { useKeyListener } from './useKeyListener';
 
 /**
  * Attaches a keydown listener for the Escape key while the popup is open.
@@ -26,17 +27,17 @@ export function useEscapeKey({
     prevFocusedRef.current =
       (triggerRef?.current ?? (document.activeElement as HTMLElement)) || null;
 
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
       prevFocusedRef.current?.focus?.();
     };
-  }, [isActive, onClose, triggerRef]);
+  }, [isActive, triggerRef]);
+
+  const handlers = useMemo(
+    () => ({
+      Escape: onClose,
+    }),
+    [onClose]
+  );
+
+  useKeyListener({ keys: handlers, isActive });
 }
