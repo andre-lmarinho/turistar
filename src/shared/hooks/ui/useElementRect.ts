@@ -7,10 +7,7 @@ import { useState, useEffect, RefObject } from 'react';
  * It updates the rect on window resize or when the element changes.
  */
 
-export function useElementRect<T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T | null>,
-  listenScroll = false
-) {
+export function useElementRect<T extends HTMLElement = HTMLElement>(ref: RefObject<T | null>) {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
@@ -25,16 +22,12 @@ export function useElementRect<T extends HTMLElement = HTMLElement>(
     updateRect();
 
     window.addEventListener('resize', updateRect);
-    if (listenScroll) {
-      window.addEventListener('scroll', updateRect, true);
-    }
+    window.addEventListener('scroll', updateRect, true);
     return () => {
       window.removeEventListener('resize', updateRect);
-      if (listenScroll) {
-        window.removeEventListener('scroll', updateRect, true);
-      }
+      window.removeEventListener('scroll', updateRect, true);
     };
-  }, [ref, listenScroll]);
+  }, [ref]);
 
   return rect;
 }
