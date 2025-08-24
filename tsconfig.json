@@ -19,7 +19,10 @@
       }
     ],
     "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"] },
+    "paths": {
+      "@/*": ["./src/*"],
+      "@api/*": ["./src/server/api/*"]
+    },
     "types": ["vitest/globals", "node"]
   },
   "include": [
