@@ -6,7 +6,7 @@ import PlanForm from './PlanForm';
 
 export default function Hero() {
   return (
-    <section className="relative container overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
+    <section className="relative mx-auto w-full max-w-screen-xl overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
         {/* Coluna esquerda */}
         <div className="flex w-full max-w-2xl flex-col items-center text-center lg:items-start lg:text-left">

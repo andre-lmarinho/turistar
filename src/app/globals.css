@@ -1,4 +1,3 @@
-/* src/app/globals.css */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -121,32 +120,6 @@
   }
 }
 
-@layer components {
-  .section-title {
-    @apply pb-6 text-[36px] leading-[1.1] font-semibold tracking-tight md:text-[42px];
-  }
-
-  .section-description {
-    @apply pb-4 text-xl;
-  }
-}
-
-/* ========================
-   Accessibility
-======================== */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-/* ======================== */
-
 .backdrop-overlay {
   @apply fixed inset-0 z-40 bg-black/40 backdrop-blur-sm;
 }
@@ -173,40 +146,13 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-.container {
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  max-width: 80rem;
-}
-
-/* Override Leaflet panes to z-index 0 */
-.leaflet-container .leaflet-tile-pane,
-.leaflet-container .leaflet-overlay-pane,
-.leaflet-container .leaflet-shadow-pane,
-.leaflet-container .leaflet-marker-pane,
-.leaflet-container .leaflet-tooltip-pane,
-.leaflet-container .leaflet-popup-pane {
-  z-index: 0 !important;
-}
-
-/* 1) Force the map container to z-index 0 */
+/* Leaflet z-index resets */
 .leaflet-container {
-  position: relative; /* ensures stacking context without transformation */
-  z-index: 0 !important;
+  position: relative;
 }
 
-/* 2) Force all Leaflet panes to z-index 0 */
-.leaflet-container .leaflet-pane {
-  z-index: 0 !important;
-}
-
-/* 3) Also cover controls and floating elements */
-.leaflet-container .leaflet-control-container,
-.leaflet-container .leaflet-marker-pane,
-.leaflet-container .leaflet-overlay-pane,
-.leaflet-container .leaflet-shadow-pane,
-.leaflet-container .leaflet-tooltip-pane,
-.leaflet-container .leaflet-popup-pane {
+.leaflet-container,
+.leaflet-container .leaflet-pane,
+.leaflet-container .leaflet-control-container {
   z-index: 0 !important;
 }

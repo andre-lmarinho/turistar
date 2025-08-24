@@ -90,7 +90,7 @@ function PlannerClientInner({
         className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12"
       >
         {/* HEADER */}
-        <div className="container flex items-center justify-between gap-4 pb-4">
+        <div className="mx-auto flex w-full max-w-screen-xl items-center justify-between gap-4 pb-4">
           <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] md:text-5xl">
             <input
               id="planner-title"
@@ -120,7 +120,7 @@ function PlannerClientInner({
         <PlannerControls mode={mode} onModeChange={setMode} />
 
         {/* BOARD / MAP / BUDGET */}
-        <div className="relative order-2 container flex-1 overflow-visible md:order-3">
+        <div className="relative order-2 mx-auto w-full max-w-screen-xl flex-1 overflow-visible md:order-3">
           {modeOrder.map((m, idx) => {
             const isActive = idx === activeIdx;
             const rel = idx - activeIdx;

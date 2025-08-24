@@ -15,7 +15,7 @@ interface PlannerControlsProps {
 export default function PlannerControls({ mode, onModeChange }: PlannerControlsProps) {
   const { currentRange, handleRangeChange } = usePlannerContext();
   return (
-    <div className="order-3 container flex items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
+    <div className="order-3 mx-auto flex w-full max-w-screen-xl items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
       <ModeToggleButton value={mode} onChange={onModeChange} />
       <DateRangePicker
         value={currentRange}
