@@ -8,7 +8,11 @@ import { PlannerProvider } from '@/features/planner';
 import type { DayPlan } from '@/shared/types';
 
 const map = { fitBounds: vi.fn() };
-const markers: Array<{ title?: string }> = [];
+const markers: Array<{
+  title?: string;
+  eventHandlers?: Record<string, (...args: unknown[]) => void>;
+}> = [];
+const setSelectedActivity = vi.hoisted(() => vi.fn());
 let containerProps: { center?: unknown } | undefined;
 let mockDays: DayPlan[] = [];
 let mockDestCoords: { lat: number; lng: number } | null = null;
@@ -21,7 +25,10 @@ vi.mock('react-leaflet', () => {
       return <div>{props.children}</div>;
     },
     TileLayer: () => null,
-    Marker: (props: { title?: string }) => {
+    Marker: (props: {
+      title?: string;
+      eventHandlers?: Record<string, (...args: unknown[]) => void>;
+    }) => {
       markers.push(props);
       return null;
     },
@@ -41,43 +48,16 @@ vi.mock('@/features/planner/hooks/usePlanParams', () => ({
   usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
 }));
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
-  return {
-    ...actual,
-    usePlanner: () => ({
-      planId: 'p1',
-      dest: 'rome',
-      days: mockDays,
-      destCoords: mockDestCoords,
-      setDays: vi.fn(),
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      activeId: null,
-      sensors: [],
-      collisionDetection: vi.fn(),
-      handleDragStart: vi.fn(),
-      handleDragOver: vi.fn(),
-      handleDragEnd: vi.fn(),
-      addActivity: vi.fn(),
-      removeActivity: vi.fn(),
-      updateActivity: vi.fn(),
-      addBlankActivity: vi.fn(),
-    }),
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      changePosition: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
-    usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
-  };
-});
+vi.mock('@/features/planner', () => ({
+  PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  usePlannerContext: () => ({
+    planId: 'p1',
+    dest: 'rome',
+    days: mockDays,
+    destCoords: mockDestCoords,
+    setSelectedActivity,
+  }),
+}));
 
 afterEach(() => {
   map.fitBounds.mockClear();
@@ -85,9 +65,10 @@ afterEach(() => {
   containerProps = undefined;
   mockDays = [];
   mockDestCoords = null;
+  setSelectedActivity.mockClear();
 });
 
-describe.skip('map render integration', () => {
+describe('map render integration', () => {
   it('renders markers for activities', () => {
     const days: DayPlan[] = [
       {
@@ -117,5 +98,72 @@ describe.skip('map render integration', () => {
       </PlannerProvider>
     );
     expect(containerProps!.center).toEqual([3, 4]);
+  });
+
+  it('selects activity when marker clicked', () => {
+    const days: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
+        ],
+      },
+    ];
+    mockDays = days;
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    markers[0].eventHandlers?.click?.();
+    expect(setSelectedActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'a1', dayId: 'd1' })
+    );
+  });
+
+  it('handles activities missing coordinates', () => {
+    const days: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [{ id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]' }],
+      },
+    ];
+    mockDays = days;
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(markers.length).toBe(0);
+    expect(map.fitBounds).not.toHaveBeenCalled();
+  });
+
+  it('updates map bounds when days change', () => {
+    const buildDays = (lat: number, lng: number): DayPlan[] => [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]', latitude: lat, longitude: lng },
+        ],
+      },
+    ];
+    mockDays = buildDays(1, 1);
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(map.fitBounds).toHaveBeenCalledTimes(1);
+    map.fitBounds.mockClear();
+    mockDays = buildDays(2, 2);
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(map.fitBounds).toHaveBeenCalledTimes(1);
   });
 });
