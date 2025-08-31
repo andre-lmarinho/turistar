@@ -28,9 +28,7 @@ export default function Hero() {
           <h1 className="mb-6 text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
             Less time planning. More time traveling.
           </h1>
-          <p className="mb-6 text-lg md:text-xl">
-            Shape your trip in minutes and keep everything in sync.
-          </p>
+          <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>
           <Button onClick={openForm}>Start Your Planning</Button>
         </div>
 

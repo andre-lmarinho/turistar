@@ -59,7 +59,7 @@ export default function FeaturePreview() {
 
   return (
     <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
-      <div className="md:max-w-[60%]">
+      <div className="mb-10 md:max-w-[60%]">
         <h2 className="pb-6 text-2xl leading-[1.1] font-semibold tracking-tight md:text-4xl">
           Planner. Map. Budget.
         </h2>
@@ -70,7 +70,7 @@ export default function FeaturePreview() {
         </p>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {/* Cards */}
         <div className="order-2 md:order-1">
           {/* Desktop: clickable list */}

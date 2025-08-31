@@ -55,7 +55,7 @@ export default function InspirationCard({
 
   return (
     <div
-      className="bg-background block w-76 rounded-md border pb-4 text-center shadow-sm transition hover:shadow focus:shadow"
+      className="bg-card block w-76 rounded-md border pb-4 transition hover:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px] focus:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px]"
       onMouseEnter={startCycle}
       onMouseLeave={stopCycle}
       onFocus={startCycle}
@@ -70,7 +70,9 @@ export default function InspirationCard({
         height={120}
         className="mx-auto mb-2 h-40 w-full rounded-t-md object-cover"
       />
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <div className="pl-4">
+        <h3 className="text-lg font-semibold">{title}</h3>
+      </div>
     </div>
   );
 }

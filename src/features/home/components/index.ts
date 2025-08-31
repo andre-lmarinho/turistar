@@ -6,3 +6,5 @@ export { FeaturePreview } from './feature-preview';
 export { default as InspirationLink } from './InspirationLink';
 export { default as ContinuePlanningBanner } from './ContinuePlanningBanner';
 export { default as InspirationCard } from './InspirationCard';
+export { default as FinalCta } from './FinalCta';
+export { default as HomeFooter } from './HomeFooter';

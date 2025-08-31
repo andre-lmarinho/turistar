@@ -6,4 +6,6 @@ export {
   FeaturePreview,
   InspirationLink,
   ContinuePlanningBanner,
+  FinalCta,
+  HomeFooter,
 } from './components';
