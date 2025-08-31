@@ -1,4 +1,4 @@
-// src/features/budget/types/budget.ts
+// src/features/planner/types/budget/budget.ts
 
 import type { CategoryKey } from '@/shared/constants';
 export type { CategoryKey } from '@/shared/constants';

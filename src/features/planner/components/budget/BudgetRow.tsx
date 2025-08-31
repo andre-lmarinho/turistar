@@ -1,12 +1,12 @@
-// src/features/budget/components/BudgetRow.tsx
+// src/features/planner/components/budget/BudgetRow.tsx
 'use client';
 
 import React, { useId } from 'react';
 import { Pencil, Trash2, Check, X, Plus, DollarSign } from 'lucide-react';
 import { CATEGORIES, CategoryKey } from '@/shared/constants';
 import { normalizeAmount } from '@/shared/utils';
-import { useBudgetContext } from '@/features/budget';
-import type { Entry } from '@/features/budget/types';
+import { useBudgetContext } from '@/features/planner';
+import type { Entry } from '@/features/planner';
 import { Button, Input } from '@/shared/ui';
 
 // Props -------------------------------------------------------------

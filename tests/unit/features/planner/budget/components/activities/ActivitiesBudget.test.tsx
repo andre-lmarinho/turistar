@@ -1,8 +1,8 @@
-// tests/unit/features/budget/components/activities/ActivitiesBudget.test.tsx
+// tests/unit/features/planner/budget/components/activities/ActivitiesBudget.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ActivitiesBudgetPopup as ActivitiesBudget } from '@/features/budget/components/activities';
+import { ActivitiesBudgetPopup as ActivitiesBudget } from '@/features/planner/components/budget/activities';
 import type { DayPlan } from '@/shared/types';
 import { vi } from 'vitest';
 

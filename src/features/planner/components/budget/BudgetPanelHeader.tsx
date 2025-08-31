@@ -1,10 +1,10 @@
-// src/features/budget/components/BudgetPanelHeader.tsx
+// src/features/planner/components/budget/BudgetPanelHeader.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Info, DollarSign } from 'lucide-react';
 import { CATEGORIES, BUDGET_INFO } from '@/shared/constants';
-import { CategoryProgressBar, useBudgetContext } from '@/features/budget';
+import { CategoryProgressBar, useBudgetContext } from '@/features/planner';
 import { InfoPopup, Input } from '@/shared/ui';
 import { normalizeAmount } from '@/shared/utils';
 
