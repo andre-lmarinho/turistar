@@ -11,6 +11,12 @@ export {
   ActivityModal,
   ActivityModalForm,
   ActivityModalHeader,
+  BudgetItem,
+  BudgetPanelHeader,
+  CategoryProgressBar,
+  ExpenseTable,
+  BudgetRow,
+  ActivitiesBudgetPopup,
 } from './components';
 
 export {
@@ -30,6 +36,10 @@ export {
   fetchSearch,
   PlannerProvider,
   usePlannerContext,
+  BudgetProvider,
+  useBudgetContext,
+  useBudget,
+  useBudgetSupabase,
 } from './hooks';
 
 export {
@@ -41,3 +51,5 @@ export {
   moveActivityPosition,
   syncDaysWithTripRange,
 } from './services';
+
+export type { Entry, CategoryKey } from './types/budget';

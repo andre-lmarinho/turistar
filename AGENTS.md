@@ -7,7 +7,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - `/docs`: Project notes and guidelines
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
-  - `/features`: Feature modules such as planner, budget and onboarding
+  - `/features`: Feature modules such as planner and onboarding
   - `/shared`: Shared UI components, hooks, utilities and types
   - `/server`: Server actions and API handlers
   - `/data`: Local JSON used for demo itineraries

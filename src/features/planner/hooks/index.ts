@@ -15,3 +15,4 @@ export { usePlanDays } from './usePlanDaysSupabase';
 export { useDestinationAutocomplete, useGeoapifySearch, fetchSearch } from './search';
 
 export { PlannerProvider, usePlannerContext } from './PlannerContext';
+export { BudgetProvider, useBudgetContext, useBudget, useBudgetSupabase } from './budget';

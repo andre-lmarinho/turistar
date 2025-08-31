@@ -1,8 +1,8 @@
-// src/features/budget/hooks/useBudgetSupabase.ts
+// src/features/planner/hooks/budget/useBudgetSupabase.ts
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { CategoryKey } from '@/shared/constants';
-import type { Entry } from '@/features/budget/types';
+import type { Entry } from '@/features/planner';
 import { usePlanResource } from '@/shared/hooks/usePlanResource';
 
 export function useBudget(

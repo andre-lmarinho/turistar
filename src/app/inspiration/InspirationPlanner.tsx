@@ -3,7 +3,7 @@
 
 import dynamic from 'next/dynamic';
 import type { DayPlan } from '@/shared/types';
-import type { Entry } from '@/features/budget';
+import type { Entry } from '@/features/planner';
 
 interface Props {
   initialDays: DayPlan[];

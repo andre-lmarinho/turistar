@@ -10,4 +10,13 @@ export {
 } from './dnd';
 export { ActivityModal, ActivityModalForm, ActivityModalHeader } from './modal';
 
+export {
+  BudgetItem,
+  BudgetPanelHeader,
+  CategoryProgressBar,
+  ExpenseTable,
+  BudgetRow,
+  ActivitiesBudgetPopup,
+} from './budget';
+
 export { default as PlannerControls } from './PlannerControls';

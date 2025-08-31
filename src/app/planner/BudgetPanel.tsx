@@ -10,9 +10,9 @@ import {
   BudgetPanelHeader,
   ExpenseTable,
   ActivitiesBudgetPopup,
-} from '@/features/budget';
+} from '@/features/planner';
 import { InfoPopup, Button } from '@/shared/ui';
-import type { Entry } from '@/features/budget';
+import type { Entry } from '@/features/planner';
 
 interface Props {
   initialBudget?: number;

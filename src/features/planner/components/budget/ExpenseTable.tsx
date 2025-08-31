@@ -1,11 +1,11 @@
-// src/features/budget/components/ExpenseTable.tsx
+// src/features/planner/components/budget/ExpenseTable.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/shared/constants';
-import type { Entry } from '@/features/budget/types';
-import { BudgetRow, useBudgetContext } from '@/features/budget';
+import type { Entry } from '@/features/planner';
+import { BudgetRow, useBudgetContext } from '@/features/planner';
 import { InfoPopup } from '@/shared/ui';
 
 export default function ExpenseTable() {
