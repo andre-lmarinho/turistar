@@ -49,8 +49,8 @@ A new **Map View** lets you preview your itinerary locations on an interactive m
   Quickly find attractions with Geoapify-powered search and autocomplete.
 - **Map View**
   View all your planned attractions on an interactive map.
-- **Persistent Storage**
-  All planner and budget changes are saved to Supabase so they stay when you refresh.
+  - **Persistent Storage**
+    All planner changes, including budget, are saved to Supabase so they stay when you refresh.
 - **Accessibility & Responsive Design**
   Fully keyboard-accessible with layouts optimised for mobile and desktop.
 - **Sample Plan**
@@ -78,10 +78,10 @@ You can deploy the same app to Vercel or Netlify.
 
 - `/docs`: Project notes and guidelines (see [ARCHITECTURE.md](docs/ARCHITECTURE.md) for an overview of data flow)
 - `/public`: Static assets served directly
-- `/src`: Source code to be analyzed and maintained by AI agents
-  - `/app`: Next.js app directory with pages and API routes
-  - `/features`: Feature modules such as home, planner, budget and onboarding
-  - `/shared`: Shared UI components, hooks, utilities and types
+  - `/src`: Source code to be analyzed and maintained by AI agents
+    - `/app`: Next.js app directory with pages and API routes
+    - `/features`: Feature modules such as home, planner and onboarding (budget is part of planner)
+    - `/shared`: Shared UI components, hooks, utilities and types
   - `/server`: Server actions and API handlers
   - `/data`: Local JSON used for demo itineraries
 

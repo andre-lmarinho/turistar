@@ -20,7 +20,7 @@ import { DateRangePickerIcon } from '@/shared/ui';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
-import type { Entry } from '@/features/budget';
+import type { Entry } from '@/features/planner';
 import { motion } from 'framer-motion';
 
 /**
