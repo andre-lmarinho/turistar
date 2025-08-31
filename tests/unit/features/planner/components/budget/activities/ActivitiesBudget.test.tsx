@@ -1,4 +1,4 @@
-// tests/unit/features/planner/budget/components/activities/ActivitiesBudget.test.tsx
+// tests/unit/features/planner/components/budget/activities/ActivitiesBudget.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
