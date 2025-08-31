@@ -1,4 +1,4 @@
-// tests/unit/features/planner/budget/hooks/useBudgetSupabase.test.ts
+// tests/unit/features/planner/hooks/budget/useBudgetSupabase.test.ts
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';

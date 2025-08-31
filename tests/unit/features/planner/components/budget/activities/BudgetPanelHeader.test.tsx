@@ -1,4 +1,4 @@
-// tests/unit/features/planner/budget/components/activities/BudgetPanelHeader.test.tsx
+// tests/unit/features/planner/components/budget/activities/BudgetPanelHeader.test.tsx
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
