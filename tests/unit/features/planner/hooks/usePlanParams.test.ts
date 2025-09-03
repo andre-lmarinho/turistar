@@ -27,4 +27,11 @@ describe('usePlanParams', () => {
     expect(result.current.dest).toBe('');
     expect(result.current.destCoords).toBeNull();
   });
+
+  test('normalizes destination and ignores invalid coordinates', () => {
+    params = new URLSearchParams({ dest: ' ROME ', lat: 'abc', lng: '2' });
+    const { result } = renderHook(() => usePlanParams());
+    expect(result.current.dest).toBe('rome');
+    expect(result.current.destCoords).toBeNull();
+  });
 });

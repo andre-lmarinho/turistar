@@ -12,7 +12,7 @@ Tests are discovered from `tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}`.
 
 ## Current strategy
 
-Only component unit tests exist today. Future work may add integration or e2e coverage once the app stabilises. Integration tests will live under `tests/integration`.
+Only component unit tests exist today. Future work may add integration or e2e coverage once the app stabilizes. Integration tests will live under `tests/integration`.
 
 ## Folder and file naming
 
