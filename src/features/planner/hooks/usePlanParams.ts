@@ -10,8 +10,16 @@ import { useSearchParams } from 'next/navigation';
 export function usePlanParams() {
   const params = useSearchParams();
   const dest = params.get('dest')?.trim().toLowerCase() ?? '';
-  const lat = params.get('lat');
-  const lng = params.get('lng');
-  const destCoords = lat && lng ? { lat: Number(lat), lng: Number(lng) } : null;
+  const latStr = params.get('lat');
+  const lngStr = params.get('lng');
+  const lat = latStr != null ? Number(latStr) : undefined;
+  const lng = lngStr != null ? Number(lngStr) : undefined;
+  const destCoords =
+    lat != null &&
+    lng != null &&
+    !Number.isNaN(lat) &&
+    !Number.isNaN(lng)
+      ? { lat, lng }
+      : null;
   return { dest, destCoords };
 }
