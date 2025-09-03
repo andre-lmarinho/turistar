@@ -166,4 +166,67 @@ describe('map render integration', () => {
     );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
   });
+
+  it('selects activity on marker context menu', () => {
+    const days: DayPlan[] = [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
+        ],
+      },
+    ];
+    mockDays = days;
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    const preventDefault = vi.fn();
+    markers[0].eventHandlers?.contextmenu?.({
+      originalEvent: { preventDefault },
+    } as unknown as { originalEvent: { preventDefault: () => void } });
+    expect(preventDefault).toHaveBeenCalled();
+    expect(setSelectedActivity).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'a1', dayId: 'd1' })
+    );
+  });
+
+  it('falls back to default center when no coordinates provided', () => {
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(containerProps!.center).toEqual([0, 0]);
+    expect(map.fitBounds).not.toHaveBeenCalled();
+  });
+
+  it('adds markers when days update dynamically', () => {
+    const buildDays = (title: string, lat: number, lng: number): DayPlan[] => [
+      {
+        id: 'd1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a1', title, color: 'bg-[var(--color-1)]', latitude: lat, longitude: lng },
+        ],
+      },
+    ];
+    mockDays = buildDays('A1', 1, 1);
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(markers).toHaveLength(1);
+    mockDays = buildDays('A2', 2, 2);
+    render(
+      <PlannerProvider planId="p1">
+        <MapView />
+      </PlannerProvider>
+    );
+    expect(markers).toHaveLength(2);
+    expect(markers[1].title).toBe('A2');
+  });
 });
