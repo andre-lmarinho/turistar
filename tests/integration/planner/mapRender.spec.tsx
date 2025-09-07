@@ -59,7 +59,17 @@ vi.mock('@/features/planner', () => ({
   }),
 }));
 
-afterEach(() => {
+function renderMapView(days: DayPlan[], destCoords: { lat: number; lng: number } | null = null) {
+  mockDays = days;
+  mockDestCoords = destCoords;
+  return render(
+    <PlannerProvider planId="p1">
+      <MapView />
+    </PlannerProvider>
+  );
+}
+
+beforeEach(() => {
   map.fitBounds.mockClear();
   markers.length = 0;
   containerProps = undefined;
@@ -79,24 +89,13 @@ describe('map render integration', () => {
         ],
       },
     ];
-    mockDays = days;
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(days);
     expect(markers[0].title).toBe('Walk');
   });
 
   it('centers map using provided coordinates', () => {
     const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
-    mockDays = days;
-    mockDestCoords = { lat: 3, lng: 4 };
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(days, { lat: 3, lng: 4 });
     expect(containerProps!.center).toEqual([3, 4]);
   });
 
@@ -110,12 +109,7 @@ describe('map render integration', () => {
         ],
       },
     ];
-    mockDays = days;
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(days);
     markers[0].eventHandlers?.click?.();
     expect(setSelectedActivity).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'a1', dayId: 'd1' })
@@ -130,12 +124,7 @@ describe('map render integration', () => {
         activities: [{ id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]' }],
       },
     ];
-    mockDays = days;
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(days);
     expect(markers.length).toBe(0);
     expect(map.fitBounds).not.toHaveBeenCalled();
   });
@@ -150,20 +139,10 @@ describe('map render integration', () => {
         ],
       },
     ];
-    mockDays = buildDays(1, 1);
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(buildDays(1, 1));
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
     map.fitBounds.mockClear();
-    mockDays = buildDays(2, 2);
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(buildDays(2, 2));
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
   });
 
@@ -177,12 +156,7 @@ describe('map render integration', () => {
         ],
       },
     ];
-    mockDays = days;
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(days);
     const preventDefault = vi.fn();
     markers[0].eventHandlers?.contextmenu?.({
       originalEvent: { preventDefault },
@@ -194,11 +168,7 @@ describe('map render integration', () => {
   });
 
   it('falls back to default center when no coordinates provided', () => {
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView([]);
     expect(containerProps!.center).toEqual([0, 0]);
     expect(map.fitBounds).not.toHaveBeenCalled();
   });
@@ -213,19 +183,9 @@ describe('map render integration', () => {
         ],
       },
     ];
-    mockDays = buildDays('A1', 1, 1);
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(buildDays('A1', 1, 1));
     expect(markers).toHaveLength(1);
-    mockDays = buildDays('A2', 2, 2);
-    render(
-      <PlannerProvider planId="p1">
-        <MapView />
-      </PlannerProvider>
-    );
+    renderMapView(buildDays('A2', 2, 2));
     expect(markers).toHaveLength(2);
     expect(markers[1].title).toBe('A2');
   });
