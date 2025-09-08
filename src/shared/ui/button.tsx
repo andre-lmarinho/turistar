@@ -48,7 +48,7 @@ function ButtonIconWrapper({
 
     const icon = React.cloneElement(child, {
       className:
-        `${child.props.className ?? ''} transition duration-300 group-hover/icon:scale-105`.trim(),
+        `${child.props.className ?? ''} transition-transform duration-300 transform-gpu group-hover/icon:scale-105`.trim(),
     });
 
     return <div className="relative flex h-full w-full items-center justify-center">{icon}</div>;
