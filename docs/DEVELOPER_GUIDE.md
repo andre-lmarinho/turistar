@@ -9,6 +9,7 @@ Set these variables in `.env.local` and your hosting platform:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_GEOAPIFY_KEY`
+- `VERCEL_TOKEN` (optional; required only for CI or non-interactive `vercel pull`)
 
 Supabase clients live in `src/shared/lib/supabaseClient.ts` and `supabaseServer.ts`.
 

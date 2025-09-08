@@ -15,11 +15,6 @@ export function usePlanParams() {
   const lat = latStr != null ? Number(latStr) : undefined;
   const lng = lngStr != null ? Number(lngStr) : undefined;
   const destCoords =
-    lat != null &&
-    lng != null &&
-    !Number.isNaN(lat) &&
-    !Number.isNaN(lng)
-      ? { lat, lng }
-      : null;
+    lat != null && lng != null && !Number.isNaN(lat) && !Number.isNaN(lng) ? { lat, lng } : null;
   return { dest, destCoords };
 }

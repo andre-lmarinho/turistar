@@ -24,8 +24,8 @@
     "test:coverage": "vitest run --coverage",
     "prepare": "husky install",
     "gen:types": "supabase gen types typescript --project-id YOUR_ID --schema public > src/types/supabase.ts",
-    "vercel:pull": "vercel pull --yes --environment=preview --token TIpQUjNAfDgcTt0t0uUkc5eD",
-    "vercel:build": "vercel build --debug",
+    "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
+    "vercel:build": "npx vercel@latest build --debug",
     "check:vercel": "npm run vercel:pull && npm run vercel:build"
   },
   "dependencies": {
