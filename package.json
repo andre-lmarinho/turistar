@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "repository": "https://github.com/andre-lmarinho/travel-planner",
+  "engines": {
+    "node": "20.x",
+    "npm": ">=10 <11"
+  },
+  "packageManager": "npm@10.9.3",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

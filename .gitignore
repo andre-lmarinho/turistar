@@ -27,6 +27,7 @@ cypress/screenshots/
 **/.env.local    
 !.env.example
 .vercel/            # Vercel build output & metadata
+.vercel-build-tmp/  # temporary worktree used by pre-commit build
 
 # Editors / OS
 .vscode/

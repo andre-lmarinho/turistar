@@ -1,4 +1,36 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run check:vercel
+set -e
+
+# Fast local checks (fail fast, no writes)
+npm run format:check
+npm run lint
+npm run typecheck
+npm run test
+
+# Isolated Vercel build in a detached worktree to avoid mutating lockfile
+TMP_WORKTREE=".vercel-build-tmp"
+
+# Cleanup handler to always remove the temp worktree
+cleanup() {
+  git worktree remove --force "$TMP_WORKTREE" >/dev/null 2>&1 || true
+  rm -rf "$TMP_WORKTREE" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT INT TERM
+
+# Remove any leftover from previous runs
+git worktree remove --force "$TMP_WORKTREE" >/dev/null 2>&1 || true
+rm -rf "$TMP_WORKTREE" >/dev/null 2>&1 || true
+
+# Create detached worktree at current HEAD
+git worktree add --quiet --detach "$TMP_WORKTREE" HEAD
+
+(
+  cd "$TMP_WORKTREE"
+  # Clean install strictly per lockfile
+  npm ci --no-audit --no-fund
+  # Run Vercel checks in isolation
+  npm run vercel:pull
+  npm run vercel:build
+)
