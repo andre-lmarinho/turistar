@@ -15,13 +15,13 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 
 ## Coding Conventions
 
-- **Language**: All documentation, inline code comments, commit messages and PR descriptions must be written in English. Do not use any other language.
-- **Formatting**: Run `npm run format` before committing. The project uses Prettier with semicolons, single quotes and `printWidth` 100.
-- **Linting**: Ensure `npm run lint` passes.
-- **Type checking**: Ensure `npm run typecheck` passes.
-- **Tests**: Execute `npm run test` and make sure tests succeed.
-- **Warnings**: Warnings from linting, type checking, testing or any other tools are undesirable and should be resolved.
-- **Commit style**: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `✨ Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
+- Language: All documentation, inline code comments, commit messages and PR descriptions must be written in English. Do not use any other language.
+- Formatting: Run `npm run format` before committing. The project uses Prettier with semicolons, single quotes and `printWidth` 100.
+- Linting: Ensure `npm run lint` passes.
+- Type checking: Ensure `npm run typecheck` passes.
+- Tests: Execute `npm run test` and make sure tests succeed.
+- Warnings: Warnings from linting, type checking, testing or any other tools are undesirable and should be resolved.
+- Commit style: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `:sparkles: Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
 
 ## General Conventions for AI Agents
 
@@ -37,22 +37,22 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Use functional components with hooks.
 - Keep components small and focused.
 - Always define prop types properly.
-- Use PascalCase for custom component filenames. The `/src/components/ui` directory intentionally retains the lowercase naming style inherited from shadcn-ui.
+- Use PascalCase for custom component filenames. The `/src/shared/ui` directory intentionally retains the lowercase naming style inherited from shadcn-ui.
 
 ### Export Conventions
 
 To keep code clear and maintainable, we recommend:
 
-- **React Components**
+- React Components
   - One component per file.
   - Use `export default` so importers immediately know what the file provides.
 
-- **Hooks / Utilities / Constants / Types**
+- Hooks / Utilities / Constants / Types
   - Files that export multiple items should use named exports.
-  - Improves tree‑shaking and makes available symbols explicit.
+  - Improves tree-shaking and makes available symbols explicit.
 
-- **Barrel Files (`index.ts`)**
-  - Re‑export default component exports as named exports.
+- Barrel Files (`index.ts`)
+  - Re-export default component exports as named exports.
   - Re-export named exports from hooks/util modules.
 
 This approach ensures consistent imports, better IDE support, and safer refactoring when renaming files or symbols.
@@ -86,3 +86,4 @@ npm run test -- --coverage
 - [Deployment](docs/DEPLOYMENT.md)
 - [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [Contributing](docs/CONTRIBUTING.md)
+

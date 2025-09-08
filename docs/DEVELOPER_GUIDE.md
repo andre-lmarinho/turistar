@@ -1,6 +1,6 @@
 # Developer Guide
 
-This guide condenses environment, routing, style and accessibility notes for Turistar.
+This guide condenses environment, routing, style, and accessibility notes for Turistar.
 
 ## Environment
 
@@ -11,7 +11,7 @@ Set these variables in `.env.local` and your hosting platform:
 - `NEXT_PUBLIC_GEOAPIFY_KEY`
 - `VERCEL_TOKEN` (optional; required only for CI or non-interactive `vercel pull`)
 
-Supabase clients live in `src/shared/lib/supabaseClient.ts` and `supabaseServer.ts`.
+Supabase clients live in `src/shared/lib/supabaseClient.ts` and `src/shared/lib/supabaseServer.ts`.
 
 ## Routing
 
@@ -41,5 +41,5 @@ Aim for WCAG 2.1 AA compliance:
 
 - Provide text alternatives and clear labels
 - Ensure color contrast and visible focus states
-- Keep touch targets ≥44×44 px and support keyboard navigation
+- Keep touch targets at least 44×44 px and support keyboard navigation
 - Use semantic HTML and ARIA roles only when necessary

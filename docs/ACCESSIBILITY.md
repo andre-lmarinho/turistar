@@ -14,7 +14,7 @@ This project aims to meet WCAG 2.1 AA requirements. Use the checklist below when
   readers can identify the map
 - Elements labelled by their content must include that visible text in the
   accessible name
-- Touch targets for interactive controls should be at least 44×44&nbsp;px with
+- Touch targets for interactive controls should be at least 44×44 px with
   adequate spacing
 - Provide valid `role` values and prefer native elements over overriding roles
 - Do not repeat image alternative text in adjacent visible captions or

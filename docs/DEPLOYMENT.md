@@ -34,4 +34,3 @@ You can also run the production build locally with:
 ```bash
 npm start
 ```
-
