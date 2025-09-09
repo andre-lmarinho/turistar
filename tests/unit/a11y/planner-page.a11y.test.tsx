@@ -7,9 +7,7 @@ import { axe } from 'jest-axe';
 // Stub next/dynamic to avoid importing the full PlannerClient
 vi.mock('next/dynamic', () => ({
   __esModule: true,
-  default: (_loader: unknown, _opts?: unknown) => () => (
-    <main id="main-content" aria-label="Planner app" />
-  ),
+  default: () => () => <main id="main-content" aria-label="Planner app" />,
 }));
 
 import PlannerPage from '@/app/planner/page';
