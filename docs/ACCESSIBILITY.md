@@ -32,6 +32,8 @@ Run the axe DevTools browser extension on each page during development. The exte
 
 ### Automated Testing
 
+Automated checks run with `jest-axe` + Vitest. The matcher is registered in `vitest.setup.tsx`, and sample tests live under `tests/unit/a11y`.
+
 Use `jest-axe` with Vitest to catch accessibility regressions. A basic example:
 
 ```ts
@@ -48,3 +50,7 @@ it('home page is accessible', async () => {
 ```
 
 Run `npm test` to execute the suite and include accessibility checks as part of CI.
+
+Notes:
+- CSS imports from Next components are stubbed in tests to avoid PostCSS processing.
+- Next-specific modules are mocked in `vitest.setup.tsx` for DOM rendering.

@@ -1,11 +1,15 @@
 // vitest.setup.ts
 process.env.TZ = 'UTC';
-process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:54321';
+process.env.NEXT_PUBLIC_SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:54321';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'anon';
-process.env.NEXT_PUBLIC_GEOAPIFY_KEY =
-  process.env.NEXT_PUBLIC_GEOAPIFY_KEY ?? 'test-key';
+process.env.NEXT_PUBLIC_GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY ?? 'test-key';
 import '@testing-library/jest-dom';
+import { expect } from 'vitest';
+import { toHaveNoViolations } from 'jest-axe';
 import React from 'react';
+// jest-axe matcher registration (cast to satisfy TS in Vitest env)
+expect.extend(toHaveNoViolations as unknown as Parameters<typeof expect.extend>[0]);
 
 class ResizeObserverMock {
   observe = vi.fn();
@@ -20,16 +24,48 @@ vi.mock('focus-trap-react', () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// Next.js runtime component shims for testing
+vi.mock('next/link', () => ({
+  __esModule: true,
+  default: ({
+    href,
+    children,
+    ...props
+  }: { href?: unknown; children?: React.ReactNode } & Record<string, unknown>) => (
+    // Normalize href to string for test DOM
+    <a href={typeof href === 'string' ? href : '#'} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
+vi.mock('next/image', () => ({
+  __esModule: true,
+  // Render a plain img for tests
+  default: (props: Record<string, unknown>) => {
+    const source = ((props || {}) as Record<string, unknown>) ?? {};
+    const alt = (source.alt as string) ?? '';
+    const rest = { ...source } as Record<string, unknown>;
+    // Drop non-standard props for <img>
+    delete (rest as { priority?: unknown }).priority;
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img alt={alt} {...rest} />;
+  },
+}));
+
+vi.mock('@vercel/speed-insights/next', () => ({
+  SpeedInsights: () => null,
+}));
+
 // Canvas isn't implemented in jsdom. Provide a minimal mock so tests using
 // measureText can run without installing additional packages.
-HTMLCanvasElement.prototype.getContext = vi
-  .fn(
-    () =>
-      ({
-        font: '',
-        measureText: vi.fn(() => ({ width: 0 })),
-      }) as unknown as CanvasRenderingContext2D,
-  ) as unknown as HTMLCanvasElement['getContext'];
+HTMLCanvasElement.prototype.getContext = vi.fn(
+  () =>
+    ({
+      font: '',
+      measureText: vi.fn(() => ({ width: 0 })),
+    }) as unknown as CanvasRenderingContext2D
+) as unknown as HTMLCanvasElement['getContext'];
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({
@@ -48,14 +84,11 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-
 vi.mock('@testing-library/react', async () => {
-  const actual: typeof import('@testing-library/react') = await vi.importActual(
-    '@testing-library/react'
-  );
-  const { QueryClient, QueryClientProvider } = await vi.importActual<
-    typeof import('@tanstack/react-query')
-  >('@tanstack/react-query');
+  const actual: typeof import('@testing-library/react') =
+    await vi.importActual('@testing-library/react');
+  const { QueryClient, QueryClientProvider } =
+    await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query');
 
   function WithClient({ children }: { children: React.ReactNode }) {
     const client = new QueryClient();
@@ -70,4 +103,3 @@ vi.mock('@testing-library/react', async () => {
       actual.renderHook(fn, { wrapper: WithClient, ...options }),
   };
 });
-

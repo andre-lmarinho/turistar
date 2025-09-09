@@ -1,0 +1,1 @@
+﻿🔒 Remove embedded Vercel token; move build to CI

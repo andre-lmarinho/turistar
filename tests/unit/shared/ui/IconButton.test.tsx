@@ -1,3 +1,5 @@
+// tests/unit/shared/ui/IconButton.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { IconButton } from '@/shared/ui';
