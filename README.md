@@ -185,6 +185,7 @@ For more details on project conventions, see:
 - [Testing](docs/TESTING.md)
 - [Deployment](docs/DEPLOYMENT.md)
 - [Developer Guide](docs/DEVELOPER_GUIDE.md)
+- [SEO Setup](docs/SEO.md)
 - [Contributing](docs/CONTRIBUTING.md)
 
 ---
