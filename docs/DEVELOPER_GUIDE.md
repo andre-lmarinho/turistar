@@ -13,6 +13,10 @@ Set these variables in `.env.local` and your hosting platform:
 
 Supabase clients live in `src/shared/lib/supabaseClient.ts` and `src/shared/lib/supabaseServer.ts`.
 
+## Configuration
+
+Centralized project configuration files reside in the `/config` directory. It houses ESLint, Tailwind CSS, PostCSS, commitlint, and Vitest settings. The test environment is initialized via `config/vitest.setup.tsx`.
+
 ## Routing
 
 The `src/app` directory wires pages and API routes. It should stay thin:
