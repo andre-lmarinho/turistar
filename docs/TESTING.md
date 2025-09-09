@@ -6,7 +6,7 @@ This project uses **Vitest** with React Testing Library for unit and integration
 
 - **Environment:** `jsdom` is used so components render in a browser-like DOM.
 - **Path alias:** `@` resolves to the `src` directory, matching `tsconfig.json`.
-- **Setup file:** [`vitest.setup.tsx`](../config/vitest.setup.tsx) sets global mocks and utilities. It imports `@testing-library/jest-dom`, mocks `focus-trap-react`, and sets the timezone to UTC.
+- **Setup file:** [`vitest.setup.tsx`](../vitest.setup.tsx) sets global mocks and utilities. It imports `@testing-library/jest-dom`, mocks `focus-trap-react`, and sets the timezone to UTC.
 
 Tests are discovered from `tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}`.
 
@@ -20,5 +20,5 @@ Test files use the `*.test.ts` or `*.test.tsx` pattern in `tests/unit` and the `
 
 ## Mocking guidelines
 
-- **Global mocks:** put shared mocks in `config/vitest.setup.tsx` so all tests can rely on them.
+- **Global mocks:** put shared mocks in `vitest.setup.tsx` so all tests can rely on them.
 - **Local mocks:** use `vi.mock()` inside individual test files when the behavior is specific to that test.

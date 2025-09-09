@@ -67,7 +67,6 @@ A Map View lets you preview your itinerary locations on an interactive map.
 ## Project Structure
 
 - `/docs`: Project notes and guidelines (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for data flow)
-- `/config`: Shared configuration for linting, styling, commit checks, and tests (`vitest.setup.tsx` lives here)
 - `/src`: Application source code
   - `/app`: Next.js app directory with pages and API routes
   - `/features`: Feature modules such as home, planner, and onboarding (budget is part of planner)
@@ -75,7 +74,6 @@ A Map View lets you preview your itinerary locations on an interactive map.
   - `/server`: Server actions and API handlers
   - `/data`: Local JSON used for demo itineraries
 - `/public`: Static assets served directly
-- `/tests`: Unit and integration tests (global setup at `config/vitest.setup.tsx`)
 
 ```ts
 import { PlannerControls } from '@/features/planner';
