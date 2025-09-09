@@ -11,6 +11,7 @@ build/              # qualquer pasta de build custom
 # Tooling & cache
 .turbo/             # Turbopack/Turborepo cache
 .eslintcache
+/.cache/
 *.tsbuildinfo       # TypeScript incremental
 tsconfig.tsbuildinfo
 

@@ -6,7 +6,8 @@ This project uses **Vitest** with React Testing Library for unit and integration
 
 - **Environment:** `jsdom` is used so components render in a browser-like DOM.
 - **Path alias:** `@` resolves to the `src` directory, matching `tsconfig.json`.
-- **Setup file:** [`vitest.setup.tsx`](../vitest.setup.tsx) sets global mocks and utilities. It imports `@testing-library/jest-dom`, mocks `focus-trap-react`, and sets the timezone to UTC.
+- **Setup file:** [`config/vitest.setup.tsx`](../config/vitest.setup.tsx) sets global mocks and utilities. It imports `@testing-library/jest-dom`, mocks `focus-trap-react`, and sets the timezone to UTC.
+- **Coverage:** `@vitest/coverage-v8` is used via `coverage: { provider: 'v8' }` in `config/vitest.config.ts`. Run with `npm run test:coverage`.
 
 Tests are discovered from `tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}`.
 

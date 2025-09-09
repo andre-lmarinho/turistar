@@ -43,3 +43,13 @@ Aim for WCAG 2.1 AA compliance:
 - Ensure color contrast and visible focus states
 - Keep touch targets at least 44×44 px and support keyboard navigation
 - Use semantic HTML and ARIA roles only when necessary
+
+## Configuration
+
+- Centralized tool configs live under `config/`.
+- ESLint uses `config/eslint.config.mjs` (scripts and VS Code point to it).
+- Vitest uses `config/vitest.config.ts` and `config/vitest.setup.tsx`.
+- Prettier and PostCSS configurations live inside `package.json` under `prettier` and `postcss`.
+- Commitlint configuration lives inside `package.json` under `commitlint`.
+- Keep `next.config.ts`, `tailwind.config.ts`, `tsconfig.json`, and `next-env.d.ts` in the repository root.
+- TypeScript incremental state is written to `.next/cache/tsconfig.tsbuildinfo`.
