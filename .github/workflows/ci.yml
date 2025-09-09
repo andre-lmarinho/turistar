@@ -6,8 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,16 +24,3 @@ jobs:
       - name: Test (coverage)
         run: npm run test:coverage
       - run: npm run lint:commit
-      - name: Vercel Pull (preview env)
-        if: ${{ env.VERCEL_TOKEN != '' }}
-        run: npm run vercel:pull
-      - name: Vercel Build
-        if: ${{ env.VERCEL_TOKEN != '' }}
-        run: npm run vercel:build
-      - name: Upload Vercel Build Artifact
-        if: ${{ env.VERCEL_TOKEN != '' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: vercel-output-${{ github.sha }}
-          path: .vercel/output/**
-          if-no-files-found: warn
