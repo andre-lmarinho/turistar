@@ -5,6 +5,7 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 ## Project Structure
 
 - `/docs`: Project notes and guidelines
+- `/config`: Centralized tool configs (ESLint, Vitest, etc.)
 - `/src`: Source code to be analyzed and maintained by AI agents
   - `/app`: Next.js app directory with pages and API routes
   - `/features`: Feature modules such as planner and onboarding
@@ -22,6 +23,8 @@ This `Agents.md` file provides comprehensive guidance for any AI agents working 
 - Tests: Execute `npm run test` and make sure tests succeed.
 - Warnings: Warnings from linting, type checking, testing or any other tools are undesirable and should be resolved.
 - Commit style: Start commits with an appropriate Gitmoji followed by a short, capitalized description in English (e.g., `:sparkles: Add map view`). A commitlint hook enforces this format, and commit suggestions after PR/merge must also use Gitmoji.
+
+Note: Tailwind and Next configs remain at the repository root for compatibility (`tailwind.config.ts`, `next.config.ts`).
 
 ## General Conventions for AI Agents
 
@@ -86,4 +89,3 @@ npm run test -- --coverage
 - [Deployment](docs/DEPLOYMENT.md)
 - [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [Contributing](docs/CONTRIBUTING.md)
-
