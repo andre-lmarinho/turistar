@@ -5,6 +5,7 @@ This project uses Next.js Metadata API and app routes to provide basic SEO out o
 ## What’s included
 
 - Global metadata in `src/app/layout.tsx` (title, description, Open Graph, Twitter card, icons, robots)
+- Page metadata for the planner in `src/app/planner/page.tsx`
 - JSON‑LD Organization and WebSite via `src/shared/components/SeoJsonLd.tsx`
 - BreadcrumbList and TouristAttraction JSON‑LD on inspiration pages via `src/features/inspiration/components/BreadcrumbLd.tsx`
 - Dynamic `robots.txt` at `src/app/robots.ts` (noindex on non‑production)
