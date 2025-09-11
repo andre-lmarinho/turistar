@@ -121,7 +121,6 @@ export default function FeaturePreview() {
           <ul
             ref={imagesRef}
             tabIndex={-1}
-            aria-hidden="true"
             className="scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0"
           >
             {features.map((f, idx) => (
@@ -129,8 +128,7 @@ export default function FeaturePreview() {
                 <div className="select-none">
                   <Image
                     src={f.imgSrc}
-                    alt=""
-                    role="presentation"
+                    alt={`${f.title} screenshot`}
                     width={1600}
                     height={900}
                     className="block h-auto w-full overflow-hidden rounded-xl object-contain"

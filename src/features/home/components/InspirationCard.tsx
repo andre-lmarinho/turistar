@@ -65,8 +65,7 @@ export default function InspirationCard({
     >
       <Image
         src={imageUrls[index]}
-        alt=""
-        aria-hidden="true"
+        alt={`Photo from ${title}`}
         width={228}
         height={120}
         className="mx-auto mb-2 h-40 w-full rounded-t-md object-cover"

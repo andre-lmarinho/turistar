@@ -36,8 +36,7 @@ export default function Hero() {
         <div className="flex w-full justify-center lg:justify-end">
           <Image
             src="/images/home/hero_.webp"
-            alt=""
-            aria-hidden="true"
+            alt="Illustration of a traveler planning a trip"
             width={800}
             height={600}
             className="h-auto w-full max-w-[420px] select-none"
