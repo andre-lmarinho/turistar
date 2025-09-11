@@ -10,6 +10,7 @@ import InspirationPlanner from '../InspirationPlanner';
 import { buildDaysFromInspirationData, type InspirationData } from '@/features/planner/services';
 import { capitalize } from '@/shared/utils';
 import { SITE_URL } from '@/shared/constants/site';
+import BreadcrumbLd from '@/features/inspiration/components/BreadcrumbLd';
 
 type CityParams = { city: string };
 
@@ -84,6 +85,7 @@ export async function generateMetadata({
 /* page component */
 export default async function InspirationPage({ params }: { params: Promise<CityParams> }) {
   const { city } = await params;
+  const pageUrl = `${SITE_URL}/inspiration/${city}`;
 
   if (!/^[a-z0-9-]+$/.test(city)) notFound();
 
@@ -100,13 +102,16 @@ export default async function InspirationPage({ params }: { params: Promise<City
     }));
 
     return (
-      <InspirationPlanner
-        initialDays={initialDays}
-        dest={city}
-        planId={`${city}-inspiration`}
-        initialBudget={initialBudget}
-        initialEntries={initialEntries}
-      />
+      <>
+        <BreadcrumbLd city={city} pageUrl={pageUrl} />
+        <InspirationPlanner
+          initialDays={initialDays}
+          dest={city}
+          planId={`${city}-inspiration`}
+          initialBudget={initialBudget}
+          initialEntries={initialEntries}
+        />
+      </>
     );
   } catch {
     notFound();
