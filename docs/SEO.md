@@ -11,7 +11,10 @@ This project uses Next.js Metadata API and app routes to provide basic SEO out o
 
 ## Configuration
 
-- Site URL is defined in `src/shared/constants/site.ts` as a constant (no env required). Update it if the domain changes.
+- Site URL is resolved at runtime via `SITE_URL` from `src/shared/constants/site.ts`.
+  - Local dev: auto-falls back to `http://localhost:3000`.
+  - Vercel: uses `VERCEL_URL` and prepends `https://`.
+  - Custom domains: optionally set `NEXT_PUBLIC_SITE_URL` to a full origin (no trailing slash) in your environment.
 - Default preview image: `/previews/preview_01.png` in `public/`.
 
 ## Extending
@@ -22,4 +25,4 @@ This project uses Next.js Metadata API and app routes to provide basic SEO out o
 
 ## Local vs Production
 
-- `robots.ts` allows indexing when the configured site URL is not localhost. Since the site URL is a constant, it will allow indexing for the production domain and dev servers will not be crawled.
+- `robots.ts` allows indexing when the resolved site URL is not localhost. Production deployments are indexed; dev servers are disallowed by default.

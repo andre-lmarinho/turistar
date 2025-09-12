@@ -11,6 +11,14 @@ Set these variables in `.env.local` and your hosting platform:
 - `NEXT_PUBLIC_GEOAPIFY_KEY`
 - `VERCEL_TOKEN` (optional; required only for CI or non-interactive `vercel pull`)
 
+### Public Site URL
+
+- Do not hardcode production URLs in code.
+- Use the shared resolver from `src/shared/constants/site.ts` (`SITE_URL`) or `getPublicSiteUrl()` from `src/shared/utils/url.ts`.
+- Local development: leave `NEXT_PUBLIC_SITE_URL` unset; the resolver falls back to `http://localhost:3000`.
+- Vercel: we auto-detect `VERCEL_URL` and prepend `https://`.
+- Custom domains: set `NEXT_PUBLIC_SITE_URL` to the full origin without a trailing slash, e.g. `https://travel.turistar.app`.
+
 Supabase clients live in `src/shared/lib/supabaseClient.ts` and `src/shared/lib/supabaseServer.ts`.
 
 ## Routing
