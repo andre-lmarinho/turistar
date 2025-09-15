@@ -12,10 +12,12 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';
+    // Middleware now sets Content-Security-Policy with a per-request nonce.
+    // Filter CSP out from static headers to avoid duplicates.
     return [
       {
         source: '/:path*',
-        headers: getSecurityHeaders(isDev),
+        headers: getSecurityHeaders(isDev).filter((h) => h.key !== 'Content-Security-Policy'),
       },
       // Aggressive caching for static assets
       {

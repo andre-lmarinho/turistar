@@ -4,7 +4,7 @@
 
 export type Header = { key: string; value: string };
 
-function buildCsp(isDev: boolean): string {
+export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): string {
   const common = [
     "default-src 'self'",
     "style-src 'self' 'unsafe-inline' https:",
@@ -28,12 +28,16 @@ function buildCsp(isDev: boolean): string {
     );
   } else {
     // Production: disallow inline/eval
-    common.push(
+    const scriptDirectives: string[] = [
       "script-src 'self' https:",
       "script-src-elem 'self' https:",
-      "connect-src 'self' https:",
-      "worker-src 'self'"
-    );
+    ];
+    if (nonce) {
+      // Allow only scripts with our nonce and trust dynamically added scripts from those
+      scriptDirectives[0] = `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https:`;
+      scriptDirectives[1] = `script-src-elem 'self' 'nonce-${nonce}' https:`;
+    }
+    common.push(...scriptDirectives, "connect-src 'self' https:", "worker-src 'self'");
   }
 
   return common.join('; ');
@@ -62,7 +66,7 @@ export function getSecurityHeaders(isDev: boolean): Header[] {
     // Basic permission policy (tighten as features are added)
     { key: 'Permissions-Policy', value: buildPermissionsPolicy() },
     // Content Security Policy, environment-aware
-    { key: 'Content-Security-Policy', value: buildCsp(isDev) },
+    { key: 'Content-Security-Policy', value: buildCsp({ isDev }) },
   ];
   if (!isDev) {
     headers.unshift({
