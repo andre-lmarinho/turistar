@@ -58,6 +58,29 @@ vi.mock('@vercel/speed-insights/next', () => ({
   SpeedInsights: () => null,
 }));
 
+// Prevent Leaflet from loading in tests (depends on browser globals)
+vi.mock('react-leaflet', () => ({
+  __esModule: true,
+  MapContainer: ({ children }: { children?: React.ReactNode }) => (
+    <div data-testid="map">{children}</div>
+  ),
+  TileLayer: () => null,
+  Marker: ({ children }: { children?: React.ReactNode }) => (
+    <div data-testid="marker">{children}</div>
+  ),
+  useMap: () => ({ fitBounds: vi.fn(), setView: vi.fn() }),
+}));
+
+vi.mock('leaflet', () => ({
+  __esModule: true,
+  default: {
+    latLngBounds: (...args: unknown[]) => ({ args }),
+    divIcon: (options: unknown) => ({ options }),
+  },
+  latLngBounds: (...args: unknown[]) => ({ args }),
+  divIcon: (options: unknown) => ({ options }),
+}));
+
 // Canvas isn't implemented in jsdom. Provide a minimal mock so tests using
 // measureText can run without installing additional packages.
 HTMLCanvasElement.prototype.getContext = vi.fn(
