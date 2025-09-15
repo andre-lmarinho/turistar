@@ -1,8 +1,7 @@
 // src/shared/hooks/ui/useElementMeasure.ts
 'use client';
 
-import { useRef, useState, useLayoutEffect, useEffect, RefObject, useCallback } from 'react';
-import { measureTextWidth } from '@/shared/utils';
+import { useRef, useState, useLayoutEffect, RefObject, useCallback } from 'react';
 
 interface MeasureOptions<T extends HTMLElement> {
   /** Optional external ref. If not provided, an internal ref is used. */
@@ -31,7 +30,15 @@ function calculateTextWidth(el: HTMLElement, text: string) {
   const paddingRight = parseFloat(style.paddingRight || '0');
   const borderLeft = parseFloat(style.borderLeftWidth || '0');
   const borderRight = parseFloat(style.borderRightWidth || '0');
-  const textWidth = measureTextWidth(text || ' ', font);
+
+  // Inline canvas-based text measurement to avoid external util.
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return Math.ceil(paddingLeft + paddingRight + borderLeft + borderRight);
+  ctx.font = font;
+  const metrics = ctx.measureText(text || ' ');
+  const textWidth = metrics.width;
+
   return Math.ceil(textWidth + paddingLeft + paddingRight + borderLeft + borderRight);
 }
 
@@ -85,11 +92,8 @@ export function useElementMeasure<T extends HTMLElement = HTMLElement>(
     };
   }, [ref, updateMeasures, rect]);
 
-  useEffect(() => {
-    if (text !== undefined) {
-      updateMeasures();
-    }
-  }, [text, updateMeasures]);
+  // Extra effect for text changes is unnecessary because `text` is part of
+  // `updateMeasures` dependencies, which retriggers the layout effect above.
 
   return { ref, ...measures };
 }

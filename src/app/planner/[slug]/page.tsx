@@ -20,7 +20,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   let title: string | undefined;
   let initialDays: DayPlan[] | undefined;
 
-  const supabase = await supabaseServer();
+  const supabase = supabaseServer();
   const { data: planRow, error: planErr } = (await supabase
     .from('plans')
     .select('id, title, plan_destinations(destinations(name))')

@@ -40,4 +40,4 @@ function stripTrailingSlash(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 
-export default getPublicSiteUrl;
+// Default export removed to prefer named imports.

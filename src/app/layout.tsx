@@ -7,7 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import Providers from '@/shared/components/Providers';
 import SupabaseProvider from '@/shared/components/providers/SupabaseProvider';
-import { SeoJsonLd } from '@/shared/components/SeoJsonLd';
+import SeoJsonLd from '@/shared/components/SeoJsonLd';
 import { SITE_URL } from '@/shared/constants/site';
 
 const previewImage = new URL('/previews/preview_01.png', SITE_URL).toString();

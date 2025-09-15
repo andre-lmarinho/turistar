@@ -56,5 +56,3 @@ export function useSupabaseResource<TData = unknown, TPayload = unknown>({
     isPending: mutation.isPending,
   };
 }
-
-export default useSupabaseResource;

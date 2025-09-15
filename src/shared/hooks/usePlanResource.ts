@@ -72,5 +72,3 @@ export function usePlanResource<TData = unknown, TPayload = unknown>({
     ...rest,
   });
 }
-
-export default usePlanResource;
