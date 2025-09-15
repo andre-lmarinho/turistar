@@ -5,6 +5,9 @@ import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify';
 /**
  * API route that proxies Geoapify autocomplete results.
  */
+export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const text = searchParams.get('text');

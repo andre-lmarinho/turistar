@@ -15,7 +15,7 @@ CREATE TABLE public.activities (
   image_url text,
   color text,
   address text,
-  position integer,
+  position integer DEFAULT 0,
   CONSTRAINT activities_pkey PRIMARY KEY (id),
   CONSTRAINT activities_day_id_fkey FOREIGN KEY (day_id) REFERENCES public.plan_days(id)
 );
@@ -51,8 +51,8 @@ CREATE TABLE public.plan_destinations (
   destination_id uuid NOT NULL,
   position integer NOT NULL DEFAULT 0,
   CONSTRAINT plan_destinations_pkey PRIMARY KEY (plan_id, destination_id),
-  CONSTRAINT plan_destinations_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id),
-  CONSTRAINT plan_destinations_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
+  CONSTRAINT plan_destinations_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id),
+  CONSTRAINT plan_destinations_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
 );
 CREATE TABLE public.plans (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),

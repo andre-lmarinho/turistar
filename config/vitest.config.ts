@@ -24,6 +24,14 @@ export default defineConfig({
     globals: true,
     setupFiles: resolve(__dirname, 'vitest.setup.tsx'),
     include: ['tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}'],
-    coverage: { provider: 'v8' },
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        statements: 50,
+        branches: 40,
+        functions: 40,
+        lines: 50,
+      },
+    },
   },
 });

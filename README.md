@@ -14,6 +14,7 @@ A simple travel planner built with Next.js, React, and drag-and-drop. Select any
 - [Getting Started](#getting-started)
 - [Scripts](#scripts)
 - [Testing](#testing)
+ - [Health Endpoint](#health-endpoint)
 - [Deployment](#deployment)
 - [Developer Guide](#developer-guide)
 - [License](#license)
@@ -154,6 +155,20 @@ npm run vercel:build
 ## Testing
 
 See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
+
+---
+
+## Health Endpoint
+
+- Path: `/health`
+- Method: `GET`
+- Response: `{ "status": "ok", "version": "<package.json version>" }`
+
+Example:
+
+```bash
+curl -s http://localhost:3000/health
+```
 
 ---
 

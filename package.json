@@ -16,7 +16,7 @@
     "setup": "npm install && npm run format && npm run lint && npm run test",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" \"tests/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" \"tests/**/*.{ts,tsx,js,jsx,json,css,md}\"",
-    "lint": "eslint . -c config/eslint.config.mjs --ext .ts,.tsx --cache --cache-location .cache/eslintcache --fix",
+    "lint": "eslint . -c config/eslint.config.mjs --ext .ts,.tsx --cache --cache-location .cache/.eslintcache --fix",
     "lint:commit": "commitlint --from=HEAD~1 --to=HEAD",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c config/vitest.config.ts",
@@ -46,7 +46,7 @@
     "framer-motion": "^12.23.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
-    "next": "15.3.4",
+    "next": "^15.5.3",
     "react": "^19.0.0",
     "react-day-picker": "^9.7.0",
     "react-dom": "^19.0.0",
@@ -55,7 +55,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@commitlint/cli": "*",
+    "@commitlint/cli": "^19.8.1",
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4",
     "@tanstack/react-query-devtools": "^5.81.5",
@@ -68,14 +68,14 @@
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "@vitest/coverage-v8": "^3.2.4",
-    "commitlint-config-gitmoji": "*",
+    "commitlint-config-gitmoji": "^2.3.1",
     "eslint": "^9.30.1",
     "eslint-config-next": "^15.4.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "gitmoji-cli": "*",
+    "gitmoji-cli": "^9.7.0",
     "husky": "^8.0.0",
     "jest-axe": "^9.0.0",
     "jsdom": "^26.1.0",
@@ -85,7 +85,8 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vite": "^7.1.5"
   },
   "prettier": {
     "semi": true,
