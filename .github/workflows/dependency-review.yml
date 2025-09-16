@@ -6,6 +6,8 @@ on:
 
 jobs:
   dependency-review:
+    if: ${{ github.event.pull_request.base.repo.private == false }}
+    # Skip when private repos lack dependency review support
     runs-on: ubuntu-latest
     permissions:
       contents: read
