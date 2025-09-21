@@ -2,10 +2,12 @@
 export const dynamic = 'force-dynamic';
 
 import PlannerClient from '../PlannerClient';
+import {
+  mapPlanDaysFromSupabase,
+  type SupabasePlanDayRow,
+} from '@/features/planner/services/supabase/planDaysMapper';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import type { DayPlan } from '@/shared/types';
-import { format, parseISO } from 'date-fns';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -48,43 +50,12 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
     .select('date, activities(*)')
     .eq('plan_id', planId)
     .order('position')) as unknown as {
-    data: {
-      date: string;
-      activities: {
-        id: string;
-        title: string;
-        color: string | null;
-        category: string;
-        description: string | null;
-        start_time: string | null;
-        duration: number | null;
-        latitude: number | null;
-        longitude: number | null;
-        budget: number | null;
-        image_url: string | null;
-      }[];
-    }[];
+    data: SupabasePlanDayRow[] | null;
     error: unknown;
   };
 
   if (!dayErr && dayRows) {
-    initialDays = dayRows.map((d) => ({
-      id: d.date,
-      label: format(parseISO(d.date), 'EEE, dd MMM'),
-      activities: d.activities.map((a) => ({
-        id: a.id,
-        title: a.title,
-        color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-        category: a.category,
-        description: a.description ?? undefined,
-        startTime: a.start_time ?? undefined,
-        duration: a.duration ?? undefined,
-        latitude: a.latitude ?? undefined,
-        longitude: a.longitude ?? undefined,
-        budget: a.budget ?? undefined,
-        imageUrl: a.image_url ?? undefined,
-      })),
-    })) as DayPlan[];
+    initialDays = mapPlanDaysFromSupabase(dayRows);
   }
 
   if (!destination) {

@@ -1,29 +1,15 @@
 // src/features/planner/hooks/usePlanDaysSupabase.ts
 
+import {
+  mapPlanDaysFromSupabase,
+  type SupabaseActivityRow,
+  type SupabasePlanDayRow,
+} from '@/features/planner/services/supabase/planDaysMapper';
 import { usePlanResource } from '@/shared/hooks/usePlanResource';
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { PlanDay, DayPlan } from '@/shared/types';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
-import { format, parseISO } from 'date-fns';
 import { fetchExistingDays, deleteRemovedDays, upsertDayActivities } from './persistDaysHelpers';
-
-interface ActivityRow {
-  id: string;
-  day_id: string;
-  title: string | null;
-  color: string | null;
-  address: string | null;
-  category: string | null;
-  description: string | null;
-  start_time: string | null;
-  duration: number | null;
-  latitude: number | null;
-  longitude: number | null;
-  budget: number | null;
-  image_url: string | null;
-  position: number | null;
-}
 
 interface QueryBuilder extends SupabaseQueryBuilder {
   select: (...args: unknown[]) => QueryBuilder;
@@ -38,11 +24,6 @@ interface QueryBuilder extends SupabaseQueryBuilder {
   single: () => Promise<{ data: unknown; error: unknown }>;
 }
 
-interface PlanDayWithActivities {
-  date: string;
-  activities: ActivityRow[];
-}
-
 export function usePlanDays(planId: string, enabled = true) {
   const days = usePlanResource<DayPlan[]>({
     planId,
@@ -53,28 +34,11 @@ export function usePlanDays(planId: string, enabled = true) {
         .eq('plan_id', id)
         .order('position')
         .order('position', { foreignTable: 'activities' })) as unknown as {
-        data: PlanDayWithActivities[];
+        data: SupabasePlanDayRow[];
         error: unknown;
       };
       if (error) throw error;
-      return data.map((d) => ({
-        id: d.date,
-        label: format(parseISO(d.date), 'EEE, dd MMM'),
-        activities: d.activities.map((a) => ({
-          id: a.id,
-          title: a.title,
-          color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-          address: a.address ?? undefined,
-          category: a.category,
-          description: a.description ?? undefined,
-          startTime: a.start_time ?? undefined,
-          duration: a.duration ?? undefined,
-          latitude: a.latitude ?? undefined,
-          longitude: a.longitude ?? undefined,
-          budget: a.budget ?? undefined,
-          imageUrl: a.image_url ?? undefined,
-        })),
-      })) as DayPlan[];
+      return mapPlanDaysFromSupabase(data);
     },
     enabled,
   });
@@ -125,7 +89,7 @@ export function usePlanDays(planId: string, enabled = true) {
           existing.map((d) => d.id)
         )
         .abortSignal(signal)) as unknown as {
-        data: Pick<ActivityRow, 'id' | 'day_id'>[] | null;
+        data: Pick<SupabaseActivityRow, 'id' | 'day_id'>[] | null;
         error: unknown;
       };
       if (existingActsErr) throw existingActsErr;
