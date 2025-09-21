@@ -3,7 +3,6 @@
 import type { Metadata } from 'next';
 import '@/app/globals.css';
 import 'leaflet/dist/leaflet.css';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import Providers from '@/shared/components/Providers';
 import SupabaseProvider from '@/shared/components/providers/SupabaseProvider';
@@ -79,7 +78,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SupabaseProvider>
           <Providers>{children}</Providers>
         </SupabaseProvider>
-        <SpeedInsights />
       </body>
     </html>
   );
