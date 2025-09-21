@@ -9,7 +9,6 @@ export { useDragState } from './useDragState';
 export { usePlanner } from './usePlanner';
 export { usePlanTitle } from './usePlanTitleSupabase';
 export { useSelectedActivity } from './useSelectedActivity';
-export { usePlanParams } from './usePlanParams';
 export { usePlanDays } from './usePlanDaysSupabase';
 
 export { useDestinationAutocomplete, useGeoapifySearch, fetchSearch } from './search';

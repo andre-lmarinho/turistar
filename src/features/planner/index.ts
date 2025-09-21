@@ -29,7 +29,6 @@ export {
   usePlanner,
   usePlanTitle,
   useSelectedActivity,
-  usePlanParams,
   usePlanDays,
   useDestinationAutocomplete,
   useGeoapifySearch,

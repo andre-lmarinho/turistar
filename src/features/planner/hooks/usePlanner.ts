@@ -2,13 +2,13 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { pointerWithin } from '@dnd-kit/core';
 import { DateRange } from 'react-day-picker';
 import { eachDayOfInterval } from 'date-fns';
 
 import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from './useDnDPlanner';
-import { usePlanParams } from './usePlanParams';
 import { buildInitialDays, syncDaysWithTripRange } from '@/features/planner/services';
 import { setPlanDateRange } from '@/app/planner/actions/updatePlan';
 import type { DayPlan } from '@/shared/types';
@@ -20,7 +20,14 @@ interface UsePlannerOptions {
   persistDays?: { mutate: (state: DayPlan[]) => void };
 }
 export function usePlanner(options: UsePlannerOptions = {}) {
-  const { dest: urlDest, destCoords } = usePlanParams();
+  const params = useSearchParams();
+  const urlDest = params.get('dest')?.trim().toLowerCase() ?? '';
+  const latStr = params.get('lat');
+  const lngStr = params.get('lng');
+  const lat = latStr != null ? Number(latStr) : undefined;
+  const lng = lngStr != null ? Number(lngStr) : undefined;
+  const destCoords =
+    lat != null && lng != null && !Number.isNaN(lat) && !Number.isNaN(lng) ? { lat, lng } : null;
   const dest = options.dest ?? urlDest;
   const planId = options.planId ?? '';
 

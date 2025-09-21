@@ -46,10 +46,6 @@ vi.mock('@/features/planner', async () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
-}));
-
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),

@@ -44,10 +44,6 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
-}));
-
 vi.mock('@/features/planner', () => ({
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({

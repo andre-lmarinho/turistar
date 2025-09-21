@@ -55,10 +55,6 @@ vi.mock('@/features/planner', async () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
-}));
-
 function renderBoard() {
   mockDays = [
     { id: 'd1', label: 'Day 1', activities: buildActivities('a', 15) },
