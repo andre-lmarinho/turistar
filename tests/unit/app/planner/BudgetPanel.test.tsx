@@ -51,10 +51,6 @@ vi.mock('@/features/planner', async () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
-}));
-
 describe.skip('BudgetPanel', () => {
   beforeEach(() => {
     mockFrom.mockReset();

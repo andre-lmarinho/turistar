@@ -74,10 +74,6 @@ vi.mock('@/features/planner', async () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: mockDestCoords }),
-}));
-
 // Simplify Leaflet utilities
 vi.mock('leaflet', () => ({
   __esModule: true,

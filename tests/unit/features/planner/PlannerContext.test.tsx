@@ -62,14 +62,10 @@ vi.mock('@/features/planner', async () => {
       deleteActivity: vi.fn(),
       changeColor: vi.fn(),
     }),
-    usePlanParams: () => ({ dest: 'rome', destCoords: null }),
   };
 });
 vi.mock('@/features/planner/hooks/usePlanDaysSupabase', () => ({
   usePlanDays: () => ({ data: storedDays, persistDays }),
-}));
-vi.mock('@/features/planner/hooks/usePlanParams', () => ({
-  usePlanParams: () => ({ dest: 'rome', destCoords: null }),
 }));
 vi.mock('@/shared/hooks/useDebounce', () => ({
   useDebounce: (v: string) => v,
