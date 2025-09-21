@@ -20,7 +20,6 @@ export { default as NavCircleButton } from './button-icons/NavCircleButton';
 
 // Unique buttons
 export { default as AddCardButton } from './button-especials/AddCardButton';
-export { default as DestinationActionButton } from './button-especials/DestinationAction';
 export { default as ModeToggleButton } from './button-especials/ModeToggleButton';
 export { default as UpdateButton } from './button-especials/UpdateButton';
 
