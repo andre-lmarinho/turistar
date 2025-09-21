@@ -1,5 +1,6 @@
 // src/server/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
 import { fetchGeoapifySearch } from '@/shared/lib/geoapify';
 
 /**
@@ -10,13 +11,10 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q');
+  const q = validateGeoapifyQuery(searchParams, 'q');
   const lang = searchParams.get('lang') ?? 'en';
-  if (!q) {
-    return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
-  }
-  if (q.length < 4) {
-    return NextResponse.json({ error: 'Query must be at least 4 characters.' }, { status: 400 });
+  if (typeof q !== 'string') {
+    return q;
   }
 
   try {

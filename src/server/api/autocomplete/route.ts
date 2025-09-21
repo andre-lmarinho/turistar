@@ -1,5 +1,6 @@
 // src/server/api/autocomplete/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
 import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify';
 
 /**
@@ -10,15 +11,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const text = searchParams.get('text');
+  const text = validateGeoapifyQuery(searchParams, 'text');
+  if (typeof text !== 'string') {
+    return text;
+  }
   const lat = searchParams.get('lat');
   const lon = searchParams.get('lon');
-  if (!text) {
-    return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
-  }
-  if (text.length < 4) {
-    return NextResponse.json({ error: 'Query must be at least 4 characters.' }, { status: 400 });
-  }
 
   try {
     const results = await fetchGeoapifyAutocomplete(
