@@ -13,9 +13,20 @@ import { SITE_URL } from '@/shared/constants/site';
 
 type CityParams = { city: string };
 
+type NextInspirationPageProps = globalThis.PageProps<'/inspiration/[city]'>;
+
+const resolveCityParams = (params: NextInspirationPageProps['params']): CityParams => {
+  if (!params) {
+    throw new Error('Missing inspiration route params');
+  }
+
+  // Next.js still types app router params as Promises; cast to the resolved shape.
+  return params as unknown as CityParams;
+};
+
 /* <head> metadata */
-export async function generateMetadata({ params }: { params: CityParams }): Promise<Metadata> {
-  const { city } = params;
+export async function generateMetadata(props: NextInspirationPageProps): Promise<Metadata> {
+  const { city } = resolveCityParams(props.params);
   const title = `${capitalize(city)} Inspiration`;
   const pageUrl = `${SITE_URL}/inspiration/${city}`;
 
@@ -78,8 +89,8 @@ export async function generateMetadata({ params }: { params: CityParams }): Prom
 }
 
 /* page component */
-export default async function InspirationPage({ params }: { params: CityParams }) {
-  const { city } = params;
+export default async function InspirationPage(props: NextInspirationPageProps) {
+  const { city } = resolveCityParams(props.params);
 
   if (!/^[a-z0-9-]+$/.test(city)) notFound();
 

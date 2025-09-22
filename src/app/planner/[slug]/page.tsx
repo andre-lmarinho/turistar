@@ -14,9 +14,35 @@ type PageProps = {
   searchParams: { dest?: string };
 };
 
-export default async function PlannerPlanPage({ params, searchParams }: PageProps) {
-  const { slug } = params;
-  const { dest } = searchParams;
+type NextPlannerPageProps = globalThis.PageProps<'/planner/[slug]'>;
+
+const resolvePlannerParams = (params: NextPlannerPageProps['params']): PageProps['params'] => {
+  if (!params) {
+    throw new Error('Missing planner route params');
+  }
+
+  // Next.js still types app router params as Promises; cast to the resolved shape.
+  return params as unknown as PageProps['params'];
+};
+
+const resolvePlannerSearchParams = (
+  searchParams: NextPlannerPageProps['searchParams']
+): PageProps['searchParams'] => {
+  if (!searchParams) {
+    return {};
+  }
+
+  const resolved = searchParams as unknown as Record<string, string | string[] | undefined>;
+  const rawDest = resolved.dest;
+
+  return {
+    dest: Array.isArray(rawDest) ? rawDest[0] : rawDest,
+  };
+};
+
+export default async function PlannerPlanPage(props: NextPlannerPageProps) {
+  const { slug } = resolvePlannerParams(props.params);
+  const { dest } = resolvePlannerSearchParams(props.searchParams);
 
   let destination = dest;
   let title: string | undefined;
