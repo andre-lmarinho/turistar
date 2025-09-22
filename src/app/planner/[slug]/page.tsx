@@ -10,13 +10,13 @@ import { supabaseServer } from '@/shared/lib/supabaseServer';
 import type { DayPlan } from '@/shared/types';
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ dest?: string }>;
+  params: { slug: string };
+  searchParams: { dest?: string };
 };
 
 export default async function PlannerPlanPage({ params, searchParams }: PageProps) {
-  const { slug } = await params;
-  const { dest } = await searchParams;
+  const { slug } = params;
+  const { dest } = searchParams;
 
   let destination = dest;
   let title: string | undefined;

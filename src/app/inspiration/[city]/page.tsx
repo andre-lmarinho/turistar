@@ -14,12 +14,8 @@ import { SITE_URL } from '@/shared/constants/site';
 type CityParams = { city: string };
 
 /* <head> metadata */
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<CityParams>;
-}): Promise<Metadata> {
-  const { city } = await params;
+export async function generateMetadata({ params }: { params: CityParams }): Promise<Metadata> {
+  const { city } = params;
   const title = `${capitalize(city)} Inspiration`;
   const pageUrl = `${SITE_URL}/inspiration/${city}`;
 
@@ -82,8 +78,8 @@ export async function generateMetadata({
 }
 
 /* page component */
-export default async function InspirationPage({ params }: { params: Promise<CityParams> }) {
-  const { city } = await params;
+export default async function InspirationPage({ params }: { params: CityParams }) {
+  const { city } = params;
 
   if (!/^[a-z0-9-]+$/.test(city)) notFound();
 
