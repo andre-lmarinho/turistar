@@ -9,3 +9,4 @@ export { useCardPopups } from './useCardPopups';
 export { useFlexibleRef } from './useFlexibleRef';
 export { useKeyBinds } from './useKeyBinds';
 export { useKeyListener } from './useKeyListener';
+export { useSyncedPointerCarousels } from './useSyncedPointerCarousels';
