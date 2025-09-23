@@ -1,61 +1,27 @@
 // src/features/home/components/feature-preview/FeaturePreview.tsx
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Image from 'next/image';
-import { scrollToChild } from '@/shared/utils';
-import { usePointerDragScroll } from '@/shared/hooks/ui';
+import { usePointerDragScroll, useSyncedPointerCarousels } from '@/features/home/hooks';
 import FeatureCard from './FeatureCard';
 import NavDots from './NavDots';
 import { features } from './data/features';
 import './styles.css';
 
 export default function FeaturePreview() {
-  const [activeIdx, setActiveIdx] = useState(0);
-
   const cardsRef = useRef<HTMLUListElement | null>(null);
   const imagesRef = useRef<HTMLUListElement | null>(null);
+  const carouselRefs = useMemo(() => [cardsRef, imagesRef], [cardsRef, imagesRef]);
 
-  const controllerRef = useRef<'cards' | 'images' | null>(null);
+  const {
+    activeIndex,
+    select: handleSelect,
+    scrollHandlers: [cardsHandlers, imagesHandlers],
+  } = useSyncedPointerCarousels(carouselRefs);
 
-  usePointerDragScroll(cardsRef, {
-    onDragStart: () => {
-      controllerRef.current = 'cards';
-    },
-    onScrollPreview: (i) => {
-      if (controllerRef.current === 'cards') setActiveIdx(i);
-    },
-    onRelease: (i) => {
-      controllerRef.current = null;
-      setActiveIdx(i);
-    },
-  });
-
-  usePointerDragScroll(imagesRef, {
-    onDragStart: () => {
-      controllerRef.current = 'images';
-    },
-    onScrollPreview: (i) => {
-      if (controllerRef.current === 'images') setActiveIdx(i);
-    },
-    onRelease: (i) => {
-      controllerRef.current = null;
-      setActiveIdx(i);
-    },
-  });
-
-  useEffect(() => {
-    const cards = cardsRef.current;
-    const imgs = imagesRef.current;
-    if (controllerRef.current !== 'cards' && cards) {
-      scrollToChild(cards, activeIdx, { smooth: true, disableSnap: true });
-    }
-    if (controllerRef.current !== 'images' && imgs) {
-      scrollToChild(imgs, activeIdx, { smooth: true, disableSnap: true });
-    }
-  }, [activeIdx]);
-
-  const handleSelect = (idx: number) => setActiveIdx(idx);
+  usePointerDragScroll(cardsRef, cardsHandlers);
+  usePointerDragScroll(imagesRef, imagesHandlers);
 
   return (
     <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
@@ -79,7 +45,7 @@ export default function FeaturePreview() {
               <li key={f.title}>
                 <FeatureCard
                   feature={f}
-                  isActive={idx === activeIdx}
+                  isActive={idx === activeIndex}
                   onClick={() => handleSelect(idx)}
                 />
               </li>
@@ -93,7 +59,7 @@ export default function FeaturePreview() {
           >
             {features.map((f, idx) => (
               <li key={f.title} className="min-w-full shrink-0 basis-full snap-start">
-                <FeatureCard feature={f} isActive={idx === activeIdx} asButton={false} />
+                <FeatureCard feature={f} isActive={idx === activeIndex} asButton={false} />
               </li>
             ))}
           </ul>
@@ -101,7 +67,7 @@ export default function FeaturePreview() {
           {/* Mobile: dots below the cards */}
           <NavDots
             total={features.length}
-            current={activeIdx}
+            current={activeIndex}
             onSelect={handleSelect}
             className="mt-4 justify-center md:hidden"
           />
@@ -112,7 +78,7 @@ export default function FeaturePreview() {
           {/* Desktop: dots above the image to the right */}
           <NavDots
             total={features.length}
-            current={activeIdx}
+            current={activeIndex}
             onSelect={handleSelect}
             className="mb-3 hidden justify-end md:flex"
           />
@@ -134,7 +100,7 @@ export default function FeaturePreview() {
                     width={1600}
                     height={900}
                     className="block h-auto w-full overflow-hidden rounded-xl object-contain"
-                    priority={idx === activeIdx}
+                    priority={idx === activeIndex}
                     draggable={false}
                     onDragStart={(e) => e.preventDefault()}
                   />
