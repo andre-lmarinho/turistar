@@ -86,6 +86,6 @@ Turistar is a single Next.js 15 application using the App Router with React 19 a
 
 - Keep documentation, types, and tests in sync with feature work—update relevant files in `docs/`
 - Split large features into reviewable commits and reference related tickets in descriptions
-- Commit messages must start with a Gitmoji followed by a capitalized summary (see `docs/CONTRIBUTING.md`)
+- Write clear, descriptive commit messages (see `docs/CONTRIBUTING.md`)
 - Ensure `npm run format`, `npm run lint`, `npm run typecheck`, and `npm run test` all pass before requesting review
 - Run `npm run check:vercel` when changes may impact deployment output to confirm preview builds succeed

@@ -21,7 +21,7 @@ Database Setup
 - Never expose service role keys in client bundles—keep privileged access in server-only utilities inside `src/shared/lib/`
 
 PR Requirements
-- Commit messages must follow the Gitmoji + capitalized summary format enforced by commitlint
+- Commit messages must be clear, concise, and written in English
 - Every PR must pass `npm run format`, `npm run lint`, `npm run typecheck`, and `npm run test`
 - Update relevant docs in `docs/` when behavior, APIs, or environment variables change
 - Keep Supabase types (`src/types/supabase.ts`) and planner schemas in sync when modifying database tables
