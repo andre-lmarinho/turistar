@@ -1,4 +1,4 @@
-// src/shared/hooks/ui/usePointerDragScroll.ts
+// src/features/home/hooks/usePointerDragScroll.ts
 
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';

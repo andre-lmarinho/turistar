@@ -1,4 +1,4 @@
-// src/shared/hooks/ui/useSyncedPointerCarousels.ts
+// src/features/home/hooks/useSyncedPointerCarousels.ts
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';

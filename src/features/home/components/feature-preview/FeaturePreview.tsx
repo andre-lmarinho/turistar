@@ -3,7 +3,7 @@
 
 import React, { useMemo, useRef } from 'react';
 import Image from 'next/image';
-import { usePointerDragScroll, useSyncedPointerCarousels } from '@/shared/hooks/ui';
+import { usePointerDragScroll, useSyncedPointerCarousels } from '@/features/home/hooks';
 import FeatureCard from './FeatureCard';
 import NavDots from './NavDots';
 import { features } from './data/features';
