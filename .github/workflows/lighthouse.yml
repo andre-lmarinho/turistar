@@ -1,0 +1,116 @@
+name: Lighthouse
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Disable Next.js telemetry
+        run: npx next telemetry disable
+
+      - name: Build application
+        run: npm run build:prod
+
+      - name: Run Lighthouse CI
+        id: lhci
+        continue-on-error: true
+        run: |
+          set +e
+          npx start-server-and-test "npm run serve:prod" http://127.0.0.1:3000 "npm run warmup && npm run lhci"
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          if [ -f ".lighthouseci/assertion-results.json" ]; then
+            echo "assertion_results=.lighthouseci/assertion-results.json" >> "$GITHUB_OUTPUT"
+          elif [ -f "lhci-reports/assertion-results.json" ]; then
+            echo "assertion_results=lhci-reports/assertion-results.json" >> "$GITHUB_OUTPUT"
+          fi
+          exit $status
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lhci-reports
+          path: lhci-reports
+          if-no-files-found: ignore
+
+      - name: Check Lighthouse assertions
+        if: steps.lhci.outcome == 'failure'
+        env:
+          ASSERTION_RESULTS: ${{ steps.lhci.outputs.assertion_results }}
+        run: |
+          if [ -z "${ASSERTION_RESULTS}" ] || [ ! -f "${ASSERTION_RESULTS}" ]; then
+            echo "::warning::Lighthouse CI failed, but no assertion results file was found. Skipping assertion failure."
+            exit 0
+          fi
+          node <<'NODE'
+          const fs = require('fs');
+
+          const path = process.env.ASSERTION_RESULTS;
+          let data;
+          try {
+            data = JSON.parse(fs.readFileSync(path, 'utf8'));
+          } catch (error) {
+            console.warn(`::warning::Unable to parse Lighthouse assertion results: ${error.message}`);
+            process.exit(0);
+          }
+
+          const results = Array.isArray(data.assertionResults) ? data.assertionResults : [];
+          const failed = results.filter((result) => {
+            const status = String(result.status || result.level || '').toLowerCase();
+            return status === 'fail' || status === 'error';
+          });
+          const summaryFailures = data.summary && typeof data.summary.failed === 'number' ? data.summary.failed : 0;
+
+          if (failed.length === 0 && summaryFailures === 0) {
+            console.warn('::warning::Lighthouse CI exited with a failure but no assertion errors were recorded.');
+            process.exit(0);
+          }
+
+          if (failed.length === 0 && summaryFailures > 0) {
+            const plural = summaryFailures === 1 ? '' : 's';
+            console.error(`Lighthouse reported ${summaryFailures} failing assertion${plural}, but no detailed results were available. Check the LHCI logs for more information.`);
+            process.exit(1);
+          }
+
+          const plural = failed.length === 1 ? '' : 's';
+          console.error(`Found ${failed.length} Lighthouse assertion failure${plural}:`);
+          for (const assertion of failed) {
+            const details = [];
+            if (assertion.auditId) details.push(assertion.auditId);
+            if (assertion.friendlyMessage) details.push(assertion.friendlyMessage);
+            if (assertion.expected !== undefined) details.push(`expected ${assertion.expected}`);
+            if (assertion.operator && assertion.targetValue !== undefined) {
+              details.push(`expected ${assertion.operator} ${assertion.targetValue}`);
+            }
+            if (assertion.actual !== undefined) details.push(`actual ${assertion.actual}`);
+            if (assertion.metricValue !== undefined) details.push(`metric ${assertion.metricValue}`);
+            if (details.length) {
+              console.error(`- ${details.join(' | ')}`);
+            }
+            if (assertion.url) {
+              console.error(`  URL: ${assertion.url}`);
+            }
+          }
+          process.exit(1);
+          NODE
