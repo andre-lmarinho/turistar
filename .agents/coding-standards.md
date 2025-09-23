@@ -63,4 +63,4 @@ const { data } = await supabase
 
 - All documentation, code comments, commit messages, and PR descriptions must be written in English.
 - Run `npm run format`, `npm run lint`, `npm run typecheck`, and `npm run test` before pushing changes.
-- Commit messages must follow the Gitmoji + capitalized summary convention enforced by commitlint.
+- Commit messages must be written in clear, descriptive English.

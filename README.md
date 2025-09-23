@@ -130,7 +130,7 @@ Prerequisites: Node.js v18+ and npm
 4. Run the linter via `npm run lint`.
 5. Run the type checker with `npm run typecheck`.
 6. Ensure all tests pass with `npm run test`.
-7. Follow the commit message style: start with a Gitmoji followed by a short, capitalized description in English (see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)).
+7. Write clear commit messages that summarize your changes (see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)).
 
 ---
 

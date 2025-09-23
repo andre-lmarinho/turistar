@@ -22,7 +22,6 @@
 - `npm run format:check` – Verify formatting without writing changes
 - `npm run lint` – Run ESLint with the shared config and auto-fixes
 - `npm run typecheck` – Run the TypeScript compiler in strict, no-emit mode
-- `npm run lint:commit` – Validate the most recent commit against Gitmoji commitlint rules
 
 ## Testing Commands
 
