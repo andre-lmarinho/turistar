@@ -2,28 +2,26 @@
 
 Thank you for taking the time to contribute to Turistar! This document outlines the development conventions for the project so that all contributions are consistent and easy to review.
 
-## Branches and Gitmoji Commits
+## Branches and Commit Messages
 
 - Use short branch names starting with a type, for example `feature/*`, `fix/*` or `chore/*`.
-- Commit messages must follow Gitmoji conventions: start with an appropriate Gitmoji followed by a short, capitalized description in English.
-  - Example: `:sparkles: Add date picker to planner`
-  - A commitlint hook enforces this format, and the CI pipeline may run `npm run lint:commit` to verify it on pull requests.
+- Write clear, present-tense commit messages that summarize the change.
 - Squash commits before merging so the main branch history stays tidy.
 
 ### Sample Commit Messages
 
-Examples of valid commit messages:
+Examples of helpful commit messages:
 
-- `:sparkles: Add date picker to planner`
-- `:bug: Fix timezone calculation`
-- `:memo: Update contribution guidelines`
+- `Add date picker to planner`
+- `Fix timezone calculation`
+- `Update contribution guidelines`
 
 ## Pull Requests
 
 - Use the pull request template.
   - Provide a short overview in Summary.
   - Copy the Summary text verbatim into Description and expand if needed.
-  - Commit suggestions after merging should also use Gitmoji.
+- Commit suggestions after merging should follow the same clarity guidelines.
 
 ## Linting and Formatting
 
