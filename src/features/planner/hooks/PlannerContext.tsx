@@ -1,11 +1,10 @@
 // src/features/planner/hooks/PlannerContext.tsx
 'use client';
 
-import React, { useEffect, useRef } from 'react';
 import { usePlanner, useSelectedActivity, usePlanDays } from '@/features/planner';
-import { useDebounce } from '@/shared/hooks/useDebounce';
 import { createContextProvider } from '@/shared/context/createContextProvider';
 import type { DayPlan } from '@/shared/types';
+import { usePersistedPlannerDays } from './usePersistedPlannerDays';
 
 type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;
 
@@ -27,70 +26,21 @@ function usePlannerContextValue({
     dest,
     persistDays,
   });
-  const hasSyncedRef = useRef(false);
-  const lastSerialized = useRef('');
-  const serialized = JSON.stringify(planner.days);
-  const debounced = useDebounce(serialized, 500);
-  const queueRef = useRef<DayPlan[] | null>(null);
-  const prevDaysRef = useRef(planner.days);
+  const { days, setDays } = usePersistedPlannerDays({
+    planner,
+    persistDays,
+    persist,
+    storedDays: storedDays as DayPlan[] | undefined,
+  });
 
-  useEffect(() => {
-    prevDaysRef.current = planner.days;
-  }, [planner.days]);
-
-  useEffect(() => {
-    if (storedDays !== undefined && !hasSyncedRef.current) {
-      hasSyncedRef.current = true;
-      lastSerialized.current = serialized;
-    }
-  }, [serialized, storedDays]);
-
-  const flush = React.useCallback(async () => {
-    if (persistDays.isPending || !queueRef.current) return;
-    const state = queueRef.current;
-    queueRef.current = null;
-    try {
-      await persistDays.mutateAsync(state);
-      lastSerialized.current = JSON.stringify(state);
-      prevDaysRef.current = state;
-    } catch {
-      planner.setDays(prevDaysRef.current);
-    } finally {
-      if (queueRef.current) flush();
-    }
-  }, [persistDays, planner]);
-
-  useEffect(() => {
-    if (!persist || !hasSyncedRef.current) return;
-    if (planner.days.length === 0) return;
-    if (debounced === lastSerialized.current) return;
-    queueRef.current = planner.days;
-    flush();
-  }, [debounced, planner.days, persist, persistDays.isPending, flush]);
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (queueRef.current) flush();
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && queueRef.current) flush();
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [flush]);
-
-  const selected = useSelectedActivity(planner.days, planner.setDays, {
+  const selected = useSelectedActivity(days, setDays, {
     addActivity: planner.addActivity,
     removeActivity: planner.removeActivity,
     updateActivity: planner.updateActivity,
     addBlankActivity: planner.addBlankActivity,
   });
 
-  return { ...planner, ...selected };
+  return { ...planner, days, setDays, ...selected };
 }
 
 const [PlannerProvider, usePlannerContext] = createContextProvider(
