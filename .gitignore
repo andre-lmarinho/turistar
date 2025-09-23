@@ -17,6 +17,7 @@ tsconfig.tsbuildinfo
 
 # Testing / E2E
 coverage/
+lhci-reports/
 playwright-report/
 test-results/
 cypress/videos/

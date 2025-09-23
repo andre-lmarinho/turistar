@@ -11,7 +11,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:prod": "next build",
     "start": "next start",
+    "serve:prod": "next start --hostname 0.0.0.0 --port 3000",
     "clean": "rimraf .next node_modules",
     "setup": "npm install && npm run format && npm run lint && npm run test",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" \"tests/**/*.{ts,tsx,js,jsx,json,css,md}\"",
@@ -22,6 +24,8 @@
     "test": "vitest run -c config/vitest.config.ts",
     "test:watch": "vitest --watch -c config/vitest.config.ts",
     "test:coverage": "vitest run --coverage -c config/vitest.config.ts",
+    "warmup": "bash ./scripts/warmup.sh",
+    "lhci": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json",
     "prepare": "husky install",
     "gen:types": "supabase gen types typescript --project-id YOUR_ID --schema public > src/types/supabase.ts",
     "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
