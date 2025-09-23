@@ -17,7 +17,35 @@ interface UsePersistedPlannerDaysParams {
   storedDays?: DayPlan[] | undefined;
 }
 
-/** Keeps planner days synced with Supabase, including debounce, rollback, and lifecycle flushes. */
+interface PersistQueue {
+  state: DayPlan[];
+  serialized: string;
+}
+
+interface PersistMeta {
+  ready: boolean;
+  lastSaved: string;
+  fallback: DayPlan[];
+}
+
+function cloneDays(days: DayPlan[]): DayPlan[] {
+  return days.map((day) => ({
+    ...day,
+    activities: day.activities.map((activity) => ({ ...activity })),
+  }));
+}
+
+function snapshotDays(days: DayPlan[]) {
+  const state = cloneDays(days);
+  return { state, serialized: JSON.stringify(state) };
+}
+
+/**
+ * Persists planner days with debounce, rollback, and lifecycle-aware flushing.
+ *
+ * The hook keeps a cloned snapshot of the last saved state so failed mutations can
+ * safely roll back even though the planner mutates nested arrays in place.
+ */
 export function usePersistedPlannerDays({
   planner,
   persistDays,
@@ -25,54 +53,62 @@ export function usePersistedPlannerDays({
   storedDays,
 }: UsePersistedPlannerDaysParams) {
   const { days, setDays } = planner;
-  const debounced = useDebounce(JSON.stringify(days), 500);
-  const stateRef = useRef<{
-    ready: boolean;
-    lastSaved: string;
-    queue: DayPlan[] | null;
-    fallback: DayPlan[];
-  }>({
-    ready: storedDays !== undefined,
-    lastSaved: storedDays !== undefined ? JSON.stringify(days) : '',
-    queue: null,
-    fallback: days,
-  });
+  const debouncedDays = useDebounce(days, 500);
+  const metaRef = useRef<PersistMeta | null>(null);
+  if (!metaRef.current) {
+    const snapshot = snapshotDays(storedDays ?? days);
+    metaRef.current = {
+      ready: storedDays !== undefined,
+      lastSaved: storedDays ? snapshot.serialized : '',
+      fallback: snapshot.state,
+    };
+  }
+  const queueRef = useRef<PersistQueue | null>(null);
+
   useEffect(() => {
-    stateRef.current.fallback = days;
-    if (!stateRef.current.ready && storedDays !== undefined) {
-      stateRef.current.ready = true;
-      stateRef.current.lastSaved = JSON.stringify(days);
-    }
-  }, [days, storedDays]);
+    if (storedDays === undefined) return;
+    const snapshot = snapshotDays(storedDays);
+    const meta = metaRef.current!;
+    meta.ready = true;
+    meta.lastSaved = snapshot.serialized;
+    meta.fallback = snapshot.state;
+  }, [storedDays]);
 
   const { mutateAsync, isPending } = persistDays;
   const flush = useCallback(async () => {
-    const queued = stateRef.current.queue;
+    const queued = queueRef.current;
+    const meta = metaRef.current!;
     if (!queued || isPending) return;
 
-    stateRef.current.queue = null;
+    queueRef.current = null;
     try {
-      await mutateAsync(queued);
-      stateRef.current.lastSaved = JSON.stringify(queued);
-      stateRef.current.fallback = queued;
+      await mutateAsync(queued.state);
+      meta.lastSaved = queued.serialized;
+      meta.fallback = queued.state;
     } catch {
-      setDays(stateRef.current.fallback);
+      setDays(cloneDays(meta.fallback));
     } finally {
-      if (stateRef.current.queue) void flush();
+      if (queueRef.current) void flush();
     }
   }, [isPending, mutateAsync, setDays]);
 
   useEffect(() => {
-    if (!persist || !stateRef.current.ready) return;
-    if (days.length === 0 || debounced === stateRef.current.lastSaved) return;
+    const meta = metaRef.current!;
+    if (!persist || !meta.ready) return;
+    if (debouncedDays.length === 0) return;
 
-    stateRef.current.queue = days;
+    const serialized = JSON.stringify(debouncedDays);
+    if (serialized === meta.lastSaved) return;
+
+    queueRef.current = { state: cloneDays(debouncedDays), serialized };
     void flush();
-  }, [days, debounced, flush, persist]);
+  }, [debouncedDays, flush, persist]);
 
   useEffect(() => {
+    if (!persist) return;
+
     const flushOnLifecycle = (event?: Event) => {
-      if (!stateRef.current.queue) return;
+      if (!queueRef.current) return;
       if (event?.type === 'visibilitychange' && document.visibilityState !== 'hidden') return;
       void flush();
     };
@@ -83,7 +119,7 @@ export function usePersistedPlannerDays({
       window.removeEventListener('beforeunload', flushOnLifecycle);
       document.removeEventListener('visibilitychange', flushOnLifecycle);
     };
-  }, [flush]);
+  }, [flush, persist]);
 
   return { days, setDays, flush };
 }
