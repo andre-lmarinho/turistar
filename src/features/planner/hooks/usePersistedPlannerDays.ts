@@ -1,0 +1,125 @@
+// src/features/planner/hooks/usePersistedPlannerDays.ts
+'use client';
+import { useCallback, useEffect, useRef } from 'react';
+import { useDebounce } from '@/shared/hooks/useDebounce';
+import type { DayPlan } from '@/shared/types';
+import type { usePlanner } from './usePlanner';
+
+interface PersistDaysMutation {
+  mutateAsync: (state: DayPlan[]) => Promise<unknown>;
+  isPending: boolean;
+}
+
+interface UsePersistedPlannerDaysParams {
+  planner: Pick<ReturnType<typeof usePlanner>, 'days' | 'setDays'>;
+  persistDays: PersistDaysMutation;
+  persist?: boolean;
+  storedDays?: DayPlan[] | undefined;
+}
+
+interface PersistQueue {
+  state: DayPlan[];
+  serialized: string;
+}
+
+interface PersistMeta {
+  ready: boolean;
+  lastSaved: string;
+  fallback: DayPlan[];
+}
+
+function cloneDays(days: DayPlan[]): DayPlan[] {
+  return days.map((day) => ({
+    ...day,
+    activities: day.activities.map((activity) => ({ ...activity })),
+  }));
+}
+
+function snapshotDays(days: DayPlan[]) {
+  const state = cloneDays(days);
+  return { state, serialized: JSON.stringify(state) };
+}
+
+/**
+ * Persists planner days with debounce, rollback, and lifecycle-aware flushing.
+ *
+ * The hook keeps a cloned snapshot of the last saved state so failed mutations can
+ * safely roll back even though the planner mutates nested arrays in place.
+ */
+export function usePersistedPlannerDays({
+  planner,
+  persistDays,
+  persist = true,
+  storedDays,
+}: UsePersistedPlannerDaysParams) {
+  const { days, setDays } = planner;
+  const debouncedDays = useDebounce(days, 500);
+  const metaRef = useRef<PersistMeta | null>(null);
+  if (!metaRef.current) {
+    const snapshot = snapshotDays(storedDays ?? days);
+    metaRef.current = {
+      ready: storedDays !== undefined,
+      lastSaved: storedDays ? snapshot.serialized : '',
+      fallback: snapshot.state,
+    };
+  }
+  const queueRef = useRef<PersistQueue | null>(null);
+
+  useEffect(() => {
+    if (storedDays === undefined) return;
+    const snapshot = snapshotDays(storedDays);
+    const meta = metaRef.current!;
+    meta.ready = true;
+    meta.lastSaved = snapshot.serialized;
+    meta.fallback = snapshot.state;
+  }, [storedDays]);
+
+  const { mutateAsync, isPending } = persistDays;
+  const flush = useCallback(async () => {
+    const queued = queueRef.current;
+    const meta = metaRef.current!;
+    if (!queued || isPending) return;
+
+    queueRef.current = null;
+    try {
+      await mutateAsync(queued.state);
+      meta.lastSaved = queued.serialized;
+      meta.fallback = queued.state;
+    } catch {
+      setDays(cloneDays(meta.fallback));
+    } finally {
+      if (queueRef.current) void flush();
+    }
+  }, [isPending, mutateAsync, setDays]);
+
+  useEffect(() => {
+    const meta = metaRef.current!;
+    if (!persist || !meta.ready) return;
+    if (debouncedDays.length === 0) return;
+
+    const serialized = JSON.stringify(debouncedDays);
+    if (serialized === meta.lastSaved) return;
+
+    queueRef.current = { state: cloneDays(debouncedDays), serialized };
+    void flush();
+  }, [debouncedDays, flush, persist]);
+
+  useEffect(() => {
+    if (!persist) return;
+
+    const flushOnLifecycle = (event?: Event) => {
+      if (!queueRef.current) return;
+      if (event?.type === 'visibilitychange' && document.visibilityState !== 'hidden') return;
+      void flush();
+    };
+
+    window.addEventListener('beforeunload', flushOnLifecycle);
+    document.addEventListener('visibilitychange', flushOnLifecycle);
+    return () => {
+      window.removeEventListener('beforeunload', flushOnLifecycle);
+      document.removeEventListener('visibilitychange', flushOnLifecycle);
+    };
+  }, [flush, persist]);
+
+  return { days, setDays, flush };
+}

@@ -68,7 +68,7 @@ vi.mock('@/features/planner/hooks/usePlanDaysSupabase', () => ({
   usePlanDays: () => ({ data: storedDays, persistDays }),
 }));
 vi.mock('@/shared/hooks/useDebounce', () => ({
-  useDebounce: (v: string) => v,
+  useDebounce: <T,>(value: T) => value,
 }));
 // Mock usePlanDays hook state
 let persistDays: { mutateAsync: Mock<() => Promise<unknown>>; isPending: boolean } = {
