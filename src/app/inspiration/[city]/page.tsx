@@ -3,16 +3,19 @@ export const dynamic = 'force-dynamic';
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-import InspirationPlanner from '../InspirationPlanner';
 import {
   buildDaysFromInspirationData,
   type InspirationData,
 } from '@/features/planner/services/buildDaysFromInspirationData';
 import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
+
+const PlannerClient = dynamic(() => import('@/app/planner/PlannerClient'), {
+  ssr: false,
+});
 
 type CityParams = { city: string };
 
@@ -103,12 +106,14 @@ export default async function InspirationPage({ params }: { params: Promise<City
     }));
 
     return (
-      <InspirationPlanner
+      <PlannerClient
         initialDays={initialDays}
         dest={city}
         planId={`${city}-inspiration`}
         initialBudget={initialBudget}
         initialEntries={initialEntries}
+        hideOnboarding
+        persist={false}
       />
     );
   } catch {

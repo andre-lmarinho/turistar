@@ -9,12 +9,12 @@ import BudgetPanel from '@/app/planner/BudgetPanel';
 const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 
 import ActivityModal from '@/features/planner/components/modal/ActivityModal';
-import PlannerControls from '@/features/planner/components/PlannerControls';
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
 import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
 import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
-import { DateRangePickerIcon } from '@/shared/ui/DatePicker';
+import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
+import ModeToggleButton from '@/shared/ui/button-especials/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
@@ -108,7 +108,14 @@ function PlannerClientInner({
           </div>
         </div>
 
-        <PlannerControls mode={mode} onModeChange={setMode} />
+        <div className="order-3 mx-auto flex w-full max-w-screen-xl items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
+          <ModeToggleButton value={mode} onChange={setMode} />
+          <DateRangePicker
+            value={currentRange}
+            onChange={handleRangeChange}
+            className="hidden md:flex"
+          />
+        </div>
 
         {/* BOARD / MAP / BUDGET */}
         <div className="relative order-2 mx-auto w-full max-w-screen-xl flex-1 overflow-visible md:order-3">

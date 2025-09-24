@@ -28,19 +28,6 @@ vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
   default: () => null,
 }));
 
-vi.mock('@/features/planner/components/PlannerControls', async () => {
-  const React = await import('react');
-  const ModeToggleButton = (await import('@/shared/ui/button-especials/ModeToggleButton')).default;
-  return {
-    __esModule: true,
-    default: ({ mode, onModeChange }: { mode: Mode; onModeChange: (m: Mode) => void }) => (
-      <div data-testid="planner-controls">
-        <ModeToggleButton value={mode} onChange={onModeChange} />
-      </div>
-    ),
-  };
-});
-
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,

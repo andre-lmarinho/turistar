@@ -80,11 +80,6 @@ vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
   default: () => null,
 }));
 
-vi.mock('@/features/planner/components/PlannerControls', () => ({
-  __esModule: true,
-  default: () => <div />,
-}));
-
 vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),

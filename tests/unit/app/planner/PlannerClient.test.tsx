@@ -75,11 +75,6 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/components/PlannerControls', () => ({
-  __esModule: true,
-  default: () => <div data-testid="planner-controls" />,
-}));
-
 vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
   __esModule: true,
   default: () => null,

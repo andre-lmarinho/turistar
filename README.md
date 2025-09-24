@@ -76,10 +76,6 @@ A Map View lets you preview your itinerary locations on an interactive map.
   - `/data`: Local JSON used for demo itineraries
 - `/public`: Static assets served directly
 
-```ts
-import PlannerControls from '@/features/planner/components/PlannerControls';
-```
-
 See [docs/DEVELOPER_GUIDE.md#routing](docs/DEVELOPER_GUIDE.md#routing) for a breakdown of the `src/app` directory.
 
 ---

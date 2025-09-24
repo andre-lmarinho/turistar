@@ -11,10 +11,6 @@ This document outlines the structure of Turistar and highlights important design
 - `src/data`: Inspiration JSON files for sample itineraries.
 - `public`: Static assets and preview images served directly by Next.js.
 
-```ts
-import PlannerControls from '@/features/planner/components/PlannerControls';
-```
-
 For deeper feature details see the source files within `src/features`.
 
 ## Key Design Decisions

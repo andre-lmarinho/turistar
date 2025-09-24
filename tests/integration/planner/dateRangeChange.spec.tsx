@@ -152,23 +152,6 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
   return { __esModule: true, PlannerProvider, usePlannerContext };
 });
 
-vi.mock('@/features/planner/components/PlannerControls', async () => {
-  const React = await import('react');
-  const { DateRangePicker } = await import('@/shared/ui/DatePicker');
-  const planner = await import('@/features/planner/hooks/PlannerContext');
-  return {
-    __esModule: true,
-    default: function PlannerControlsMock() {
-      const { currentRange, handleRangeChange } = planner.usePlannerContext();
-      return (
-        <div>
-          <DateRangePicker value={currentRange} onChange={handleRangeChange} />
-        </div>
-      );
-    },
-  };
-});
-
 // Onboarding mocks
 vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
   __esModule: true,
