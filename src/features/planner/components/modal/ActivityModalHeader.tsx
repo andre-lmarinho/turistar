@@ -6,9 +6,10 @@ import type { Activity, DayPlan } from '@/shared/types';
 import Image from 'next/image';
 import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
 import { ChevronDown, Trash2, X, Palette } from 'lucide-react';
-import { isTouchDevice } from '@/shared/utils';
+import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 
-import { Button, IconButton } from '@/shared/ui';
+import { Button } from '@/shared/ui/button';
+import IconButton from '@/shared/ui/IconButton';
 
 /**
  * Color strip shown at the very top of ActivityModal.

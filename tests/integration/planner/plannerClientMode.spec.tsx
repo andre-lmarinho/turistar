@@ -6,21 +6,22 @@ import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/shared/ui', async () => {
-  const actual = await vi.importActual<typeof import('@/shared/ui')>('@/shared/ui');
-  return {
-    ...actual,
-    ModeToggleButton: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
-      <div>
-        <button onClick={() => onChange('planner')}>Planner</button>
-        <button onClick={() => onChange('map')}>Map</button>
-        <button onClick={() => onChange('budget')}>Budget</button>
-      </div>
-    ),
-    DateRangePicker: () => <div />,
-    DateRangePickerIcon: () => <div />,
-  };
-});
+vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+  __esModule: true,
+  default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
+    <div>
+      <button onClick={() => onChange('planner')}>Planner</button>
+      <button onClick={() => onChange('map')}>Map</button>
+      <button onClick={() => onChange('budget')}>Budget</button>
+    </div>
+  ),
+}));
+
+vi.mock('@/shared/ui/DatePicker', () => ({
+  __esModule: true,
+  DateRangePicker: () => <div />, // not used
+  DateRangePickerIcon: () => <div />, // not used
+}));
 
 vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
   __esModule: true,
@@ -29,7 +30,7 @@ vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
 
 vi.mock('@/features/planner/components/PlannerControls', async () => {
   const React = await import('react');
-  const { ModeToggleButton } = await import('@/shared/ui');
+  const ModeToggleButton = (await import('@/shared/ui/button-especials/ModeToggleButton')).default;
   return {
     __esModule: true,
     default: ({ mode, onModeChange }: { mode: Mode; onModeChange: (m: Mode) => void }) => (

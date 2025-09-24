@@ -4,8 +4,10 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
 
-import { Input, CloseButton, Modal } from '@/shared/ui';
-import { normalizeAmount } from '@/shared/utils';
+import { Input } from '@/shared/ui/input';
+import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import Modal from '@/shared/ui/Modal';
+import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/shared/types';
 
 interface ActivitiesBudgetProps {

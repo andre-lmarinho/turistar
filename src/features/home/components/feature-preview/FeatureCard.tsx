@@ -1,6 +1,6 @@
 // src/features/home/components/feature-preview/FeatureCard.tsx
 
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 import type { Feature } from './types';
 
 export default function FeatureCard({

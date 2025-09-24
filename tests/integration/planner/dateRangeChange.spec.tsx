@@ -27,8 +27,8 @@ const updatedBounds: Bounds = { sw: [2, 2], ne: [3, 3] };
 
 
 // Mocks for shared UI components
-vi.mock('@/shared/ui', () => ({
-  ModeToggleButton: () => <div />, // not used in this test
+vi.mock('@/shared/ui/DatePicker', () => ({
+  __esModule: true,
   DateRangePicker: ({
     onChange,
   }: {
@@ -43,7 +43,17 @@ vi.mock('@/shared/ui', () => ({
     </button>
   ),
   DateRangePickerIcon: () => <div />,
+}));
+
+vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+  __esModule: true,
+  default: () => <div />, // not used in this test
+}));
+
+vi.mock('@/shared/ui/button', () => ({
+  __esModule: true,
   Button: (props: React.ComponentProps<'button'>) => <button {...props} />,
+  buttonVariants: () => '',
 }));
 
 let setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;
@@ -144,7 +154,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 
 vi.mock('@/features/planner/components/PlannerControls', async () => {
   const React = await import('react');
-  const { DateRangePicker } = await import('@/shared/ui');
+  const { DateRangePicker } = await import('@/shared/ui/DatePicker');
   const planner = await import('@/features/planner/hooks/PlannerContext');
   return {
     __esModule: true,

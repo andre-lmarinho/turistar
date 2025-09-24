@@ -3,7 +3,8 @@
 
 import React from 'react';
 import type { Activity, DayPlan } from '@/shared/types';
-import { CardColorsPopup, DayPickerPopup } from '@/shared/ui';
+import CardColorsPopup from '@/shared/ui/popups/CardColorsPopup';
+import DayPickerPopup from '@/shared/ui/popups/DayPickerPopup';
 import { useCardPopups } from './useCardPopups';
 
 interface Props {

@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Info } from 'lucide-react';
-import { CategoryKey, CATEGORIES, CHART_COLORS, BUDGET_INFO } from '@/shared/constants';
-import { InfoPopup } from '@/shared/ui';
+import { CategoryKey, CATEGORIES, CHART_COLORS } from '@/shared/constants/budget';
+import { BUDGET_INFO } from '@/shared/constants/budgetInfo';
+import InfoPopup from '@/shared/ui/popups/InfoPopup';
 
 interface Props {
   category: CategoryKey;

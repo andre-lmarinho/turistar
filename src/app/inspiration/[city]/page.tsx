@@ -11,7 +11,7 @@ import {
   buildDaysFromInspirationData,
   type InspirationData,
 } from '@/features/planner/services/buildDaysFromInspirationData';
-import { capitalize } from '@/shared/utils';
+import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
 
 type CityParams = { city: string };

@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
-import { ONBOARDING_STEPS } from '@/shared/constants';
+import { ONBOARDING_STEPS } from '@/shared/constants/onboarding';
 import { vi } from 'vitest';
 import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
 

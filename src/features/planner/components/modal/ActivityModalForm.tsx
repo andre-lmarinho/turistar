@@ -6,8 +6,10 @@ import { AlignLeft, MapPin } from 'lucide-react';
 import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/shared/types';
-import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants';
-import { UpdateButton, Input, LocationSearchInput } from '@/shared/ui';
+import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
+import UpdateButton from '@/shared/ui/button-especials/UpdateButton';
+import { Input } from '@/shared/ui/input';
+import LocationSearchInput from '@/shared/ui/LocationSearchInput';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface ActivityModalFormProps {

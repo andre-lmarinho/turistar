@@ -1,6 +1,6 @@
 // src/features/home/components/feature-preview/NavDots.tsx
 
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 
 export default function NavDots({
   total,

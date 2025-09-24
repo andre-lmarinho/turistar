@@ -3,13 +3,14 @@
 
 import React, { useState } from 'react';
 import { Info } from 'lucide-react';
-import { BUDGET_INFO } from '@/shared/constants';
+import { BUDGET_INFO } from '@/shared/constants/budgetInfo';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
 import ActivitiesBudgetPopup from '@/features/planner/components/budget/activities/ActivitiesBudget';
-import { InfoPopup, Button } from '@/shared/ui';
+import { Button } from '@/shared/ui/button';
+import InfoPopup from '@/shared/ui/popups/InfoPopup';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 interface Props {

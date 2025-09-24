@@ -5,11 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan } from '@/shared/types';
-import { Button } from '@/shared/ui';
+import { Button } from '@/shared/ui/button';
 import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 
 interface Props {
   activity: Activity & { dayId?: string };

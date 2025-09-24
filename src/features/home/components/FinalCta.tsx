@@ -3,7 +3,9 @@
 
 import { useState } from 'react';
 import PlanForm from './PlanForm';
-import { Button, CloseButton, Modal } from '@/shared/ui';
+import { Button } from '@/shared/ui/button';
+import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import Modal from '@/shared/ui/Modal';
 
 export default function FinalCta() {
   const [open, setOpen] = useState(false);

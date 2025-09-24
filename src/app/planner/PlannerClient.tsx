@@ -14,7 +14,7 @@ import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/Pla
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
 import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
 import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
-import { DateRangePickerIcon } from '@/shared/ui';
+import { DateRangePickerIcon } from '@/shared/ui/DatePicker';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';

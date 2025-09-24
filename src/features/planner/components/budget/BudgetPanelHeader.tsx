@@ -3,11 +3,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info, DollarSign } from 'lucide-react';
-import { CATEGORIES, BUDGET_INFO } from '@/shared/constants';
+import { CATEGORIES } from '@/shared/constants/budget';
+import { BUDGET_INFO } from '@/shared/constants/budgetInfo';
 import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import { InfoPopup, Input } from '@/shared/ui';
-import { normalizeAmount } from '@/shared/utils';
+import InfoPopup from '@/shared/ui/popups/InfoPopup';
+import { Input } from '@/shared/ui/input';
+import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 
 interface SummaryValueProps {
   amount: number;

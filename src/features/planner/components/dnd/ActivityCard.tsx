@@ -2,14 +2,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { isTouchDevice } from '@/shared/utils';
+import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
 import { useCardColors } from '@/shared/hooks/ui/useCardColors';
 import type { Activity, DayPlan } from '@/shared/types';
 import ActivityCardBase from './ActivityCardBase';
 import ActivityCardEditing from './ActivityCardEditing';
 import ActivityCardEditorOverlay from './ActivityCardEditorOverlay';
-import { IconButton } from '@/shared/ui';
+import IconButton from '@/shared/ui/IconButton';
 import { Pencil } from 'lucide-react';
 
 export interface ActivityCardProps {

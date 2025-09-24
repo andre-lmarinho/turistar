@@ -3,7 +3,8 @@
 
 import React from 'react';
 import type { DayPlan } from '@/shared/types';
-import { CloseButton, Popup } from '@/shared/ui';
+import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import Popup from '@/shared/ui/popups/Popup';
 
 interface Props {
   days: DayPlan[];

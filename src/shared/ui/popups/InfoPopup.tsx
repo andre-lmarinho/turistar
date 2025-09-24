@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Popover, PopoverTrigger, PopoverContent } from '@/shared/ui';
+import { Popover, PopoverTrigger, PopoverContent } from '../popover';
 
 interface InfoPopupProps {
   content: React.ReactNode;

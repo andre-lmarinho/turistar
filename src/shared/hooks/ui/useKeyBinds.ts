@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { KEY_BINDS } from '@/shared/constants';
+import { KEY_BINDS } from '@/shared/constants/keyBinds';
 import { useKeyListener } from './useKeyListener';
 
 interface KeyBindOptions {

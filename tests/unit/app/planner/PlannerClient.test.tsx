@@ -117,14 +117,20 @@ vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
   default: onboardingMocks.OnboardingModal,
 }));
 
-vi.mock('@/shared/ui', async () => {
-  const actual = await vi.importActual<typeof import('@/shared/ui')>('@/shared/ui');
+vi.mock('@/shared/ui/DatePicker', async () => {
+  const actual = await vi.importActual<typeof import('@/shared/ui/DatePicker')>(
+    '@/shared/ui/DatePicker'
+  );
   return {
     ...actual,
     DateRangePickerIcon: () => <div data-testid="date-picker" />,
-    ModeToggleButton: () => <div data-testid="mode-toggle" />,
   };
 });
+
+vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+  __esModule: true,
+  default: () => <div data-testid="mode-toggle" />,
+}));
 
 beforeEach(() => {
   localStorage.clear();
