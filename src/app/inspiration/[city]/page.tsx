@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import dynamic from 'next/dynamic';
+import loadDynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
@@ -13,9 +13,12 @@ import {
 import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
 
-const PlannerClient = dynamic(() => import('@/app/planner/PlannerClient'), {
-  ssr: false,
-});
+const PlannerClient = loadDynamic(
+  () => import('@/app/planner/PlannerClient'),
+  {
+    ssr: false,
+  },
+);
 
 type CityParams = { city: string };
 
