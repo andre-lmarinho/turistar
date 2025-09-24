@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic';
 
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import loadDynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
@@ -13,12 +12,7 @@ import {
 import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
 
-const PlannerClient = loadDynamic(
-  () => import('@/app/planner/PlannerClient'),
-  {
-    ssr: false,
-  },
-);
+import PlannerClientWrapper from './PlannerClientWrapper';
 
 type CityParams = { city: string };
 
@@ -109,7 +103,7 @@ export default async function InspirationPage({ params }: { params: Promise<City
     }));
 
     return (
-      <PlannerClient
+      <PlannerClientWrapper
         initialDays={initialDays}
         dest={city}
         planId={`${city}-inspiration`}

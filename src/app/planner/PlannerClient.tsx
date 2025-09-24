@@ -31,7 +31,7 @@ import { motion } from 'framer-motion';
 type Mode = 'planner' | 'map' | 'budget';
 const modeOrder: Mode[] = ['planner', 'map', 'budget'];
 
-interface PlannerClientProps {
+export interface PlannerClientProps {
   initialDays?: DayPlan[];
   planId?: string;
   slug?: string;
