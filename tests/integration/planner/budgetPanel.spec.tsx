@@ -13,9 +13,9 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
 }));
 
 vi.mock('@/features/planner/hooks/PlannerContext', async () => {
-  const actual = await vi.importActual<
-    typeof import('@/features/planner/hooks/PlannerContext')
-  >('@/features/planner/hooks/PlannerContext');
+  const actual = await vi.importActual<typeof import('@/features/planner/hooks/PlannerContext')>(
+    '@/features/planner/hooks/PlannerContext'
+  );
   return {
     ...actual,
     PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,

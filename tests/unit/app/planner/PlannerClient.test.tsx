@@ -29,7 +29,7 @@ const onboardingMocks = vi.hoisted(() => {
         showOnboarding,
         setShowOnboarding,
       }),
-      [showOnboarding, setShowOnboarding],
+      [showOnboarding, setShowOnboarding]
     );
 
     return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
@@ -113,9 +113,8 @@ vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
 }));
 
 vi.mock('@/shared/ui/DatePicker', async () => {
-  const actual = await vi.importActual<typeof import('@/shared/ui/DatePicker')>(
-    '@/shared/ui/DatePicker'
-  );
+  const actual =
+    await vi.importActual<typeof import('@/shared/ui/DatePicker')>('@/shared/ui/DatePicker');
   return {
     ...actual,
     DateRangePickerIcon: () => <div data-testid="date-picker" />,

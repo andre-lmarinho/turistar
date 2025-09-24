@@ -26,7 +26,7 @@ const onboardingMocks = vi.hoisted(() => {
         showOnboarding,
         setShowOnboarding,
       }),
-      [showOnboarding, setShowOnboarding],
+      [showOnboarding, setShowOnboarding]
     );
 
     return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;

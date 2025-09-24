@@ -25,7 +25,6 @@ const updatedDays: DayPlan[] = [{ id: 'd2', label: 'Day 2', activities: [] }];
 const initialBounds: Bounds = { sw: [0, 0], ne: [1, 1] };
 const updatedBounds: Bounds = { sw: [2, 2], ne: [3, 3] };
 
-
 // Mocks for shared UI components
 vi.mock('@/shared/ui/DatePicker', () => ({
   __esModule: true,
