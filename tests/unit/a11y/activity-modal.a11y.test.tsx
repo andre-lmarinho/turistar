@@ -7,9 +7,18 @@ import { vi } from 'vitest';
 
 const { closeSpy } = vi.hoisted(() => ({ closeSpy: vi.fn() }));
 
-vi.mock('@/features/planner', () => ({
-  ActivityModalHeader: () => <div data-testid="activity-modal-header" />,
-  ActivityModalForm: () => <form aria-label="Activity form" />,
+vi.mock('@/features/planner/components/modal/ActivityModalHeader', () => ({
+  __esModule: true,
+  default: () => <div data-testid="activity-modal-header" />,
+}));
+
+vi.mock('@/features/planner/components/modal/ActivityModalForm', () => ({
+  __esModule: true,
+  default: () => <form aria-label="Activity form" />,
+}));
+
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
   usePlannerContext: () => ({
     selectedActivity: {
       id: 'a1',

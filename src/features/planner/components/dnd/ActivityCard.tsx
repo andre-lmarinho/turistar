@@ -3,14 +3,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { isTouchDevice } from '@/shared/utils';
-import { useActivityCardEditor } from '@/features/planner';
+import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
 import { useCardColors } from '@/shared/hooks/ui/useCardColors';
 import type { Activity, DayPlan } from '@/shared/types';
-import {
-  ActivityCardBase,
-  ActivityCardEditing,
-  ActivityCardEditorOverlay,
-} from '@/features/planner';
+import ActivityCardBase from './ActivityCardBase';
+import ActivityCardEditing from './ActivityCardEditing';
+import ActivityCardEditorOverlay from './ActivityCardEditorOverlay';
 import { IconButton } from '@/shared/ui';
 import { Pencil } from 'lucide-react';
 

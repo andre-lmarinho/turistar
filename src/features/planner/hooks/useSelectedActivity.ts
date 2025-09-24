@@ -3,7 +3,8 @@
 
 import { useState } from 'react';
 import type { Activity, DayPlan } from '@/shared/types';
-import { moveActivityToDay, moveActivityPosition } from '@/features/planner/services';
+import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
+import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
 
 /**
  * Manages the currently selected activity for editing in the planner.

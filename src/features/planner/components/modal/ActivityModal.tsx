@@ -2,7 +2,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ActivityModalHeader, ActivityModalForm, usePlannerContext } from '@/features/planner';
+import ActivityModalHeader from '@/features/planner/components/modal/ActivityModalHeader';
+import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
+import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { Modal } from '@/shared/ui';
 import type { Activity } from '@/shared/types';
 

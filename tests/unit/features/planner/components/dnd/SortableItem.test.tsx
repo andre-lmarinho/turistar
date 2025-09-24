@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { DndContext } from '@dnd-kit/core';
-import { SortableItem } from '@/features/planner';
+import SortableItem from '@/features/planner/components/dnd/SortableItem';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/shared/types';
 

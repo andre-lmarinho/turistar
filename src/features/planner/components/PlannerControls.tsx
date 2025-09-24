@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { DateRangePicker, ModeToggleButton } from '@/shared/ui';
-import { usePlannerContext } from '@/features/planner';
+import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 type Mode = 'planner' | 'map' | 'budget';
 

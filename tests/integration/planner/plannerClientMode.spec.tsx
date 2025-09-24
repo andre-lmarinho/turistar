@@ -22,22 +22,17 @@ vi.mock('@/shared/ui', async () => {
   };
 });
 
-vi.mock('@/features/planner', async () => {
+vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/planner/components/PlannerControls', async () => {
   const React = await import('react');
   const { ModeToggleButton } = await import('@/shared/ui');
   return {
-    PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    usePlannerContext: () => ({
-      planId: 'p1',
-      dest: 'rome',
-      days: [],
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-    }),
-    usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
-    ActivityModal: () => null,
-    PlannerControls: ({ mode, onModeChange }: { mode: Mode; onModeChange: (m: Mode) => void }) => (
+    __esModule: true,
+    default: ({ mode, onModeChange }: { mode: Mode; onModeChange: (m: Mode) => void }) => (
       <div data-testid="planner-controls">
         <ModeToggleButton value={mode} onChange={onModeChange} />
       </div>
@@ -45,9 +40,45 @@ vi.mock('@/features/planner', async () => {
   };
 });
 
-vi.mock('@/features/onboarding', () => ({
-  OnboardingModal: () => null,
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
+  PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  usePlannerContext: () => ({
+    planId: 'p1',
+    dest: 'rome',
+    days: [],
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    sensors: undefined,
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    changeColor: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    selectedActivity: null,
+  }),
+}));
+
+vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+  __esModule: true,
+  usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
+}));
+
+vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+  __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
 vi.mock('@/app/planner/PlannerBoard', () => ({

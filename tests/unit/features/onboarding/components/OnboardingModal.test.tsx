@@ -5,7 +5,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
 import { ONBOARDING_STEPS } from '@/shared/constants';
 import { vi } from 'vitest';
-import { OnboardingProvider } from '@/features/onboarding';
+import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
 
 const mockSetShowOnboarding = vi.fn();
 vi.mock('@/features/onboarding/hooks/useOnboardingCheck', () => ({

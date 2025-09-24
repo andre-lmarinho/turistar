@@ -12,8 +12,10 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
+vi.mock('@/features/planner/hooks/PlannerContext', async () => {
+  const actual = await vi.importActual<
+    typeof import('@/features/planner/hooks/PlannerContext')
+  >('@/features/planner/hooks/PlannerContext');
   return {
     ...actual,
     PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -21,11 +23,26 @@ vi.mock('@/features/planner', async () => {
       planId: 'p1',
       days: mockDays,
       updateActivity: vi.fn(),
+      setSelectedActivity: vi.fn(),
+      changeDay: vi.fn(),
+      changePosition: vi.fn(),
+      changeColor: vi.fn(),
+      removeActivity: vi.fn(),
+      addBlankAndSelect: vi.fn(),
+      sensors: undefined,
+      collisionDetection: vi.fn(),
+      handleDragStart: vi.fn(),
+      handleDragOver: vi.fn(),
+      handleDragEnd: vi.fn(),
+      selectedActivity: null,
+      setDays: vi.fn(),
+      currentRange: undefined,
+      handleRangeChange: vi.fn(),
     }),
   };
 });
 
-import { PlannerProvider } from '@/features/planner';
+import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 
 describe('budget panel', () => {

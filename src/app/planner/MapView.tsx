@@ -4,7 +4,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import { usePlannerContext } from '@/features/planner';
+import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"

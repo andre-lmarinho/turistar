@@ -4,7 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import { Info, DollarSign } from 'lucide-react';
 import { CATEGORIES, BUDGET_INFO } from '@/shared/constants';
-import { CategoryProgressBar, useBudgetContext } from '@/features/planner';
+import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
+import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import { InfoPopup, Input } from '@/shared/ui';
 import { normalizeAmount } from '@/shared/utils';
 

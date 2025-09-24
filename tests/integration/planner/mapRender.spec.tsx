@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/app/planner/MapView';
-import { PlannerProvider } from '@/features/planner';
+import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/shared/types';
 
 const map = { fitBounds: vi.fn() };
@@ -44,7 +44,8 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-vi.mock('@/features/planner', () => ({
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
     planId: 'p1',
@@ -52,6 +53,21 @@ vi.mock('@/features/planner', () => ({
     days: mockDays,
     destCoords: mockDestCoords,
     setSelectedActivity,
+    setDays: vi.fn(),
+    sensors: undefined,
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    changeColor: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    selectedActivity: null,
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
   }),
 }));
 

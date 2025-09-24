@@ -2,7 +2,8 @@
 'use client';
 
 import React from 'react';
-import { OnboardingCarousel, useOnboardingContext } from '@/features/onboarding';
+import OnboardingCarousel from '@/features/onboarding/components/OnboardingCarousel';
+import { useOnboardingContext } from '@/features/onboarding/hooks/OnboardingContext';
 import { CloseButton, Modal } from '@/shared/ui';
 
 export default function OnboardingModal() {

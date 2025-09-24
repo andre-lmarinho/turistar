@@ -7,44 +7,93 @@ import PlannerClient from '@/app/planner/PlannerClient';
 
 let mockPlanId = 'plan1';
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
-  return {
-    ...actual,
-    usePlanner: () => ({
-      planId: mockPlanId,
-      dest: 'rome',
-      days: [{ id: 'd1', label: 'Day 1', activities: [] }],
-      setDays: vi.fn(),
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      activeId: null,
-      sensors: [],
-      collisionDetection: vi.fn(),
-      handleDragStart: vi.fn(),
-      handleDragOver: vi.fn(),
-      handleDragEnd: vi.fn(),
-      addActivity: vi.fn(),
-      removeActivity: vi.fn(),
-      updateActivity: vi.fn(),
-      addBlankActivity: vi.fn(),
-    }),
-    usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
-    useActivitiesById: () => ({}),
-    PlannerControls: () => <div data-testid="planner-controls" />, // though not used
-    ActivityModal: () => null,
+type OnboardingContextValue = {
+  showOnboarding: boolean;
+  setShowOnboarding: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const onboardingMocks = vi.hoisted(() => {
+  const React = require('react') as typeof import('react');
+
+  const OnboardingContext = React.createContext<OnboardingContextValue>({
+    showOnboarding: true,
+    setShowOnboarding: () => undefined,
+  });
+
+  const useOnboardingContext = () => React.useContext(OnboardingContext);
+
+  const OnboardingProvider = ({ children }: { children: React.ReactNode }) => {
+    const [showOnboarding, setShowOnboarding] = React.useState(true);
+    const value = React.useMemo(
+      () => ({
+        showOnboarding,
+        setShowOnboarding,
+      }),
+      [showOnboarding, setShowOnboarding],
+    );
+
+    return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
   };
+
+  const OnboardingModal = () => {
+    const { showOnboarding } = useOnboardingContext();
+    const planId = mockPlanId;
+
+    React.useEffect(() => {
+      localStorage.setItem(`planner-onboarding-shown-${planId}`, 'true');
+    }, [planId]);
+
+    return showOnboarding ? <div>Your planner is ready</div> : null;
+  };
+
+  return { OnboardingProvider, useOnboardingContext, OnboardingModal };
 });
+
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
+  PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  usePlannerContext: () => ({
+    planId: mockPlanId,
+    dest: 'rome',
+    days: [{ id: 'd1', label: 'Day 1', activities: [] }],
+    setDays: vi.fn(),
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    sensors: [],
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    changeColor: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    selectedActivity: null,
+  }),
+}));
+
+vi.mock('@/features/planner/components/PlannerControls', () => ({
+  __esModule: true,
+  default: () => <div data-testid="planner-controls" />,
+}));
+
+vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+  __esModule: true,
+  usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
+}));
+
+vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
+  __esModule: true,
+  BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
@@ -57,14 +106,15 @@ vi.mock('@/app/planner/PlannerBoard', () => ({
 vi.mock('@/app/planner/BudgetPanel', () => ({
   default: () => <div data-testid="budget" />,
 }));
-vi.mock('@/features/onboarding', () => ({
-  OnboardingModal: () => {
-    React.useEffect(() => {
-      localStorage.setItem(`planner-onboarding-shown-${mockPlanId}`, 'true');
-    }, []);
-    return <div>Your planner is ready</div>;
-  },
-  OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+  __esModule: true,
+  OnboardingProvider: onboardingMocks.OnboardingProvider,
+  useOnboardingContext: onboardingMocks.useOnboardingContext,
+}));
+
+vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+  __esModule: true,
+  default: onboardingMocks.OnboardingModal,
 }));
 
 vi.mock('@/shared/ui', async () => {

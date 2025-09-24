@@ -25,6 +25,7 @@ const updatedDays: DayPlan[] = [{ id: 'd2', label: 'Day 2', activities: [] }];
 const initialBounds: Bounds = { sw: [0, 0], ne: [1, 1] };
 const updatedBounds: Bounds = { sw: [2, 2], ne: [3, 3] };
 
+
 // Mocks for shared UI components
 vi.mock('@/shared/ui', () => ({
   ModeToggleButton: () => <div />, // not used in this test
@@ -54,69 +55,120 @@ export const handleRangeChange = vi.fn(() => {
 });
 
 // Planner feature mocks
-vi.mock('@/features/planner', async () => {
+vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
+  __esModule: true,
+  BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+  __esModule: true,
+  usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
+}));
+
+vi.mock('@/features/planner/hooks/PlannerContext', async () => {
   const React = await import('react');
-  const { DateRangePicker } = await import('@/shared/ui');
-  const PlannerContext = React.createContext({
-    planId: '',
-    dest: '',
-    days: [] as DayPlan[],
-    currentRange: undefined as DateRange | undefined,
-    handleRangeChange: () => {},
-    addBlankAndSelect: () => {},
-    bounds: { sw: [0, 0], ne: [1, 1] } as Bounds,
-  });
+
+  type InternalPlannerCtx = PlannerCtx & {
+    setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;
+    setSelectedActivity: React.Dispatch<React.SetStateAction<null>>;
+    changeDay: (...args: unknown[]) => void;
+    changePosition: (...args: unknown[]) => void;
+    changeColor: (...args: unknown[]) => void;
+    removeActivity: (...args: unknown[]) => void;
+    updateActivity: (...args: unknown[]) => void;
+    sensors: unknown;
+    collisionDetection: (...args: unknown[]) => void;
+    handleDragStart: (...args: unknown[]) => void;
+    handleDragOver: (...args: unknown[]) => void;
+    handleDragEnd: (...args: unknown[]) => void;
+    selectedActivity: null;
+  };
+
+  const PlannerContext = React.createContext<InternalPlannerCtx | null>(null);
 
   function PlannerProvider({
     children,
     initialDays,
   }: {
     children: React.ReactNode;
-    initialDays: DayPlan[];
+    initialDays?: DayPlan[];
+    planId: string;
+    dest?: string;
+    persist?: boolean;
   }) {
-    const [days, _setDays] = React.useState(initialDays);
-    const [bounds, _setBounds] = React.useState(initialBounds);
+    const [days, _setDays] = React.useState(initialDays ?? []);
+    const [bounds, _setBounds] = React.useState<Bounds>(initialBounds);
     setDays = _setDays;
     setBounds = _setBounds;
-    const value = {
+    const value: InternalPlannerCtx = {
       planId: 'p1',
       dest: 'rome',
       days,
-      currentRange: undefined as DateRange | undefined,
+      currentRange: undefined,
       handleRangeChange,
       addBlankAndSelect: vi.fn(),
       bounds,
+      setDays: _setDays,
+      setSelectedActivity: vi.fn(),
+      changeDay: vi.fn(),
+      changePosition: vi.fn(),
+      changeColor: vi.fn(),
+      removeActivity: vi.fn(),
+      updateActivity: vi.fn(),
+      sensors: undefined,
+      collisionDetection: vi.fn(),
+      handleDragStart: vi.fn(),
+      handleDragOver: vi.fn(),
+      handleDragEnd: vi.fn(),
+      selectedActivity: null,
     };
     return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>;
   }
 
-  const usePlannerContext = () => React.useContext(PlannerContext);
-  getPlannerContext = usePlannerContext;
-  const usePlanTitle = () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() });
-  const ActivityModal = () => null;
-  const PlannerControls = () => {
-    const { currentRange, handleRangeChange } = usePlannerContext();
-    return (
-      <div>
-        <DateRangePicker value={currentRange} onChange={handleRangeChange} />
-      </div>
-    );
+  const usePlannerContext = () => {
+    const ctx = React.useContext(PlannerContext);
+    if (!ctx) {
+      throw new Error('PlannerContext not initialized');
+    }
+    return ctx;
   };
+  getPlannerContext = usePlannerContext as unknown as () => PlannerCtx;
 
+  return { __esModule: true, PlannerProvider, usePlannerContext };
+});
+
+vi.mock('@/features/planner/components/PlannerControls', async () => {
+  const React = await import('react');
+  const { DateRangePicker } = await import('@/shared/ui');
+  const planner = await import('@/features/planner/hooks/PlannerContext');
   return {
-    PlannerProvider,
-    usePlannerContext,
-    usePlanTitle,
-    ActivityModal,
-    PlannerControls,
-    BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    __esModule: true,
+    default: function PlannerControlsMock() {
+      const { currentRange, handleRangeChange } = planner.usePlannerContext();
+      return (
+        <div>
+          <DateRangePicker value={currentRange} onChange={handleRangeChange} />
+        </div>
+      );
+    },
   };
 });
 
 // Onboarding mocks
-vi.mock('@/features/onboarding', () => ({
-  OnboardingModal: () => null,
+vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+  __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
 // Downstream components that read from planner context
@@ -135,7 +187,14 @@ vi.mock('@/app/planner/MapView', () => {
   return {
     default: function MapViewMock() {
       const ctx =
-        typeof getPlannerContext === 'function' ? getPlannerContext() : { bounds: initialBounds };
+        typeof getPlannerContext === 'function'
+          ? getPlannerContext()
+          : {
+              bounds: {
+                sw: [0, 0] as [number, number],
+                ne: [1, 1] as [number, number],
+              },
+            };
       return <div data-testid="map-view">{JSON.stringify(ctx.bounds)}</div>;
     },
   };

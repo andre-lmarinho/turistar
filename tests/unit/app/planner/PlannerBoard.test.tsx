@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/react';
 import { closestCenter } from '@dnd-kit/core';
 import PlannerBoard from '@/app/planner/PlannerBoard';
-import { PlannerProvider } from '@/features/planner';
+import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan, Activity } from '@/shared/types';
 import { vi } from 'vitest';
 
@@ -18,42 +18,41 @@ function buildActivities(prefix: string, count: number): Activity[] {
 
 let mockDays: DayPlan[] = [];
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
-  return {
-    ...actual,
-    usePlanner: () => ({
-      planId: 'p1',
-      dest: 'rome',
-      days: mockDays,
-      destCoords: null,
-      setDays: vi.fn(),
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      activeId: null,
-      sensors: [],
-      collisionDetection: closestCenter,
-      handleDragStart: vi.fn(),
-      handleDragOver: vi.fn(),
-      handleDragEnd: vi.fn(),
-      addActivity: vi.fn(),
-      removeActivity: vi.fn(),
-      updateActivity: vi.fn(),
-      addBlankActivity: vi.fn(),
-    }),
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      changePosition: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
-  };
-});
+vi.mock('@/features/planner/hooks/usePlanner', () => ({
+  usePlanner: () => ({
+    planId: 'p1',
+    dest: 'rome',
+    days: mockDays,
+    destCoords: null,
+    setDays: vi.fn(),
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    activeId: null,
+    sensors: [],
+    collisionDetection: closestCenter,
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    addActivity: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    addBlankActivity: vi.fn(),
+  }),
+}));
+
+vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+  useSelectedActivity: () => ({
+    selectedActivity: null,
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    closeModal: vi.fn(),
+    save: vi.fn(),
+    deleteActivity: vi.fn(),
+    changeColor: vi.fn(),
+  }),
+}));
 
 function renderBoard() {
   mockDays = [

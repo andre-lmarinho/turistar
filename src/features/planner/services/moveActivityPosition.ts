@@ -1,7 +1,7 @@
 // src/features/planner/services/moveActivityPosition.ts
 
 import type { DayPlan } from '@/shared/types';
-import { cloneDays } from '@/features/planner/services';
+import { cloneDays } from '@/features/planner/services/cloneDays';
 
 /**
  * Moves an activity to a new index within its current day.

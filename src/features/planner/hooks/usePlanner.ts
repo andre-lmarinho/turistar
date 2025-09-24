@@ -9,7 +9,8 @@ import { eachDayOfInterval } from 'date-fns';
 
 import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from './useDnDPlanner';
-import { buildInitialDays, syncDaysWithTripRange } from '@/features/planner/services';
+import { buildInitialDays } from '@/features/planner/services/initialDays';
+import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
 import { setPlanDateRange } from '@/app/planner/actions/updatePlan';
 import type { DayPlan } from '@/shared/types';
 

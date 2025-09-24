@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
-import { SortableItem } from '@/features/planner';
+import SortableItem from './SortableItem';
 import { AddCardButton } from '@/shared/ui';
 import type { DayPlan, Activity } from '@/shared/types';
 

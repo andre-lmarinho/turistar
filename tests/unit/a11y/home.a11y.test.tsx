@@ -5,9 +5,9 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 // Stub FeaturePreview group to avoid CSS import side-effects
-vi.mock('@/features/home/components/feature-preview', () => ({
+vi.mock('@/features/home/components/feature-preview/FeaturePreview', () => ({
   __esModule: true,
-  FeaturePreview: () => <div data-testid="feature-preview" />,
+  default: () => <div data-testid="feature-preview" />,
 }));
 
 import Home from '@/app/page';

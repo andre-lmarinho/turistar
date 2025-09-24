@@ -8,7 +8,7 @@ import { DollarSign, Hourglass } from 'lucide-react';
 import type { Activity } from '@/shared/types';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants';
 import { UpdateButton, Input, LocationSearchInput } from '@/shared/ui';
-import { usePlannerContext } from '@/features/planner';
+import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface ActivityModalFormProps {
   activity: Activity;

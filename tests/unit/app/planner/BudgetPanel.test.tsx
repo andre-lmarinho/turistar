@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BudgetPanel from '@/app/planner/BudgetPanel';
-import { PlannerProvider } from '@/features/planner';
+import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/shared/types';
 
@@ -14,42 +14,41 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
-  return {
-    ...actual,
-    usePlanner: () => ({
-      planId: 'test',
-      dest: 'rome',
-      days: mockDays,
-      destCoords: null,
-      setDays: vi.fn(),
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      activeId: null,
-      sensors: [],
-      collisionDetection: vi.fn(),
-      handleDragStart: vi.fn(),
-      handleDragOver: vi.fn(),
-      handleDragEnd: vi.fn(),
-      addActivity: vi.fn(),
-      removeActivity: vi.fn(),
-      updateActivity: vi.fn(),
-      addBlankActivity: vi.fn(),
-    }),
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      changePosition: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
-  };
-});
+vi.mock('@/features/planner/hooks/usePlanner', () => ({
+  usePlanner: () => ({
+    planId: 'test',
+    dest: 'rome',
+    days: mockDays,
+    destCoords: null,
+    setDays: vi.fn(),
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    activeId: null,
+    sensors: [],
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    addActivity: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    addBlankActivity: vi.fn(),
+  }),
+}));
+
+vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+  useSelectedActivity: () => ({
+    selectedActivity: null,
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    closeModal: vi.fn(),
+    save: vi.fn(),
+    deleteActivity: vi.fn(),
+    changeColor: vi.fn(),
+  }),
+}));
 
 describe.skip('BudgetPanel', () => {
   beforeEach(() => {

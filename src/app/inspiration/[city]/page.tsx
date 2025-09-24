@@ -7,7 +7,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import InspirationPlanner from '../InspirationPlanner';
-import { buildDaysFromInspirationData, type InspirationData } from '@/features/planner/services';
+import {
+  buildDaysFromInspirationData,
+  type InspirationData,
+} from '@/features/planner/services/buildDaysFromInspirationData';
 import { capitalize } from '@/shared/utils';
 import { SITE_URL } from '@/shared/constants/site';
 

@@ -8,19 +8,17 @@ import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 
-import {
-  ActivityModal,
-  PlannerControls,
-  PlannerProvider,
-  usePlannerContext,
-  usePlanTitle,
-} from '@/features/planner';
-import { OnboardingModal, OnboardingProvider } from '@/features/onboarding';
+import ActivityModal from '@/features/planner/components/modal/ActivityModal';
+import PlannerControls from '@/features/planner/components/PlannerControls';
+import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
+import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
+import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
+import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
 import { DateRangePickerIcon } from '@/shared/ui';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
-import type { Entry } from '@/features/planner';
+import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
 
 /**

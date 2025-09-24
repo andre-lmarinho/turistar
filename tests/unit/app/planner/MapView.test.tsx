@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/app/planner/MapView';
-import { PlannerProvider } from '@/features/planner';
+import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/shared/types';
 
 // Reuse the same mocks across tests
@@ -37,42 +37,41 @@ vi.mock('react-leaflet', () => {
   };
 });
 
-vi.mock('@/features/planner', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
-  return {
-    ...actual,
-    usePlanner: () => ({
-      planId: 'p1',
-      dest: 'rome',
-      days: mockDays,
-      destCoords: mockDestCoords,
-      setDays: vi.fn(),
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      activeId: null,
-      sensors: [],
-      collisionDetection: vi.fn(),
-      handleDragStart: vi.fn(),
-      handleDragOver: vi.fn(),
-      handleDragEnd: vi.fn(),
-      addActivity: vi.fn(),
-      removeActivity: vi.fn(),
-      updateActivity: vi.fn(),
-      addBlankActivity: vi.fn(),
-    }),
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      changePosition: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
-  };
-});
+vi.mock('@/features/planner/hooks/usePlanner', () => ({
+  usePlanner: () => ({
+    planId: 'p1',
+    dest: 'rome',
+    days: mockDays,
+    destCoords: mockDestCoords,
+    setDays: vi.fn(),
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    activeId: null,
+    sensors: [],
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    addActivity: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    addBlankActivity: vi.fn(),
+  }),
+}));
+
+vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+  useSelectedActivity: () => ({
+    selectedActivity: null,
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    closeModal: vi.fn(),
+    save: vi.fn(),
+    deleteActivity: vi.fn(),
+    changeColor: vi.fn(),
+  }),
+}));
 
 // Simplify Leaflet utilities
 vi.mock('leaflet', () => ({

@@ -4,8 +4,9 @@
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/shared/constants';
-import type { Entry } from '@/features/planner';
-import { BudgetRow, useBudgetContext } from '@/features/planner';
+import type { Entry } from '@/features/planner/types/budget/budget';
+import BudgetRow from '@/features/planner/components/budget/BudgetRow';
+import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import { InfoPopup } from '@/shared/ui';
 
 export default function ExpenseTable() {
