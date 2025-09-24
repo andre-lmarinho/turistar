@@ -3,7 +3,7 @@
 
 import { createContextProvider } from '@/shared/context/createContextProvider';
 import { useBudget } from './useBudgetSupabase';
-import type { Entry } from '@/features/planner';
+import type { Entry } from '@/features/planner/types/budget/budget';
 
 const [BudgetProvider, useBudgetContext] = createContextProvider(
   ({

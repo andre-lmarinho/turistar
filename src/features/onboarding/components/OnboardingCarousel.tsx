@@ -5,8 +5,8 @@ import React, { useState, useRef } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
-import { ONBOARDING_STEPS } from '@/shared/constants';
-import { NavCircleButton } from '@/shared/ui';
+import { ONBOARDING_STEPS } from '@/shared/constants/onboarding';
+import NavCircleButton from '@/shared/ui/button-icons/NavCircleButton';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;

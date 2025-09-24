@@ -3,11 +3,12 @@
 
 import React, { useId } from 'react';
 import { Pencil, Trash2, Check, X, Plus, DollarSign } from 'lucide-react';
-import { CATEGORIES, CategoryKey } from '@/shared/constants';
-import { normalizeAmount } from '@/shared/utils';
-import { useBudgetContext } from '@/features/planner';
-import type { Entry } from '@/features/planner';
-import { Button, Input } from '@/shared/ui';
+import { CATEGORIES, CategoryKey } from '@/shared/constants/budget';
+import { normalizeAmount } from '@/shared/utils/normalizeAmount';
+import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
+import type { Entry } from '@/features/planner/types/budget/budget';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 
 // Props -------------------------------------------------------------
 type ViewProps = {

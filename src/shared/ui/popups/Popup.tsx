@@ -3,7 +3,7 @@
 
 import React, { useRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import OverlayContainer from '../OverlayContainer';
 

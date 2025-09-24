@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
-import { BudgetProvider } from '@/features/planner/hooks';
+import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 
 const mockFrom = vi.fn();
 vi.mock('@/shared/lib/supabaseClient', () => ({

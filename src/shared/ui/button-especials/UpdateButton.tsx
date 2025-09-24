@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/shared/ui';
+import { Button } from '@/shared/ui/button';
 
 export interface UpdateButtonProps extends React.ComponentProps<typeof Button> {
   ready: boolean;

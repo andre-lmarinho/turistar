@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Tooltip } from '@/shared/ui';
+import Tooltip from '@/shared/ui/Tooltip';
 
 interface KeyHintTooltipProps {
   /** Tooltip text before the shortcut key label */

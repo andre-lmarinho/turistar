@@ -5,11 +5,14 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-import InspirationPlanner from '../InspirationPlanner';
-import { buildDaysFromInspirationData, type InspirationData } from '@/features/planner/services';
-import { capitalize } from '@/shared/utils';
+import {
+  buildDaysFromInspirationData,
+  type InspirationData,
+} from '@/features/planner/services/buildDaysFromInspirationData';
+import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
+
+import PlannerClientWrapper from './PlannerClientWrapper';
 
 type CityParams = { city: string };
 
@@ -100,12 +103,14 @@ export default async function InspirationPage({ params }: { params: Promise<City
     }));
 
     return (
-      <InspirationPlanner
+      <PlannerClientWrapper
         initialDays={initialDays}
         dest={city}
         planId={`${city}-inspiration`}
         initialBudget={initialBudget}
         initialEntries={initialEntries}
+        hideOnboarding
+        persist={false}
       />
     );
   } catch {

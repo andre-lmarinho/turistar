@@ -3,8 +3,9 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS, KEY_BINDS } from '@/shared/constants';
-import { TooltipKeyHint } from '@/shared/ui';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS } from '@/shared/constants/colors';
+import { KEY_BINDS } from '@/shared/constants/keyBinds';
+import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
 
 export type AddCardButtonPosition = 'new' | 'insert';
 

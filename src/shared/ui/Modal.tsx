@@ -4,7 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import OverlayContainer from './OverlayContainer';
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 
 interface ModalProps extends React.ComponentProps<typeof OverlayContainer> {}
 

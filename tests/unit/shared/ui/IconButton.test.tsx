@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { IconButton } from '@/shared/ui';
+import IconButton from '@/shared/ui/IconButton';
 import { X, Trash2, Palette, Pencil } from 'lucide-react';
 
 describe('IconButton', () => {

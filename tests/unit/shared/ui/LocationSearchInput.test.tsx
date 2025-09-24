@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { LocationSearchInput } from '@/shared/ui';
+import LocationSearchInput from '@/shared/ui/LocationSearchInput';
 
 const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   return {
@@ -12,7 +12,7 @@ const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/features/planner', () => ({
+vi.mock('@/features/planner/hooks/search/useDestinationAutocomplete', () => ({
   useDestinationAutocomplete: mockUseDestinationAutocomplete,
 }));
 vi.mock('@/shared/hooks/useDebounce', () => ({

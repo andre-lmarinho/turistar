@@ -5,8 +5,8 @@ import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 
-import { cn } from '@/shared/utils';
-import { ActivityCard } from '@/features/planner';
+import { cn } from '@/shared/utils/utils';
+import ActivityCard from './ActivityCard';
 import type { Activity, DayPlan } from '@/shared/types';
 
 export interface SortableItemProps {

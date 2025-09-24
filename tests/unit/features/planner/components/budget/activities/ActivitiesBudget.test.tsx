@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ActivitiesBudgetPopup as ActivitiesBudget } from '@/features/planner/components/budget/activities';
+import ActivitiesBudget from '@/features/planner/components/budget/activities/ActivitiesBudget';
 import type { DayPlan } from '@/shared/types';
 import { vi } from 'vitest';
 

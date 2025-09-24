@@ -1,6 +1,6 @@
 // src/features/planner/services/initialDays.ts
 
-import { formatDayPlan } from '@/features/planner/services';
+import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import type { DayPlan } from '@/shared/types';
 
 /**

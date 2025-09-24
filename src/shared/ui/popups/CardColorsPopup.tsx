@@ -2,8 +2,11 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { DEFAULT_COLORS, MAX_FILE_SIZE } from '@/shared/constants';
-import { Button, CloseButton, Popup } from '@/shared/ui';
+import { DEFAULT_COLORS } from '@/shared/constants/colors';
+import { MAX_FILE_SIZE } from '@/shared/constants/ui';
+import { Button } from '@/shared/ui/button';
+import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import Popup from '@/shared/ui/popups/Popup';
 
 interface CardColorsPopupProps {
   imageUrl: string;

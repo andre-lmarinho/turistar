@@ -4,15 +4,13 @@ import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import { PlannerProvider, usePlannerContext } from '@/features/planner';
+import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/shared/types';
 
 // Mock hooks used inside PlannerContext
-vi.mock('@/features/planner', async () => {
+vi.mock('@/features/planner/hooks/usePlanner', () => {
   const React = require('react');
-  const actual = await vi.importActual<typeof import('@/features/planner')>('@/features/planner');
   return {
-    ...actual,
     usePlanner: ({ initialDays }: { initialDays?: DayPlan[] }) => {
       const [days, setDays] = React.useState(initialDays ?? []);
       return {
@@ -52,18 +50,21 @@ vi.mock('@/features/planner', async () => {
           }),
       };
     },
-    useSelectedActivity: () => ({
-      selectedActivity: null,
-      setSelectedActivity: vi.fn(),
-      changeDay: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-      closeModal: vi.fn(),
-      save: vi.fn(),
-      deleteActivity: vi.fn(),
-      changeColor: vi.fn(),
-    }),
   };
 });
+
+vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+  useSelectedActivity: () => ({
+    selectedActivity: null,
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    closeModal: vi.fn(),
+    save: vi.fn(),
+    deleteActivity: vi.fn(),
+    changeColor: vi.fn(),
+  }),
+}));
 vi.mock('@/features/planner/hooks/usePlanDaysSupabase', () => ({
   usePlanDays: () => ({ data: storedDays, persistDays }),
 }));

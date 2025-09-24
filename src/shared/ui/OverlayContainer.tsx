@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import FocusTrap from 'focus-trap-react';
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/utils';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 
 interface OverlayContainerProps extends React.HTMLAttributes<HTMLDivElement> {

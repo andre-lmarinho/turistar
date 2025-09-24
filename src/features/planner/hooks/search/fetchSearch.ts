@@ -1,6 +1,6 @@
 // src/features/planner/hooks/search/fetchSearch.ts
 import type { SearchActivity } from '@/shared/types';
-import { fetchJson } from '@/shared/lib';
+import { fetchJson } from '@/shared/lib/http';
 
 /**
  * Fetches place search results via the local API.

@@ -6,48 +6,67 @@ import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/shared/ui', async () => {
-  const actual = await vi.importActual<typeof import('@/shared/ui')>('@/shared/ui');
-  return {
-    ...actual,
-    ModeToggleButton: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
-      <div>
-        <button onClick={() => onChange('planner')}>Planner</button>
-        <button onClick={() => onChange('map')}>Map</button>
-        <button onClick={() => onChange('budget')}>Budget</button>
-      </div>
-    ),
-    DateRangePicker: () => <div />,
-    DateRangePickerIcon: () => <div />,
-  };
-});
+vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+  __esModule: true,
+  default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
+    <div>
+      <button onClick={() => onChange('planner')}>Planner</button>
+      <button onClick={() => onChange('map')}>Map</button>
+      <button onClick={() => onChange('budget')}>Budget</button>
+    </div>
+  ),
+}));
 
-vi.mock('@/features/planner', async () => {
-  const React = await import('react');
-  const { ModeToggleButton } = await import('@/shared/ui');
-  return {
-    PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    usePlannerContext: () => ({
-      planId: 'p1',
-      dest: 'rome',
-      days: [],
-      currentRange: undefined,
-      handleRangeChange: vi.fn(),
-      addBlankAndSelect: vi.fn(),
-    }),
-    usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
-    ActivityModal: () => null,
-    PlannerControls: ({ mode, onModeChange }: { mode: Mode; onModeChange: (m: Mode) => void }) => (
-      <div data-testid="planner-controls">
-        <ModeToggleButton value={mode} onChange={onModeChange} />
-      </div>
-    ),
-  };
-});
+vi.mock('@/shared/ui/DatePicker', () => ({
+  __esModule: true,
+  DateRangePicker: () => <div />, // not used
+  DateRangePickerIcon: () => <div />, // not used
+}));
 
-vi.mock('@/features/onboarding', () => ({
-  OnboardingModal: () => null,
+vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
+  PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  usePlannerContext: () => ({
+    planId: 'p1',
+    dest: 'rome',
+    days: [],
+    currentRange: undefined,
+    handleRangeChange: vi.fn(),
+    addBlankAndSelect: vi.fn(),
+    sensors: undefined,
+    collisionDetection: vi.fn(),
+    handleDragStart: vi.fn(),
+    handleDragOver: vi.fn(),
+    handleDragEnd: vi.fn(),
+    setSelectedActivity: vi.fn(),
+    changeDay: vi.fn(),
+    changePosition: vi.fn(),
+    changeColor: vi.fn(),
+    removeActivity: vi.fn(),
+    updateActivity: vi.fn(),
+    selectedActivity: null,
+  }),
+}));
+
+vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+  __esModule: true,
+  usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
+}));
+
+vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+  __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
 vi.mock('@/app/planner/PlannerBoard', () => ({

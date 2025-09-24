@@ -5,8 +5,8 @@ import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
-import { TooltipKeyHint } from '@/shared/ui';
-import { KEY_BINDS } from '@/shared/constants';
+import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
+import { KEY_BINDS } from '@/shared/constants/keyBinds';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 
 type Mode = 'planner' | 'map' | 'budget';

@@ -13,8 +13,12 @@ const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/features/planner', () => ({
+vi.mock('@/features/planner/hooks/search/useDestinationAutocomplete', () => ({
   useDestinationAutocomplete: mockUseDestinationAutocomplete,
+}));
+
+vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+  __esModule: true,
   usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 } }),
 }));
 

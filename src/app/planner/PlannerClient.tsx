@@ -8,19 +8,17 @@ import PlannerBoard from '@/app/planner/PlannerBoard';
 import BudgetPanel from '@/app/planner/BudgetPanel';
 const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
 
-import {
-  ActivityModal,
-  PlannerControls,
-  PlannerProvider,
-  usePlannerContext,
-  usePlanTitle,
-} from '@/features/planner';
-import { OnboardingModal, OnboardingProvider } from '@/features/onboarding';
-import { DateRangePickerIcon } from '@/shared/ui';
+import ActivityModal from '@/features/planner/components/modal/ActivityModal';
+import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
+import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
+import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
+import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
+import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
+import ModeToggleButton from '@/shared/ui/button-especials/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/shared/hooks/ui/useKeyBinds';
 import type { DayPlan } from '@/shared/types';
-import type { Entry } from '@/features/planner';
+import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
 
 /**
@@ -33,7 +31,7 @@ import { motion } from 'framer-motion';
 type Mode = 'planner' | 'map' | 'budget';
 const modeOrder: Mode[] = ['planner', 'map', 'budget'];
 
-interface PlannerClientProps {
+export interface PlannerClientProps {
   initialDays?: DayPlan[];
   planId?: string;
   slug?: string;
@@ -110,7 +108,14 @@ function PlannerClientInner({
           </div>
         </div>
 
-        <PlannerControls mode={mode} onModeChange={setMode} />
+        <div className="order-3 mx-auto flex w-full max-w-screen-xl items-center justify-center gap-4 py-2 md:order-2 md:justify-between md:pt-0 md:pb-4">
+          <ModeToggleButton value={mode} onChange={setMode} />
+          <DateRangePicker
+            value={currentRange}
+            onChange={handleRangeChange}
+            className="hidden md:flex"
+          />
+        </div>
 
         {/* BOARD / MAP / BUDGET */}
         <div className="relative order-2 mx-auto w-full max-w-screen-xl flex-1 overflow-visible md:order-3">

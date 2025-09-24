@@ -1,9 +1,9 @@
 // src/features/planner/services/buildDaysFromInspirationData.ts
 
-import { formatDayPlan } from '@/features/planner/services';
+import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import type { Activity, DayPlan } from '@/shared/types';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants';
-import type { CategoryKey } from '@/shared/constants';
+import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/shared/constants/colors';
+import type { CategoryKey } from '@/shared/constants/budget';
 
 /**
  * Converts raw inspiration JSON data into a DayPlan array.
