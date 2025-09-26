@@ -1,3 +1,9 @@
 // src/app/planner/page.tsx
 
-export { default, dynamic } from '@/features/planner';
+import PlannerExperience from '@/features/planner/ui/screens/PlannerExperienceDynamic';
+
+export const dynamic = 'force-dynamic';
+
+export default function PlannerPage() {
+  return <PlannerExperience />;
+}
