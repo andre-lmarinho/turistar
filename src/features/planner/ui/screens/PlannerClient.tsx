@@ -67,6 +67,8 @@ function PlannerClientInner({
     text: title,
   });
 
+  const headingText = title?.trim().length ? title : (dest ?? 'Your trip plan');
+
   useKeyBinds({
     onPlanner: () => setMode('planner'),
     onMap: () => setMode('map'),
@@ -87,11 +89,13 @@ function PlannerClientInner({
         {/* HEADER */}
         <div className="mx-auto flex w-full max-w-screen-xl items-center justify-between gap-4 pb-4">
           <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)] md:text-5xl">
+            <span id="planner-title-heading" className="sr-only">
+              {headingText}
+            </span>
             <input
               id="planner-title"
               name="title"
-              role="heading"
-              aria-level={1}
+              aria-labelledby="planner-title-heading"
               aria-label="Planner title"
               type="text"
               ref={titleRef}
