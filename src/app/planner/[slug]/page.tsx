@@ -1,6 +1,6 @@
 // src/app/planner/[slug]/page.tsx
 
-import PlannerExperience from '@/features/planner/ui/screens/PlannerExperienceDynamic';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';
 
 export const dynamic = 'force-dynamic';
@@ -17,7 +17,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   const experience = await getPublicPlannerExperience({ slug, dest });
 
   return (
-    <PlannerExperience
+    <PlannerClient
       initialDays={experience.initialDays}
       planId={experience.planId}
       slug={slug}

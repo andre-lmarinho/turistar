@@ -10,11 +10,11 @@ vi.mock('next/dynamic', () => ({
   default: () => () => <main id="main-content" aria-label="Planner app" />,
 }));
 
-import PlannerPage from '@/app/planner/page';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 
 describe('Accessibility — Planner page', () => {
   it('has no a11y violations', async () => {
-    const { container } = render(<PlannerPage />);
+    const { container } = render(<PlannerClient />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

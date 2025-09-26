@@ -22,7 +22,7 @@ import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
 
 /**
- * Top-level client component for the /planner route.
+ * Top-level client component for the planner experience.
  * - Shows the date-range picker, the “Open Panel” button, the filter panel,
  *   and the drag-and-drop board.
  * - Handles selecting a card to open the ActivityModal.
