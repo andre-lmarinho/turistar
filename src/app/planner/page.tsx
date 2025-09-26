@@ -1,16 +1,3 @@
 // src/app/planner/page.tsx
-'use client';
 
-import nextDynamic from 'next/dynamic';
-import LoadingScreen from '@/shared/components/LoadingScreen';
-
-export const dynamic = 'force-dynamic';
-
-const PlannerClient = nextDynamic(() => import('./PlannerClient'), {
-  ssr: false,
-  loading: () => <LoadingScreen text="Loading planner…" />,
-});
-
-export default function PlannerPage() {
-  return <PlannerClient />;
-}
+export { default, dynamic } from '@/features/planner';

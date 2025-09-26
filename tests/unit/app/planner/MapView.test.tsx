@@ -3,7 +3,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import MapView from '@/app/planner/MapView';
+import MapView from '@/features/planner/ui/screens/MapView';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/shared/types';
 

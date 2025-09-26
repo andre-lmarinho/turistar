@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
+import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
 import { ONBOARDING_STEPS } from '@/shared/constants/onboarding';
 import { vi } from 'vitest';
-import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
+import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
 
 const mockSetShowOnboarding = vi.fn();
-vi.mock('@/features/onboarding/hooks/useOnboardingCheck', () => ({
+vi.mock('@/features/planner/hooks/onboarding/useOnboardingCheck', () => ({
   useOnboardingCheck: () => ({ showOnboarding: true, setShowOnboarding: mockSetShowOnboarding }),
 }));
 

@@ -1,4 +1,4 @@
-// src/app/planner/MapView.tsx
+// src/features/planner/ui/screens/MapView.tsx
 'use client';
 
 import React, { useRef, useEffect, useMemo } from 'react';

@@ -1,4 +1,4 @@
-// src/app/planner/BudgetPanel.tsx
+// src/features/planner/ui/screens/BudgetPanel.tsx
 'use client';
 
 import React, { useState } from 'react';

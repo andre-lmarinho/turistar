@@ -1,9 +1,9 @@
-// src/features/onboarding/components/OnboardingModal.tsx
+// src/features/planner/components/onboarding/OnboardingModal.tsx
 'use client';
 
 import React from 'react';
-import OnboardingCarousel from '@/features/onboarding/components/OnboardingCarousel';
-import { useOnboardingContext } from '@/features/onboarding/hooks/OnboardingContext';
+import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
+import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Modal from '@/shared/ui/Modal';
 

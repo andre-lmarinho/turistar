@@ -90,24 +90,24 @@ vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
   BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: onboardingMocks.OnboardingProvider,
   useOnboardingContext: onboardingMocks.useOnboardingContext,
 }));
 
-vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   __esModule: true,
   default: onboardingMocks.OnboardingModal,
 }));
 
-vi.mock('@/app/planner/PlannerBoard', () => ({
+vi.mock('@/features/planner/ui/screens/PlannerBoard', () => ({
   default: () => <div />,
 }));
-vi.mock('@/app/planner/MapView', () => ({
+vi.mock('@/features/planner/ui/screens/MapView', () => ({
   default: () => <div />,
 }));
-vi.mock('@/app/planner/BudgetPanel', () => ({
+vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
   default: () => <div />,
 }));
 
@@ -116,7 +116,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/app/planner/PlannerClient';
+import { PlannerClient } from '@/features/planner';
 
 describe('onboarding modal visibility', () => {
   it('shows modal initially and hides after finish', async () => {

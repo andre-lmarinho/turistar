@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import BudgetPanel from '@/app/planner/BudgetPanel';
+import BudgetPanel from '@/features/planner/ui/screens/BudgetPanel';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/shared/types';

@@ -4,9 +4,13 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import InspirationLink from '@/features/home/components/InspirationLink';
-import rome from '@/data/rome.json';
-import paris from '@/data/paris.json';
-import boipeba from '@/data/boipeba.json';
+import romeJson from '@/features/inspiration/data/rome.json';
+import parisJson from '@/features/inspiration/data/paris.json';
+import boipebaJson from '@/features/inspiration/data/boipeba.json';
+
+const rome = romeJson as { title_inspiration: string };
+const paris = parisJson as { title_inspiration: string };
+const boipeba = boipebaJson as { title_inspiration: string };
 
 describe('InspirationLink', () => {
   it('renders destinations as links with correct hrefs', () => {

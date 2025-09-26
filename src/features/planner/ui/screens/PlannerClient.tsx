@@ -1,18 +1,18 @@
-// src/app/planner/PlannerClient.tsx
+// src/features/planner/ui/screens/PlannerClient.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PlannerBoard from '@/app/planner/PlannerBoard';
-import BudgetPanel from '@/app/planner/BudgetPanel';
-const MapView = dynamic(() => import('@/app/planner/MapView'), { ssr: false });
+import PlannerBoard from './PlannerBoard';
+import BudgetPanel from './BudgetPanel';
+const MapView = dynamic(() => import('./MapView'), { ssr: false });
 
 import ActivityModal from '@/features/planner/components/modal/ActivityModal';
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
-import OnboardingModal from '@/features/onboarding/components/OnboardingModal';
-import { OnboardingProvider } from '@/features/onboarding/hooks/OnboardingContext';
+import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
+import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
 import ModeToggleButton from '@/shared/ui/button-especials/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';

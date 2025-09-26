@@ -58,24 +58,24 @@ vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   __esModule: true,
   default: () => null,
 }));
 
-vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
-vi.mock('@/app/planner/PlannerBoard', () => ({
+vi.mock('@/features/planner/ui/screens/PlannerBoard', () => ({
   default: () => <div data-testid="planner-board" />,
 }));
-vi.mock('@/app/planner/MapView', () => ({
+vi.mock('@/features/planner/ui/screens/MapView', () => ({
   default: () => <div data-testid="map-view" />,
 }));
-vi.mock('@/app/planner/BudgetPanel', () => ({
+vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
   default: () => <div data-testid="budget-panel" />,
 }));
 
@@ -84,7 +84,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/app/planner/PlannerClient';
+import { PlannerClient } from '@/features/planner';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {

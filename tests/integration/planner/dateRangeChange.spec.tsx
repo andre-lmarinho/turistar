@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
 import type { DayPlan } from '@/shared/types';
 
-import PlannerClient from '@/app/planner/PlannerClient';
+import { PlannerClient } from '@/features/planner';
 
 type Bounds = { sw: [number, number]; ne: [number, number] };
 interface PlannerCtx {
@@ -152,19 +152,19 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 });
 
 // Onboarding mocks
-vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   __esModule: true,
   default: () => null,
 }));
 
-vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
 // Downstream components that read from planner context
-vi.mock('@/app/planner/PlannerBoard', () => {
+vi.mock('@/features/planner/ui/screens/PlannerBoard', () => {
   const React = require('react');
   return {
     default: function PlannerBoardMock() {
@@ -174,7 +174,7 @@ vi.mock('@/app/planner/PlannerBoard', () => {
   };
 });
 
-vi.mock('@/app/planner/MapView', () => {
+vi.mock('@/features/planner/ui/screens/MapView', () => {
   const React = require('react');
   return {
     default: function MapViewMock() {
@@ -192,7 +192,7 @@ vi.mock('@/app/planner/MapView', () => {
   };
 });
 
-vi.mock('@/app/planner/BudgetPanel', () => ({
+vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
   default: () => <div />,
 }));
 

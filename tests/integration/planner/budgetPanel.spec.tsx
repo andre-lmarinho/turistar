@@ -43,7 +43,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 });
 
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import BudgetPanel from '@/app/planner/BudgetPanel';
+import BudgetPanel from '@/features/planner/ui/screens/BudgetPanel';
 
 describe('budget panel', () => {
   beforeEach(() => {
