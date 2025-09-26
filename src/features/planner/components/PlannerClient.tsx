@@ -1,12 +1,12 @@
-// src/features/planner/ui/screens/PlannerClient.tsx
+// src/features/planner/components/PlannerClient.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PlannerBoard from './PlannerBoard';
-import BudgetPanel from './BudgetPanel';
-const MapView = dynamic(() => import('./MapView'), { ssr: false });
+import PlannerBoard from './dnd/PlannerBoard';
+import BudgetBoard from './budget/BudgetBoard';
+const MapBoard = dynamic(() => import('./map/MapBoard'), { ssr: false });
 
 import ActivityModal from '@/features/planner/components/modal/ActivityModal';
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
@@ -14,7 +14,7 @@ import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
 import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
-import ModeToggleButton from '@/features/planner/ui/widgets/buttons/ModeToggleButton';
+import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/features/planner/hooks/internal/useKeyBinds';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
@@ -149,13 +149,13 @@ function PlannerClientInner({
                 <div style={{ pointerEvents: isActive ? 'auto' : 'none' }} className="h-full">
                   {m === 'planner' && <PlannerBoard />}
                   {m === 'budget' && (
-                    <BudgetPanel
+                    <BudgetBoard
                       initialBudget={initialBudget}
                       initialEntries={initialEntries}
                       persist={persist}
                     />
                   )}
-                  {m === 'map' && <MapView />}
+                  {m === 'map' && <MapBoard />}
                 </div>
               </motion.div>
             );

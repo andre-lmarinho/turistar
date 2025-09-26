@@ -1,4 +1,4 @@
-// src/features/planner/ui/widgets/buttons/AddCardButton.tsx
+// src/features/planner/ui/buttons/AddCardButton.tsx
 'use client';
 
 import React from 'react';

@@ -3,8 +3,8 @@
 
 import React from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import CardColorsPopup from '@/features/planner/ui/widgets/popups/CardColorsPopup';
-import DayPickerPopup from '@/features/planner/ui/widgets/popups/DayPickerPopup';
+import CardColorsPopup from '@/features/planner/ui/popups/CardColorsPopup';
+import DayPickerPopup from '@/features/planner/ui/popups/DayPickerPopup';
 import { useCardPopups } from './useCardPopups';
 
 interface Props {

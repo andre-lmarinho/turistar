@@ -1,6 +1,6 @@
 // src/app/planner/[slug]/page.tsx
 
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';
 
 export const dynamic = 'force-dynamic';

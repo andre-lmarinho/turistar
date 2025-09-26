@@ -27,6 +27,6 @@ For deeper feature details see the source files within `src/features`.
 
 ## UI Folder Conventions
 
-- Use `ui/screens` only when a feature needs full-page orchestrators (e.g., planner experiences). If a slice exposes a single composition, you can keep it in the slice `index.ts` instead of a nested folder.
-- Group overlays such as onboarding or activity editors under `ui/modals`.
-- Place reusable pieces like cards, accordions, or icons in `ui/widgets` (feature-specific) or `src/shared/ui` (cross-feature atoms). Keep these components lightweight and decoupled from domain logic so they can be shared safely.
+- Place feature orchestrators and domain-specific compositions inside `components/`, grouping by capability (e.g., `components/dnd`, `components/budget`, `components/map`). Routes should import from these modules instead of assembling UI inside `app/`.
+- Keep overlays, editors, and other layered experiences alongside the rest of the feature components (for example, `components/modal/ActivityModal.tsx`), so the slice owns its full UX.
+- Reserve `ui/` for micro widgets like buttons or popups. Create focused subfolders such as `ui/buttons` and `ui/popups`, and keep shared atoms in `src/shared/ui` when they are reused across slices.

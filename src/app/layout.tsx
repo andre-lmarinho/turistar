@@ -5,7 +5,7 @@ import '@/app/globals.css';
 import 'leaflet/dist/leaflet.css';
 
 import Providers from '@/shared/components/Providers';
-import SupabaseProvider from '@/shared/components/providers/SupabaseProvider';
+import SupabaseProvider from '@/shared/components/SupabaseProvider';
 import SeoJsonLd from '@/shared/components/SeoJsonLd';
 import { SITE_URL } from '@/shared/constants/site';
 

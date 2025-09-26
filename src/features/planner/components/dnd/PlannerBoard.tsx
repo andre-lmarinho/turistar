@@ -1,4 +1,4 @@
-// src/features/planner/ui/screens/PlannerBoard.tsx
+// src/features/planner/components/dnd/PlannerBoard.tsx
 'use client';
 
 import React from 'react';

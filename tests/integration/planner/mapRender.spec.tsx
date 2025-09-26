@@ -3,7 +3,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import MapView from '@/features/planner/ui/screens/MapView';
+import MapBoard from '@/features/planner/components/map/MapBoard';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -71,12 +71,12 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-function renderMapView(days: DayPlan[], destCoords: { lat: number; lng: number } | null = null) {
+function renderMapBoard(days: DayPlan[], destCoords: { lat: number; lng: number } | null = null) {
   mockDays = days;
   mockDestCoords = destCoords;
   return render(
     <PlannerProvider planId="p1">
-      <MapView />
+      <MapBoard />
     </PlannerProvider>
   );
 }
@@ -101,13 +101,13 @@ describe('map render integration', () => {
         ],
       },
     ];
-    renderMapView(days);
+    renderMapBoard(days);
     expect(markers[0].title).toBe('Walk');
   });
 
   it('centers map using provided coordinates', () => {
     const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
-    renderMapView(days, { lat: 3, lng: 4 });
+    renderMapBoard(days, { lat: 3, lng: 4 });
     expect(containerProps!.center).toEqual([3, 4]);
   });
 
@@ -121,7 +121,7 @@ describe('map render integration', () => {
         ],
       },
     ];
-    renderMapView(days);
+    renderMapBoard(days);
     markers[0].eventHandlers?.click?.();
     expect(setSelectedActivity).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'a1', dayId: 'd1' })
@@ -136,7 +136,7 @@ describe('map render integration', () => {
         activities: [{ id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]' }],
       },
     ];
-    renderMapView(days);
+    renderMapBoard(days);
     expect(markers.length).toBe(0);
     expect(map.fitBounds).not.toHaveBeenCalled();
   });
@@ -151,10 +151,10 @@ describe('map render integration', () => {
         ],
       },
     ];
-    renderMapView(buildDays(1, 1));
+    renderMapBoard(buildDays(1, 1));
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
     map.fitBounds.mockClear();
-    renderMapView(buildDays(2, 2));
+    renderMapBoard(buildDays(2, 2));
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
   });
 
@@ -168,7 +168,7 @@ describe('map render integration', () => {
         ],
       },
     ];
-    renderMapView(days);
+    renderMapBoard(days);
     const preventDefault = vi.fn();
     markers[0].eventHandlers?.contextmenu?.({
       originalEvent: { preventDefault },
@@ -180,7 +180,7 @@ describe('map render integration', () => {
   });
 
   it('falls back to default center when no coordinates provided', () => {
-    renderMapView([]);
+    renderMapBoard([]);
     expect(containerProps!.center).toEqual([0, 0]);
     expect(map.fitBounds).not.toHaveBeenCalled();
   });
@@ -195,9 +195,9 @@ describe('map render integration', () => {
         ],
       },
     ];
-    renderMapView(buildDays('A1', 1, 1));
+    renderMapBoard(buildDays('A1', 1, 1));
     expect(markers).toHaveLength(1);
-    renderMapView(buildDays('A2', 2, 2));
+    renderMapBoard(buildDays('A2', 2, 2));
     expect(markers).toHaveLength(2);
     expect(markers[1].title).toBe('A2');
   });

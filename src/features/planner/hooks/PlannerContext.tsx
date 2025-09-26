@@ -4,7 +4,7 @@
 import { usePlanner } from '@/features/planner/hooks/usePlanner';
 import { useSelectedActivity } from '@/features/planner/hooks/useSelectedActivity';
 import { usePlanDays } from '@/features/planner/hooks/usePlanDaysSupabase';
-import { createContextProvider } from '@/shared/context/createContextProvider';
+import { createContextProvider } from '@/shared/lib/createContextProvider';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { usePersistedPlannerDays } from './usePersistedPlannerDays';
 

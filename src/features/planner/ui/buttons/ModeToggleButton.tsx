@@ -1,4 +1,4 @@
-// src/features/planner/ui/widgets/buttons/ModeToggleButton.tsx
+// src/features/planner/ui/buttons/ModeToggleButton.tsx
 'use client';
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';

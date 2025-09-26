@@ -1,4 +1,4 @@
-// src/features/planner/ui/widgets/popups/DayPickerPopup.tsx
+// src/features/planner/ui/popups/DayPickerPopup.tsx
 'use client';
 
 import React from 'react';

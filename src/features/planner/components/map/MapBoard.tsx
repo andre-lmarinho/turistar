@@ -1,4 +1,4 @@
-// src/features/planner/ui/screens/MapView.tsx
+// src/features/planner/components/map/MapBoard.tsx
 'use client';
 
 import React, { useRef, useEffect, useMemo } from 'react';
@@ -45,7 +45,7 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-function MapView() {
+function MapBoard() {
   const { days, setSelectedActivity, destCoords } = usePlannerContext();
   const centerCoords = destCoords ?? undefined;
   const dayPaths = useMemo(
@@ -144,4 +144,4 @@ function MapView() {
   );
 }
 
-export default React.memo(MapView);
+export default React.memo(MapBoard);

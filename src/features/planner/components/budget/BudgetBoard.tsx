@@ -1,4 +1,4 @@
-// src/features/planner/ui/screens/BudgetPanel.tsx
+// src/features/planner/components/budget/BudgetBoard.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -8,7 +8,7 @@ import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
-import ActivitiesBudgetPopup from '@/features/planner/components/budget/activities/ActivitiesBudget';
+import ActivitiesBudgetPopup from '@/features/planner/components/budget/ActivitiesBudget';
 import { Button } from '@/shared/ui/button';
 import InfoPopup from '@/shared/ui/popups/InfoPopup';
 import type { Entry } from '@/features/planner/types/budget/budget';
@@ -19,7 +19,7 @@ interface Props {
   persist?: boolean;
 }
 
-function BudgetPanel({ initialBudget, initialEntries, persist = true }: Props) {
+function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
   const { planId, days, updateActivity } = usePlannerContext();
   const activitiesTotal = days.reduce(
     (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
@@ -75,4 +75,4 @@ function BudgetPanel({ initialBudget, initialEntries, persist = true }: Props) {
   );
 }
 
-export default React.memo(BudgetPanel);
+export default React.memo(BudgetBoard);

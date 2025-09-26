@@ -1,4 +1,4 @@
-// src/features/planner/ui/widgets/popups/CardColorsPopup.tsx
+// src/features/planner/ui/popups/CardColorsPopup.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';

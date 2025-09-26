@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
     <div>
@@ -69,13 +69,13 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/ui/screens/PlannerBoard', () => ({
+vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   default: () => <div data-testid="planner-board" />,
 }));
-vi.mock('@/features/planner/ui/screens/MapView', () => ({
+vi.mock('@/features/planner/components/map/MapBoard', () => ({
   default: () => <div data-testid="map-view" />,
 }));
-vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
+vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   default: () => <div data-testid="budget-panel" />,
 }));
 
@@ -84,7 +84,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {

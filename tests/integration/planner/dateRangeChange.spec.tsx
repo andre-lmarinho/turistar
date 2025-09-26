@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 type Bounds = { sw: [number, number]; ne: [number, number] };
 interface PlannerCtx {
@@ -44,7 +44,7 @@ vi.mock('@/shared/ui/DatePicker', () => ({
   DateRangePickerIcon: () => <div />,
 }));
 
-vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: () => <div />, // not used in this test
 }));
@@ -164,7 +164,7 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 }));
 
 // Downstream components that read from planner context
-vi.mock('@/features/planner/ui/screens/PlannerBoard', () => {
+vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
   const React = require('react');
   return {
     default: function PlannerBoardMock() {
@@ -174,7 +174,7 @@ vi.mock('@/features/planner/ui/screens/PlannerBoard', () => {
   };
 });
 
-vi.mock('@/features/planner/ui/screens/MapView', () => {
+vi.mock('@/features/planner/components/map/MapBoard', () => {
   const React = require('react');
   return {
     default: function MapViewMock() {
@@ -192,7 +192,7 @@ vi.mock('@/features/planner/ui/screens/MapView', () => {
   };
 });
 
-vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
+vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   default: () => <div />,
 }));
 

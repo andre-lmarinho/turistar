@@ -1,4 +1,4 @@
-// src/features/planner/components/budget/activities/ActivitiesBudget.tsx
+// src/features/planner/components/budget/ActivitiesBudget.tsx
 'use client';
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';

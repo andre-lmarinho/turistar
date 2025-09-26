@@ -1,4 +1,4 @@
-// src/features/planner/ui/widgets/buttons/UpdateButton.tsx
+// src/features/planner/ui/buttons/UpdateButton.tsx
 'use client';
 
 import React from 'react';

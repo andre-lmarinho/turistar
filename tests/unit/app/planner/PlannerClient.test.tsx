@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 let mockPlanId = 'plan1';
 
@@ -95,10 +95,10 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock('@/features/planner/ui/screens/PlannerBoard', () => ({
+vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   default: () => <div data-testid="board" />,
 }));
-vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
+vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   default: () => <div data-testid="budget" />,
 }));
 vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
@@ -121,7 +121,7 @@ vi.mock('@/shared/ui/DatePicker', async () => {
   };
 });
 
-vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: () => <div data-testid="mode-toggle" />,
 }));

@@ -10,7 +10,7 @@ vi.mock('next/dynamic', () => ({
   default: () => () => <div data-testid="mocked-dynamic-component" />,
 }));
 
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 describe('Accessibility — Planner page', () => {
   it('has no a11y violations', async () => {

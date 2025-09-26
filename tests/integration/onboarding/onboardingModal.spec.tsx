@@ -101,13 +101,13 @@ vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   default: onboardingMocks.OnboardingModal,
 }));
 
-vi.mock('@/features/planner/ui/screens/PlannerBoard', () => ({
+vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   default: () => <div />,
 }));
-vi.mock('@/features/planner/ui/screens/MapView', () => ({
+vi.mock('@/features/planner/components/map/MapBoard', () => ({
   default: () => <div />,
 }));
-vi.mock('@/features/planner/ui/screens/BudgetPanel', () => ({
+vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   default: () => <div />,
 }));
 
@@ -116,7 +116,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 describe('onboarding modal visibility', () => {
   it('shows modal initially and hides after finish', async () => {

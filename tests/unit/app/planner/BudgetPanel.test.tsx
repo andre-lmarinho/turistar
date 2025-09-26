@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import BudgetPanel from '@/features/planner/ui/screens/BudgetPanel';
+import BudgetBoard from '@/features/planner/components/budget/BudgetBoard';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import { vi } from 'vitest';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
@@ -90,7 +90,7 @@ describe.skip('BudgetPanel', () => {
     ];
     render(
       <PlannerProvider planId="p1">
-        <BudgetPanel />
+        <BudgetBoard />
       </PlannerProvider>
     );
     await waitFor(() => expect(screen.getAllByText(/\$\s*25\.00/).length).toBeGreaterThan(0));

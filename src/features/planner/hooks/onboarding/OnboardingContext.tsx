@@ -1,7 +1,7 @@
 // src/features/planner/hooks/onboarding/OnboardingContext.tsx
 'use client';
 
-import { createContextProvider } from '@/shared/context/createContextProvider';
+import { createContextProvider } from '@/shared/lib/createContextProvider';
 import { useOnboardingCheck } from './useOnboardingCheck';
 
 const [OnboardingProvider, useOnboardingContext] = createContextProvider(
