@@ -1,4 +1,4 @@
-// src/shared/ui/button-especials/ModeToggleButton.tsx
+// src/features/planner/ui/widgets/buttons/ModeToggleButton.tsx
 'use client';
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
@@ -6,7 +6,7 @@ import { motion, useMotionValue, animate, type ValueAnimationTransition } from '
 import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
 import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
-import { KEY_BINDS } from '@/shared/constants/keyBinds';
+import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 
 type Mode = 'planner' | 'map' | 'budget';

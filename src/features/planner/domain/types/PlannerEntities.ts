@@ -1,4 +1,4 @@
-// src/shared/types/index.ts
+// src/features/planner/domain/types/PlannerEntities.ts
 
 /**
  * A single activity within a plan.

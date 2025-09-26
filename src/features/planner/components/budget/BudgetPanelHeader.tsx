@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info, DollarSign } from 'lucide-react';
-import { CATEGORIES } from '@/shared/constants/budget';
-import { BUDGET_INFO } from '@/shared/constants/budgetInfo';
+import { CATEGORIES } from '@/features/planner/domain/constants/budget';
+import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import InfoPopup from '@/shared/ui/popups/InfoPopup';

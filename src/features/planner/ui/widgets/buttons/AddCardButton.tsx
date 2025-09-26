@@ -1,10 +1,10 @@
-// src/shared/ui/button-especials/AddCardButton.tsx
+// src/features/planner/ui/widgets/buttons/AddCardButton.tsx
 'use client';
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS } from '@/shared/constants/colors';
-import { KEY_BINDS } from '@/shared/constants/keyBinds';
+import { DEFAULT_NEW_CARD_COLOR_INDEX, DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
+import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
 import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
 
 export type AddCardButtonPosition = 'new' | 'insert';

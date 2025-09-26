@@ -2,7 +2,7 @@
 
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface PlanDayRow {
   id: string;

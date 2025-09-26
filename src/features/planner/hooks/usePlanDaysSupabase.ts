@@ -5,10 +5,10 @@ import {
   type SupabaseActivityRow,
   type SupabasePlanDayRow,
 } from '@/features/planner/services/supabase/planDaysMapper';
-import { usePlanResource } from '@/shared/hooks/usePlanResource';
+import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
-import type { PlanDay, DayPlan } from '@/shared/types';
+import type { PlanDay, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { fetchExistingDays, deleteRemovedDays, upsertDayActivities } from './persistDaysHelpers';
 
 interface QueryBuilder extends SupabaseQueryBuilder {

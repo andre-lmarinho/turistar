@@ -121,7 +121,7 @@ vi.mock('@/shared/ui/DatePicker', async () => {
   };
 });
 
-vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: () => <div data-testid="mode-toggle" />,
 }));

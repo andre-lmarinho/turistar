@@ -1,6 +1,6 @@
 // src/features/planner/services/cloneDays.ts
 
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Creates a shallow copy of each day and its activities array.

@@ -1,9 +1,9 @@
-// src/shared/hooks/ui/useKeyBinds.ts
+// src/features/planner/hooks/internal/useKeyBinds.ts
 'use client';
 
 import { useCallback, useMemo } from 'react';
-import { KEY_BINDS } from '@/shared/constants/keyBinds';
-import { useKeyListener } from './useKeyListener';
+import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
+import { useKeyListener } from '@/shared/hooks/ui/useKeyListener';
 
 interface KeyBindOptions {
   onPlanner: () => void;

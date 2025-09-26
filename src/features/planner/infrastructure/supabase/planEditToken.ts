@@ -1,4 +1,4 @@
-// src/shared/lib/planEditToken.ts
+// src/features/planner/infrastructure/supabase/planEditToken.ts
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 const KEY = 'plan_edit_tokens'; // map of plan_id -> token

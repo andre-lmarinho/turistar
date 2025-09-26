@@ -1,4 +1,4 @@
-// src/shared/constants/budgetInfo.ts
+// src/features/planner/domain/constants/budgetInfo.ts
 
 export const BUDGET_INFO = {
   totalBudget: 'The amount you plan to spend on your trip.',

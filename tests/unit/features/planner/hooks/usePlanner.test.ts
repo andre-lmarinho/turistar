@@ -3,7 +3,7 @@
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 import { usePlanner } from '@/features/planner/hooks/usePlanner';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 let params = new URLSearchParams();
 

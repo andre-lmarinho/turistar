@@ -1,10 +1,10 @@
-// src/shared/hooks/ui/useActivityPopupControls.ts
+// src/features/planner/hooks/internal/useActivityPopupControls.tsx
 'use client';
 
 import React from 'react';
-import type { Activity, DayPlan } from '@/shared/types';
-import CardColorsPopup from '@/shared/ui/popups/CardColorsPopup';
-import DayPickerPopup from '@/shared/ui/popups/DayPickerPopup';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import CardColorsPopup from '@/features/planner/ui/widgets/popups/CardColorsPopup';
+import DayPickerPopup from '@/features/planner/ui/widgets/popups/DayPickerPopup';
 import { useCardPopups } from './useCardPopups';
 
 interface Props {

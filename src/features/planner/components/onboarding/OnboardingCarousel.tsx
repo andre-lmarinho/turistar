@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
-import { ONBOARDING_STEPS } from '@/shared/constants/onboarding';
+import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
 import NavCircleButton from '@/shared/ui/button-icons/NavCircleButton';
 
 interface OnboardingCarouselProps {

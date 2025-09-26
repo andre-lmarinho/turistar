@@ -1,5 +1,5 @@
-// src/shared/hooks/ui/useCardColors.ts
-import { DEFAULT_COLORS } from '@/shared/constants/colors';
+// src/features/planner/hooks/internal/useCardColors.ts
+import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 
 export function useCardColors(twBg?: string, bgColor?: string) {
   const colorClass = twBg ?? (bgColor && !bgColor.startsWith('#') ? bgColor : undefined);

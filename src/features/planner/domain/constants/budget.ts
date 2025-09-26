@@ -1,4 +1,4 @@
-// src/shared/constants/budget.ts
+// src/features/planner/domain/constants/budget.ts
 
 import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
 

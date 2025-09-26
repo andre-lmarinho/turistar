@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
     <div>

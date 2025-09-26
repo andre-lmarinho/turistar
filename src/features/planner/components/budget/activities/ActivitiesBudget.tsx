@@ -8,7 +8,7 @@ import { Input } from '@/shared/ui/input';
 import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Modal from '@/shared/ui/Modal';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface ActivitiesBudgetProps {
   open: boolean;

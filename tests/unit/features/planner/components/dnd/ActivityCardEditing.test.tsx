@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import ActivityCardEditing from '@/features/planner/components/dnd/ActivityCardEditing';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 function renderComponent() {
   const cardRef = React.createRef<HTMLDivElement>();

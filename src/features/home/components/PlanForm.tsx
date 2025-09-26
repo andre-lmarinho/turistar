@@ -8,13 +8,13 @@ import Image from 'next/image';
 import { Button } from '@/shared/ui/button';
 import { DateRangePicker } from '@/shared/ui/DatePicker';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
-import type { AutocompletePlace } from '@/shared/types';
+import type { AutocompletePlace } from '@/features/planner/domain/types/PlannerEntities';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlan } from '@/app/planner/actions/createPlan';
-import { usePlanEditTokens } from '@/shared/lib/planEditToken';
-import { useRecentPlan } from '@/shared/hooks/useRecentPlan';
+import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
+import { useRecentPlan } from '@/features/planner/hooks/internal/useRecentPlan';
 
 export default function PlanForm() {
   const router = useRouter();

@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { DndContext } from '@dnd-kit/core';
 import SortableItem from '@/features/planner/components/dnd/SortableItem';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 describe('SortableItem', () => {
   const activity = { id: 'x', title: 'Hello', color: 'bg-[var(--color-1)]' } as const;

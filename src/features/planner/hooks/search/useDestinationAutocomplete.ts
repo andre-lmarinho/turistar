@@ -2,7 +2,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { AutocompletePlace } from '@/shared/types';
+import type { AutocompletePlace } from '@/features/planner/domain/types/PlannerEntities';
 
 async function fetchAutocomplete(
   text: string,

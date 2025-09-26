@@ -6,8 +6,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core';
 
 import SortableItem from './SortableItem';
-import AddCardButton from '@/shared/ui/button-especials/AddCardButton';
-import type { DayPlan, Activity } from '@/shared/types';
+import AddCardButton from '@/features/planner/ui/widgets/buttons/AddCardButton';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 interface DayColumnProps {
   day: DayPlan;

@@ -1,4 +1,4 @@
-// src/shared/constants/keyBinds.ts
+// src/features/planner/domain/constants/keyBinds.ts
 
 /**
  * Keyboard shortcuts used across the planner UI.

@@ -5,7 +5,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import BudgetPanel from '@/features/planner/ui/screens/BudgetPanel';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 let mockDays: DayPlan[] = [];
 

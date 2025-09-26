@@ -1,4 +1,4 @@
-// src/shared/constants/onboarding.ts
+// src/features/planner/domain/constants/onboarding.ts
 
 export interface OnboardingStep {
   title: string;

@@ -7,7 +7,7 @@ import { useSortable } from '@dnd-kit/sortable';
 
 import { cn } from '@/shared/utils/utils';
 import ActivityCard from './ActivityCard';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface SortableItemProps {
   id: string;

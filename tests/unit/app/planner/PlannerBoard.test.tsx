@@ -5,7 +5,7 @@ import { within } from '@testing-library/react';
 import { closestCenter } from '@dnd-kit/core';
 import PlannerBoard from '@/features/planner/ui/screens/PlannerBoard';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan, Activity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { vi } from 'vitest';
 
 function buildActivities(prefix: string, count: number): Activity[] {

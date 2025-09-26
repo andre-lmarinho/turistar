@@ -2,7 +2,7 @@
 'use client';
 import { useCallback, useEffect, useRef } from 'react';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {

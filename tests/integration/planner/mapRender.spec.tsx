@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import MapView from '@/features/planner/ui/screens/MapView';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 const map = { fitBounds: vi.fn() };
 const markers: Array<{

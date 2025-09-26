@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import UpdateButton from '@/shared/ui/button-especials/UpdateButton';
+import UpdateButton from '@/features/planner/ui/widgets/buttons/UpdateButton';
 
 describe('UpdateButton', () => {
   it('is disabled when ready is false', () => {

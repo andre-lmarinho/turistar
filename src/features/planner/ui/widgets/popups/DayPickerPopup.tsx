@@ -1,8 +1,8 @@
-// src/shared/ui/popups/DayPickerPopup.tsx
+// src/features/planner/ui/widgets/popups/DayPickerPopup.tsx
 'use client';
 
 import React from 'react';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Popup from '@/shared/ui/popups/Popup';
 

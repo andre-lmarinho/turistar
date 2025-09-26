@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 import { PlannerClient } from '@/features/planner';
 
@@ -44,7 +44,7 @@ vi.mock('@/shared/ui/DatePicker', () => ({
   DateRangePickerIcon: () => <div />,
 }));
 
-vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/widgets/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: () => <div />, // not used in this test
 }));

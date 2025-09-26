@@ -4,9 +4,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Button } from '@/shared/ui/button';
-import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
+import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import { cn } from '@/shared/utils/utils';

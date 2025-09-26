@@ -6,7 +6,7 @@ import {
   deleteRemovedDays,
   upsertDayActivities,
 } from '@/features/planner/hooks/persistDaysHelpers';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 const mockFrom = vi.fn();
 vi.mock('@/shared/lib/supabaseClient', () => ({

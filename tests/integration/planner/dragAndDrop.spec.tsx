@@ -3,7 +3,7 @@
 import { renderHook, act } from '@testing-library/react';
 import type { DragStartEvent, DragOverEvent } from '@dnd-kit/core';
 import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
-import type { DayPlan, Activity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 describe('drag and drop integration', () => {
   function setup(initial?: DayPlan[]) {

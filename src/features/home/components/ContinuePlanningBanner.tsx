@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { differenceInCalendarDays } from 'date-fns';
 
 import { Button } from '@/shared/ui/button';
-import { useRecentPlan } from '@/shared/hooks/useRecentPlan';
+import { useRecentPlan } from '@/features/planner/hooks/internal/useRecentPlan';
 
 export default function ContinuePlanningBanner() {
   const { recentPlan } = useRecentPlan();

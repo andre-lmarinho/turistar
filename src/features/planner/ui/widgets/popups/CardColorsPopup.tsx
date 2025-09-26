@@ -1,8 +1,8 @@
-// src/shared/ui/popups/CardColorsPopup.tsx
+// src/features/planner/ui/widgets/popups/CardColorsPopup.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { DEFAULT_COLORS } from '@/shared/constants/colors';
+import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
 import CloseButton from '@/shared/ui/button-icons/CloseButton';

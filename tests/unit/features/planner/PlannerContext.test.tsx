@@ -5,7 +5,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 // Mock hooks used inside PlannerContext
 vi.mock('@/features/planner/hooks/usePlanner', () => {

@@ -8,7 +8,7 @@ import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,
 } from '../services/supabase/planDaysMapper';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface PlannerExperiencePayload {
   planId: string;

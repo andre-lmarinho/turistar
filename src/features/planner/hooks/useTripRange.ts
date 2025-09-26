@@ -5,7 +5,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { eachDayOfInterval, parseISO } from 'date-fns';
 import { DateRange } from 'react-day-picker';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Manages the trip date range in client state.

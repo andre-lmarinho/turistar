@@ -1,4 +1,4 @@
-// src/shared/constants/colors.ts
+// src/features/planner/domain/constants/colors.ts
 
 /**
  * Index of the default new card color

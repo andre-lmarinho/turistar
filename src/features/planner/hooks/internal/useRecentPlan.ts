@@ -1,4 +1,4 @@
-// src/shared/hooks/useRecentPlan.ts
+// src/features/planner/hooks/internal/useRecentPlan.ts
 'use client';
 
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
