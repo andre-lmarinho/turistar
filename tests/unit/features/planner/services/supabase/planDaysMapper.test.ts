@@ -4,7 +4,10 @@ import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,
 } from '@/features/planner/services/supabase/planDaysMapper';
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/features/planner/domain/constants/colors';
+import {
+  DEFAULT_COLORS,
+  DEFAULT_NEW_CARD_COLOR_INDEX,
+} from '@/features/planner/domain/constants/colors';
 
 const DEFAULT_COLOR = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg;
 

@@ -12,7 +12,7 @@ import type { AutocompletePlace } from '@/features/planner/domain/types/PlannerE
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
-import { createPlan } from '@/app/planner/actions/createPlan';
+import { createPlannerPlan } from '@/features/planner';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import { useRecentPlan } from '@/features/planner/hooks/internal/useRecentPlan';
 
@@ -69,30 +69,20 @@ export default function PlanForm() {
 
     setLoading(true);
     try {
-      const {
-        id: planId,
-        publicSlug,
-        editToken,
-      } = await createPlan(
-        title || destParam,
-        { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
-        range.from.toISOString(),
-        range.to.toISOString()
-      );
-
-      saveEditToken(planId, editToken);
-      saveRecentPlan({
-        id: planId,
-        slug: publicSlug,
-        dest: destParam,
-        start: range.from.toISOString(),
-        end: range.to.toISOString(),
+      const { planId, publicSlug, editToken, recentPlan } = await createPlannerPlan({
+        title: title || destParam,
+        destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
+        startDate: range.from.toISOString(),
+        endDate: range.to.toISOString(),
       });
 
+      saveEditToken(planId, editToken);
+      saveRecentPlan(recentPlan);
+
       const query = new URLSearchParams({
-        dest: destParam,
-        start: range.from.toISOString(),
-        end: range.to.toISOString(),
+        dest: recentPlan.dest,
+        start: recentPlan.start,
+        end: recentPlan.end,
       });
       if (coords) {
         query.set('lat', String(coords.lat));

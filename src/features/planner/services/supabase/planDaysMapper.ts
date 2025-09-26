@@ -1,6 +1,9 @@
 // src/features/planner/services/supabase/planDaysMapper.ts
 
-import { DEFAULT_COLORS, DEFAULT_NEW_CARD_COLOR_INDEX } from '@/features/planner/domain/constants/colors';
+import {
+  DEFAULT_COLORS,
+  DEFAULT_NEW_CARD_COLOR_INDEX,
+} from '@/features/planner/domain/constants/colors';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { format, parseISO } from 'date-fns';
 

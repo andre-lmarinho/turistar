@@ -2,7 +2,10 @@
 
 // Helpers for fetching POIs from the Geoapify API.
 
-import type { SearchActivity, AutocompletePlace } from '@/features/planner/domain/types/PlannerEntities';
+import type {
+  SearchActivity,
+  AutocompletePlace,
+} from '@/features/planner/domain/types/PlannerEntities';
 import { clientEnv } from './clientEnv';
 
 /* Types */

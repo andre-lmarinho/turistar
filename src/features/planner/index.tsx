@@ -26,3 +26,10 @@ export type { PlannerClientProps } from './ui/screens/PlannerClient';
 export { getPublicPlannerExperience };
 export type { PlannerExperiencePayload } from './server/getPublicPlannerExperience';
 export { default as PlannerClient } from './ui/screens/PlannerClient';
+export { createPlannerPlan } from './server/createPlan';
+export type {
+  CreatePlannerPlanInput,
+  CreatePlannerPlanResult,
+  PlannerDestination,
+  PlannerRecentPlanPayload,
+} from './server/createPlan';
