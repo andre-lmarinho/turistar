@@ -1,7 +1,7 @@
 // src/app/planner/[slug]/page.tsx
 export { dynamic } from '@/features/planner';
 
-import PlannerExperience, { getPlannerExperience } from '@/features/planner';
+import { PlannerExperience, getPlannerExperience } from '@/features/planner';
 
 type PageProps = {
   params: Promise<{ slug: string }>;

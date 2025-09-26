@@ -48,8 +48,7 @@ export async function getPublicPlannerExperience({
 
   const planId = planRow.id;
   const title = planRow.title ?? undefined;
-  const destination =
-    dest ?? planRow.plan_destinations?.[0]?.destinations?.name ?? undefined;
+  const destination = dest ?? planRow.plan_destinations?.[0]?.destinations?.name ?? undefined;
 
   if (!destination) {
     notFound();

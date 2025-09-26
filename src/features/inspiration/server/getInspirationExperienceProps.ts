@@ -24,7 +24,7 @@ function toInitialEntries(data: InspirationDocument) {
 }
 
 export async function getInspirationExperienceProps(
-  city: string,
+  city: string
 ): Promise<InspirationExperienceProps> {
   assertValidCitySlug(city);
 

@@ -20,12 +20,16 @@ export default function InspirationLink() {
     {
       city: 'rome',
       label: rome.title_inspiration,
-      images: rome.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
+      images: rome.itinerary.flatMap((day) =>
+        day.activities.map((activity) => activity.imageUrl ?? '')
+      ),
     },
     {
       city: 'paris',
       label: paris.title_inspiration,
-      images: paris.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
+      images: paris.itinerary.flatMap((day) =>
+        day.activities.map((activity) => activity.imageUrl ?? '')
+      ),
     },
     {
       city: 'boipeba',

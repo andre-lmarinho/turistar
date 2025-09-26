@@ -3,10 +3,7 @@ import type { Metadata } from 'next';
 import { capitalize } from '@/shared/utils/utils';
 import { SITE_URL } from '@/shared/constants/site';
 
-import {
-  assertValidCitySlug,
-  safeReadInspirationData,
-} from './inspirationData';
+import { assertValidCitySlug, safeReadInspirationData } from './inspirationData';
 
 export async function generateInspirationMetadata(city: string): Promise<Metadata> {
   assertValidCitySlug(city);
@@ -30,13 +27,7 @@ export async function generateInspirationMetadata(city: string): Promise<Metadat
       title,
       description: defaultDescription,
     },
-    keywords: [
-      capitalize(city),
-      'travel planner',
-      'itinerary',
-      'budget travel',
-      'map',
-    ],
+    keywords: [capitalize(city), 'travel planner', 'itinerary', 'budget travel', 'map'],
   };
 
   const data = await safeReadInspirationData(city);

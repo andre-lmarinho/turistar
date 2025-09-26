@@ -1,10 +1,6 @@
 // src/features/planner/index.tsx
 
-import nextDynamic from 'next/dynamic';
-
-import LoadingScreen from '@/shared/components/LoadingScreen';
-
-import type { PlannerClientProps } from './ui/screens/PlannerClient';
+import PlannerExperienceComponent from './ui/screens/PlannerExperienceDynamic';
 import {
   getPublicPlannerExperience,
   type PlannerExperiencePayload,
@@ -19,17 +15,14 @@ export async function getPlannerExperience(props: {
   return getPublicPlannerExperience(props);
 }
 
-export const PlannerExperience = nextDynamic<PlannerClientProps>(
-  () => import('./ui/screens/PlannerClient'),
-  {
-    ssr: false,
-    loading: () => <LoadingScreen text="Loading planner…" />,
-  },
-);
+export function PlannerPage() {
+  return <PlannerExperienceComponent />;
+}
 
-export default PlannerExperience;
+export default PlannerPage;
 
-export type { PlannerClientProps };
+export { default as PlannerExperience } from './ui/screens/PlannerExperienceDynamic';
+export type { PlannerClientProps } from './ui/screens/PlannerClient';
 export { getPublicPlannerExperience };
 export type { PlannerExperiencePayload } from './server/getPublicPlannerExperience';
 export { default as PlannerClient } from './ui/screens/PlannerClient';
