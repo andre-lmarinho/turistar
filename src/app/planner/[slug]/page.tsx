@@ -1,7 +1,8 @@
 // src/app/planner/[slug]/page.tsx
 export { dynamic } from '@/features/planner';
 
-import { PlannerExperience, getPlannerExperience } from '@/features/planner';
+import PlannerExperience from '@/features/planner/ui/screens/PlannerExperienceDynamic';
+import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -12,7 +13,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   const { slug } = await params;
   const { dest } = await searchParams;
 
-  const experience = await getPlannerExperience({ slug, dest });
+  const experience = await getPublicPlannerExperience({ slug, dest });
 
   return (
     <PlannerExperience

@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { PlannerClient } from '@/features/planner';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 
 let mockPlanId = 'plan1';
 

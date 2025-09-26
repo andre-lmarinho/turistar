@@ -84,7 +84,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import { PlannerClient } from '@/features/planner';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {

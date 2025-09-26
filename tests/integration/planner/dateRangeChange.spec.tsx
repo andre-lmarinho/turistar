@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
-import { PlannerClient } from '@/features/planner';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 
 type Bounds = { sw: [number, number]; ne: [number, number] };
 interface PlannerCtx {

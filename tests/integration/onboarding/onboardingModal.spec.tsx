@@ -116,7 +116,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import { PlannerClient } from '@/features/planner';
+import PlannerClient from '@/features/planner/ui/screens/PlannerClient';
 
 describe('onboarding modal visibility', () => {
   it('shows modal initially and hides after finish', async () => {
