@@ -11,6 +11,7 @@ import Modal from '@/shared/ui/Modal';
 export default function Hero() {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const modalTitleId = 'hero-plan-modal-title';
   useEffect(() => {
     const interval = setInterval(() => {
       setPosition({
@@ -57,7 +58,11 @@ export default function Hero() {
         overlayClassName="backdrop-overlay"
         wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
         className="w-full max-w-md p-6"
+        aria-labelledby={modalTitleId}
       >
+        <h2 id={modalTitleId} className="sr-only">
+          Start planning your trip
+        </h2>
         <div className="flex w-full justify-end">
           <CloseButton onClick={closeForm} />
         </div>
