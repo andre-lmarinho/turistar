@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import InspirationCard from './InspirationCard';
+import InspirationCard from '../ui/InspirationCard';
 import romeJson from '@/features/inspiration/data/rome.json';
 import parisJson from '@/features/inspiration/data/paris.json';
 import boipebaJson from '@/features/inspiration/data/boipeba.json';

@@ -1,9 +1,0 @@
-.is-dragging {
-  user-select: none;
-  scroll-snap-type: none !important;
-  scroll-behavior: auto !important;
-  cursor: grabbing !important;
-}
-.no-snap {
-  scroll-snap-type: none !important;
-}

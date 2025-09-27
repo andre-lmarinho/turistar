@@ -1,4 +1,4 @@
-// src/features/home/components/HomeFooter.tsx
+// src/features/home/ui/HomeFooter.tsx
 
 import Link from 'next/link';
 
