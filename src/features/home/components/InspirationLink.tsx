@@ -11,34 +11,20 @@ import type { InspirationDocument } from '@/features/inspiration/server/types';
 
 type InspirationPreview = InspirationDocument & { title_inspiration: string };
 
-const rome = romeJson as InspirationPreview;
-const paris = parisJson as InspirationPreview;
-const boipeba = boipebaJson as InspirationPreview;
+const inspirationSources: Array<{ slug: string; doc: InspirationPreview }> = [
+  { slug: 'rome', doc: romeJson as InspirationPreview },
+  { slug: 'paris', doc: parisJson as InspirationPreview },
+  { slug: 'boipeba', doc: boipebaJson as InspirationPreview },
+];
+
+const toDestinationPreview = ({ slug, doc }: { slug: string; doc: InspirationPreview }) => ({
+  city: slug,
+  label: doc.title_inspiration,
+  images: doc.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
+});
 
 export default function InspirationLink() {
-  const destinations = [
-    {
-      city: 'rome',
-      label: rome.title_inspiration,
-      images: rome.itinerary.flatMap((day) =>
-        day.activities.map((activity) => activity.imageUrl ?? '')
-      ),
-    },
-    {
-      city: 'paris',
-      label: paris.title_inspiration,
-      images: paris.itinerary.flatMap((day) =>
-        day.activities.map((activity) => activity.imageUrl ?? '')
-      ),
-    },
-    {
-      city: 'boipeba',
-      label: boipeba.title_inspiration,
-      images: boipeba.itinerary.flatMap((day) =>
-        day.activities.map((activity) => activity.imageUrl ?? '')
-      ),
-    },
-  ];
+  const destinations = inspirationSources.map(toDestinationPreview);
 
   return (
     <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
