@@ -19,6 +19,17 @@ For deeper feature details see the source files within `src/features`.
 - State management: planner data, including budget, lives in feature contexts and synchronizes to Supabase through shared hooks.
 - Geoapify search: destination search and autocomplete run through `/api/search` and client hooks.
 
+## Planner realtime collaboration
+
+The planner uses a realtime, event-driven workflow so multiple travelers can edit the same plan simultaneously:
+
+- **Realtime connection** – `usePlanCollaboration` opens a Supabase Realtime channel that streams every new row from `plan_events` to the client. Incoming payloads are validated in `planEventsRepository` before the reducers consume them.
+- **Event reducers** – Each change is represented as a typed event handled by `planEventReducer.ts`, which applies optimistic updates locally while maintaining ordered days/activities via gap ordering utilities.
+- **Optimistic persistence** – `diffPlanEvents.ts` compares the previous and next state when a user interacts with the planner, emits the minimal set of events, and persists them through the `append_plan_events` RPC. Conflicts trigger a snapshot refresh to reconcile versions.
+- **Durable snapshots** – On load, the hook fetches the latest `plan_snapshots` entry, replays missing events, and then keeps the realtime channel alive. Reconnecting clients follow the same pattern to recover.
+
+See [Planner Realtime Collaboration](./planner/realtime-collaboration.md) for a full reference covering payloads, versioning, and failure handling.
+
 ## Vertical Slice Decisions
 
 - **Feature-owned orchestration**: Routes delegate to feature entry points (e.g., `/inspiration/[city]` re-exports the page from `features/inspiration`). Each slice exposes a single composition component so the `app/` layer stays thin.
