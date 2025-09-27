@@ -17,18 +17,10 @@ const inspirationSources: Array<{ slug: string; doc: InspirationPreview }> = [
   { slug: 'boipeba', doc: boipebaJson as InspirationPreview },
 ];
 
-const toDestinationPreview = ({
-  slug,
-  doc,
-}: {
-  slug: string;
-  doc: InspirationPreview;
-}) => ({
+const toDestinationPreview = ({ slug, doc }: { slug: string; doc: InspirationPreview }) => ({
   city: slug,
   label: doc.title_inspiration,
-  images: doc.itinerary.flatMap((day) =>
-    day.activities.map((activity) => activity.imageUrl ?? '')
-  ),
+  images: doc.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
 });
 
 export default function InspirationLink() {
