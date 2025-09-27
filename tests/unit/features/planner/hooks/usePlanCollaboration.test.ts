@@ -12,19 +12,17 @@ import type {
 import { usePlanCollaboration } from '@/features/planner/hooks/usePlanCollaboration';
 
 const fetchSnapshot = vi.fn<() => Promise<PlanSnapshot>>();
-const fetchEvents = vi.fn<
-  (planId: string, version: number) => Promise<PlanEvent[]>
->();
-const appendEvents = vi.fn<
-  (
-    planId: string,
-    baseVersion: number,
-    events: PlanEventInsert[]
-  ) => Promise<{ version: number; events: PlanEvent[] }>
->();
-const subscribeToPlan = vi.fn<
-  (planId: string, handler: (event: PlanEvent) => void) => { unsubscribe: () => void }
->();
+const fetchEvents = vi.fn<(planId: string, version: number) => Promise<PlanEvent[]>>();
+const appendEvents =
+  vi.fn<
+    (
+      planId: string,
+      baseVersion: number,
+      events: PlanEventInsert[]
+    ) => Promise<{ version: number; events: PlanEvent[] }>
+  >();
+const subscribeToPlan =
+  vi.fn<(planId: string, handler: (event: PlanEvent) => void) => { unsubscribe: () => void }>();
 
 vi.mock('@/features/planner/services/supabase/planEventsRepository', () => ({
   PlanEventsRepository: vi.fn().mockImplementation(() => ({
