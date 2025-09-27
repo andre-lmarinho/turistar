@@ -12,6 +12,11 @@
 - `npm run typecheck` – Run the TypeScript compiler in no-emit mode
 - `npm run test` – Execute the Vitest unit and integration suites
 - `npm run format` – Format source and test files with Prettier
+- `npm run format:check` – Verify repository formatting with Prettier
+
+### CI Expectations
+
+- Execute **all** project validators and CI checks (format, lint, typecheck, and test) before finalizing any implementation to avoid avoidable regressions.
 
 ## Tool Preferences
 
