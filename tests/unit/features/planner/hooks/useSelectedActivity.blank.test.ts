@@ -24,10 +24,13 @@ function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeo
   return {
     days,
     setDays,
+    selectedActivity: selected.selectedActivity,
     addBlankAndSelect: selected.addBlankAndSelect,
     closeModal: selected.closeModal,
-    setSelectedActivity: selected.setSelectedActivity,
     save: selected.save,
+    changeDay: selected.changeDay,
+    changePosition: selected.changePosition,
+    setSelectedActivity: selected.setSelectedActivity,
   };
 }
 
@@ -36,7 +39,7 @@ describe('useSelectedActivity blank placeholders', () => {
     vi.useRealTimers();
   });
 
-  it('removes blank placeholders and skips persistence when closing an untouched modal', async () => {
+  it('does not enqueue persistence when cancelling a brand new card', async () => {
     vi.useFakeTimers();
     const persistSpy = vi.fn().mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
@@ -47,8 +50,7 @@ describe('useSelectedActivity blank placeholders', () => {
       result.current.addBlankAndSelect('day-1');
     });
 
-    expect(result.current.days[0].activities).toHaveLength(1);
-    expect(result.current.days[0].activities[0].title).toBe('');
+    expect(result.current.days[0].activities).toHaveLength(0);
 
     await act(async () => {
       result.current.closeModal();
@@ -64,7 +66,78 @@ describe('useSelectedActivity blank placeholders', () => {
     expect(persistSpy).not.toHaveBeenCalled();
   });
 
-  it('removes placeholders that received a server-assigned id before closing', async () => {
+  it('creates a persisted activity at the reserved index on save', async () => {
+    const idSpy = vi
+      .spyOn(placeholders, 'generateClientActivityId')
+      .mockReturnValue('generated-id');
+    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const initialDays: DayPlan[] = [
+      {
+        id: 'day-1',
+        label: 'Day 1',
+        activities: [
+          { id: 'a', title: 'Breakfast', color: '#f00' },
+          { id: 'b', title: 'Dinner', color: '#0f0' },
+        ],
+      },
+    ];
+
+    const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
+
+    await act(async () => {
+      result.current.addBlankAndSelect('day-1', 1);
+    });
+
+    await act(async () => {
+      result.current.save({ title: 'City tour' });
+    });
+
+    const activities = result.current.days[0].activities;
+    expect(activities).toHaveLength(3);
+    expect(activities[1].id).toBe('generated-id');
+    expect(activities[1].title).toBe('City tour');
+
+    idSpy.mockRestore();
+  });
+
+  it('saves a new card into a different day after changing the selected day', async () => {
+    const idSpy = vi
+      .spyOn(placeholders, 'generateClientActivityId')
+      .mockReturnValue('activity-123');
+    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const initialDays: DayPlan[] = [
+      { id: 'day-1', label: 'Day 1', activities: [{ id: 'a', title: 'Breakfast', color: '#f00' }] },
+      { id: 'day-2', label: 'Day 2', activities: [{ id: 'b', title: 'Dinner', color: '#0f0' }] },
+    ];
+
+    const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
+
+    await act(async () => {
+      result.current.addBlankAndSelect('day-1');
+    });
+
+    const pendingId = result.current.selectedActivity?.id;
+    expect(pendingId).toBeTruthy();
+
+    await act(async () => {
+      if (pendingId) {
+        result.current.changeDay(pendingId, 'day-2');
+      }
+    });
+
+    await act(async () => {
+      result.current.save({ title: 'Museum' });
+    });
+
+    expect(result.current.days[0].activities).toHaveLength(1);
+    expect(result.current.days[1].activities).toHaveLength(2);
+    expect(result.current.days[1].activities[1].id).toBe('activity-123');
+    expect(result.current.days[1].activities[1].title).toBe('Museum');
+
+    idSpy.mockRestore();
+  });
+
+  it('removes blank activities that arrive from the server when closing the modal', async () => {
     const persistSpy = vi.fn().mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
 
@@ -90,33 +163,5 @@ describe('useSelectedActivity blank placeholders', () => {
     });
 
     expect(result.current.days[0].activities).toHaveLength(0);
-  });
-
-  it('replaces a blank placeholder with a persisted activity on save', async () => {
-    const idSpy = vi
-      .spyOn(placeholders, 'generateClientActivityId')
-      .mockReturnValue('generated-id');
-    const persistSpy = vi.fn().mockResolvedValue(undefined);
-    const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
-
-    const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
-
-    await act(async () => {
-      result.current.addBlankAndSelect('day-1');
-    });
-
-    expect(result.current.days[0].activities).toHaveLength(1);
-    expect(result.current.days[0].activities[0].id).toMatch(/^blank-/);
-
-    await act(async () => {
-      result.current.save({ title: 'City tour' });
-    });
-
-    expect(result.current.days[0].activities).toHaveLength(1);
-    const activity = result.current.days[0].activities[0];
-    expect(activity.id).toBe('generated-id');
-    expect(activity.title).toBe('City tour');
-
-    idSpy.mockRestore();
   });
 });
