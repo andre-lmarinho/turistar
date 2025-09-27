@@ -58,29 +58,32 @@ export function usePersistedPlannerDays({
   const { days, setDays } = planner;
   const debouncedDays = useDebounce(days, 500);
   const metaRef = useRef<PersistMeta | null>(null);
+  const queueRef = useRef<PersistQueue | null>(null);
   const mountedRef = useRef(true);
+  const lastAppliedRef = useRef<string | null>(null);
   const isTestEnv = process.env.NODE_ENV === 'test';
   const persistenceEnabled = !isTestEnv || process.env.ENABLE_PLANNER_PERSIST_TESTS === 'true';
   const noopFlush = useCallback(async () => {}, []);
   const allowRemotePersist = persistenceEnabled && persist;
   const storageKey = `planner:${planId}:days`;
-  const [localSnapshot, setLocalSnapshot, localReady] = useLocalStorage<DayPlan[] | null>(
+  const [cachedDays, setCachedDays, cacheReady] = useLocalStorage<DayPlan[] | null>(
     storageKey,
     null
   );
   const localSerialized = useMemo(
-    () => (localSnapshot ? JSON.stringify(localSnapshot) : null),
-    [localSnapshot]
+    () => (cachedDays ? JSON.stringify(cachedDays) : null),
+    [cachedDays]
   );
+
   if (!metaRef.current) {
-    const snapshot = snapshotDays(storedDays ?? days);
+    const initialSnapshot = snapshotDays(storedDays ?? days);
     metaRef.current = {
       ready: storedDays !== undefined,
-      lastSaved: storedDays ? snapshot.serialized : '',
-      fallback: snapshot.state,
+      lastSaved: storedDays ? initialSnapshot.serialized : '',
+      fallback: initialSnapshot.state,
     };
+    lastAppliedRef.current = initialSnapshot.serialized;
   }
-  const queueRef = useRef<PersistQueue | null>(null);
 
   useEffect(
     () => () => {
@@ -91,47 +94,58 @@ export function usePersistedPlannerDays({
 
   useEffect(() => {
     if (!persistenceEnabled) return;
-    if (storedDays == null) return;
-    const snapshot = snapshotDays(storedDays);
-    const meta = metaRef.current!;
-    meta.ready = true;
-    meta.lastSaved = snapshot.serialized;
-    meta.fallback = snapshot.state;
-    if (localSerialized !== snapshot.serialized) {
-      setLocalSnapshot(snapshot.state);
-    }
-  }, [localSerialized, persistenceEnabled, setLocalSnapshot, storedDays]);
-
-  useEffect(() => {
-    if (!persistenceEnabled) return;
-    if (!localReady) return;
+    if (!cacheReady) return;
+    if (cachedDays) return;
     if (storedDays !== undefined) return;
-    if (!localSnapshot) return;
-    const meta = metaRef.current!;
-    meta.ready = true;
-    const snapshot = snapshotDays(localSnapshot);
-    meta.lastSaved = snapshot.serialized;
-    meta.fallback = snapshot.state;
-    if (mountedRef.current) {
-      setDays(cloneDays(localSnapshot));
-    }
-  }, [localReady, localSnapshot, persistenceEnabled, setDays, storedDays]);
-
-  useEffect(() => {
-    if (!persistenceEnabled) return;
-    if (!localReady) return;
-    if (storedDays !== undefined) return;
-    if (localSnapshot) return;
-
-    const meta = metaRef.current!;
-    if (meta.ready) return;
 
     const snapshot = snapshotDays(days);
+    setCachedDays(snapshot.state);
+    const meta = metaRef.current!;
+    meta.fallback = snapshot.state;
+    if (!meta.lastSaved) meta.lastSaved = snapshot.serialized;
+    lastAppliedRef.current = snapshot.serialized;
+  }, [cacheReady, cachedDays, days, persistenceEnabled, setCachedDays, storedDays]);
+
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (!cacheReady) return;
+    if (storedDays !== undefined) return;
+    if (!cachedDays) return;
+
+    const snapshot = snapshotDays(cachedDays);
+    const meta = metaRef.current!;
+    meta.fallback = snapshot.state;
+    if (!meta.lastSaved) meta.lastSaved = snapshot.serialized;
+    if (lastAppliedRef.current === snapshot.serialized) return;
+
+    lastAppliedRef.current = snapshot.serialized;
+    if (mountedRef.current) {
+      setDays(cloneDays(cachedDays));
+    }
+  }, [cacheReady, cachedDays, persistenceEnabled, setDays, storedDays]);
+
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (storedDays === undefined) return;
+
+    const remoteDays = storedDays ?? [];
+    const snapshot = snapshotDays(remoteDays);
+    const meta = metaRef.current!;
     meta.ready = true;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
-    setLocalSnapshot(snapshot.state);
-  }, [days, localReady, localSnapshot, persistenceEnabled, setLocalSnapshot, storedDays]);
+
+    if (cacheReady && localSerialized !== snapshot.serialized) {
+      setCachedDays(snapshot.state);
+    }
+
+    if (lastAppliedRef.current !== snapshot.serialized) {
+      lastAppliedRef.current = snapshot.serialized;
+      if (mountedRef.current) {
+        setDays(cloneDays(remoteDays));
+      }
+    }
+  }, [cacheReady, localSerialized, persistenceEnabled, setCachedDays, setDays, storedDays]);
 
   const { mutateAsync, isPending } = persistDays;
   const flush = useCallback(async () => {
@@ -147,25 +161,26 @@ export function usePersistedPlannerDays({
       meta.fallback = queued.state;
     } catch {
       if (mountedRef.current) {
+        const fallbackSnapshot = snapshotDays(meta.fallback);
+        meta.fallback = fallbackSnapshot.state;
+        lastAppliedRef.current = fallbackSnapshot.serialized;
         setDays(cloneDays(meta.fallback));
+        if (cacheReady && localSerialized !== fallbackSnapshot.serialized) {
+          setCachedDays(fallbackSnapshot.state);
+        }
       }
     } finally {
       if (queueRef.current) void flush();
     }
-  }, [allowRemotePersist, isPending, mutateAsync, setDays]);
-
-  useEffect(() => {
-    if (!allowRemotePersist) return;
-    const meta = metaRef.current!;
-    if (!meta.ready) return;
-    if (debouncedDays.length === 0) return;
-
-    const serialized = JSON.stringify(debouncedDays);
-    if (serialized === meta.lastSaved) return;
-
-    queueRef.current = { state: cloneDays(debouncedDays), serialized };
-    void flush();
-  }, [allowRemotePersist, debouncedDays, flush]);
+  }, [
+    allowRemotePersist,
+    cacheReady,
+    isPending,
+    localSerialized,
+    mutateAsync,
+    setCachedDays,
+    setDays,
+  ]);
 
   useEffect(() => {
     if (!allowRemotePersist) return;
@@ -186,15 +201,30 @@ export function usePersistedPlannerDays({
 
   useEffect(() => {
     if (!persistenceEnabled) return;
-    if (!localReady) return;
-    const meta = metaRef.current;
-    if (!meta?.ready) return;
+    if (!cacheReady) return;
+    if (debouncedDays.length === 0) return;
 
-    const serialized = JSON.stringify(days);
-    if (serialized === localSerialized) return;
+    const snapshot = snapshotDays(debouncedDays);
+    if (localSerialized !== snapshot.serialized) {
+      setCachedDays(snapshot.state);
+    }
 
-    setLocalSnapshot(cloneDays(days));
-  }, [days, localReady, localSerialized, persistenceEnabled, setLocalSnapshot]);
+    if (!allowRemotePersist) return;
+    const meta = metaRef.current!;
+    if (!meta.ready) return;
+    if (snapshot.serialized === meta.lastSaved) return;
+
+    queueRef.current = { state: snapshot.state, serialized: snapshot.serialized };
+    void flush();
+  }, [
+    allowRemotePersist,
+    cacheReady,
+    debouncedDays,
+    flush,
+    localSerialized,
+    persistenceEnabled,
+    setCachedDays,
+  ]);
 
   return { days, setDays, flush: allowRemotePersist ? flush : noopFlush };
 }
