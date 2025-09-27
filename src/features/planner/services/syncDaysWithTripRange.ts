@@ -24,6 +24,7 @@ export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]):
   }
 
   const formattedTrip = tripDays.map((d) => formatDayPlan(d));
+  const tripIdSet = new Set(formattedTrip.map((t) => t.id));
   const map = new Map(currentDays.map((d) => [d.id, d]));
 
   const updated: DayPlan[] = formattedTrip.map((tpl) => {
@@ -37,7 +38,7 @@ export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]):
   const afterActs: DayPlan['activities'] = [];
 
   currentDays.forEach((day) => {
-    if (formattedTrip.some((t) => t.id === day.id)) return;
+    if (tripIdSet.has(day.id)) return;
     const date = parseISO(day.id);
     if (isBefore(date, first)) {
       beforeActs.push(...day.activities);
