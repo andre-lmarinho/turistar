@@ -85,12 +85,12 @@ function FeatureCarouselCard({
   onSelect,
 }: FeatureCarouselCardProps) {
   const cardClassName = cn(
-    'relative w-full overflow-hidden rounded p-6 text-left before:absolute before:inset-y-0 before:left-0 before:w-[6px] before:bg-primary before:content-[""]',
+    'relative w-full overflow-hidden rounded p-6 text-left before:absolute before:inset-y-0 before:left-0 before:w-[6px] before:bg-primary before:content-[""] before:opacity-100 before:transition-opacity before:duration-200 before:ease-out md:before:opacity-0',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
     'transition-[transform,box-shadow,background-color] duration-200 ease-out',
     interactive ? 'cursor-pointer' : 'cursor-default',
     isActive
-      ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px] md:before:bg-primary'
+      ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px] md:before:bg-primary md:before:opacity-100'
       : 'md:[box-shadow:none]'
   );
 
