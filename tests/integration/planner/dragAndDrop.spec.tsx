@@ -34,4 +34,30 @@ describe('drag and drop integration', () => {
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
+
+  it('keeps drag metadata in sync after sequential moves', () => {
+    const { result } = setup();
+    const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
+
+    act(() => {
+      result.current.handleDragStart(startEvent);
+      result.current.handleDragOver({
+        active: { id: 'a1' },
+        over: { id: 'day2' },
+      } as Partial<DragOverEvent> as DragOverEvent);
+    });
+
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+
+    act(() => {
+      result.current.handleDragStart(startEvent);
+      result.current.handleDragOver({
+        active: { id: 'a1' },
+        over: { id: 'day1' },
+      } as Partial<DragOverEvent> as DragOverEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1']);
+  });
 });
