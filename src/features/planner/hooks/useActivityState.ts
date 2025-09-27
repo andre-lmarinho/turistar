@@ -20,10 +20,15 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       if (!copy[dayIndex]) {
         copy[dayIndex] = { id: `temp-${Date.now()}`, label: `Day ${dayIndex + 1}`, activities: [] };
       }
+      const sanitizedTitle = act.title?.trim() ?? '';
+      const nextActivity = {
+        ...act,
+        title: sanitizedTitle.length > 0 ? sanitizedTitle : 'Untitled activity',
+        color: act.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      };
       if (!copy[dayIndex].activities.some((a) => a.id === act.id)) {
         copy[dayIndex].activities.push({
-          ...act,
-          color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+          ...nextActivity,
         });
       }
       return copy;
@@ -42,7 +47,16 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
         day.activities.some((a) => a.id === id)
           ? {
               ...day,
-              activities: day.activities.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+              activities: day.activities.map((a) =>
+                a.id === id
+                  ? {
+                      ...a,
+                      ...patch,
+                      title:
+                        patch.title && patch.title.trim().length > 0 ? patch.title.trim() : a.title,
+                    }
+                  : a
+              ),
             }
           : day
       )
@@ -52,7 +66,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
   function addBlankActivity(dayIndex = 0, insertIndex?: number): Activity {
     const blank: Activity = {
       id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      title: '',
+      title: 'Untitled activity',
       description: '',
       duration: 0,
       color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,

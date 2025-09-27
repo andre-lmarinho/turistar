@@ -7,6 +7,7 @@ export interface Activity {
   id: string;
   title: string;
   color: string;
+  position?: string;
   description?: string;
   address?: string;
   duration?: number;
@@ -52,6 +53,8 @@ export interface DayPlan {
   label: string;
   /** List of activities for this day */
   activities: Activity[];
+  /** Relative ordering position used for conflict-free reordering */
+  position?: string;
 }
 
 /**

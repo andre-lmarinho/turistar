@@ -65,15 +65,26 @@ vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
     changeColor: vi.fn(),
   }),
 }));
-vi.mock('@/features/planner/hooks/usePlanDaysSupabase', () => ({
-  usePlanDays: () => ({ data: storedDays, persistDays }),
+vi.mock('@/features/planner/hooks/usePlanCollaboration', () => ({
+  usePlanCollaboration: () => ({
+    data: storedDays,
+    persistDays,
+    isLoading: false,
+    error: null,
+    version: 1,
+  }),
 }));
 vi.mock('@/shared/hooks/useDebounce', () => ({
   useDebounce: <T,>(value: T) => value,
 }));
-// Mock usePlanDays hook state
-let persistDays: { mutateAsync: Mock<() => Promise<unknown>>; isPending: boolean } = {
+// Mock usePlanCollaboration hook state
+let persistDays: {
+  mutateAsync: Mock<() => Promise<unknown>>;
+  mutate: Mock<() => unknown>;
+  isPending: boolean;
+} = {
   mutateAsync: vi.fn(),
+  mutate: vi.fn(),
   isPending: false,
 };
 let storedDays: DayPlan[] | undefined = undefined;
@@ -89,6 +100,7 @@ describe('PlannerProvider synchronization', () => {
           persistDays.isPending = false;
         });
       }),
+      mutate: vi.fn(),
       isPending: false,
     };
     const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -120,6 +132,7 @@ describe('PlannerProvider synchronization', () => {
           persistDays.isPending = false;
         });
       }),
+      mutate: vi.fn(),
       isPending: false,
     };
     storedDays = initialDays;
