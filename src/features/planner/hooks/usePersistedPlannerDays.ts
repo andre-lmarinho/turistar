@@ -14,7 +14,7 @@ interface UsePersistedPlannerDaysParams {
   planner: Pick<ReturnType<typeof usePlanner>, 'days' | 'setDays'>;
   persistDays: PersistDaysMutation;
   persist?: boolean;
-  storedDays?: DayPlan[] | undefined;
+  storedDays?: DayPlan[] | null;
 }
 
 interface PersistQueue {
@@ -66,7 +66,7 @@ export function usePersistedPlannerDays({
   const queueRef = useRef<PersistQueue | null>(null);
 
   useEffect(() => {
-    if (storedDays === undefined) return;
+    if (storedDays == null) return;
     const snapshot = snapshotDays(storedDays);
     const meta = metaRef.current!;
     meta.ready = true;

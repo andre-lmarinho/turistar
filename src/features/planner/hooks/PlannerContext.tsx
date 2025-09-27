@@ -21,9 +21,10 @@ function usePlannerContextValue({
   dest?: string;
   persist?: boolean;
 }): PlannerCtx {
-  const { data: storedDays, persistDays } = usePlanDays(planId, persist);
+  const { data: storedDaysRaw, persistDays } = usePlanDays(planId, persist);
+  const storedDays = storedDaysRaw ?? undefined;
   const planner = usePlanner({
-    initialDays: (storedDays as unknown as DayPlan[]) ?? initialDays,
+    initialDays: storedDays ?? initialDays,
     planId,
     dest,
     persistDays,
@@ -32,7 +33,7 @@ function usePlannerContextValue({
     planner,
     persistDays,
     persist,
-    storedDays: storedDays as DayPlan[] | undefined,
+    storedDays,
   });
 
   const selected = useSelectedActivity(days, setDays, {
