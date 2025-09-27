@@ -11,3 +11,9 @@ export function isBlankActivityTitle(title: string | undefined | null): boolean 
 export function isPlaceholderActivity(activity: Pick<Activity, 'id' | 'title'>): boolean {
   return activity.id.startsWith(BLANK_ACTIVITY_PREFIX) || isBlankActivityTitle(activity.title);
 }
+
+export function generateClientActivityId(): string {
+  const crypto = globalThis.crypto;
+  if (crypto?.randomUUID) return crypto.randomUUID();
+  return `act-${Math.random().toString(36).slice(2, 10)}`;
+}

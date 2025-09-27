@@ -15,7 +15,7 @@ import { BLANK_ACTIVITY_PREFIX } from '@/features/planner/domain/utils/activityP
  */
 
 export function useActivityState(setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>) {
-  function addActivity(act: Activity, dayIndex = 0): void {
+  function addActivity(act: Activity, dayIndex = 0, insertIndex?: number): void {
     setDays((prev) => {
       const copy = [...prev];
       if (!copy[dayIndex]) {
@@ -27,10 +27,17 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
         title: sanitizedTitle.length > 0 ? sanitizedTitle : 'Untitled activity',
         color: act.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
       };
-      if (!copy[dayIndex].activities.some((a) => a.id === act.id)) {
-        copy[dayIndex].activities.push({
-          ...nextActivity,
-        });
+      const activities = copy[dayIndex].activities;
+      if (!activities.some((a) => a.id === act.id)) {
+        if (insertIndex == null || insertIndex < 0 || insertIndex > activities.length) {
+          activities.push({
+            ...nextActivity,
+          });
+        } else {
+          activities.splice(insertIndex, 0, {
+            ...nextActivity,
+          });
+        }
       }
       return copy;
     });

@@ -8,6 +8,7 @@ import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerE
 import { useActivityState } from '@/features/planner/hooks/useActivityState';
 import { useSelectedActivity } from '@/features/planner/hooks/useSelectedActivity';
 import { usePersistedPlannerDays } from '@/features/planner/hooks/usePersistedPlannerDays';
+import * as placeholders from '@/features/planner/domain/utils/activityPlaceholders';
 
 function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeof vi.fn>) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
@@ -26,6 +27,7 @@ function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeo
     addBlankAndSelect: selected.addBlankAndSelect,
     closeModal: selected.closeModal,
     setSelectedActivity: selected.setSelectedActivity,
+    save: selected.save,
   };
 }
 
@@ -88,5 +90,33 @@ describe('useSelectedActivity blank placeholders', () => {
     });
 
     expect(result.current.days[0].activities).toHaveLength(0);
+  });
+
+  it('replaces a blank placeholder with a persisted activity on save', async () => {
+    const idSpy = vi
+      .spyOn(placeholders, 'generateClientActivityId')
+      .mockReturnValue('generated-id');
+    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
+
+    const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
+
+    await act(async () => {
+      result.current.addBlankAndSelect('day-1');
+    });
+
+    expect(result.current.days[0].activities).toHaveLength(1);
+    expect(result.current.days[0].activities[0].id).toMatch(/^blank-/);
+
+    await act(async () => {
+      result.current.save({ title: 'City tour' });
+    });
+
+    expect(result.current.days[0].activities).toHaveLength(1);
+    const activity = result.current.days[0].activities[0];
+    expect(activity.id).toBe('generated-id');
+    expect(activity.title).toBe('City tour');
+
+    idSpy.mockRestore();
   });
 });

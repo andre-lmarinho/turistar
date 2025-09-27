@@ -5,7 +5,8 @@ import { useState } from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import {
   BLANK_ACTIVITY_PREFIX,
-  isBlankActivityTitle,
+  generateClientActivityId,
+  isPlaceholderActivity,
 } from '@/features/planner/domain/utils/activityPlaceholders';
 import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
 import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
@@ -22,7 +23,7 @@ import { moveActivityPosition } from '@/features/planner/services/moveActivityPo
  */
 
 interface UseSelectedActivityOptions {
-  addActivity: (act: Activity, dayIndex?: number) => void;
+  addActivity: (act: Activity, dayIndex?: number, insertIndex?: number) => void;
   removeActivity: (id: string) => void;
   updateActivity: (id: string, patch: Partial<Activity>) => void;
   addBlankActivity: (dayIndex?: number, insertIndex?: number) => Activity;
@@ -60,7 +61,7 @@ export function useSelectedActivity(
             removed = true;
             return false;
           }
-          if (isBlankActivityTitle(activity.title)) {
+          if (isPlaceholderActivity(activity)) {
             removed = true;
             return false;
           }
@@ -74,7 +75,7 @@ export function useSelectedActivity(
   };
 
   const closeModal = () => {
-    if (selectedActivity && isBlankActivityTitle(selectedActivity.title)) {
+    if (selectedActivity && isPlaceholderActivity(selectedActivity)) {
       const { id, dayId } = selectedActivity;
       if (id.startsWith(BLANK_ACTIVITY_PREFIX)) {
         removeActivity(id);
@@ -87,13 +88,30 @@ export function useSelectedActivity(
 
   const save = (patch: Partial<Activity>) => {
     if (!selectedActivity || !patch.title?.trim()) return;
-    if (selectedActivity.id.startsWith('temp-')) {
-      addActivity(
-        { ...selectedActivity, ...patch, duration: Number(patch.duration) },
-        days.findIndex((d) => d.id === selectedActivity.dayId)
+    const dayIndex = days.findIndex((d) => d.id === selectedActivity.dayId);
+    const sanitized = { ...patch, duration: Number(patch.duration) };
+    if (selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
+      if (dayIndex === -1) {
+        setSelectedActivity(null);
+        return;
+      }
+      const placeholderIndex = days[dayIndex].activities.findIndex(
+        (activity) => activity.id === selectedActivity.id
       );
+      removeActivity(selectedActivity.id);
+      const { dayId: _omitDayId, ...activityBase } = {
+        ...selectedActivity,
+        ...sanitized,
+        id: generateClientActivityId(),
+      };
+      void _omitDayId;
+      addActivity(activityBase, dayIndex, placeholderIndex === -1 ? undefined : placeholderIndex);
+    } else if (selectedActivity.id.startsWith('temp-')) {
+      const { dayId: _omitDayId, ...activityBase } = { ...selectedActivity, ...sanitized };
+      void _omitDayId;
+      addActivity(activityBase, dayIndex);
     } else {
-      updateActivity(selectedActivity.id, { ...patch, duration: Number(patch.duration) });
+      updateActivity(selectedActivity.id, sanitized);
     }
     setSelectedActivity(null);
   };
