@@ -2,6 +2,7 @@
 
 import { midpoint } from '@/features/planner/domain/events/gapOrdering';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { BLANK_ACTIVITY_PREFIX } from '@/features/planner/domain/utils/activityPlaceholders';
 import type { PlanEventInsert } from '@/features/planner/domain/types/PlanEvent';
 
 function generateId(): string {
@@ -211,7 +212,7 @@ export function diffPlanEvents(
     day.activities.forEach((activity, index) => {
       const prevActivity = prevActivityMap.get(activity.id);
       if (!prevActivity) {
-        const isPlaceholder = activity.id.startsWith('blank-');
+        const isPlaceholder = activity.id.startsWith(BLANK_ACTIVITY_PREFIX);
         const position = midpoint(
           index > 0 ? neighborPositionMap.get(activityOrder[index - 1]) : undefined,
           computeRightNeighborPosition(activityOrder, index, neighborPositionMap)

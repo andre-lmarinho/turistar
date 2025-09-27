@@ -3,6 +3,10 @@
 
 import { useState } from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import {
+  BLANK_ACTIVITY_PREFIX,
+  isBlankActivityTitle,
+} from '@/features/planner/domain/utils/activityPlaceholders';
 import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
 import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
 
@@ -44,13 +48,39 @@ export function useSelectedActivity(
     setSelectedActivity({ ...blank, dayId });
   };
 
+  const removePlaceholderFromDay = (dayId: string, candidateId: string): boolean => {
+    let removed = false;
+    setDays((prev) => {
+      if (removed) return prev;
+      const next = prev.map((day) => {
+        if (day.id !== dayId || removed) return day;
+        const activities = day.activities.filter((activity) => {
+          if (removed) return true;
+          if (activity.id === candidateId) {
+            removed = true;
+            return false;
+          }
+          if (isBlankActivityTitle(activity.title)) {
+            removed = true;
+            return false;
+          }
+          return true;
+        });
+        return removed ? { ...day, activities } : day;
+      });
+      return removed ? next : prev;
+    });
+    return removed;
+  };
+
   const closeModal = () => {
-    if (
-      selectedActivity &&
-      selectedActivity.id.startsWith('blank-') &&
-      !selectedActivity.title.trim()
-    ) {
-      removeActivity(selectedActivity.id);
+    if (selectedActivity && isBlankActivityTitle(selectedActivity.title)) {
+      const { id, dayId } = selectedActivity;
+      if (id.startsWith(BLANK_ACTIVITY_PREFIX)) {
+        removeActivity(id);
+      } else if (!dayId || !removePlaceholderFromDay(dayId, id)) {
+        removeActivity(id);
+      }
     }
     setSelectedActivity(null);
   };

@@ -6,6 +6,7 @@ import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
+import { BLANK_ACTIVITY_PREFIX } from '@/features/planner/domain/utils/activityPlaceholders';
 
 /**
  * Provides helpers for modifying day activities.
@@ -65,8 +66,8 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
   function addBlankActivity(dayIndex = 0, insertIndex?: number): Activity {
     const blank: Activity = {
-      id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      title: 'Untitled activity',
+      id: `${BLANK_ACTIVITY_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      title: '',
       description: '',
       duration: 0,
       color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
