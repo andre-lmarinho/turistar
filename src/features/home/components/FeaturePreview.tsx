@@ -1,26 +1,26 @@
-// src/features/home/components/feature-preview/FeaturePreview.tsx
+// src/features/home/components/FeaturePreview.tsx
 'use client';
 
-import FeatureCarousel from '../../ui/feature-preview/FeatureCarousel';
-import type { FeatureCarouselFeature } from '../../ui/feature-preview/FeatureCarousel';
+import FeatureCarousel from '../ui/feature-preview/FeatureCarousel';
+import type { FeatureCarouselFeature } from '../ui/feature-preview/FeatureCarousel';
 
 const features: FeatureCarouselFeature[] = [
   {
     title: 'Drag. Drop. Done.',
     description:
-      'Design each day in minutes. Add what matters, reorder quickly, and swap ideas in place. The board stays clean and fast, so the plan feels like yours.',
+      'Plan days in minutes. Add what matters, reorder fast, and swap ideas without clutter.',
     imgSrc: '/images/home/feature_01.webp',
   },
   {
     title: 'See your trip on the map',
     description:
-      'Preview stops by day and see distance at a glance. Routes are clear and reordering keeps context. Jump between pins and cards without losing your place.',
+      'View stops by day, check distances at a glance, and move between pins and cards with context intact.',
     imgSrc: '/images/home/feature_02.webp',
   },
   {
-    title: 'Built in budget',
+    title: 'Built-in budget',
     description:
-      'Track costs as you plan. See running totals by day and for the whole trip. Adjust with confidence and stay within what you set.',
+      'Track costs as you go. See daily and trip totals, adjust with ease, and stay on budget.',
     imgSrc: '/images/home/feature_03.webp',
   },
 ];
