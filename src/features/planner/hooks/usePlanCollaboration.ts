@@ -110,11 +110,22 @@ export function usePlanCollaboration(
         pendingEventIdsRef.current.delete(ev.id);
         updated = applyPlanEvent(updated, ev);
       }
-      versionRef.current = version;
+
+      const appliedVersion = storedEvents.at(-1)?.version ?? baseVersion;
+      const expectedVersion = baseVersion + storedEvents.length;
+
+      versionRef.current = appliedVersion;
       snapshotRef.current = cloneDays(updated);
-      setState({ version, days: updated });
+      setState({ version: appliedVersion, days: updated });
+
+      if (version > expectedVersion || appliedVersion !== version) {
+        await load();
+        return;
+      }
+
+      versionRef.current = version;
     },
-    [planId]
+    [load, planId]
   );
 
   const mutateAsync = useCallback(
