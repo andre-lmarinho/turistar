@@ -40,13 +40,6 @@ function ensureDay(
   return { days: next, day: next[next.length - 1] };
 }
 
-function insertAt<T>(list: T[], index: number, value: T): T[] {
-  const next = [...list];
-  if (index < 0 || index > next.length) next.push(value);
-  else next.splice(index, 0, value);
-  return next;
-}
-
 function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
   switch (event.type) {
     case 'activity.created': {
@@ -58,7 +51,15 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       if (exists) {
         return ensuredDays;
       }
-      day.activities = insertAt(day.activities, day.activities.length, sanitized);
+      const insertIdx =
+        position === undefined
+          ? -1
+          : day.activities.findIndex((a) => {
+              if (!a.position) return false;
+              return a.position > position;
+            });
+      if (insertIdx === -1) day.activities.push(sanitized);
+      else day.activities.splice(insertIdx, 0, sanitized);
       return ensuredDays;
     }
     case 'activity.updated': {

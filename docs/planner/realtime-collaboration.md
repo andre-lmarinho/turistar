@@ -26,7 +26,7 @@ Events are strongly typed in [`PlanEvent.ts`](../../src/features/planner/domain/
 
 | Type | Payload summary | Notes |
 | --- | --- | --- |
-| `activity.created` | `{ dayId, activity, position }` | Inserts the sanitized activity into the destination day using gap ordering.
+| `activity.created` | `{ dayId, activity, position }` | Inserts the sanitized activity into the destination day using gap ordering, placing it before the first card with a greater position.
 | `activity.updated` | `{ activityId, patch }` | Applies partial updates to a single activity.
 | `activity.deleted` | `{ activityId }` | Removes the activity regardless of its current day.
 | `activity.moved` | `{ activityId, fromDayId, toDayId, position }` | Moves an activity between days and repositions it.
