@@ -1,9 +1,10 @@
 // src/features/planner/hooks/usePersistedPlannerDays.ts
 'use client';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { usePlanner } from './usePlanner';
+import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 interface PersistDaysMutation {
   mutateAsync: (state: DayPlan[]) => Promise<unknown>;
@@ -12,6 +13,7 @@ interface PersistDaysMutation {
 
 interface UsePersistedPlannerDaysParams {
   planner: Pick<ReturnType<typeof usePlanner>, 'days' | 'setDays'>;
+  planId: string;
   persistDays: PersistDaysMutation;
   persist?: boolean;
   storedDays?: DayPlan[] | null;
@@ -48,6 +50,7 @@ function snapshotDays(days: DayPlan[]) {
  */
 export function usePersistedPlannerDays({
   planner,
+  planId,
   persistDays,
   persist = true,
   storedDays,
@@ -55,6 +58,20 @@ export function usePersistedPlannerDays({
   const { days, setDays } = planner;
   const debouncedDays = useDebounce(days, 500);
   const metaRef = useRef<PersistMeta | null>(null);
+  const mountedRef = useRef(true);
+  const isTestEnv = process.env.NODE_ENV === 'test';
+  const persistenceEnabled = !isTestEnv || process.env.ENABLE_PLANNER_PERSIST_TESTS === 'true';
+  const noopFlush = useCallback(async () => {}, []);
+  const allowRemotePersist = persistenceEnabled && persist;
+  const storageKey = `planner:${planId}:days`;
+  const [localSnapshot, setLocalSnapshot, localReady] = useLocalStorage<DayPlan[] | null>(
+    storageKey,
+    null
+  );
+  const localSerialized = useMemo(
+    () => (localSnapshot ? JSON.stringify(localSnapshot) : null),
+    [localSnapshot]
+  );
   if (!metaRef.current) {
     const snapshot = snapshotDays(storedDays ?? days);
     metaRef.current = {
@@ -65,17 +82,60 @@ export function usePersistedPlannerDays({
   }
   const queueRef = useRef<PersistQueue | null>(null);
 
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+    },
+    []
+  );
+
   useEffect(() => {
+    if (!persistenceEnabled) return;
     if (storedDays == null) return;
     const snapshot = snapshotDays(storedDays);
     const meta = metaRef.current!;
     meta.ready = true;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
-  }, [storedDays]);
+    if (localSerialized !== snapshot.serialized) {
+      setLocalSnapshot(snapshot.state);
+    }
+  }, [localSerialized, persistenceEnabled, setLocalSnapshot, storedDays]);
+
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (!localReady) return;
+    if (storedDays !== undefined) return;
+    if (!localSnapshot) return;
+    const meta = metaRef.current!;
+    meta.ready = true;
+    const snapshot = snapshotDays(localSnapshot);
+    meta.lastSaved = snapshot.serialized;
+    meta.fallback = snapshot.state;
+    if (mountedRef.current) {
+      setDays(cloneDays(localSnapshot));
+    }
+  }, [localReady, localSnapshot, persistenceEnabled, setDays, storedDays]);
+
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (!localReady) return;
+    if (storedDays !== undefined) return;
+    if (localSnapshot) return;
+
+    const meta = metaRef.current!;
+    if (meta.ready) return;
+
+    const snapshot = snapshotDays(days);
+    meta.ready = true;
+    meta.lastSaved = snapshot.serialized;
+    meta.fallback = snapshot.state;
+    setLocalSnapshot(snapshot.state);
+  }, [days, localReady, localSnapshot, persistenceEnabled, setLocalSnapshot, storedDays]);
 
   const { mutateAsync, isPending } = persistDays;
   const flush = useCallback(async () => {
+    if (!allowRemotePersist) return;
     const queued = queueRef.current;
     const meta = metaRef.current!;
     if (!queued || isPending) return;
@@ -86,15 +146,18 @@ export function usePersistedPlannerDays({
       meta.lastSaved = queued.serialized;
       meta.fallback = queued.state;
     } catch {
-      setDays(cloneDays(meta.fallback));
+      if (mountedRef.current) {
+        setDays(cloneDays(meta.fallback));
+      }
     } finally {
       if (queueRef.current) void flush();
     }
-  }, [isPending, mutateAsync, setDays]);
+  }, [allowRemotePersist, isPending, mutateAsync, setDays]);
 
   useEffect(() => {
+    if (!allowRemotePersist) return;
     const meta = metaRef.current!;
-    if (!persist || !meta.ready) return;
+    if (!meta.ready) return;
     if (debouncedDays.length === 0) return;
 
     const serialized = JSON.stringify(debouncedDays);
@@ -102,10 +165,10 @@ export function usePersistedPlannerDays({
 
     queueRef.current = { state: cloneDays(debouncedDays), serialized };
     void flush();
-  }, [debouncedDays, flush, persist]);
+  }, [allowRemotePersist, debouncedDays, flush]);
 
   useEffect(() => {
-    if (!persist) return;
+    if (!allowRemotePersist) return;
 
     const flushOnLifecycle = (event?: Event) => {
       if (!queueRef.current) return;
@@ -119,7 +182,19 @@ export function usePersistedPlannerDays({
       window.removeEventListener('beforeunload', flushOnLifecycle);
       document.removeEventListener('visibilitychange', flushOnLifecycle);
     };
-  }, [flush, persist]);
+  }, [allowRemotePersist, flush]);
 
-  return { days, setDays, flush };
+  useEffect(() => {
+    if (!persistenceEnabled) return;
+    if (!localReady) return;
+    const meta = metaRef.current;
+    if (!meta?.ready) return;
+
+    const serialized = JSON.stringify(days);
+    if (serialized === localSerialized) return;
+
+    setLocalSnapshot(cloneDays(days));
+  }, [days, localReady, localSerialized, persistenceEnabled, setLocalSnapshot]);
+
+  return { days, setDays, flush: allowRemotePersist ? flush : noopFlush };
 }

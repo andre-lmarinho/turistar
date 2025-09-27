@@ -58,16 +58,14 @@ describe('persistDaysHelpers', () => {
     expect(delDays).toHaveBeenCalled();
   });
 
-  test('upsertDayActivities upserts, inserts and deletes', async () => {
+  test('upsertDayActivities upserts, inserts and reports persisted ids', async () => {
     const upsert = vi.fn().mockResolvedValue({ error: null });
     const insert = vi.fn().mockResolvedValue({ error: null });
-    const del = vi.fn().mockResolvedValue({ error: null });
     mockFrom.mockImplementation((table: string) => {
       if (table === 'activities') {
         return {
           upsert: () => ({ abortSignal: () => upsert() }),
           insert: () => ({ abortSignal: () => insert() }),
-          delete: () => ({ in: () => ({ abortSignal: () => del() }) }),
         } as unknown;
       }
       return {} as unknown;
@@ -86,10 +84,12 @@ describe('persistDaysHelpers', () => {
         category: 'c2',
       },
     ];
-    const existingActs = new Set(['old']);
-    await upsertDayActivities('day1', acts, existingActs, new AbortController().signal);
+    const onPersisted = vi.fn();
+    await upsertDayActivities('day1', acts, new AbortController().signal, {
+      onPersisted,
+    });
     expect(upsert).toHaveBeenCalled();
     expect(insert).toHaveBeenCalled();
-    expect(del).toHaveBeenCalled();
+    expect(onPersisted).toHaveBeenCalledWith('11111111-1111-1111-1111-111111111111');
   });
 });

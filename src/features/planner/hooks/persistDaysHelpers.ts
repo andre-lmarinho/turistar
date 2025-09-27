@@ -75,19 +75,21 @@ export async function deleteRemovedDays(
   }
 }
 
+interface UpsertDayActivitiesOptions {
+  onPersisted?: (id: string) => void;
+}
+
 export async function upsertDayActivities(
   dayId: string,
   activities: DayPlan['activities'],
-  existingActs: Set<string>,
-  signal: AbortSignal
+  signal: AbortSignal,
+  options?: UpsertDayActivitiesOptions
 ) {
-  const incomingIds = new Set<string>();
   const updates: ActivityUpsert[] = [];
   const inserts: ActivityUpsert[] = [];
 
   for (let j = 0; j < activities.length; j++) {
     const a = activities[j];
-    incomingIds.add(a.id);
     const base: ActivityUpsert = {
       day_id: dayId,
       title: a.title,
@@ -103,8 +105,12 @@ export async function upsertDayActivities(
       image_url: a.imageUrl ?? null,
       position: j,
     };
-    if (/^[0-9a-fA-F-]{36}$/.test(a.id)) updates.push({ ...base, id: a.id });
-    else inserts.push(base);
+    if (/^[0-9a-fA-F-]{36}$/.test(a.id)) {
+      updates.push({ ...base, id: a.id });
+      options?.onPersisted?.(a.id);
+    } else {
+      inserts.push(base);
+    }
   }
 
   if (updates.length) {
@@ -118,14 +124,5 @@ export async function upsertDayActivities(
       .insert(inserts)
       .abortSignal(signal)) as unknown as { error: unknown };
     if (insErr) throw insErr;
-  }
-
-  const toDeleteActs = [...existingActs].filter((id) => !incomingIds.has(id));
-  if (toDeleteActs.length) {
-    const { error: delErr } = (await (supabase.from('activities') as QueryBuilder)
-      .delete()
-      .in('id', toDeleteActs)
-      .abortSignal(signal)) as unknown as { error: unknown };
-    if (delErr) throw delErr;
   }
 }

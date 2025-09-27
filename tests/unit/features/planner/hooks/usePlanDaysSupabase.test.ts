@@ -136,6 +136,97 @@ describe('usePlanDaysSupabase', () => {
     });
     expect(upsertActs).toHaveBeenCalled();
     expect(insertActs).not.toHaveBeenCalled();
+    expect(deleteActs).not.toHaveBeenCalled();
+  });
+
+  test('keeps activities moved to an earlier day', async () => {
+    const selectDays = vi.fn().mockResolvedValue({
+      data: [
+        { id: 'd1', date: '2023-01-01', destination_id: 'dest1' },
+        { id: 'd2', date: '2023-01-02', destination_id: 'dest1' },
+      ],
+      error: null,
+    });
+    const selectActs = vi.fn().mockResolvedValue({
+      data: [
+        { id: '11111111-1111-1111-1111-111111111111', day_id: 'd2' },
+        { id: '22222222-2222-2222-2222-222222222222', day_id: 'd2' },
+      ],
+      error: null,
+    });
+    const upsertActs = vi.fn().mockResolvedValue({ error: null });
+    const insertActs = vi.fn().mockResolvedValue({ error: null });
+    const deleteActs = vi.fn().mockResolvedValue({ error: null });
+    const updateDay = vi.fn().mockResolvedValue({ error: null });
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'plan_days') {
+        return {
+          select: () => ({ eq: () => ({ abortSignal: () => selectDays() }) }),
+          update: () => ({ eq: () => ({ abortSignal: () => updateDay() }) }),
+          insert: () => ({
+            select: () => ({
+              single: () => ({ abortSignal: () => ({ data: { id: 'd1' }, error: null }) }),
+            }),
+          }),
+          delete: () => ({ in: () => ({ abortSignal: () => ({ error: null }) }) }),
+        } as unknown;
+      }
+      if (table === 'activities') {
+        return {
+          select: () => ({ in: () => ({ abortSignal: () => selectActs() }) }),
+          upsert: () => ({ abortSignal: () => upsertActs() }),
+          insert: () => ({ abortSignal: () => insertActs() }),
+          delete: () => ({ in: () => ({ abortSignal: () => deleteActs() }) }),
+        } as unknown;
+      }
+      if (table === 'plan_destinations') {
+        return {
+          select: () => ({
+            eq: () => ({
+              order: () => ({
+                abortSignal: () => ({ data: [{ destination_id: 'dest1' }], error: null }),
+              }),
+            }),
+          }),
+        } as unknown;
+      }
+      return {} as unknown;
+    });
+
+    const { result } = renderHook(() => usePlanDays('p1', false));
+    await act(async () => {
+      await result.current.persistDays.mutateAsync([
+        {
+          id: '2023-01-01',
+          label: 'Sun, 01 Jan',
+          activities: [
+            {
+              id: '11111111-1111-1111-1111-111111111111',
+              title: 'Moved activity',
+              category: 'c',
+              color: 'bg-[var(--color-1)]',
+            },
+          ],
+        },
+        {
+          id: '2023-01-02',
+          label: 'Mon, 02 Jan',
+          activities: [
+            {
+              id: '22222222-2222-2222-2222-222222222222',
+              title: 'Stay put',
+              category: 'c2',
+              color: 'bg-[var(--color-2)]',
+            },
+          ],
+        },
+      ]);
+    });
+
+    expect(upsertActs).toHaveBeenCalledTimes(2);
+    expect(insertActs).not.toHaveBeenCalled();
+    expect(deleteActs).not.toHaveBeenCalled();
   });
 
   test('fetches destination_id when none exist', async () => {

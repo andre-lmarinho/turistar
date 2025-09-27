@@ -31,6 +31,7 @@ function usePlannerContextValue({
   });
   const { days, setDays } = usePersistedPlannerDays({
     planner,
+    planId,
     persistDays,
     persist,
     storedDays,

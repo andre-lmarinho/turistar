@@ -64,6 +64,13 @@ export function usePlanDays(planId: string, enabled = true) {
       const existing = (await fetchExistingDays(id, signal)) ?? [];
       await deleteRemovedDays(existing, state, signal);
 
+      const incomingActivityIds = new Set<string>();
+      for (const day of state) {
+        for (const activity of day.activities) {
+          if (activity.id) incomingActivityIds.add(activity.id);
+        }
+      }
+
       let destinationId: string | undefined = existing[0]?.destination_id;
       if (!destinationId) {
         const { data: destRows, error: destErr } = (await (
@@ -93,11 +100,8 @@ export function usePlanDays(planId: string, enabled = true) {
         error: unknown;
       };
       if (existingActsErr) throw existingActsErr;
-      const actMap = new Map<string, Set<string>>();
-      existingActsRows?.forEach((a) => {
-        if (!actMap.has(a.day_id)) actMap.set(a.day_id, new Set());
-        actMap.get(a.day_id)!.add(a.id);
-      });
+      const existingActivityIds = new Set(existingActsRows?.map((activity) => activity.id) ?? []);
+      const remainingActivityIds = new Set(existingActivityIds);
 
       const existingByDate = new Map<string, (typeof existing)[number]>();
       for (const row of existing) {
@@ -131,8 +135,24 @@ export function usePlanDays(planId: string, enabled = true) {
           if (updErr) throw updErr;
         }
 
-        const existingActs = actMap.get(dayId) ?? new Set();
-        await upsertDayActivities(dayId!, day.activities, existingActs, signal);
+        await upsertDayActivities(dayId!, day.activities, signal, {
+          onPersisted: (activityId) => {
+            if (remainingActivityIds.has(activityId)) {
+              remainingActivityIds.delete(activityId);
+            }
+          },
+        });
+      }
+
+      const toDeleteActs = [...remainingActivityIds].filter(
+        (activityId) => !incomingActivityIds.has(activityId)
+      );
+      if (toDeleteActs.length) {
+        const { error: delErr } = (await (supabase.from('activities') as QueryBuilder)
+          .delete()
+          .in('id', toDeleteActs)
+          .abortSignal(signal)) as unknown as { error: unknown };
+        if (delErr) throw delErr;
       }
     },
   });
