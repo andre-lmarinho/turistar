@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
-import { BUDGET_INFO } from '@/shared/constants/budgetInfo';
+import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import BudgetRow from '@/features/planner/components/budget/BudgetRow';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';

@@ -12,7 +12,7 @@ import { useDnDPlanner } from './useDnDPlanner';
 import { buildInitialDays } from '@/features/planner/services/initialDays';
 import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
 import { setPlanDateRange } from '@/app/planner/actions/updatePlan';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface UsePlannerOptions {
   initialDays?: DayPlan[];

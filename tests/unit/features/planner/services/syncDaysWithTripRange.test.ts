@@ -3,7 +3,7 @@
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
 import { parseISO } from 'date-fns';
-import type { DayPlan, Activity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 function buildActivity(id: string): Activity {
   return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };

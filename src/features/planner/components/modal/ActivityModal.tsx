@@ -6,7 +6,7 @@ import ActivityModalHeader from '@/features/planner/components/modal/ActivityMod
 import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import Modal from '@/shared/ui/Modal';
-import type { Activity } from '@/shared/types';
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export default function ActivityModal() {
   const {

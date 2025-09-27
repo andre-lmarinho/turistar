@@ -1,9 +1,9 @@
 // src/features/planner/hooks/usePlanTitleSupabase.ts
 import { useEffect, useState } from 'react';
 import { capitalize } from '@/shared/utils/utils';
-import { usePlanEditTokens } from '@/shared/lib/planEditToken';
+import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import { updatePlanTitle } from '@/app/planner/actions/updatePlanTitle';
-import { usePlanResource } from '@/shared/hooks/usePlanResource';
+import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
   const initialTitle = capitalize(defaultTitle);

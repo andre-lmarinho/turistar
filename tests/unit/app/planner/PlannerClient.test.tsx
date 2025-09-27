@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import PlannerClient from '@/app/planner/PlannerClient';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 let mockPlanId = 'plan1';
 
@@ -95,19 +95,19 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock('@/app/planner/PlannerBoard', () => ({
+vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   default: () => <div data-testid="board" />,
 }));
-vi.mock('@/app/planner/BudgetPanel', () => ({
+vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   default: () => <div data-testid="budget" />,
 }));
-vi.mock('@/features/onboarding/hooks/OnboardingContext', () => ({
+vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: onboardingMocks.OnboardingProvider,
   useOnboardingContext: onboardingMocks.useOnboardingContext,
 }));
 
-vi.mock('@/features/onboarding/components/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   __esModule: true,
   default: onboardingMocks.OnboardingModal,
 }));
@@ -121,7 +121,7 @@ vi.mock('@/shared/ui/DatePicker', async () => {
   };
 });
 
-vi.mock('@/shared/ui/button-especials/ModeToggleButton', () => ({
+vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   default: () => <div data-testid="mode-toggle" />,
 }));

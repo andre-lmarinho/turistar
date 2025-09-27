@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import Image from 'next/image';
-import { useActivityPopupControls } from '@/shared/hooks/ui/useActivityPopupControls';
+import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
 import { ChevronDown, Trash2, X, Palette } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 

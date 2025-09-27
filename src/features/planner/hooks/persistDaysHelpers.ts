@@ -2,7 +2,7 @@
 
 import type { SupabaseQueryBuilder } from '@supabase/supabase-js';
 import { supabase } from '@/shared/lib/supabaseClient';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface PlanDayRow {
   id: string;
@@ -45,11 +45,11 @@ export async function fetchExistingDays(planId: string, signal: AbortSignal) {
     .select('id, date, destination_id')
     .eq('plan_id', planId)
     .abortSignal(signal)) as unknown as {
-    data: PlanDayRow[];
+    data: PlanDayRow[] | null;
     error: unknown;
   };
   if (error) throw error;
-  return data;
+  return data ?? [];
 }
 
 export async function deleteRemovedDays(

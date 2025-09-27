@@ -3,9 +3,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import MapView from '@/app/planner/MapView';
+import MapBoard from '@/features/planner/components/map/MapBoard';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
@@ -105,14 +105,14 @@ describe.skip('FitAllMarkers effect', () => {
     mockDays = buildDays([1, 1]);
     const { rerender } = render(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
 
     rerender(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(map.fitBounds).toHaveBeenCalledTimes(1);
@@ -120,7 +120,7 @@ describe.skip('FitAllMarkers effect', () => {
     mockDays = buildDays([2, 2]);
     rerender(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(map.fitBounds).toHaveBeenCalledTimes(2);
@@ -149,7 +149,7 @@ describe.skip('Marker accessibility', () => {
     mockDays = days;
     render(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(markers[0].title).toBe('Walk');
@@ -169,7 +169,7 @@ describe.skip('Marker accessibility', () => {
     mockDays = days;
     render(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(polylines.length).toBe(0);
@@ -187,7 +187,7 @@ describe.skip('Marker accessibility', () => {
     mockDestCoords = { lat: 5, lng: 6 };
     render(
       <PlannerProvider planId="p1">
-        <MapView />
+        <MapBoard />
       </PlannerProvider>
     );
     expect(containerProps!.center).toEqual([5, 6]);

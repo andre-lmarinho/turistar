@@ -4,8 +4,8 @@
 import React, { useEffect, useState } from 'react';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
-import { useCardColors } from '@/shared/hooks/ui/useCardColors';
-import type { Activity, DayPlan } from '@/shared/types';
+import { useCardColors } from '@/features/planner/hooks/internal/useCardColors';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import ActivityCardBase from './ActivityCardBase';
 import ActivityCardEditing from './ActivityCardEditing';
 import ActivityCardEditorOverlay from './ActivityCardEditorOverlay';

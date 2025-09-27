@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivityCard from '@/features/planner/components/dnd/ActivityCard';
 import { vi } from 'vitest';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 const baseActivity: Activity & { dayId?: string } = {
   id: 'a1',

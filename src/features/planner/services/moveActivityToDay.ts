@@ -1,6 +1,6 @@
 // src/features/planner/services/moveActivityToDay.ts
 
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { cloneDays } from '@/features/planner/services/cloneDays';
 
 export function moveActivityToDay(

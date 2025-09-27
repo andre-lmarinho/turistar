@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ActivitiesBudget from '@/features/planner/components/budget/activities/ActivitiesBudget';
-import type { DayPlan } from '@/shared/types';
+import ActivitiesBudget from '@/features/planner/components/budget/ActivitiesBudget';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { vi } from 'vitest';
 
 describe('ActivitiesBudget', () => {

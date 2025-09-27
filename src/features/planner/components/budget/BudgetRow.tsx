@@ -3,7 +3,7 @@
 
 import React, { useId } from 'react';
 import { Pencil, Trash2, Check, X, Plus, DollarSign } from 'lucide-react';
-import { CATEGORIES, CategoryKey } from '@/shared/constants/budget';
+import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import type { Entry } from '@/features/planner/types/budget/budget';

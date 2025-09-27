@@ -7,7 +7,7 @@ import Hero from '@/features/home/components/Hero';
 import HomeFooter from '@/features/home/components/HomeFooter';
 import InspirationLink from '@/features/home/components/InspirationLink';
 
-export default function Home() {
+export default function HomePage() {
   return (
     <main id="main-content">
       <ContinuePlanningBanner />

@@ -10,7 +10,7 @@ import {
   type DragOverEvent,
   type UniqueIdentifier,
 } from '@dnd-kit/core';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Handles drag-and-drop interactions for day plans.

@@ -1,7 +1,7 @@
 // tests/unit/features/planner/services/moveActivityToDay.test.ts
 
 import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
-import type { DayPlan, Activity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 function buildActivity(id: string): Activity {
   return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };

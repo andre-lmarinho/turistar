@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Activity, DayPlan } from '@/shared/types';
+import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
 import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
 

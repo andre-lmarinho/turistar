@@ -1,7 +1,7 @@
 // src/features/planner/hooks/budget/BudgetContext.tsx
 'use client';
 
-import { createContextProvider } from '@/shared/context/createContextProvider';
+import { createContextProvider } from '@/shared/lib/createContextProvider';
 import { useBudget } from './useBudgetSupabase';
 import type { Entry } from '@/features/planner/types/budget/budget';
 

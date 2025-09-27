@@ -4,7 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
-import type { Activity } from '@/shared/types';
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   return {

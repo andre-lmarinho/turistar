@@ -1,7 +1,7 @@
 // src/features/planner/services/formatDayPlan.ts
 
 import { formatISO, format } from 'date-fns';
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Formats a single date into a DayPlan structure.

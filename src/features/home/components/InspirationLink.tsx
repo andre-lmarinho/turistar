@@ -4,27 +4,38 @@
 import React from 'react';
 import Link from 'next/link';
 import InspirationCard from './InspirationCard';
-import rome from '@/data/rome.json';
-import paris from '@/data/paris.json';
-import boipeba from '@/data/boipeba.json';
+import romeJson from '@/features/inspiration/data/rome.json';
+import parisJson from '@/features/inspiration/data/paris.json';
+import boipebaJson from '@/features/inspiration/data/boipeba.json';
+import type { InspirationDocument } from '@/features/inspiration/server/types';
+
+type InspirationPreview = InspirationDocument & { title_inspiration: string };
+
+const rome = romeJson as InspirationPreview;
+const paris = parisJson as InspirationPreview;
+const boipeba = boipebaJson as InspirationPreview;
 
 export default function InspirationLink() {
   const destinations = [
     {
       city: 'rome',
       label: rome.title_inspiration,
-      images: rome.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl)),
+      images: rome.itinerary.flatMap((day) =>
+        day.activities.map((activity) => activity.imageUrl ?? '')
+      ),
     },
     {
       city: 'paris',
       label: paris.title_inspiration,
-      images: paris.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl)),
+      images: paris.itinerary.flatMap((day) =>
+        day.activities.map((activity) => activity.imageUrl ?? '')
+      ),
     },
     {
       city: 'boipeba',
       label: boipeba.title_inspiration,
       images: boipeba.itinerary.flatMap((day) =>
-        day.activities.map((activity) => activity.imageUrl)
+        day.activities.map((activity) => activity.imageUrl ?? '')
       ),
     },
   ];

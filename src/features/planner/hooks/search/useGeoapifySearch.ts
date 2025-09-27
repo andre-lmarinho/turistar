@@ -3,7 +3,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchSearch } from './fetchSearch';
-import type { SearchActivity } from '@/shared/types';
+import type { SearchActivity } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Runs a Geoapify place search when the query has 4+ characters.

@@ -8,13 +8,13 @@ import Image from 'next/image';
 import { Button } from '@/shared/ui/button';
 import { DateRangePicker } from '@/shared/ui/DatePicker';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
-import type { AutocompletePlace } from '@/shared/types';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
-import { createPlan } from '@/app/planner/actions/createPlan';
-import { usePlanEditTokens } from '@/shared/lib/planEditToken';
-import { useRecentPlan } from '@/shared/hooks/useRecentPlan';
+import { createPlannerPlan } from '@/features/planner/contracts/marketing/createPlannerPlan';
+import { usePlanEditTokens } from '@/features/planner/contracts/marketing/usePlanEditTokens';
+import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import type { AutocompletePlace } from '@/features/planner/contracts/marketing/types';
 
 export default function PlanForm() {
   const router = useRouter();
@@ -69,30 +69,20 @@ export default function PlanForm() {
 
     setLoading(true);
     try {
-      const {
-        id: planId,
-        publicSlug,
-        editToken,
-      } = await createPlan(
-        title || destParam,
-        { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
-        range.from.toISOString(),
-        range.to.toISOString()
-      );
-
-      saveEditToken(planId, editToken);
-      saveRecentPlan({
-        id: planId,
-        slug: publicSlug,
-        dest: destParam,
-        start: range.from.toISOString(),
-        end: range.to.toISOString(),
+      const { planId, publicSlug, editToken, recentPlan } = await createPlannerPlan({
+        title: title || destParam,
+        destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
+        startDate: range.from.toISOString(),
+        endDate: range.to.toISOString(),
       });
 
+      saveEditToken(planId, editToken);
+      saveRecentPlan(recentPlan);
+
       const query = new URLSearchParams({
-        dest: destParam,
-        start: range.from.toISOString(),
-        end: range.to.toISOString(),
+        dest: recentPlan.dest,
+        start: recentPlan.start,
+        end: recentPlan.end,
       });
       if (coords) {
         query.set('lat', String(coords.lat));

@@ -5,9 +5,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { AlignLeft, MapPin } from 'lucide-react';
 import { DollarSign, Hourglass } from 'lucide-react';
 
-import type { Activity } from '@/shared/types';
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
-import UpdateButton from '@/shared/ui/button-especials/UpdateButton';
+import UpdateButton from '@/features/planner/ui/buttons/UpdateButton';
 import { Input } from '@/shared/ui/input';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';

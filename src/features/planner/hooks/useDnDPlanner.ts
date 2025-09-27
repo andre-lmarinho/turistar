@@ -1,7 +1,7 @@
 // src/features/planner/hooks/useDnDPlanner.ts
 'use client';
 
-import type { DayPlan } from '@/shared/types';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { useDragState } from './useDragState';
 import { useActivityState } from './useActivityState';
 

@@ -7,14 +7,14 @@ import { axe } from 'jest-axe';
 // Stub next/dynamic to avoid importing the full PlannerClient
 vi.mock('next/dynamic', () => ({
   __esModule: true,
-  default: () => () => <main id="main-content" aria-label="Planner app" />,
+  default: () => () => <div data-testid="mocked-dynamic-component" />,
 }));
 
-import PlannerPage from '@/app/planner/page';
+import PlannerClient from '@/features/planner/components/PlannerClient';
 
 describe('Accessibility — Planner page', () => {
   it('has no a11y violations', async () => {
-    const { container } = render(<PlannerPage />);
+    const { container } = render(<PlannerClient />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

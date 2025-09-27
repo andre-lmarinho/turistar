@@ -1,7 +1,7 @@
 // src/features/planner/hooks/useActivitiesById.ts
 
 import { useMemo } from 'react';
-import type { DayPlan, Activity } from '@/shared/types';
+import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 /**
  * Creates a lookup table for all activities by their ID.

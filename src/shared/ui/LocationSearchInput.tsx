@@ -5,7 +5,7 @@ import React from 'react';
 import Spinner from './Spinner';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
-import type { AutocompletePlace } from '@/shared/types';
+import type { AutocompletePlace } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface LocationSearchInputProps {
   value: string;
