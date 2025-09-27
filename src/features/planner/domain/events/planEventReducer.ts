@@ -126,7 +126,8 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       const { day } = event.payload;
       if (days.some((existing) => existing.id === day.id)) return days;
       const next = days.map(cloneDay);
-      const insertIdx = next.findIndex((d) => (d.position ?? '') > day.position);
+      const targetPosition = toPositionNumber(day.position);
+      const insertIdx = next.findIndex((d) => toPositionNumber(d.position) > targetPosition);
       const sanitizedDay: DayPlan = {
         id: day.id,
         label: day.label,
@@ -160,10 +161,10 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       if (!target) return next;
       target.position = position;
       next.sort((a, b) => {
-        const posA = a.position ?? '';
-        const posB = b.position ?? '';
+        const posA = toPositionNumber(a.position);
+        const posB = toPositionNumber(b.position);
         if (posA === posB) return a.id.localeCompare(b.id);
-        return posA < posB ? -1 : 1;
+        return posA - posB;
       });
       return next;
     }
