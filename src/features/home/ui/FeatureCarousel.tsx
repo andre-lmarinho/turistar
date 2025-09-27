@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
+import { clsx } from 'clsx';
+
 import { usePointerDragScroll } from '@/features/home/hooks/usePointerDragScroll';
 import { useSyncedPointerCarousels } from '@/features/home/hooks/useSyncedPointerCarousels';
 import { cn } from '@/shared/utils/utils';
@@ -84,14 +86,18 @@ function FeatureCarouselCard({
   interactive,
   onSelect,
 }: FeatureCarouselCardProps) {
-  const cardClassName = cn(
-    'relative w-full overflow-hidden rounded p-6 text-left before:absolute before:inset-y-0 before:left-0 before:w-[6px] before:bg-primary before:content-[""] before:opacity-100 before:transition-opacity before:duration-200 before:ease-out md:before:opacity-0',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
-    'transition-[transform,box-shadow,background-color] duration-200 ease-out',
-    interactive ? 'cursor-pointer' : 'cursor-default',
-    isActive
-      ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px] md:before:bg-primary md:before:opacity-100'
-      : 'md:[box-shadow:none]'
+  const cardClassName = clsx(
+    cn(
+      'relative w-full overflow-hidden rounded p-6 text-left',
+      'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
+      'transition-[transform,box-shadow,background-color] duration-200 ease-out',
+      interactive ? 'cursor-pointer' : 'cursor-default',
+      isActive ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px]' : 'md:[box-shadow:none]'
+    ),
+    'before:absolute before:inset-y-0 before:left-0 before:w-[6px]',
+    'before:bg-primary before:content-[""] before:opacity-100',
+    'before:transition-opacity before:duration-200 before:ease-out',
+    isActive ? 'md:before:bg-primary md:before:opacity-100' : 'md:before:opacity-0'
   );
 
   const content = (
