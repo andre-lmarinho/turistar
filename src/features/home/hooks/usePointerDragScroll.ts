@@ -20,32 +20,72 @@ export function usePointerDragScroll(
   const startScrollRef = useRef(0);
   const startIdxRef = useRef(0);
   const overshootRef = useRef(0);
+  const itemsMetricsRef = useRef<{
+    count: number;
+    centers: number[];
+    widths: number[];
+  } | null>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const nearestIndex = () => {
+    const measureItems = () => {
       const items = Array.from(el.children) as HTMLElement[];
-      if (!items.length) return 0;
-      const parentRect = el.getBoundingClientRect();
-      const center = parentRect.left + parentRect.width / 2;
-      let i = 0;
+      const count = items.length;
+      if (!count) {
+        itemsMetricsRef.current = { count: 0, centers: [], widths: [] };
+        return itemsMetricsRef.current;
+      }
+
+      const centers = new Array<number>(count);
+      const widths = new Array<number>(count);
+      for (let idx = 0; idx < count; idx += 1) {
+        const it = items[idx];
+        const width = it.offsetWidth;
+        widths[idx] = width;
+        centers[idx] = it.offsetLeft + width / 2;
+      }
+
+      const metrics = { count, centers, widths };
+      itemsMetricsRef.current = metrics;
+      return metrics;
+    };
+
+    const getMetrics = (force = false) => {
+      if (force || !itemsMetricsRef.current) {
+        return measureItems();
+      }
+
+      const items = el.children.length;
+      if (itemsMetricsRef.current.count !== items) {
+        return measureItems();
+      }
+
+      return itemsMetricsRef.current;
+    };
+
+    const nearestIndex = (force = false) => {
+      const metrics = getMetrics(force);
+      if (!metrics.count) return 0;
+
+      const center = el.scrollLeft + el.clientWidth / 2;
+      let bestIdx = 0;
       let best = Infinity;
-      items.forEach((it, idx) => {
-        const rect = it.getBoundingClientRect();
-        const itemCenter = rect.left + rect.width / 2;
-        const d = Math.abs(center - itemCenter);
-        if (d < best) {
-          best = d;
-          i = idx;
+      for (let idx = 0; idx < metrics.count; idx += 1) {
+        const itemCenter = metrics.centers[idx];
+        const distance = Math.abs(center - itemCenter);
+        if (distance < best) {
+          best = distance;
+          bestIdx = idx;
         }
-      });
-      return i;
+      }
+      return bestIdx;
     };
 
     const down = (e: PointerEvent) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      measureItems();
       draggingRef.current = true;
       el.setPointerCapture?.(e.pointerId);
       startXRef.current = e.clientX;
@@ -98,7 +138,7 @@ export function usePointerDragScroll(
       const delta = e.clientX - startXRef.current;
       const threshold = 40;
       const maxIdx = el.children.length - 1;
-      let idx = nearestIndex();
+      let idx = nearestIndex(true);
 
       if (Math.abs(delta) > threshold) {
         const direction = delta < 0 ? 1 : -1;
@@ -107,18 +147,29 @@ export function usePointerDragScroll(
 
       scrollToChild(el, idx, { smooth: true, disableSnap: true, duration: 600 });
       opts?.onRelease?.(idx);
+      itemsMetricsRef.current = null;
+    };
+
+    const handleResize = () => {
+      itemsMetricsRef.current = null;
+      if (draggingRef.current) {
+        measureItems();
+      }
     };
 
     el.addEventListener('pointerdown', down);
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       el.removeEventListener('pointerdown', down);
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       window.removeEventListener('pointercancel', up);
+      window.removeEventListener('resize', handleResize);
+      itemsMetricsRef.current = null;
     };
   }, [ref, opts]);
 }
