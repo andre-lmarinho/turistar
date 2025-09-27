@@ -61,7 +61,7 @@ export function usePlanDays(planId: string, enabled = true) {
     planId,
     resource: 'plan_days',
     persistFn: async (id, state, signal) => {
-      const existing = await fetchExistingDays(id, signal);
+      const existing = (await fetchExistingDays(id, signal)) ?? [];
       await deleteRemovedDays(existing, state, signal);
 
       let destinationId: string | undefined = existing[0]?.destination_id;
@@ -99,9 +99,14 @@ export function usePlanDays(planId: string, enabled = true) {
         actMap.get(a.day_id)!.add(a.id);
       });
 
+      const existingByDate = new Map<string, (typeof existing)[number]>();
+      for (const row of existing) {
+        existingByDate.set(row.date, row);
+      }
+
       for (let i = 0; i < state.length; i++) {
         const day = state[i];
-        const found = existing.find((d) => d.date === day.id);
+        const found = existingByDate.get(day.id);
         let dayId = found?.id;
         let destId = found?.destination_id ?? destinationId;
         if (!destId) throw new Error('destination_id missing');
@@ -117,6 +122,7 @@ export function usePlanDays(planId: string, enabled = true) {
           };
           if (inserted.error || !inserted.data) throw inserted.error;
           dayId = inserted.data.id;
+          existingByDate.set(day.id, { id: dayId, destination_id: destId, date: day.id });
         } else {
           const { error: updErr } = (await (supabase.from('plan_days') as QueryBuilder)
             .update({ position: i, date: day.id })
