@@ -21,7 +21,7 @@ export default function ContinuePlanningBanner() {
       <p className="my-auto">
         Continue your {tripLength} {tripLength === 1 ? 'day' : 'days'} trip to {dest}
       </p>
-      <Button variant="accent" size="sm">
+      <Button asChild variant="accent" size="sm">
         <Link href={`/planner/${slug}?${query}`}>Continue Planning</Link>
       </Button>
     </section>
