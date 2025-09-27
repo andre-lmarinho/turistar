@@ -1,13 +1,7 @@
 // src/features/planner/hooks/useDragState.ts
 'use client';
 
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  type SetStateAction,
-} from 'react';
+import { useState, useRef, useEffect, useCallback, type SetStateAction } from 'react';
 import {
   PointerSensor,
   useSensor,
@@ -63,34 +57,27 @@ export function useDragState(initialDays: DayPlan[]) {
   const [days, setDaysState] = useState<DayPlan[]>(initialDays);
 
   const dayIndexRef = useRef<Map<string, number>>(new Map());
-  const activityIndexRef = useRef<
-    Map<string, { dayIdx: number; actIdx: number }>
-  >(new Map());
+  const activityIndexRef = useRef<Map<string, { dayIdx: number; actIdx: number }>>(new Map());
 
-  const rebuildCaches = useCallback(
-    (sourceDays: DayPlan[]) => {
-      const dayIndexMap = dayIndexRef.current;
-      const activityIndexMap = activityIndexRef.current;
-      dayIndexMap.clear();
-      activityIndexMap.clear();
+  const rebuildCaches = useCallback((sourceDays: DayPlan[]) => {
+    const dayIndexMap = dayIndexRef.current;
+    const activityIndexMap = activityIndexRef.current;
+    dayIndexMap.clear();
+    activityIndexMap.clear();
 
-      sourceDays.forEach((day, dayIdx) => {
-        dayIndexMap.set(String(day.id), dayIdx);
-        day.activities.forEach((activity, actIdx) => {
-          activityIndexMap.set(String(activity.id), { dayIdx, actIdx });
-        });
+    sourceDays.forEach((day, dayIdx) => {
+      dayIndexMap.set(String(day.id), dayIdx);
+      day.activities.forEach((activity, actIdx) => {
+        activityIndexMap.set(String(activity.id), { dayIdx, actIdx });
       });
-    },
-    []
-  );
+    });
+  }, []);
 
   const setDays = useCallback(
     (value: SetStateAction<DayPlan[]>) => {
       setDaysState((prevDays) => {
         const nextDays =
-          typeof value === 'function'
-            ? (value as (prev: DayPlan[]) => DayPlan[])(prevDays)
-            : value;
+          typeof value === 'function' ? (value as (prev: DayPlan[]) => DayPlan[])(prevDays) : value;
 
         if (nextDays === prevDays) {
           rebuildCaches(prevDays);
@@ -105,6 +92,7 @@ export function useDragState(initialDays: DayPlan[]) {
   );
 
   useEffect(() => {
+    if (!initialDays.length) return;
     setDays(initialDays);
   }, [initialDays, setDays]);
 
@@ -131,12 +119,7 @@ export function useDragState(initialDays: DayPlan[]) {
       const sourceMeta = activityIndexRef.current.get(String(active.id));
       if (!sourceMeta) return prevDays;
 
-      const target = getDragTarget(
-        prevDays,
-        over,
-        dayIndexRef.current,
-        activityIndexRef.current
-      );
+      const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
       if (!target) return prevDays;
 
       const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
