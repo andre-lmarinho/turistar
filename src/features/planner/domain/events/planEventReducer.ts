@@ -26,6 +26,12 @@ function sanitizeActivity(activity: Activity): Activity {
   return sanitized;
 }
 
+function toPositionNumber(position?: string): number {
+  if (!position) return Number.MAX_SAFE_INTEGER;
+  const numeric = Number(position);
+  return Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER;
+}
+
 function ensureDay(
   days: DayPlan[],
   dayId: string,
@@ -51,13 +57,10 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       if (exists) {
         return ensuredDays;
       }
-      const insertIdx =
-        position === undefined
-          ? -1
-          : day.activities.findIndex((a) => {
-              if (!a.position) return false;
-              return a.position > position;
-            });
+      const targetPosition = toPositionNumber(position);
+      const insertIdx = day.activities.findIndex(
+        (a) => toPositionNumber(a.position) > targetPosition
+      );
       if (insertIdx === -1) day.activities.push(sanitized);
       else day.activities.splice(insertIdx, 0, sanitized);
       return ensuredDays;
@@ -95,7 +98,10 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
         if (activityIndex === -1) return next;
         const [activity] = day.activities.splice(activityIndex, 1);
         activity.position = position;
-        const insertIdx = day.activities.findIndex((a) => a.position && a.position > position);
+        const targetPosition = toPositionNumber(position);
+        const insertIdx = day.activities.findIndex(
+          (a) => toPositionNumber(a.position) > targetPosition
+        );
         if (insertIdx === -1) day.activities.push(activity);
         else day.activities.splice(insertIdx, 0, activity);
         return next;
@@ -108,7 +114,10 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       if (activityIndex === -1) return next;
       const [activity] = fromDay.activities.splice(activityIndex, 1);
       activity.position = position;
-      const insertIdx = toDay.activities.findIndex((a) => a.position && a.position > position);
+      const targetPosition = toPositionNumber(position);
+      const insertIdx = toDay.activities.findIndex(
+        (a) => toPositionNumber(a.position) > targetPosition
+      );
       if (insertIdx === -1) toDay.activities.push(activity);
       else toDay.activities.splice(insertIdx, 0, activity);
       return next;

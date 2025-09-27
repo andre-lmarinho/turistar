@@ -7,10 +7,10 @@ import type { PlanEvent } from '@/features/planner/domain/types/PlanEvent';
 const baseDay: DayPlan = {
   id: 'day-1',
   label: 'Day 1',
-  position: 'a0',
+  position: '1024',
   activities: [
-    { id: 'a-1', title: 'Breakfast', color: 'bg-red', position: 'a0' },
-    { id: 'a-3', title: 'Dinner', color: 'bg-blue', position: 'a2' },
+    { id: 'a-1', title: 'Breakfast', color: 'bg-red', position: '1024' },
+    { id: 'a-3', title: 'Dinner', color: 'bg-blue', position: '3072' },
   ],
 };
 
@@ -24,12 +24,12 @@ describe('planEventReducer', () => {
       createdAt: new Date().toISOString(),
       payload: {
         dayId: 'day-1',
-        position: 'a1',
+        position: '2048',
         activity: {
           id: 'a-2',
           title: 'Lunch',
           color: 'bg-green',
-          position: 'a1',
+          position: '2048',
         },
       },
     };
