@@ -13,5 +13,7 @@ export async function setPlanDateRange(planId: string, from: Date, to: Date) {
       end_date: format(to, 'yyyy-MM-dd'),
     })
     .eq('id', planId);
-  if (error) throw error;
+  if (error) {
+    throw new Error(error.message ?? 'Failed to update plan date range');
+  }
 }

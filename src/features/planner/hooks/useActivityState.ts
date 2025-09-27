@@ -6,6 +6,7 @@ import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
+import { generatePlaceholderActivityId } from '@/features/planner/domain/utils/activityPlaceholders';
 
 /**
  * Provides helpers for modifying day activities.
@@ -14,7 +15,7 @@ import {
  */
 
 export function useActivityState(setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>) {
-  function addActivity(act: Activity, dayIndex = 0): void {
+  function addActivity(act: Activity, dayIndex = 0, insertIndex?: number): void {
     setDays((prev) => {
       const copy = [...prev];
       if (!copy[dayIndex]) {
@@ -26,10 +27,17 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
         title: sanitizedTitle.length > 0 ? sanitizedTitle : 'Untitled activity',
         color: act.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
       };
-      if (!copy[dayIndex].activities.some((a) => a.id === act.id)) {
-        copy[dayIndex].activities.push({
-          ...nextActivity,
-        });
+      const activities = copy[dayIndex].activities;
+      if (!activities.some((a) => a.id === act.id)) {
+        if (insertIndex == null || insertIndex < 0 || insertIndex > activities.length) {
+          activities.push({
+            ...nextActivity,
+          });
+        } else {
+          activities.splice(insertIndex, 0, {
+            ...nextActivity,
+          });
+        }
       }
       return copy;
     });
@@ -65,8 +73,8 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
   function addBlankActivity(dayIndex = 0, insertIndex?: number): Activity {
     const blank: Activity = {
-      id: `blank-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      title: 'Untitled activity',
+      id: generatePlaceholderActivityId(),
+      title: '',
       description: '',
       duration: 0,
       color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,

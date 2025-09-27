@@ -40,7 +40,6 @@ function usePlannerContextValue({
     addActivity: planner.addActivity,
     removeActivity: planner.removeActivity,
     updateActivity: planner.updateActivity,
-    addBlankActivity: planner.addBlankActivity,
   });
 
   return { ...planner, days, setDays, ...selected };

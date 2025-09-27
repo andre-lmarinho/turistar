@@ -88,7 +88,8 @@ function FeatureCarouselCard({
     'relative w-full overflow-hidden rounded p-6 text-left',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
     'transition-[transform,box-shadow,background-color] duration-200 ease-out',
-    interactive ? 'cursor-pointer' : 'cursor-default',
+    'cursor-default md:cursor-pointer',
+    'pointer-events-none md:pointer-events-auto',
     isActive ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px]' : 'md:[box-shadow:none]',
     'before:absolute before:inset-y-0 before:left-0 before:w-[6px]',
     'before:bg-primary before:content-[""] before:opacity-100',
@@ -103,18 +104,17 @@ function FeatureCarouselCard({
     </>
   );
 
-  if (interactive) {
-    return (
-      <button type="button" onClick={onSelect} aria-pressed={isActive} className={cardClassName}>
-        {content}
-      </button>
-    );
-  }
-
   return (
-    <div tabIndex={0} role="button" className={cardClassName}>
+    <button
+      type="button"
+      onClick={interactive ? onSelect : undefined}
+      aria-pressed={interactive ? isActive : undefined}
+      aria-disabled={!interactive}
+      tabIndex={interactive ? 0 : -1}
+      className={cardClassName}
+    >
       {content}
-    </div>
+    </button>
   );
 }
 
@@ -158,11 +158,17 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   const imagesRef = useRef<HTMLUListElement | null>(null);
   const disabledCardsRef = useRef<HTMLUListElement | null>(null);
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const carouselRefs = useMemo(() => [cardsRef, imagesRef], [cardsRef, imagesRef]);
   const { activeIndex, select, scrollHandlers } = useSyncedPointerCarousels(carouselRefs);
   const [cardsHandlers, imagesHandlers] = scrollHandlers;
 
   const isDesktop = useIsDesktop();
+  const interactive = hasMounted && isDesktop;
 
   const cardsDragRef = isDesktop ? disabledCardsRef : cardsRef;
   const cardsDragHandlers = isDesktop ? undefined : cardsHandlers;
@@ -172,10 +178,10 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
 
   const handleCardSelect = useCallback(
     (index: number) => {
-      if (!isDesktop) return;
+      if (!interactive) return;
       select(index);
     },
-    [isDesktop, select]
+    [interactive, select]
   );
 
   const handleDotSelect = useCallback(
@@ -198,7 +204,7 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
                 <FeatureCarouselCard
                   feature={feature}
                   isActive={index === activeIndex}
-                  interactive={isDesktop}
+                  interactive={interactive}
                   onSelect={() => handleCardSelect(index)}
                 />
               </li>

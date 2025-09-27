@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {
@@ -28,6 +29,13 @@ interface PersistMeta {
   fallback: DayPlan[];
 }
 
+function removeBlankActivities(days: DayPlan[]): DayPlan[] {
+  return days.map((day) => {
+    const filtered = day.activities.filter((activity) => !isPlaceholderActivity(activity));
+    return filtered.length === day.activities.length ? day : { ...day, activities: filtered };
+  });
+}
+
 function cloneDays(days: DayPlan[]): DayPlan[] {
   return days.map((day) => ({
     ...day,
@@ -36,7 +44,7 @@ function cloneDays(days: DayPlan[]): DayPlan[] {
 }
 
 function snapshotDays(days: DayPlan[]) {
-  const state = cloneDays(days);
+  const state = cloneDays(removeBlankActivities(days));
   return { state, serialized: JSON.stringify(state) };
 }
 
@@ -101,10 +109,11 @@ export function usePersistedPlannerDays({
     if (!persist || !meta.ready) return;
     if (debouncedDays.length === 0) return;
 
-    const serialized = JSON.stringify(debouncedDays);
+    const cleanedDays = removeBlankActivities(debouncedDays);
+    const serialized = JSON.stringify(cleanedDays);
     if (serialized === meta.lastSaved) return;
 
-    queueRef.current = { state: cloneDays(debouncedDays), serialized };
+    queueRef.current = { state: cloneDays(cleanedDays), serialized };
     void flush();
   }, [debouncedDays, flush, persist]);
 
