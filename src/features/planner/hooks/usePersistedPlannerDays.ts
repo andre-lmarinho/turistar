@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { isBlankActivityTitle } from '@/features/planner/domain/utils/activityPlaceholders';
+import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {
@@ -31,7 +31,7 @@ interface PersistMeta {
 
 function removeBlankActivities(days: DayPlan[]): DayPlan[] {
   return days.map((day) => {
-    const filtered = day.activities.filter((activity) => !isBlankActivityTitle(activity.title));
+    const filtered = day.activities.filter((activity) => !isPlaceholderActivity(activity));
     return filtered.length === day.activities.length ? day : { ...day, activities: filtered };
   });
 }

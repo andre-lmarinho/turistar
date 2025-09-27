@@ -2,7 +2,7 @@
 
 import { midpoint } from '@/features/planner/domain/events/gapOrdering';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { BLANK_ACTIVITY_PREFIX } from '@/features/planner/domain/utils/activityPlaceholders';
+import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import type { PlanEventInsert } from '@/features/planner/domain/types/PlanEvent';
 
 function generateId(): string {
@@ -98,6 +98,7 @@ export function diffPlanEvents(
 
   for (const day of prevDaysWithPositions) {
     for (const activity of ensurePositions(day.activities)) {
+      if (isPlaceholderActivity(activity)) continue;
       prevActivityMap.set(activity.id, { dayId: day.id, activity });
     }
   }
@@ -120,6 +121,14 @@ export function diffPlanEvents(
     ...day,
     activities: ensurePositions(day.activities).map(cloneActivity),
   }));
+
+  const nextActivityMap = new Map<string, { dayId: string; activity: Activity }>();
+  for (const day of nextDaysWithPositions) {
+    for (const activity of day.activities) {
+      if (isPlaceholderActivity(activity)) continue;
+      nextActivityMap.set(activity.id, { dayId: day.id, activity });
+    }
+  }
 
   for (let index = 0; index < nextDaysWithPositions.length; index++) {
     const day = nextDaysWithPositions[index];
@@ -190,11 +199,12 @@ export function diffPlanEvents(
   // Activity diffing
   for (const day of nextDaysWithPositions) {
     const prevDay = prevDayMap.get(day.id);
-    const nextActivityIds = new Set(day.activities.map((a) => a.id));
+    const visibleActivities = day.activities.filter((activity) => !isPlaceholderActivity(activity));
 
     if (prevDay) {
       for (const activity of prevDay.activities) {
-        if (!nextActivityIds.has(activity.id)) {
+        if (isPlaceholderActivity(activity)) continue;
+        if (!nextActivityMap.has(activity.id)) {
           events.push({
             id: generateId(),
             planId,
@@ -206,18 +216,16 @@ export function diffPlanEvents(
       }
     }
 
-    const activityOrder = day.activities.map((a) => a.id);
-    const neighborPositionMap = new Map(day.activities.map((a) => [a.id, a.position]));
+    const activityOrder = visibleActivities.map((a) => a.id);
+    const neighborPositionMap = new Map(visibleActivities.map((a) => [a.id, a.position]));
 
-    day.activities.forEach((activity, index) => {
+    visibleActivities.forEach((activity, index) => {
       const prevActivity = prevActivityMap.get(activity.id);
       if (!prevActivity) {
-        const isPlaceholder = activity.id.startsWith(BLANK_ACTIVITY_PREFIX);
         const position = midpoint(
           index > 0 ? neighborPositionMap.get(activityOrder[index - 1]) : undefined,
           computeRightNeighborPosition(activityOrder, index, neighborPositionMap)
         );
-        const activityId = isPlaceholder ? generateId() : activity.id;
         events.push({
           id: generateId(),
           planId,
@@ -225,8 +233,8 @@ export function diffPlanEvents(
           payload: {
             dayId: day.id,
             activity: {
-              ...sanitizeActivity({ ...activity, id: activityId }),
-              id: activityId,
+              ...sanitizeActivity(activity),
+              id: activity.id,
               position,
             },
             position,
