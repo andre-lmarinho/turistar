@@ -111,8 +111,8 @@ export function useDragState(initialDays: DayPlan[]) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
     const now = Date.now();
-    // Avoid rapid re-renders by only updating every 50ms
-    if (now - lastTimeRef.current < 50) return;
+    // Avoid rapid re-renders but keep drag responsive
+    if (now - lastTimeRef.current < 16) return;
     lastTimeRef.current = now;
 
     setDays((prevDays) => {

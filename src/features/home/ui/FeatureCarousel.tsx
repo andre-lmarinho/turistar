@@ -110,7 +110,6 @@ function FeatureCarouselCard({
       onClick={interactive ? onSelect : undefined}
       aria-pressed={interactive ? isActive : undefined}
       aria-disabled={!interactive}
-      disabled={!interactive}
       tabIndex={interactive ? 0 : -1}
       className={cardClassName}
     >
@@ -159,11 +158,17 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   const imagesRef = useRef<HTMLUListElement | null>(null);
   const disabledCardsRef = useRef<HTMLUListElement | null>(null);
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const carouselRefs = useMemo(() => [cardsRef, imagesRef], [cardsRef, imagesRef]);
   const { activeIndex, select, scrollHandlers } = useSyncedPointerCarousels(carouselRefs);
   const [cardsHandlers, imagesHandlers] = scrollHandlers;
 
   const isDesktop = useIsDesktop();
+  const interactive = hasMounted && isDesktop;
 
   const cardsDragRef = isDesktop ? disabledCardsRef : cardsRef;
   const cardsDragHandlers = isDesktop ? undefined : cardsHandlers;
@@ -173,10 +178,10 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
 
   const handleCardSelect = useCallback(
     (index: number) => {
-      if (!isDesktop) return;
+      if (!interactive) return;
       select(index);
     },
-    [isDesktop, select]
+    [interactive, select]
   );
 
   const handleDotSelect = useCallback(
@@ -199,7 +204,7 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
                 <FeatureCarouselCard
                   feature={feature}
                   isActive={index === activeIndex}
-                  interactive={isDesktop}
+                  interactive={interactive}
                   onSelect={() => handleCardSelect(index)}
                 />
               </li>

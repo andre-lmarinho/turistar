@@ -99,36 +99,19 @@ export function useSelectedActivity(
     setSelectedActivity({ ...blank, dayId });
   };
 
-  const removePlaceholderFromPlanner = (activityId: string, dayId?: string) => {
-    if (!activityId) return;
+  const removePlaceholderFromPlanner = (activityId: string) => {
+    if (!activityId.startsWith(BLANK_ACTIVITY_PREFIX)) return;
     setDays((prev) => {
-      const removeFromDay = (daysState: DayPlan[], index: number): DayPlan[] | null => {
-        const day = daysState[index];
-        if (!day) return null;
-        const targetIdx = day.activities.findIndex((activity) => activity.id === activityId);
-        if (targetIdx === -1) return null;
-        const nextDays = [...daysState];
-        nextDays[index] = {
+      let removed = false;
+      const next = prev.map((day) => {
+        if (!day.activities.some((activity) => activity.id === activityId)) return day;
+        removed = true;
+        return {
           ...day,
-          activities: day.activities.filter((_, idx) => idx !== targetIdx),
+          activities: day.activities.filter((activity) => activity.id !== activityId),
         };
-        return nextDays;
-      };
-
-      if (dayId) {
-        const preferredIndex = prev.findIndex((day) => day.id === dayId);
-        if (preferredIndex !== -1) {
-          const preferredResult = removeFromDay(prev, preferredIndex);
-          if (preferredResult) return preferredResult;
-        }
-      }
-
-      for (let i = 0; i < prev.length; i += 1) {
-        const result = removeFromDay(prev, i);
-        if (result) return result;
-      }
-
-      return prev;
+      });
+      return removed ? next : prev;
     });
   };
 
@@ -140,8 +123,12 @@ export function useSelectedActivity(
       return;
     }
 
-    if (selectedActivity && isPlaceholderActivity(selectedActivity)) {
-      removePlaceholderFromPlanner(selectedActivity.id, selectedActivity.dayId);
+    if (selectedActivity) {
+      if (selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
+        removePlaceholderFromPlanner(selectedActivity.id);
+      } else if (isPlaceholderActivity(selectedActivity)) {
+        removeActivity(selectedActivity.id);
+      }
     }
     newActivityMetaRef.current = null;
     setSelectedActivity(null);
@@ -205,8 +192,8 @@ export function useSelectedActivity(
       setSelectedActivity(null);
       return;
     }
-    if (isPlaceholderActivity(selectedActivity)) {
-      removePlaceholderFromPlanner(selectedActivity.id, selectedActivity.dayId);
+    if (selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
+      removePlaceholderFromPlanner(selectedActivity.id);
     } else {
       removeActivity(selectedActivity.id);
     }

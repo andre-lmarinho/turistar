@@ -79,20 +79,20 @@ export function usePlanner(options: UsePlannerOptions = {}) {
   async function handleRangeChange(r: DateRange | undefined) {
     setRange(r);
     if (!r?.from || !r?.to) return;
-    if (options.planId) {
-      try {
+    try {
+      if (options.planId) {
         await setPlanDateRange(options.planId, r.from, r.to);
-      } catch (err) {
-        console.error(err);
       }
+      const newTripDays = eachDayOfInterval({ start: r.from, end: r.to });
+      setDays((prev: DayPlan[]) => {
+        const cleaned = dedupeDays(prev);
+        const updated = syncDaysWithTripRange(cleaned, newTripDays);
+        options.persistDays?.mutate(updated);
+        return updated;
+      });
+    } catch (err) {
+      console.error('Failed to update planner range', err);
     }
-    const newTripDays = eachDayOfInterval({ start: r.from, end: r.to });
-    setDays((prev: DayPlan[]) => {
-      const cleaned = dedupeDays(prev);
-      const updated = syncDaysWithTripRange(cleaned, newTripDays);
-      options.persistDays?.mutate(updated);
-      return updated;
-    });
   }
 
   return {
