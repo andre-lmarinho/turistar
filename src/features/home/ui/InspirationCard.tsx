@@ -1,4 +1,4 @@
-// src/features/home/components/InspirationCard.tsx
+// src/features/home/ui/InspirationCard.tsx
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
