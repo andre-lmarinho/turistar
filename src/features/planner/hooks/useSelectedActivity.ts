@@ -6,6 +6,7 @@ import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerE
 import {
   BLANK_ACTIVITY_PREFIX,
   generateClientActivityId,
+  generatePlaceholderActivityId,
   isPlaceholderActivity,
 } from '@/features/planner/domain/utils/activityPlaceholders';
 import {
@@ -43,6 +44,7 @@ export function useSelectedActivity(
 ) {
   const [selectedActivityState, setSelectedActivityState] = useState<SelectedActivityState>(null);
   const newActivityMetaRef = useRef<NewActivityMeta>(null);
+  const savingRef = useRef(false);
 
   const setSelectedActivity = (
     value: SelectedActivityState | ((prev: SelectedActivityState) => SelectedActivityState)
@@ -84,7 +86,7 @@ export function useSelectedActivity(
 
   const addBlankAndSelect = (dayId: string, insertIdx?: number) => {
     const blank: Activity = {
-      id: `${BLANK_ACTIVITY_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      id: generatePlaceholderActivityId(),
       title: '',
       description: '',
       duration: 0,
@@ -97,6 +99,39 @@ export function useSelectedActivity(
     setSelectedActivity({ ...blank, dayId });
   };
 
+  const removePlaceholderFromPlanner = (activityId: string, dayId?: string) => {
+    if (!activityId) return;
+    setDays((prev) => {
+      const removeFromDay = (daysState: DayPlan[], index: number): DayPlan[] | null => {
+        const day = daysState[index];
+        if (!day) return null;
+        const targetIdx = day.activities.findIndex((activity) => activity.id === activityId);
+        if (targetIdx === -1) return null;
+        const nextDays = [...daysState];
+        nextDays[index] = {
+          ...day,
+          activities: day.activities.filter((_, idx) => idx !== targetIdx),
+        };
+        return nextDays;
+      };
+
+      if (dayId) {
+        const preferredIndex = prev.findIndex((day) => day.id === dayId);
+        if (preferredIndex !== -1) {
+          const preferredResult = removeFromDay(prev, preferredIndex);
+          if (preferredResult) return preferredResult;
+        }
+      }
+
+      for (let i = 0; i < prev.length; i += 1) {
+        const result = removeFromDay(prev, i);
+        if (result) return result;
+      }
+
+      return prev;
+    });
+  };
+
   const closeModal = () => {
     const pendingMeta = newActivityMetaRef.current;
     if (selectedActivity && pendingMeta && selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
@@ -106,7 +141,7 @@ export function useSelectedActivity(
     }
 
     if (selectedActivity && isPlaceholderActivity(selectedActivity)) {
-      removeActivity(selectedActivity.id);
+      removePlaceholderFromPlanner(selectedActivity.id, selectedActivity.dayId);
     }
     newActivityMetaRef.current = null;
     setSelectedActivity(null);
@@ -114,39 +149,52 @@ export function useSelectedActivity(
 
   const save = (patch: Partial<Activity>) => {
     if (!selectedActivity || !patch.title?.trim()) return;
-    const pendingMeta = newActivityMetaRef.current;
-    const sanitized = { ...patch, duration: Number(patch.duration) };
-    const dayIndex = days.findIndex((d) => d.id === selectedActivity.dayId);
-    if (pendingMeta && selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
-      const targetDayId = selectedActivity.dayId ?? pendingMeta.dayId;
-      const dayIndex = days.findIndex((d) => d.id === targetDayId);
-      if (dayIndex === -1) {
-        setSelectedActivity(null);
-        newActivityMetaRef.current = null;
+    if (savingRef.current) return;
+
+    savingRef.current = true;
+    try {
+      const pendingMeta = newActivityMetaRef.current;
+      const sanitized = { ...patch, duration: Number(patch.duration) };
+      const currentDayIndex = days.findIndex((d) => d.id === selectedActivity.dayId);
+
+      if (pendingMeta && selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
+        const targetDayId = selectedActivity.dayId ?? pendingMeta.dayId;
+        const resolvedDayIndex = days.findIndex((d) => d.id === targetDayId);
+        if (resolvedDayIndex === -1) {
+          return;
+        }
+        const placeholderIndex =
+          pendingMeta.insertIndex ?? days[resolvedDayIndex].activities.length;
+        const { dayId: _omitDayId, ...activityBase } = {
+          ...selectedActivity,
+          ...sanitized,
+          id: generateClientActivityId(),
+        };
+        void _omitDayId;
+        addActivity(
+          activityBase,
+          resolvedDayIndex,
+          placeholderIndex === -1 ? undefined : placeholderIndex
+        );
         return;
       }
-      const placeholderIndex = pendingMeta.insertIndex ?? days[dayIndex].activities.length;
-      const { dayId: _omitDayId, ...activityBase } = {
-        ...selectedActivity,
-        ...sanitized,
-        id: generateClientActivityId(),
-      };
-      void _omitDayId;
-      addActivity(activityBase, dayIndex, placeholderIndex === -1 ? undefined : placeholderIndex);
-      newActivityMetaRef.current = null;
-    } else if (selectedActivity.id.startsWith('temp-')) {
-      if (dayIndex === -1) {
-        newActivityMetaRef.current = null;
-        setSelectedActivity(null);
+
+      if (selectedActivity.id.startsWith('temp-')) {
+        if (currentDayIndex === -1) {
+          return;
+        }
+        const { dayId: _omitDayId, ...activityBase } = { ...selectedActivity, ...sanitized };
+        void _omitDayId;
+        addActivity(activityBase, currentDayIndex);
         return;
       }
-      const { dayId: _omitDayId, ...activityBase } = { ...selectedActivity, ...sanitized };
-      void _omitDayId;
-      addActivity(activityBase, dayIndex);
-    } else {
+
       updateActivity(selectedActivity.id, sanitized);
+    } finally {
+      savingRef.current = false;
+      newActivityMetaRef.current = null;
+      setSelectedActivity(null);
     }
-    setSelectedActivity(null);
   };
 
   const deleteActivityById = () => {
@@ -157,7 +205,11 @@ export function useSelectedActivity(
       setSelectedActivity(null);
       return;
     }
-    removeActivity(selectedActivity.id);
+    if (isPlaceholderActivity(selectedActivity)) {
+      removePlaceholderFromPlanner(selectedActivity.id, selectedActivity.dayId);
+    } else {
+      removeActivity(selectedActivity.id);
+    }
     newActivityMetaRef.current = null;
     setSelectedActivity(null);
   };

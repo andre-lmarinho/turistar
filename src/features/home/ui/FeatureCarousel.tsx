@@ -108,8 +108,10 @@ function FeatureCarouselCard({
     <button
       type="button"
       onClick={interactive ? onSelect : undefined}
-      aria-pressed={isActive}
-      tabIndex={0}
+      aria-pressed={interactive ? isActive : undefined}
+      aria-disabled={!interactive}
+      disabled={!interactive}
+      tabIndex={interactive ? 0 : -1}
       className={cardClassName}
     >
       {content}
