@@ -61,7 +61,7 @@ export function usePlanDays(planId: string, enabled = true) {
     planId,
     resource: 'plan_days',
     persistFn: async (id, state, signal) => {
-      const existing = await fetchExistingDays(id, signal);
+      const existing = (await fetchExistingDays(id, signal)) ?? [];
       await deleteRemovedDays(existing, state, signal);
 
       let destinationId: string | undefined = existing[0]?.destination_id;
@@ -99,7 +99,10 @@ export function usePlanDays(planId: string, enabled = true) {
         actMap.get(a.day_id)!.add(a.id);
       });
 
-      const existingByDate = new Map(existing.map((d) => [d.date, d]));
+      const existingByDate = new Map<string, (typeof existing)[number]>();
+      for (const row of existing) {
+        existingByDate.set(row.date, row);
+      }
 
       for (let i = 0; i < state.length; i++) {
         const day = state[i];
