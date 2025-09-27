@@ -69,10 +69,14 @@ export function usePersistedPlannerDays({
     if (storedDays == null) return;
     const snapshot = snapshotDays(storedDays);
     const meta = metaRef.current!;
+    const hasChanged = snapshot.serialized !== meta.lastSaved;
     meta.ready = true;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
-  }, [storedDays]);
+    if (hasChanged) {
+      setDays(snapshot.state);
+    }
+  }, [setDays, storedDays]);
 
   const { mutateAsync, isPending } = persistDays;
   const flush = useCallback(async () => {
