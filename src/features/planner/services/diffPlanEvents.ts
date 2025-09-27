@@ -45,10 +45,14 @@ function toNumber(position?: string): number | null {
 function isBetween(position: string | undefined, left?: string, right?: string): boolean {
   const value = toNumber(position);
   if (value == null) return false;
+
   const leftNum = toNumber(left);
   const rightNum = toNumber(right);
+  const effectiveRight =
+    rightNum == null || (leftNum != null && leftNum >= rightNum) ? null : rightNum;
+
   if (leftNum != null && value <= leftNum) return false;
-  if (rightNum != null && value >= rightNum) return false;
+  if (effectiveRight != null && value >= effectiveRight) return false;
   return true;
 }
 
