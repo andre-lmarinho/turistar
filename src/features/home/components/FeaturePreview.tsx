@@ -1,8 +1,8 @@
 // src/features/home/components/FeaturePreview.tsx
 'use client';
 
-import FeatureCarousel from '../ui/feature-preview/FeatureCarousel';
-import type { FeatureCarouselFeature } from '../ui/feature-preview/FeatureCarousel';
+import FeatureCarousel from '../ui/FeatureCarousel';
+import type { FeatureCarouselFeature } from '../ui/FeatureCarousel';
 
 const features: FeatureCarouselFeature[] = [
   {
