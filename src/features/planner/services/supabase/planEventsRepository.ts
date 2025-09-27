@@ -118,8 +118,9 @@ export class PlanEventsRepository {
     const { data, error } = await (this.client.from('plan_snapshots') as any)
       .select('plan_id, version, state, updated_at')
       .eq('plan_id', planId)
-      .single();
+      .maybeSingle();
     if (error) throw error;
+
     const parsed = SnapshotRowSchema.parse(
       data ?? {
         plan_id: planId,
