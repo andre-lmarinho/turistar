@@ -43,10 +43,7 @@ const IMAGE_LIST_CLASSES =
 const IMAGE_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start';
 
 function useIsDesktop(query: string = DESKTOP_MEDIA_QUERY) {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(query).matches;
-  });
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
