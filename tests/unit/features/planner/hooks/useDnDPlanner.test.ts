@@ -34,7 +34,7 @@ describe('useDnDPlanner', () => {
     const overEvent = {
       active: { id: 'a1' },
       over: { id: 'a2' },
-    } as Partial<DragOverEvent> as DragOverEvent;
+    } as unknown as DragOverEvent;
 
     act(() => {
       result.current.handleDragOver(overEvent);
@@ -43,12 +43,37 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
   });
 
+  test('handleDragOver drops to the end of the same day when moving downward', () => {
+    const { result } = setup();
+    const overEvent = {
+      active: { id: 'a1' },
+      over: {
+        id: 'day1',
+        data: {
+          current: {
+            sortable: {
+              containerId: 'day1',
+              index: 3,
+            },
+          },
+        },
+      },
+    } as unknown as DragOverEvent;
+
+    act(() => {
+      result.current.handleDragOver(overEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1']);
+  });
+
   test('handleDragOver moves activity across days', () => {
     const { result } = setup();
     const overEvent = {
       active: { id: 'a1' },
       over: { id: 'day2' },
-    } as Partial<DragOverEvent> as DragOverEvent;
+    } as unknown as DragOverEvent;
 
     act(() => {
       result.current.handleDragOver(overEvent);
@@ -61,7 +86,7 @@ describe('useDnDPlanner', () => {
   test('handleDragEnd clears activeId', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
-    const endEvent = { active: { id: 'a1' }, over: null } as Partial<DragEndEvent> as DragEndEvent;
+    const endEvent = { active: { id: 'a1' }, over: null } as unknown as DragEndEvent;
 
     act(() => {
       result.current.handleDragStart(startEvent);
@@ -77,7 +102,7 @@ describe('useDnDPlanner', () => {
     const endEvent = {
       active: { id: 'a1' },
       over: { id: 'day2' },
-    } as Partial<DragEndEvent> as DragEndEvent;
+    } as unknown as DragEndEvent;
 
     let updated: DayPlan[] | undefined;
     act(() => {
@@ -91,14 +116,43 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragEnd keeps indices aligned when dropping lower in the same column', () => {
+    const { result } = setup();
+    const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
+    const endEvent = {
+      active: { id: 'a1' },
+      over: {
+        id: 'day1',
+        data: {
+          current: {
+            sortable: {
+              containerId: 'day1',
+              index: 3,
+            },
+          },
+        },
+      },
+    } as unknown as DragEndEvent;
+
+    let updated: DayPlan[] | undefined;
+    act(() => {
+      result.current.handleDragStart(startEvent);
+      updated = result.current.handleDragEnd(endEvent);
+    });
+
+    expect(updated?.[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1']);
+  });
+
   test('handleDragEnd falls back to the last hovered column when over is null', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
     const overEvent = {
       active: { id: 'a1' },
       over: { id: 'day2' },
-    } as Partial<DragOverEvent> as DragOverEvent;
-    const endEvent = { active: { id: 'a1' }, over: null } as Partial<DragEndEvent> as DragEndEvent;
+    } as unknown as DragOverEvent;
+    const endEvent = { active: { id: 'a1' }, over: null } as unknown as DragEndEvent;
 
     let updated: DayPlan[] | undefined;
     act(() => {

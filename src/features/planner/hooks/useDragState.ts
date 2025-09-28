@@ -103,7 +103,8 @@ function moveActivity(
   if (!target) return days;
 
   const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
-  const { dstDayIdx, newIndex } = target;
+  const { dstDayIdx } = target;
+  let { newIndex } = target;
 
   if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
     return days;
@@ -131,7 +132,17 @@ function moveActivity(
     dstActivities = nextDays[dstDayIdx].activities;
   }
 
-  dstActivities.splice(newIndex, 0, moved);
+  const isSameDay = dstDayIdx === srcDayIdx;
+  const overId = over ? String(over.id) : null;
+  const isContainerTarget = overId != null && overId === String(dstDay.id);
+
+  if (isSameDay && isContainerTarget && newIndex > oldIndex) {
+    newIndex -= 1;
+  }
+
+  const clampedIndex = Math.max(0, Math.min(newIndex, dstActivities.length));
+
+  dstActivities.splice(clampedIndex, 0, moved);
 
   return nextDays;
 }
