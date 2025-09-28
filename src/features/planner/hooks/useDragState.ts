@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, type SetStateAction } from 'react';
+import { flushSync } from 'react-dom';
 import {
   PointerSensor,
   useSensor,
@@ -109,54 +110,56 @@ export function useDragState(initialDays: DayPlan[]) {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
 
-    setDays((prevDays) => {
-      const sourceMeta = activityIndexRef.current.get(String(active.id));
-      if (!sourceMeta) return prevDays;
+    flushSync(() => {
+      setDays((prevDays) => {
+        const sourceMeta = activityIndexRef.current.get(String(active.id));
+        if (!sourceMeta) return prevDays;
 
-      const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
-      if (!target) return prevDays;
+        const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
+        if (!target) return prevDays;
 
-      const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
-      const { dstDayIdx, newIndex } = target;
+        const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
+        const { dstDayIdx, newIndex } = target;
 
-      const nextDays = [...prevDays];
-      const srcDay = prevDays[srcDayIdx];
-      const dstDay = prevDays[dstDayIdx];
-      if (!srcDay || !dstDay) return prevDays;
+        const nextDays = [...prevDays];
+        const srcDay = prevDays[srcDayIdx];
+        const dstDay = prevDays[dstDayIdx];
+        if (!srcDay || !dstDay) return prevDays;
 
-      if (dstDayIdx === srcDayIdx) {
-        if (newIndex === oldIndex) {
-          return prevDays;
+        if (dstDayIdx === srcDayIdx) {
+          if (newIndex === oldIndex) {
+            return prevDays;
+          }
+
+          nextDays[srcDayIdx] = {
+            ...srcDay,
+            activities: arrayMove(srcDay.activities, oldIndex, newIndex),
+          };
+
+          return nextDays;
         }
 
         nextDays[srcDayIdx] = {
           ...srcDay,
-          activities: arrayMove(srcDay.activities, oldIndex, newIndex),
+          activities: [...srcDay.activities],
         };
+        const srcActivities = nextDays[srcDayIdx].activities;
+        const [moved] = srcActivities.splice(oldIndex, 1);
+        if (!moved) return prevDays;
+
+        let dstActivities = srcActivities;
+        if (dstDayIdx !== srcDayIdx) {
+          nextDays[dstDayIdx] = {
+            ...dstDay,
+            activities: [...dstDay.activities],
+          };
+          dstActivities = nextDays[dstDayIdx].activities;
+        }
+
+        dstActivities.splice(newIndex, 0, moved);
 
         return nextDays;
-      }
-
-      nextDays[srcDayIdx] = {
-        ...srcDay,
-        activities: [...srcDay.activities],
-      };
-      const srcActivities = nextDays[srcDayIdx].activities;
-      const [moved] = srcActivities.splice(oldIndex, 1);
-      if (!moved) return prevDays;
-
-      let dstActivities = srcActivities;
-      if (dstDayIdx !== srcDayIdx) {
-        nextDays[dstDayIdx] = {
-          ...dstDay,
-          activities: [...dstDay.activities],
-        };
-        dstActivities = nextDays[dstDayIdx].activities;
-      }
-
-      dstActivities.splice(newIndex, 0, moved);
-
-      return nextDays;
+      });
     });
   }
 
