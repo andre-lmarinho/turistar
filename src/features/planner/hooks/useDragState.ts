@@ -185,16 +185,21 @@ export function useDragState(initialDays: DayPlan[]) {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   // Throttle state updates so drag-over doesn't fire excessively
   const lastTimeRef = useRef<number>(0);
+  const lastOverRef = useRef<DragOverEvent['over']>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
     lastTimeRef.current = 0;
+    lastOverRef.current = null;
   }
 
   function handleDragOver(e: DragOverEvent): void {
     const { active, over } = e;
+    if (over) {
+      lastOverRef.current = over;
+    }
     if (!over || active.id === over.id) return;
     const now = Date.now();
     // Avoid rapid re-renders but keep drag responsive
@@ -209,7 +214,10 @@ export function useDragState(initialDays: DayPlan[]) {
   function handleDragEnd(e: DragEndEvent): DayPlan[] {
     setActiveId(null);
 
-    const { active, over } = e;
+    const { active } = e;
+    const over = e.over ?? lastOverRef.current;
+    lastOverRef.current = null;
+
     if (!over || active.id === over.id) {
       return days;
     }
