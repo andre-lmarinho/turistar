@@ -10,6 +10,7 @@ import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
 import UpdateButton from '@/features/planner/ui/buttons/UpdateButton';
 import { Input } from '@/shared/ui/input';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
+import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface ActivityModalFormProps {
@@ -184,6 +185,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           inputClassName="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           latitude={destCoords?.lat}
           longitude={destCoords?.lng}
+          autocompleteHook={useAddressAutocomplete}
         />
       </div>
 

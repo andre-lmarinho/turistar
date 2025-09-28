@@ -4,8 +4,10 @@
 import React from 'react';
 import Spinner from './Spinner';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
-import type { AutocompletePlace } from '@/features/planner/domain/types/PlannerEntities';
+import type { AutocompletePlace } from '@/shared/types/locations';
+import type { LocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
+
+export type { LocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
 
 export interface LocationSearchInputProps {
   value: string;
@@ -17,6 +19,7 @@ export interface LocationSearchInputProps {
   inputClassName?: string;
   latitude?: number;
   longitude?: number;
+  autocompleteHook: LocationAutocompleteHook;
 }
 
 export default function LocationSearchInput({
@@ -29,13 +32,14 @@ export default function LocationSearchInput({
   inputClassName,
   latitude,
   longitude,
+  autocompleteHook,
 }: LocationSearchInputProps) {
   const debounced = useDebounce(value);
 
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(-1);
 
-  const { results, loading, error } = useDestinationAutocomplete(debounced, {
+  const { results, loading, error } = autocompleteHook(debounced, {
     enabled: open,
     latitude,
     longitude,

@@ -1,5 +1,5 @@
 // src/features/planner/hooks/search/fetchSearch.ts
-import type { SearchActivity } from '@/features/planner/domain/types/PlannerEntities';
+import type { SearchActivity } from '@/shared/types/locations';
 import { fetchJson } from '@/shared/lib/http';
 
 /**
