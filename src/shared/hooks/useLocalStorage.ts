@@ -33,23 +33,26 @@ export function useLocalStorage<T>(key: string, initial: T) {
     latestValue.current = value;
   }, [value]);
 
-  const setStoredValue = useCallback<Dispatch<SetStateAction<T>>>((nextValue) => {
-    const resolvedValue =
-      typeof nextValue === 'function'
-        ? (nextValue as (current: T) => T)(latestValue.current)
-        : nextValue;
+  const setStoredValue = useCallback<Dispatch<SetStateAction<T>>>(
+    (nextValue) => {
+      const resolvedValue =
+        typeof nextValue === 'function'
+          ? (nextValue as (current: T) => T)(latestValue.current)
+          : nextValue;
 
-    latestValue.current = resolvedValue;
-    setValue(resolvedValue);
+      latestValue.current = resolvedValue;
+      setValue(resolvedValue);
 
-    if (typeof window !== 'undefined') {
-      try {
-        window.localStorage.setItem(key, JSON.stringify(resolvedValue));
-      } catch {
-        /* ignore */
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(key, JSON.stringify(resolvedValue));
+        } catch {
+          /* ignore */
+        }
       }
-    }
-  }, [key]);
+    },
+    [key]
+  );
 
   useEffect(() => {
     if (!initialized.current || typeof window === 'undefined') return;
