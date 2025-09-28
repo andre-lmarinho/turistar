@@ -21,8 +21,7 @@ export function useDnDPlanner(initialDays: DayPlan[]) {
     handleDragStart,
     handleDragOver,
     handleDragEnd,
-  } =
-    useDragState(initialDays);
+  } = useDragState(initialDays);
 
   const { addActivity, removeActivity, updateActivity, addBlankActivity } =
     useActivityState(setDays);
