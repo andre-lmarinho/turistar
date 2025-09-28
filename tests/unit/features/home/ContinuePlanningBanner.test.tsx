@@ -3,9 +3,10 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot, type Root } from 'react-dom/client';
-import { screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 
 import ContinuePlanningBanner from '@/features/home/components/ContinuePlanningBanner';
+import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
 
 vi.mock('next/link', () => ({
   default: ({ href, children }: { href: string; children: React.ReactNode }) => (
@@ -56,5 +57,36 @@ describe('ContinuePlanningBanner hydration', () => {
 
     consoleError.mockRestore();
     act(() => root.unmount());
+  });
+
+  it('saves the recent plan to localStorage immediately', () => {
+    const plan = {
+      id: '2',
+      slug: 'immediate',
+      dest: 'Lisbon',
+      start: '2023-02-01',
+      end: '2023-02-05',
+    };
+
+    function SaveRecentPlanButton() {
+      const { saveRecentPlan } = useRecentPlan();
+
+      return (
+        <button type="button" onClick={() => saveRecentPlan(plan)}>
+          Save plan
+        </button>
+      );
+    }
+
+    const { unmount } = render(<SaveRecentPlanButton />);
+
+    expect(window.localStorage.getItem('recent_plan')).toBe(JSON.stringify(null));
+
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'Save plan' }));
+      unmount();
+    });
+
+    expect(window.localStorage.getItem('recent_plan')).toBe(JSON.stringify(plan));
   });
 });
