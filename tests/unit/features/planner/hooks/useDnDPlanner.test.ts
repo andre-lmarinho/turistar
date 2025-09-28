@@ -99,6 +99,26 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragEnd falls back to last known target when drop lacks over data', () => {
+    const { result } = setup();
+    const overEvent = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as Partial<DragOverEvent> as DragOverEvent;
+    const endEvent = {
+      active: { id: 'a1' },
+      over: null,
+    } as Partial<DragEndEvent> as DragEndEvent;
+
+    act(() => {
+      result.current.handleDragOver(overEvent);
+      result.current.handleDragEnd(endEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+  });
+
   test('updates days when initialDays changes', () => {
     const first: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
     const second: DayPlan[] = [
