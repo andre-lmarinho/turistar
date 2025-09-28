@@ -209,16 +209,22 @@ export function useDragState(initialDays: DayPlan[]) {
 
   function handleDragOver(e: DragOverEvent): void {
     const { active, over } = e;
-    if (over) {
+    const previousOver = lastOverRef.current;
+    let nextOver = over;
+
+    if (over && over.id === active.id) {
+      nextOver = previousOver;
+    } else if (over) {
       lastOverRef.current = over;
     }
-    if (!over || active.id === over.id) return;
+
+    if (!nextOver) return;
 
     setDays((prevDays) => {
       const nextDays = moveActivity(
         prevDays,
         active.id,
-        over,
+        nextOver,
         dayIndexRef.current,
         activityIndexRef.current
       );
@@ -226,7 +232,7 @@ export function useDragState(initialDays: DayPlan[]) {
       if (nextDays !== prevDays) {
         lastMoveRef.current = {
           activeId: String(active.id),
-          overId: over ? String(over.id) : null,
+          overId: nextOver ? String(nextOver.id) : null,
           days: nextDays,
         };
       }
@@ -239,7 +245,8 @@ export function useDragState(initialDays: DayPlan[]) {
     setActiveId(null);
 
     const { active } = e;
-    const over = e.over ?? lastOverRef.current;
+    const storedOver = lastOverRef.current;
+    const over = !e.over || e.over.id === active.id ? (storedOver ?? e.over ?? null) : e.over;
     lastOverRef.current = null;
 
     const currentDays = daysRef.current;
@@ -251,7 +258,7 @@ export function useDragState(initialDays: DayPlan[]) {
       return currentDays;
     }
 
-    if (!e.over && lastMoveRef.current) {
+    if ((!e.over || e.over.id === active.id) && lastMoveRef.current) {
       const lastMove = lastMoveRef.current;
       if (
         lastMove.days === currentDays &&

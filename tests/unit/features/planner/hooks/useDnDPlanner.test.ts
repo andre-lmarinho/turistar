@@ -197,6 +197,36 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragEnd reuses the stored hover when the final over matches the active card', () => {
+    const { result } = setup();
+    const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
+    const moveToDayTwo = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as unknown as DragOverEvent;
+    const hoverActive = {
+      active: { id: 'a1' },
+      over: { id: 'a1' },
+    } as unknown as DragOverEvent;
+    const endEvent = {
+      active: { id: 'a1' },
+      over: { id: 'a1' },
+    } as unknown as DragEndEvent;
+
+    let updated: DayPlan[] | undefined;
+    act(() => {
+      result.current.handleDragStart(startEvent);
+      result.current.handleDragOver(moveToDayTwo);
+      result.current.handleDragOver(hoverActive);
+      updated = result.current.handleDragEnd(endEvent);
+    });
+
+    expect(updated?.[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(updated?.[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+  });
+
   test('handleDragEnd keeps same-day reorder when drop finishes outside a column', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
