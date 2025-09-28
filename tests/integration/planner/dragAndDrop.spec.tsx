@@ -6,15 +6,6 @@ import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 describe('drag and drop integration', () => {
-  async function nextFrame() {
-    await new Promise<void>((resolve) => {
-      if (typeof requestAnimationFrame === 'function') {
-        requestAnimationFrame(() => resolve());
-      } else {
-        setTimeout(() => resolve(), 0);
-      }
-    });
-  }
   function setup(initial?: DayPlan[]) {
     const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
     const a2: Activity = { id: 'a2', title: 'A2', color: 'bg-[var(--color-1)]' };
@@ -27,7 +18,7 @@ describe('drag and drop integration', () => {
     return { result };
   }
 
-  it('moves activity across days via drag events', async () => {
+  it('moves activity across days via drag events', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
     const overEvent = {
@@ -35,38 +26,35 @@ describe('drag and drop integration', () => {
       over: { id: 'day2' },
     } as Partial<DragOverEvent> as DragOverEvent;
 
-    await act(async () => {
+    act(() => {
       result.current.handleDragStart(startEvent);
       result.current.handleDragOver(overEvent);
-      await nextFrame();
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
-  it('keeps drag metadata in sync after sequential moves', async () => {
+  it('keeps drag metadata in sync after sequential moves', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
 
-    await act(async () => {
+    act(() => {
       result.current.handleDragStart(startEvent);
       result.current.handleDragOver({
         active: { id: 'a1' },
         over: { id: 'day2' },
       } as Partial<DragOverEvent> as DragOverEvent);
-      await nextFrame();
     });
 
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
 
-    await act(async () => {
+    act(() => {
       result.current.handleDragStart(startEvent);
       result.current.handleDragOver({
         active: { id: 'a1' },
         over: { id: 'day1' },
       } as Partial<DragOverEvent> as DragOverEvent);
-      await nextFrame();
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);

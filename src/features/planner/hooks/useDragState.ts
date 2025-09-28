@@ -62,12 +62,9 @@ export function useDragState(initialDays: DayPlan[]) {
   const activityIndexRef = useRef<Map<string, { dayIdx: number; actIdx: number }>>(new Map());
   const lastAppliedRef = useRef<{
     activeId: UniqueIdentifier;
-    overId: UniqueIdentifier | null;
+    targetDayId: UniqueIdentifier;
+    targetIndex: number;
   } | null>(null);
-  const queuedFrameRef = useRef<number | null>(null);
-  const queuedEventRef = useRef<{ activeId: UniqueIdentifier; over: DragOverEvent['over'] } | null>(
-    null
-  );
 
   const rebuildCaches = useCallback((sourceDays: DayPlan[]) => {
     const dayIndexMap = dayIndexRef.current;
@@ -113,13 +110,6 @@ export function useDragState(initialDays: DayPlan[]) {
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
     lastAppliedRef.current = null;
-    if (queuedFrameRef.current != null) {
-      if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
-        window.cancelAnimationFrame(queuedFrameRef.current);
-      }
-      queuedFrameRef.current = null;
-    }
-    queuedEventRef.current = null;
   }
 
   const applyDragUpdate = useCallback(
@@ -142,6 +132,17 @@ export function useDragState(initialDays: DayPlan[]) {
         const dstDay = prevDays[dstDayIdx];
         if (!srcDay || !dstDay) return prevDays;
 
+        const lastApplied = lastAppliedRef.current;
+        const dstDayId = dstDay.id;
+        if (
+          lastApplied &&
+          lastApplied.activeId === activeIdValue &&
+          lastApplied.targetDayId === dstDayId &&
+          lastApplied.targetIndex === newIndex
+        ) {
+          return prevDays;
+        }
+
         if (dstDayIdx === srcDayIdx) {
           if (newIndex === oldIndex) {
             return prevDays;
@@ -153,6 +154,11 @@ export function useDragState(initialDays: DayPlan[]) {
             activities: arrayMove(srcDay.activities, oldIndex, newIndex),
           };
           didUpdate = true;
+          lastAppliedRef.current = {
+            activeId: activeIdValue,
+            targetDayId: dstDayId,
+            targetIndex: newIndex,
+          };
           return nextDays;
         }
 
@@ -173,10 +179,13 @@ export function useDragState(initialDays: DayPlan[]) {
         dstActivities.splice(newIndex, 0, moved);
 
         didUpdate = true;
+        lastAppliedRef.current = {
+          activeId: activeIdValue,
+          targetDayId: dstDayId,
+          targetIndex: newIndex,
+        };
         return nextDays;
       });
-
-      lastAppliedRef.current = { activeId: activeIdValue, overId: over.id ?? null };
 
       if (!didUpdate) {
         return;
@@ -185,87 +194,22 @@ export function useDragState(initialDays: DayPlan[]) {
     [setDays]
   );
 
-  const scheduleDragUpdate = useCallback(
-    (activeIdValue: UniqueIdentifier, over: DragOverEvent['over']) => {
-      if (!over) return;
-
-      const lastApplied = lastAppliedRef.current;
-      const overId = over.id ?? null;
-      if (!queuedFrameRef.current) {
-        if (
-          lastApplied &&
-          lastApplied.activeId === activeIdValue &&
-          lastApplied.overId === overId
-        ) {
-          return;
-        }
-
-        applyDragUpdate(activeIdValue, over);
-
-        queuedFrameRef.current =
-          typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function'
-            ? window.requestAnimationFrame(() => {
-                queuedFrameRef.current = null;
-                const nextEvent = queuedEventRef.current;
-                queuedEventRef.current = null;
-                if (!nextEvent) return;
-                applyDragUpdate(nextEvent.activeId, nextEvent.over);
-              })
-            : window.setTimeout(() => {
-                queuedFrameRef.current = null;
-                const nextEvent = queuedEventRef.current;
-                queuedEventRef.current = null;
-                if (!nextEvent) return;
-                applyDragUpdate(nextEvent.activeId, nextEvent.over);
-              }, 16);
-
-        return;
-      }
-
-      queuedEventRef.current = { activeId: activeIdValue, over };
-    },
-    [applyDragUpdate]
-  );
-
   function handleDragMove(e: DragMoveEvent): void {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    scheduleDragUpdate(active.id, over);
+    applyDragUpdate(active.id, over);
   }
 
   function handleDragOver(e: DragOverEvent): void {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    scheduleDragUpdate(active.id, over);
+    applyDragUpdate(active.id, over);
   }
 
   function handleDragEnd(): void {
     setActiveId(null);
-    if (queuedFrameRef.current != null) {
-      if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
-        window.cancelAnimationFrame(queuedFrameRef.current);
-      } else {
-        window.clearTimeout(queuedFrameRef.current);
-      }
-      queuedFrameRef.current = null;
-    }
-    queuedEventRef.current = null;
     lastAppliedRef.current = null;
   }
-
-  useEffect(() => {
-    return () => {
-      if (queuedFrameRef.current != null) {
-        if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {
-          window.cancelAnimationFrame(queuedFrameRef.current);
-        } else {
-          window.clearTimeout(queuedFrameRef.current);
-        }
-        queuedFrameRef.current = null;
-      }
-      queuedEventRef.current = null;
-    };
-  }, []);
 
   return {
     days,
