@@ -9,8 +9,14 @@ import ContinuePlanningBanner from '@/features/home/components/ContinuePlanningB
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
 
 vi.mock('next/link', () => ({
-  default: ({ href, children }: { href: string; children: React.ReactNode }) => (
-    <a href={href}>{children}</a>
+  default: ({
+    href,
+    children,
+    ...rest
+  }: { href: string; children: React.ReactNode } & Record<string, unknown>) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
   ),
 }));
 
