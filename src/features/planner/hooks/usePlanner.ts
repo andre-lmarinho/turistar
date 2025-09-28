@@ -54,6 +54,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
   const {
     days,
     setDays,
+    getDaysSnapshot,
     activeId,
     sensors,
     handleDragStart,
@@ -65,9 +66,9 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     addBlankActivity,
   } = useDnDPlanner(initialDnDDays);
 
-  function persistOnDragEnd() {
-    handleDragEnd();
-    options.persistDays?.mutate(days);
+  function persistOnDragEnd(event?: Parameters<typeof handleDragEnd>[0]) {
+    handleDragEnd(event);
+    options.persistDays?.mutate(getDaysSnapshot());
   }
 
   /**
