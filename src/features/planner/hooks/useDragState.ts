@@ -195,12 +195,16 @@ export function useDragState(initialDays: DayPlan[]) {
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const lastOverRef = useRef<DragOverEvent['over']>(null);
+  const lastMoveRef = useRef<{ activeId: string; overId: string | null; days: DayPlan[] } | null>(
+    null
+  );
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
     lastOverRef.current = null;
+    lastMoveRef.current = null;
   }
 
   function handleDragOver(e: DragOverEvent): void {
@@ -210,9 +214,25 @@ export function useDragState(initialDays: DayPlan[]) {
     }
     if (!over || active.id === over.id) return;
 
-    setDays((prevDays) =>
-      moveActivity(prevDays, active.id, over, dayIndexRef.current, activityIndexRef.current)
-    );
+    setDays((prevDays) => {
+      const nextDays = moveActivity(
+        prevDays,
+        active.id,
+        over,
+        dayIndexRef.current,
+        activityIndexRef.current
+      );
+
+      if (nextDays !== prevDays) {
+        lastMoveRef.current = {
+          activeId: String(active.id),
+          overId: over ? String(over.id) : null,
+          days: nextDays,
+        };
+      }
+
+      return nextDays;
+    });
   }
 
   function handleDragEnd(e: DragEndEvent): DayPlan[] {
@@ -222,11 +242,27 @@ export function useDragState(initialDays: DayPlan[]) {
     const over = e.over ?? lastOverRef.current;
     lastOverRef.current = null;
 
+    const currentDays = daysRef.current;
+    const activeKey = String(active.id);
+    const overId = over ? String(over.id) : null;
+
     if (!over || active.id === over.id) {
-      return days;
+      lastMoveRef.current = null;
+      return currentDays;
     }
 
-    const currentDays = daysRef.current;
+    if (!e.over && lastMoveRef.current) {
+      const lastMove = lastMoveRef.current;
+      if (
+        lastMove.days === currentDays &&
+        lastMove.activeId === activeKey &&
+        lastMove.overId === overId
+      ) {
+        lastMoveRef.current = null;
+        return currentDays;
+      }
+    }
+
     const updated = moveActivity(
       currentDays,
       active.id,
@@ -240,6 +276,7 @@ export function useDragState(initialDays: DayPlan[]) {
       setDays(updated);
     }
 
+    lastMoveRef.current = null;
     return updated;
   }
 
