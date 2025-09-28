@@ -58,7 +58,9 @@ function getDragTarget(
   let activityMeta = activityIndexMap.get(overId);
   if (!activityMeta) {
     for (let dayIdx = 0; dayIdx < days.length; dayIdx += 1) {
-      const actIdx = days[dayIdx].activities.findIndex((activity) => String(activity.id) === overId);
+      const actIdx = days[dayIdx].activities.findIndex(
+        (activity) => String(activity.id) === overId
+      );
       if (actIdx !== -1) {
         activityMeta = { dayIdx, actIdx };
         break;
@@ -86,7 +88,9 @@ function moveActivity(
   let sourceMeta = activityIndexMap.get(activeKey);
   if (!sourceMeta) {
     for (let dayIdx = 0; dayIdx < days.length; dayIdx += 1) {
-      const actIdx = days[dayIdx].activities.findIndex((activity) => String(activity.id) === activeKey);
+      const actIdx = days[dayIdx].activities.findIndex(
+        (activity) => String(activity.id) === activeKey
+      );
       if (actIdx !== -1) {
         sourceMeta = { dayIdx, actIdx };
         break;
