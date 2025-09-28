@@ -12,8 +12,16 @@ import { useActivityState } from './useActivityState';
  */
 
 export function useDnDPlanner(initialDays: DayPlan[]) {
-  const { days, setDays, activeId, sensors, handleDragStart, handleDragOver, handleDragEnd } =
-    useDragState(initialDays);
+  const {
+    days,
+    setDays,
+    activeId,
+    sensors,
+    handleDragStart,
+    handleDragMove,
+    handleDragOver,
+    handleDragEnd,
+  } = useDragState(initialDays);
 
   const { addActivity, removeActivity, updateActivity, addBlankActivity } =
     useActivityState(setDays);
@@ -24,6 +32,7 @@ export function useDnDPlanner(initialDays: DayPlan[]) {
     activeId,
     sensors,
     handleDragStart,
+    handleDragMove,
     handleDragOver,
     handleDragEnd,
     addActivity,

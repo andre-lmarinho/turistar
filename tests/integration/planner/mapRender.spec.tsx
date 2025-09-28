@@ -57,6 +57,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
     sensors: undefined,
     collisionDetection: vi.fn(),
     handleDragStart: vi.fn(),
+    handleDragMove: vi.fn(),
     handleDragOver: vi.fn(),
     handleDragEnd: vi.fn(),
     addBlankAndSelect: vi.fn(),

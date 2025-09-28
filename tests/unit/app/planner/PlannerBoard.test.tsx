@@ -31,6 +31,7 @@ vi.mock('@/features/planner/hooks/usePlanner', () => ({
     sensors: [],
     collisionDetection: closestCenter,
     handleDragStart: vi.fn(),
+    handleDragMove: vi.fn(),
     handleDragOver: vi.fn(),
     handleDragEnd: vi.fn(),
     addActivity: vi.fn(),

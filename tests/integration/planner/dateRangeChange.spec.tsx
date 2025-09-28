@@ -93,6 +93,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
     sensors: unknown;
     collisionDetection: (...args: unknown[]) => void;
     handleDragStart: (...args: unknown[]) => void;
+    handleDragMove: (...args: unknown[]) => void;
     handleDragOver: (...args: unknown[]) => void;
     handleDragEnd: (...args: unknown[]) => void;
     selectedActivity: null;
@@ -132,6 +133,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       sensors: undefined,
       collisionDetection: vi.fn(),
       handleDragStart: vi.fn(),
+      handleDragMove: vi.fn(),
       handleDragOver: vi.fn(),
       handleDragEnd: vi.fn(),
       selectedActivity: null,

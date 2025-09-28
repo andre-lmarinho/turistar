@@ -7,6 +7,15 @@ import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
 import { usePersistedPlannerDays } from '@/features/planner/hooks/usePersistedPlannerDays';
 
 describe('useDnDPlanner with persistence', () => {
+  async function nextFrame() {
+    await new Promise<void>((resolve) => {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => resolve());
+      } else {
+        setTimeout(() => resolve(), 0);
+      }
+    });
+  }
   const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
   const b1: Activity = { id: 'b1', title: 'B1', color: 'bg-[var(--color-1)]' };
   const initial: DayPlan[] = [
@@ -28,7 +37,7 @@ describe('useDnDPlanner with persistence', () => {
     return { persistSpy, ...wrapper };
   }
 
-  it('keeps days length after dragging across columns', () => {
+  it('keeps days length after dragging across columns', async () => {
     const { result } = setup();
 
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
@@ -37,9 +46,10 @@ describe('useDnDPlanner with persistence', () => {
       over: { id: 'day2' },
     } as Partial<DragOverEvent> as DragOverEvent;
 
-    act(() => {
+    await act(async () => {
       result.current.handleDragStart(startEvent);
       result.current.handleDragOver(overEvent);
+      await nextFrame();
     });
 
     expect(result.current.days).toHaveLength(2);

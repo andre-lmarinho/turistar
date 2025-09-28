@@ -21,6 +21,7 @@ function PlannerBoard() {
     sensors,
     collisionDetection,
     handleDragStart,
+    handleDragMove,
     handleDragOver,
     handleDragEnd,
     setSelectedActivity,
@@ -49,6 +50,7 @@ function PlannerBoard() {
       sensors={sensors}
       collisionDetection={collisionDetection}
       onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToWindowEdges]}

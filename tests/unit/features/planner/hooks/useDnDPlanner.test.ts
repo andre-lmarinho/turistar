@@ -6,6 +6,16 @@ import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 describe('useDnDPlanner', () => {
+  async function nextFrame() {
+    await new Promise<void>((resolve) => {
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => resolve());
+      } else {
+        setTimeout(() => resolve(), 0);
+      }
+    });
+  }
+
   function setup(initial?: DayPlan[]) {
     const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
     const a2: Activity = { id: 'a2', title: 'A2', color: 'bg-[var(--color-1)]' };
@@ -29,29 +39,31 @@ describe('useDnDPlanner', () => {
     expect(result.current.activeId).toBe('a1');
   });
 
-  test('handleDragOver reorders within the same day', () => {
+  test('handleDragOver reorders within the same day', async () => {
     const { result } = setup();
     const overEvent = {
       active: { id: 'a1' },
       over: { id: 'a2' },
     } as Partial<DragOverEvent> as DragOverEvent;
 
-    act(() => {
+    await act(async () => {
       result.current.handleDragOver(overEvent);
+      await nextFrame();
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
   });
 
-  test('handleDragOver moves activity across days', () => {
+  test('handleDragOver moves activity across days', async () => {
     const { result } = setup();
     const overEvent = {
       active: { id: 'a1' },
       over: { id: 'day2' },
     } as Partial<DragOverEvent> as DragOverEvent;
 
-    act(() => {
+    await act(async () => {
       result.current.handleDragOver(overEvent);
+      await nextFrame();
     });
 
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
