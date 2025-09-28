@@ -83,6 +83,36 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragOver applies rapid successive targets immediately', () => {
+    const { result } = setup();
+    const toDayTwo = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as unknown as DragOverEvent;
+    const backToDayOne = {
+      active: { id: 'a1' },
+      over: {
+        id: 'day1',
+        data: {
+          current: {
+            sortable: {
+              containerId: 'day1',
+              index: 1,
+            },
+          },
+        },
+      },
+    } as unknown as DragOverEvent;
+
+    act(() => {
+      result.current.handleDragOver(toDayTwo);
+      result.current.handleDragOver(backToDayOne);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1']);
+  });
+
   test('handleDragEnd clears activeId', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
