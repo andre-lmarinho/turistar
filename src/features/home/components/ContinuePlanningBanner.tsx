@@ -5,8 +5,9 @@ import React from 'react';
 import Link from 'next/link';
 import { differenceInCalendarDays } from 'date-fns';
 
-import { Button } from '@/shared/ui/button';
+import { buttonVariants } from '@/shared/ui/button';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import { cn } from '@/shared/utils/utils';
 
 export default function ContinuePlanningBanner() {
   const { recentPlan } = useRecentPlan();
@@ -21,9 +22,12 @@ export default function ContinuePlanningBanner() {
       <p className="my-auto">
         Continue your {tripLength} {tripLength === 1 ? 'day' : 'days'} trip to {dest}
       </p>
-      <Button asChild variant="accent" size="sm">
-        <Link href={`/planner/${slug}?${query}`}>Continue Planning</Link>
-      </Button>
+      <Link
+        href={`/planner/${slug}?${query}`}
+        className={cn(buttonVariants({ variant: 'accent', size: 'sm' }))}
+      >
+        Continue Planning
+      </Link>
     </section>
   );
 }
