@@ -77,14 +77,20 @@ export function usePersistedPlannerDays({
     if (storedDays == null) return;
     const snapshot = snapshotDays(storedDays);
     const meta = metaRef.current!;
-    const hasChanged = snapshot.serialized !== meta.lastSaved;
     meta.ready = true;
+
+    if (snapshot.state.length === 0 && days.length > 0) {
+      meta.lastSaved = snapshot.serialized;
+      return;
+    }
+
+    const hasChanged = snapshot.serialized !== meta.lastSaved;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
     if (hasChanged) {
       setDays(snapshot.state);
     }
-  }, [setDays, storedDays]);
+  }, [days.length, setDays, storedDays]);
 
   const { mutateAsync, isPending } = persistDays;
   const flush = useCallback(async () => {
