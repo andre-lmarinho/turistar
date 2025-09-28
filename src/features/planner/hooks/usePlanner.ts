@@ -4,6 +4,7 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { pointerWithin } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import { DateRange } from 'react-day-picker';
 import { eachDayOfInterval } from 'date-fns';
 
@@ -66,9 +67,10 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     addBlankActivity,
   } = useDnDPlanner(initialDnDDays);
 
-  function persistOnDragEnd() {
-    handleDragEnd();
-    options.persistDays?.mutate(days);
+  function persistOnDragEnd(e: DragEndEvent) {
+    handleDragEnd(e, (nextDays) => {
+      options.persistDays?.mutate(nextDays);
+    });
   }
 
   /**

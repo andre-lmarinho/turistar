@@ -9,6 +9,7 @@ import {
   type DragStartEvent,
   type DragOverEvent,
   type DragMoveEvent,
+  type DragEndEvent,
   type UniqueIdentifier,
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -57,6 +58,7 @@ function getDragTarget(
 
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDaysState] = useState<DayPlan[]>(initialDays);
+  const daysRef = useRef<DayPlan[]>(initialDays);
 
   const dayIndexRef = useRef<Map<string, number>>(new Map());
   const activityIndexRef = useRef<Map<string, { dayIdx: number; actIdx: number }>>(new Map());
@@ -91,10 +93,12 @@ export function useDragState(initialDays: DayPlan[]) {
 
         if (nextDays === prevDays) {
           rebuildCaches(prevDays);
+          daysRef.current = prevDays;
           return prevDays;
         }
 
         rebuildCaches(nextDays);
+        daysRef.current = nextDays;
         return nextDays;
       });
     },
@@ -110,6 +114,68 @@ export function useDragState(initialDays: DayPlan[]) {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
+  function reorderActivities(
+    prevDays: DayPlan[],
+    activeIdValue: UniqueIdentifier,
+    over: DragOverEvent['over']
+  ): { nextDays: DayPlan[]; didUpdate: boolean } {
+    if (!over) {
+      return { nextDays: prevDays, didUpdate: false };
+    }
+
+    const sourceMeta = activityIndexRef.current.get(String(activeIdValue));
+    if (!sourceMeta) {
+      return { nextDays: prevDays, didUpdate: false };
+    }
+
+    const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
+    if (!target) {
+      return { nextDays: prevDays, didUpdate: false };
+    }
+
+    const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
+    const { dstDayIdx, newIndex } = target;
+
+    const srcDay = prevDays[srcDayIdx];
+    const dstDay = prevDays[dstDayIdx];
+    if (!srcDay || !dstDay) {
+      return { nextDays: prevDays, didUpdate: false };
+    }
+
+    if (dstDayIdx === srcDayIdx) {
+      if (newIndex === oldIndex) {
+        return { nextDays: prevDays, didUpdate: false };
+      }
+
+      const nextDays = [...prevDays];
+      nextDays[srcDayIdx] = {
+        ...srcDay,
+        activities: arrayMove(srcDay.activities, oldIndex, newIndex),
+      };
+      return { nextDays, didUpdate: true };
+    }
+
+    const nextDays = [...prevDays];
+    nextDays[srcDayIdx] = {
+      ...srcDay,
+      activities: [...srcDay.activities],
+    };
+    const srcActivities = nextDays[srcDayIdx].activities;
+    const [moved] = srcActivities.splice(oldIndex, 1);
+    if (!moved) {
+      return { nextDays: prevDays, didUpdate: false };
+    }
+
+    nextDays[dstDayIdx] = {
+      ...dstDay,
+      activities: [...dstDay.activities],
+    };
+    const dstActivities = nextDays[dstDayIdx].activities;
+    dstActivities.splice(newIndex, 0, moved);
+
+    return { nextDays, didUpdate: true };
+  }
+
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
     lastAppliedRef.current = null;
@@ -123,64 +189,30 @@ export function useDragState(initialDays: DayPlan[]) {
   }
 
   const applyDragUpdate = useCallback(
-    (activeIdValue: UniqueIdentifier, over: DragOverEvent['over']) => {
-      if (!over) return;
+    (
+      activeIdValue: UniqueIdentifier,
+      over: DragOverEvent['over'],
+      onApply?: (nextDays: DayPlan[]) => void
+    ): boolean => {
+      if (!over) return false;
 
       let didUpdate = false;
+      let appliedDays: DayPlan[] | null = null;
 
       setDays((prevDays) => {
-        const sourceMeta = activityIndexRef.current.get(String(activeIdValue));
-        if (!sourceMeta) return prevDays;
-
-        const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
-        if (!target) return prevDays;
-
-        const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
-        const { dstDayIdx, newIndex } = target;
-
-        const srcDay = prevDays[srcDayIdx];
-        const dstDay = prevDays[dstDayIdx];
-        if (!srcDay || !dstDay) return prevDays;
-
-        if (dstDayIdx === srcDayIdx) {
-          if (newIndex === oldIndex) {
-            return prevDays;
-          }
-
-          const nextDays = [...prevDays];
-          nextDays[srcDayIdx] = {
-            ...srcDay,
-            activities: arrayMove(srcDay.activities, oldIndex, newIndex),
-          };
-          didUpdate = true;
-          return nextDays;
-        }
-
-        const nextDays = [...prevDays];
-        nextDays[srcDayIdx] = {
-          ...srcDay,
-          activities: [...srcDay.activities],
-        };
-        const srcActivities = nextDays[srcDayIdx].activities;
-        const [moved] = srcActivities.splice(oldIndex, 1);
-        if (!moved) return prevDays;
-
-        nextDays[dstDayIdx] = {
-          ...dstDay,
-          activities: [...dstDay.activities],
-        };
-        const dstActivities = nextDays[dstDayIdx].activities;
-        dstActivities.splice(newIndex, 0, moved);
-
-        didUpdate = true;
+        const { nextDays, didUpdate: wasUpdated } = reorderActivities(prevDays, activeIdValue, over);
+        didUpdate = wasUpdated;
+        appliedDays = nextDays;
         return nextDays;
       });
 
       lastAppliedRef.current = { activeId: activeIdValue, overId: over.id ?? null };
 
-      if (!didUpdate) {
-        return;
+      if (didUpdate && appliedDays && onApply) {
+        onApply(appliedDays);
       }
+
+      return didUpdate;
     },
     [setDays]
   );
@@ -239,7 +271,25 @@ export function useDragState(initialDays: DayPlan[]) {
     scheduleDragUpdate(active.id, over);
   }
 
-  function handleDragEnd(): void {
+  function handleDragEnd(e: DragEndEvent, onApply?: (nextDays: DayPlan[]) => void): void {
+    const { active, over } = e;
+
+    if (over && active.id !== over.id) {
+      const overId = over.id ?? null;
+      const lastApplied = lastAppliedRef.current;
+
+      if (!lastApplied || lastApplied.activeId !== active.id || lastApplied.overId !== overId) {
+        const updated = applyDragUpdate(active.id, over, onApply);
+        if (!updated && onApply) {
+          onApply(daysRef.current);
+        }
+      } else if (onApply) {
+        onApply(daysRef.current);
+      }
+    } else if (onApply) {
+      onApply(daysRef.current);
+    }
+
     setActiveId(null);
     if (queuedFrameRef.current != null) {
       if (typeof window !== 'undefined' && typeof window.cancelAnimationFrame === 'function') {

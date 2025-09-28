@@ -1,7 +1,7 @@
 // tests/unit/features/planner/hooks/useDnDPlanner.test.ts
 
 import { renderHook, act } from '@testing-library/react';
-import type { DragStartEvent, DragOverEvent } from '@dnd-kit/core';
+import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -70,13 +70,33 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragEnd applies move when dragOver was skipped', () => {
+    const { result } = setup();
+    const endEvent = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as Partial<DragEndEvent> as DragEndEvent;
+
+    act(() => {
+      result.current.handleDragEnd(endEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+  });
+
   test('handleDragEnd clears activeId', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
 
+    const endEvent = {
+      active: { id: 'a1' },
+      over: null,
+    } as Partial<DragEndEvent> as DragEndEvent;
+
     act(() => {
       result.current.handleDragStart(startEvent);
-      result.current.handleDragEnd();
+      result.current.handleDragEnd(endEvent);
     });
 
     expect(result.current.activeId).toBeNull();
