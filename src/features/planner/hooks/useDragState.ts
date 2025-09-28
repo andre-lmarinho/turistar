@@ -97,69 +97,84 @@ export function useDragState(initialDays: DayPlan[]) {
   }, [initialDays, setDays]);
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  // Throttle state updates so drag-over doesn't fire excessively
-  const lastTimeRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
+  const queuedEventRef = useRef<Pick<DragOverEvent, 'active' | 'over'> | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
-    lastTimeRef.current = 0;
   }
 
   function handleDragOver(e: DragOverEvent): void {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    const now = Date.now();
-    // Avoid rapid re-renders but keep drag responsive
-    if (now - lastTimeRef.current < 16) return;
-    lastTimeRef.current = now;
+    queuedEventRef.current = { active, over };
 
-    setDays((prevDays) => {
-      const sourceMeta = activityIndexRef.current.get(String(active.id));
-      if (!sourceMeta) return prevDays;
+    if (rafRef.current != null) return;
 
-      const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
-      if (!target) return prevDays;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const queued = queuedEventRef.current;
+      if (!queued) return;
+      queuedEventRef.current = null;
 
-      const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
-      const { dstDayIdx, newIndex } = target;
+      setDays((prevDays) => {
+        const sourceMeta = activityIndexRef.current.get(String(queued.active.id));
+        if (!sourceMeta) return prevDays;
 
-      if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
-        return prevDays;
-      }
+        const target = getDragTarget(prevDays, queued.over, dayIndexRef.current, activityIndexRef.current);
+        if (!target) return prevDays;
 
-      const nextDays = [...prevDays];
-      const srcDay = prevDays[srcDayIdx];
-      const dstDay = prevDays[dstDayIdx];
-      if (!srcDay || !dstDay) return prevDays;
+        const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
+        const { dstDayIdx, newIndex } = target;
 
-      nextDays[srcDayIdx] = {
-        ...srcDay,
-        activities: [...srcDay.activities],
-      };
-      const srcActivities = nextDays[srcDayIdx].activities;
-      const [moved] = srcActivities.splice(oldIndex, 1);
-      if (!moved) return prevDays;
+        if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
+          return prevDays;
+        }
 
-      let dstActivities = srcActivities;
-      if (dstDayIdx !== srcDayIdx) {
-        nextDays[dstDayIdx] = {
-          ...dstDay,
-          activities: [...dstDay.activities],
+        const nextDays = [...prevDays];
+        const srcDay = prevDays[srcDayIdx];
+        const dstDay = prevDays[dstDayIdx];
+        if (!srcDay || !dstDay) return prevDays;
+
+        nextDays[srcDayIdx] = {
+          ...srcDay,
+          activities: [...srcDay.activities],
         };
-        dstActivities = nextDays[dstDayIdx].activities;
-      }
+        const srcActivities = nextDays[srcDayIdx].activities;
+        const [moved] = srcActivities.splice(oldIndex, 1);
+        if (!moved) return prevDays;
 
-      dstActivities.splice(newIndex, 0, moved);
+        let dstActivities = srcActivities;
+        if (dstDayIdx !== srcDayIdx) {
+          nextDays[dstDayIdx] = {
+            ...dstDay,
+            activities: [...dstDay.activities],
+          };
+          dstActivities = nextDays[dstDayIdx].activities;
+        }
 
-      return nextDays;
+        dstActivities.splice(newIndex, 0, moved);
+
+        return nextDays;
+      });
     });
   }
 
   function handleDragEnd(): void {
     setActiveId(null);
   }
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      queuedEventRef.current = null;
+    };
+  }, []);
 
   return {
     days,
