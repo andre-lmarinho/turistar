@@ -197,6 +197,57 @@ describe('useDnDPlanner', () => {
     expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
+  test('handleDragEnd uses collision fallback when no hover was stored', () => {
+    const { result } = setup();
+    const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
+    const endEvent = {
+      active: { id: 'a1' },
+      over: null,
+      collisions: [
+        {
+          id: 'day2',
+          data: {
+            droppableContainer: {
+              id: 'day2',
+              key: 'day2',
+              disabled: false,
+              node: { current: null },
+              data: {
+                current: {
+                  sortable: {
+                    containerId: 'day2',
+                    index: 1,
+                  },
+                },
+              },
+              rect: {
+                current: {
+                  width: 0,
+                  height: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                },
+              },
+            },
+          },
+        },
+      ],
+    } as unknown as DragEndEvent;
+
+    let updated: DayPlan[] | undefined;
+    act(() => {
+      result.current.handleDragStart(startEvent);
+      updated = result.current.handleDragEnd(endEvent);
+    });
+
+    expect(updated?.[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(updated?.[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+  });
+
   test('handleDragEnd reuses the stored hover when the final over matches the active card', () => {
     const { result } = setup();
     const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;

@@ -147,6 +147,46 @@ function moveActivity(
   return nextDays;
 }
 
+function getCollisionFallback(
+  collisions: DragEndEvent['collisions'],
+  activeId: UniqueIdentifier
+): DragOverEvent['over'] | null {
+  if (!collisions || collisions.length === 0) {
+    return null;
+  }
+
+  const activeKey = String(activeId);
+
+  for (const collision of collisions) {
+    if (!collision || String(collision.id) === activeKey) {
+      continue;
+    }
+
+    const droppable = collision.data?.droppableContainer;
+    if (!droppable) {
+      continue;
+    }
+
+    const rect = droppable.rect.current ?? {
+      width: 0,
+      height: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    };
+
+    return {
+      id: droppable.id,
+      data: droppable.data,
+      disabled: droppable.disabled,
+      rect,
+    } as DragOverEvent['over'];
+  }
+
+  return null;
+}
+
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDaysState] = useState<DayPlan[]>(initialDays);
   const daysRef = useRef<DayPlan[]>(initialDays);
@@ -246,8 +286,20 @@ export function useDragState(initialDays: DayPlan[]) {
 
     const { active } = e;
     const storedOver = lastOverRef.current;
-    const over = !e.over || e.over.id === active.id ? (storedOver ?? e.over ?? null) : e.over;
-    lastOverRef.current = null;
+    let over: DragOverEvent['over'] | null = e.over;
+    let derivedOver: DragOverEvent['over'] | null = null;
+
+    if (!over || over.id === active.id) {
+      if (storedOver && storedOver.id !== active.id) {
+        over = storedOver;
+      } else {
+        derivedOver = getCollisionFallback(e.collisions, active.id);
+        if (derivedOver) {
+          over = derivedOver;
+          lastOverRef.current = derivedOver;
+        }
+      }
+    }
 
     const currentDays = daysRef.current;
     const activeKey = String(active.id);
@@ -255,6 +307,9 @@ export function useDragState(initialDays: DayPlan[]) {
 
     if (!over || active.id === over.id) {
       lastMoveRef.current = null;
+      if (!derivedOver) {
+        lastOverRef.current = null;
+      }
       return currentDays;
     }
 
@@ -284,6 +339,7 @@ export function useDragState(initialDays: DayPlan[]) {
     }
 
     lastMoveRef.current = null;
+    lastOverRef.current = null;
     return updated;
   }
 
