@@ -8,6 +8,7 @@ import {
   useSensors,
   type DragStartEvent,
   type DragOverEvent,
+  type DragEndEvent,
   type UniqueIdentifier,
 } from '@dnd-kit/core';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
@@ -55,6 +56,7 @@ function getDragTarget(
 
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDaysState] = useState<DayPlan[]>(initialDays);
+  const daysRef = useRef<DayPlan[]>(initialDays);
 
   const dayIndexRef = useRef<Map<string, number>>(new Map());
   const activityIndexRef = useRef<Map<string, { dayIdx: number; actIdx: number }>>(new Map());
@@ -80,10 +82,12 @@ export function useDragState(initialDays: DayPlan[]) {
           typeof value === 'function' ? (value as (prev: DayPlan[]) => DayPlan[])(prevDays) : value;
 
         if (nextDays === prevDays) {
+          daysRef.current = prevDays;
           rebuildCaches(prevDays);
           return prevDays;
         }
 
+        daysRef.current = nextDays;
         rebuildCaches(nextDays);
         return nextDays;
       });
@@ -102,68 +106,90 @@ export function useDragState(initialDays: DayPlan[]) {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
+  const lastOverRef = useRef<DragOverEvent['over'] | null>(null);
+
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
     lastTimeRef.current = 0;
+    lastOverRef.current = null;
   }
+
+  const applyDragUpdate = useCallback(
+    (activeId: UniqueIdentifier, over: DragOverEvent['over'] | null) => {
+      if (!over) return;
+
+      setDays((prevDays) => {
+        const sourceMeta = activityIndexRef.current.get(String(activeId));
+        if (!sourceMeta) return prevDays;
+
+        const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
+        if (!target) return prevDays;
+
+        const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
+        const { dstDayIdx, newIndex } = target;
+
+        if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
+          return prevDays;
+        }
+
+        const nextDays = [...prevDays];
+        const srcDay = prevDays[srcDayIdx];
+        const dstDay = prevDays[dstDayIdx];
+        if (!srcDay || !dstDay) return prevDays;
+
+        nextDays[srcDayIdx] = {
+          ...srcDay,
+          activities: [...srcDay.activities],
+        };
+        const srcActivities = nextDays[srcDayIdx].activities;
+        const [moved] = srcActivities.splice(oldIndex, 1);
+        if (!moved) return prevDays;
+
+        let dstActivities = srcActivities;
+        if (dstDayIdx !== srcDayIdx) {
+          nextDays[dstDayIdx] = {
+            ...dstDay,
+            activities: [...dstDay.activities],
+          };
+          dstActivities = nextDays[dstDayIdx].activities;
+        }
+
+        dstActivities.splice(newIndex, 0, moved);
+
+        lastOverRef.current = over;
+
+        return nextDays;
+      });
+    },
+    [setDays]
+  );
 
   function handleDragOver(e: DragOverEvent): void {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
+    lastOverRef.current = over;
     const now = Date.now();
     // Avoid rapid re-renders but keep drag responsive
     if (now - lastTimeRef.current < 16) return;
     lastTimeRef.current = now;
 
-    setDays((prevDays) => {
-      const sourceMeta = activityIndexRef.current.get(String(active.id));
-      if (!sourceMeta) return prevDays;
-
-      const target = getDragTarget(prevDays, over, dayIndexRef.current, activityIndexRef.current);
-      if (!target) return prevDays;
-
-      const { dayIdx: srcDayIdx, actIdx: oldIndex } = sourceMeta;
-      const { dstDayIdx, newIndex } = target;
-
-      if (dstDayIdx === srcDayIdx && newIndex === oldIndex) {
-        return prevDays;
-      }
-
-      const nextDays = [...prevDays];
-      const srcDay = prevDays[srcDayIdx];
-      const dstDay = prevDays[dstDayIdx];
-      if (!srcDay || !dstDay) return prevDays;
-
-      nextDays[srcDayIdx] = {
-        ...srcDay,
-        activities: [...srcDay.activities],
-      };
-      const srcActivities = nextDays[srcDayIdx].activities;
-      const [moved] = srcActivities.splice(oldIndex, 1);
-      if (!moved) return prevDays;
-
-      let dstActivities = srcActivities;
-      if (dstDayIdx !== srcDayIdx) {
-        nextDays[dstDayIdx] = {
-          ...dstDay,
-          activities: [...dstDay.activities],
-        };
-        dstActivities = nextDays[dstDayIdx].activities;
-      }
-
-      dstActivities.splice(newIndex, 0, moved);
-
-      return nextDays;
-    });
+    applyDragUpdate(active.id, over);
   }
 
-  function handleDragEnd(): void {
+  function handleDragEnd(e?: DragEndEvent): void {
+    const active = e?.active;
+    const over = e?.over ?? lastOverRef.current;
+    if (active && over && active.id !== over.id) {
+      applyDragUpdate(active.id, over);
+    }
     setActiveId(null);
+    lastOverRef.current = null;
   }
 
   return {
     days,
     setDays,
+    getDaysSnapshot: () => daysRef.current,
     activeId,
     sensors,
     handleDragStart,

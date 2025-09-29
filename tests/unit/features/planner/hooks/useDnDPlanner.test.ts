@@ -1,7 +1,7 @@
 // tests/unit/features/planner/hooks/useDnDPlanner.test.ts
 
 import { renderHook, act } from '@testing-library/react';
-import type { DragStartEvent, DragOverEvent } from '@dnd-kit/core';
+import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -68,6 +68,55 @@ describe('useDnDPlanner', () => {
     });
 
     expect(result.current.activeId).toBeNull();
+  });
+
+  test('handleDragEnd reorders when dropping over another activity', () => {
+    const { result } = setup();
+    const endEvent = {
+      active: { id: 'a1' },
+      over: { id: 'a2' },
+    } as Partial<DragEndEvent> as DragEndEvent;
+
+    act(() => {
+      result.current.handleDragEnd(endEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2', 'a1']);
+  });
+
+  test('handleDragEnd moves activity across days on drop', () => {
+    const { result } = setup();
+    const endEvent = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as Partial<DragEndEvent> as DragEndEvent;
+
+    act(() => {
+      result.current.handleDragEnd(endEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+  });
+
+  test('handleDragEnd falls back to last known target when drop lacks over data', () => {
+    const { result } = setup();
+    const overEvent = {
+      active: { id: 'a1' },
+      over: { id: 'day2' },
+    } as Partial<DragOverEvent> as DragOverEvent;
+    const endEvent = {
+      active: { id: 'a1' },
+      over: null,
+    } as Partial<DragEndEvent> as DragEndEvent;
+
+    act(() => {
+      result.current.handleDragOver(overEvent);
+      result.current.handleDragEnd(endEvent);
+    });
+
+    expect(result.current.days[0].activities.map((a) => a.id)).toEqual(['a2']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
   });
 
   test('updates days when initialDays changes', () => {
