@@ -1,7 +1,6 @@
 // src/features/planner/hooks/usePersistedPlannerDays.ts
 'use client';
-import { useCallback, useEffect, useRef } from 'react';
-import { useDebounce } from '@/shared/hooks/useDebounce';
+import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import type { usePlanner } from './usePlanner';
@@ -16,11 +15,6 @@ interface UsePersistedPlannerDaysParams {
   persistDays: PersistDaysMutation;
   persist?: boolean;
   storedDays?: DayPlan[] | null;
-}
-
-interface PersistQueue {
-  state: DayPlan[];
-  serialized: string;
 }
 
 interface PersistMeta {
@@ -49,7 +43,7 @@ function snapshotDays(days: DayPlan[]) {
 }
 
 /**
- * Persists planner days with debounce, rollback, and lifecycle-aware flushing.
+ * Persists planner days immediately with rollback safeguards.
  *
  * The hook keeps a cloned snapshot of the last saved state so failed mutations can
  * safely roll back even though the planner mutates nested arrays in place.
@@ -61,7 +55,6 @@ export function usePersistedPlannerDays({
   storedDays,
 }: UsePersistedPlannerDaysParams) {
   const { days, setDays } = planner;
-  const debouncedDays = useDebounce(days, 500);
   const metaRef = useRef<PersistMeta | null>(null);
   if (!metaRef.current) {
     const snapshot = snapshotDays(storedDays ?? days);
@@ -71,7 +64,8 @@ export function usePersistedPlannerDays({
       fallback: snapshot.state,
     };
   }
-  const queueRef = useRef<PersistQueue | null>(null);
+  const persistChainRef = useRef<Promise<void>>(Promise.resolve());
+  const lastRequestedRef = useRef<string>(metaRef.current.lastSaved);
 
   useEffect(() => {
     if (storedDays == null) return;
@@ -81,64 +75,46 @@ export function usePersistedPlannerDays({
 
     if (snapshot.state.length === 0 && days.length > 0) {
       meta.lastSaved = snapshot.serialized;
+      lastRequestedRef.current = meta.lastSaved;
       return;
     }
 
     const hasChanged = snapshot.serialized !== meta.lastSaved;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
+    lastRequestedRef.current = meta.lastSaved;
     if (hasChanged) {
       setDays(snapshot.state);
     }
   }, [days.length, setDays, storedDays]);
 
-  const { mutateAsync, isPending } = persistDays;
-  const flush = useCallback(async () => {
-    const queued = queueRef.current;
-    const meta = metaRef.current!;
-    if (!queued || isPending) return;
-
-    queueRef.current = null;
-    try {
-      await mutateAsync(queued.state);
-      meta.lastSaved = queued.serialized;
-      meta.fallback = queued.state;
-    } catch {
-      setDays(cloneDays(meta.fallback));
-    } finally {
-      if (queueRef.current) void flush();
-    }
-  }, [isPending, mutateAsync, setDays]);
+  const { mutateAsync } = persistDays;
 
   useEffect(() => {
     const meta = metaRef.current!;
     if (!persist || !meta.ready) return;
-    if (debouncedDays.length === 0) return;
+    if (days.length === 0) return;
 
-    const cleanedDays = removeBlankActivities(debouncedDays);
+    const cleanedDays = removeBlankActivities(days);
+    if (cleanedDays.length === 0) return;
+
     const serialized = JSON.stringify(cleanedDays);
-    if (serialized === meta.lastSaved) return;
+    if (serialized === meta.lastSaved || serialized === lastRequestedRef.current) return;
 
-    queueRef.current = { state: cloneDays(cleanedDays), serialized };
-    void flush();
-  }, [debouncedDays, flush, persist]);
+    const snapshotState = cloneDays(cleanedDays);
+    lastRequestedRef.current = serialized;
 
-  useEffect(() => {
-    if (!persist) return;
+    persistChainRef.current = persistChainRef.current.finally(async () => {
+      try {
+        await mutateAsync(snapshotState);
+        meta.lastSaved = serialized;
+        meta.fallback = snapshotState;
+      } catch {
+        lastRequestedRef.current = meta.lastSaved;
+        setDays(cloneDays(meta.fallback));
+      }
+    });
+  }, [days, mutateAsync, persist, setDays]);
 
-    const flushOnLifecycle = (event?: Event) => {
-      if (!queueRef.current) return;
-      if (event?.type === 'visibilitychange' && document.visibilityState !== 'hidden') return;
-      void flush();
-    };
-
-    window.addEventListener('beforeunload', flushOnLifecycle);
-    document.addEventListener('visibilitychange', flushOnLifecycle);
-    return () => {
-      window.removeEventListener('beforeunload', flushOnLifecycle);
-      document.removeEventListener('visibilitychange', flushOnLifecycle);
-    };
-  }, [flush, persist]);
-
-  return { days, setDays, flush };
+  return { days, setDays };
 }

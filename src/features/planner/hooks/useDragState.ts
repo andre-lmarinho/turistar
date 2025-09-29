@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect, useCallback, type SetStateAction } from 'react';
 import {
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragStartEvent,
@@ -104,7 +105,11 @@ export function useDragState(initialDays: DayPlan[]) {
   // Throttle state updates so drag-over doesn't fire excessively
   const lastTimeRef = useRef<number>(0);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 8 } });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { delay: 0, tolerance: 4 },
+  });
+  const sensors = useSensors(pointerSensor, touchSensor);
 
   const lastOverRef = useRef<DragOverEvent['over'] | null>(null);
 

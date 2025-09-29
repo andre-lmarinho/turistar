@@ -78,7 +78,7 @@ export default function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative list-none',
+        'relative list-none [touch-action:none]',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         className
       )}
