@@ -66,6 +66,7 @@ export function usePersistedPlannerDays({
   }
   const persistChainRef = useRef<Promise<void>>(Promise.resolve());
   const lastRequestedRef = useRef<string>(metaRef.current.lastSaved);
+  const needsReplayRef = useRef(false);
 
   useEffect(() => {
     if (storedDays == null) return;
@@ -99,9 +100,13 @@ export function usePersistedPlannerDays({
     if (cleanedDays.length === 0) return;
 
     const serialized = JSON.stringify(cleanedDays);
-    if (serialized === meta.lastSaved || serialized === lastRequestedRef.current) return;
+    const shouldSkip =
+      !needsReplayRef.current &&
+      (serialized === meta.lastSaved || serialized === lastRequestedRef.current);
+    if (shouldSkip) return;
 
     const snapshotState = cloneDays(cleanedDays);
+    needsReplayRef.current = false;
     lastRequestedRef.current = serialized;
 
     persistChainRef.current = persistChainRef.current.finally(async () => {
@@ -111,6 +116,7 @@ export function usePersistedPlannerDays({
         meta.fallback = snapshotState;
       } catch {
         lastRequestedRef.current = meta.lastSaved;
+        needsReplayRef.current = true;
         setDays(cloneDays(meta.fallback));
       }
     });
