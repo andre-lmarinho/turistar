@@ -1,20 +1,20 @@
 // tests/unit/features/planner/components/ActivityModalForm.test.tsx
 
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
-const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
+const { mockUseAddressAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   return {
-    mockUseDestinationAutocomplete: vi.fn(),
+    mockUseAddressAutocomplete: vi.fn(),
     mockUseDebounce: vi.fn(),
   };
 });
 
-vi.mock('@/features/planner/hooks/search/useDestinationAutocomplete', () => ({
-  useDestinationAutocomplete: mockUseDestinationAutocomplete,
+vi.mock('@/features/planner/hooks/search/useAddressAutocomplete', () => ({
+  useAddressAutocomplete: mockUseAddressAutocomplete,
 }));
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
@@ -28,12 +28,12 @@ vi.mock('@/shared/hooks/useDebounce', () => ({
 
 describe('ActivityModalForm address autocomplete', () => {
   beforeEach(() => {
-    mockUseDestinationAutocomplete.mockReset();
+    mockUseAddressAutocomplete.mockReset();
     mockUseDebounce.mockImplementation((v: unknown) => v);
   });
 
   it('saves selected address with coordinates', async () => {
-    mockUseDestinationAutocomplete.mockReturnValue({
+    mockUseAddressAutocomplete.mockReturnValue({
       results: [{ name: '1 Infinite Loop, CA', latitude: 10, longitude: 20 }],
       loading: false,
       error: false,
@@ -52,6 +52,8 @@ describe('ActivityModalForm address autocomplete', () => {
 
     const option = await screen.findByRole('option', { name: '1 Infinite Loop, CA' });
     fireEvent.mouseDown(option);
+
+    await waitFor(() => expect(input).toHaveValue('1 Infinite Loop, CA'));
 
     const saveBtn = screen.getByRole('button', { name: 'Update' });
     fireEvent.click(saveBtn);

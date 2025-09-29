@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 const originalFetch = global.fetch;
 const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
+let fetchGeoapifyAddressAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAddressAutocomplete;
 let mapGeoapifyFeature: typeof import('@/shared/lib/geoapify').mapGeoapifyFeature;
 
 describe('mapGeoapifyFeature', () => {
@@ -74,7 +75,9 @@ describe('fetchGeoapifyAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyAutocomplete } = await import('@/shared/lib/geoapify'));
+    ({ fetchGeoapifyAutocomplete, fetchGeoapifyAddressAutocomplete } = await import(
+      '@/shared/lib/geoapify'
+    ));
   });
 
   afterEach(() => {
@@ -140,5 +143,40 @@ describe('fetchGeoapifyAutocomplete', () => {
       latitude: 3,
       longitude: 4,
     });
+  });
+});
+
+describe('fetchGeoapifyAddressAutocomplete', () => {
+  beforeEach(async () => {
+    vi.resetModules();
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
+    ({ fetchGeoapifyAddressAutocomplete } = await import('@/shared/lib/geoapify'));
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+    process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
+  });
+
+  it('requests street/building/amenity types and filters results accordingly', async () => {
+    const mockJson = vi.fn().mockResolvedValue({
+      features: [
+        { properties: { formatted: '10 Downing St', result_type: 'building', lat: 1, lon: 2 } },
+        { properties: { formatted: 'Main Plaza', result_type: 'amenity', lat: 3, lon: 4 } },
+        { properties: { formatted: 'Paris, France', result_type: 'city', lat: 5, lon: 6 } },
+      ],
+    });
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: mockJson } as unknown as Response);
+
+    const results = await fetchGeoapifyAddressAutocomplete('10 Down');
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('type=street%2Cbuilding%2Camenity'),
+      expect.any(Object)
+    );
+    expect(results).toEqual([
+      { name: '10 Downing St', latitude: 1, longitude: 2 },
+      { name: 'Main Plaza', latitude: 3, longitude: 4 },
+    ]);
   });
 });

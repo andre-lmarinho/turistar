@@ -8,13 +8,14 @@ import Image from 'next/image';
 import { Button } from '@/shared/ui/button';
 import { DateRangePicker } from '@/shared/ui/DatePicker';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
+import { useDestinationAutocomplete } from '@/features/home/hooks/search/useDestinationAutocomplete';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
 import { createPlannerPlan } from '@/features/planner/contracts/marketing/createPlannerPlan';
 import { usePlanEditTokens } from '@/features/planner/contracts/marketing/usePlanEditTokens';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
-import type { AutocompletePlace } from '@/features/planner/contracts/marketing/types';
+import type { AutocompletePlace } from '@/shared/types/locations';
 
 export default function PlanForm() {
   const router = useRouter();
@@ -121,6 +122,7 @@ export default function PlanForm() {
               onChange={handleDestChange}
               placeholder="Destination"
               className="w-64"
+              autocompleteHook={useDestinationAutocomplete}
             />
           </fieldset>
 

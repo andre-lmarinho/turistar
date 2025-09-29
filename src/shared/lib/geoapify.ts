@@ -2,10 +2,7 @@
 
 // Helpers for fetching POIs from the Geoapify API.
 
-import type {
-  SearchActivity,
-  AutocompletePlace,
-} from '@/features/planner/domain/types/PlannerEntities';
+import type { AutocompletePlace, SearchActivity } from '@/shared/types/locations';
 import { clientEnv } from './clientEnv';
 
 /* Types */
@@ -80,16 +77,29 @@ export function mapGeoapifyFeature(f: GeoapifyFeature): SearchActivity {
 }
 
 /* Geoapify – Autocomplete */
-export async function fetchGeoapifyAutocomplete(
-  text: string,
-  lat?: number,
-  lon?: number
-): Promise<AutocompletePlace[]> {
+type AutocompleteOptions = {
+  text: string;
+  lat?: number;
+  lon?: number;
+  typeFilter?: string;
+  allowedResultTypes: Set<string>;
+};
+
+async function fetchGeoapifyAutocompleteInternal({
+  text,
+  lat,
+  lon,
+  typeFilter,
+  allowedResultTypes,
+}: AutocompleteOptions): Promise<GeoapifyFeature[]> {
   const key = getGeoapifyKey();
 
   let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
     text
   )}&limit=5&apiKey=${key}`;
+  if (typeFilter) {
+    url += `&type=${encodeURIComponent(typeFilter)}`;
+  }
   if (lat != null && lon != null) {
     url += `&bias=proximity:${lon},${lat}`;
   }
@@ -101,15 +111,47 @@ export async function fetchGeoapifyAutocomplete(
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
+  return data.features.filter((f) => allowedResultTypes.has(f.properties.result_type ?? ''));
+}
+
+export async function fetchGeoapifyAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
   const allowed = new Set(['city', 'state', 'country']);
+  const features = await fetchGeoapifyAutocompleteInternal({
+    text,
+    lat,
+    lon,
+    allowedResultTypes: allowed,
+  });
   const priority: Record<string, number> = { city: 0, state: 1, country: 2 };
-  const filtered = data.features.filter((f) => allowed.has(f.properties.result_type ?? ''));
-  filtered.sort(
+  features.sort(
     (a, b) =>
       (priority[a.properties.result_type ?? ''] ?? 3) -
       (priority[b.properties.result_type ?? ''] ?? 3)
   );
-  return filtered.map((f) => ({
+  return features.map((f) => ({
+    name: f.properties.formatted ?? f.properties.name ?? text,
+    latitude: f.properties.lat,
+    longitude: f.properties.lon,
+  }));
+}
+
+export async function fetchGeoapifyAddressAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
+  const features = await fetchGeoapifyAutocompleteInternal({
+    text,
+    lat,
+    lon,
+    typeFilter: 'street,building,amenity',
+    allowedResultTypes: new Set(['street', 'building', 'amenity']),
+  });
+  return features.map((f) => ({
     name: f.properties.formatted ?? f.properties.name ?? text,
     latitude: f.properties.lat,
     longitude: f.properties.lon,

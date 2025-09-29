@@ -3,40 +3,39 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import LocationSearchInput from '@/shared/ui/LocationSearchInput';
+import LocationSearchInput, {
+  type LocationAutocompleteHook,
+} from '@/shared/ui/LocationSearchInput';
 
-const { mockUseDestinationAutocomplete, mockUseDebounce } = vi.hoisted(() => {
+const { mockUseDebounce } = vi.hoisted(() => {
   return {
-    mockUseDestinationAutocomplete: vi.fn(),
     mockUseDebounce: vi.fn(),
   };
 });
-
-vi.mock('@/features/planner/hooks/search/useDestinationAutocomplete', () => ({
-  useDestinationAutocomplete: mockUseDestinationAutocomplete,
-}));
 vi.mock('@/shared/hooks/useDebounce', () => ({
   useDebounce: mockUseDebounce,
 }));
 
 describe('LocationSearchInput', () => {
   beforeEach(() => {
-    mockUseDestinationAutocomplete.mockReset();
+    mockUseDebounce.mockReset();
     mockUseDebounce.mockImplementation((v: unknown) => v);
   });
 
   it('passes the selected place object when clicking a suggestion', () => {
-    mockUseDestinationAutocomplete.mockReturnValue({
+    const autocompleteHook: LocationAutocompleteHook = vi.fn(() => ({
       results: [
         { name: 'Rome, Italy', latitude: 0, longitude: 0 },
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
       error: false,
-    });
+    }));
 
     const handleChange = vi.fn();
-    render(<LocationSearchInput value="" onChange={handleChange} />);
+    render(
+      <LocationSearchInput value="" onChange={handleChange} autocompleteHook={autocompleteHook} />
+    );
 
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Rome' } });
@@ -52,17 +51,19 @@ describe('LocationSearchInput', () => {
   });
 
   it('allows selecting a suggestion with keyboard navigation', () => {
-    mockUseDestinationAutocomplete.mockReturnValue({
+    const autocompleteHook: LocationAutocompleteHook = vi.fn(() => ({
       results: [
         { name: 'Rome, Italy', latitude: 0, longitude: 0 },
         { name: 'London, UK', latitude: 1, longitude: 1 },
       ],
       loading: false,
       error: false,
-    });
+    }));
 
     const handleChange = vi.fn();
-    render(<LocationSearchInput value="" onChange={handleChange} />);
+    render(
+      <LocationSearchInput value="" onChange={handleChange} autocompleteHook={autocompleteHook} />
+    );
 
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Ro' } });
@@ -79,13 +80,15 @@ describe('LocationSearchInput', () => {
   });
 
   it('renders an error message when the hook returns an error', () => {
-    mockUseDestinationAutocomplete.mockReturnValue({
+    const autocompleteHook: LocationAutocompleteHook = vi.fn(() => ({
       results: [],
       loading: false,
       error: true,
-    });
+    }));
 
-    render(<LocationSearchInput value="Paris" onChange={() => {}} />);
+    render(
+      <LocationSearchInput value="Paris" onChange={() => {}} autocompleteHook={autocompleteHook} />
+    );
 
     expect(screen.getByText('Failed to load suggestions.')).toBeInTheDocument();
   });
