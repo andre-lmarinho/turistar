@@ -14,7 +14,16 @@ const clientEnvSchema = z.object({
 // explicitly ensures the values are inlined during compilation and available at runtime.
 // In CI we allow safe placeholders so builds don't fail when secrets are absent.
 // This affects only CI artifacts; dev/prod must still provide real values.
-const IN_CI = String(process.env.CI).toLowerCase() === 'true';
+const CI_TRUTHY_VALUES = new Set(['true', '1', 'yes']);
+
+const isTruthyCi = (value: unknown) => {
+  if (typeof value !== 'string') return false;
+
+  const normalizedValue = value.trim().toLowerCase();
+  return normalizedValue.length > 0 && CI_TRUTHY_VALUES.has(normalizedValue);
+};
+
+const IN_CI = isTruthyCi(process.env.CI);
 
 const FALLBACKS = {
   NEXT_PUBLIC_SUPABASE_URL: 'http://localhost:54321',
