@@ -9,6 +9,7 @@ import { eachDayOfInterval } from 'date-fns';
 
 import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from './useDnDPlanner';
+import { useOptimisticReorder } from './useOptimisticReorder';
 import { buildInitialDays } from '@/features/planner/services/initialDays';
 import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
 import { setPlanDateRange } from '@/app/planner/actions/updatePlan';
@@ -60,14 +61,31 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     handleDragStart,
     handleDragOver,
     handleDragEnd,
+    consumeLastOperation,
     addActivity,
     removeActivity,
     updateActivity,
     addBlankActivity,
   } = useDnDPlanner(initialDnDDays);
 
+  const { reorder } = useOptimisticReorder({
+    planId,
+    getDaysSnapshot,
+    setDays,
+  });
+
   function persistOnDragEnd(event?: Parameters<typeof handleDragEnd>[0]) {
     handleDragEnd(event);
+    const operation = consumeLastOperation();
+    if (operation) {
+      void reorder({
+        itemId: operation.itemId,
+        fromDayId: operation.fromDayId,
+        toDayId: operation.toDayId,
+        toIndex: operation.toIndex,
+      });
+      return;
+    }
     options.persistDays?.mutate(getDaysSnapshot());
   }
 

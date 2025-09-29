@@ -17,3 +17,15 @@ The planner feature orchestrates collaborative trip editing, drag-and-drop sched
 4. On conflicts, refetch the snapshot and replay events to ensure every client converges to the same version.
 
 Follow the reference document above when adding event types or adjusting persistence so tests and Supabase migrations stay aligned.
+
+## Drag-and-drop behaviour
+
+- The planner mounts a single `PointerSensor` with a `distance: 6` activation constraint and a keyboard sensor to keep activation instant across desktop and touch devices. Sensors are created post-hydration inside `usePlannerSensors` to avoid the TouchSensor long-press fallback that affected Vercel builds.
+- Each activity exposes an explicit drag handle rendered by `DragHandle.tsx`. Only the handle receives the DnD listeners so tapping or scrolling the card body never triggers a drag.
+- Handles disable text selection and touch gestures so the pointer activation happens on the first frame.
+
+## Optimistic reordering
+
+- `useOptimisticReorder` wraps TanStack Query to apply local reorders synchronously and push them to `/api/plans/[planId]/reorder`.
+- The hook mutates the React Query cache and planner context immediately, rolls back on server errors, and shows a toast (`Mudança desfeita. Não foi possível salvar.`) via `PlannerToastViewport`.
+- The API persists fractional positions. If neighbouring positions collide the handler rebalances the entire day using `rebuildRanks` so repeated drags never require full renumbering on the client.

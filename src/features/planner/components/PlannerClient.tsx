@@ -20,6 +20,7 @@ import { useKeyBinds } from '@/features/planner/hooks/internal/useKeyBinds';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
+import { PlannerToastViewport } from '@/features/planner/ui/usePlannerToast';
 
 /**
  * Top-level client component for the planner experience.
@@ -165,6 +166,7 @@ function PlannerClientInner({
         <ActivityModal />
 
         {!hideOnboarding && <OnboardingModal />}
+        <PlannerToastViewport />
       </main>
     </OnboardingProvider>
   );

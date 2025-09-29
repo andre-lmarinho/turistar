@@ -7,6 +7,7 @@ import { useSortable } from '@dnd-kit/sortable';
 
 import { cn } from '@/shared/utils/utils';
 import ActivityCard from './ActivityCard';
+import DragHandle from './DragHandle';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface SortableItemProps {
@@ -77,16 +78,16 @@ export default function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={cn(
-        'relative list-none',
-        isDragging ? 'cursor-grabbing' : 'cursor-grab',
-        className
-      )}
-      {...attributes}
-      {...listeners}
+      className={cn('relative list-none', className)}
       role="listitem"
     >
-      <div className={cn(isDragging && 'opacity-0')}>
+      <DragHandle
+        {...listeners}
+        {...attributes}
+        isDragging={isDragging}
+        className="z-10"
+      />
+      <div className={cn('pt-8', isDragging && 'opacity-0')}>
         <ActivityCard
           activity={activity}
           availableDays={availableDays}

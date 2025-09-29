@@ -2,16 +2,9 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, type SetStateAction } from 'react';
-import {
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragStartEvent,
-  type DragOverEvent,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from '@dnd-kit/core';
+import { type DragStartEvent, type DragOverEvent, type DragEndEvent, type UniqueIdentifier } from '@dnd-kit/core';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { usePlannerSensors } from './usePlannerSensors';
 
 /**
  * Handles drag-and-drop interactions for day plans.
@@ -57,6 +50,13 @@ function getDragTarget(
 export function useDragState(initialDays: DayPlan[]) {
   const [days, setDaysState] = useState<DayPlan[]>(initialDays);
   const daysRef = useRef<DayPlan[]>(initialDays);
+  const getSnapshot = useCallback(() => daysRef.current, []);
+  const lastOperationRef = useRef<{
+    itemId: string;
+    fromDayId: string;
+    toDayId: string;
+    toIndex: number;
+  } | null>(null);
 
   const dayIndexRef = useRef<Map<string, number>>(new Map());
   const activityIndexRef = useRef<Map<string, { dayIdx: number; actIdx: number }>>(new Map());
@@ -104,7 +104,7 @@ export function useDragState(initialDays: DayPlan[]) {
   // Throttle state updates so drag-over doesn't fire excessively
   const lastTimeRef = useRef<number>(0);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const sensors = usePlannerSensors();
 
   const lastOverRef = useRef<DragOverEvent['over'] | null>(null);
 
@@ -112,6 +112,7 @@ export function useDragState(initialDays: DayPlan[]) {
     setActiveId(e.active.id);
     lastTimeRef.current = 0;
     lastOverRef.current = null;
+    lastOperationRef.current = null;
   }
 
   const applyDragUpdate = useCallback(
@@ -154,7 +155,15 @@ export function useDragState(initialDays: DayPlan[]) {
           dstActivities = nextDays[dstDayIdx].activities;
         }
 
-        dstActivities.splice(newIndex, 0, moved);
+        const insertionIndex = Math.max(0, Math.min(newIndex, dstActivities.length));
+        dstActivities.splice(insertionIndex, 0, moved);
+
+        lastOperationRef.current = {
+          itemId: String(activeId),
+          fromDayId: srcDay.id,
+          toDayId: dstDay.id,
+          toIndex: insertionIndex,
+        };
 
         lastOverRef.current = over;
 
@@ -186,14 +195,21 @@ export function useDragState(initialDays: DayPlan[]) {
     lastOverRef.current = null;
   }
 
+  function consumeLastOperation() {
+    const op = lastOperationRef.current;
+    lastOperationRef.current = null;
+    return op;
+  }
+
   return {
     days,
     setDays,
-    getDaysSnapshot: () => daysRef.current,
+    getDaysSnapshot: getSnapshot,
     activeId,
     sensors,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
+    consumeLastOperation,
   };
 }

@@ -34,6 +34,7 @@ function mapActivityRow(activity: SupabaseActivityRow) {
     id: activity.id,
     title: activity.title ?? '',
     color: activity.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+    position: activity.position != null ? String(activity.position) : undefined,
     address: activity.address ?? undefined,
     category: activity.category ?? undefined,
     description: activity.description ?? undefined,
