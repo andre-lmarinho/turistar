@@ -1,6 +1,11 @@
 // src/features/planner/services/supabase/planEventsRepository.ts
 
 import { supabase } from '@/shared/lib/supabaseClient';
+import type {
+  PostgrestMaybeSingleResponse,
+  PostgrestResponse,
+  PostgrestSingleResponse,
+} from '@supabase/postgrest-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type {
@@ -11,6 +16,11 @@ import type {
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { normalizePositions } from '@/features/planner/domain/events/gapOrdering';
 import type { Database } from '@/shared/types/supabase';
+
+type PlanSnapshotRow = Database['public']['Tables']['plan_snapshots']['Row'];
+type PlanEventRow = Database['public']['Tables']['plan_events']['Row'];
+type AppendPlanEventsResponse = Database['public']['Functions']['append_plan_events']['Returns'];
+type PlannerRealtimeChannel = ReturnType<SupabaseClient<Database>['channel']>;
 
 const ActivitySchema = z.object({
   id: z.string(),
@@ -50,6 +60,11 @@ const EventRowSchema = z.object({
   payload: z.unknown(),
   created_at: z.string(),
   actor_id: z.string().nullish(),
+});
+
+const AppendEventsResponseSchema = z.object({
+  version: z.number(),
+  inserted_events: z.array(EventRowSchema),
 });
 
 function mapActivity(row: z.infer<typeof ActivitySchema>): Activity {
@@ -115,10 +130,12 @@ export class PlanEventsRepository {
   }
 
   async fetchSnapshot(planId: string): Promise<PlanSnapshot> {
-    const { data, error } = await (this.client.from('plan_snapshots') as any)
+    const response = (await this.client
+      .from('plan_snapshots')
       .select('plan_id, version, state, updated_at')
       .eq('plan_id', planId)
-      .maybeSingle();
+      .maybeSingle()) as PostgrestMaybeSingleResponse<PlanSnapshotRow>;
+    const { data, error } = response;
     if (error) throw error;
 
     const parsed = SnapshotRowSchema.parse(
@@ -133,15 +150,16 @@ export class PlanEventsRepository {
   }
 
   async fetchEvents(planId: string, sinceVersion: number): Promise<PlanEvent[]> {
-    const { data, error } = await (this.client as any)
+    const response = (await this.client
       .from('plan_events')
       .select('event_id, plan_id, version, event_type, payload, created_at, actor_id')
       .eq('plan_id', planId)
       .gt('version', sinceVersion)
-      .order('version', { ascending: true });
+      .order('version', { ascending: true })) as unknown as PostgrestResponse<PlanEventRow>;
+    const { data, error } = response;
     if (error) throw error;
     if (!data) return [];
-    const parsedRows = (data as unknown[]).map((row) => EventRowSchema.parse(row));
+    const parsedRows = data.map((row) => EventRowSchema.parse(row));
     return parsedRows.map(mapEvent);
   }
 
@@ -150,28 +168,26 @@ export class PlanEventsRepository {
     baseVersion: number,
     events: PlanEventInsert[]
   ): Promise<{ events: PlanEvent[]; version: number }> {
-    const { data, error } = await (this.client as any).rpc('append_plan_events', {
+    const response = (await this.client.rpc('append_plan_events', {
       plan_id: planId,
       base_version: baseVersion,
       events,
-    });
+    })) as PostgrestSingleResponse<AppendPlanEventsResponse>;
+    const { data, error } = response;
 
     if (error) throw error;
     if (!data) {
       return { version: baseVersion, events: [] };
     }
-    const { version, inserted_events: inserted } = data as {
-      version: number;
-      inserted_events: z.infer<typeof EventRowSchema>[];
-    };
+    const { version, inserted_events } = AppendEventsResponseSchema.parse(data);
     return {
       version,
-      events: inserted.map((row) => mapEvent(EventRowSchema.parse(row))),
+      events: inserted_events.map(mapEvent),
     };
   }
 
-  subscribeToPlan(planId: string, handler: (event: PlanEvent) => void): any {
-    const channel = (this.client as any)
+  subscribeToPlan(planId: string, handler: (event: PlanEvent) => void): PlannerRealtimeChannel {
+    const channel = this.client
       .channel(`plan-events-${planId}`)
       .on(
         'postgres_changes',

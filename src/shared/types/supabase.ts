@@ -184,9 +184,86 @@ export interface Database {
           },
         ];
       };
+      plan_events: {
+        Row: {
+          event_id: string;
+          plan_id: string;
+          version: number;
+          event_type: string;
+          payload: Json;
+          actor_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          event_id?: string;
+          plan_id: string;
+          version: number;
+          event_type: string;
+          payload?: Json;
+          actor_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          event_id?: string;
+          plan_id?: string;
+          version?: number;
+          event_type?: string;
+          payload?: Json;
+          actor_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_events_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      plan_snapshots: {
+        Row: {
+          plan_id: string;
+          version: number;
+          state: Json;
+          updated_at: string;
+        };
+        Insert: {
+          plan_id: string;
+          version?: number;
+          state?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          plan_id?: string;
+          version?: number;
+          state?: Json;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_snapshots_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: Record<string, unknown>;
-    Functions: Record<string, unknown>;
+    Functions: Record<string, unknown> & {
+      append_plan_events: {
+        Args: {
+          plan_id: string;
+          base_version: number;
+          events: unknown;
+        };
+        Returns: {
+          version: number;
+          inserted_events: unknown;
+        };
+      };
+    };
     Enums: Record<string, unknown>;
     CompositeTypes: Record<string, unknown>;
   };
