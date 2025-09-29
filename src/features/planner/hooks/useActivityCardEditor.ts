@@ -8,7 +8,6 @@ export function useActivityCardEditor({
   onTitleSave,
 }: {
   title: string;
-  imageUrl?: string;
   onTitleSave?: (s: string) => void;
 }) {
   const [editing, setEditing] = useState(false);

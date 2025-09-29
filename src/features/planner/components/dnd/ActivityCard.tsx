@@ -47,7 +47,6 @@ export default function ActivityCard({
   const { editing, draft, setDraft, inputRef, cardRef, overlayRef, start, save, cancel } =
     useActivityCardEditor({
       title,
-      imageUrl,
       onTitleSave,
     });
 
