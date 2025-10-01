@@ -10,6 +10,7 @@ import {
   reducePlanEvents,
 } from '@/features/planner/domain/events/planEventReducer';
 import { diffPlanEvents } from '@/features/planner/services/diffPlanEvents';
+import { cloneDays } from '@/features/planner/services/cloneDays';
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;
@@ -20,13 +21,6 @@ interface PersistMutation {
   mutate: (state: DayPlan[]) => void;
   mutateAsync: (state: DayPlan[]) => Promise<void>;
   isPending: boolean;
-}
-
-function cloneDays(days: DayPlan[]): DayPlan[] {
-  return days.map((day) => ({
-    ...day,
-    activities: day.activities.map((activity) => ({ ...activity })),
-  }));
 }
 
 export function usePlanCollaboration(

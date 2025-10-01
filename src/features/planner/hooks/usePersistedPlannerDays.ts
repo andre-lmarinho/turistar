@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
+import { cloneDays } from '@/features/planner/services/cloneDays';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {
@@ -28,13 +29,6 @@ function removeBlankActivities(days: DayPlan[]): DayPlan[] {
     const filtered = day.activities.filter((activity) => !isPlaceholderActivity(activity));
     return filtered.length === day.activities.length ? day : { ...day, activities: filtered };
   });
-}
-
-function cloneDays(days: DayPlan[]): DayPlan[] {
-  return days.map((day) => ({
-    ...day,
-    activities: day.activities.map((activity) => ({ ...activity })),
-  }));
 }
 
 function snapshotDays(days: DayPlan[]) {
