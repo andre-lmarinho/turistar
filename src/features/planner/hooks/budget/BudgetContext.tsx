@@ -2,7 +2,7 @@
 'use client';
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';
-import { useBudget } from './useBudgetSupabase';
+import { useBudget } from './useBudget';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 const [BudgetProvider, useBudgetContext] = createContextProvider(

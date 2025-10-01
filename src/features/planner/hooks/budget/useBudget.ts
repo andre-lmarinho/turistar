@@ -1,4 +1,4 @@
-// src/features/planner/hooks/budget/useBudgetSupabase.ts
+// src/features/planner/hooks/budget/useBudget.ts
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { CategoryKey } from '@/features/planner/domain/constants/budget';
@@ -240,5 +240,3 @@ export function useBudget(
     handleDeleteEntry,
   };
 }
-
-export { useBudget as useBudgetSupabase };
