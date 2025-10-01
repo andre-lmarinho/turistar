@@ -33,12 +33,3 @@ export interface DayPlan {
   position?: string;
 }
 
-/**
- * Database row for a planner day persisted in Supabase.
- */
-export interface PlanDay {
-  id: string;
-  plan_id: string;
-  date: string;
-  position: number;
-}

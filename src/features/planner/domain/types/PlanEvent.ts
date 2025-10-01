@@ -81,13 +81,6 @@ export type PlanEvent =
 
 export type PlanEventInsert = Omit<PlanEvent, 'version' | 'createdAt'>;
 
-export type NewPlanEvent<TType extends PlanEventType> = Omit<
-  PlanEventBase<TType, PlanEvent['payload']>,
-  'id' | 'version' | 'createdAt'
-> & {
-  payload: Extract<PlanEvent, { type: TType }>['payload'];
-};
-
 export interface PlanSnapshot {
   version: number;
   days: DayPlan[];
