@@ -43,11 +43,16 @@ export function usePointerDragScroll(
 
       const centers = new Array<number>(count);
       const widths = new Array<number>(count);
+      const parentRect = el.getBoundingClientRect();
+      const scrollLeft = el.scrollLeft;
+
       for (let idx = 0; idx < count; idx += 1) {
         const it = items[idx];
-        const width = it.offsetWidth;
+        const rect = it.getBoundingClientRect();
+        const width = rect.width;
         widths[idx] = width;
-        centers[idx] = it.offsetLeft + width / 2;
+        const offsetLeft = rect.left - parentRect.left + scrollLeft;
+        centers[idx] = offsetLeft + width / 2;
       }
 
       const metrics = { count, centers, widths };
