@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Add inspiration routes based on available demo data JSON files
   try {
-    const dataDir = join(process.cwd(), 'src', 'data');
+    const dataDir = join(process.cwd(), 'src', 'features', 'inspiration', 'data');
     const files = await fs.readdir(dataDir);
     for (const f of files) {
       if (f.endsWith('.json')) {

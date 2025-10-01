@@ -25,7 +25,6 @@ export default function PlanForm() {
   });
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [title, setTitle] = useState('');
   const { saveEditToken } = usePlanEditTokens();
   const { saveRecentPlan } = useRecentPlan();
 
@@ -45,11 +44,9 @@ export default function PlanForm() {
     if (typeof val === 'string') {
       setDest(val);
       setCoords(null);
-      setTitle(val.split(',')[0].trim());
     } else {
       setDest(val.name);
       setCoords({ lat: val.latitude, lng: val.longitude });
-      setTitle(val.name.split(',')[0].trim());
     }
   }
 
@@ -71,7 +68,7 @@ export default function PlanForm() {
     setLoading(true);
     try {
       const { planId, publicSlug, editToken, recentPlan } = await createPlannerPlan({
-        title: title || destParam,
+        title: destParam,
         destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
         startDate: range.from.toISOString(),
         endDate: range.to.toISOString(),

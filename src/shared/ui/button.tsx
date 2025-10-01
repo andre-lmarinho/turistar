@@ -16,14 +16,12 @@ const buttonVariants = cva(
         accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-xs',
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
         icon: 'bg-background border-border hover:bg-muted border backdrop-blur-sm',
-        iconrd: 'bg-background rounded-full',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
       },
       size: {
         default: 'h-9 px-6 py-6 text-base has-[>svg]:px-3',
         sm: 'h-8 gap-1.5 px-3 text-sm has-[>svg]:px-2.5',
         icon: 'h-8 w-8 [&_svg:not([class*="size-"])]:size-4',
-        iconsm: 'h-6 w-6 [&_svg:not([class*="size-"])]:size-3',
       },
     },
     defaultVariants: {

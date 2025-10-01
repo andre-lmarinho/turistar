@@ -9,12 +9,11 @@ import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
  * Provides trigger refs and handlers to toggle these popups.
  */
 
-export type CardPopupType = 'color' | 'date' | 'position' | null;
+export type CardPopupType = 'color' | 'date' | null;
 
 export function useCardPopups() {
   const colorButtonRef = useFlexibleRef();
   const dateButtonRef = useFlexibleRef();
-  const positionButtonRef = useFlexibleRef();
 
   const [activePopup, setActivePopup] = useState<CardPopupType>(null);
 
@@ -26,18 +25,12 @@ export function useCardPopups() {
     setActivePopup((prev) => (prev === 'date' ? null : 'date'));
   }
 
-  function handlePositionButtonClick() {
-    setActivePopup((prev) => (prev === 'position' ? null : 'position'));
-  }
-
   return {
     colorButtonRef,
     dateButtonRef,
-    positionButtonRef,
     activePopup,
     setActivePopup,
     handleColorButtonClick,
     handleDateButtonClick,
-    handlePositionButtonClick,
   } as const;
 }

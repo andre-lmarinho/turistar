@@ -252,4 +252,3 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   );
 }
 
-export { FeatureCarouselCard, FeatureCarouselNavDots };
