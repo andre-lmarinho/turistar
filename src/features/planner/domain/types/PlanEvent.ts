@@ -10,8 +10,7 @@ export type PlanEventType =
   | 'day.created'
   | 'day.updated'
   | 'day.removed'
-  | 'day.reordered'
-  | 'budget.updated';
+  | 'day.reordered';
 
 export interface PlanEventBase<TType extends PlanEventType, TPayload> {
   id: string;
@@ -63,11 +62,6 @@ export interface DayReorderedPayload {
   position: string;
 }
 
-export interface BudgetUpdatedPayload {
-  total: number;
-  currency: string;
-}
-
 export type PlanEvent =
   | PlanEventBase<'activity.created', ActivityCreatedPayload>
   | PlanEventBase<'activity.updated', ActivityUpdatedPayload>
@@ -76,17 +70,9 @@ export type PlanEvent =
   | PlanEventBase<'day.created', DayCreatedPayload>
   | PlanEventBase<'day.updated', DayUpdatedPayload>
   | PlanEventBase<'day.removed', DayRemovedPayload>
-  | PlanEventBase<'day.reordered', DayReorderedPayload>
-  | PlanEventBase<'budget.updated', BudgetUpdatedPayload>;
+  | PlanEventBase<'day.reordered', DayReorderedPayload>;
 
 export type PlanEventInsert = Omit<PlanEvent, 'version' | 'createdAt'>;
-
-export type NewPlanEvent<TType extends PlanEventType> = Omit<
-  PlanEventBase<TType, PlanEvent['payload']>,
-  'id' | 'version' | 'createdAt'
-> & {
-  payload: Extract<PlanEvent, { type: TType }>['payload'];
-};
 
 export interface PlanSnapshot {
   version: number;

@@ -24,7 +24,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
-  const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
   const [address, setAddress] = useState(activity.address ?? '');
   const [latitude, setLatitude] = useState<number | undefined>(activity.latitude);
   const [longitude, setLongitude] = useState<number | undefined>(activity.longitude);
@@ -36,7 +35,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
     setEditedDescription(activity.description ?? '');
     setDuration(activity.duration || 0);
     setBudget(activity.budget || 0);
-    setEditedImageUrl(activity.imageUrl ?? '');
     setAddress(activity.address ?? '');
     setLatitude(activity.latitude);
     setLongitude(activity.longitude);
@@ -78,7 +76,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       color,
       duration: Number(duration),
       budget,
-      imageUrl: editedImageUrl,
+      imageUrl: activity.imageUrl,
       address: addr || undefined,
       latitude: lat,
       longitude: lng,

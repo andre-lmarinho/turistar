@@ -1,15 +1,15 @@
-// tests/unit/features/planner/hooks/budget/useBudgetSupabase.test.ts
+// tests/unit/features/planner/hooks/budget/useBudget.test.ts
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useBudget } from '@/features/planner/hooks/budget/useBudgetSupabase';
+import { useBudget } from '@/features/planner/hooks/budget/useBudget';
 
 const mockFrom = vi.fn();
 vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-describe('useBudgetSupabase', () => {
+describe('useBudget hook', () => {
   beforeEach(() => {
     mockFrom.mockReset();
   });

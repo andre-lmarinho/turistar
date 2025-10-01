@@ -46,7 +46,6 @@
   --radius: 0.625rem;
   --font-geist-sans: ui-sans-serif, system-ui;
   --font-geist-mono: ui-monospace, SFMono-Regular, monospace;
-  --font-architects-daughter: cursive;
   /* Base colors for the general interface */
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0 0);
@@ -126,10 +125,6 @@
 
 .backdrop-overlay {
   @apply fixed inset-0 z-40 bg-[var(--backdrop)] backdrop-blur-sm;
-}
-
-.handcrafted {
-  font-family: var(--font-architects-daughter), cursive;
 }
 
 .scrollbar-hidden {

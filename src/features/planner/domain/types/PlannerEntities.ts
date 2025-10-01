@@ -32,13 +32,3 @@ export interface DayPlan {
   /** Relative ordering position used for conflict-free reordering */
   position?: string;
 }
-
-/**
- * Database row for a planner day persisted in Supabase.
- */
-export interface PlanDay {
-  id: string;
-  plan_id: string;
-  date: string;
-  position: number;
-}

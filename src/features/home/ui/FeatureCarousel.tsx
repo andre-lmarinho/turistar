@@ -156,7 +156,6 @@ function FeatureCarouselNavDots({
 export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   const cardsRef = useRef<HTMLUListElement | null>(null);
   const imagesRef = useRef<HTMLUListElement | null>(null);
-  const disabledCardsRef = useRef<HTMLUListElement | null>(null);
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -170,10 +169,7 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   const isDesktop = useIsDesktop();
   const interactive = hasMounted && isDesktop;
 
-  const cardsDragRef = isDesktop ? disabledCardsRef : cardsRef;
-  const cardsDragHandlers = isDesktop ? undefined : cardsHandlers;
-
-  usePointerDragScroll(cardsDragRef, cardsDragHandlers);
+  usePointerDragScroll(cardsRef, cardsHandlers, !isDesktop);
   usePointerDragScroll(imagesRef, imagesHandlers);
 
   const handleCardSelect = useCallback(
@@ -251,5 +247,3 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
     </>
   );
 }
-
-export { FeatureCarouselCard, FeatureCarouselNavDots };

@@ -9,5 +9,3 @@ export const KEY_BINDS = {
   budget: 'b', // ModeToggleButton.tsx
   newCard: 'n', // AddCardButton.tsx
 } as const;
-
-export type KeyBind = (typeof KEY_BINDS)[keyof typeof KEY_BINDS];
