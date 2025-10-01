@@ -168,9 +168,6 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       });
       return next;
     }
-    case 'budget.updated': {
-      return days;
-    }
     default:
       return days;
   }

@@ -42,5 +42,3 @@ export const clientEnv = clientEnvSchema.parse({
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY ??
     (IN_CI ? FALLBACKS.NEXT_PUBLIC_GEOAPIFY_KEY : undefined),
 });
-
-export type ClientEnv = z.infer<typeof clientEnvSchema>;

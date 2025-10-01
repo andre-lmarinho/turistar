@@ -24,6 +24,7 @@ Each section below expands on the responsibilities and provides implementation r
 
 Events are strongly typed in [`PlanEvent.ts`](../../src/features/planner/domain/types/PlanEvent.ts). They fall into three families:
 
+<!-- prettier-ignore -->
 | Type | Payload summary | Notes |
 | --- | --- | --- |
 | `activity.created` | `{ dayId, activity, position }` | Inserts the sanitized activity into the destination day using gap ordering, placing it before the first card with a greater position.
@@ -34,7 +35,6 @@ Events are strongly typed in [`PlanEvent.ts`](../../src/features/planner/domain/
 | `day.updated` | `{ dayId, patch }` | Updates metadata (label, etc.) for a specific day.
 | `day.removed` | `{ dayId }` | Removes a day and its activities from the plan.
 | `day.reordered` | `{ dayId, position }` | Updates a day’s gap-order position.
-| `budget.updated` | `{ total, currency }` | Synchronizes overall budget changes.
 
 The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events/planEventReducer.ts) interpret each event and update the in-memory `PlanState`. Tests in `tests/unit/features/planner/hooks/usePlanCollaboration.test.ts` guard the behaviour.
 

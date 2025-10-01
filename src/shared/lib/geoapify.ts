@@ -23,14 +23,6 @@ type GeoapifyFeature = {
 };
 type GeoapifyResponse = { features: GeoapifyFeature[] };
 
-export const GEOAPIFY_CATEGORIES = [
-  'tourism.attraction',
-  'tourism.sights',
-  'entertainment.museum',
-  'entertainment.culture.gallery',
-  'natural.protected_area',
-];
-
 /* Helpers */
 export function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;

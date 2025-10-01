@@ -235,5 +235,3 @@ export function useSelectedActivity(
     changeColor,
   };
 }
-
-export type UseSelectedActivityReturn = ReturnType<typeof useSelectedActivity>;
