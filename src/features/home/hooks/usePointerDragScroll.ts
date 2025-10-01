@@ -13,7 +13,8 @@ export type PointerDragHandlers = {
 
 export function usePointerDragScroll(
   ref: RefObject<HTMLUListElement | null>,
-  opts?: PointerDragHandlers
+  opts?: PointerDragHandlers,
+  enabled: boolean = true
 ) {
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
@@ -27,6 +28,8 @@ export function usePointerDragScroll(
   } | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const el = ref.current;
     if (!el) return;
 
@@ -171,5 +174,5 @@ export function usePointerDragScroll(
       window.removeEventListener('resize', handleResize);
       itemsMetricsRef.current = null;
     };
-  }, [ref, opts]);
+  }, [ref, opts, enabled]);
 }

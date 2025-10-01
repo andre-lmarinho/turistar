@@ -5,7 +5,6 @@ import '@/app/globals.css';
 import 'leaflet/dist/leaflet.css';
 
 import Providers from '@/shared/components/Providers';
-import SupabaseProvider from '@/shared/components/SupabaseProvider';
 import SeoJsonLd from '@/shared/components/SeoJsonLd';
 import { SITE_URL } from '@/shared/constants/site';
 
@@ -75,9 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <SeoJsonLd />
-        <SupabaseProvider>
-          <Providers>{children}</Providers>
-        </SupabaseProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
