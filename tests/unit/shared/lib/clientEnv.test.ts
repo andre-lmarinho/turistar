@@ -21,14 +21,12 @@ describe('clientEnv', () => {
       delete process.env.NEXT_PUBLIC_SUPABASE_URL;
       delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       delete process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
-      delete process.env.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT;
 
       const { clientEnv } = await import('@/shared/lib/clientEnv');
 
       expect(clientEnv.NEXT_PUBLIC_SUPABASE_URL).toBe('http://localhost:54321');
       expect(clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY).toBe('anon');
       expect(clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY).toBe('test-key');
-      expect(clientEnv.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT).toBe(true);
     }
   );
 });

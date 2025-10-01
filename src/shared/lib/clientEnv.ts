@@ -6,7 +6,6 @@ const clientEnvSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
   NEXT_PUBLIC_GEOAPIFY_KEY: z.string(),
-  NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT: z.coerce.boolean().default(true),
 });
 
 // Next.js replaces `process.env.NEXT_PUBLIC_*` at build time, but the
@@ -29,7 +28,6 @@ const FALLBACKS = {
   NEXT_PUBLIC_SUPABASE_URL: 'http://localhost:54321',
   NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon',
   NEXT_PUBLIC_GEOAPIFY_KEY: 'test-key',
-  NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT: 'true',
 } as const;
 
 export const clientEnv = clientEnvSchema.parse({
@@ -43,9 +41,6 @@ export const clientEnv = clientEnvSchema.parse({
   NEXT_PUBLIC_GEOAPIFY_KEY:
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY ??
     (IN_CI ? FALLBACKS.NEXT_PUBLIC_GEOAPIFY_KEY : undefined),
-  NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT:
-    process.env.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT ??
-    (IN_CI ? FALLBACKS.NEXT_PUBLIC_WIKIMEDIA_ENRICHMENT : undefined),
 });
 
 export type ClientEnv = z.infer<typeof clientEnvSchema>;
