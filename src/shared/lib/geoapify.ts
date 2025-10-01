@@ -36,7 +36,6 @@ export function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
 }
 
-
 /* Geoapify – Autocomplete */
 type AutocompleteOptions = {
   text: string;
@@ -118,4 +117,3 @@ export async function fetchGeoapifyAddressAutocomplete(
     longitude: f.properties.lon,
   }));
 }
-

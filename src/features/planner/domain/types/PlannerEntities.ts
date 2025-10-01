@@ -32,4 +32,3 @@ export interface DayPlan {
   /** Relative ordering position used for conflict-free reordering */
   position?: string;
 }
-
