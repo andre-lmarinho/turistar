@@ -11,6 +11,8 @@ export type PointerDragHandlers = {
   onScrollPreview?: (nearestIndex: number) => void;
 };
 
+const MAX_OVERSHOOT_PX = 64;
+
 export function usePointerDragScroll(
   ref: RefObject<HTMLUListElement | null>,
   opts?: PointerDragHandlers,
@@ -113,9 +115,11 @@ export function usePointerDragScroll(
       const max = el.scrollWidth - el.clientWidth;
       if (next < 0 || next > max) {
         const overshoot = next < 0 ? next : next - max;
-        // Move with the drag direction so the bounce feels natural.
-        overshootRef.current = -overshoot * 0.35;
-        el.style.transform = `translateX(${overshootRef.current}px)`;
+        // Clamp the bounce so the preview never stretches beyond its frame.
+        const maxOvershoot = Math.max(12, Math.min(MAX_OVERSHOOT_PX, el.clientWidth * 0.15));
+        const easedOvershoot = Math.max(Math.min(-overshoot * 0.35, maxOvershoot), -maxOvershoot);
+        overshootRef.current = easedOvershoot;
+        el.style.transform = `translateX(${easedOvershoot}px)`;
         next = next < 0 ? 0 : max;
       } else {
         overshootRef.current = 0;
