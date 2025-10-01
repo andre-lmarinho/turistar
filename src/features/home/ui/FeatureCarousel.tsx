@@ -222,26 +222,27 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
             onSelect={handleDotSelect}
             className="mb-3 hidden justify-end md:flex"
           />
-
-          <ul ref={imagesRef} tabIndex={-1} aria-hidden="true" className={IMAGE_LIST_CLASSES}>
-            {features.map((feature, index) => (
-              <li key={feature.title} className={IMAGE_ITEM_CLASSES}>
-                <div className="select-none">
-                  <Image
-                    src={feature.imgSrc}
-                    alt=""
-                    role="presentation"
-                    width={1600}
-                    height={900}
-                    className="block h-auto w-full overflow-hidden rounded-xl object-contain"
-                    priority={index === activeIndex}
-                    draggable={false}
-                    onDragStart={(event) => event.preventDefault()}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-hidden">
+            <ul ref={imagesRef} tabIndex={-1} aria-hidden="true" className={IMAGE_LIST_CLASSES}>
+              {features.map((feature, index) => (
+                <li key={feature.title} className={IMAGE_ITEM_CLASSES}>
+                  <div className="select-none">
+                    <Image
+                      src={feature.imgSrc}
+                      alt=""
+                      role="presentation"
+                      width={1600}
+                      height={900}
+                      className="block h-auto w-full overflow-hidden rounded-xl object-contain"
+                      priority={index === activeIndex}
+                      draggable={false}
+                      onDragStart={(event) => event.preventDefault()}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </>
