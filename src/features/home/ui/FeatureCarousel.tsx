@@ -192,30 +192,30 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
       <style jsx global>
         {GLOBAL_CAROUSEL_STYLES}
       </style>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div className="order-1 md:order-1">
-          <ul ref={cardsRef} className={CARD_LIST_CLASSES}>
-            {features.map((feature, index) => (
-              <li key={feature.title} className={CARD_ITEM_CLASSES}>
-                <FeatureCarouselCard
-                  feature={feature}
-                  isActive={index === activeIndex}
-                  interactive={interactive}
-                  onSelect={() => handleCardSelect(index)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="flex flex-col gap-8 md:gap-3">
+        <FeatureCarouselNavDots
+          total={features.length}
+          current={activeIndex}
+          onSelect={handleDotSelect}
+          className="order-2 justify-center md:order-1 md:justify-end md:self-end"
+        />
+        <div className="order-1 flex flex-col gap-8 md:order-2 md:grid md:grid-cols-3 md:gap-8">
+          <div className="order-2 md:order-none">
+            <ul ref={cardsRef} className={CARD_LIST_CLASSES}>
+              {features.map((feature, index) => (
+                <li key={feature.title} className={CARD_ITEM_CLASSES}>
+                  <FeatureCarouselCard
+                    feature={feature}
+                    isActive={index === activeIndex}
+                    interactive={interactive}
+                    onSelect={() => handleCardSelect(index)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="order-2 flex flex-col md:order-2 md:col-span-2">
-          <FeatureCarouselNavDots
-            total={features.length}
-            current={activeIndex}
-            onSelect={handleDotSelect}
-            className="order-2 mt-4 justify-center md:order-1 md:mt-0 md:mb-3 md:justify-end"
-          />
-          <div className="order-1 overflow-hidden md:order-2">
+          <div className="order-1 overflow-hidden md:order-none md:col-span-2">
             <ul ref={imagesRef} tabIndex={-1} aria-hidden="true" className={IMAGE_LIST_CLASSES}>
               {features.map((feature, index) => (
                 <li key={feature.title} className={IMAGE_ITEM_CLASSES}>
