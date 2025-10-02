@@ -172,6 +172,20 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
   usePointerDragScroll(cardsRef, cardsHandlers, !isDesktop);
   usePointerDragScroll(imagesRef, imagesHandlers);
 
+  const previousIsDesktopRef = useRef(isDesktop);
+  useEffect(() => {
+    if (!hasMounted) return;
+
+    const previousIsDesktop = previousIsDesktopRef.current;
+    if (previousIsDesktop === isDesktop) return;
+
+    previousIsDesktopRef.current = isDesktop;
+
+    if (!cardsRef.current || !imagesRef.current) return;
+
+    select(activeIndex);
+  }, [activeIndex, hasMounted, isDesktop, select]);
+
   const handleCardSelect = useCallback(
     (index: number) => {
       if (!interactive) return;
