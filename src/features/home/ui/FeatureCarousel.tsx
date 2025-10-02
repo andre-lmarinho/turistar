@@ -193,7 +193,7 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
         {GLOBAL_CAROUSEL_STYLES}
       </style>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div className="order-2 md:order-1">
+        <div className="order-1 md:order-1">
           <ul ref={cardsRef} className={CARD_LIST_CLASSES}>
             {features.map((feature, index) => (
               <li key={feature.title} className={CARD_ITEM_CLASSES}>
@@ -206,23 +206,16 @@ export default function FeatureCarousel({ features }: FeatureCarouselProps) {
               </li>
             ))}
           </ul>
-
-          <FeatureCarouselNavDots
-            total={features.length}
-            current={activeIndex}
-            onSelect={handleDotSelect}
-            className="mt-4 justify-center md:hidden"
-          />
         </div>
 
-        <div className="order-1 md:order-2 md:col-span-2">
+        <div className="order-2 flex flex-col md:order-2 md:col-span-2">
           <FeatureCarouselNavDots
             total={features.length}
             current={activeIndex}
             onSelect={handleDotSelect}
-            className="mb-3 hidden justify-end md:flex"
+            className="order-2 mt-4 justify-center md:order-1 md:mt-0 md:mb-3 md:justify-end"
           />
-          <div className="overflow-hidden">
+          <div className="order-1 overflow-hidden md:order-2">
             <ul ref={imagesRef} tabIndex={-1} aria-hidden="true" className={IMAGE_LIST_CLASSES}>
               {features.map((feature, index) => (
                 <li key={feature.title} className={IMAGE_ITEM_CLASSES}>
