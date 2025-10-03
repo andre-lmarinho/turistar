@@ -1,0 +1,12 @@
+node_modules
+.next
+.vercel
+coverage
+dist
+out
+build
+.turbo
+.storybook
+.vscode
+tmp
+**/*.snap

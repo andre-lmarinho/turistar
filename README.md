@@ -82,7 +82,7 @@ See [docs/DEVELOPER_GUIDE.md#routing](docs/DEVELOPER_GUIDE.md#routing) for a bre
 
 ## Getting Started
 
-Prerequisites: Node.js v18+ and npm
+Prerequisites: Node.js v20 (see `.nvmrc`) and npm
 
 1. Clone the repo
 
@@ -122,7 +122,7 @@ Prerequisites: Node.js v18+ and npm
 
 1. Install dependencies with `npm install`.
 2. Start the dev server using `npm run dev`.
-3. Format code before committing with `npm run format`.
+3. Format code before committing with `npm run format` (Prettier respects `.prettierignore`).
 4. Run the linter via `npm run lint`.
 5. Run the type checker with `npm run typecheck`.
 6. Ensure all tests pass with `npm run test`.
@@ -151,6 +151,12 @@ npm run vercel:build
 ## Testing
 
 See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
+
+### Coverage reporting
+
+- `npm run test:coverage` generates reports in `coverage/`, including `coverage/lcov.info` for Codecov uploads.
+- The CI pipeline uploads the coverage folder as an artifact and forwards the LCOV report to Codecov using `secrets.CODECOV_TOKEN`.
+- For private forks, generate a Codecov token by adding the forked repository in [Codecov](https://about.codecov.io/) and navigating to **Settings → General → Upload token**. Store the value as the `CODECOV_TOKEN` secret in your fork before running the CI workflow.
 
 ---
 
@@ -198,6 +204,14 @@ For more details on project conventions, see:
 - [Developer Guide](docs/DEVELOPER_GUIDE.md)
 - [SEO Setup](docs/SEO.md)
 - [Contributing](docs/CONTRIBUTING.md)
+
+### Node.js version management
+
+The repository's required Node.js version is tracked in `.nvmrc`, and the CI workflow reads it directly. When bumping Node:
+
+1. Update `.nvmrc` to the new version number.
+2. Update the `engines.node` field in `package.json` to match.
+3. Verify local and CI environments with `nvm use` and the updated workflow configuration.
 
 ---
 

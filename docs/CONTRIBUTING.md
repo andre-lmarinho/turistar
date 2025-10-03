@@ -32,7 +32,7 @@ npm run format
 npm run lint
 ```
 
-Formatting uses Prettier with semicolons and single quotes; ESLint enforces the project's TypeScript and React rules.
+Formatting uses Prettier with semicolons and single quotes. The formatter now targets common project file types via a single glob and respects `.prettierignore` for generated assets. ESLint enforces the project's TypeScript and React rules and will fail on any warnings, so address them before committing.
 
 - Run `npm run typecheck` before committing to verify type safety.
 
@@ -45,6 +45,12 @@ npm run test
 ```
 
 Use `npm run test:watch` for watch mode or `npm run test:coverage` to produce coverage reports.
+
+### Coverage uploads (Codecov)
+
+- Coverage reports are written to the `coverage/` directory, including `coverage/lcov.info` for Codecov.
+- The CI workflow uploads these reports as artifacts and forwards the LCOV file to Codecov when `CODECOV_TOKEN` is configured.
+- For private forks, create or import the repository in Codecov and copy the value from **Settings → General → Upload token**, then add it as a `CODECOV_TOKEN` secret in your forked repository.
 
 ## Storybook
 
@@ -61,3 +67,7 @@ Developer documentation lives inside the `docs` folder. There is no automated do
 ---
 
 Happy coding!
+
+## Toolchain updates
+
+- The required Node.js version is pinned in `.nvmrc`, and the CI workflow reads that file. When upgrading Node, update `.nvmrc` and the `engines.node` field in `package.json` together and verify `nvm use` succeeds locally.

@@ -8,7 +8,7 @@
 
 - `npm run dev` – Start the Next.js development server with Turbopack
 - `npm run build` – Build the production bundle
-- `npm run lint` – Lint the repository with ESLint (auto-fix enabled)
+- `npm run lint` – Lint the repository with ESLint (fails on warnings)
 - `npm run typecheck` – Run the TypeScript compiler in no-emit mode
 - `npm run test` – Execute the Vitest unit and integration suites
 - `npm run format` – Format source and test files with Prettier
