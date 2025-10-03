@@ -46,9 +46,8 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
 function buildPermissionsPolicy(): string {
   // Use a conservative, broadly-supported subset to avoid browser warnings.
   // Deny by default unless explicitly needed by the app.
-  return ['camera=()', 'microphone=()', 'geolocation=()', 'payment=()', 'fullscreen=(self)'].join(
-    ', '
-  );
+  // prettier-ignore
+  return ['camera=()', 'microphone=()', 'geolocation=()', 'payment=()', 'fullscreen=(self)'].join(', ');
 }
 
 export function getSecurityHeaders(isDev: boolean): Header[] {
