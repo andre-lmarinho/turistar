@@ -23,8 +23,8 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
       // Broadly allow during dev; rely on strict prod CSP for security
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: http: https:",
       // Do not emit script-src-elem in dev to avoid browser quirks with inline scripts
-      "connect-src http: https: ws: wss:",
-      "worker-src blob: data: http: https:"
+      'connect-src http: https: ws: wss:',
+      'worker-src blob: data: http: https:'
     );
   } else {
     // Production: disallow inline/eval
@@ -46,13 +46,9 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
 function buildPermissionsPolicy(): string {
   // Use a conservative, broadly-supported subset to avoid browser warnings.
   // Deny by default unless explicitly needed by the app.
-  return [
-    'camera=()',
-    'microphone=()',
-    'geolocation=()',
-    'payment=()',
-    'fullscreen=(self)',
-  ].join(', ');
+  return ['camera=()', 'microphone=()', 'geolocation=()', 'payment=()', 'fullscreen=(self)'].join(
+    ', '
+  );
 }
 
 export function getSecurityHeaders(isDev: boolean): Header[] {

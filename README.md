@@ -14,7 +14,7 @@ A simple travel planner built with Next.js, React, and drag-and-drop. Select any
 - [Getting Started](#getting-started)
 - [Scripts](#scripts)
 - [Testing](#testing)
- - [Health Endpoint](#health-endpoint)
+- [Health Endpoint](#health-endpoint)
 - [Deployment](#deployment)
 - [Developer Guide](#developer-guide)
 - [License](#license)
@@ -122,7 +122,7 @@ Prerequisites: Node.js v18+ and npm
 
 1. Install dependencies with `npm install`.
 2. Start the dev server using `npm run dev`.
-3. Format code before committing with `npm run format`.
+3. Format code before committing with `npm run format` (this covers application code, tests, and documentation files).
 4. Run the linter via `npm run lint`.
 5. Run the type checker with `npm run typecheck`.
 6. Ensure all tests pass with `npm run test`.
@@ -136,7 +136,7 @@ Prerequisites: Node.js v18+ and npm
 - `npm run build` – compile for production
 - `npm run start` – run production build locally
 - `npm run lint` – run ESLint
-- `npm run format` – run Prettier
+- `npm run format` – format repository files with Prettier
 - `npm run test` – run unit tests
 
 ### Local Vercel build
@@ -151,6 +151,17 @@ npm run vercel:build
 ## Testing
 
 See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
+
+### Coverage reporting
+
+- `npm run test:coverage` writes coverage assets into `coverage/`, including an `lcov.info` file.
+- Private forks need to create a Codecov token from [Codecov repository settings](https://app.codecov.io/) and add it as `CODECOV_TOKEN` in their fork's GitHub repository secrets so the CI job can upload coverage results.
+
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#codecov-and-private-forks) for step-by-step instructions.
+
+### Node.js version management
+
+The project tracks its active Node.js release in both `.nvmrc` and the `engines.node` field inside `package.json`. When upgrading Node.js, update **both** locations in the same pull request so local development, CI, and deployments remain consistent.
 
 ---
 
