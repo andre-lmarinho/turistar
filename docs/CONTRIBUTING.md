@@ -32,7 +32,7 @@ npm run format
 npm run lint
 ```
 
-Formatting uses Prettier with semicolons and single quotes; ESLint enforces the project's TypeScript and React rules.
+`npm run format` runs Prettier across application, test, and documentation files. Formatting uses Prettier with semicolons and single quotes; ESLint enforces the project's TypeScript and React rules and fails on warnings.
 
 - Run `npm run typecheck` before committing to verify type safety.
 
@@ -45,6 +45,20 @@ npm run test
 ```
 
 Use `npm run test:watch` for watch mode or `npm run test:coverage` to produce coverage reports.
+
+### Codecov and private forks
+
+Codecov uploads run automatically in CI. Maintainers of private forks must supply their own token:
+
+1. Sign in to [Codecov](https://app.codecov.io/) and add your forked repository.
+2. From the repository settings page, copy the Codecov upload token.
+3. In your GitHub fork, create a repository secret named `CODECOV_TOKEN` with that value.
+
+The CI workflow reads `secrets.CODECOV_TOKEN`; without it, coverage uploads for private forks will fail.
+
+### Node.js version bumps
+
+The project pins Node.js in two places: `.nvmrc` (for local environments) and the `engines.node` field in `package.json` (for tooling and deployments). When bumping Node.js, update both files together and mention the change in your pull request.
 
 ## Storybook
 

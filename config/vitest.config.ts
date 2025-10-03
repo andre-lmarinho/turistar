@@ -22,6 +22,8 @@ export default defineConfig({
     include: ['tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',
+      reportsDirectory: 'coverage',
+      reporter: ['text', 'lcov'],
       thresholds: {
         statements: 50,
         branches: 40,

@@ -14,4 +14,3 @@ This document summarizes the security posture and operational practices for Turi
 ## Reporting
 
 Please open a private security advisory or contact the maintainers for any potential vulnerability. Do not open public issues for undisclosed security vulnerabilities.
-

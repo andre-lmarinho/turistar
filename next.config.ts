@@ -22,9 +22,7 @@ const nextConfig: NextConfig = {
       // Aggressive caching for static assets
       {
         source: '/:all*(js|css|png|jpg|jpeg|gif|webp|ico|svg|woff2)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ];
   },
