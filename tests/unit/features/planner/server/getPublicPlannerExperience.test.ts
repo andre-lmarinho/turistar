@@ -1,0 +1,208 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('next/navigation', () => ({
+  notFound: vi.fn(),
+}));
+
+vi.mock('@/shared/lib/supabaseServer', () => ({
+  supabaseServer: vi.fn(),
+}));
+
+import { notFound } from 'next/navigation';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';
+import type { SupabasePlanDayRow } from '@/features/planner/services/supabase/planDaysMapper';
+
+interface SupabaseResult<T> {
+  data: T;
+  error: unknown;
+}
+
+function createPlanQuery(result: SupabaseResult<{
+  id: string;
+  title: string | null;
+  plan_destinations: { destinations: { name: string } }[] | null;
+} | null>) {
+  const chain: any = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    single: vi.fn(async () => result),
+  };
+  return chain;
+}
+
+function createDayQuery(result: SupabaseResult<SupabasePlanDayRow[] | null>) {
+  const chain: any = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    order: vi.fn(async () => result),
+  };
+  return chain;
+}
+
+function mockSupabase(planResult: SupabaseResult<{
+  id: string;
+  title: string | null;
+  plan_destinations: { destinations: { name: string } }[] | null;
+} | null>, dayResult: SupabaseResult<SupabasePlanDayRow[] | null>) {
+  const planQuery = createPlanQuery(planResult);
+  const dayQuery = createDayQuery(dayResult);
+  const supabase = {
+    from: vi.fn((table: string) => {
+      if (table === 'plans') return planQuery;
+      if (table === 'plan_days') return dayQuery;
+      throw new Error(`Unexpected table ${table}`);
+    }),
+  };
+  return supabase;
+}
+
+const notFoundError = new Error('NOT_FOUND');
+
+describe('getPublicPlannerExperience', () => {
+  beforeEach(() => {
+    vi.mocked(notFound).mockImplementation(() => {
+      throw notFoundError;
+    });
+    vi.mocked(supabaseServer).mockReset();
+    vi.mocked(notFound).mockClear();
+  });
+
+  it('returns the planner experience with mapped days and fallback destination', async () => {
+    const planResult: SupabaseResult<{
+      id: string;
+      title: string | null;
+      plan_destinations: { destinations: { name: string } }[] | null;
+    } | null> = {
+      data: {
+        id: 'plan-1',
+        title: 'Summer Escape',
+        plan_destinations: [
+          {
+            destinations: {
+              name: 'Paris',
+            },
+          },
+        ],
+      },
+      error: null,
+    };
+
+    const dayResult: SupabaseResult<SupabasePlanDayRow[] | null> = {
+      data: [
+        {
+          date: '2024-01-01',
+          activities: [
+            {
+              id: 'activity-1',
+              day_id: '2024-01-01',
+              title: 'Visit Louvre',
+              color: '#123456',
+              address: 'Paris, France',
+              category: 'Culture',
+              description: 'Explore the museum',
+              start_time: '09:00',
+              duration: 120,
+              latitude: 48.8606,
+              longitude: 2.3376,
+              budget: 50,
+              image_url: null,
+              position: 0,
+            },
+          ],
+        },
+      ],
+      error: null,
+    };
+
+    const supabase = mockSupabase(planResult, dayResult);
+    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+
+    const experience = await getPublicPlannerExperience({ slug: 'summer-escape' });
+
+    expect(notFound).not.toHaveBeenCalled();
+    expect(experience).toEqual({
+      planId: 'plan-1',
+      title: 'Summer Escape',
+      destination: 'Paris',
+      initialDays: [
+        {
+          id: '2024-01-01',
+          label: 'Mon, 01 Jan',
+          activities: [
+            expect.objectContaining({
+              id: 'activity-1',
+              title: 'Visit Louvre',
+              color: '#123456',
+              address: 'Paris, France',
+              category: 'Culture',
+              description: 'Explore the museum',
+              startTime: '09:00',
+              duration: 120,
+              latitude: 48.8606,
+              longitude: 2.3376,
+              budget: 50,
+            }),
+          ],
+        },
+      ],
+    });
+  });
+
+  it('calls notFound when the plan is missing or returns an error', async () => {
+    const planResult = { data: null, error: new Error('plan missing') };
+    const dayResult = { data: null, error: null };
+    const supabase = mockSupabase(planResult, dayResult);
+    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+
+    await expect(getPublicPlannerExperience({ slug: 'no-plan' })).rejects.toBe(notFoundError);
+    expect(notFound).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls notFound when no destination is available', async () => {
+    const planResult = {
+      data: {
+        id: 'plan-2',
+        title: 'Untitled',
+        plan_destinations: [],
+      },
+      error: null,
+    };
+    const dayResult = { data: null, error: null };
+    const supabase = mockSupabase(planResult, dayResult);
+    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+
+    await expect(getPublicPlannerExperience({ slug: 'missing-dest' })).rejects.toBe(notFoundError);
+    expect(notFound).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns experience without initial days when the day query fails', async () => {
+    const planResult = {
+      data: {
+        id: 'plan-3',
+        title: null,
+        plan_destinations: [
+          {
+            destinations: {
+              name: 'Lisbon',
+            },
+          },
+        ],
+      },
+      error: null,
+    };
+    const dayResult = { data: null, error: new Error('days failure') };
+    const supabase = mockSupabase(planResult, dayResult);
+    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+
+    const experience = await getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' });
+
+    expect(notFound).not.toHaveBeenCalled();
+    expect(experience).toEqual({
+      planId: 'plan-3',
+      title: undefined,
+      destination: 'Lisbon',
+      initialDays: undefined,
+    });
+  });
+});
