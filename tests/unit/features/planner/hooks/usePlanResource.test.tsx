@@ -30,9 +30,7 @@ interface MockQueryBuilder<TData> {
   upsert: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
   order: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
   gt: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
-  maybeSingle: ReturnType<
-    typeof vi.fn<() => Promise<{ data: TData; error: unknown }>>
-  >;
+  maybeSingle: ReturnType<typeof vi.fn<() => Promise<{ data: TData; error: unknown }>>>;
   single: ReturnType<typeof vi.fn<() => Promise<{ data: TData; error: unknown }>>>;
 }
 
@@ -80,13 +78,11 @@ describe('usePlanResource', () => {
     const onSuccess = vi.fn();
 
     let callCount = 0;
-    vi.mocked(supabase.from).mockImplementation(
-      ((table: string) => {
-        expect(table).toBe('plans');
-        callCount += 1;
-        return callCount === 1 ? fetchBuilder : updateBuilder;
-      }) as never
-    );
+    vi.mocked(supabase.from).mockImplementation(((table: string) => {
+      expect(table).toBe('plans');
+      callCount += 1;
+      return callCount === 1 ? fetchBuilder : updateBuilder;
+    }) as never);
 
     const { result } = renderHook(
       () =>
@@ -123,12 +119,10 @@ describe('usePlanResource', () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const builder = createBuilder({ data: { notes: 'Notes' }, error: null });
 
-    vi.mocked(supabase.from).mockImplementation(
-      ((table: string) => {
-        expect(table).toBe('plan_days');
-        return builder;
-      }) as never
-    );
+    vi.mocked(supabase.from).mockImplementation(((table: string) => {
+      expect(table).toBe('plan_days');
+      return builder;
+    }) as never);
 
     const { result } = renderHook(
       () =>
@@ -216,12 +210,10 @@ describe('usePlanResource', () => {
     const updateBuilder = createBuilder({ data: null, error });
 
     let call = 0;
-    vi.mocked(supabase.from).mockImplementation(
-      (() => {
-        call += 1;
-        return call === 1 ? fetchBuilder : updateBuilder;
-      }) as never
-    );
+    vi.mocked(supabase.from).mockImplementation((() => {
+      call += 1;
+      return call === 1 ? fetchBuilder : updateBuilder;
+    }) as never);
 
     const { result } = renderHook(
       () =>
