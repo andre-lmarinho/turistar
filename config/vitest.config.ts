@@ -10,9 +10,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, '../src'),
-      '@supabase/ssr': resolve(__dirname, '../src/__mocks__/supabaseSsr.ts'),
-      '@/app/globals.css': resolve(__dirname, '../src/__mocks__/empty.css'),
-      'leaflet/dist/leaflet.css': resolve(__dirname, '../src/__mocks__/empty.css'),
+      '@supabase/ssr': resolve(__dirname, '../tests/__mocks__/supabaseSsr.ts'),
+      '@/app/globals.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
+      'leaflet/dist/leaflet.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
     },
   },
   test: {

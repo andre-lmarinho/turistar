@@ -20,17 +20,9 @@
       }
     ],
     "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"] },
+    "paths": { "@/*": ["./src/*"], "jest-axe": ["./tests/types/jest-axe.d.ts"] },
     "types": ["vitest/globals", "node"]
   },
-  "include": [
-    "src",
-    "src/global.d.ts",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["src", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
