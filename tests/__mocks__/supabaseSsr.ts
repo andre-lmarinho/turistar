@@ -1,4 +1,4 @@
-// src/__mocks__/supabaseSsr.ts
+// tests/__mocks__/supabaseSsr.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/types/supabase';
 
