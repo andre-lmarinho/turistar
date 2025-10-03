@@ -40,7 +40,11 @@ describe('useSupabaseResource', () => {
   it('uses the persistFn, aborts previous calls, and invalidates the query on success', async () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const invalidateSpy = vi.spyOn(client, 'invalidateQueries');
-    const persistCalls: { payload: string; signal: AbortSignal; resolve: (value: unknown) => void }[] = [];
+    const persistCalls: {
+      payload: string;
+      signal: AbortSignal;
+      resolve: (value: unknown) => void;
+    }[] = [];
 
     const persistFn = vi.fn((payload: string, signal: AbortSignal) => {
       return new Promise((resolve) => {

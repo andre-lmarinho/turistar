@@ -23,7 +23,9 @@ describe('createPlan action', () => {
       ],
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     const result = await createPlan(
       'Trip to Paris',
@@ -52,7 +54,9 @@ describe('createPlan action', () => {
       },
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     const result = await createPlan('Title', { name: 'Lisbon' }, '2024-02-01', '2024-02-10');
 
@@ -70,14 +74,18 @@ describe('createPlan action', () => {
   it('throws when the RPC returns an error', async () => {
     const error = new Error('failed');
     const rpc = vi.fn().mockResolvedValue({ data: null, error });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await expect(createPlan('x', { name: 'Y' }, '2024-01-01', '2024-01-02')).rejects.toBe(error);
   });
 
   it('throws when the RPC does not return data', async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await expect(createPlan('x', { name: 'Y' }, '2024-01-01', '2024-01-02')).rejects.toThrow(
       'Failed to create plan'

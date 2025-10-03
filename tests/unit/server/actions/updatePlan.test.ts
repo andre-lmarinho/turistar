@@ -16,9 +16,15 @@ describe('setPlanDateRange', () => {
     const eq = vi.fn().mockResolvedValue({ error: null });
     const update = vi.fn(() => ({ eq }));
     const from = vi.fn(() => ({ update }));
-    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
-    await setPlanDateRange('plan-1', new Date('2024-03-10T10:30:00Z'), new Date('2024-03-15T15:45:00Z'));
+    await setPlanDateRange(
+      'plan-1',
+      new Date('2024-03-10T10:30:00Z'),
+      new Date('2024-03-15T15:45:00Z')
+    );
 
     expect(from).toHaveBeenCalledWith('plans');
     expect(update).toHaveBeenCalledWith({ start_date: '2024-03-10', end_date: '2024-03-15' });
@@ -30,7 +36,9 @@ describe('setPlanDateRange', () => {
     const eq = vi.fn().mockResolvedValue({ error });
     const update = vi.fn(() => ({ eq }));
     const from = vi.fn(() => ({ update }));
-    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await expect(
       setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
@@ -41,7 +49,9 @@ describe('setPlanDateRange', () => {
     const eq = vi.fn().mockResolvedValue({ error: {} });
     const update = vi.fn(() => ({ eq }));
     const from = vi.fn(() => ({ update }));
-    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await expect(
       setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))

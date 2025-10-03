@@ -18,11 +18,13 @@ interface SupabaseResult<T> {
   error: unknown;
 }
 
-function createPlanQuery(result: SupabaseResult<{
-  id: string;
-  title: string | null;
-  plan_destinations: { destinations: { name: string } }[] | null;
-} | null>) {
+function createPlanQuery(
+  result: SupabaseResult<{
+    id: string;
+    title: string | null;
+    plan_destinations: { destinations: { name: string } }[] | null;
+  } | null>
+) {
   const chain: any = {
     select: vi.fn(() => chain),
     eq: vi.fn(() => chain),
@@ -40,11 +42,14 @@ function createDayQuery(result: SupabaseResult<SupabasePlanDayRow[] | null>) {
   return chain;
 }
 
-function mockSupabase(planResult: SupabaseResult<{
-  id: string;
-  title: string | null;
-  plan_destinations: { destinations: { name: string } }[] | null;
-} | null>, dayResult: SupabaseResult<SupabasePlanDayRow[] | null>) {
+function mockSupabase(
+  planResult: SupabaseResult<{
+    id: string;
+    title: string | null;
+    plan_destinations: { destinations: { name: string } }[] | null;
+  } | null>,
+  dayResult: SupabaseResult<SupabasePlanDayRow[] | null>
+) {
   const planQuery = createPlanQuery(planResult);
   const dayQuery = createDayQuery(dayResult);
   const supabase = {
@@ -116,7 +121,9 @@ describe('getPublicPlannerExperience', () => {
     };
 
     const supabase = mockSupabase(planResult, dayResult);
-    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce(
+      supabase as unknown as ReturnType<typeof supabaseServer>
+    );
 
     const experience = await getPublicPlannerExperience({ slug: 'summer-escape' });
 
@@ -153,7 +160,9 @@ describe('getPublicPlannerExperience', () => {
     const planResult = { data: null, error: new Error('plan missing') };
     const dayResult = { data: null, error: null };
     const supabase = mockSupabase(planResult, dayResult);
-    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce(
+      supabase as unknown as ReturnType<typeof supabaseServer>
+    );
 
     await expect(getPublicPlannerExperience({ slug: 'no-plan' })).rejects.toBe(notFoundError);
     expect(notFound).toHaveBeenCalledTimes(1);
@@ -170,7 +179,9 @@ describe('getPublicPlannerExperience', () => {
     };
     const dayResult = { data: null, error: null };
     const supabase = mockSupabase(planResult, dayResult);
-    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce(
+      supabase as unknown as ReturnType<typeof supabaseServer>
+    );
 
     await expect(getPublicPlannerExperience({ slug: 'missing-dest' })).rejects.toBe(notFoundError);
     expect(notFound).toHaveBeenCalledTimes(1);
@@ -193,7 +204,9 @@ describe('getPublicPlannerExperience', () => {
     };
     const dayResult = { data: null, error: new Error('days failure') };
     const supabase = mockSupabase(planResult, dayResult);
-    vi.mocked(supabaseServer).mockReturnValueOnce(supabase as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce(
+      supabase as unknown as ReturnType<typeof supabaseServer>
+    );
 
     const experience = await getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' });
 

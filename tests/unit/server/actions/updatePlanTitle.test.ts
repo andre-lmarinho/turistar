@@ -14,7 +14,9 @@ describe('updatePlanTitle', () => {
 
   it('invokes the update_plan_title RPC with provided values', async () => {
     const rpc = vi.fn().mockResolvedValue({ error: null });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await updatePlanTitle('plan-1', 'token-123', 'New Title');
 
@@ -28,7 +30,9 @@ describe('updatePlanTitle', () => {
   it('throws when Supabase returns an error', async () => {
     const error = new Error('rpc failed');
     const rpc = vi.fn().mockResolvedValue({ error });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
 
     await expect(updatePlanTitle('plan-1', 'token', 'Title')).rejects.toBe(error);
   });
