@@ -13,14 +13,19 @@ export default function Hero() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const modalTitleId = 'hero-plan-modal-title';
   useEffect(() => {
+    if (open) {
+      return undefined;
+    }
+
     const interval = setInterval(() => {
       setPosition({
         x: Math.random() * 20 - 10,
         y: Math.random() * 20 - 10,
       });
     }, 5000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [open]);
   const openForm = () => setOpen(true);
   const closeForm = () => setOpen(false);
   return (
