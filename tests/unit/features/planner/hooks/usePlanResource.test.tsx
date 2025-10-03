@@ -13,23 +13,58 @@ import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResour
 import { supabase } from '@/shared/lib/supabaseClient';
 
 function createWrapper(client: QueryClient) {
-  return ({ children }: { children: ReactNode }) => (
+  const QueryClientTestWrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
+  QueryClientTestWrapper.displayName = 'QueryClientTestWrapper';
+  return QueryClientTestWrapper;
 }
 
-function createBuilder(result: { data: unknown; error: unknown }) {
-  const builder: any = {
+interface MockQueryBuilder<TData> {
+  __updatePayload: unknown;
+  select: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  update: ReturnType<typeof vi.fn<(changes: unknown) => MockQueryBuilder<TData>>>;
+  eq: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  abortSignal: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  insert: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  upsert: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  order: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  gt: ReturnType<typeof vi.fn<() => MockQueryBuilder<TData>>>;
+  maybeSingle: ReturnType<
+    typeof vi.fn<() => Promise<{ data: TData; error: unknown }>>
+  >;
+  single: ReturnType<typeof vi.fn<() => Promise<{ data: TData; error: unknown }>>>;
+}
+
+function createBuilder<TData>(result: { data: TData; error: unknown }) {
+  const builder = {
     __updatePayload: undefined as unknown,
-    select: vi.fn(() => builder),
-    update: vi.fn((changes: unknown) => {
-      builder.__updatePayload = changes;
-      return builder;
-    }),
-    eq: vi.fn(() => builder),
-    abortSignal: vi.fn(() => builder),
-    single: vi.fn(async () => result),
-  };
+    select: vi.fn<() => MockQueryBuilder<TData>>(),
+    update: vi.fn<(changes: unknown) => MockQueryBuilder<TData>>(),
+    eq: vi.fn<() => MockQueryBuilder<TData>>(),
+    abortSignal: vi.fn<() => MockQueryBuilder<TData>>(),
+    insert: vi.fn<() => MockQueryBuilder<TData>>(),
+    upsert: vi.fn<() => MockQueryBuilder<TData>>(),
+    order: vi.fn<() => MockQueryBuilder<TData>>(),
+    gt: vi.fn<() => MockQueryBuilder<TData>>(),
+    maybeSingle: vi.fn<() => Promise<{ data: TData; error: unknown }>>(),
+    single: vi.fn<() => Promise<{ data: TData; error: unknown }>>(),
+  } as unknown as MockQueryBuilder<TData>;
+
+  builder.select.mockReturnValue(builder);
+  builder.update.mockImplementation((changes: unknown) => {
+    builder.__updatePayload = changes;
+    return builder;
+  });
+  builder.eq.mockReturnValue(builder);
+  builder.abortSignal.mockReturnValue(builder);
+  builder.insert.mockReturnValue(builder);
+  builder.upsert.mockReturnValue(builder);
+  builder.order.mockReturnValue(builder);
+  builder.gt.mockReturnValue(builder);
+  builder.maybeSingle.mockResolvedValue(result);
+  builder.single.mockResolvedValue(result);
+
   return builder;
 }
 
@@ -45,11 +80,13 @@ describe('usePlanResource', () => {
     const onSuccess = vi.fn();
 
     let callCount = 0;
-    vi.mocked(supabase.from).mockImplementation((table: string) => {
-      expect(table).toBe('plans');
-      callCount += 1;
-      return callCount === 1 ? fetchBuilder : updateBuilder;
-    });
+    vi.mocked(supabase.from).mockImplementation(
+      ((table: string) => {
+        expect(table).toBe('plans');
+        callCount += 1;
+        return callCount === 1 ? fetchBuilder : updateBuilder;
+      }) as never
+    );
 
     const { result } = renderHook(
       () =>
@@ -86,10 +123,12 @@ describe('usePlanResource', () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const builder = createBuilder({ data: { notes: 'Notes' }, error: null });
 
-    vi.mocked(supabase.from).mockImplementation((table: string) => {
-      expect(table).toBe('plan_days');
-      return builder;
-    });
+    vi.mocked(supabase.from).mockImplementation(
+      ((table: string) => {
+        expect(table).toBe('plan_days');
+        return builder;
+      }) as never
+    );
 
     const { result } = renderHook(
       () =>
@@ -146,7 +185,7 @@ describe('usePlanResource', () => {
     const builder = createBuilder({ data: null, error: null });
     builder.single.mockRejectedValue(error);
 
-    vi.mocked(supabase.from).mockImplementation(() => builder);
+    vi.mocked(supabase.from).mockImplementation((() => builder) as never);
 
     const { result } = renderHook(
       () =>
@@ -154,7 +193,6 @@ describe('usePlanResource', () => {
           planId: 'plan-4',
           resource: 'error-fetch',
           table: 'plans',
-          retry: false,
           enabled: false,
         }),
       { wrapper: createWrapper(client) }
@@ -178,10 +216,12 @@ describe('usePlanResource', () => {
     const updateBuilder = createBuilder({ data: null, error });
 
     let call = 0;
-    vi.mocked(supabase.from).mockImplementation(() => {
-      call += 1;
-      return call === 1 ? fetchBuilder : updateBuilder;
-    });
+    vi.mocked(supabase.from).mockImplementation(
+      (() => {
+        call += 1;
+        return call === 1 ? fetchBuilder : updateBuilder;
+      }) as never
+    );
 
     const { result } = renderHook(
       () =>

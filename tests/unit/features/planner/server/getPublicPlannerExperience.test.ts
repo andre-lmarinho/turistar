@@ -18,27 +18,58 @@ interface SupabaseResult<T> {
   error: unknown;
 }
 
-function createPlanQuery(
-  result: SupabaseResult<{
-    id: string;
-    title: string | null;
-    plan_destinations: { destinations: { name: string } }[] | null;
-  } | null>
-) {
-  const chain: any = {
-    select: vi.fn(() => chain),
-    eq: vi.fn(() => chain),
-    single: vi.fn(async () => result),
-  };
+type PlanRecord = {
+  id: string;
+  title: string | null;
+  plan_destinations: { destinations: { name: string } }[] | null;
+} | null;
+
+type DayRecord = SupabasePlanDayRow[] | null;
+
+interface PlanQueryChain {
+  select: ReturnType<typeof vi.fn<(columns: string) => PlanQueryChain>>;
+  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => PlanQueryChain>>;
+  single: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<PlanRecord>>>>;
+}
+
+interface DayQueryChain {
+  select: ReturnType<typeof vi.fn<(columns: string) => DayQueryChain>>;
+  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => DayQueryChain>>;
+  order: ReturnType<
+    typeof vi.fn<
+      (column: string, options: { ascending: boolean }) => Promise<SupabaseResult<DayRecord>>
+    >
+  >;
+}
+
+function createPlanQuery(result: SupabaseResult<PlanRecord>) {
+  const chain = {
+    select: vi.fn<(columns: string) => PlanQueryChain>(),
+    eq: vi.fn<(column: string, value: unknown) => PlanQueryChain>(),
+    single: vi.fn<() => Promise<SupabaseResult<PlanRecord>>>(),
+  } as unknown as PlanQueryChain;
+
+  chain.select.mockReturnValue(chain);
+  chain.eq.mockReturnValue(chain);
+  chain.single.mockResolvedValue(result);
+
   return chain;
 }
 
-function createDayQuery(result: SupabaseResult<SupabasePlanDayRow[] | null>) {
-  const chain: any = {
-    select: vi.fn(() => chain),
-    eq: vi.fn(() => chain),
-    order: vi.fn(async () => result),
-  };
+function createDayQuery(result: SupabaseResult<DayRecord>) {
+  const chain = {
+    select: vi.fn<(columns: string) => DayQueryChain>(),
+    eq: vi.fn<(column: string, value: unknown) => DayQueryChain>(),
+    order:
+      vi.fn<
+        (column: string, options: { ascending: boolean }) => Promise<SupabaseResult<DayRecord>>
+      >(),
+  } as unknown as DayQueryChain;
+
+  chain.select.mockReturnValue(chain);
+  chain.eq.mockReturnValue(chain);
+  chain.order.mockResolvedValue(result);
+
   return chain;
 }
 

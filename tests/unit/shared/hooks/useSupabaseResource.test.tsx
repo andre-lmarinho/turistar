@@ -6,9 +6,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
 
 function createWrapper(client: QueryClient) {
-  return ({ children }: { children: ReactNode }) => (
+  const QueryClientTestWrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
+  QueryClientTestWrapper.displayName = 'QueryClientTestWrapper';
+  return QueryClientTestWrapper;
 }
 
 async function flushMicrotasks() {
