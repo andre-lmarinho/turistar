@@ -13,11 +13,15 @@ export async function createPlan(title: string, dest: DestinationInfo, start: st
 
   const startDate = start.slice(0, 10);
   const endDate = end.slice(0, 10);
+  const toNullableFinite = (value: number | undefined): number | null =>
+    typeof value === 'number' && Number.isFinite(value) ? value : null;
+  const latitude = toNullableFinite(dest.latitude);
+  const longitude = toNullableFinite(dest.longitude);
   const { data, error } = await supabase.rpc('create_full_plan', {
     _title: title,
     _dest_name: dest.name,
-    _dest_lat: dest.latitude ?? null,
-    _dest_long: dest.longitude ?? null,
+    _dest_lat: latitude,
+    _dest_long: longitude,
     _start_date: startDate,
     _end_date: endDate,
   });

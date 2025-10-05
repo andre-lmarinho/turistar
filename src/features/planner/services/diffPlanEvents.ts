@@ -20,10 +20,20 @@ function ensureTitle(title: string | undefined, fallback: string): string {
   return trimmed && trimmed.length > 0 ? trimmed : fallback;
 }
 
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
 function sanitizeActivity(activity: Activity): Activity {
-  return {
+  const { latitude, longitude, ...base } = {
     ...activity,
     title: ensureTitle(activity.title, 'Untitled activity'),
+  };
+
+  return {
+    ...base,
+    ...(isFiniteNumber(latitude) ? { latitude } : {}),
+    ...(isFiniteNumber(longitude) ? { longitude } : {}),
   };
 }
 
