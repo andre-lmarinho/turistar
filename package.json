@@ -25,8 +25,7 @@
     "test:coverage": "vitest run --coverage -c config/vitest.config.ts",
     "warmup": "bash ./scripts/warmup.sh",
     "lhci": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json",
-    "prepare": "husky install",
-    "gen:types": "supabase gen types typescript --project-id YOUR_ID --schema public > src/types/supabase.ts",
+    "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/types/supabase.ts",
     "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
     "vercel:build": "npx vercel@latest build --debug",
     "check:vercel": "npm run vercel:pull && npm run vercel:build"
@@ -75,7 +74,6 @@
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "husky": "^8.0.0",
     "jest-axe": "^10.0.0",
     "jsdom": "^27.0.0",
     "prettier": "^3.6.2",

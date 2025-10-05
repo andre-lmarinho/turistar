@@ -2,64 +2,55 @@
 
 ## Development Commands
 
-- `npm run dev` – Start the Next.js development server with Turbopack
-- `npm run warmup` – Prime the development environment by running setup scripts
-- `npm run setup` – Install dependencies and run format, lint, and test in sequence
-- `npm run start` – Serve the production build locally
+- `npm run dev` - Start development server for web app
 
 ## Build Commands
 
-- `npm run build` – Build the production bundle
-- `npm run build:prod` – Alias for the production build (used by hosting providers)
-- `npm run serve:prod` – Run the production server on 0.0.0.0:3000
-- `npm run check:vercel` – Execute `vercel pull` + `vercel build` to validate deployment output
-- `npm run vercel:pull` – Fetch the latest Vercel environment configuration
-- `npm run vercel:build` – Run the local Vercel build with debug logs
+- `npm run build` - Build all packages and apps
+- `npm run build:prod` - Alias for the production build pipeline
+- `npm run start` - Serve the compiled build locally
+- `npm run clean` - Remove build artifacts and dependencies
 
 ## Lint & Type Check
 
-- `npm run format` – Format source and test files with Prettier
-- `npm run format:check` – Verify formatting without writing changes
-- `npm run lint` – Run ESLint with the shared config and auto-fixes
-- `npm run typecheck` – Run the TypeScript compiler in strict, no-emit mode
+- `npm run lint` - Run ESLint on codebase
+- `npm run typecheck` - Run TypeScript type checking
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Run format check with Prettier
 
 ## Testing Commands
 
 ### Unit & Integration Tests
 
-- `npm run test` – Execute the Vitest suite once (unit + integration)
-- `npm run test -- tests/unit/<file>.test.tsx` – Run a specific unit test file
-- `npm run test:watch` – Watch mode for iterative unit/integration testing
-- `npm run test:coverage` – Collect coverage with V8 instrumentation
+- `npm run test` - Run the Vitest suite once
+- `npm run test:watch` - Run Vitest in watch mode during development
+- `npm run test:coverage` - Generate coverage reports with Vitest
 
 ### End-to-End Tests
 
-- Turistar does not yet ship Playwright e2e tests; rely on integration coverage and manual QA flows.
+- Travel Planner does not include automated end-to-end scripts.
 
-## Supabase Commands
+## Database Commands
 
-- `npm run gen:types` – Generate Supabase TypeScript types into `src/types/supabase.ts`
-- `supabase start` – Optional local Supabase instance for offline development (requires Supabase CLI)
-- `supabase db reset` – Reset the local database when testing schema changes
+- `npm run gen:types` - Regenerate Supabase public schema
 
 ## Useful Development Patterns
 
 ### Running Single Tests
 
 ```bash
-# Run a single integration spec
-npm run test -- tests/integration/planner/drag-and-drop.spec.tsx
+# Run a single test file
+npm run test -- <relative-test-path>
 
-# Watch a unit test file while developing a component
-npm run test -- tests/unit/shared/components/map-card.test.tsx -- --watch
+# Focus on an integration test suite
+npm run test -- <relative-integration-test-path>
 
-# Generate Supabase types after updating the database schema
-npm run gen:types
+# Watch a specific test suite during refactors
+npm run test:watch -- <relative-test-path>
+
+# E2E test specific file
+e2e is not implemented
+
+# Run specific test by name
+e2e is not implemented
 ```
-
-### Environment Setup
-
-- Copy `.env.example` to `.env.local`
-- Provide `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `NEXT_PUBLIC_GEOAPIFY_KEY`
-- Add optional `SUPABASE_SERVICE_ROLE_KEY` for server-side automation scripts
-- Do not commit environment files—`.env.local` is ignored by Git

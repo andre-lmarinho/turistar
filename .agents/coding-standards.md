@@ -1,66 +1,35 @@
-# Coding Standards & Best Practices
-
 ## Import Guidelines
 
 ### Type Imports
 
 ```typescript
-// ✅ Good – Use type-only imports for TypeScript definitions
-import type { Metadata } from 'next';
-import type { Database } from '@/types/supabase';
+// ✅ Good - Use type imports for TypeScript types
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { NextRequest } from 'next/server';
 
-// ❌ Bad – Value imports for types trigger unnecessary runtime code
-import { Metadata } from 'next';
-import { Database } from '@/types/supabase';
+// ❌ Bad - Regular import for types
+import { SupabaseClient } from '@supabase/supabase-js';
 ```
-
-### Module Aliases
-
-- Prefer the `@/` alias instead of long relative paths: `import { PlannerControls } from '@/features/planner';`
-- Keep absolute imports grouped before relative imports; maintain alphabetical ordering within each group.
 
 ## Code Structure
 
 ### Early Returns
 
-- Guard against missing data (`if (!plan) return null;`) to keep components shallow and readable.
-- When fetching data, validate with Zod and exit early on parsing failures to prevent cascading errors.
+- Prefer early returns to reduce nesting: `if (!session) return redirect("/login");`
 
 ### Composition Over Prop Drilling
 
-- Share state through context providers (e.g., `PlannerContext`) and custom hooks.
-- Break complex UI into small components that compose shared primitives from `src/shared/ui`.
+- Use React children and context instead of passing props through multiple components
 
 ### Security Rules
 
 ```typescript
-// ❌ NEVER expose service-role secrets or unrestricted Supabase queries to the client
-const supabase = createClient(process.env.SUPABASE_SERVICE_ROLE_KEY!); // ❌ do not instantiate on the client
+// ❌ NEVER log or expose service-role keys
+const client = createSupabaseClient(process.env.SUPABASE_SERVICE_ROLE_KEY!); // ❌ avoid leaking secrets
 
-// ✅ Good – Use the shared server client and select explicit columns
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-
-const supabase = await createSupabaseServerClient();
-const { data } = await supabase
-  .from('plans')
-  .select('id, title, trip_start, trip_end')
-  .eq('user_id', userId);
+// ✅ Good - Scope keys to secure environments and never send them to the client
+const client = createSupabaseClient({
+  serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  anonymousKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+});
 ```
-
-## Component Patterns
-
-- Implement new UI with React function components and TypeScript typings for props.
-- Follow `docs/COMMENTING.md`: add path banner comments and document custom hooks with summary blocks.
-- Keep planner-specific logic under `src/features/planner/` and export a single default component per file when possible.
-
-## Styling
-
-- Favor Tailwind utility classes; extend variants with `class-variance-authority` when components need style permutations.
-- Update `src/app/globals.css` tokens if introducing new theme colors or spacing values.
-- Avoid inline styles except for dynamic CSS variables.
-
-## Tooling Requirements
-
-- All documentation, code comments, commit messages, and PR descriptions must be written in English.
-- Run `npm run format`, `npm run lint`, `npm run typecheck`, and `npm run test` before pushing changes.
-- Commit messages must be written in clear, descriptive English.

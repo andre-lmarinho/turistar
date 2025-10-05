@@ -1,66 +1,151 @@
 # Knowledge Base - Product & Domain-Specific Information
 
-## Repo note for andre-lmarinho/travel-planner
+## Repo note for travel-planner/travel-planner
 
-Turistar is a single Next.js 15 application (React 19, TypeScript, Tailwind) that lives entirely in the `src/` directory. There are no workspaces or sub-packages—focus all changes within this app. Use Node.js 20.x and npm 10.x to match CI.
+The whole thing is a monorepo. You need to be working in the src/features folder.
 
-Linting and Formatting
+### Linting and Formatting
 
-- Run `npm run format` to apply Prettier with semicolons, single quotes, and 100-character width
-- Run `npm run lint` to execute ESLint with project rules (auto-fixing is enabled by default)
-- Run `npm run typecheck` to confirm the TypeScript program compiles cleanly
+- Run lint: `npm run lint`
+- Run type checking: `npm run typecheck`
+- Run code format: `npm run format`
 
-Development
+### PR Requirements
 
-- Install dependencies via `npm install`
-- Copy `.env.example` to `.env.local`
-- Provide Supabase (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, optional `SUPABASE_SERVICE_ROLE_KEY`) and Geoapify (`NEXT_PUBLIC_GEOAPIFY_KEY`) credentials
-- Start the development server with `npm run dev`
+- PR title must follow Conventional Commits specification
+- For most PRs, you only need to run linting, format and type checking
 
-Database Setup
+## Basic Performance Guidelines
 
-- The hosted Supabase project powers persistence; local development can use Supabase CLI for an offline database if desired
-- Generate typed bindings after schema updates using `npm run gen:types`
-- Never expose service role keys in client bundles—keep privileged access in server-only utilities inside `src/shared/lib/`
+- Aim for O(n) or O(n log n) complexity, avoid O(n²)
+- Use database-level filtering instead of JavaScript filtering
+- Consider pagination for large datasets
+- Use database transactions for related operations
 
-PR Requirements
+## File Naming Conventions
 
-- Commit messages must be clear, concise, and written in English
-- Every PR must pass `npm run format`, `npm run lint`, `npm run typecheck`, and `npm run test`
-- Update relevant docs in `docs/` when behavior, APIs, or environment variables change
-- Keep Supabase types (`src/types/supabase.ts`) and planner schemas in sync when modifying database tables
+### Repository Files
 
-Accessibility
+- **Must** include `Repository` suffix, PascalCase matching class: `PlannerRepository.ts`
 
-- Adhere to the checklist in `docs/ACCESSIBILITY.md` for each UI change
-- Provide accessible names for map components using `aria-label="Itinerary map"`
-- Ensure drag-and-drop interactions remain keyboard accessible through focus management hooks in `src/features/planner/hooks`
+### Service Files
 
-Testing
+- **Must** include `Service` suffix, PascalCase matching class, avoid generic names: `MembershipService.ts`
 
-- Vitest + React Testing Library cover unit and integration scenarios; add tests under `tests/unit` or `tests/integration` mirroring source paths
-- Global testing utilities live in `config/vitest.setup.tsx` and stub Next.js modules plus Leaflet CSS imports
-- Accessibility assertions leverage `jest-axe`; include or update them when adjusting semantic markup
+### General Files
 
-State & Data Flow
+- **Components**: PascalCase (e.g., `ContactForm.tsx`)
+- **Utilities**: kebab-case (e.g., `date-utils.ts`)
+- **Types**: PascalCase with `.types.ts` suffix (e.g., `Contact.types.ts`)
+- **Tests**: Same as source file + `.test.ts` or `.spec.ts`
+- **Avoid**: Dot-suffixes like `.service.ts`, `.repository.ts` (except for tests, types, specs)
 
-- Planner data is managed via `PlannerContext` with persistence handled by hooks such as `usePlanDaysSupabase`
-- The drag-and-drop board relies on `useDnDPlanner` and `useDragState`; extend these hooks rather than reimplementing sensors
-- Sample itineraries in `src/data/` should remain read-only; create new fixtures there for demos instead of mutating at runtime
+## Avoid barrel imports
 
-API Integrations
+```typescript
+// ❌ Bad - Avoid importing from index.ts barrel files
+import { BookingService, UserService } from './services';
 
-- `/api/search` proxies Geoapify lookups; sanitize all inputs and limit results using helper functions in `src/server/api`
-- Server actions in `src/server/` centralize Supabase mutations; reuse them from components to keep business logic off the client
+// ✅ Good - Import directly from source files
+import { BookingService } from './services/BookingService';
+import { UserService } from './services/UserService';
 
-Deployment & Observability
+// ❌ Bad
+import { Button } from '@src/ui';
 
-- Use `npm run check:vercel` before shipping changes that influence build output, metadata, or environment configuration
-- Security headers are defined in `config/securityHeaders.ts` and applied in `next.config.ts`; update both together when altering policies
-- Logging should avoid leaking secrets—surface only user-friendly messages to the client and log details server-side via shared utilities
+// ✅ Good - Import directly from source files
+import { Button } from '@src/ui/components/button';
+```
 
-Documentation Expectations
+## When creating pull requests
 
-- Follow `docs/COMMENTING.md` for path banners and hook summaries
-- Keep architecture, testing, and deployment docs up to date alongside code changes
-- All written communication (docs, comments, commit messages, PR summaries) must be in English
+Create pull requests in draft mode by default, so that actual human can mark it as ready for review only when it is.
+
+When making changes to this codebase, always run type checks locally using before concluding that CI failures are unrelated to your changes. Even if errors appear in files you haven't directly modified, your changes might still be causing type issues through dependencies or type inference. Compare type check results between the main branch and your feature branch to confirm whether you've introduced new type errors.
+
+### Title
+
+- Use conventional commits: `feat:`, `fix:`, `refactor:`
+- Be specific: `fix: handle timezone edge case in project creation`
+- Not generic: `fix: project bug`
+
+### Size Limits
+
+- **Large PRs** (>500 lines or >10 files) are not recommended.
+- Guide the user how to split large PRs into smaller ones.
+
+## When reviewing pull requests
+
+When asked to review a PR, focus on providing a clear summary of what the PR is doing and its core functionality. Avoid getting sidetracked by CI failures, testing issues, or technical implementation details unless specifically requested. The user prefers concise, focused reviews that prioritize understanding the main purpose and changes of the PR.
+
+## When handling errors
+
+### Descriptive Errors
+
+```typescript
+// ✅ Good - Provide context for failures
+throw new Error(`Failed to render special card for ${project.slug}`);
+
+// ❌ Bad - Too generic
+throw new Error('Render failed');
+```
+
+### Error Types
+
+```typescript
+// ✅ Good - Use domain-specific helpers
+function assertProject(project?: ProjectMeta): asserts project is ProjectMeta {
+  if (!project) {
+    throw new Error('Project configuration is missing');
+  }
+}
+```
+
+## When working on type issues
+
+Type casting with "as any" is strictly forbidden. When encountering Supabase type incompatibilities or other TypeScript type issues, proper type-safe solutions must be used instead, such as Supabase extensions system, type parameter constraints, repository pattern isolation, explicit type definitions, and extension composition patterns that are already established in the codebase.
+
+## When working with branches
+
+When asked to move changes to a different branch, use git commands to commit existing changes to the specified branch rather than redoing the work. This is more efficient and prevents duplication of effort. The user prefers direct branch operations over reimplementing the same changes multiple times.
+
+## When working with CI/CD
+
+When reviewing CI check failures:
+
+1. E2E tests can be flaky and may fail intermittently
+2. Focus only on CI failures that are directly related to your code changes
+3. Infrastructure-related failures (like dependency installation issues) can be disregarded if all code-specific checks (type checking, linting, unit tests) are passing
+
+## When working with git and CI systems
+
+Always push committed changes to the remote repository before waiting for or checking CI status. Waiting for CI checks on unpushed local commits is backwards - the CI runs on the remote repository state, not local commits. The proper sequence is: commit locally, run local checks, push to remote, then monitor CI status.
+
+## When adding new UI elements or text strings
+
+All UI strings must be properly translated using the i18n system. This includes:
+
+- Labels for new UI elements (like dropdown labels, settings headers)
+- Option values that are displayed to users
+- Any text that appears in the interface
+
+Even if some related strings are already translated (like "Planning" and "Insights"), new strings must be explicitly added to the translation system.
+
+## When developing Playwright tests
+
+Always ensure Playwright tests pass locally before pushing code. The user requires fast local e2e feedback loops instead of relying on CI, which is too slow for development iteration. Never push test code until those tests are passing locally first.
+
+## When fixing failing tests
+
+When fixing failing tests, take an incremental approach by addressing one file at a time rather than attempting to fix all issues simultaneously. This methodical approach makes it easier to identify and resolve specific issues without getting overwhelmed by the complexity of multiple failing tests across different files. Focus on getting each file's tests passing completely before moving on to the next file.
+
+To identify and fix issues:
+
+1. Run `npm run typecheck` to identify TypeScript type errors and get fresh results always, bypassing any caching issues
+2. Run `npm run test` to identify failing unit tests
+3. Address both type errors and failing tests before considering the task complete
+4. Type errors often need to be fixed first as they may be causing the test failures
+
+## When implementing mocks
+
+When mocking tests, prefer implementing simpler mock designs that directly implement the required interfaces rather than trying to match complex deep mock structures created with mockDeep. This approach is more maintainable and helps resolve type compatibility issues. The user encourages creative solutions and refactoring to better designs when the standard mocking approach causes persistent type errors.
