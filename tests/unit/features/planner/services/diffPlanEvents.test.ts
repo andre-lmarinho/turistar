@@ -3,6 +3,11 @@
 import { describe, expect, it } from 'vitest';
 
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type {
+  ActivityCreatedPayload,
+  ActivityUpdatedPayload,
+  DayCreatedPayload,
+} from '@/features/planner/domain/types/PlanEvent';
 import { diffPlanEvents } from '@/features/planner/services/diffPlanEvents';
 
 const baseDay = {
@@ -135,15 +140,25 @@ describe('diffPlanEvents', () => {
 
     const createdDay = events.find((event) => event.type === 'day.created');
     expect(createdDay).toBeDefined();
-    const activityFromDay = createdDay?.payload.day.activities[0];
+    if (!createdDay || createdDay.type !== 'day.created') {
+      throw new Error('Expected to find a day.created event');
+    }
+
+    const dayPayload = createdDay.payload as DayCreatedPayload;
+    const activityFromDay = dayPayload.day.activities[0];
     expect(activityFromDay).toBeDefined();
     expect(activityFromDay).not.toHaveProperty('latitude');
     expect(activityFromDay).not.toHaveProperty('longitude');
 
     const activityCreated = events.find((event) => event.type === 'activity.created');
     expect(activityCreated).toBeDefined();
-    expect(activityCreated?.payload.activity).not.toHaveProperty('latitude');
-    expect(activityCreated?.payload.activity).not.toHaveProperty('longitude');
+    if (!activityCreated || activityCreated.type !== 'activity.created') {
+      throw new Error('Expected to find an activity.created event');
+    }
+
+    const createdPayload = activityCreated.payload as ActivityCreatedPayload;
+    expect(createdPayload.activity).not.toHaveProperty('latitude');
+    expect(createdPayload.activity).not.toHaveProperty('longitude');
   });
 
   it('drops non-finite coordinates from update patches', () => {
@@ -187,7 +202,12 @@ describe('diffPlanEvents', () => {
 
     const updateEvent = events.find((event) => event.type === 'activity.updated');
     expect(updateEvent).toBeDefined();
-    expect(updateEvent?.payload.patch).not.toHaveProperty('latitude');
-    expect(updateEvent?.payload.patch).not.toHaveProperty('longitude');
+    if (!updateEvent || updateEvent.type !== 'activity.updated') {
+      throw new Error('Expected to find an activity.updated event');
+    }
+
+    const updatePayload = updateEvent.payload as ActivityUpdatedPayload;
+    expect(updatePayload.patch).not.toHaveProperty('latitude');
+    expect(updatePayload.patch).not.toHaveProperty('longitude');
   });
 });
