@@ -9,7 +9,9 @@ import { createPlan } from '@/server/actions/createPlan';
 
 function mockSupabaseRpc(response: unknown) {
   const rpc = vi.fn().mockResolvedValue(response);
-  vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+  vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+    typeof supabaseServer
+  >);
   return rpc;
 }
 
@@ -87,16 +89,16 @@ describe('createPlan action', () => {
   });
 
   it('throws a friendly error when destination name is empty', async () => {
-    await expect(
-      createPlan('Trip', { name: '   ' }, '2024-03-01', '2024-03-02')
-    ).rejects.toThrow('Destination name cannot be empty.');
+    await expect(createPlan('Trip', { name: '   ' }, '2024-03-01', '2024-03-02')).rejects.toThrow(
+      'Destination name cannot be empty.'
+    );
     expect(supabaseServer).not.toHaveBeenCalled();
   });
 
   it('throws a friendly error when end date is before start date', async () => {
-    await expect(
-      createPlan('Trip', { name: 'Tokyo' }, '2024-05-05', '2024-05-01')
-    ).rejects.toThrow('End date must be on or after the start date.');
+    await expect(createPlan('Trip', { name: 'Tokyo' }, '2024-05-05', '2024-05-01')).rejects.toThrow(
+      'End date must be on or after the start date.'
+    );
     expect(supabaseServer).not.toHaveBeenCalled();
   });
 });

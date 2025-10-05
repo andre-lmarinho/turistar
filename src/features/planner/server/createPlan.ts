@@ -2,10 +2,7 @@
 'use server';
 
 import { createPlan as createPlanAction } from '@/server/actions/createPlan';
-import type {
-  CreatePlanInput,
-  PlanDestinationInput,
-} from '@/server/actions/planSchemas';
+import type { CreatePlanInput, PlanDestinationInput } from '@/server/actions/planSchemas';
 
 export type PlannerDestination = PlanDestinationInput;
 
