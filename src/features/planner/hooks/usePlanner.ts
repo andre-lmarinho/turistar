@@ -23,12 +23,15 @@ interface UsePlannerOptions {
 export function usePlanner(options: UsePlannerOptions = {}) {
   const params = useSearchParams();
   const urlDest = params.get('dest')?.trim().toLowerCase() ?? '';
-  const latStr = params.get('lat');
-  const lngStr = params.get('lng');
-  const lat = latStr != null ? Number(latStr) : undefined;
-  const lng = lngStr != null ? Number(lngStr) : undefined;
-  const destCoords =
-    lat != null && lng != null && !Number.isNaN(lat) && !Number.isNaN(lng) ? { lat, lng } : null;
+  const parseFiniteParam = (value: string | null): number | null => {
+    if (value == null) return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+
+  const lat = parseFiniteParam(params.get('lat'));
+  const lng = parseFiniteParam(params.get('lng'));
+  const destCoords = lat != null && lng != null ? { lat, lng } : null;
   const dest = options.dest ?? urlDest;
   const planId = options.planId ?? '';
 

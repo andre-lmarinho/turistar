@@ -46,4 +46,19 @@ describe('usePlanner', () => {
     rerender({ init: plan });
     expect(result.current.days).toEqual(plan);
   });
+
+  test('ignores non-finite destination coordinates from query params', () => {
+    const start = '2023-01-01T00:00:00.000Z';
+    const end = '2023-01-02T00:00:00.000Z';
+    params = new URLSearchParams({
+      start,
+      end,
+      lat: `${Number.POSITIVE_INFINITY}`,
+      lng: `${Number.NEGATIVE_INFINITY}`,
+    });
+
+    const { result } = renderHook(() => usePlanner({ initialDays: [] }));
+
+    expect(result.current.destCoords).toBeNull();
+  });
 });
