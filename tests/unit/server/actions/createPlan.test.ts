@@ -7,13 +7,19 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { createPlan } from '@/server/actions/createPlan';
 
+function mockSupabaseRpc(response: unknown) {
+  const rpc = vi.fn().mockResolvedValue(response);
+  vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+  return rpc;
+}
+
 describe('createPlan action', () => {
   beforeEach(() => {
     vi.mocked(supabaseServer).mockReset();
   });
 
   it('sends formatted payload and supports array responses', async () => {
-    const rpc = vi.fn().mockResolvedValue({
+    const rpc = mockSupabaseRpc({
       data: [
         {
           plan_id: 'plan-1',
@@ -23,13 +29,10 @@ describe('createPlan action', () => {
       ],
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
 
     const result = await createPlan(
-      'Trip to Paris',
-      { name: 'Paris', latitude: 1.23, longitude: 4.56 },
+      '  Trip to Paris  ',
+      { name: '  Paris  ', latitude: 1.23, longitude: 4.56 },
       '2024-01-01T10:00:00Z',
       '2024-01-05T12:00:00Z'
     );
@@ -46,7 +49,7 @@ describe('createPlan action', () => {
   });
 
   it('supports object responses from RPC', async () => {
-    const rpc = vi.fn().mockResolvedValue({
+    const rpc = mockSupabaseRpc({
       data: {
         plan_id: 'plan-2',
         public_slug: 'slug-2',
@@ -54,9 +57,6 @@ describe('createPlan action', () => {
       },
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
 
     const result = await createPlan('Title', { name: 'Lisbon' }, '2024-02-01', '2024-02-10');
 
@@ -73,22 +73,30 @@ describe('createPlan action', () => {
 
   it('throws when the RPC returns an error', async () => {
     const error = new Error('failed');
-    const rpc = vi.fn().mockResolvedValue({ data: null, error });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
+    mockSupabaseRpc({ data: null, error });
 
     await expect(createPlan('x', { name: 'Y' }, '2024-01-01', '2024-01-02')).rejects.toBe(error);
   });
 
   it('throws when the RPC does not return data', async () => {
-    const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
+    mockSupabaseRpc({ data: null, error: null });
 
     await expect(createPlan('x', { name: 'Y' }, '2024-01-01', '2024-01-02')).rejects.toThrow(
       'Failed to create plan'
     );
+  });
+
+  it('throws a friendly error when destination name is empty', async () => {
+    await expect(
+      createPlan('Trip', { name: '   ' }, '2024-03-01', '2024-03-02')
+    ).rejects.toThrow('Destination name cannot be empty.');
+    expect(supabaseServer).not.toHaveBeenCalled();
+  });
+
+  it('throws a friendly error when end date is before start date', async () => {
+    await expect(
+      createPlan('Trip', { name: 'Tokyo' }, '2024-05-05', '2024-05-01')
+    ).rejects.toThrow('End date must be on or after the start date.');
+    expect(supabaseServer).not.toHaveBeenCalled();
   });
 });

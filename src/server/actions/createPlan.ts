@@ -1,25 +1,48 @@
 // src/server/actions/createPlan.ts
 'use server';
+
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
-interface DestinationInfo {
-  name: string;
-  latitude?: number;
-  longitude?: number;
-}
+import {
+  createPlanSchema,
+  getFriendlyZodMessage,
+  type CreatePlanInput,
+  type PlanDestinationInput,
+} from './planSchemas';
 
-export async function createPlan(title: string, dest: DestinationInfo, start: string, end: string) {
+export type { PlanDestinationInput } from './planSchemas';
+
+export async function createPlan(
+  title: CreatePlanInput['title'],
+  dest: PlanDestinationInput,
+  start: CreatePlanInput['startDate'],
+  end: CreatePlanInput['endDate']
+) {
+  let parsed;
+  try {
+    parsed = createPlanSchema.parse({
+      title,
+      destination: dest,
+      startDate: start,
+      endDate: end,
+    });
+  } catch (error) {
+    throw new Error(getFriendlyZodMessage(error, 'Invalid plan details.'));
+  }
+
+  const { title: safeTitle, destination, startDate, endDate } = parsed;
   const supabase = supabaseServer();
 
-  const startDate = start.slice(0, 10);
-  const endDate = end.slice(0, 10);
+  const startISODate = startDate.toISOString().slice(0, 10);
+  const endISODate = endDate.toISOString().slice(0, 10);
+
   const { data, error } = await supabase.rpc('create_full_plan', {
-    _title: title,
-    _dest_name: dest.name,
-    _dest_lat: dest.latitude ?? null,
-    _dest_long: dest.longitude ?? null,
-    _start_date: startDate,
-    _end_date: endDate,
+    _title: safeTitle,
+    _dest_name: destination.name,
+    _dest_lat: destination.latitude ?? null,
+    _dest_long: destination.longitude ?? null,
+    _start_date: startISODate,
+    _end_date: endISODate,
   });
 
   if (error || !data) throw error ?? new Error('Failed to create plan');

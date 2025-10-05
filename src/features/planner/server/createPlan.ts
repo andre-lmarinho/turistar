@@ -2,19 +2,14 @@
 'use server';
 
 import { createPlan as createPlanAction } from '@/server/actions/createPlan';
+import type {
+  CreatePlanInput,
+  PlanDestinationInput,
+} from '@/server/actions/planSchemas';
 
-export interface PlannerDestination {
-  name: string;
-  latitude?: number;
-  longitude?: number;
-}
+export type PlannerDestination = PlanDestinationInput;
 
-export interface CreatePlannerPlanInput {
-  title: string;
-  destination: PlannerDestination;
-  startDate: string;
-  endDate: string;
-}
+export type CreatePlannerPlanInput = CreatePlanInput;
 
 export interface PlannerRecentPlanPayload {
   id: string;
@@ -56,8 +51,8 @@ export async function createPlannerPlan({
       id,
       slug: publicSlug,
       dest: destination.name,
-      start: startDate,
-      end: endDate,
+      start: typeof startDate === 'string' ? startDate : new Date(startDate).toISOString(),
+      end: typeof endDate === 'string' ? endDate : new Date(endDate).toISOString(),
     },
   };
 }
