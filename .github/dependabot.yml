@@ -10,3 +10,8 @@ updates:
       prefix-development: '⬆️'
     labels:
       - dependencies
+    groups:
+      dependencies:
+        dependency-type: 'production'
+      devDependencies:
+        dependency-type: 'development'
