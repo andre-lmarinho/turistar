@@ -1,0 +1,19 @@
+{
+  "autocomplete": [
+    {
+      "name": "Paris, France",
+      "latitude": 48.8566,
+      "longitude": 2.3522
+    },
+    {
+      "name": "New York, United States",
+      "latitude": 40.7128,
+      "longitude": -74.006
+    },
+    {
+      "name": "Tokyo, Japan",
+      "latitude": 35.6762,
+      "longitude": 139.6503
+    }
+  ]
+}

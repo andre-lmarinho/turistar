@@ -21,7 +21,7 @@
     ],
     "baseUrl": ".",
     "paths": { "@/*": ["./src/*"], "jest-axe": ["./tests/types/jest-axe.d.ts"] },
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node", "@playwright/test"]
   },
   "include": ["src", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

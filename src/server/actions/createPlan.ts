@@ -1,6 +1,8 @@
 // src/server/actions/createPlan.ts
 'use server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
+import type { Database } from '@/shared/types/supabase';
 
 interface DestinationInfo {
   name: string;
@@ -8,8 +10,14 @@ interface DestinationInfo {
   longitude?: number;
 }
 
-export async function createPlan(title: string, dest: DestinationInfo, start: string, end: string) {
-  const supabase = supabaseServer();
+export async function createPlan(
+  title: string,
+  dest: DestinationInfo,
+  start: string,
+  end: string,
+  client: SupabaseClient<Database> = supabaseServer()
+) {
+  const supabase = client;
 
   const startDate = start.slice(0, 10);
   const endDate = end.slice(0, 10);

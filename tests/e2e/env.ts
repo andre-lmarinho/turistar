@@ -1,3 +1,5 @@
+import { resetSupabaseMock } from './mocks/supabase';
+
 const DEFAULT_E2E_ENV = {
   NEXT_PUBLIC_E2E: '1',
   NEXT_PUBLIC_SITE_URL: 'http://127.0.0.1:3100',
@@ -15,6 +17,10 @@ export const applyE2EEnv = () => {
 };
 
 applyE2EEnv();
+
+if (process.env.NEXT_PUBLIC_E2E === '1') {
+  resetSupabaseMock();
+}
 
 export type E2EEnvKey = keyof typeof DEFAULT_E2E_ENV;
 
