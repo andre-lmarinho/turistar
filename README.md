@@ -214,7 +214,7 @@ For more details on project conventions, see:
 
 ## License
 
-This project is open-source under the [MIT License](LICENSE).
+This project is open-source under the [GNU Affero General Public License v3.0](LICENSE).
 
 ---
 
