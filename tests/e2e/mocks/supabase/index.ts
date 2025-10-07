@@ -22,6 +22,27 @@ type PlanState = {
   events: PlanEventRow[];
 };
 
+type PlanEventInput = {
+  id: string;
+  type: string;
+  payload: unknown;
+  actorId?: string | null;
+};
+
+type RpcParams = {
+  create_full_plan: { _title?: string | null };
+  append_plan_events: {
+    plan_id: string;
+    base_version?: number | string | null;
+    events?: PlanEventInput[];
+  };
+  update_plan_title: {
+    _plan_id: string;
+    _edit_token: string;
+    _new_title?: string | null;
+  };
+};
+
 type EqFilters = Record<string, unknown>;
 type GtFilters = Record<string, number>;
 
@@ -110,11 +131,15 @@ class MockSupabaseClientImpl {
     this.currentVersion = this.plan.snapshots.at(-1)?.version ?? 0;
   }
 
-  async rpc(name: string, params: Record<string, any>) {
+  async rpc<TName extends keyof RpcParams>(
+    name: TName,
+    params: RpcParams[TName]
+  ): Promise<{ data: unknown; error: Error | null }> {
     switch (name) {
       case 'create_full_plan': {
+        const rpcParams = params as RpcParams['create_full_plan'];
         this.resetState();
-        this.plan.title = params._title ?? this.plan.title;
+        this.plan.title = rpcParams._title ?? this.plan.title;
         const snapshot = this.plan.snapshots[0];
         snapshot.updated_at = new Date().toISOString();
         this.currentVersion = snapshot.version ?? 0;
@@ -128,9 +153,10 @@ class MockSupabaseClientImpl {
         };
       }
       case 'append_plan_events': {
-        const planId = params.plan_id as string;
-        const baseVersion = Number(params.base_version ?? 0);
-        const events = Array.isArray(params.events) ? params.events : [];
+        const rpcParams = params as RpcParams['append_plan_events'];
+        const planId = rpcParams.plan_id;
+        const baseVersion = Number(rpcParams.base_version ?? 0);
+        const events: PlanEventInput[] = rpcParams.events ?? [];
 
         if (planId !== this.plan.plan_id) {
           return { data: null, error: new Error('Unknown plan') };
@@ -145,7 +171,7 @@ class MockSupabaseClientImpl {
           };
         }
 
-        const inserted: PlanEventRow[] = events.map((event: any) => {
+        const inserted: PlanEventRow[] = events.map((event: PlanEventInput) => {
           this.currentVersion += 1;
           const stored: PlanEventRow = {
             event_id: event.id,
@@ -173,8 +199,9 @@ class MockSupabaseClientImpl {
         };
       }
       case 'update_plan_title': {
-        if (params._plan_id === this.plan.plan_id) {
-          this.plan.title = params._new_title ?? this.plan.title;
+        const rpcParams = params as RpcParams['update_plan_title'];
+        if (rpcParams._plan_id === this.plan.plan_id) {
+          this.plan.title = rpcParams._new_title ?? this.plan.title;
         }
         return { data: null, error: null };
       }
