@@ -76,7 +76,10 @@ class MockQueryBuilder<TTable extends TableName> {
   private gtFilters: GtFilters = {};
   private orderFilter: OrderFilter | null = null;
 
-  constructor(private table: TTable, private client: MockSupabaseClientImpl) {}
+  constructor(
+    private table: TTable,
+    private client: MockSupabaseClientImpl
+  ) {}
 
   select() {
     return this;
@@ -235,9 +238,7 @@ class MockSupabaseClientImpl {
       rows = rows.filter((row) => row.version > gt.version);
     }
     if (order?.column === 'version') {
-      rows.sort((a, b) =>
-        order.ascending ? a.version - b.version : b.version - a.version
-      );
+      rows.sort((a, b) => (order.ascending ? a.version - b.version : b.version - a.version));
     }
     return rows.map((row) => ({ ...row }));
   }

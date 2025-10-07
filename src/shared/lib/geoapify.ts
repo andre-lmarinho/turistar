@@ -106,9 +106,7 @@ if (isE2E) {
     const normalized = text.trim().toLowerCase();
     return fixedResults
       .filter((place) =>
-        normalized.length === 0
-          ? true
-          : place.name.toLowerCase().includes(normalized)
+        normalized.length === 0 ? true : place.name.toLowerCase().includes(normalized)
       )
       .map((place) => ({ ...place }));
   };
