@@ -43,6 +43,7 @@ function mapActivityRow(activity: SupabaseActivityRow) {
     longitude: activity.longitude ?? undefined,
     budget: activity.budget ?? undefined,
     imageUrl: activity.image_url ?? undefined,
+    position: activity.position != null ? String(activity.position) : undefined,
   } satisfies DayPlan['activities'][number];
 }
 
@@ -54,6 +55,14 @@ export function mapPlanDaysFromSupabase(rows: SupabasePlanDayRow[] | null | unde
   return rows.map((day) => ({
     id: day.date,
     label: format(parseISO(day.date), 'EEE, dd MMM'),
-    activities: (day.activities ?? []).map(mapActivityRow),
+    activities: (day.activities ?? [])
+      .slice()
+      .sort((a, b) => {
+        if (a.position == null && b.position == null) return 0;
+        if (a.position == null) return 1;
+        if (b.position == null) return -1;
+        return a.position - b.position;
+      })
+      .map(mapActivityRow),
   }));
 }

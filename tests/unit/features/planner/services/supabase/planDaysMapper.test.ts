@@ -48,6 +48,7 @@ describe('mapPlanDaysFromSupabase', () => {
             id: 'activity-1',
             title: 'Visit the museum',
             color: '#123456',
+            position: '0',
             address: '123 Museum Rd',
             category: 'culture',
             description: 'Explore art exhibits',
@@ -102,6 +103,7 @@ describe('mapPlanDaysFromSupabase', () => {
           id: 'activity-2',
           title: '',
           color: DEFAULT_COLOR,
+          position: '1',
           address: undefined,
           category: undefined,
           description: undefined,
@@ -126,5 +128,52 @@ describe('mapPlanDaysFromSupabase', () => {
     expect(mapPlanDaysFromSupabase(null)).toEqual([]);
     expect(mapPlanDaysFromSupabase(undefined)).toEqual([]);
     expect(mapPlanDaysFromSupabase([])).toEqual([]);
+  });
+
+  it('sorts activities by position before mapping', () => {
+    const rows: SupabasePlanDayRow[] = [
+      {
+        date: '2024-07-08',
+        activities: [
+          {
+            id: 'b',
+            day_id: 'day-1',
+            title: 'second',
+            color: null,
+            address: null,
+            category: null,
+            description: null,
+            start_time: null,
+            duration: null,
+            latitude: null,
+            longitude: null,
+            budget: null,
+            image_url: null,
+            position: 2000,
+          },
+          {
+            id: 'a',
+            day_id: 'day-1',
+            title: 'first',
+            color: null,
+            address: null,
+            category: null,
+            description: null,
+            start_time: null,
+            duration: null,
+            latitude: null,
+            longitude: null,
+            budget: null,
+            image_url: null,
+            position: 1000,
+          },
+        ],
+      },
+    ];
+
+    const [day] = mapPlanDaysFromSupabase(rows);
+
+    expect(day.activities.map((activity) => activity.id)).toEqual(['a', 'b']);
+    expect(day.activities.map((activity) => activity.position)).toEqual(['1000', '2000']);
   });
 });
