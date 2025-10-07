@@ -1,0 +1,26 @@
+{
+  "plan": {
+    "plan_id": "plan-e2e-001",
+    "public_slug": "plan-e2e-001",
+    "edit_token": "edit-token-e2e",
+    "title": "Playwright E2E Plan",
+    "snapshots": [
+      {
+        "plan_id": "plan-e2e-001",
+        "version": 0,
+        "state": {
+          "days": [
+            {
+              "id": "day-1",
+              "label": "Day 1",
+              "position": "a",
+              "activities": []
+            }
+          ]
+        },
+        "updated_at": "2024-01-01T00:00:00.000Z"
+      }
+    ],
+    "events": []
+  }
+}

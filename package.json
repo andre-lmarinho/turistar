@@ -11,6 +11,7 @@
   "packageManager": "npm@10.9.3",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:e2e": "NEXT_PUBLIC_E2E=1 next dev --turbopack --port 3100",
     "build": "next build",
     "build:prod": "next build",
     "start": "next start",
@@ -24,6 +25,8 @@
     "test": "vitest run -c config/vitest.config.ts",
     "test:watch": "vitest --watch -c config/vitest.config.ts",
     "test:coverage": "vitest run --coverage -c config/vitest.config.ts",
+    "e2e": "playwright test -c config/playwright.config.ts",
+    "e2e:update": "playwright test -c config/playwright.config.ts --update-snapshots",
     "warmup": "bash ./scripts/warmup.sh",
     "lhci": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json",
     "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/types/supabase.ts",
@@ -58,6 +61,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.56.0",
     "@tailwindcss/postcss": "^4",
     "@tanstack/react-query-devtools": "^5.81.5",
     "@testing-library/jest-dom": "^6.8.0",

@@ -5,6 +5,14 @@
 import type { AutocompletePlace } from '@/shared/types/locations';
 import { clientEnv } from './clientEnv';
 
+const isE2E = process.env.NEXT_PUBLIC_E2E === '1';
+
+type GeoapifyAutocompleteProvider = (
+  text: string,
+  lat?: number,
+  lon?: number
+) => Promise<AutocompletePlace[]>;
+
 /* Types */
 type GeoapifyFeature = {
   properties: {
@@ -66,11 +74,7 @@ async function fetchGeoapifyAutocompleteInternal({
   return data.features.filter((f) => allowedResultTypes.has(f.properties.result_type ?? ''));
 }
 
-export async function fetchGeoapifyAutocomplete(
-  text: string,
-  lat?: number,
-  lon?: number
-): Promise<AutocompletePlace[]> {
+const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, lat, lon) => {
   const allowed = new Set(['city', 'state', 'country']);
   const features = await fetchGeoapifyAutocompleteInternal({
     text,
@@ -89,6 +93,35 @@ export async function fetchGeoapifyAutocomplete(
     latitude: f.properties.lat,
     longitude: f.properties.lon,
   }));
+};
+
+let autocompleteProvider: GeoapifyAutocompleteProvider = defaultAutocompleteProvider;
+
+type GeoapifyFixture = { autocomplete: AutocompletePlace[] };
+
+if (isE2E) {
+  const fixture = require('../../../tests/e2e/fixtures/geoapify.json') as GeoapifyFixture;
+  const fixedResults = fixture.autocomplete.map((place) => ({ ...place }));
+  autocompleteProvider = async (text) => {
+    const normalized = text.trim().toLowerCase();
+    return fixedResults
+      .filter((place) =>
+        normalized.length === 0 ? true : place.name.toLowerCase().includes(normalized)
+      )
+      .map((place) => ({ ...place }));
+  };
+}
+
+export function setGeoapifyAutocompleteProvider(provider: GeoapifyAutocompleteProvider) {
+  autocompleteProvider = provider;
+}
+
+export async function fetchGeoapifyAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
+  return autocompleteProvider(text, lat, lon);
 }
 
 export async function fetchGeoapifyAddressAutocomplete(
