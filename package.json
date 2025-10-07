@@ -10,6 +10,7 @@
   "packageManager": "npm@10.9.3",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:e2e": "NEXT_PUBLIC_E2E=1 next dev --turbopack --port 3100",
     "build": "next build",
     "build:prod": "next build",
     "start": "next start",
