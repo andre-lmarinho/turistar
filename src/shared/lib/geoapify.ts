@@ -41,15 +41,39 @@ type AutocompleteOptions = {
   text: string;
   lat?: number;
   lon?: number;
-  typeFilter?: string;
   allowedResultTypes: Set<string>;
+};
+
+const ADDRESS_ALLOWED_RESULT_TYPES = new Set([
+  'building',
+  'street',
+  'amenity',
+  'suburb',
+  'neighbourhood',
+  'district',
+  'quarter',
+  'locality',
+  'village',
+  'hamlet',
+]);
+
+const ADDRESS_RESULT_PRIORITY: Record<string, number> = {
+  building: 0,
+  street: 1,
+  amenity: 2,
+  suburb: 3,
+  neighbourhood: 4,
+  district: 5,
+  quarter: 6,
+  locality: 7,
+  village: 8,
+  hamlet: 9,
 };
 
 async function fetchGeoapifyAutocompleteInternal({
   text,
   lat,
   lon,
-  typeFilter,
   allowedResultTypes,
 }: AutocompleteOptions): Promise<GeoapifyFeature[]> {
   const key = getGeoapifyKey();
@@ -57,9 +81,6 @@ async function fetchGeoapifyAutocompleteInternal({
   let url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(
     text
   )}&limit=5&apiKey=${key}`;
-  if (typeFilter) {
-    url += `&type=${encodeURIComponent(typeFilter)}`;
-  }
   if (lat != null && lon != null) {
     url += `&bias=proximity:${lon},${lat}`;
   }
@@ -133,8 +154,13 @@ export async function fetchGeoapifyAddressAutocomplete(
     text,
     lat,
     lon,
-    typeFilter: 'street,building,amenity',
-    allowedResultTypes: new Set(['street', 'building', 'amenity']),
+    allowedResultTypes: ADDRESS_ALLOWED_RESULT_TYPES,
+  });
+  features.sort((a, b) => {
+    const aType = a.properties.result_type ?? '';
+    const bType = b.properties.result_type ?? '';
+    return (ADDRESS_RESULT_PRIORITY[aType] ?? Number.MAX_SAFE_INTEGER) -
+      (ADDRESS_RESULT_PRIORITY[bType] ?? Number.MAX_SAFE_INTEGER);
   });
   return features.map((f) => ({
     name: f.properties.formatted ?? f.properties.name ?? text,

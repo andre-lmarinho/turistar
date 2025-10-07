@@ -92,25 +92,26 @@ describe('fetchGeoapifyAddressAutocomplete', () => {
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = originalKey;
   });
 
-  it('requests street/building/amenity types and filters results accordingly', async () => {
+  it('keeps address-like result types and sorts them by specificity', async () => {
     const mockJson = vi.fn().mockResolvedValue({
       features: [
         { properties: { formatted: '10 Downing St', result_type: 'building', lat: 1, lon: 2 } },
+        { properties: { formatted: 'Plaza District', result_type: 'district', lat: 9, lon: 10 } },
         { properties: { formatted: 'Main Plaza', result_type: 'amenity', lat: 3, lon: 4 } },
-        { properties: { formatted: 'Paris, France', result_type: 'city', lat: 5, lon: 6 } },
+        { properties: { formatted: 'Pituba', result_type: 'suburb', lat: 5, lon: 6 } },
+        { properties: { formatted: 'Paris, France', result_type: 'city', lat: 7, lon: 8 } },
       ],
     });
     global.fetch = vi.fn().mockResolvedValue({ ok: true, json: mockJson } as unknown as Response);
 
     const results = await fetchGeoapifyAddressAutocomplete('10 Down');
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('type=street%2Cbuilding%2Camenity'),
-      expect.any(Object)
-    );
+    expect(global.fetch).toHaveBeenCalledWith(expect.not.stringContaining('type='), expect.any(Object));
     expect(results).toEqual([
       { name: '10 Downing St', latitude: 1, longitude: 2 },
       { name: 'Main Plaza', latitude: 3, longitude: 4 },
+      { name: 'Pituba', latitude: 5, longitude: 6 },
+      { name: 'Plaza District', latitude: 9, longitude: 10 },
     ]);
   });
 });
