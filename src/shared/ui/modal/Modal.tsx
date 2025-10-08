@@ -14,7 +14,6 @@ const modalContentVariants = cva(
       size: {
         sm: 'max-w-sm',
         md: 'max-w-md',
-        lg: 'max-w-xl',
       },
     },
     defaultVariants: {

@@ -25,7 +25,7 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
           <Icon size={12} aria-hidden="true" />
           <span className="flex items-center gap-1 text-sm">
             {label}
-            <Tooltip content={BUDGET_INFO[category]} tone="info">
+            <Tooltip content={BUDGET_INFO[category]}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </span>

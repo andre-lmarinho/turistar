@@ -28,7 +28,7 @@ export default function OnboardingModal() {
         {/* Close button */}
         <div className="flex items-center justify-end pb-4">
           <ModalClose asChild>
-            <Button type="button" variant="icon" size="icon" title="Close" icon="x" />
+            <Button type="button" variant="outline" size="icon" title="Close" icon="x" />
           </ModalClose>
         </div>
         {/* Carousel */}

@@ -101,7 +101,7 @@ export default function ActivityCardEditing({
               <Button
                 ref={dayPopover.triggerRef}
                 size="sm"
-                variant="icon"
+                variant="outline"
                 type="button"
                 icon="arrow-left-right"
                 iconProps={{ className: 'size-4' }}
@@ -110,7 +110,7 @@ export default function ActivityCardEditing({
               </Button>
             </PopoverTrigger>
             {dayPopover.content ? (
-              <PopoverContent tone="plain" side={popoverSide} align="start" sideOffset={8}>
+              <PopoverContent side={popoverSide} align="start" sideOffset={8}>
                 {dayPopover.content}
               </PopoverContent>
             ) : null}
@@ -121,7 +121,7 @@ export default function ActivityCardEditing({
               <Button
                 ref={colorPopover.triggerRef}
                 size="sm"
-                variant="icon"
+                variant="outline"
                 type="button"
                 icon="palette"
                 iconProps={{ className: 'size-4' }}
@@ -129,14 +129,14 @@ export default function ActivityCardEditing({
                 Card Colors
               </Button>
             </PopoverTrigger>
-            <PopoverContent tone="plain" side={popoverSide} align="start" sideOffset={8}>
+            <PopoverContent side={popoverSide} align="start" sideOffset={8}>
               {colorPopover.content}
             </PopoverContent>
           </Popover>
 
           <Button
             size="sm"
-            variant="icon"
+            variant="outline"
             type="button"
             onClick={onDelete}
             icon="trash-2"

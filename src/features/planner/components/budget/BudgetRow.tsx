@@ -202,7 +202,7 @@ export default function BudgetRow(props: BudgetRowProps) {
         <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
           <Button
             size="icon"
-            variant="ghost"
+            variant="outline"
             type="button"
             onClick={() => props.onEdit(props.index)}
             aria-label="Edit entry"
@@ -213,7 +213,7 @@ export default function BudgetRow(props: BudgetRowProps) {
           {props.onDelete && (
             <Button
               size="icon"
-              variant="ghost"
+              variant="outline"
               type="button"
               onClick={() => props.onDelete && props.onDelete(props.index)}
               aria-label="Delete entry"
@@ -231,7 +231,7 @@ export default function BudgetRow(props: BudgetRowProps) {
         <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
           <Button
             size="icon"
-            variant="ghost"
+            variant="outline"
             type="button"
             onClick={() => props.onSave(props.index, props.editEntry)}
             aria-label="Save entry"
@@ -241,7 +241,7 @@ export default function BudgetRow(props: BudgetRowProps) {
           />
           <Button
             size="icon"
-            variant="ghost"
+            variant="outline"
             type="button"
             onClick={props.onCancel}
             aria-label="Cancel edit"
@@ -257,7 +257,7 @@ export default function BudgetRow(props: BudgetRowProps) {
     return (
       <td role="gridcell" className="p-2 text-right">
         <Button
-          variant="icon"
+          variant="outline"
           size="icon"
           type="button"
           onClick={props.onAdd}

@@ -9,12 +9,6 @@ import { cn } from '@/shared/utils/cn';
 const DEFAULT_DELAY_DURATION = 150;
 const DEFAULT_SIDE_OFFSET = 6;
 
-const toneClasses = {
-  default:
-    'pointer-events-none bg-[var(--foreground)] px-2 py-1 text-[10px] font-medium text-background',
-  info: 'pointer-events-auto w-max max-w-xs border bg-background p-2 text-xs',
-};
-
 export interface TooltipProps {
   content: React.ReactNode;
   children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
@@ -23,7 +17,6 @@ export interface TooltipProps {
   align?: TooltipPrimitive.TooltipContentProps['align'];
   sideOffset?: number;
   delayDuration?: number;
-  tone?: keyof typeof toneClasses;
 }
 
 export default function Tooltip({
@@ -34,7 +27,6 @@ export default function Tooltip({
   align = 'center',
   sideOffset = DEFAULT_SIDE_OFFSET,
   delayDuration = DEFAULT_DELAY_DURATION,
-  tone = 'default',
 }: TooltipProps) {
   return (
     <TooltipPrimitive.Root delayDuration={delayDuration}>
@@ -46,7 +38,7 @@ export default function Tooltip({
           sideOffset={sideOffset}
           className={cn(
             'z-50 select-none rounded shadow-md outline-hidden data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1',
-            toneClasses[tone],
+            'pointer-events-auto w-max max-w-xs border border-border bg-background p-2 text-xs text-foreground',
             className
           )}
         >

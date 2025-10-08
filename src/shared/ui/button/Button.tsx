@@ -9,16 +9,14 @@ import { cn } from '@/shared/utils/cn';
 
 /* Button Variants ----------------------------------------------------- */
 const buttonVariants = cva(
-  'focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
         accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-xs',
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
-        icon: 'bg-background border-border hover:bg-muted border backdrop-blur-sm',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        outline: 'border-border bg-background text-foreground hover:bg-muted/60 border shadow-xs',
+        outline: 'border border-border bg-background text-foreground hover:bg-muted/40 shadow-xs',
       },
       size: {
         default: 'h-9 px-6 py-6 text-base has-[>svg]:px-3',
@@ -32,30 +30,6 @@ const buttonVariants = cva(
     },
   }
 );
-
-/* Wrapper for Icon Variant ------------------------------------------- */
-function ButtonIconWrapper({
-  children,
-  variant,
-}: {
-  children: React.ReactNode;
-  variant?: VariantProps<typeof buttonVariants>['variant'];
-}) {
-  if (variant?.includes('icon') && React.isValidElement(children) && 'props' in children) {
-    const child = children as React.ReactElement<{ className?: string }>;
-
-    const icon = React.cloneElement(child, {
-      className: cn(
-        child.props.className,
-        'transition-transform duration-300 transform-gpu group-hover/icon:scale-105'
-      ),
-    });
-
-    return <div className="relative flex h-full w-full items-center justify-center">{icon}</div>;
-  }
-
-  return <>{children}</>;
-}
 
 /* Button Component --------------------------------------------------- */
 const Button = React.forwardRef<
@@ -88,39 +62,40 @@ const Button = React.forwardRef<
 ) {
   const Comp = asChild ? Slot : 'button';
 
-  const baseClasses = buttonVariants({ variant, size, className });
-
-  const iconGroup = variant?.includes('icon') ? ' group/icon' : '';
+  const baseClasses = cn(buttonVariants({ variant, size }), className);
 
   const finalClasses = disabled
     ? baseClasses
         .replace(/hover:[^\s]+/g, '')
         .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
-    : baseClasses + iconGroup;
+    : baseClasses;
 
   const IconComponent = icon ? lucideIcons[icon] : undefined;
 
   const iconElement = IconComponent ? <IconComponent aria-hidden="true" {...iconProps} /> : null;
 
-  const wrappedIcon = iconElement ? (
-    <ButtonIconWrapper variant={variant}>{iconElement}</ButtonIconWrapper>
-  ) : null;
+  const hasChildren = React.Children.count(children) > 0;
 
-  const content = iconElement ? (
-    iconPosition === 'right' ? (
-      <>
-        {children}
-        {wrappedIcon}
-      </>
-    ) : (
-      <>
-        {wrappedIcon}
-        {children}
-      </>
-    )
-  ) : (
-    <ButtonIconWrapper variant={variant}>{children}</ButtonIconWrapper>
-  );
+  let content: React.ReactNode;
+
+  if (iconElement && hasChildren) {
+    content =
+      iconPosition === 'right' ? (
+        <>
+          {children}
+          {iconElement}
+        </>
+      ) : (
+        <>
+          {iconElement}
+          {children}
+        </>
+      );
+  } else if (iconElement) {
+    content = iconElement;
+  } else {
+    content = children;
+  }
 
   const buttonElement = (
     <Comp
@@ -135,7 +110,7 @@ const Button = React.forwardRef<
     </Comp>
   );
 
-  return variant?.includes('icon') && title ? (
+  return size === 'icon' && title ? (
     <Tooltip content={title} side={position}>
       {buttonElement}
     </Tooltip>

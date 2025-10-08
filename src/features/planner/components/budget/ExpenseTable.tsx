@@ -45,7 +45,7 @@ export default function ExpenseTable() {
           <th scope="col" className="p-2 text-left">
             <span className="flex items-center gap-1 font-normal">
               Description
-              <Tooltip content={BUDGET_INFO.description} tone="info">
+              <Tooltip content={BUDGET_INFO.description}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
@@ -53,7 +53,7 @@ export default function ExpenseTable() {
           <th scope="col" className="p-2 text-left">
             <span className="flex items-center gap-1 font-normal">
               Category
-              <Tooltip content={BUDGET_INFO.category} tone="info">
+              <Tooltip content={BUDGET_INFO.category}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
@@ -61,7 +61,7 @@ export default function ExpenseTable() {
           <th scope="col" className="w-32 p-2 text-right">
             <span className="flex items-center justify-end gap-1 font-normal">
               Amount
-              <Tooltip content={BUDGET_INFO.amount} tone="info">
+              <Tooltip content={BUDGET_INFO.amount}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>
@@ -69,7 +69,7 @@ export default function ExpenseTable() {
           <th scope="col" className="p-2 text-right">
             <span className="flex items-center justify-end gap-1 font-normal">
               Actions
-              <Tooltip content={BUDGET_INFO.actions} tone="info">
+              <Tooltip content={BUDGET_INFO.actions}>
                 <Info aria-hidden="true" size={12} className="text-muted-foreground" />
               </Tooltip>
             </span>

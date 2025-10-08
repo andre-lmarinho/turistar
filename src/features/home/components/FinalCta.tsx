@@ -28,7 +28,7 @@ export default function FinalCta() {
             </h2>
             <div className="flex w-full justify-end">
               <ModalClose asChild>
-                <Button type="button" variant="icon" size="icon" title="Close" icon="x" />
+                <Button type="button" variant="outline" size="icon" title="Close" icon="x" />
               </ModalClose>
             </div>
             <PlanForm />

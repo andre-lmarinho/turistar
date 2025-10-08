@@ -85,7 +85,7 @@ export default function ActivityModalHeader({
         )}
         {editedImageUrl && (
           <Button
-            variant="icon"
+            variant="outline"
             size="sm"
             className={`absolute right-2 bottom-2 z-20 text-xs ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
@@ -107,7 +107,7 @@ export default function ActivityModalHeader({
                 <Button
                   ref={dayPopover.triggerRef}
                   size="sm"
-                  variant="icon"
+                  variant="outline"
                   type="button"
                   className="text-xs"
                   icon="chevron-down"
@@ -118,23 +118,23 @@ export default function ActivityModalHeader({
                 </Button>
               </PopoverTrigger>
               {dayPopover.content ? (
-                <PopoverContent tone="plain" side="bottom" align="start" sideOffset={8}>
+                <PopoverContent side="bottom" align="start" sideOffset={8}>
                   {dayPopover.content}
                 </PopoverContent>
               ) : null}
             </Popover>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="icon" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
+            <Button variant="outline" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
             <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
               <PopoverTrigger asChild>
-                <Button ref={colorPopover.triggerRef} variant="icon" size="icon" title="Card Color" icon="palette" />
+                <Button ref={colorPopover.triggerRef} variant="outline" size="icon" title="Card Color" icon="palette" />
               </PopoverTrigger>
-              <PopoverContent tone="plain" side="bottom" align="end" sideOffset={8}>
+              <PopoverContent side="bottom" align="end" sideOffset={8}>
                 {colorPopover.content}
               </PopoverContent>
             </Popover>
-            <Button variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+            <Button variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
           </div>
         </div>
 

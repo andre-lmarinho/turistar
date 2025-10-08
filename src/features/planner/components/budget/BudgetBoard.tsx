@@ -44,7 +44,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
       >
         <div className="flex justify-between pb-4">
           <h2 className="text-3xl font-semibold">Traveling Budget</h2>
-          <Button variant="icon" size="sm" onClick={() => setEditActivities(true)}>
+          <Button variant="outline" size="sm" onClick={() => setEditActivities(true)}>
             Budget Your Activities
           </Button>
         </div>
@@ -54,7 +54,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
           <div className="col-span-2 md:ml-12">
             <h3 id="expenses-heading" className="flex items-center gap-1 pb-2 font-semibold">
               Expenses
-              <Tooltip content={BUDGET_INFO.expenses} aria-hidden="true" tone="info">
+              <Tooltip content={BUDGET_INFO.expenses} aria-hidden="true">
                 <Info size={12} className="text-muted-foreground" aria-hidden="true" />
               </Tooltip>
             </h3>

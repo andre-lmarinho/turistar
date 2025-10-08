@@ -98,7 +98,7 @@ export default function ActivityCard({
 
         {!editing && (
           <Button
-            variant="icon"
+            variant="outline"
             size="icon"
             title="Edit Card"
             position="bottom"

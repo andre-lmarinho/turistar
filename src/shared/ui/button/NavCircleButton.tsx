@@ -24,7 +24,7 @@ export default function NavCircleButton({
   return (
     <Button
       type="button"
-      variant="icon"
+      variant="outline"
       size="icon"
       title={title}
       className={cn('size-7 rounded-full p-0', className)}

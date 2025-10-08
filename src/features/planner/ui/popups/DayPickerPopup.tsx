@@ -33,7 +33,7 @@ export default function DayPickerPopup({
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
-        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+        <Button type="button" variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
       </div>
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">

@@ -59,7 +59,7 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <label htmlFor="budget-input" className="flex items-center gap-1 text-sm">
             Total Budget
-            <Tooltip content={BUDGET_INFO.totalBudget} tone="info">
+            <Tooltip content={BUDGET_INFO.totalBudget}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </label>
@@ -85,7 +85,7 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <span className="flex items-center gap-1 text-sm">
             Total Spent
-            <Tooltip content={BUDGET_INFO.totalSpent} tone="info">
+            <Tooltip content={BUDGET_INFO.totalSpent}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </span>
@@ -96,7 +96,7 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <span className="flex items-center gap-1 text-sm">
             Difference
-            <Tooltip content={BUDGET_INFO.difference} tone="info">
+            <Tooltip content={BUDGET_INFO.difference}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
             </Tooltip>
           </span>

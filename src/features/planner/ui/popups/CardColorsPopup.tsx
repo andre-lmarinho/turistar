@@ -34,7 +34,7 @@ export default function CardColorsPopup({
         <h3 id="card-color-popup-title" className="font-bold">
           Card Background
         </h3>
-        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+        <Button type="button" variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
       </div>
       <div className="gap-4 p-4">
         {tempImageUrl && (

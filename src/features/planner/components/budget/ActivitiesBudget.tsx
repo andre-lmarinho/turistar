@@ -61,7 +61,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           <ModalClose asChild>
             <Button
               type="button"
-              variant="icon"
+              variant="outline"
               size="icon"
               title="Close"
               icon="x"
