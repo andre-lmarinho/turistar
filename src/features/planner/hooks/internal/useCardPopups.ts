@@ -17,20 +17,10 @@ export function useCardPopups() {
 
   const [activePopup, setActivePopup] = useState<CardPopupType>(null);
 
-  function handleColorButtonClick() {
-    setActivePopup((prev) => (prev === 'color' ? null : 'color'));
-  }
-
-  function handleDateButtonClick() {
-    setActivePopup((prev) => (prev === 'date' ? null : 'date'));
-  }
-
   return {
     colorButtonRef,
     dateButtonRef,
     activePopup,
     setActivePopup,
-    handleColorButtonClick,
-    handleDateButtonClick,
   } as const;
 }

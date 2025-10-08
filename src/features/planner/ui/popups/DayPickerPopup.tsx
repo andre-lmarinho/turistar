@@ -4,7 +4,6 @@
 import React from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Button } from '@/shared/ui/button';
-import { PopoverPanel } from '@/shared/ui/popover';
 
 interface Props {
   days: DayPlan[];
@@ -13,7 +12,6 @@ interface Props {
   selectedIndex?: number;
   onSelectIndex?: (index: number) => void;
   onClose: () => void;
-  triggerRef?: React.RefObject<HTMLElement>;
 }
 
 export default function DayPickerPopup({
@@ -23,7 +21,6 @@ export default function DayPickerPopup({
   selectedIndex,
   onSelectIndex,
   onClose,
-  triggerRef,
 }: Props) {
   const positions = React.useMemo(() => {
     const day = days.find((d) => d.id === selected);
@@ -31,12 +28,7 @@ export default function DayPickerPopup({
   }, [days, selected]);
 
   return (
-    <PopoverPanel
-      triggerRef={triggerRef}
-      onClose={onClose}
-      size="md"
-      aria-labelledby="day-picker-popup-title"
-    >
+    <div className="w-72 rounded-lg border bg-background shadow-xl" aria-labelledby="day-picker-popup-title">
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
@@ -79,6 +71,6 @@ export default function DayPickerPopup({
           </select>
         </div>
       </div>
-    </PopoverPanel>
+    </div>
   );
 }

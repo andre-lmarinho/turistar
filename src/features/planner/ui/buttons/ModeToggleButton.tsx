@@ -106,7 +106,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
           );
 
           return (
-            <TooltipKeyHint key={mode} shortcut={KEY_BINDS[mode]} content={label} position="bottom">
+            <TooltipKeyHint key={mode} shortcut={KEY_BINDS[mode]} content={label} side="bottom">
               {button}
             </TooltipKeyHint>
           );

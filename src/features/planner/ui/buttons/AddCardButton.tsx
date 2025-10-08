@@ -43,7 +43,7 @@ export default function AddCardButton({
       </button>
     );
     return (
-      <TooltipKeyHint shortcut={KEY_BINDS.newCard} content="New Card" position="bottom">
+      <TooltipKeyHint shortcut={KEY_BINDS.newCard} content="New Card" side="bottom">
         {button}
       </TooltipKeyHint>
     );

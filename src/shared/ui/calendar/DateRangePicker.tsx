@@ -51,7 +51,12 @@ export function DateRangePicker({ className, value, onChange }: Props) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
+      <PopoverContent
+        tone="plain"
+        className="mt-2 min-w-[500px] border border-border/60 bg-background shadow-lg"
+        align="start"
+        side="bottom"
+      >
         <Calendar
           mode="range"
           selected={value}
@@ -88,7 +93,12 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           iconProps={{ className: 'h-4 w-4' }}
         />
       </PopoverTrigger>
-      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
+      <PopoverContent
+        tone="plain"
+        className="mt-2 min-w-[500px] border border-border/60 bg-background shadow-lg"
+        align="start"
+        side="bottom"
+      >
         <Calendar
           mode="range"
           selected={value}

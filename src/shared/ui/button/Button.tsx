@@ -136,7 +136,7 @@ const Button = React.forwardRef<
   );
 
   return variant?.includes('icon') && title ? (
-    <Tooltip content={title} position={position}>
+    <Tooltip content={title} side={position}>
       {buttonElement}
     </Tooltip>
   ) : (

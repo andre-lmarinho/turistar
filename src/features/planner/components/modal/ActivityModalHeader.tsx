@@ -8,6 +8,7 @@ import { useActivityPopupControls } from '@/features/planner/hooks/internal/useA
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 
 import { Button } from '@/shared/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 /**
  * Color strip shown at the very top of ActivityModal.
@@ -36,14 +37,7 @@ export default function ActivityModalHeader({
 }) {
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
 
-  const {
-    colorButtonRef,
-    dateButtonRef,
-    handleColorButtonClick,
-    handleDateButtonClick,
-    ColorPopup,
-    DayPopup,
-  } = useActivityPopupControls({
+  const { colorPopover, dayPopover } = useActivityPopupControls({
     activity,
     availableDays,
     bgColor,
@@ -108,36 +102,43 @@ export default function ActivityModalHeader({
         {/* Header buttons */}
         <div className="relative z-10 flex items-center justify-between p-2">
           <div className="flex items-center gap-2">
-            <Button
-              ref={dateButtonRef}
-              size="sm"
-              variant="icon"
-              type="button"
-              onClick={handleDateButtonClick}
-              className="text-xs"
-              icon="chevron-down"
-              iconPosition="right"
-              iconProps={{ className: 'size-4' }}
-            >
-              {currentDayLabel ?? 'Change Day'}
-            </Button>
+            <Popover open={dayPopover.open} onOpenChange={dayPopover.onOpenChange}>
+              <PopoverTrigger asChild>
+                <Button
+                  ref={dayPopover.triggerRef}
+                  size="sm"
+                  variant="icon"
+                  type="button"
+                  className="text-xs"
+                  icon="chevron-down"
+                  iconPosition="right"
+                  iconProps={{ className: 'size-4' }}
+                >
+                  {currentDayLabel ?? 'Change Day'}
+                </Button>
+              </PopoverTrigger>
+              {dayPopover.content ? (
+                <PopoverContent tone="plain" side="bottom" align="start" sideOffset={8}>
+                  {dayPopover.content}
+                </PopoverContent>
+              ) : null}
+            </Popover>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="icon" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
-            <Button
-              ref={colorButtonRef}
-              variant="icon"
-              size="icon"
-              title="Card Color"
-              icon="palette"
-              onClick={handleColorButtonClick}
-            />
+            <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
+              <PopoverTrigger asChild>
+                <Button ref={colorPopover.triggerRef} variant="icon" size="icon" title="Card Color" icon="palette" />
+              </PopoverTrigger>
+              <PopoverContent tone="plain" side="bottom" align="end" sideOffset={8}>
+                {colorPopover.content}
+              </PopoverContent>
+            </Popover>
             <Button variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
           </div>
         </div>
 
-        {ColorPopup && <div className="absolute top-[3rem] right-[1rem] z-50">{ColorPopup}</div>}
-        {DayPopup && <div className="absolute top-[3rem] left-[1rem] z-50">{DayPopup}</div>}
+        {/* Popovers render via portal */}
       </div>
     </>
   );

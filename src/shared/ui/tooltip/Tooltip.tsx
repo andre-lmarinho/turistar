@@ -2,72 +2,57 @@
 'use client';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+
 import { cn } from '@/shared/utils/cn';
 
-interface TooltipProps {
+const DEFAULT_DELAY_DURATION = 150;
+const DEFAULT_SIDE_OFFSET = 6;
+
+const toneClasses = {
+  default:
+    'pointer-events-none bg-[var(--foreground)] px-2 py-1 text-[10px] font-medium text-background',
+  info: 'pointer-events-auto w-max max-w-xs border bg-background p-2 text-xs',
+};
+
+export interface TooltipProps {
   content: React.ReactNode;
   children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
   className?: string;
-  position?: 'top' | 'bottom';
+  side?: TooltipPrimitive.TooltipContentProps['side'];
+  align?: TooltipPrimitive.TooltipContentProps['align'];
+  sideOffset?: number;
+  delayDuration?: number;
+  tone?: keyof typeof toneClasses;
 }
 
-export default function Tooltip({ content, children, className, position = 'top' }: TooltipProps) {
-  const [visible, setVisible] = React.useState(false);
-  const [coords, setCoords] = React.useState({ x: 0, y: 0 });
-  const tooltipId = React.useId();
-
-  const show = (e: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
-    setCoords({
-      x: rect.left + rect.width / 2,
-      y: position === 'bottom' ? rect.bottom : rect.top,
-    });
-    setVisible(true);
-  };
-
-  const hide = () => setVisible(false);
-
-  const trigger = React.cloneElement(children, {
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      children.props.onMouseEnter?.(e);
-      show(e);
-    },
-    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-      children.props.onMouseLeave?.(e);
-      hide();
-    },
-    onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      children.props.onFocus?.(e);
-      show(e);
-    },
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      children.props.onBlur?.(e);
-      hide();
-    },
-    'aria-describedby': tooltipId,
-  });
-
+export default function Tooltip({
+  content,
+  children,
+  className,
+  side = 'top',
+  align = 'center',
+  sideOffset = DEFAULT_SIDE_OFFSET,
+  delayDuration = DEFAULT_DELAY_DURATION,
+  tone = 'default',
+}: TooltipProps) {
   return (
-    <>
-      {trigger}
-      {visible &&
-        ReactDOM.createPortal(
-          <div
-            id={tooltipId}
-            className={cn(
-              'text-background pointer-events-none fixed z-50 -translate-x-1/2 rounded bg-[var(--foreground)] px-2 py-1 text-[10px]',
-              position === 'bottom' ? 'translate-y-[6px]' : '-translate-y-[calc(100%+6px)]',
-              className
-            )}
-            style={{ left: coords.x, top: coords.y }}
-            role="tooltip"
-          >
-            {content}
-          </div>,
-          document.body
-        )}
-    </>
+    <TooltipPrimitive.Root delayDuration={delayDuration}>
+      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Content
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          className={cn(
+            'z-50 select-none rounded shadow-md outline-hidden data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1',
+            toneClasses[tone],
+            className
+          )}
+        >
+          {content}
+        </TooltipPrimitive.Content>
+      </TooltipPrimitive.Portal>
+    </TooltipPrimitive.Root>
   );
 }

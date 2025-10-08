@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Modal, ModalClose, ModalContent } from '@/shared/ui/modal';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -49,54 +49,54 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
   if (!open) return null;
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      overlayClassName="backdrop-overlay"
-      aria-labelledby="activities-budget-title"
-      className="focus:ring-primary bg-background w-[95%] max-w-md rounded-lg shadow-xl focus:ring-2 focus:outline-none"
-    >
-      <div className="flex items-center justify-between border-b px-4 py-2">
-        <h3 id="activities-budget-title" className="font-bold">
-          Budget Your Activities
-        </h3>
-        <Button
-          type="button"
-          variant="icon"
-          size="icon"
-          title="Close"
-          icon="x"
-          aria-label="Close activities budget dialog"
-          onClick={handleClose}
-        />
-      </div>
-
-      <div
-        role="list"
+    <Modal open={open} onOpenChange={(nextOpen) => { if (!nextOpen) handleClose(); }}>
+      <ModalContent
         aria-labelledby="activities-budget-title"
-        className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
+        className="bg-background focus-visible:ring-primary w-[95%] max-w-md border-none p-0 shadow-xl"
       >
-        {activities.map((act, idx) => (
-          <div key={act.id} role="listitem" className="flex items-center justify-between gap-2">
-            <span className="flex-1 truncate text-sm">
-              {act.title || 'Untitled'} – {act.dayLabel}
-            </span>
-            <Input
-              autoFocus={idx === 0 && shouldAutoFocus}
-              onFocus={idx === 0 ? () => setShouldAutoFocus(false) : undefined}
-              autoComplete="off"
-              labelId={`budget-${act.id}`}
-              value={inputs[act.id] ?? ''}
-              onValueChange={(v) => setInputs((prev) => ({ ...prev, [act.id]: v }))}
-              inputSize="sm"
-              background="default"
-              placeholder="Budget"
-              aria-label={`Budget for ${act.title || 'untitled'} – ${act.dayLabel}`}
-              icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+        <div className="flex items-center justify-between border-b px-4 py-2">
+          <h3 id="activities-budget-title" className="font-bold">
+            Budget Your Activities
+          </h3>
+          <ModalClose asChild>
+            <Button
+              type="button"
+              variant="icon"
+              size="icon"
+              title="Close"
+              icon="x"
+              aria-label="Close activities budget dialog"
             />
-          </div>
-        ))}
-      </div>
+          </ModalClose>
+        </div>
+
+        <div
+          role="list"
+          aria-labelledby="activities-budget-title"
+          className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
+        >
+          {activities.map((act, idx) => (
+            <div key={act.id} role="listitem" className="flex items-center justify-between gap-2">
+              <span className="flex-1 truncate text-sm">
+                {act.title || 'Untitled'} – {act.dayLabel}
+              </span>
+              <Input
+                autoFocus={idx === 0 && shouldAutoFocus}
+                onFocus={idx === 0 ? () => setShouldAutoFocus(false) : undefined}
+                autoComplete="off"
+                labelId={`budget-${act.id}`}
+                value={inputs[act.id] ?? ''}
+                onValueChange={(v) => setInputs((prev) => ({ ...prev, [act.id]: v }))}
+                inputSize="sm"
+                background="default"
+                placeholder="Budget"
+                aria-label={`Budget for ${act.title || 'untitled'} – ${act.dayLabel}`}
+                icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+              />
+            </div>
+          ))}
+        </div>
+      </ModalContent>
     </Modal>
   );
 }

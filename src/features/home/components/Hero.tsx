@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Modal, ModalClose, ModalContent, ModalTrigger } from '@/shared/ui/modal';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
@@ -25,8 +25,6 @@ export default function Hero() {
 
     return () => clearInterval(interval);
   }, [open]);
-  const openForm = () => setOpen(true);
-  const closeForm = () => setOpen(false);
   return (
     <section className="relative mx-auto w-full max-w-screen-lg overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
       {/* Left column */}
@@ -36,7 +34,26 @@ export default function Hero() {
             Less time planning. More time traveling.
           </h1>
           <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>
-          <Button onClick={openForm}>Start Your Planning</Button>
+          <Modal open={open} onOpenChange={setOpen}>
+            <ModalTrigger asChild>
+              <Button>Start Your Planning</Button>
+            </ModalTrigger>
+
+            <ModalContent
+              aria-labelledby={modalTitleId}
+              className="w-full max-w-md border-none"
+            >
+              <h2 id={modalTitleId} className="sr-only">
+                Start planning your trip
+              </h2>
+              <div className="flex w-full justify-end">
+                <ModalClose asChild>
+                  <Button type="button" variant="icon" size="icon" title="Close" icon="x" />
+                </ModalClose>
+              </div>
+              <PlanForm />
+            </ModalContent>
+          </Modal>
         </div>
 
         {/* Right column */}
@@ -56,29 +73,6 @@ export default function Hero() {
         </div>
       </div>
 
-      <Modal
-        open={open}
-        onClose={closeForm}
-        overlayClassName="backdrop-overlay"
-        wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
-        className="w-full max-w-md p-6"
-        aria-labelledby={modalTitleId}
-      >
-        <h2 id={modalTitleId} className="sr-only">
-          Start planning your trip
-        </h2>
-        <div className="flex w-full justify-end">
-          <Button
-            type="button"
-            variant="icon"
-            size="icon"
-            title="Close"
-            icon="x"
-            onClick={closeForm}
-          />
-        </div>
-        <PlanForm />
-      </Modal>
     </section>
   );
 }

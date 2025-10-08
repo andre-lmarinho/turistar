@@ -10,7 +10,7 @@ import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelH
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
 import ActivitiesBudgetPopup from '@/features/planner/components/budget/ActivitiesBudget';
 import { Button } from '@/shared/ui/button';
-import { InfoPopover } from '@/shared/ui/popover';
+import { Tooltip } from '@/shared/ui/tooltip';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 interface Props {
@@ -54,9 +54,9 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
           <div className="col-span-2 md:ml-12">
             <h3 id="expenses-heading" className="flex items-center gap-1 pb-2 font-semibold">
               Expenses
-              <InfoPopover content={BUDGET_INFO.expenses} aria-hidden="true">
+              <Tooltip content={BUDGET_INFO.expenses} aria-hidden="true" tone="info">
                 <Info size={12} className="text-muted-foreground" aria-hidden="true" />
-              </InfoPopover>
+              </Tooltip>
             </h3>
 
             <div aria-labelledby="expenses-heading">

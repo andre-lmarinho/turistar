@@ -5,7 +5,6 @@ import React, { useRef, useState } from 'react';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
-import { PopoverPanel } from '@/shared/ui/popover';
 
 interface CardColorsPopupProps {
   imageUrl: string;
@@ -14,7 +13,6 @@ interface CardColorsPopupProps {
   selectedColor: string;
   onChangeColor: (color: string) => void;
   onClose: () => void;
-  triggerRef?: React.RefObject<HTMLElement>;
   colors?: typeof DEFAULT_COLORS;
 }
 
@@ -26,18 +24,12 @@ export default function CardColorsPopup({
   onChangeColor,
   colors = DEFAULT_COLORS,
   onClose,
-  triggerRef,
 }: CardColorsPopupProps) {
   const [tempImageUrl, setTempImageUrl] = useState(imageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <PopoverPanel
-      triggerRef={triggerRef}
-      onClose={onClose}
-      className="w-[304px]"
-      aria-labelledby="card-color-popup-title"
-    >
+    <div className="w-[304px] rounded-lg border bg-background shadow-xl" aria-labelledby="card-color-popup-title">
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="card-color-popup-title" className="font-bold">
           Card Background
@@ -120,6 +112,6 @@ export default function CardColorsPopup({
           />
         </div>
       </div>
-    </PopoverPanel>
+    </div>
   );
 }
