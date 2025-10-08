@@ -1,8 +1,8 @@
-// src/shared/ui/LocationSearchInput.tsx
+// src/shared/ui/input/LocationSearchInput.tsx
 'use client';
 
 import React from 'react';
-import Spinner from './Spinner';
+import { Spinner } from '../icon';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { AutocompletePlace } from '@/shared/types/locations';
 import type { LocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';

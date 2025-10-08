@@ -1,10 +1,10 @@
-// src/shared/ui/button-icons/NavCircleButton.tsx
+// src/shared/ui/button/NavCircleButton.tsx
 'use client';
 
 import React from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
-import { Button } from '@/shared/ui/button';
+import { Button } from './Button';
 
 interface NavCircleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   direction?: 'left' | 'right';

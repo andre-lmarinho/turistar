@@ -1,14 +1,14 @@
-// src/shared/ui/popups/Popup.tsx
+// src/shared/ui/popover/PopoverPanel.tsx
 'use client';
 
 import React, { useRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
-import OverlayContainer from '../OverlayContainer';
+import { OverlayContainer } from '../overlay-container';
 
-/** Popup style variants */
-export const popupVariants = cva(
+/** Popover panel style variants */
+export const popoverPanelVariants = cva(
   'bg-background focus:ring-primary rounded-lg shadow-xl focus:ring-2 focus:outline-none',
   {
     variants: {
@@ -24,11 +24,11 @@ export const popupVariants = cva(
   }
 );
 
-interface PopupProps
+interface PopoverPanelProps
   extends React.ComponentProps<typeof OverlayContainer>,
-    VariantProps<typeof popupVariants> {}
+    VariantProps<typeof popoverPanelVariants> {}
 
-export default function Popup({
+export default function PopoverPanel({
   open = true,
   withOverlay = false,
   triggerRef,
@@ -38,7 +38,7 @@ export default function Popup({
   overlayClassName,
   children,
   ...props
-}: PopupProps) {
+}: PopoverPanelProps) {
   const popupRef = useRef<HTMLDivElement>(null);
 
   usePopupDismiss({ popupRef, triggerRef, onClose: onClose ?? (() => {}), isOpen: open });
@@ -50,7 +50,7 @@ export default function Popup({
       withOverlay={withOverlay}
       onClose={onClose}
       overlayClassName={overlayClassName}
-      className={cn(popupVariants({ size }), className)}
+      className={cn(popoverPanelVariants({ size }), className)}
       triggerRef={triggerRef}
       {...props}
     >

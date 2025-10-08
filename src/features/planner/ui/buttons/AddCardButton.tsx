@@ -8,7 +8,7 @@ import {
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
 import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
-import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
+import { TooltipKeyHint } from '@/shared/ui/tooltip';
 
 export type AddCardButtonPosition = 'new' | 'insert';
 

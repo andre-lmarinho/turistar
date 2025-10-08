@@ -1,11 +1,10 @@
-// src/shared/ui/button.tsx
 'use client';
 
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { lucideIcons, type LucideIconName } from './icon';
-import Tooltip from './Tooltip';
+import { lucideIcons, type LucideIconName } from '../icon';
+import { Tooltip } from '../tooltip';
 import { cn } from '@/shared/utils/cn';
 
 /* Button Variants ----------------------------------------------------- */

@@ -6,8 +6,8 @@ import { DateRange } from 'react-day-picker';
 import Image from 'next/image';
 
 import { Button } from '@/shared/ui/button';
-import { DateRangePicker } from '@/shared/ui/DatePicker';
-import LocationSearchInput from '@/shared/ui/LocationSearchInput';
+import { DateRangePicker } from '@/shared/ui/calendar';
+import { LocationSearchInput } from '@/shared/ui/input';
 import { useDestinationAutocomplete } from '@/features/home/hooks/search/useDestinationAutocomplete';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';

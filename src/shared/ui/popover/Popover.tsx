@@ -1,4 +1,4 @@
-// src/shared/ui/popover.tsx
+// src/shared/ui/popover/Popover.tsx
 'use client';
 
 import * as React from 'react';

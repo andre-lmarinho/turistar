@@ -1,8 +1,8 @@
-// src/shared/ui/TooltipKeyHint.tsx
+// src/shared/ui/tooltip/TooltipKeyHint.tsx
 'use client';
 
 import React from 'react';
-import Tooltip from '@/shared/ui/Tooltip';
+import Tooltip from './Tooltip';
 
 interface KeyHintTooltipProps {
   /** Tooltip text before the shortcut key label */

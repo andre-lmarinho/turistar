@@ -1,4 +1,4 @@
-// src/shared/ui/Spinner.tsx
+// src/shared/ui/icon/Spinner.tsx
 'use client';
 
 import React from 'react';
