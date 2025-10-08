@@ -1,5 +1,3 @@
-// tests/integration/planner/dateRangeChange.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -26,33 +24,31 @@ const initialBounds: Bounds = { sw: [0, 0], ne: [1, 1] };
 const updatedBounds: Bounds = { sw: [2, 2], ne: [3, 3] };
 
 // Mocks for shared UI components
-vi.mock('@/shared/ui/DatePicker', () => ({
-  __esModule: true,
-  DateRangePicker: ({
-    onChange,
-  }: {
-    value: DateRange | undefined;
-    onChange: (r: DateRange | undefined) => void;
-  }) => (
-    <button
-      data-testid="date-picker"
-      onClick={() => onChange({ from: new Date('2025-01-01'), to: new Date('2025-01-02') })}
-    >
-      Pick dates
-    </button>
-  ),
-  DateRangePickerIcon: () => <div />,
-}));
+vi.mock('@/shared/ui/DatePicker', async () => {
+  const { Button } = await vi.importActual<typeof import('@/shared/ui/button')>('@/shared/ui/button');
+  return {
+    __esModule: true,
+    DateRangePicker: ({
+      onChange,
+    }: {
+      value: DateRange | undefined;
+      onChange: (r: DateRange | undefined) => void;
+    }) => (
+      <Button
+        type="button"
+        data-testid="date-picker"
+        onClick={() => onChange({ from: new Date('2025-01-01'), to: new Date('2025-01-02') })}
+      >
+        Pick dates
+      </Button>
+    ),
+    DateRangePickerIcon: () => <div />,
+  };
+});
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
-  default: () => <div />, // not used in this test
-}));
-
-vi.mock('@/shared/ui/button', () => ({
-  __esModule: true,
-  Button: (props: React.ComponentProps<'button'>) => <button {...props} />,
-  buttonVariants: () => '',
+  default: () => <div />,
 }));
 
 let setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;

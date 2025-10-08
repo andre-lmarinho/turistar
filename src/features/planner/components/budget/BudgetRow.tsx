@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useId } from 'react';
-import { DollarSign } from 'lucide-react';
 import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
@@ -53,11 +52,6 @@ export default function BudgetRow(props: BudgetRowProps) {
     }
 
     const value = props.mode === 'edit' ? props.editEntry.description : desc;
-    const onChange =
-      props.mode === 'edit'
-        ? (ev: React.ChangeEvent<HTMLInputElement>) =>
-            props.setEditEntry((prev) => prev && { ...prev, description: ev.target.value })
-        : (ev: React.ChangeEvent<HTMLInputElement>) => setDesc(ev.target.value);
     const placeholder = props.mode === 'new' ? 'Description' : undefined;
     const autoFocus = props.mode === 'edit';
 
@@ -66,16 +60,24 @@ export default function BudgetRow(props: BudgetRowProps) {
         <label htmlFor={`description-${baseId}`} className="sr-only">
           Description
         </label>
-        <input
+        <Input
+          labelId={`description-${baseId}`}
           id={`description-${baseId}`}
           name="description"
           value={value}
           autoComplete="off"
           autoFocus={autoFocus}
           placeholder={placeholder}
-          onChange={onChange}
+          onValueChange={(val) =>
+            props.mode === 'edit'
+              ? props.setEditEntry((prev) => prev && { ...prev, description: val })
+              : setDesc(val)
+          }
           aria-label="Description"
-          className="focus:ring-primary w-full rounded border px-2 py-1 focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          align="left"
+          inputSize="full"
+          tone="ringed"
+          density="default"
         />
       </td>
     );
@@ -158,8 +160,8 @@ export default function BudgetRow(props: BudgetRowProps) {
             inputMode="decimal"
             autoComplete="off"
             aria-label="Amount"
-            icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-            className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            icon="dollar-sign"
+            tone="ringed"
           />
         </td>
       );
@@ -189,8 +191,8 @@ export default function BudgetRow(props: BudgetRowProps) {
           autoComplete="off"
           placeholder="Amount"
           aria-label="Amount"
-          icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          icon="dollar-sign"
+          tone="ringed"
         />
       </td>
     );

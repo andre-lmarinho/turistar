@@ -1,5 +1,3 @@
-// tests/unit/features/home/components/PlanForm.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -27,11 +25,10 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock('@/shared/ui/button', () => ({
-  Button: ({ children }: { children: React.ReactNode }) => (
-    <button type="button">{children}</button>
-  ),
-}));
+vi.mock('@/shared/ui/button', async () => {
+  const actual = await vi.importActual<typeof import('@/shared/ui/button')>('@/shared/ui/button');
+  return actual;
+});
 
 vi.mock('@/shared/ui/DatePicker', () => ({
   DateRangePicker: () => <div />,

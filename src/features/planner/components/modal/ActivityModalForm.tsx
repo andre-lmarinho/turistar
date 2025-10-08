@@ -2,8 +2,6 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { AlignLeft, MapPin } from 'lucide-react';
-import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
@@ -12,6 +10,9 @@ import { Input } from '@/shared/ui/input';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const AlignLeftIcon = lucideIcons['align-left'];
 
 interface ActivityModalFormProps {
   activity: Activity;
@@ -91,16 +92,21 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       <label htmlFor="title" className="sr-only">
         Title
       </label>
-      <input
+      <Input
+        labelId="title"
         id="title"
         name="title"
         ref={titleInputRef}
         value={editedTitle}
-        onChange={(e) => setEditedTitle(e.target.value)}
+        onValueChange={setEditedTitle}
         placeholder={EMPTY_ACTIVITY_TITLE}
         required
         aria-required="true"
-        className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+        align="left"
+        inputSize="full"
+        tone="ringed"
+        density="activityTitle"
+        className="mx-4 mb-4"
       />
 
       {/* Duration & Budget group */}
@@ -115,7 +121,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             htmlFor="activity-notes"
             className="mb-1 flex items-center gap-1 text-xs font-bold"
           >
-            <Hourglass size={12} aria-hidden="true" />
             <span>Duration</span>
           </label>
           <Input
@@ -125,11 +130,13 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             aria-label="Duration in hours"
             inputSize="sm"
             background="default"
+            tone="ringed"
+            density="compact"
             type="number"
             placeholder="Hrs"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             autoComplete="off"
             min={0}
+            icon="hourglass"
           />
         </div>
         {/* Budget */}
@@ -138,7 +145,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             htmlFor="activity-notes"
             className="mb-1 flex items-center gap-1 text-xs font-bold"
           >
-            <DollarSign size={12} aria-hidden="true" />
             <span>Budget</span>
           </label>
           <Input
@@ -149,10 +155,12 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
             type="number"
             inputSize="sm"
             background="default"
+            tone="ringed"
+            density="compact"
             placeholder="Budget"
             min={0}
             autoComplete="off"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            icon="dollar-sign"
           />
         </div>
       </fieldset>
@@ -163,7 +171,6 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
           htmlFor="activity-address"
           className="mb-1 flex items-center gap-1 text-xs font-bold"
         >
-          <MapPin size={12} aria-hidden="true" />
           <span>Address</span>
         </label>
         <LocationSearchInput
@@ -192,7 +199,7 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       {/* Notes */}
       <div className="mb-2 px-4">
         <label htmlFor="activity-notes" className="mb-1 flex items-center gap-1 text-xs font-bold">
-          <AlignLeft size={12} aria-hidden="true" />
+          <AlignLeftIcon size={12} aria-hidden="true" />
           <span>Notes</span>
         </label>
         <textarea

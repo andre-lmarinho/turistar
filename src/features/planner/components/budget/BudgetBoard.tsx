@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
@@ -12,6 +11,9 @@ import ActivitiesBudgetPopup from '@/features/planner/components/budget/Activiti
 import { Button } from '@/shared/ui/button';
 import InfoPopup from '@/shared/ui/popups/InfoPopup';
 import type { Entry } from '@/features/planner/types/budget/budget';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const InfoIcon = lucideIcons.info;
 
 interface Props {
   initialBudget?: number;
@@ -55,7 +57,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
             <h3 id="expenses-heading" className="flex items-center gap-1 pb-2 font-semibold">
               Expenses
               <InfoPopup content={BUDGET_INFO.expenses} aria-hidden="true">
-                <Info size={12} className="text-muted-foreground" aria-hidden="true" />
+                <InfoIcon size={12} className="text-muted-foreground" aria-hidden="true" />
               </InfoPopup>
             </h3>
 

@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import { usePointerDragScroll } from '@/features/home/hooks/usePointerDragScroll';
 import { useSyncedPointerCarousels } from '@/features/home/hooks/useSyncedPointerCarousels';
+import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 
 export type FeatureCarouselFeature = {
@@ -84,19 +85,6 @@ function FeatureCarouselCard({
   interactive,
   onSelect,
 }: FeatureCarouselCardProps) {
-  const cardClassName = cn(
-    'relative w-full overflow-hidden rounded p-6 text-left',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
-    'transition-[transform,box-shadow,background-color] duration-200 ease-out',
-    'cursor-default md:cursor-pointer',
-    'pointer-events-none md:pointer-events-auto',
-    isActive ? 'md:[box-shadow:rgba(9,30,66,0.15)_0px_0.5rem_1rem_0px]' : 'md:[box-shadow:none]',
-    'before:absolute before:inset-y-0 before:left-0 before:w-[6px]',
-    'before:bg-primary before:content-[""] before:opacity-100',
-    'before:transition-opacity before:duration-200 before:ease-out',
-    isActive ? 'md:before:bg-primary md:before:opacity-100' : 'md:before:opacity-0'
-  );
-
   const content = (
     <>
       <h3 className="pb-4 text-xl font-medium md:leading-[1.2]">{feature.title}</h3>
@@ -105,16 +93,16 @@ function FeatureCarouselCard({
   );
 
   return (
-    <button
+    <Button
       type="button"
+      variant="featureCard"
       onClick={interactive ? onSelect : undefined}
-      aria-pressed={interactive ? isActive : undefined}
+      aria-pressed={isActive}
       aria-disabled={!interactive}
       tabIndex={interactive ? 0 : -1}
-      className={cardClassName}
     >
       {content}
-    </button>
+    </Button>
   );
 }
 
@@ -136,14 +124,11 @@ function FeatureCarouselNavDots({
       {Array.from({ length: total }).map((_, index) => {
         const isActive = index === current;
         return (
-          <button
+          <Button
             key={index}
             type="button"
             onClick={() => onSelect(index)}
-            className={cn(
-              'h-2 cursor-pointer rounded-full transition-[width] duration-200 ease-out',
-              isActive ? 'w-[3.75rem] bg-[var(--secondary)]' : 'w-2 bg-[var(--card-foreground)]'
-            )}
+            variant="featureCarouselDot"
             aria-label={`Go to slide ${index + 1}`}
             aria-current={isActive ? 'true' : 'false'}
           />

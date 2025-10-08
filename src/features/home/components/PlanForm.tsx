@@ -135,7 +135,7 @@ export default function PlanForm() {
             />
           </fieldset>
 
-          <Button className="flex w-full" type="submit">
+          <Button variant="cta" type="submit">
             Start Your Planning
           </Button>
 

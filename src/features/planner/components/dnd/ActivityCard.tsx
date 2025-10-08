@@ -1,4 +1,3 @@
-// src/features/planner/components/dnd/ActivityCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -65,9 +64,11 @@ export default function ActivityCard({
         className="group relative"
         style={{ visibility: editing ? 'hidden' : undefined }}
       >
-        <button
+        <Button
           type="button"
-          className="w-full text-left"
+          variant="ghost"
+          size="sm"
+          className="w-full bg-transparent p-0 text-left hover:bg-transparent focus-visible:ring-0"
           onClick={() => !editing && onSelect?.()}
           onKeyDown={(e) => {
             if (!editing && (e.key === 'Enter' || e.key === ' ')) {
@@ -94,7 +95,7 @@ export default function ActivityCard({
             budget={budget}
             borderColorClass={borderColorClass}
           />
-        </button>
+        </Button>
 
         {!editing && (
           <Button

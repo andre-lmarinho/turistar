@@ -1,4 +1,3 @@
-// src/features/planner/components/onboarding/OnboardingCarousel.tsx
 'use client';
 
 import React, { useState, useRef } from 'react';
@@ -6,7 +5,8 @@ import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
 import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
-import NavCircleButton from '@/shared/ui/button-icons/NavCircleButton';
+import { Button } from '@/shared/ui/button';
+import NavCircleButton from '@/features/planner/ui/buttons/NavCircleButton';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;
@@ -172,19 +172,17 @@ export default function OnboardingCarousel({ baseWidth = 300, onFinish }: Onboar
       {/* Dots navigation */}
       <div role="tablist" aria-label="Slide navigation" className="mt-4 flex w-full justify-center">
         {ONBOARDING_STEPS.map((_, i) => (
-          <button
+          <Button
             key={i}
             role="tab"
             aria-selected={currentIndex % ONBOARDING_STEPS.length === i}
             tabIndex={currentIndex % ONBOARDING_STEPS.length === i ? 0 : -1}
             onClick={() => setCurrentIndex(i)}
-            className={`bg-border focus:ring-primary h-2 w-2 rounded-full transition-transform focus:ring-2 focus:outline-none ${
-              currentIndex % ONBOARDING_STEPS.length === i
-                ? 'bg-primary scale-125'
-                : 'bg-[rgba(255,255,255,1)]'
-            }`}
+            variant="plannerOnboardingDot"
             aria-label={`Go to slide ${i + 1}`}
-          />
+          >
+            <span className="sr-only">Go to slide {i + 1}</span>
+          </Button>
         ))}
       </div>
     </div>

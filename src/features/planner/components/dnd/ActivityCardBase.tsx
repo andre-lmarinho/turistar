@@ -3,8 +3,11 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { DollarSign, Hourglass } from 'lucide-react';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const HourglassIcon = lucideIcons.hourglass;
+const DollarSignIcon = lucideIcons['dollar-sign'];
 
 interface ActivityCardBaseProps {
   title: string;
@@ -82,12 +85,12 @@ export default function ActivityCardBase({
           <div className="mb-1 flex gap-2 rounded-full text-xs">
             {duration! > 0 && (
               <span className="inline-flex items-center gap-1">
-                <Hourglass size={12} aria-hidden="true" />
+                <HourglassIcon size={12} aria-hidden="true" />
               </span>
             )}
             {budget! > 0 && (
               <span className="inline-flex items-center gap-1">
-                <DollarSign size={12} aria-hidden="true" />
+                <DollarSignIcon size={12} aria-hidden="true" />
               </span>
             )}
           </div>

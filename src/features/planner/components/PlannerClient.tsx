@@ -1,4 +1,3 @@
-// src/features/planner/components/PlannerClient.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -17,6 +16,7 @@ import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
 import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/features/planner/hooks/internal/useKeyBinds';
+import { Input } from '@/shared/ui/input';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
@@ -92,19 +92,23 @@ function PlannerClientInner({
             <span id="planner-title-heading" className="sr-only">
               {headingText}
             </span>
-            <input
+            <Input
+              labelId="planner-title"
               id="planner-title"
               name="title"
               aria-labelledby="planner-title-heading"
               aria-label="Planner title"
-              type="text"
               ref={titleRef}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={title ?? ''}
+              onValueChange={setTitle}
               onBlur={saveTitle}
-              style={{ width: `${titleWidth}px` }}
               onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-              className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-4 py-2 transition-colors outline-none focus:cursor-text"
+              style={{ width: `${titleWidth}px` }}
+              align="left"
+              inputSize="auto"
+              background="default"
+              tone="plannerTitle"
+              density="plannerTitle"
             />
           </h1>
           <div className="flex gap-2 md:hidden">

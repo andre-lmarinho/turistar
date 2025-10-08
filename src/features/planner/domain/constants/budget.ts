@@ -1,15 +1,19 @@
 // src/features/planner/domain/constants/budget.ts
 
-import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
+import type { LucideIconName } from '@/shared/ui/icon';
 
 export const CATEGORIES = [
-  { key: 'transport', label: 'Transportation', icon: Bus },
-  { key: 'lodging', label: 'Lodging', icon: Hotel },
-  { key: 'food', label: 'Food', icon: Utensils },
-  { key: 'activities', label: 'Tours & Activities', icon: Ticket },
-  { key: 'shopping', label: 'Shopping & Extras', icon: ShoppingCart },
-  { key: 'documents', label: 'Documents & Fees', icon: FileText },
-] as const;
+  { key: 'transport', label: 'Transportation', icon: 'bus' },
+  { key: 'lodging', label: 'Lodging', icon: 'hotel' },
+  { key: 'food', label: 'Food', icon: 'utensils' },
+  { key: 'activities', label: 'Tours & Activities', icon: 'ticket' },
+  { key: 'shopping', label: 'Shopping & Extras', icon: 'shopping-cart' },
+  { key: 'documents', label: 'Documents & Fees', icon: 'file-text' },
+] as const satisfies ReadonlyArray<{
+  key: string;
+  label: string;
+  icon: LucideIconName;
+}>;
 
 export type CategoryKey = (typeof CATEGORIES)[number]['key'];
 

@@ -1,4 +1,3 @@
-// src/features/planner/ui/popups/CardColorsPopup.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -6,6 +5,7 @@ import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
 import Popup from '@/shared/ui/popups/Popup';
+import { cn } from '@/shared/utils/cn';
 
 interface CardColorsPopupProps {
   imageUrl: string;
@@ -50,7 +50,6 @@ export default function CardColorsPopup({
             size="sm"
             variant="muted"
             type="button"
-            className="cursor-pointer"
             onClick={() => {
               setTempImageUrl('');
               onClearImage();
@@ -69,14 +68,16 @@ export default function CardColorsPopup({
             {colors.map((c) => {
               const label = c.name;
               return (
-                <button
+                <Button
                   key={c.bg}
+                  type="button"
+                  variant="colorSwatch"
                   onClick={() => onChangeColor(c.bg)}
-                  className={`h-10 w-[31%] rounded border-2 shadow-xl ${
-                    c.bg.startsWith('#') ? '' : c.bg
-                  } ${selectedColor === c.bg ? 'ring-primary ring-2' : 'border-background'}`}
+                  data-selected={selectedColor === c.bg ? 'true' : 'false'}
+                  className={cn(!c.bg.startsWith('#') ? c.bg : undefined)}
                   style={c.bg.startsWith('#') ? { backgroundColor: c.bg } : undefined}
                   aria-label={label}
+                  aria-pressed={selectedColor === c.bg}
                 />
               );
             })}

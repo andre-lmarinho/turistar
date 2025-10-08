@@ -1,21 +1,25 @@
-// tests/integration/planner/plannerClientMode.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
-  __esModule: true,
-  default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
-    <div>
-      <button onClick={() => onChange('planner')}>Planner</button>
-      <button onClick={() => onChange('map')}>Map</button>
-      <button onClick={() => onChange('budget')}>Budget</button>
-    </div>
-  ),
-}));
+vi.mock('@/features/planner/ui/buttons/ModeToggleButton', async () => {
+  const { Button } = await vi.importActual<typeof import('@/shared/ui/button')>(
+    '@/shared/ui/button'
+  );
+
+  return {
+    __esModule: true,
+    default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
+      <div>
+        <Button onClick={() => onChange('planner')}>Planner</Button>
+        <Button onClick={() => onChange('map')}>Map</Button>
+        <Button onClick={() => onChange('budget')}>Budget</Button>
+      </div>
+    ),
+  };
+});
 
 vi.mock('@/shared/ui/DatePicker', () => ({
   __esModule: true,

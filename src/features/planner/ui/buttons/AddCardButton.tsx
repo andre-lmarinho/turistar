@@ -1,14 +1,17 @@
-// src/features/planner/ui/buttons/AddCardButton.tsx
 'use client';
 
 import React from 'react';
-import { Plus } from 'lucide-react';
 import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
 import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
 import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
+import { Button } from '@/shared/ui/button';
+import { cn } from '@/shared/utils/cn';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const PlusIcon = lucideIcons.plus;
 
 export type AddCardButtonPosition = 'new' | 'insert';
 
@@ -31,16 +34,15 @@ export default function AddCardButton({
     const baseColor = baseBg;
 
     const button = (
-      <button
+      <Button
         type="button"
+        variant="plannerAddCard"
+        className={cn(baseColor, borderColor)}
+        icon="plus"
         onClick={() => onAddActivity(dayId, index)}
-        className={`cursor-pointer p-2 ${borderColor} ${baseColor} bg-background flex h-10 w-full items-center rounded-lg transition`}
       >
-        <Plus size={18} aria-hidden="true" className="mr-2" />
-        <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-          New Card
-        </span>
-      </button>
+        New Card
+      </Button>
     );
     return (
       <TooltipKeyHint shortcut={KEY_BINDS.newCard} content="New Card" position="bottom">
@@ -50,19 +52,19 @@ export default function AddCardButton({
   }
 
   return (
-    <button
+    <Button
       type="button"
+      variant="plannerInsertCard"
       onClick={() => onAddActivity(dayId, index)}
       aria-label="Insert new card"
-      className={`group relative z-20 flex h-2 w-full cursor-pointer items-center justify-center transition`}
     >
       <span className="sr-only">Insert new card</span>
-      <Plus
+      <PlusIcon
         size={24}
         aria-hidden="true"
-        className={`bg-background z-20 h-5 w-6 rounded opacity-0 shadow-md transition-opacity group-hover:opacity-100`}
+        className="bg-background z-20 h-5 w-6 rounded opacity-0 shadow-md transition-opacity group-hover:opacity-100"
       />
       <span className="border-border absolute w-[90%] border-t-2 border-dashed opacity-0 transition group-hover:opacity-100"></span>
-    </button>
+    </Button>
   );
 }

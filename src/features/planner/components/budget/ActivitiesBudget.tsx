@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
@@ -90,9 +89,11 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
               onValueChange={(v) => setInputs((prev) => ({ ...prev, [act.id]: v }))}
               inputSize="sm"
               background="default"
+              tone="ringed"
+              density="compact"
               placeholder="Budget"
               aria-label={`Budget for ${act.title || 'untitled'} – ${act.dayLabel}`}
-              icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+              icon="dollar-sign"
             />
           </div>
         ))}

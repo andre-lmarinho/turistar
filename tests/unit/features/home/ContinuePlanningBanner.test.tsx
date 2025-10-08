@@ -1,5 +1,3 @@
-// tests/unit/features/home/ContinuePlanningBanner.test.tsx
-
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot, type Root } from 'react-dom/client';
@@ -7,6 +5,7 @@ import { render, screen, act, fireEvent } from '@testing-library/react';
 
 import ContinuePlanningBanner from '@/features/home/components/ContinuePlanningBanner';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import { Button } from '@/shared/ui/button';
 
 vi.mock('next/link', () => ({
   default: ({
@@ -78,9 +77,9 @@ describe('ContinuePlanningBanner hydration', () => {
       const { saveRecentPlan } = useRecentPlan();
 
       return (
-        <button type="button" onClick={() => saveRecentPlan(plan)}>
+        <Button type="button" onClick={() => saveRecentPlan(plan)}>
           Save plan
-        </button>
+        </Button>
       );
     }
 

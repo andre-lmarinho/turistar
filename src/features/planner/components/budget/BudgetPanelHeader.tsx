@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Info, DollarSign } from 'lucide-react';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
 import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
@@ -10,6 +9,10 @@ import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext'
 import InfoPopup from '@/shared/ui/popups/InfoPopup';
 import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const InfoIcon = lucideIcons.info;
+const DollarSignIcon = lucideIcons['dollar-sign'];
 
 interface SummaryValueProps {
   amount: number;
@@ -23,7 +26,7 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
       aria-label={ariaLabel}
     >
       <span className="bg-muted border-r-1">
-        <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
+        <DollarSignIcon aria-hidden="true" className="text-muted-foreground m-2 size-4" />
       </span>
       <span className="w-full px-2 py-1 text-right">{amount.toFixed(2)}</span>
     </span>
@@ -60,7 +63,7 @@ export default function BudgetPanelHeader() {
           <label htmlFor="budget-input" className="flex items-center gap-1 text-sm">
             Total Budget
             <InfoPopup content={BUDGET_INFO.totalBudget}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
+              <InfoIcon size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </label>
 
@@ -70,9 +73,10 @@ export default function BudgetPanelHeader() {
             onValueChange={setBudgetInput}
             inputSize="default"
             background="default"
+            tone="ringed"
             autoComplete="off"
             placeholder="Budget"
-            icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+            icon="dollar-sign"
             onBlur={() => {
               const val = normalizeAmount(budgetInput);
               setBudget(val);
@@ -86,7 +90,7 @@ export default function BudgetPanelHeader() {
           <span className="flex items-center gap-1 text-sm">
             Total Spent
             <InfoPopup content={BUDGET_INFO.totalSpent}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
+              <InfoIcon size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
           <SummaryValue amount={totalSpent} ariaLabel={`Total spent: $${totalSpent.toFixed(2)}`} />
@@ -97,7 +101,7 @@ export default function BudgetPanelHeader() {
           <span className="flex items-center gap-1 text-sm">
             Difference
             <InfoPopup content={BUDGET_INFO.difference}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
+              <InfoIcon size={12} aria-hidden="true" className="text-muted-foreground" />
             </InfoPopup>
           </span>
           <SummaryValue amount={difference} ariaLabel={`Difference: $${difference.toFixed(2)}`} />

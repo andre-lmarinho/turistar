@@ -1,5 +1,3 @@
-// tests/integration/onboarding/onboardingModal.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -11,6 +9,7 @@ type OnboardingContextValue = {
 
 const onboardingMocks = vi.hoisted(() => {
   const React = require('react') as typeof import('react');
+  const Button = (props: React.ComponentProps<'button'>) => <button {...props} />;
 
   const OnboardingContext = React.createContext<OnboardingContextValue>({
     showOnboarding: true,
@@ -41,7 +40,9 @@ const onboardingMocks = vi.hoisted(() => {
 
     return (
       <div role="dialog">
-        <button onClick={() => setShowOnboarding(false)}>Close</button>
+        <Button type="button" onClick={() => setShowOnboarding(false)}>
+          Close
+        </Button>
       </div>
     );
   };

@@ -1,21 +1,20 @@
-// src/features/planner/ui/buttons/ModeToggleButton.tsx
 'use client';
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
-import type { LucideIcon } from 'lucide-react';
-import { List, Map, DollarSign } from 'lucide-react';
 import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
 import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
+import { Button } from '@/shared/ui/button';
+import { lucideIcons, type LucideIconName } from '@/shared/ui/icon';
 
 type Mode = 'planner' | 'map' | 'budget';
 const modes: Mode[] = ['planner', 'map', 'budget'];
 
-const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIcon }> = {
-  planner: { label: 'Planner', icon: List },
-  map: { label: 'Map', icon: Map },
-  budget: { label: 'Budget', icon: DollarSign },
+const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIconName }> = {
+  planner: { label: 'Planner', icon: 'list' },
+  map: { label: 'Map', icon: 'map' },
+  budget: { label: 'Budget', icon: 'dollar-sign' },
 };
 
 interface ModeToggleButtonProps {
@@ -82,27 +81,22 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
         )}
 
         {modes.map((mode) => {
-          const { label, icon: Icon } = MODE_CONFIG[mode];
+          const { label, icon } = MODE_CONFIG[mode];
+          const Icon = lucideIcons[icon];
           const selected = mode === value;
 
           const button = (
-            <button
+            <Button
               key={mode}
               role="tab"
               type="button"
+              variant="plannerModeToggle"
               onClick={() => onChange(mode)}
               aria-selected={selected}
-              className={`relative z-10 flex-1 cursor-pointer px-2 py-1 text-sm font-medium transition-colors ${
-                selected
-                  ? 'text-[var(--primary-foreground)]'
-                  : 'text-[var(--foreground)] hover:text-[var(--foreground)]'
-              } `}
             >
-              <div className="flex h-full w-full items-center justify-center gap-2 p-2">
-                <Icon aria-hidden="true" className="h-4 w-4" />
-                {label}
-              </div>
-            </button>
+              <Icon aria-hidden="true" className="h-4 w-4" />
+              {label}
+            </Button>
           );
 
           return (

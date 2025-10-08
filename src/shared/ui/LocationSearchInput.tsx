@@ -1,8 +1,9 @@
-// src/shared/ui/LocationSearchInput.tsx
 'use client';
 
 import React from 'react';
 import Spinner from './Spinner';
+import { Input } from './input';
+import { Button } from './button';
 import { useDebounce } from '@/shared/hooks/useDebounce';
 import type { AutocompletePlace } from '@/shared/types/locations';
 import type { LocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
@@ -58,18 +59,18 @@ export default function LocationSearchInput({
           {label}
         </label>
       )}
-      <input
+      <Input
+        labelId={id}
         id={id}
         role="combobox"
         aria-expanded={open}
         aria-controls={`${id}-suggestions`}
         aria-activedescendant={active >= 0 ? `${id}-option-${active}` : undefined}
-        type="text"
         value={value}
-        onChange={(e) => {
+        onValueChange={(val) => {
           setOpen(true);
           setActive(-1);
-          onChange(e.target.value);
+          onChange(val);
         }}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown' && results.length > 0) {
@@ -96,11 +97,13 @@ export default function LocationSearchInput({
           setActive(-1);
         }}
         placeholder={placeholder}
-        className={
-          inputClassName ??
-          'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none'
-        }
+        align="left"
+        inputSize="full"
+        tone="search"
+        density="search"
+        inputClassName={inputClassName}
         autoComplete="off"
+        icon="map-pin"
       />
       {loading && <Spinner className="absolute top-2 right-2 size-4" />}
       {error && (
@@ -116,19 +119,17 @@ export default function LocationSearchInput({
         >
           {results.map((r: AutocompletePlace, idx: number) => (
             <li key={`${r.latitude}-${r.longitude}`}>
-              <button
+              <Button
                 id={`${id}-option-${idx}`}
                 role="option"
+                type="button"
+                variant="listOption"
                 aria-selected={active === idx}
                 tabIndex={-1}
-                type="button"
-                className={`w-full px-2 py-1 text-left ${
-                  active === idx ? 'bg-accent' : 'hover:bg-accent'
-                }`}
                 onMouseDown={() => handleSelect(r)}
               >
                 {r.name}
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

@@ -2,12 +2,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Info } from 'lucide-react';
 import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import BudgetRow from '@/features/planner/components/budget/BudgetRow';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import InfoPopup from '@/shared/ui/popups/InfoPopup';
+import { lucideIcons } from '@/shared/ui/icon';
+
+const InfoIcon = lucideIcons.info;
 
 export default function ExpenseTable() {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
@@ -46,7 +48,7 @@ export default function ExpenseTable() {
             <span className="flex items-center gap-1 font-normal">
               Description
               <InfoPopup content={BUDGET_INFO.description}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
+                <InfoIcon aria-hidden="true" size={12} className="text-muted-foreground" />
               </InfoPopup>
             </span>
           </th>
@@ -54,7 +56,7 @@ export default function ExpenseTable() {
             <span className="flex items-center gap-1 font-normal">
               Category
               <InfoPopup content={BUDGET_INFO.category}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
+                <InfoIcon aria-hidden="true" size={12} className="text-muted-foreground" />
               </InfoPopup>
             </span>
           </th>
@@ -62,7 +64,7 @@ export default function ExpenseTable() {
             <span className="flex items-center justify-end gap-1 font-normal">
               Amount
               <InfoPopup content={BUDGET_INFO.amount}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
+                <InfoIcon aria-hidden="true" size={12} className="text-muted-foreground" />
               </InfoPopup>
             </span>
           </th>
@@ -70,7 +72,7 @@ export default function ExpenseTable() {
             <span className="flex items-center justify-end gap-1 font-normal">
               Actions
               <InfoPopup content={BUDGET_INFO.actions}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
+                <InfoIcon aria-hidden="true" size={12} className="text-muted-foreground" />
               </InfoPopup>
             </span>
           </th>
