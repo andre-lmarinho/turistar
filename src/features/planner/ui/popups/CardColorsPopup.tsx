@@ -5,7 +5,6 @@ import React, { useRef, useState } from 'react';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Popup from '@/shared/ui/popups/Popup';
 
 interface CardColorsPopupProps {
@@ -43,7 +42,7 @@ export default function CardColorsPopup({
         <h3 id="card-color-popup-title" className="font-bold">
           Card Background
         </h3>
-        <CloseButton onClick={onClose} />
+        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
       </div>
       <div className="gap-4 p-4">
         {tempImageUrl && (

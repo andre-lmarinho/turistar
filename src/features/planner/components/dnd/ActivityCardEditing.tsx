@@ -3,7 +3,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Palette, ArrowLeftRight, Trash2 } from 'lucide-react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Button } from '@/shared/ui/button';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
@@ -107,8 +106,9 @@ export default function ActivityCardEditing({
             variant="icon"
             type="button"
             onClick={handleDateButtonClick}
+            icon="arrow-left-right"
+            iconProps={{ className: 'size-4' }}
           >
-            <ArrowLeftRight className="size-4" aria-hidden="true" />
             Move
           </Button>
           <div className="relative mb-1">
@@ -121,16 +121,23 @@ export default function ActivityCardEditing({
             variant="icon"
             type="button"
             onClick={handleColorButtonClick}
+            icon="palette"
+            iconProps={{ className: 'size-4' }}
           >
-            <Palette className="size-4" aria-hidden="true" />
             Card Colors
           </Button>
           <div className="relative mb-1">
             {ColorPopup && <div className="absolute top-1 left-full z-50">{ColorPopup}</div>}
           </div>
 
-          <Button size="sm" variant="icon" type="button" onClick={onDelete}>
-            <Trash2 className="size-4" aria-hidden="true" />
+          <Button
+            size="sm"
+            variant="icon"
+            type="button"
+            onClick={onDelete}
+            icon="trash-2"
+            iconProps={{ className: 'size-4' }}
+          >
             Delete
           </Button>
         </div>,

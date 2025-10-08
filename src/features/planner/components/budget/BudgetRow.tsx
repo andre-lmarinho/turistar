@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useId } from 'react';
-import { Pencil, Trash2, Check, X, Plus, DollarSign } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
@@ -207,9 +207,9 @@ export default function BudgetRow(props: BudgetRowProps) {
             onClick={() => props.onEdit(props.index)}
             aria-label="Edit entry"
             className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          >
-            <Pencil aria-hidden="true" className="size-4" />
-          </Button>
+            icon="pencil"
+            iconProps={{ className: 'size-4' }}
+          />
           {props.onDelete && (
             <Button
               size="icon"
@@ -218,9 +218,9 @@ export default function BudgetRow(props: BudgetRowProps) {
               onClick={() => props.onDelete && props.onDelete(props.index)}
               aria-label="Delete entry"
               className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            >
-              <Trash2 aria-hidden="true" className="size-4" />
-            </Button>
+              icon="trash-2"
+              iconProps={{ className: 'size-4' }}
+            />
           )}
         </td>
       );
@@ -236,9 +236,9 @@ export default function BudgetRow(props: BudgetRowProps) {
             onClick={() => props.onSave(props.index, props.editEntry)}
             aria-label="Save entry"
             className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          >
-            <Check aria-hidden="true" className="size-4" />
-          </Button>
+            icon="check"
+            iconProps={{ className: 'size-4' }}
+          />
           <Button
             size="icon"
             variant="ghost"
@@ -246,9 +246,9 @@ export default function BudgetRow(props: BudgetRowProps) {
             onClick={props.onCancel}
             aria-label="Cancel edit"
             className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          >
-            <X aria-hidden="true" className="size-4" />
-          </Button>
+            icon="x"
+            iconProps={{ className: 'size-4' }}
+          />
         </td>
       );
     }
@@ -263,9 +263,9 @@ export default function BudgetRow(props: BudgetRowProps) {
           onClick={props.onAdd}
           aria-label="Add expense"
           className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        >
-          <Plus aria-hidden="true" className="size-4" />
-        </Button>
+          icon="plus"
+          iconProps={{ className: 'size-4' }}
+        />
       </td>
     );
   };

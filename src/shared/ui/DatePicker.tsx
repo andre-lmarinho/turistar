@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import { Calendar } from './calendar';
@@ -27,17 +26,29 @@ export function DateRangePicker({ className, value, onChange }: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
           className={cn(
-            'bg-background focus:ring-primary flex w-64 items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none',
-            !value?.from && 'text-muted-foreground italic',
+            'w-64 justify-between gap-4 text-sm font-normal',
+            !value?.from && 'text-muted-foreground',
             className
           )}
           aria-label={label}
+          icon="calendar"
+          iconPosition="right"
+          iconProps={{ className: 'text-muted-foreground h-4 w-4' }}
         >
-          <span>{label}</span>
-          <CalendarIcon className="text-muted-foreground h-4 w-4" aria-hidden="true" />
-        </button>
+          <span
+            className={cn(
+              'flex-1 truncate text-left',
+              !value?.from && 'text-muted-foreground italic'
+            )}
+          >
+            {label}
+          </span>
+        </Button>
       </PopoverTrigger>
 
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
@@ -73,9 +84,9 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           title={label}
           aria-label={label}
           className={className}
-        >
-          <CalendarIcon aria-hidden="true" className="h-4 w-4" />
-        </Button>
+          icon="calendar"
+          iconProps={{ className: 'h-4 w-4' }}
+        />
       </PopoverTrigger>
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
         <Calendar

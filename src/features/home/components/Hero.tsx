@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Modal from '@/shared/ui/Modal';
 
 export default function Hero() {
@@ -69,7 +68,14 @@ export default function Hero() {
           Start planning your trip
         </h2>
         <div className="flex w-full justify-end">
-          <CloseButton onClick={closeForm} />
+          <Button
+            type="button"
+            variant="icon"
+            size="icon"
+            title="Close"
+            icon="x"
+            onClick={closeForm}
+          />
         </div>
         <PlanForm />
       </Modal>

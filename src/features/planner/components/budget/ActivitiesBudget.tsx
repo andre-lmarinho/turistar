@@ -5,7 +5,7 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import { Button } from '@/shared/ui/button';
 import Modal from '@/shared/ui/Modal';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
@@ -60,7 +60,15 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
         <h3 id="activities-budget-title" className="font-bold">
           Budget Your Activities
         </h3>
-        <CloseButton onClick={handleClose} aria-label="Close activities budget dialog" />
+        <Button
+          type="button"
+          variant="icon"
+          size="icon"
+          title="Close"
+          icon="x"
+          aria-label="Close activities budget dialog"
+          onClick={handleClose}
+        />
       </div>
 
       <div

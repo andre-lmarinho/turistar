@@ -5,11 +5,9 @@ import React, { useState, useEffect } from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import Image from 'next/image';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
-import { ChevronDown, Trash2, X, Palette } from 'lucide-react';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 
 import { Button } from '@/shared/ui/button';
-import IconButton from '@/shared/ui/IconButton';
 
 /**
  * Color strip shown at the very top of ActivityModal.
@@ -117,28 +115,24 @@ export default function ActivityModalHeader({
               type="button"
               onClick={handleDateButtonClick}
               className="text-xs"
+              icon="chevron-down"
+              iconPosition="right"
+              iconProps={{ className: 'size-4' }}
             >
               {currentDayLabel ?? 'Change Day'}
-              <ChevronDown className="size-4" aria-hidden="true" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <IconButton
-              ariaLabel="Delete"
-              icon={<Trash2 aria-hidden="true" />}
-              onClick={onDelete}
-            />
-            <IconButton
+            <Button variant="icon" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
+            <Button
               ref={colorButtonRef}
-              ariaLabel="Card Color"
-              icon={<Palette aria-hidden="true" className="group-hover/icon:-rotate-45" />}
+              variant="icon"
+              size="icon"
+              title="Card Color"
+              icon="palette"
               onClick={handleColorButtonClick}
             />
-            <IconButton
-              ariaLabel="Close"
-              icon={<X aria-hidden="true" className="group-hover/icon:rotate-90" />}
-              onClick={onClose}
-            />
+            <Button variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
           </div>
         </div>
 

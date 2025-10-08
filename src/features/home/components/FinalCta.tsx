@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
 import Modal from '@/shared/ui/Modal';
 
 export default function FinalCta() {
@@ -32,7 +31,14 @@ export default function FinalCta() {
           Start planning your trip
         </h2>
         <div className="flex w-full justify-end">
-          <CloseButton onClick={closeForm} />
+          <Button
+            type="button"
+            variant="icon"
+            size="icon"
+            title="Close"
+            icon="x"
+            onClick={closeForm}
+          />
         </div>
         <PlanForm />
       </Modal>

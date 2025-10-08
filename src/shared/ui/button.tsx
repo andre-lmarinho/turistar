@@ -4,7 +4,9 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { lucideIcons, type LucideIconName } from './icon';
 import Tooltip from './Tooltip';
+import { cn } from '@/shared/utils/cn';
 
 /* Button Variants ----------------------------------------------------- */
 const buttonVariants = cva(
@@ -17,6 +19,7 @@ const buttonVariants = cva(
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
         icon: 'bg-background border-border hover:bg-muted border backdrop-blur-sm',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
+        outline: 'border-border bg-background text-foreground hover:bg-muted/60 border shadow-xs',
       },
       size: {
         default: 'h-9 px-6 py-6 text-base has-[>svg]:px-3',
@@ -36,17 +39,17 @@ function ButtonIconWrapper({
   children,
   variant,
 }: {
-  title?: string;
   children: React.ReactNode;
   variant?: VariantProps<typeof buttonVariants>['variant'];
-  position?: 'top' | 'bottom';
 }) {
   if (variant?.includes('icon') && React.isValidElement(children) && 'props' in children) {
     const child = children as React.ReactElement<{ className?: string }>;
 
     const icon = React.cloneElement(child, {
-      className:
-        `${child.props.className ?? ''} transition-transform duration-300 transform-gpu group-hover/icon:scale-105`.trim(),
+      className: cn(
+        child.props.className,
+        'transition-transform duration-300 transform-gpu group-hover/icon:scale-105'
+      ),
     });
 
     return <div className="relative flex h-full w-full items-center justify-center">{icon}</div>;
@@ -56,22 +59,34 @@ function ButtonIconWrapper({
 }
 
 /* Button Component --------------------------------------------------- */
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  disabled,
-  title,
-  children,
-  position = 'top',
-  ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    title?: string;
-    position?: 'top' | 'bottom';
-  }) {
+const Button = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<'button'> &
+    VariantProps<typeof buttonVariants> & {
+      asChild?: boolean;
+      title?: string;
+      position?: 'top' | 'bottom';
+      icon?: LucideIconName;
+      iconPosition?: 'left' | 'right';
+      iconProps?: React.SVGAttributes<SVGSVGElement>;
+    }
+>(function Button(
+  {
+    className,
+    variant,
+    size,
+    asChild = false,
+    disabled,
+    title,
+    children,
+    position = 'top',
+    icon,
+    iconPosition = 'left',
+    iconProps,
+    ...props
+  },
+  ref
+) {
   const Comp = asChild ? Slot : 'button';
 
   const baseClasses = buttonVariants({ variant, size, className });
@@ -84,15 +99,40 @@ function Button({
         .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
     : baseClasses + iconGroup;
 
+  const IconComponent = icon ? lucideIcons[icon] : undefined;
+
+  const iconElement = IconComponent ? <IconComponent aria-hidden="true" {...iconProps} /> : null;
+
+  const wrappedIcon = iconElement ? (
+    <ButtonIconWrapper variant={variant}>{iconElement}</ButtonIconWrapper>
+  ) : null;
+
+  const content = iconElement ? (
+    iconPosition === 'right' ? (
+      <>
+        {children}
+        {wrappedIcon}
+      </>
+    ) : (
+      <>
+        {wrappedIcon}
+        {children}
+      </>
+    )
+  ) : (
+    <ButtonIconWrapper variant={variant}>{children}</ButtonIconWrapper>
+  );
+
   const buttonElement = (
     <Comp
+      ref={ref}
       data-slot="button"
       className={finalClasses}
       disabled={disabled}
       {...(title ? { 'aria-label': title } : {})}
       {...props}
     >
-      <ButtonIconWrapper variant={variant}>{children}</ButtonIconWrapper>
+      {content}
     </Comp>
   );
 
@@ -103,6 +143,8 @@ function Button({
   ) : (
     buttonElement
   );
-}
+});
+
+Button.displayName = 'Button';
 
 export { Button, buttonVariants };

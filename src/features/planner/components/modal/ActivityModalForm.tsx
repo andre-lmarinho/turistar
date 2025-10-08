@@ -7,7 +7,7 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
-import UpdateButton from '@/features/planner/ui/buttons/UpdateButton';
+import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import LocationSearchInput from '@/shared/ui/LocationSearchInput';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
@@ -82,6 +82,8 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
       longitude: lng,
     });
   }
+
+  const canSave = Boolean(editedTitle.trim());
 
   return (
     <>
@@ -206,15 +208,14 @@ export default function ActivityModalForm({ activity, onSave, color }: ActivityM
 
       {/* Update */}
       <div className="flex justify-center gap-2 pb-4">
-        <UpdateButton
+        <Button
           type="button"
-          ready={Boolean(editedTitle.trim())}
-          aria-disabled={!Boolean(editedTitle.trim())}
+          disabled={!canSave}
           onClick={handleSave}
           className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
         >
           Update
-        </UpdateButton>
+        </Button>
       </div>
     </>
   );

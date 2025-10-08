@@ -3,8 +3,8 @@
 
 import React from 'react';
 import type { ButtonHTMLAttributes } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
+import { Button } from '@/shared/ui/button';
 
 interface NavCircleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   direction?: 'left' | 'right';
@@ -13,20 +13,24 @@ interface NavCircleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export default function NavCircleButton({
   direction = 'left',
   className,
+  title: providedTitle,
   ...props
 }: NavCircleButtonProps) {
-  const Icon = direction === 'left' ? ChevronLeft : ChevronRight;
+  const icon = direction === 'left' ? 'chevron-left' : 'chevron-right';
+  const ariaLabel = props['aria-label'] as string | undefined;
+  const title =
+    providedTitle ?? ariaLabel ?? (direction === 'left' ? 'Previous step' : 'Next step');
 
   return (
-    <button
+    <Button
       type="button"
+      variant="icon"
+      size="icon"
+      title={title}
+      className={cn('size-7 rounded-full p-0', className)}
+      icon={icon}
+      iconProps={{ className: 'size-[18px]' }}
       {...props}
-      className={cn(
-        'bg-background border-border focus:ring-primary hover:bg-muted flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border focus:ring-2 focus:outline-none',
-        className
-      )}
-    >
-      <Icon size={18} aria-hidden="true" />
-    </button>
+    />
   );
 }
