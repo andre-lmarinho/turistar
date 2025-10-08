@@ -19,12 +19,13 @@ describe('Button', () => {
     expect(ref.current).toHaveTextContent('Save');
   });
 
-  it('applies icon-specific behaviours when variant includes icon', () => {
-    const { getByRole } = render(<Button variant="icon" size="icon" title="Edit" icon="pencil" />);
+  it('applies icon-specific behaviours when rendered at icon size', () => {
+    const { getByRole } = render(<Button size="icon" title="Edit" icon="pencil" />);
 
     const button = getByRole('button', { name: 'Edit' });
     expect(button).toHaveAttribute('aria-label', 'Edit');
-    expect(button.className).toContain('group/icon');
+    expect(button.className).toContain('h-8');
+    expect(button.className).toContain('w-8');
     expect(button.querySelector('svg')).toBeTruthy();
   });
 

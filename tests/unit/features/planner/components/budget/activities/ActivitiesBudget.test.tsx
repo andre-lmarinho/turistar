@@ -1,7 +1,7 @@
 // tests/unit/features/planner/components/budget/activities/ActivitiesBudget.test.tsx
 
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ActivitiesBudget from '@/features/planner/components/budget/ActivitiesBudget';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { vi } from 'vitest';
@@ -18,9 +18,12 @@ describe('ActivitiesBudget', () => {
   it('calls onClose when clicking outside the dialog', () => {
     const onClose = vi.fn();
     render(<ActivitiesBudget open days={days} onUpdate={() => {}} onClose={onClose} />);
-    const dialog = screen.getByRole('dialog');
-    fireEvent.click(dialog.parentElement as HTMLElement);
-    expect(onClose).toHaveBeenCalled();
+    const overlay = document.querySelector('[data-slot="modal-overlay"]') as HTMLElement;
+    expect(overlay).toBeTruthy();
+    fireEvent.pointerDown(overlay);
+    fireEvent.pointerUp(overlay);
+    fireEvent.click(overlay);
+    return waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 
   it('allows moving focus between inputs without closing', () => {

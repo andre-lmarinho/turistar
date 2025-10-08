@@ -118,7 +118,12 @@ export default function ActivityModalHeader({
                 </Button>
               </PopoverTrigger>
               {dayPopover.content ? (
-                <PopoverContent side="bottom" align="start" sideOffset={8}>
+                <PopoverContent
+                  side="bottom"
+                  align="start"
+                  sideOffset={8}
+                  aria-labelledby="day-picker-popup-title"
+                >
                   {dayPopover.content}
                 </PopoverContent>
               ) : null}
@@ -142,7 +147,12 @@ export default function ActivityModalHeader({
                   icon="palette"
                 />
               </PopoverTrigger>
-              <PopoverContent side="bottom" align="end" sideOffset={8}>
+              <PopoverContent
+                side="bottom"
+                align="end"
+                sideOffset={8}
+                aria-labelledby="card-color-popup-title"
+              >
                 {colorPopover.content}
               </PopoverContent>
             </Popover>

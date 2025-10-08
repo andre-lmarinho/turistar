@@ -36,6 +36,7 @@ const ModalOverlay = React.forwardRef<
   return (
     <DialogPrimitive.Overlay
       ref={ref}
+      data-slot="modal-overlay"
       className={cn(
         'backdrop-overlay data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         className
@@ -55,9 +56,13 @@ const ModalContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   ModalContentProps
 >(function ModalContent({ className, children, size, overlayProps, ...props }, ref) {
+  const { 'aria-describedby': ariaDescribedBy, 'aria-labelledby': ariaLabelledBy, ...restProps } = props;
+
   return (
     <DialogPrimitive.Portal>
-      <ModalOverlay {...overlayProps} />
+      <DialogPrimitive.Close asChild>
+        <ModalOverlay {...overlayProps} />
+      </DialogPrimitive.Close>
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
@@ -65,7 +70,10 @@ const ModalContent = React.forwardRef<
           modalContentVariants({ size }),
           className
         )}
-        {...props}
+        aria-modal="true"
+        aria-describedby={ariaDescribedBy ?? undefined}
+        aria-labelledby={ariaLabelledBy}
+        {...restProps}
       >
         {children}
       </DialogPrimitive.Content>

@@ -110,7 +110,12 @@ export default function ActivityCardEditing({
               </Button>
             </PopoverTrigger>
             {dayPopover.content ? (
-              <PopoverContent side={popoverSide} align="start" sideOffset={8}>
+              <PopoverContent
+                side={popoverSide}
+                align="start"
+                sideOffset={8}
+                aria-labelledby="day-picker-popup-title"
+              >
                 {dayPopover.content}
               </PopoverContent>
             ) : null}
@@ -129,7 +134,12 @@ export default function ActivityCardEditing({
                 Card Colors
               </Button>
             </PopoverTrigger>
-            <PopoverContent side={popoverSide} align="start" sideOffset={8}>
+            <PopoverContent
+              side={popoverSide}
+              align="start"
+              sideOffset={8}
+              aria-labelledby="card-color-popup-title"
+            >
               {colorPopover.content}
             </PopoverContent>
           </Popover>
