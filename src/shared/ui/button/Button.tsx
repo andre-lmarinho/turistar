@@ -16,7 +16,7 @@ const buttonVariants = cva(
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
         accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-xs',
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
-        outline: 'border border-border bg-background text-foreground hover:bg-muted/40 shadow-xs',
+        outline: 'border-border bg-background text-foreground hover:bg-muted/40 border shadow-xs',
       },
       size: {
         default: 'h-9 px-6 py-6 text-base has-[>svg]:px-3',
