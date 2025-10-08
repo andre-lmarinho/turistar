@@ -6,14 +6,14 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { cn } from '@/shared/utils/cn';
-import { buttonVariants } from '../button';
+import { Button, buttonVariants } from '../button';
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
   captionLayout = 'label',
-  buttonVariant = 'ghost',
+  buttonVariant = 'outline',
   formatters,
   components,
   ...props

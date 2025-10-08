@@ -37,8 +37,8 @@ export default function Tooltip({
           align={align}
           sideOffset={sideOffset}
           className={cn(
-            'z-50 select-none rounded shadow-md outline-hidden data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1',
-            'pointer-events-auto w-max max-w-xs border border-border bg-background p-2 text-xs text-foreground',
+            'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[side=bottom]:slide-in-from-top-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1 data-[side=top]:slide-in-from-bottom-1 z-50 rounded shadow-md outline-hidden select-none',
+            'border-border bg-background text-foreground pointer-events-auto w-max max-w-xs border p-2 text-xs',
             className
           )}
         >

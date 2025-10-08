@@ -52,7 +52,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
       </PopoverTrigger>
 
       <PopoverContent
-        className="mt-2 min-w-[500px] border border-border/60 bg-background shadow-lg"
+        className="border-border/60 bg-background mt-2 min-w-[500px] border shadow-lg"
         align="start"
         side="bottom"
       >
@@ -93,7 +93,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
         />
       </PopoverTrigger>
       <PopoverContent
-        className="mt-2 min-w-[500px] border border-border/60 bg-background shadow-lg"
+        className="border-border/60 bg-background mt-2 min-w-[500px] border shadow-lg"
         align="start"
         side="bottom"
       >

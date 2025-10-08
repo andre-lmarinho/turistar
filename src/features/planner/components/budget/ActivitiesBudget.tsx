@@ -49,7 +49,12 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
   if (!open) return null;
 
   return (
-    <Modal open={open} onOpenChange={(nextOpen) => { if (!nextOpen) handleClose(); }}>
+    <Modal
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) handleClose();
+      }}
+    >
       <ModalContent
         aria-labelledby="activities-budget-title"
         className="bg-background focus-visible:ring-primary w-[95%] max-w-md border-none p-0 shadow-xl"

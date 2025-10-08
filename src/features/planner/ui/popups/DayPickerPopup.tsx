@@ -28,12 +28,22 @@ export default function DayPickerPopup({
   }, [days, selected]);
 
   return (
-    <div className="w-72 rounded-lg border bg-background shadow-xl" aria-labelledby="day-picker-popup-title">
+    <div
+      className="bg-background w-72 rounded-lg border shadow-xl"
+      aria-labelledby="day-picker-popup-title"
+    >
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
-        <Button type="button" variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          title="Close"
+          icon="x"
+          onClick={onClose}
+        />
       </div>
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">

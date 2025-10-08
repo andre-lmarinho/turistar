@@ -125,10 +125,22 @@ export default function ActivityModalHeader({
             </Popover>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
+            <Button
+              variant="outline"
+              size="icon"
+              title="Delete"
+              icon="trash-2"
+              onClick={onDelete}
+            />
             <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
               <PopoverTrigger asChild>
-                <Button ref={colorPopover.triggerRef} variant="outline" size="icon" title="Card Color" icon="palette" />
+                <Button
+                  ref={colorPopover.triggerRef}
+                  variant="outline"
+                  size="icon"
+                  title="Card Color"
+                  icon="palette"
+                />
               </PopoverTrigger>
               <PopoverContent side="bottom" align="end" sideOffset={8}>
                 {colorPopover.content}

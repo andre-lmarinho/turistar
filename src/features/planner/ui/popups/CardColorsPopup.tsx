@@ -29,12 +29,22 @@ export default function CardColorsPopup({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-[304px] rounded-lg border bg-background shadow-xl" aria-labelledby="card-color-popup-title">
+    <div
+      className="bg-background w-[304px] rounded-lg border shadow-xl"
+      aria-labelledby="card-color-popup-title"
+    >
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="card-color-popup-title" className="font-bold">
           Card Background
         </h3>
-        <Button type="button" variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          title="Close"
+          icon="x"
+          onClick={onClose}
+        />
       </div>
       <div className="gap-4 p-4">
         {tempImageUrl && (

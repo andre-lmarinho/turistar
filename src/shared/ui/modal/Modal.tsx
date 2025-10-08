@@ -8,7 +8,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 
 const modalContentVariants = cva(
-  'bg-background focus-visible:ring-primary relative z-50 grid w-full gap-4 rounded-lg border border-border p-6 shadow-xl outline-hidden focus-visible:ring-2',
+  'bg-background focus-visible:ring-primary border-border relative z-50 grid w-full gap-4 rounded-lg border p-6 shadow-xl outline-hidden focus-visible:ring-2',
   {
     variants: {
       size: {
@@ -54,17 +54,14 @@ interface ModalContentProps
 const ModalContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   ModalContentProps
->(function ModalContent(
-  { className, children, size, overlayProps, ...props },
-  ref
-) {
+>(function ModalContent({ className, children, size, overlayProps, ...props }, ref) {
   return (
     <DialogPrimitive.Portal>
       <ModalOverlay {...overlayProps} />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 focus:outline-none',
+          'data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 focus:outline-none',
           modalContentVariants({ size }),
           className
         )}

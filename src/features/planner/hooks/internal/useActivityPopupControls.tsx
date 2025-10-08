@@ -34,12 +34,7 @@ export function useActivityPopupControls({
   onChangeImage,
   onClearImage,
 }: Props) {
-  const {
-    colorButtonRef,
-    dateButtonRef,
-    activePopup,
-    setActivePopup,
-  } = useCardPopups();
+  const { colorButtonRef, dateButtonRef, activePopup, setActivePopup } = useCardPopups();
 
   const currentDay = availableDays.find((d) => d.id === activity.dayId);
   const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;

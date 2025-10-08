@@ -5,8 +5,7 @@ import React from 'react';
 
 import Tooltip, { type TooltipProps } from './Tooltip';
 
-interface KeyHintTooltipProps
-  extends Omit<TooltipProps, 'content' | 'children'> {
+interface KeyHintTooltipProps extends Omit<TooltipProps, 'content' | 'children'> {
   /** Tooltip text before the shortcut key label */
   content: React.ReactNode;
   /** Keyboard shortcut key */
@@ -34,14 +33,14 @@ export default function TooltipKeyHint({
       {...props}
       side={resolvedSide}
       className={className}
-      content={(
+      content={
         <>
           {content}{' '}
-          <kbd className="bg-[var(--foreground)] rounded px-1 py-0.5 text-xs font-medium text-background">
+          <kbd className="text-background rounded bg-[var(--foreground)] px-1 py-0.5 text-xs font-medium">
             {label}
           </kbd>
         </>
-      )}
+      }
     >
       {children}
     </Tooltip>

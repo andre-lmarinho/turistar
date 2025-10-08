@@ -39,10 +39,7 @@ export default function Hero() {
               <Button>Start Your Planning</Button>
             </ModalTrigger>
 
-            <ModalContent
-              aria-labelledby={modalTitleId}
-              className="w-full max-w-md border-none"
-            >
+            <ModalContent aria-labelledby={modalTitleId} className="w-full max-w-md border-none">
               <h2 id={modalTitleId} className="sr-only">
                 Start planning your trip
               </h2>
@@ -72,7 +69,6 @@ export default function Hero() {
           />
         </div>
       </div>
-
     </section>
   );
 }
