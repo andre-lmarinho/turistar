@@ -56,7 +56,11 @@ const ModalContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   ModalContentProps
 >(function ModalContent({ className, children, size, overlayProps, ...props }, ref) {
-  const { 'aria-describedby': ariaDescribedBy, 'aria-labelledby': ariaLabelledBy, ...restProps } = props;
+  const {
+    'aria-describedby': ariaDescribedBy,
+    'aria-labelledby': ariaLabelledBy,
+    ...restProps
+  } = props;
 
   return (
     <DialogPrimitive.Portal>
