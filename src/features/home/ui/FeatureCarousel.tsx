@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import { usePointerDragScroll } from '@/features/home/hooks/usePointerDragScroll';
 import { useSyncedPointerCarousels } from '@/features/home/hooks/useSyncedPointerCarousels';
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 
 export type FeatureCarouselFeature = {
   title: string;

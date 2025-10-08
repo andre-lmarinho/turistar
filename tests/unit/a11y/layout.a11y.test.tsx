@@ -6,7 +6,7 @@ import { axe } from 'jest-axe';
 import { silenceConsole } from '../../utils/silenceConsole';
 
 // Stub CSS imports used by the layout before importing the component
-vi.mock('@/app/globals.css', () => ({}) as unknown as Record<string, never>);
+vi.mock('@/shared/utils/theme.css', () => ({}) as unknown as Record<string, never>);
 vi.mock('leaflet/dist/leaflet.css', () => ({}) as unknown as Record<string, never>);
 
 import RootLayout from '@/app/layout';

@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 
 import type { Metadata } from 'next';
-import '@/app/globals.css';
+import '@/shared/utils/theme.css';
 import 'leaflet/dist/leaflet.css';
 
 import Providers from '@/shared/components/Providers';

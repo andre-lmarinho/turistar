@@ -3,7 +3,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 
 interface TooltipProps {
   content: React.ReactNode;
