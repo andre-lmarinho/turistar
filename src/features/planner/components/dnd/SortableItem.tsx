@@ -5,7 +5,7 @@ import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 import ActivityCard from './ActivityCard';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 

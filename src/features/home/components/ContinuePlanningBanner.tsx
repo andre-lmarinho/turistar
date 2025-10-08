@@ -7,7 +7,7 @@ import { differenceInCalendarDays } from 'date-fns';
 
 import { buttonVariants } from '@/shared/ui/button';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 
 export default function ContinuePlanningBanner() {
   const { recentPlan } = useRecentPlan();

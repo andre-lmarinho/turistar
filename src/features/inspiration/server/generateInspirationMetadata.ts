@@ -1,6 +1,6 @@
 // src/features/inspiration/server/generateInspirationMetadata.ts
 import type { Metadata } from 'next';
-import { capitalize } from '@/shared/utils/utils';
+import { capitalize } from '@/shared/utils/capitalize';
 import { SITE_URL } from '@/shared/constants/site';
 
 import { assertValidCitySlug, safeReadInspirationData } from './inspirationData';

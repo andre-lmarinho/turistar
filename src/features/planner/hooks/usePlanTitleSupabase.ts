@@ -1,6 +1,6 @@
 // src/features/planner/hooks/usePlanTitleSupabase.ts
 import { useEffect, useState } from 'react';
-import { capitalize } from '@/shared/utils/utils';
+import { capitalize } from '@/shared/utils/capitalize';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import { updatePlanTitle } from '@/app/planner/actions/updatePlanTitle';
 import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';

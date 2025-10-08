@@ -106,7 +106,10 @@ describe('fetchGeoapifyAddressAutocomplete', () => {
 
     const results = await fetchGeoapifyAddressAutocomplete('10 Down');
 
-    expect(global.fetch).toHaveBeenCalledWith(expect.not.stringContaining('type='), expect.any(Object));
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.not.stringContaining('type='),
+      expect.any(Object)
+    );
     expect(results).toEqual([
       { name: '10 Downing St', latitude: 1, longitude: 2 },
       { name: 'Main Plaza', latitude: 3, longitude: 4 },

@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, '../src'),
       '@supabase/ssr': resolve(__dirname, '../tests/__mocks__/supabaseSsr.ts'),
-      '@/app/globals.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
+      '@/shared/utils/theme.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
       'leaflet/dist/leaflet.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
     },
   },

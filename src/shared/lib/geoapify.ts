@@ -159,8 +159,10 @@ export async function fetchGeoapifyAddressAutocomplete(
   features.sort((a, b) => {
     const aType = a.properties.result_type ?? '';
     const bType = b.properties.result_type ?? '';
-    return (ADDRESS_RESULT_PRIORITY[aType] ?? Number.MAX_SAFE_INTEGER) -
-      (ADDRESS_RESULT_PRIORITY[bType] ?? Number.MAX_SAFE_INTEGER);
+    return (
+      (ADDRESS_RESULT_PRIORITY[aType] ?? Number.MAX_SAFE_INTEGER) -
+      (ADDRESS_RESULT_PRIORITY[bType] ?? Number.MAX_SAFE_INTEGER)
+    );
   });
   return features.map((f) => ({
     name: f.properties.formatted ?? f.properties.name ?? text,
