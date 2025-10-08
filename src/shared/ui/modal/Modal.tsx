@@ -64,9 +64,7 @@ const ModalContent = React.forwardRef<
 
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Close asChild>
-        <ModalOverlay {...overlayProps} />
-      </DialogPrimitive.Close>
+      <ModalOverlay {...overlayProps} />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
