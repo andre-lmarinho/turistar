@@ -9,7 +9,7 @@ import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import LocationSearchInput from '@/shared/ui/LocationSearchInput';
+import { LocationSearchInput } from '@/shared/ui/input';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 

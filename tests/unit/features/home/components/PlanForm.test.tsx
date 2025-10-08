@@ -33,7 +33,7 @@ vi.mock('@/shared/ui/button', () => ({
   ),
 }));
 
-vi.mock('@/shared/ui/DatePicker', () => ({
+vi.mock('@/shared/ui/calendar', () => ({
   DateRangePicker: () => <div />,
 }));
 
@@ -42,9 +42,9 @@ vi.mock('@/shared/components/LoadingScreen', () => ({
   default: () => null,
 }));
 
-vi.mock('@/shared/ui/LocationSearchInput', () => ({
+vi.mock('@/shared/ui/input', () => ({
   __esModule: true,
-  default: mockLocationSearchInput,
+  LocationSearchInput: mockLocationSearchInput,
 }));
 
 vi.mock('@/features/planner/contracts/marketing/createPlannerPlan', () => ({

@@ -5,7 +5,7 @@ import React from 'react';
 import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { Button } from '@/shared/ui/button';
-import Modal from '@/shared/ui/Modal';
+import { Modal } from '@/shared/ui/modal';
 
 export default function OnboardingModal() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();

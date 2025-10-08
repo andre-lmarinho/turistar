@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { Button } from '@/shared/ui/button';
-import Popup from '@/shared/ui/popups/Popup';
+import { PopoverPanel } from '@/shared/ui/popover';
 
 interface CardColorsPopupProps {
   imageUrl: string;
@@ -32,7 +32,7 @@ export default function CardColorsPopup({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Popup
+    <PopoverPanel
       triggerRef={triggerRef}
       onClose={onClose}
       className="w-[304px]"
@@ -120,6 +120,6 @@ export default function CardColorsPopup({
           />
         </div>
       </div>
-    </Popup>
+    </PopoverPanel>
   );
 }

@@ -1,11 +1,11 @@
-// src/shared/ui/DatePicker.tsx
+// src/shared/ui/calendar/DateRangePicker.tsx
 
 import * as React from 'react';
 import { format } from 'date-fns';
 import { DateRange } from 'react-day-picker';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Calendar } from './calendar';
-import { Button } from './button';
+import { Popover, PopoverContent, PopoverTrigger } from '../popover';
+import { Calendar } from './Calendar';
+import { Button } from '../button';
 import { cn } from '@/shared/utils/cn';
 
 interface Props {
@@ -64,7 +64,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
   );
 }
 
-// Icon-only version matching button-icons style
+// Icon-only version matching button icon style
 export function DateRangePickerIcon({ className, value, onChange }: Props) {
   const [open, setOpen] = React.useState(false);
 

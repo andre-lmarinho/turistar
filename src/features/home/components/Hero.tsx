@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import Modal from '@/shared/ui/Modal';
+import { Modal } from '@/shared/ui/modal';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);

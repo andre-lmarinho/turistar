@@ -17,7 +17,7 @@ vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   ),
 }));
 
-vi.mock('@/shared/ui/DatePicker', () => ({
+vi.mock('@/shared/ui/calendar', () => ({
   __esModule: true,
   DateRangePicker: () => <div />, // not used
   DateRangePickerIcon: () => <div />, // not used

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import Modal from '@/shared/ui/Modal';
+import { Modal } from '@/shared/ui/modal';
 
 export default function FinalCta() {
   const [open, setOpen] = useState(false);

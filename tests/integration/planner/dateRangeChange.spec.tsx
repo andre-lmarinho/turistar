@@ -26,7 +26,7 @@ const initialBounds: Bounds = { sw: [0, 0], ne: [1, 1] };
 const updatedBounds: Bounds = { sw: [2, 2], ne: [3, 3] };
 
 // Mocks for shared UI components
-vi.mock('@/shared/ui/DatePicker', () => ({
+vi.mock('@/shared/ui/calendar', () => ({
   __esModule: true,
   DateRangePicker: ({
     onChange,
