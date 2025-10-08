@@ -4,7 +4,7 @@
 import React from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 
 interface NavCircleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   direction?: 'left' | 'right';

@@ -9,7 +9,7 @@ import { Button } from '@/shared/ui/button';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
-import { cn } from '@/shared/utils/utils';
+import { cn } from '@/shared/utils/cn';
 
 interface Props {
   activity: Activity & { dayId?: string };
