@@ -4,7 +4,7 @@
 import React from 'react';
 import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import { Button } from '@/shared/ui/button';
 import Modal from '@/shared/ui/Modal';
 
 export default function OnboardingModal() {
@@ -26,7 +26,7 @@ export default function OnboardingModal() {
       </h2>
       {/* Close button */}
       <div className="flex items-center justify-end pb-4">
-        <CloseButton onClick={onClose} />
+        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
       </div>
       {/* Carousel */}
       <div className="flex items-center justify-center">

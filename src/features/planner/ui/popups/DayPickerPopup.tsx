@@ -3,7 +3,7 @@
 
 import React from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import CloseButton from '@/shared/ui/button-icons/CloseButton';
+import { Button } from '@/shared/ui/button';
 import Popup from '@/shared/ui/popups/Popup';
 
 interface Props {
@@ -41,7 +41,7 @@ export default function DayPickerPopup({
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
-        <CloseButton onClick={onClose} />
+        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
       </div>
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">

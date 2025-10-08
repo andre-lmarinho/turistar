@@ -9,8 +9,7 @@ import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerE
 import ActivityCardBase from './ActivityCardBase';
 import ActivityCardEditing from './ActivityCardEditing';
 import ActivityCardEditorOverlay from './ActivityCardEditorOverlay';
-import IconButton from '@/shared/ui/IconButton';
-import { Pencil } from 'lucide-react';
+import { Button } from '@/shared/ui/button';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };
@@ -98,12 +97,14 @@ export default function ActivityCard({
         </button>
 
         {!editing && (
-          <IconButton
-            icon={<Pencil aria-hidden="true" />}
-            ariaLabel="Edit Card"
+          <Button
+            variant="icon"
+            size="icon"
+            title="Edit Card"
             position="bottom"
             type="button"
             className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+            icon="pencil"
             onClick={(e) => {
               e.stopPropagation();
               start();
