@@ -1,9 +1,9 @@
-// src/shared/ui/Modal.tsx
+// src/shared/ui/modal/Modal.tsx
 'use client';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import OverlayContainer from './OverlayContainer';
+import { OverlayContainer } from '../overlay-container';
 import { cn } from '@/shared/utils/cn';
 
 interface ModalProps extends React.ComponentProps<typeof OverlayContainer> {}

@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import Modal from '@/shared/ui/Modal';
+import { Modal } from '@/shared/ui/modal';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 

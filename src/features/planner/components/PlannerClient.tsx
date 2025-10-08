@@ -13,7 +13,7 @@ import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/Pla
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
 import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
-import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/DatePicker';
+import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/calendar';
 import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useKeyBinds } from '@/features/planner/hooks/internal/useKeyBinds';

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import ActivityModalHeader from '@/features/planner/components/modal/ActivityModalHeader';
 import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import Modal from '@/shared/ui/Modal';
+import { Modal } from '@/shared/ui/modal';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export default function ActivityModal() {

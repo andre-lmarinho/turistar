@@ -112,9 +112,9 @@ vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
   default: onboardingMocks.OnboardingModal,
 }));
 
-vi.mock('@/shared/ui/DatePicker', async () => {
+vi.mock('@/shared/ui/calendar', async () => {
   const actual =
-    await vi.importActual<typeof import('@/shared/ui/DatePicker')>('@/shared/ui/DatePicker');
+    await vi.importActual<typeof import('@/shared/ui/calendar')>('@/shared/ui/calendar');
   return {
     ...actual,
     DateRangePickerIcon: () => <div data-testid="date-picker" />,

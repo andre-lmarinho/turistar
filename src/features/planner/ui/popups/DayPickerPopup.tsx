@@ -4,7 +4,7 @@
 import React from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Button } from '@/shared/ui/button';
-import Popup from '@/shared/ui/popups/Popup';
+import { PopoverPanel } from '@/shared/ui/popover';
 
 interface Props {
   days: DayPlan[];
@@ -31,7 +31,7 @@ export default function DayPickerPopup({
   }, [days, selected]);
 
   return (
-    <Popup
+    <PopoverPanel
       triggerRef={triggerRef}
       onClose={onClose}
       size="md"
@@ -79,6 +79,6 @@ export default function DayPickerPopup({
           </select>
         </div>
       </div>
-    </Popup>
+    </PopoverPanel>
   );
 }

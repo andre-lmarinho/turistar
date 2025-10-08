@@ -1,4 +1,4 @@
-// src/shared/ui/calendar.tsx
+// src/shared/ui/calendar/Calendar.tsx
 'use client';
 
 import * as React from 'react';
@@ -6,7 +6,7 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { cn } from '@/shared/utils/cn';
-import { Button, buttonVariants } from '@/shared/ui/button';
+import { Button, buttonVariants } from '../button';
 
 function Calendar({
   className,

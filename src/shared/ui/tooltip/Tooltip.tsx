@@ -1,4 +1,4 @@
-// src/shared/ui/Tooltip.tsx
+// src/shared/ui/tooltip/Tooltip.tsx
 'use client';
 
 import React from 'react';

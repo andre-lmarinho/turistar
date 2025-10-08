@@ -1,15 +1,15 @@
-// src/shared/ui/popups/InfoPopup.tsx
+// src/shared/ui/popover/InfoPopover.tsx
 'use client';
 
 import React from 'react';
-import { Popover, PopoverTrigger, PopoverContent } from '../popover';
+import { Popover, PopoverTrigger, PopoverContent } from './Popover';
 
-interface InfoPopupProps {
+interface InfoPopoverProps {
   content: React.ReactNode;
   children: React.ReactElement;
 }
 
-export default function InfoPopup({ content, children }: InfoPopupProps) {
+export default function InfoPopover({ content, children }: InfoPopoverProps) {
   const [open, setOpen] = React.useState(false);
   const contentId = React.useId();
 

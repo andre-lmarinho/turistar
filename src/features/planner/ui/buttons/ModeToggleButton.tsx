@@ -5,7 +5,7 @@ import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { List, Map, DollarSign } from 'lucide-react';
-import TooltipKeyHint from '@/shared/ui/TooltipKeyHint';
+import { TooltipKeyHint } from '@/shared/ui/tooltip';
 import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 
