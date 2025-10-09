@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import ActivityModalHeader from '@/features/planner/components/modal/ActivityModalHeader';
 import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import { Modal } from '@/shared/ui/modal';
+import { Modal, ModalContent } from '@/shared/ui/modal';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export default function ActivityModal() {
@@ -34,13 +34,14 @@ export default function ActivityModal() {
   }
 
   return (
-    <Modal
-      open={open}
-      onClose={closeModal}
-      overlayClassName="backdrop-overlay"
-      aria-labelledby="activity-modal-title"
-      className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
-    >
+    <Modal open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) closeModal();
+    }}>
+      <ModalContent
+        aria-labelledby="activity-modal-title"
+        className="bg-background focus-visible:ring-primary flex w-[95%] max-w-[452px] flex-col focus-visible:ring-2"
+        overlayProps={{ className: 'backdrop-overlay' }}
+      >
       <h2 id="activity-modal-title" className="sr-only">
         Edit Activity
       </h2>
@@ -56,6 +57,7 @@ export default function ActivityModal() {
         onImageChange={handleImageChange}
       />
       <ActivityModalForm activity={draft} onSave={save} color={activity.color} />
+      </ModalContent>
     </Modal>
   );
 }

@@ -44,7 +44,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
       >
         <div className="flex justify-between pb-4">
           <h2 className="text-3xl font-semibold">Traveling Budget</h2>
-          <Button variant="icon" size="sm" onClick={() => setEditActivities(true)}>
+          <Button variant="outline" size="sm" onClick={() => setEditActivities(true)}>
             Budget Your Activities
           </Button>
         </div>

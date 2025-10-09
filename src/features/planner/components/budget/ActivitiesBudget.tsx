@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Modal, ModalContent } from '@/shared/ui/modal';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -26,6 +26,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [shouldAutoFocus, setShouldAutoFocus] = useState(false);
   const prevOpen = useRef(open);
+  const closingRef = useRef(false);
 
   useEffect(() => {
     if (open && !prevOpen.current) {
@@ -35,11 +36,14 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
       }
       setInputs(init);
       setShouldAutoFocus(true);
+      closingRef.current = false;
     }
     prevOpen.current = open;
   }, [open, activities]);
 
   const handleClose = () => {
+    if (closingRef.current) return;
+    closingRef.current = true;
     for (const [id, val] of Object.entries(inputs)) {
       onUpdate(id, normalizeAmount(val));
     }
@@ -51,18 +55,27 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
   return (
     <Modal
       open={open}
-      onClose={handleClose}
-      overlayClassName="backdrop-overlay"
-      aria-labelledby="activities-budget-title"
-      className="focus:ring-primary bg-background w-[95%] max-w-md rounded-lg shadow-xl focus:ring-2 focus:outline-none"
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          if (closingRef.current) {
+            closingRef.current = false;
+            return;
+          }
+          handleClose();
+        }
+      }}
     >
+      <ModalContent
+        aria-labelledby="activities-budget-title"
+        className="focus-visible:ring-primary w-[95%] max-w-md"
+        overlayProps={{ className: 'backdrop-overlay' }}
+      >
       <div className="flex items-center justify-between border-b px-4 py-2">
         <h3 id="activities-budget-title" className="font-bold">
           Budget Your Activities
         </h3>
         <Button
           type="button"
-          variant="icon"
           size="icon"
           title="Close"
           icon="x"
@@ -97,6 +110,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           </div>
         ))}
       </div>
+      </ModalContent>
     </Modal>
   );
 }

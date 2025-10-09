@@ -257,7 +257,7 @@ export default function BudgetRow(props: BudgetRowProps) {
     return (
       <td role="gridcell" className="p-2 text-right">
         <Button
-          variant="icon"
+          variant="outline"
           size="icon"
           type="button"
           onClick={props.onAdd}

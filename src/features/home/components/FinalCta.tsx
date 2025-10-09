@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Modal, ModalContent } from '@/shared/ui/modal';
 
 export default function FinalCta() {
   const [open, setOpen] = useState(false);
@@ -19,21 +19,20 @@ export default function FinalCta() {
         <Button onClick={openForm}>Start Your Planning</Button>
       </div>
 
-      <Modal
-        open={open}
-        onClose={closeForm}
-        overlayClassName="backdrop-overlay"
-        wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
-        className="w-full max-w-md p-6"
-        aria-labelledby={modalTitleId}
-      >
+      <Modal open={open} onOpenChange={(isOpen) => {
+        if (!isOpen) closeForm();
+      }}>
+        <ModalContent
+          aria-labelledby={modalTitleId}
+          className="w-full max-w-md p-6"
+          overlayProps={{ className: 'backdrop-overlay' }}
+        >
         <h2 id={modalTitleId} className="sr-only">
           Start planning your trip
         </h2>
         <div className="flex w-full justify-end">
           <Button
             type="button"
-            variant="icon"
             size="icon"
             title="Close"
             icon="x"
@@ -41,6 +40,7 @@ export default function FinalCta() {
           />
         </div>
         <PlanForm />
+        </ModalContent>
       </Modal>
     </section>
   );

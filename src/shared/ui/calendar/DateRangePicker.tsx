@@ -78,9 +78,8 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="icon"
           size="icon"
-          position="bottom"
+          tooltipSide="bottom"
           title={label}
           aria-label={label}
           className={className}

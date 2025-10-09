@@ -103,7 +103,7 @@ export default function ActivityCardEditing({
           <Button
             ref={dateButtonRef}
             size="sm"
-            variant="icon"
+            variant="outline"
             type="button"
             onClick={handleDateButtonClick}
             icon="arrow-left-right"
@@ -118,7 +118,7 @@ export default function ActivityCardEditing({
           <Button
             ref={colorButtonRef}
             size="sm"
-            variant="icon"
+            variant="outline"
             type="button"
             onClick={handleColorButtonClick}
             icon="palette"
@@ -132,7 +132,7 @@ export default function ActivityCardEditing({
 
           <Button
             size="sm"
-            variant="icon"
+            variant="outline"
             type="button"
             onClick={onDelete}
             icon="trash-2"

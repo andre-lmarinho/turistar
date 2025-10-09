@@ -98,10 +98,9 @@ export default function ActivityCard({
 
         {!editing && (
           <Button
-            variant="icon"
             size="icon"
             title="Edit Card"
-            position="bottom"
+            tooltipSide="bottom"
             type="button"
             className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
             icon="pencil"

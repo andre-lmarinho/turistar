@@ -91,8 +91,8 @@ export default function ActivityModalHeader({
         )}
         {editedImageUrl && (
           <Button
-            variant="icon"
             size="sm"
+            variant="outline"
             className={`absolute right-2 bottom-2 z-20 text-xs ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
               e.stopPropagation();
@@ -111,7 +111,7 @@ export default function ActivityModalHeader({
             <Button
               ref={dateButtonRef}
               size="sm"
-              variant="icon"
+              variant="outline"
               type="button"
               onClick={handleDateButtonClick}
               className="text-xs"
@@ -123,16 +123,16 @@ export default function ActivityModalHeader({
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="icon" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
+            <Button variant="outline" size="icon" title="Delete" icon="trash-2" onClick={onDelete} />
             <Button
               ref={colorButtonRef}
-              variant="icon"
+              variant="outline"
               size="icon"
               title="Card Color"
               icon="palette"
               onClick={handleColorButtonClick}
             />
-            <Button variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+            <Button variant="outline" size="icon" title="Close" icon="x" onClick={onClose} />
           </div>
         </div>
 

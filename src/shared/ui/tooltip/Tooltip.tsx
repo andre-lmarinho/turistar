@@ -1,73 +1,50 @@
-// src/shared/ui/tooltip/Tooltip.tsx
 'use client';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+
 import { cn } from '@/shared/utils/cn';
 
 interface TooltipProps {
   content: React.ReactNode;
-  children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
+  children: React.ReactElement;
   className?: string;
-  position?: 'top' | 'bottom';
+  side?: TooltipPrimitive.TooltipContentProps['side'];
+  align?: TooltipPrimitive.TooltipContentProps['align'];
+  sideOffset?: TooltipPrimitive.TooltipContentProps['sideOffset'];
+  delayDuration?: number;
 }
 
-export default function Tooltip({ content, children, className, position = 'top' }: TooltipProps) {
-  const [visible, setVisible] = React.useState(false);
-  const [coords, setCoords] = React.useState({ x: 0, y: 0 });
-  const tooltipId = React.useId();
-
-  const show = (e: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement>) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
-    setCoords({
-      x: rect.left + rect.width / 2,
-      y: position === 'bottom' ? rect.bottom : rect.top,
-    });
-    setVisible(true);
-  };
-
-  const hide = () => setVisible(false);
-
-  const trigger = React.cloneElement(children, {
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      children.props.onMouseEnter?.(e);
-      show(e);
-    },
-    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-      children.props.onMouseLeave?.(e);
-      hide();
-    },
-    onFocus: (e: React.FocusEvent<HTMLElement>) => {
-      children.props.onFocus?.(e);
-      show(e);
-    },
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      children.props.onBlur?.(e);
-      hide();
-    },
-    'aria-describedby': tooltipId,
-  });
-
+function Tooltip({
+  content,
+  children,
+  className,
+  side = 'top',
+  align = 'center',
+  sideOffset = 6,
+  delayDuration = 150,
+}: TooltipProps) {
   return (
-    <>
-      {trigger}
-      {visible &&
-        ReactDOM.createPortal(
-          <div
-            id={tooltipId}
+    <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={0}>
+      <TooltipPrimitive.Root>
+        <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+        <TooltipPrimitive.Portal>
+          <TooltipPrimitive.Content
+            data-slot="tooltip-content"
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
             className={cn(
-              'text-background pointer-events-none fixed z-50 -translate-x-1/2 rounded bg-[var(--foreground)] px-2 py-1 text-[10px]',
-              position === 'bottom' ? 'translate-y-[6px]' : '-translate-y-[calc(100%+6px)]',
+              'text-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 rounded-md bg-foreground px-2 py-1 text-xs shadow-md outline-hidden',
               className
             )}
-            style={{ left: coords.x, top: coords.y }}
-            role="tooltip"
           >
             {content}
-          </div>,
-          document.body
-        )}
-    </>
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+      </TooltipPrimitive.Root>
+    </TooltipPrimitive.Provider>
   );
 }
+
+export default Tooltip;

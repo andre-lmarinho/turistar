@@ -16,32 +16,45 @@ const buttonVariants = cva(
         default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
         accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow-xs',
         muted: 'bg-card text-foreground hover:bg-muted w-full shadow-xs',
-        icon: 'bg-background border-border hover:bg-muted border backdrop-blur-sm',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         outline: 'border-border bg-background text-foreground hover:bg-muted/60 border shadow-xs',
       },
       size: {
         default: 'h-9 px-6 py-6 text-base has-[>svg]:px-3',
         sm: 'h-8 gap-1.5 px-3 text-sm has-[>svg]:px-2.5',
-        icon: 'h-8 w-8 [&_svg:not([class*="size-"])]:size-4',
+        icon:
+          'group/icon relative h-8 w-8 rounded-md border border-border bg-background p-0 hover:bg-muted/80 [&_svg:not([class*="size-"])]:size-4 backdrop-blur-sm',
       },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
     },
+    compoundVariants: [
+      {
+        variant: 'ghost',
+        size: 'icon',
+        className:
+          'border-transparent bg-transparent hover:bg-accent/60 hover:text-accent-foreground',
+      },
+      {
+        variant: 'muted',
+        size: 'icon',
+        className: 'w-auto px-2 py-1',
+      },
+    ],
   }
 );
 
 /* Wrapper for Icon Variant ------------------------------------------- */
 function ButtonIconWrapper({
   children,
-  variant,
+  size,
 }: {
   children: React.ReactNode;
-  variant?: VariantProps<typeof buttonVariants>['variant'];
+  size?: VariantProps<typeof buttonVariants>['size'];
 }) {
-  if (variant?.includes('icon') && React.isValidElement(children) && 'props' in children) {
+  if (size === 'icon' && React.isValidElement(children) && 'props' in children) {
     const child = children as React.ReactElement<{ className?: string }>;
 
     const icon = React.cloneElement(child, {
@@ -64,7 +77,10 @@ const Button = React.forwardRef<
     VariantProps<typeof buttonVariants> & {
       asChild?: boolean;
       title?: string;
-      position?: 'top' | 'bottom';
+      tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
+      tooltipAlign?: 'start' | 'center' | 'end';
+      tooltipSideOffset?: number;
+      tooltipDelayDuration?: number;
       icon?: LucideIconName;
       iconPosition?: 'left' | 'right';
       iconProps?: React.SVGAttributes<SVGSVGElement>;
@@ -78,7 +94,10 @@ const Button = React.forwardRef<
     disabled,
     title,
     children,
-    position = 'top',
+    tooltipSide = 'top',
+    tooltipAlign,
+    tooltipSideOffset,
+    tooltipDelayDuration,
     icon,
     iconPosition = 'left',
     iconProps,
@@ -90,20 +109,18 @@ const Button = React.forwardRef<
 
   const baseClasses = buttonVariants({ variant, size, className });
 
-  const iconGroup = variant?.includes('icon') ? ' group/icon' : '';
-
   const finalClasses = disabled
     ? baseClasses
         .replace(/hover:[^\s]+/g, '')
         .concat(' opacity-50 cursor-not-allowed bg-[var(--muted)] text-[var(--muted-foreground)]')
-    : baseClasses + iconGroup;
+    : baseClasses;
 
   const IconComponent = icon ? lucideIcons[icon] : undefined;
 
   const iconElement = IconComponent ? <IconComponent aria-hidden="true" {...iconProps} /> : null;
 
   const wrappedIcon = iconElement ? (
-    <ButtonIconWrapper variant={variant}>{iconElement}</ButtonIconWrapper>
+    <ButtonIconWrapper size={size}>{iconElement}</ButtonIconWrapper>
   ) : null;
 
   const content = iconElement ? (
@@ -119,7 +136,7 @@ const Button = React.forwardRef<
       </>
     )
   ) : (
-    <ButtonIconWrapper variant={variant}>{children}</ButtonIconWrapper>
+    <ButtonIconWrapper size={size}>{children}</ButtonIconWrapper>
   );
 
   const buttonElement = (
@@ -135,8 +152,14 @@ const Button = React.forwardRef<
     </Comp>
   );
 
-  return variant?.includes('icon') && title ? (
-    <Tooltip content={title} position={position}>
+  return title ? (
+    <Tooltip
+      content={title}
+      side={tooltipSide}
+      align={tooltipAlign}
+      sideOffset={tooltipSideOffset}
+      delayDuration={tooltipDelayDuration}
+    >
       {buttonElement}
     </Tooltip>
   ) : (

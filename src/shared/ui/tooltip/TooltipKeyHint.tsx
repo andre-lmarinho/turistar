@@ -9,8 +9,8 @@ interface KeyHintTooltipProps {
   content: React.ReactNode;
   /** Keyboard shortcut key */
   shortcut: string;
-  /** Tooltip display position */
-  position?: 'top' | 'bottom';
+  /** Tooltip display side */
+  side?: 'top' | 'bottom' | 'left' | 'right';
   className?: string;
   children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
 }
@@ -18,7 +18,7 @@ interface KeyHintTooltipProps {
 export default function TooltipKeyHint({
   content,
   shortcut,
-  position = 'top',
+  side = 'top',
   className,
   children,
 }: KeyHintTooltipProps) {
@@ -34,7 +34,7 @@ export default function TooltipKeyHint({
           </kbd>
         </>
       }
-      position={position}
+      side={side}
       className={className}
     >
       {children}
