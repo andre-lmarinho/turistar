@@ -1,15 +1,11 @@
-// src/shared/ui/tooltip/TooltipKeyHint.tsx
 'use client';
 
 import React from 'react';
 import Tooltip from './Tooltip';
 
 interface KeyHintTooltipProps {
-  /** Tooltip text before the shortcut key label */
   content: React.ReactNode;
-  /** Keyboard shortcut key */
   shortcut: string;
-  /** Tooltip display position */
   position?: 'top' | 'bottom';
   className?: string;
   children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;

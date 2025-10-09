@@ -5,14 +5,13 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 import { cn } from '@/shared/utils/cn';
 
-interface TooltipProps {
+interface InfoTooltipProps extends Pick<React.AriaAttributes, 'aria-hidden'> {
   content: React.ReactNode;
   children: React.ReactElement<React.HTMLAttributes<HTMLElement>>;
   className?: string;
-  position?: 'top' | 'bottom';
 }
 
-export default function Tooltip({ content, children, className, position = 'top' }: TooltipProps) {
+export default function InfoTooltip({ content, children, className, 'aria-hidden': ariaHidden }: InfoTooltipProps) {
   const contentId = React.useId();
 
   const describedBy = [children.props['aria-describedby'], contentId]
@@ -23,6 +22,7 @@ export default function Tooltip({ content, children, className, position = 'top'
   const trigger = React.cloneElement(children, {
     'aria-describedby': describedBy || undefined,
     'aria-haspopup': 'true',
+    'aria-hidden': ariaHidden ?? children.props['aria-hidden'],
   });
 
   return (
@@ -32,11 +32,12 @@ export default function Tooltip({ content, children, className, position = 'top'
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
             id={contentId}
-            side={position}
+            role="tooltip"
+            side="top"
             align="center"
             sideOffset={6}
             className={cn(
-              'text-background pointer-events-none z-50 rounded bg-[var(--foreground)] px-2 py-1 text-[10px]',
+              'bg-background w-max max-w-xs rounded-md border p-2 text-xs text-[var(--foreground)] shadow-md',
               className
             )}
           >

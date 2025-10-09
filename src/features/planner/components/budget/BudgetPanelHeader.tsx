@@ -7,7 +7,7 @@ import { CATEGORIES } from '@/features/planner/domain/constants/budget';
 import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import { InfoPopover } from '@/shared/ui/popover';
+import { InfoTooltip } from '@/shared/ui/tooltip';
 import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 
@@ -59,9 +59,9 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <label htmlFor="budget-input" className="flex items-center gap-1 text-sm">
             Total Budget
-            <InfoPopover content={BUDGET_INFO.totalBudget}>
+            <InfoTooltip content={BUDGET_INFO.totalBudget}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
+            </InfoTooltip>
           </label>
 
           <Input
@@ -85,9 +85,9 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <span className="flex items-center gap-1 text-sm">
             Total Spent
-            <InfoPopover content={BUDGET_INFO.totalSpent}>
+            <InfoTooltip content={BUDGET_INFO.totalSpent}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
+            </InfoTooltip>
           </span>
           <SummaryValue amount={totalSpent} ariaLabel={`Total spent: $${totalSpent.toFixed(2)}`} />
         </div>
@@ -96,9 +96,9 @@ export default function BudgetPanelHeader() {
         <div className="flex flex-wrap items-center justify-between">
           <span className="flex items-center gap-1 text-sm">
             Difference
-            <InfoPopover content={BUDGET_INFO.difference}>
+            <InfoTooltip content={BUDGET_INFO.difference}>
               <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
+            </InfoTooltip>
           </span>
           <SummaryValue amount={difference} ariaLabel={`Difference: $${difference.toFixed(2)}`} />
         </div>
