@@ -1,10 +1,5 @@
-// src/features/planner/components/budget/CategoryProgressBar.tsx
-
 import React from 'react';
-import { Info } from 'lucide-react';
 import { CategoryKey, CATEGORIES, CHART_COLORS } from '@/features/planner/domain/constants/budget';
-import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
-import { InfoTooltip } from '@/shared/ui/tooltip';
 
 interface Props {
   category: CategoryKey;
@@ -23,12 +18,7 @@ export default function CategoryProgressBar({ category, value, total, colorIndex
       <div className="z-30 flex items-center justify-between">
         <div className="ml-1 flex items-center gap-2">
           <Icon size={12} aria-hidden="true" />
-          <span className="flex items-center gap-1 text-sm">
-            {label}
-            <InfoTooltip content={BUDGET_INFO[category]}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoTooltip>
-          </span>
+          <span className="text-sm">{label}</span>
         </div>
         <span className="mr-1 w-20 text-right text-sm" aria-label={`$${value.toFixed(2)} spent`}>
           {'$' + value.toFixed(2)}

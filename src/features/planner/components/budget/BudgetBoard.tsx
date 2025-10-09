@@ -1,16 +1,12 @@
-// src/features/planner/components/budget/BudgetBoard.tsx
 'use client';
 
 import React, { useState } from 'react';
-import { Info } from 'lucide-react';
-import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
 import ActivitiesBudgetPopup from '@/features/planner/components/budget/ActivitiesBudget';
 import { Button } from '@/shared/ui/button';
-import { InfoTooltip } from '@/shared/ui/tooltip';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 interface Props {
@@ -52,11 +48,8 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
           <BudgetPanelHeader />
 
           <div className="col-span-2 md:ml-12">
-            <h3 id="expenses-heading" className="flex items-center gap-1 pb-2 font-semibold">
+            <h3 id="expenses-heading" className="pb-2 font-semibold">
               Expenses
-              <InfoTooltip content={BUDGET_INFO.expenses} aria-hidden="true">
-                <Info size={12} className="text-muted-foreground" aria-hidden="true" />
-              </InfoTooltip>
             </h3>
 
             <div aria-labelledby="expenses-heading">
