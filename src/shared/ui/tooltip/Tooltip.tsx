@@ -26,7 +26,7 @@ export default function Tooltip({ content, children, className, position = 'top'
   });
 
   return (
-    <TooltipPrimitive.Provider delayDuration={150} skipDelayDuration={0}>
+    <TooltipPrimitive.Provider>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>{trigger}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
@@ -36,7 +36,7 @@ export default function Tooltip({ content, children, className, position = 'top'
             align="center"
             sideOffset={6}
             className={cn(
-              'text-background pointer-events-none z-50 rounded bg-[var(--foreground)] px-2 py-1 text-[10px]',
+              'text-background pointer-events-none z-50 rounded bg-[var(--foreground)] px-2 py-1 text-xs',
               className
             )}
           >

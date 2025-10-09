@@ -19,16 +19,19 @@ export default function InfoTooltip({ content, children, className, 'aria-hidden
     .join(' ')
     .trim();
 
-  const trigger = React.cloneElement(children, {
-    'aria-describedby': describedBy || undefined,
-    'aria-haspopup': 'true',
-    'aria-hidden': ariaHidden ?? children.props['aria-hidden'],
-  });
-
   return (
-    <TooltipPrimitive.Provider delayDuration={150} skipDelayDuration={0}>
+    <TooltipPrimitive.Provider>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger asChild>{trigger}</TooltipPrimitive.Trigger>
+        <TooltipPrimitive.Trigger asChild>
+          <span
+            aria-describedby={describedBy || undefined}
+            aria-haspopup="true"
+            aria-hidden={ariaHidden ?? children.props['aria-hidden']}
+            className="inline-flex"
+          >
+            {children}
+          </span>
+        </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
             id={contentId}
