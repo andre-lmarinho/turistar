@@ -17,7 +17,6 @@
     "start": "next start",
     "serve:prod": "next start --hostname 0.0.0.0 --port 3000",
     "clean": "rimraf .next node_modules",
-    "prepare": "husky",
     "setup": "npm install && npm run format && npm run lint && npm run test",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\" --ignore-path .prettierignore",
     "lint": "eslint . -c eslint.config.mjs --ext .ts,.tsx --cache --cache-location .cache/.eslintcache --max-warnings=0",
