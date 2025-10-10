@@ -1,8 +1,8 @@
-// tests/unit/features/onboarding/components/OnboardingModal.test.tsx
+// tests/unit/features/onboarding/components/OnboardingDialog.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
+import OnboardingDialog from '@/features/planner/components/onboarding/OnboardingDialog';
 import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
 import { vi } from 'vitest';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
@@ -12,7 +12,7 @@ vi.mock('@/features/planner/hooks/onboarding/useOnboardingCheck', () => ({
   useOnboardingCheck: () => ({ showOnboarding: true, setShowOnboarding: mockSetShowOnboarding }),
 }));
 
-describe('OnboardingModal', () => {
+describe('OnboardingDialog', () => {
   beforeEach(() => {
     mockSetShowOnboarding.mockClear();
   });
@@ -20,7 +20,7 @@ describe('OnboardingModal', () => {
   it('renders all steps when open', () => {
     render(
       <OnboardingProvider planId="p1">
-        <OnboardingModal />
+        <OnboardingDialog />
       </OnboardingProvider>
     );
     ONBOARDING_STEPS.forEach((step) => {
@@ -31,7 +31,7 @@ describe('OnboardingModal', () => {
   it('calls onClose when close button clicked', () => {
     render(
       <OnboardingProvider planId="p1">
-        <OnboardingModal />
+        <OnboardingDialog />
       </OnboardingProvider>
     );
     fireEvent.click(screen.getByLabelText('Close'));

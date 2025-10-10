@@ -7,10 +7,10 @@ import PlannerBoard from './dnd/PlannerBoard';
 import BudgetBoard from './budget/BudgetBoard';
 const MapBoard = dynamic(() => import('./map/MapBoard'), { ssr: false });
 
-import ActivityModal from '@/features/planner/components/modal/ActivityModal';
+import ActivityDialog from '@/features/planner/components/dialog/ActivityDialog';
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
-import OnboardingModal from '@/features/planner/components/onboarding/OnboardingModal';
+import OnboardingDialog from '@/features/planner/components/onboarding/OnboardingDialog';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/calendar';
 import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
@@ -23,7 +23,7 @@ import { motion } from 'framer-motion';
  * Top-level client component for the planner experience.
  * - Shows the date-range picker, the “Open Panel” button, the filter panel,
  *   and the drag-and-drop board.
- * - Handles selecting a card to open the ActivityModal.
+ * - Handles selecting a card to open the ActivityDialog.
  */
 
 type Mode = 'planner' | 'map' | 'budget';
@@ -150,9 +150,9 @@ function PlannerClientInner({
           })}
         </div>
 
-        <ActivityModal />
+        <ActivityDialog />
 
-        {!hideOnboarding && <OnboardingModal />}
+        {!hideOnboarding && <OnboardingDialog />}
       </main>
     </OnboardingProvider>
   );

@@ -1,9 +1,9 @@
-// tests/unit/features/planner/components/ActivityModalForm.test.tsx
+// tests/unit/features/planner/components/ActivityDialogForm.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
+import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 const { mockUseAddressAutocomplete, mockUseDebounce } = vi.hoisted(() => {
@@ -26,7 +26,7 @@ vi.mock('@/shared/hooks/useDebounce', () => ({
   useDebounce: mockUseDebounce,
 }));
 
-describe('ActivityModalForm address autocomplete', () => {
+describe('ActivityDialogForm address autocomplete', () => {
   beforeEach(() => {
     mockUseAddressAutocomplete.mockReset();
     mockUseDebounce.mockImplementation((v: unknown) => v);
@@ -44,7 +44,7 @@ describe('ActivityModalForm address autocomplete', () => {
     const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({} as Response);
 
     render(
-      <ActivityModalForm activity={activity} onSave={handleSave} color="bg-[var(--color-0)]" />
+      <ActivityDialogForm activity={activity} onSave={handleSave} color="bg-[var(--color-0)]" />
     );
 
     const input = screen.getByLabelText('Address');

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
-import { usePointerDragScroll } from '@/features/home/hooks/usePointerDragScroll';
-import { useSyncedPointerCarousels } from '@/features/home/hooks/useSyncedPointerCarousels';
+import { usePointerDragScroll } from '@/shared/hooks/ui/usePointerDragScroll';
+import { useSyncedPointerCarousels } from '@/shared/hooks/ui/useSyncedPointerCarousels';
 import { cn } from '@/shared/utils/cn';
 
 export type FeatureCarouselFeature = {

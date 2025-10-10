@@ -1,12 +1,12 @@
-// tests/unit/a11y/activity-modal-header.a11y.test.tsx
+// tests/unit/a11y/activity-dialog-header.a11y.test.tsx
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import ActivityModalHeader from '@/features/planner/components/modal/ActivityModalHeader';
+import ActivityDialogHeader from '@/features/planner/components/dialog/ActivityDialogHeader';
 
-describe('Accessibility — ActivityModalHeader', () => {
+describe('Accessibility — ActivityDialogHeader', () => {
   it('has labeled controls and no violations', async () => {
     const activity = {
       id: 'a1',
@@ -17,7 +17,7 @@ describe('Accessibility — ActivityModalHeader', () => {
     const days = [{ id: 'd1', label: 'Day 1', activities: [activity] }];
 
     const { container } = render(
-      <ActivityModalHeader
+      <ActivityDialogHeader
         activity={{ ...activity }}
         bgColor={activity.color}
         onDelete={() => {}}

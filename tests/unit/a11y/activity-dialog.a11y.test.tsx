@@ -1,4 +1,4 @@
-// tests/unit/a11y/activity-modal.a11y.test.tsx
+// tests/unit/a11y/activity-dialog.a11y.test.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -7,12 +7,12 @@ import { vi } from 'vitest';
 
 const { closeSpy } = vi.hoisted(() => ({ closeSpy: vi.fn() }));
 
-vi.mock('@/features/planner/components/modal/ActivityModalHeader', () => ({
+vi.mock('@/features/planner/components/dialog/ActivityDialogHeader', () => ({
   __esModule: true,
-  default: () => <div data-testid="activity-modal-header" />,
+  default: () => <div data-testid="activity-dialog-header" />,
 }));
 
-vi.mock('@/features/planner/components/modal/ActivityModalForm', () => ({
+vi.mock('@/features/planner/components/dialog/ActivityDialogForm', () => ({
   __esModule: true,
   default: () => <form aria-label="Activity form" />,
 }));
@@ -26,7 +26,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
       color: 'bg-[var(--color-0)]',
       dayId: 'd1',
     },
-    closeModal: closeSpy,
+    closeDialog: closeSpy,
     deleteActivity: vi.fn(),
     changeColor: vi.fn(),
     days: [
@@ -42,11 +42,11 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-import ActivityModal from '@/features/planner/components/modal/ActivityModal';
+import ActivityDialog from '@/features/planner/components/dialog/ActivityDialog';
 
-describe('Accessibility — ActivityModal', () => {
+describe('Accessibility — ActivityDialog', () => {
   it('exposes dialog semantics and closes on Escape', async () => {
-    const { container } = render(<ActivityModal />);
+    const { container } = render(<ActivityDialog />);
 
     const dialog = screen.getByRole('dialog', { name: 'Edit Activity' });
     expect(dialog).toHaveAttribute('aria-modal', 'true');

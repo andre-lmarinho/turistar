@@ -64,7 +64,7 @@ export const handleRangeChange = vi.fn(() => {
 });
 
 // Planner feature mocks
-vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   default: () => null,
 }));
@@ -152,7 +152,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 });
 
 // Onboarding mocks
-vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
   default: () => null,
 }));

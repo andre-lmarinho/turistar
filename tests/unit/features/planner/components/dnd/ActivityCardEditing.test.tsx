@@ -1,5 +1,3 @@
-// tests/unit/features/planner/components/dnd/ActivityCardEditing.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -8,6 +6,7 @@ import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerE
 
 function renderComponent() {
   const cardRef = React.createRef<HTMLDivElement>();
+  const actionsRef = React.createRef<HTMLDivElement>();
 
   const props = {
     activity: { id: 'a1', title: 'Test', color: '', duration: 0, budget: 0 } as Activity & {
@@ -27,6 +26,8 @@ function renderComponent() {
     editedImageUrl: '',
     setEditedImageUrl: vi.fn(),
     cardRef,
+    cardRect: new DOMRect(0, 0, 160, 100),
+    actionsRef,
   };
 
   render(

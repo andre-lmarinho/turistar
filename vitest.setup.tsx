@@ -20,10 +20,6 @@ class ResizeObserverMock {
 (globalThis as unknown as { ResizeObserver: typeof ResizeObserverMock }).ResizeObserver =
   ResizeObserverMock;
 
-vi.mock('focus-trap-react', () => ({
-  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-
 // Next.js runtime component shims for testing
 vi.mock('next/link', () => ({
   __esModule: true,

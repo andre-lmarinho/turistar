@@ -1,12 +1,11 @@
-// tests/unit/features/planner/components/budget/activities/ActivitiesBudget.test.tsx
-
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import ActivitiesBudget from '@/features/planner/components/budget/ActivitiesBudget';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-describe('ActivitiesBudget', () => {
+import BudgetDialog from '@/features/planner/components/budget/BudgetDialog';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+
+describe('BudgetDialog', () => {
   const days: DayPlan[] = [
     {
       id: 'd1',
@@ -15,15 +14,22 @@ describe('ActivitiesBudget', () => {
     },
   ];
 
-  it('calls onClose when clicking outside the dialog', () => {
+  it('calls onClose when the overlay is clicked', async () => {
     const onClose = vi.fn();
-    render(<ActivitiesBudget open days={days} onUpdate={() => {}} onClose={onClose} />);
-    const dialog = screen.getByRole('dialog');
-    fireEvent.click(dialog.parentElement as HTMLElement);
+    render(<BudgetDialog open days={days} onUpdate={() => {}} onClose={onClose} />);
+
+    await waitFor(() => {
+      expect(document.querySelector('[data-radix-dialog-overlay]')).toBeTruthy();
+    });
+
+    const overlay = document.querySelector('[data-radix-dialog-overlay]') as Element;
+    fireEvent.pointerDown(overlay);
+    fireEvent.pointerUp(overlay);
+
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('allows moving focus between inputs without closing', () => {
+  it('allows interacting with inputs without closing', () => {
     const onClose = vi.fn();
     const multiple: DayPlan[] = [
       {
@@ -35,16 +41,19 @@ describe('ActivitiesBudget', () => {
         ],
       },
     ];
-    render(<ActivitiesBudget open days={multiple} onUpdate={() => {}} onClose={onClose} />);
+
+    render(<BudgetDialog open days={multiple} onUpdate={() => {}} onClose={onClose} />);
+
     const inputs = screen.getAllByPlaceholderText('Budget') as HTMLInputElement[];
     fireEvent.focus(inputs[0]);
     fireEvent.blur(inputs[0]);
     fireEvent.focus(inputs[1]);
+
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('saves all edited budgets when closing', () => {
+  it('saves edited budgets when the close button is pressed', () => {
     const onUpdate = vi.fn();
     const multiple: DayPlan[] = [
       {
@@ -56,16 +65,20 @@ describe('ActivitiesBudget', () => {
         ],
       },
     ];
-    render(<ActivitiesBudget open days={multiple} onUpdate={onUpdate} onClose={() => {}} />);
+
+    render(<BudgetDialog open days={multiple} onUpdate={onUpdate} onClose={() => {}} />);
+
     const inputs = screen.getAllByPlaceholderText('Budget') as HTMLInputElement[];
     fireEvent.change(inputs[0], { target: { value: '20' } });
     fireEvent.change(inputs[1], { target: { value: '30' } });
-    fireEvent.click(screen.getByLabelText('Close activities budget dialog'));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+
     expect(onUpdate).toHaveBeenCalledWith('a1', 20);
     expect(onUpdate).toHaveBeenCalledWith('a2', 30);
   });
 
-  it('does not reset inputs when activities change while open', () => {
+  it('retains user input when the activity list updates', () => {
     const onClose = vi.fn();
     const initial: DayPlan[] = [
       {
@@ -74,9 +87,11 @@ describe('ActivitiesBudget', () => {
         activities: [{ id: 'a1', title: 'Museum', color: '', budget: 10 }],
       },
     ];
+
     const { rerender } = render(
-      <ActivitiesBudget open days={initial} onUpdate={() => {}} onClose={onClose} />
+      <BudgetDialog open days={initial} onUpdate={() => {}} onClose={onClose} />
     );
+
     const input = screen.getByPlaceholderText('Budget') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '20' } });
 
@@ -90,7 +105,9 @@ describe('ActivitiesBudget', () => {
         ],
       },
     ];
-    rerender(<ActivitiesBudget open days={updated} onUpdate={() => {}} onClose={onClose} />);
+
+    rerender(<BudgetDialog open days={updated} onUpdate={() => {}} onClose={onClose} />);
+
     const inputs = screen.getAllByPlaceholderText('Budget') as HTMLInputElement[];
     expect(inputs[0].value).toBe('20');
     expect(inputs[1].value).toBe('');

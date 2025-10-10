@@ -1,7 +1,4 @@
-// src/features/planner/hooks/useActivityCardEditor.ts
-
-import { useState, useRef } from 'react';
-import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
+import { useCallback, useRef, useState } from 'react';
 
 export function useActivityCardEditor({
   title,
@@ -14,27 +11,18 @@ export function useActivityCardEditor({
   const [draft, setDraft] = useState(title);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  usePopupDismiss({
-    popupRef: overlayRef,
-    triggerRef: cardRef,
-    onClose: () => editing && cancel(),
-    isOpen: editing,
-  });
-
-  function start() {
+  const start = useCallback(() => {
     setEditing(true);
-  }
-  function save() {
-    const t = draft.trim();
-    if (t && t !== title) onTitleSave?.(t);
+  }, []);
+  const save = useCallback(() => {
+    const trimmed = draft.trim();
+    if (trimmed && trimmed !== title) onTitleSave?.(trimmed);
     setEditing(false);
-  }
-  function cancel() {
+  }, [draft, onTitleSave, title]);
+  const cancel = useCallback(() => {
     setDraft(title);
     setEditing(false);
-  }
+  }, [title]);
 
   return {
     editing,
@@ -42,7 +30,6 @@ export function useActivityCardEditor({
     setDraft,
     inputRef,
     cardRef,
-    overlayRef,
     start,
     save,
     cancel,

@@ -1,9 +1,8 @@
-// tests/unit/features/planner/components/dnd/ActivityCard.test.tsx
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ActivityCard from '@/features/planner/components/dnd/ActivityCard';
 import { vi } from 'vitest';
-import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 const baseActivity: Activity & { dayId?: string } = {
   id: 'a1',
@@ -15,12 +14,7 @@ const baseActivity: Activity & { dayId?: string } = {
 
 const defaultProps = {
   activity: baseActivity,
-  onChangeDay: vi.fn(),
-  onChangePosition: vi.fn(),
-  availableDays: [] as DayPlan[],
   bgColor: '',
-  onChangeColor: vi.fn(),
-  onDelete: vi.fn(),
 };
 
 describe('ActivityCard', () => {

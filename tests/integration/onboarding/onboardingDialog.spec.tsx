@@ -1,4 +1,4 @@
-// tests/integration/onboarding/onboardingModal.spec.tsx
+// tests/integration/onboarding/onboardingDialog.spec.tsx
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -32,7 +32,7 @@ const onboardingMocks = vi.hoisted(() => {
     return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
   };
 
-  const OnboardingModal = () => {
+  const OnboardingDialog = () => {
     const { showOnboarding, setShowOnboarding } = useOnboardingContext();
 
     if (!showOnboarding) {
@@ -46,7 +46,7 @@ const onboardingMocks = vi.hoisted(() => {
     );
   };
 
-  return { OnboardingProvider, useOnboardingContext, OnboardingModal };
+  return { OnboardingProvider, useOnboardingContext, OnboardingDialog };
 });
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
@@ -75,7 +75,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   default: () => null,
 }));
@@ -96,9 +96,9 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   useOnboardingContext: onboardingMocks.useOnboardingContext,
 }));
 
-vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: onboardingMocks.OnboardingModal,
+  default: onboardingMocks.OnboardingDialog,
 }));
 
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
@@ -118,12 +118,12 @@ vi.mock('next/navigation', () => ({
 
 import PlannerClient from '@/features/planner/components/PlannerClient';
 
-describe('onboarding modal visibility', () => {
-  it('shows modal initially and hides after finish', async () => {
+describe('onboarding dialog visibility', () => {
+  it('shows dialog initially and hides after finish', async () => {
     render(<PlannerClient planId="p1" hideOnboarding={false} />);
 
-    const modal = await screen.findByRole('dialog');
-    expect(modal).toBeInTheDocument();
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(screen.queryByRole('dialog')).toBeNull();

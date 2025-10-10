@@ -1,4 +1,3 @@
-// src/features/home/hooks/search/useDestinationAutocomplete.ts
 'use client';
 
 import { createLocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';

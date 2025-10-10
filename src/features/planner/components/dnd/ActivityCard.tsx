@@ -1,40 +1,27 @@
-// src/features/planner/components/dnd/ActivityCard.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { isTouchDevice } from '@/shared/utils/isTouchDevice';
+import React, { useEffect } from 'react';
+
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
+import { Button } from '@/shared/ui/button';
+import { Dialog, DialogContent } from '@/shared/ui/dialog';
+import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
 import { useCardColors } from '@/features/planner/hooks/internal/useCardColors';
-import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import ActivityCardBase from './ActivityCardBase';
-import ActivityCardEditing from './ActivityCardEditing';
-import ActivityCardEditorOverlay from './ActivityCardEditorOverlay';
-import { Button } from '@/shared/ui/button';
 
 export interface ActivityCardProps {
   activity: Activity & { dayId?: string };
   onSelect?: () => void;
   onTitleSave?: (newTitle: string) => void;
-  onChangeDay: (dayId: string) => void;
-  onChangePosition: (index: number) => void;
-  availableDays: DayPlan[];
   bgColor: string;
-  onChangeColor: (color: string) => void;
-  onDelete: () => void;
-  onUpdateImage?: (url: string) => void;
 }
 
 export default function ActivityCard({
   activity,
-  availableDays,
   onSelect,
   onTitleSave,
-  onChangeDay,
-  onChangePosition,
-  onDelete,
   bgColor,
-  onChangeColor,
-  onUpdateImage,
 }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
 
@@ -43,13 +30,14 @@ export default function ActivityCard({
     bgColor
   );
 
-  const { editing, draft, setDraft, inputRef, cardRef, overlayRef, start, save, cancel } =
+  const { editing, draft, setDraft, inputRef, cardRef, start, save, cancel } =
     useActivityCardEditor({
       title,
       onTitleSave,
     });
 
-  const [editedImageUrl, setEditedImageUrl] = useState(imageUrl ?? '');
+  const { rect: cardRect } = useElementMeasure({ ref: cardRef, rect: true });
+  const dialogTitleId = `activity-card-editor-${activity.id}`;
 
   useEffect(() => {
     if (editing) {
@@ -74,11 +62,6 @@ export default function ActivityCard({
               e.preventDefault();
               onSelect?.();
             }
-          }}
-          onContextMenu={(e) => {
-            if (isTouchDevice()) return;
-            e.preventDefault();
-            if (!editing) start();
           }}
         >
           <ActivityCardBase
@@ -113,46 +96,37 @@ export default function ActivityCard({
         )}
       </div>
 
-      <ActivityCardEditorOverlay
-        open={editing}
-        cardRef={cardRef}
-        overlayRef={overlayRef}
-        onClose={cancel}
-      >
-        <ActivityCardBase
-          editing={true}
-          title={title}
-          draftTitle={draft}
-          onDraftTitleChange={setDraft}
-          onSave={() => {
-            onUpdateImage?.(editedImageUrl);
-            save();
-          }}
-          inputRef={inputRef}
-          imageUrl={editedImageUrl}
-          duration={duration}
-          twBg={twBg}
-          budget={budget}
-          borderColorClass={borderColorClass}
-        />
-        <ActivityCardEditing
-          cardRef={overlayRef}
-          activity={activity}
-          availableDays={availableDays}
-          bgColor={bgColor}
-          onChangeColor={onChangeColor}
-          onChangeDay={onChangeDay}
-          onChangePosition={onChangePosition}
-          onSave={(url) => {
-            onUpdateImage?.(url);
-            save();
-          }}
-          onCancel={cancel}
-          onDelete={onDelete}
-          editedImageUrl={editedImageUrl}
-          setEditedImageUrl={setEditedImageUrl}
-        />
-      </ActivityCardEditorOverlay>
+      <Dialog open={editing} onClose={cancel}>
+        {cardRect ? (
+          <DialogContent
+            position="inline"
+            scroll="body"
+            className="pointer-events-auto bg-transparent p-0 shadow-none"
+            style={{ top: cardRect.top, left: cardRect.left, width: cardRect.width }}
+            aria-labelledby={dialogTitleId}
+            aria-describedby={undefined}
+          >
+            <h2 id={dialogTitleId} className="sr-only">
+              Edit activity card
+            </h2>
+            <ActivityCardBase
+              editing
+              title={title}
+              draftTitle={draft}
+              onDraftTitleChange={setDraft}
+              onSave={() => {
+                save();
+              }}
+              inputRef={inputRef}
+              imageUrl={imageUrl}
+              duration={duration}
+              twBg={twBg}
+              budget={budget}
+              borderColorClass={borderColorClass}
+            />
+          </DialogContent>
+        ) : null}
+      </Dialog>
     </>
   );
 }

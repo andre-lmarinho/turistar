@@ -1,11 +1,9 @@
-// tests/unit/features/home/components/PlanForm.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import PlanForm from '@/features/home/components/PlanForm';
-import { useDestinationAutocomplete } from '@/features/home/hooks/search/useDestinationAutocomplete';
+import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
   let captured: unknown;
@@ -65,7 +63,13 @@ describe('PlanForm destination autocomplete wiring', () => {
   });
 
   it('uses the home destination autocomplete hook', () => {
-    render(<PlanForm />);
+    render(
+      <PlanForm
+        trigger={<button type="button">Open</button>}
+        dialogTitleId="plan-form-test-dialog"
+        defaultOpen
+      />
+    );
 
     const props = getCapturedProps() as
       | { autocompleteHook?: unknown; placeholder?: string }

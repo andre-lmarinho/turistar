@@ -5,7 +5,7 @@ import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
-import ActivitiesBudgetPopup from '@/features/planner/components/budget/ActivitiesBudget';
+import BudgetDialog from '@/features/planner/components/budget/BudgetDialog';
 import { Button } from '@/shared/ui/button';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
@@ -57,7 +57,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
             </div>
           </div>
         </div>
-        <ActivitiesBudgetPopup
+        <BudgetDialog
           open={editActivities}
           days={days}
           onUpdate={(id, amount) => updateActivity(id, { budget: amount })}
