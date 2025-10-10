@@ -74,9 +74,9 @@ export function Dialog({ onClose, onOpenChange, ...props }: DialogProps) {
 
 export const DialogPortal = DialogPrimitive.Portal;
 
-export interface DialogOverlayProps
-  extends DialogPrimitive.DialogOverlayProps,
-    VariantProps<typeof overlayVariants> {}
+type DialogOverlayBaseProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>;
+
+export interface DialogOverlayProps extends DialogOverlayBaseProps, VariantProps<typeof overlayVariants> {}
 
 export const DialogOverlay = forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
@@ -94,9 +94,14 @@ export const DialogOverlay = forwardRef<
 
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-export interface DialogContentProps
-  extends DialogPrimitive.DialogContentProps,
-    VariantProps<typeof contentVariants> {
+type DialogContentBaseProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>;
+
+type EscapeKeyDownEvent = Parameters<NonNullable<DialogContentBaseProps['onEscapeKeyDown']>>[0];
+type PointerDownOutsideEvent = Parameters<
+  NonNullable<DialogContentBaseProps['onPointerDownOutside']>
+>[0];
+
+export interface DialogContentProps extends DialogContentBaseProps, VariantProps<typeof contentVariants> {
   hideOverlay?: boolean;
   closeOnEscape?: boolean;
   overlayAppearance?: VariantProps<typeof overlayVariants>['appearance'];
@@ -130,13 +135,13 @@ export const DialogContent = forwardRef<
       <DialogPrimitive.Content
         ref={ref}
         className={cn(contentVariants({ size, position, scroll, radius }), className)}
-        onEscapeKeyDown={(event) => {
+        onEscapeKeyDown={(event: EscapeKeyDownEvent) => {
           if (!closeOnEscape) {
             event.preventDefault();
           }
           onEscapeKeyDown?.(event);
         }}
-        onPointerDownOutside={(event) => {
+        onPointerDownOutside={(event: PointerDownOutsideEvent) => {
           if (preventCloseOnOutsideClick) {
             event.preventDefault();
           }
