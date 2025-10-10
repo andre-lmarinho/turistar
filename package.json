@@ -33,7 +33,7 @@
     "vercel:build": "npx vercel@latest build --debug",
     "check:vercel": "npm run vercel:pull && npm run vercel:build",
     "lint-staged": "lint-staged",
-    "prepare": "husky"
+    "prepare": "node ./scripts/prepare-husky.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
