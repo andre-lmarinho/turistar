@@ -6,7 +6,7 @@ import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
 
 /**
  * Manages state for card popups such as the color picker and date picker.
- * Provides trigger refs and handlers to toggle these popups.
+ * Provides trigger refs and exposes the active popup identifier.
  */
 
 export type CardPopupType = 'color' | 'date' | null;
@@ -17,20 +17,10 @@ export function useCardPopups() {
 
   const [activePopup, setActivePopup] = useState<CardPopupType>(null);
 
-  function handleColorButtonClick() {
-    setActivePopup((prev) => (prev === 'color' ? null : 'color'));
-  }
-
-  function handleDateButtonClick() {
-    setActivePopup((prev) => (prev === 'date' ? null : 'date'));
-  }
-
   return {
     colorButtonRef,
     dateButtonRef,
     activePopup,
     setActivePopup,
-    handleColorButtonClick,
-    handleDateButtonClick,
   } as const;
 }

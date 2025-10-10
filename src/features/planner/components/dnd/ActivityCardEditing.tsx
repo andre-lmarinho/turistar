@@ -1,4 +1,3 @@
-// src/features/planner/components/dnd/ActivityCardEditing.tsx
 'use client';
 
 import React from 'react';
@@ -9,6 +8,7 @@ import { useActivityPopupControls } from '@/features/planner/hooks/internal/useA
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import { cn } from '@/shared/utils/cn';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 interface Props {
   activity: Activity & { dayId?: string };
@@ -39,14 +39,7 @@ export default function ActivityCardEditing({
   setEditedImageUrl,
   cardRef,
 }: Props) {
-  const {
-    colorButtonRef,
-    dateButtonRef,
-    handleColorButtonClick,
-    handleDateButtonClick,
-    ColorPopup,
-    DayPopup,
-  } = useActivityPopupControls({
+  const { colorPopover, dayPopover } = useActivityPopupControls({
     activity,
     availableDays,
     bgColor,
@@ -100,35 +93,55 @@ export default function ActivityCardEditing({
           )}
           style={{ top: coords.top, left: coords.left }}
         >
-          <Button
-            ref={dateButtonRef}
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={handleDateButtonClick}
-            icon="arrow-left-right"
-            iconProps={{ className: 'size-4' }}
-          >
-            Move
-          </Button>
-          <div className="relative mb-1">
-            {DayPopup && <div className="absolute top-1 left-full z-50">{DayPopup}</div>}
-          </div>
+          <Popover open={dayPopover.open} onOpenChange={dayPopover.onOpenChange}>
+            <PopoverTrigger asChild>
+              <Button
+                ref={dayPopover.triggerRef}
+                size="sm"
+                variant="icon"
+                type="button"
+                icon="arrow-left-right"
+                iconProps={{ className: 'size-4' }}
+              >
+                Move
+              </Button>
+            </PopoverTrigger>
+            {dayPopover.content ? (
+              <PopoverContent
+                side="right"
+                align="center"
+                sideOffset={8}
+                className="w-72 p-0"
+                aria-labelledby="day-picker-popup-title"
+              >
+                {dayPopover.content}
+              </PopoverContent>
+            ) : null}
+          </Popover>
 
-          <Button
-            ref={colorButtonRef}
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={handleColorButtonClick}
-            icon="palette"
-            iconProps={{ className: 'size-4' }}
-          >
-            Card Colors
-          </Button>
-          <div className="relative mb-1">
-            {ColorPopup && <div className="absolute top-1 left-full z-50">{ColorPopup}</div>}
-          </div>
+          <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
+            <PopoverTrigger asChild>
+              <Button
+                ref={colorPopover.triggerRef}
+                size="sm"
+                variant="icon"
+                type="button"
+                icon="palette"
+                iconProps={{ className: 'size-4' }}
+              >
+                Card Colors
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              side="right"
+              align="center"
+              sideOffset={8}
+              className="w-[304px] p-0"
+              aria-labelledby="card-color-popup-title"
+            >
+              {colorPopover.content}
+            </PopoverContent>
+          </Popover>
 
           <Button
             size="sm"

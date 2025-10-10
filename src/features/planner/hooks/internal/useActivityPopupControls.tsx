@@ -34,14 +34,7 @@ export function useActivityPopupControls({
   onChangeImage,
   onClearImage,
 }: Props) {
-  const {
-    colorButtonRef,
-    dateButtonRef,
-    activePopup,
-    setActivePopup,
-    handleColorButtonClick,
-    handleDateButtonClick,
-  } = useCardPopups();
+  const { colorButtonRef, dateButtonRef, activePopup, setActivePopup } = useCardPopups();
 
   const isColorPickerOpen = activePopup === 'color';
   const isDatePickerOpen = activePopup === 'date';
@@ -49,43 +42,47 @@ export function useActivityPopupControls({
   const currentDay = availableDays.find((d) => d.id === activity.dayId);
   const currentIndex = currentDay?.activities.findIndex((a) => a.id === activity.id) ?? -1;
 
-  const ColorPopup = isColorPickerOpen ? (
-    <CardColorsPopup
-      imageUrl={imageUrl ?? ''}
-      onChangeImage={(url: string) => onChangeImage?.(url)}
-      onClearImage={() => onClearImage?.()}
-      selectedColor={bgColor}
-      onChangeColor={(selectedColor: string) => {
-        onChangeColor(selectedColor);
-        setActivePopup(null);
-      }}
-      onClose={() => setActivePopup(null)}
-      triggerRef={colorButtonRef}
-    />
-  ) : null;
-
-  const DayPopup =
-    isDatePickerOpen && availableDays.length > 0 ? (
-      <DayPickerPopup
-        days={availableDays}
-        selected={activity.dayId}
-        selectedIndex={currentIndex}
-        onSelect={(dayId: string) => {
-          onChangeDay(dayId);
-          setActivePopup(null);
-        }}
-        onSelectIndex={(idx: number) => onChangePosition(idx)}
-        onClose={() => setActivePopup(null)}
-        triggerRef={dateButtonRef}
-      />
-    ) : null;
-
   return {
-    colorButtonRef,
-    dateButtonRef,
-    handleColorButtonClick,
-    handleDateButtonClick,
-    ColorPopup,
-    DayPopup,
+    colorPopover: {
+      open: isColorPickerOpen,
+      onOpenChange: (open: boolean) => {
+        setActivePopup(open ? 'color' : null);
+      },
+      triggerRef: colorButtonRef,
+      content: (
+        <CardColorsPopup
+          imageUrl={imageUrl ?? ''}
+          onChangeImage={(url: string) => onChangeImage?.(url)}
+          onClearImage={() => onClearImage?.()}
+          selectedColor={bgColor}
+          onChangeColor={(selectedColor: string) => {
+            onChangeColor(selectedColor);
+            setActivePopup(null);
+          }}
+          onClose={() => setActivePopup(null)}
+        />
+      ),
+    },
+    dayPopover: {
+      open: isDatePickerOpen,
+      onOpenChange: (open: boolean) => {
+        setActivePopup(open ? 'date' : null);
+      },
+      triggerRef: dateButtonRef,
+      content:
+        availableDays.length > 0 ? (
+          <DayPickerPopup
+            days={availableDays}
+            selected={activity.dayId}
+            selectedIndex={currentIndex}
+            onSelect={(dayId: string) => {
+              onChangeDay(dayId);
+              setActivePopup(null);
+            }}
+            onSelectIndex={(idx: number) => onChangePosition(idx)}
+            onClose={() => setActivePopup(null)}
+          />
+        ) : null,
+    },
   } as const;
 }
