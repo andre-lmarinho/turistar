@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildCsp } from '../../../config/securityHeaders';
+import { buildCsp } from '../../../securityHeaders';
 
 describe('CSP with nonce (prod)', () => {
   it('includes a nonce and strict-dynamic in script-src', () => {
