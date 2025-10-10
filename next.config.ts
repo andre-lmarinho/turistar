@@ -1,6 +1,6 @@
 // next.config.ts
 import type { NextConfig } from 'next';
-import getSecurityHeaders from './config/securityHeaders';
+import getSecurityHeaders from './securityHeaders';
 
 const nextConfig: NextConfig = {
   // Strengthen defaults for production readiness

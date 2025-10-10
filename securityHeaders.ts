@@ -1,4 +1,4 @@
-// config/securityHeaders.ts
+// securityHeaders.ts
 // Centralized security headers applied by Next.js via next.config.ts.
 // We keep a strict CSP in production and relax it in development to support Next.js Dev/HMR.
 

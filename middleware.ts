@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { buildCsp } from './config/securityHeaders';
+import { buildCsp } from './securityHeaders';
 
 export function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV !== 'production';

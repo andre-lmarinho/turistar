@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import getSecurityHeaders from '../../../config/securityHeaders';
+import getSecurityHeaders from '../../../securityHeaders';
 
 describe('security headers', () => {
   it('includes core hardening headers', () => {

@@ -9,16 +9,16 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, '../src'),
-      '@supabase/ssr': resolve(__dirname, '../tests/__mocks__/supabaseSsr.ts'),
-      '@/shared/utils/theme.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
-      'leaflet/dist/leaflet.css': resolve(__dirname, '../tests/__mocks__/empty.css'),
+      '@': resolve(__dirname, './src'),
+      '@supabase/ssr': resolve(__dirname, './tests/__mocks__/supabaseSsr.ts'),
+      '@/shared/utils/theme.css': resolve(__dirname, './tests/__mocks__/empty.css'),
+      'leaflet/dist/leaflet.css': resolve(__dirname, './tests/__mocks__/empty.css'),
     },
   },
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: resolve(__dirname, 'vitest.setup.tsx'),
+    setupFiles: resolve(__dirname, './vitest.setup.tsx'),
     include: ['tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',
