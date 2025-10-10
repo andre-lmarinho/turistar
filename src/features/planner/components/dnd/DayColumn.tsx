@@ -1,4 +1,3 @@
-// src/features/planner/components/dnd/DayColumn.tsx
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -11,15 +10,9 @@ import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerE
 
 interface DayColumnProps {
   day: DayPlan;
-  days: DayPlan[];
   onSelectActivity?: (activity: Activity & { dayId: string }) => void;
   onAddActivity: (dayId: string, index?: number) => void;
   onUpdateTitle?: (id: string, title: string) => void;
-  onChangeDay: (activityId: string, dayId: string) => void;
-  onChangePosition: (activityId: string, index: number) => void;
-  onChangeColor: (activityId: string, color: string) => void;
-  onDelete: (activityId: string) => void;
-  onUpdateImage?: (activityId: string, url: string) => void;
 }
 
 /**
@@ -28,15 +21,9 @@ interface DayColumnProps {
  */
 export default function DayColumn({
   day,
-  days,
   onSelectActivity,
   onAddActivity,
   onUpdateTitle,
-  onChangeDay,
-  onChangePosition,
-  onChangeColor,
-  onDelete,
-  onUpdateImage,
 }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -68,14 +55,8 @@ export default function DayColumn({
               <SortableItem
                 id={activity.id}
                 activity={{ ...activity, dayId: day.id }}
-                availableDays={days}
                 onSelect={() => onSelectActivity?.({ ...activity, dayId: day.id })}
                 onTitleSave={(newTitle) => onUpdateTitle?.(activity.id, newTitle)}
-                onChangeDay={(newDayId) => onChangeDay(activity.id, newDayId)}
-                onChangePosition={(idx) => onChangePosition(activity.id, idx)}
-                onChangeColor={(newColor) => onChangeColor(activity.id, newColor)}
-                onDelete={() => onDelete(activity.id)}
-                onUpdateImage={(url) => onUpdateImage?.(activity.id, url)}
                 bgColor={activity.color}
               />
               {idx < day.activities.length - 1 && (

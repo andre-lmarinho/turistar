@@ -1,4 +1,3 @@
-// src/features/planner/components/dnd/PlannerBoard.tsx
 'use client';
 
 import React from 'react';
@@ -25,23 +24,11 @@ function PlannerBoard() {
     handleDragEnd,
     setSelectedActivity,
     addBlankAndSelect,
-    changeDay,
-    changePosition,
-    changeColor,
-    removeActivity,
     updateActivity,
-    selectedActivity,
   } = usePlannerContext();
 
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
-
-  const handleUpdateImage = (id: string, url: string) => {
-    updateActivity(id, { imageUrl: url });
-    if (selectedActivity && selectedActivity.id === id) {
-      setSelectedActivity({ ...selectedActivity, imageUrl: url });
-    }
-  };
 
   return (
     <DndContext
@@ -63,15 +50,9 @@ function PlannerBoard() {
           <div key={d.id} role="listitem" className="w-[234px] flex-shrink-0">
             <DayColumn
               day={d}
-              days={days}
               onAddActivity={(dayId, idx) => addBlankAndSelect(dayId, idx)}
               onSelectActivity={(a) => setSelectedActivity(a)}
               onUpdateTitle={(id, title) => updateActivity(id, { title })}
-              onChangeDay={(activityId, dayId) => changeDay(activityId, dayId)}
-              onChangePosition={(activityId, idx) => changePosition(activityId, idx)}
-              onChangeColor={(activityId, color) => changeColor(activityId, color)}
-              onDelete={removeActivity}
-              onUpdateImage={handleUpdateImage}
             />
           </div>
         ))}
@@ -82,13 +63,7 @@ function PlannerBoard() {
             dragOverlay
             id={active.id}
             activity={active}
-            availableDays={days}
-            onChangeDay={(newDayId) => changeDay(active.id, newDayId)}
-            onChangePosition={(idx) => changePosition(active.id, idx)}
-            onChangeColor={(newColor) => changeColor(active.id, newColor)}
             bgColor={active.color}
-            onDelete={() => removeActivity(active.id)}
-            onUpdateImage={(url) => handleUpdateImage(active.id, url)}
             aria-grabbed="true"
             aria-label={`Dragging ${active.title}`}
           />

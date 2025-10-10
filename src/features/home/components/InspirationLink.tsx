@@ -1,9 +1,8 @@
-// src/features/home/components/InspirationLink.tsx
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
-import InspirationCard from '../ui/InspirationCard';
+import InspirationCard from '../../../shared/ui/card/Card';
 import romeJson from '@/features/inspiration/data/rome.json';
 import parisJson from '@/features/inspiration/data/paris.json';
 import boipebaJson from '@/features/inspiration/data/boipeba.json';

@@ -1,4 +1,3 @@
-// src/features/planner/components/dnd/SortableItem.tsx
 'use client';
 
 import React from 'react';
@@ -7,35 +6,23 @@ import { useSortable } from '@dnd-kit/sortable';
 
 import { cn } from '@/shared/utils/cn';
 import ActivityCard from './ActivityCard';
-import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface SortableItemProps {
   id: string;
   activity: Activity & { dayId?: string };
-  availableDays: DayPlan[];
   onSelect?: () => void;
   onTitleSave?: (newTitle: string) => void;
   dragOverlay?: boolean;
   className?: string;
-  onChangeDay: (dayId: string) => void;
-  onChangePosition: (index: number) => void;
-  onChangeColor: (color: string) => void;
   bgColor: string;
-  onDelete: () => void;
-  onUpdateImage?: (url: string) => void;
 }
 
 export default function SortableItem({
   id,
   activity,
-  availableDays,
   onSelect,
   onTitleSave,
-  onChangeDay,
-  onChangePosition,
-  onChangeColor,
-  onDelete,
-  onUpdateImage,
   bgColor,
   dragOverlay = false,
   className,
@@ -54,14 +41,8 @@ export default function SortableItem({
       >
         <ActivityCard
           activity={activity}
-          availableDays={availableDays}
           onSelect={onSelect}
           onTitleSave={onTitleSave}
-          onChangeDay={onChangeDay}
-          onChangePosition={onChangePosition}
-          onChangeColor={onChangeColor}
-          onDelete={onDelete}
-          onUpdateImage={onUpdateImage}
           bgColor={bgColor}
         />
       </div>
@@ -89,14 +70,8 @@ export default function SortableItem({
       <div className={cn(isDragging && 'opacity-0')}>
         <ActivityCard
           activity={activity}
-          availableDays={availableDays}
           onSelect={onSelect}
           onTitleSave={onTitleSave}
-          onChangeDay={onChangeDay}
-          onChangePosition={onChangePosition}
-          onChangeColor={onChangeColor}
-          onDelete={onDelete}
-          onUpdateImage={onUpdateImage}
           bgColor={bgColor}
         />
       </div>

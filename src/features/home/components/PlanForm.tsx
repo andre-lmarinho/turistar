@@ -16,7 +16,7 @@ import {
 import { Button } from '@/shared/ui/button';
 import { DateRangePicker } from '@/shared/ui/calendar';
 import { LocationSearchInput } from '@/shared/ui/input';
-import { useDestinationAutocomplete } from '@/features/home/hooks/search/useDestinationAutocomplete';
+import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
 import LoadingScreen from '@/shared/components/LoadingScreen';
 import { useRouter } from 'next/navigation';
 import { addDays } from 'date-fns';
@@ -178,7 +178,10 @@ export default function PlanForm({
                 />
               </fieldset>
 
-              <fieldset className="flex w-full justify-center pb-4" aria-labelledby="daterange-label">
+              <fieldset
+                className="flex w-full justify-center pb-4"
+                aria-labelledby="daterange-label"
+              >
                 <legend id="daterange-label" className="sr-only">
                   Travel dates
                 </legend>

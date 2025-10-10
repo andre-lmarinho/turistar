@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import PlanForm from '@/features/home/components/PlanForm';
-import { useDestinationAutocomplete } from '@/features/home/hooks/search/useDestinationAutocomplete';
+import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
   let captured: unknown;

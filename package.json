@@ -31,7 +31,8 @@
     "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/types/supabase.ts",
     "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
     "vercel:build": "npx vercel@latest build --debug",
-    "check:vercel": "npm run vercel:pull && npm run vercel:build"
+    "check:vercel": "npm run vercel:pull && npm run vercel:build",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
