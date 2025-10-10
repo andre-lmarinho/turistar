@@ -1,10 +1,10 @@
-// src/features/home/components/FinalCta.tsx
 'use client';
 
 import { useState } from 'react';
+
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import { Dialog } from '@/shared/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 
 export default function FinalCta() {
   const [open, setOpen] = useState(false);
@@ -19,28 +19,32 @@ export default function FinalCta() {
         <Button onClick={openForm}>Start Your Planning</Button>
       </div>
 
-      <Dialog
-        open={open}
-        onClose={closeForm}
-        overlayClassName="backdrop-overlay"
-        wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
-        className="w-full max-w-md p-6"
-        aria-labelledby={dialogTitleId}
-      >
-        <h2 id={dialogTitleId} className="sr-only">
-          Start planning your trip
-        </h2>
-        <div className="flex w-full justify-end">
-          <Button
-            type="button"
-            variant="icon"
-            size="icon"
-            title="Close"
-            icon="x"
-            onClick={closeForm}
-          />
-        </div>
-        <PlanForm />
+      <Dialog open={open} onClose={closeForm}>
+        <DialogContent
+          size="sm"
+          className="w-full max-w-md p-6"
+          aria-labelledby={dialogTitleId}
+          aria-describedby={undefined}
+        >
+          <DialogHeader className="sr-only">
+            <DialogTitle id={dialogTitleId}>Start planning your trip</DialogTitle>
+          </DialogHeader>
+
+          <div className="flex w-full justify-end">
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant="icon"
+                size="icon"
+                title="Close"
+                icon="x"
+                onClick={closeForm}
+              />
+            </DialogClose>
+          </div>
+
+          <PlanForm />
+        </DialogContent>
       </Dialog>
     </section>
   );

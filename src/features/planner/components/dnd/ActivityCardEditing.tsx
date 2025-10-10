@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
+
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Button } from '@/shared/ui/button';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
-import { usePopupDismiss } from '@/shared/hooks/ui/usePopupDismiss';
 import { cn } from '@/shared/utils/cn';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
@@ -18,11 +18,11 @@ interface Props {
   onChangeDay: (dayId: string) => void;
   onChangePosition: (index: number) => void;
   onSave: (imageUrl: string) => void;
-  onCancel: () => void;
   onDelete: () => void;
   editedImageUrl: string;
   setEditedImageUrl: (url: string) => void;
-  cardRef: React.RefObject<HTMLDivElement | null>;
+  cardRect: DOMRect | null;
+  actionsRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function ActivityCardEditing({
@@ -33,11 +33,11 @@ export default function ActivityCardEditing({
   onChangeDay,
   onChangePosition,
   onSave,
-  onCancel,
   onDelete,
   editedImageUrl,
   setEditedImageUrl,
-  cardRef,
+  cardRect,
+  actionsRef,
 }: Props) {
   const { colorPopover, dayPopover } = useActivityPopupControls({
     activity,
@@ -50,112 +50,107 @@ export default function ActivityCardEditing({
     onChangeImage: (url: string) => setEditedImageUrl(url),
     onClearImage: () => setEditedImageUrl(''),
   });
-  const { rect: cardRect } = useElementMeasure({ ref: cardRef, rect: true });
-  const { ref: buttonContainerRef, rect: buttonRect } = useElementMeasure<HTMLDivElement>({
-    rect: true,
-  });
 
-  usePopupDismiss({ popupRef: buttonContainerRef, triggerRef: cardRef, onClose: onCancel });
+  const { rect: buttonRect } = useElementMeasure<HTMLDivElement>({ ref: actionsRef, rect: true });
 
   const gap = 8;
   const buttonGroupWidth = buttonRect?.width ?? 160;
 
-  const position =
-    cardRect && window.innerWidth - cardRect.right - gap >= buttonGroupWidth ? 'right' : 'left';
+  const position = useMemo(() => {
+    if (!cardRect) return 'right';
+    const availableRight = window.innerWidth - cardRect.right - gap;
+    return availableRight >= buttonGroupWidth ? 'right' : 'left';
+  }, [buttonGroupWidth, cardRect]);
 
-  const coords = cardRect
-    ? {
-        top: cardRect.top,
-        left: position === 'right' ? cardRect.right + gap : cardRect.left - gap,
-      }
-    : null;
-
-  if (!coords) return null;
+  const coords = useMemo(() => {
+    if (!cardRect) return null;
+    return {
+      top: cardRect.top,
+      left: position === 'right' ? cardRect.right + gap : cardRect.left - gap,
+    };
+  }, [cardRect, position]);
 
   return (
     <>
       <div className="relative z-50 mt-2 flex">
-        <Button
-          type="button"
-          size="sm"
-          className="cursor-pointer"
-          onClick={() => onSave(editedImageUrl)}
-        >
+        <Button type="button" size="sm" className="cursor-pointer" onClick={() => onSave(editedImageUrl)}>
           Update
         </Button>
       </div>
-      {ReactDOM.createPortal(
-        <div
-          ref={buttonContainerRef}
-          className={cn(
-            'fixed z-50 flex flex-col',
-            position === 'right' ? 'items-start' : '-translate-x-full items-end'
-          )}
-          style={{ top: coords.top, left: coords.left }}
-        >
-          <Popover open={dayPopover.open} onOpenChange={dayPopover.onOpenChange}>
-            <PopoverTrigger asChild>
-              <Button
-                ref={dayPopover.triggerRef}
-                size="sm"
-                variant="icon"
-                type="button"
-                icon="arrow-left-right"
-                iconProps={{ className: 'size-4' }}
-              >
-                Move
-              </Button>
-            </PopoverTrigger>
-            {dayPopover.content ? (
-              <PopoverContent
-                side="right"
-                align="center"
-                sideOffset={8}
-                className="w-72 p-0"
-                aria-labelledby="day-picker-popup-title"
-              >
-                {dayPopover.content}
-              </PopoverContent>
-            ) : null}
-          </Popover>
-
-          <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
-            <PopoverTrigger asChild>
-              <Button
-                ref={colorPopover.triggerRef}
-                size="sm"
-                variant="icon"
-                type="button"
-                icon="palette"
-                iconProps={{ className: 'size-4' }}
-              >
-                Card Colors
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              side="right"
-              align="center"
-              sideOffset={8}
-              className="w-[304px] p-0"
-              aria-labelledby="card-color-popup-title"
+      {coords
+        ? ReactDOM.createPortal(
+            <div
+              ref={actionsRef}
+              className={cn(
+                'fixed z-50 flex flex-col',
+                position === 'right' ? 'items-start' : '-translate-x-full items-end'
+              )}
+              style={{ top: coords.top, left: coords.left }}
             >
-              {colorPopover.content}
-            </PopoverContent>
-          </Popover>
+              <Popover open={dayPopover.open} onOpenChange={dayPopover.onOpenChange}>
+                <PopoverTrigger asChild>
+                  <Button
+                    ref={dayPopover.triggerRef}
+                    size="sm"
+                    variant="icon"
+                    type="button"
+                    icon="arrow-left-right"
+                    iconProps={{ className: 'size-4' }}
+                  >
+                    Move
+                  </Button>
+                </PopoverTrigger>
+                {dayPopover.content ? (
+                  <PopoverContent
+                    side="right"
+                    align="center"
+                    sideOffset={8}
+                    className="w-72 p-0"
+                    aria-labelledby="day-picker-popup-title"
+                  >
+                    {dayPopover.content}
+                  </PopoverContent>
+                ) : null}
+              </Popover>
 
-          <Button
-            size="sm"
-            variant="icon"
-            type="button"
-            onClick={onDelete}
-            icon="trash-2"
-            iconProps={{ className: 'size-4' }}
-          >
-            Delete
-          </Button>
-        </div>,
-        document.body
-      )}
+              <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
+                <PopoverTrigger asChild>
+                  <Button
+                    ref={colorPopover.triggerRef}
+                    size="sm"
+                    variant="icon"
+                    type="button"
+                    icon="palette"
+                    iconProps={{ className: 'size-4' }}
+                  >
+                    Card Colors
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  side="right"
+                  align="center"
+                  sideOffset={8}
+                  className="w-[304px] p-0"
+                  aria-labelledby="card-color-popup-title"
+                >
+                  {colorPopover.content}
+                </PopoverContent>
+              </Popover>
+
+              <Button
+                size="sm"
+                variant="icon"
+                type="button"
+                onClick={onDelete}
+                icon="trash-2"
+                iconProps={{ className: 'size-4' }}
+              >
+                Delete
+              </Button>
+            </div>,
+            document.body
+          )
+        : null}
     </>
   );
 }
