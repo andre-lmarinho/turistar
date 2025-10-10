@@ -15,8 +15,6 @@
 
 - `npm run lint` - Run ESLint on codebase
 - `npm run typecheck` - Run TypeScript type checking
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Run format check with Prettier
 
 ## Testing Commands
 
