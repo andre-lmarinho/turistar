@@ -39,5 +39,5 @@ See [Planner Realtime Collaboration](./planner/realtime-collaboration.md) for a 
 ## UI Folder Conventions
 
 - Place feature orchestrators and domain-specific compositions inside `components/`, grouping by capability (e.g., `components/dnd`, `components/budget`, `components/map`). Routes should import from these modules instead of assembling UI inside `app/`.
-- Keep overlays, editors, and other layered experiences alongside the rest of the feature components (for example, `components/modal/ActivityModal.tsx`), so the slice owns its full UX.
+- Keep overlays, editors, and other layered experiences alongside the rest of the feature components (for example, `components/dialog/ActivityDialog.tsx`), so the slice owns its full UX.
 - Reserve `ui/` for micro widgets like buttons or popups. Create focused subfolders such as `ui/buttons` and `ui/popups`, and keep shared atoms in `src/shared/ui` when they are reused across slices.

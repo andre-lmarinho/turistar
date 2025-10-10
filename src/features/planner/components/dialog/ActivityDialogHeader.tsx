@@ -10,10 +10,10 @@ import { Button } from '@/shared/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 /**
- * Color strip shown at the very top of ActivityModal.
+ * Color strip shown at the very top of ActivityDialog.
  * - Background colour = current card colour.
  */
-export default function ActivityModalHeader({
+export default function ActivityDialogHeader({
   activity,
   bgColor,
   onDelete,

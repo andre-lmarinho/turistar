@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const modalTitleId = 'hero-plan-modal-title';
+  const dialogTitleId = 'hero-plan-dialog-title';
   useEffect(() => {
     if (open) {
       return undefined;
@@ -56,15 +56,15 @@ export default function Hero() {
         </div>
       </div>
 
-      <Modal
+      <Dialog
         open={open}
         onClose={closeForm}
         overlayClassName="backdrop-overlay"
         wrapperClassName="fixed inset-0 z-50 flex items-center justify-center p-4 max-w-100 px-10 py-8 m-auto"
         className="w-full max-w-md p-6"
-        aria-labelledby={modalTitleId}
+        aria-labelledby={dialogTitleId}
       >
-        <h2 id={modalTitleId} className="sr-only">
+        <h2 id={dialogTitleId} className="sr-only">
           Start planning your trip
         </h2>
         <div className="flex w-full justify-end">
@@ -78,7 +78,7 @@ export default function Hero() {
           />
         </div>
         <PlanForm />
-      </Modal>
+      </Dialog>
     </section>
   );
 }

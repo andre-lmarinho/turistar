@@ -24,7 +24,7 @@ import { moveActivityPosition } from '@/features/planner/services/moveActivityPo
  * - Supports changing the activity’s assigned day and color.
  * - Integrates with external day/activity state via provided functions.
  *
- * This hook helps coordinate modal-based editing while keeping the main planner state in sync.
+ * This hook helps coordinate dialog-based editing while keeping the main planner state in sync.
  */
 
 interface UseSelectedActivityOptions {
@@ -115,7 +115,7 @@ export function useSelectedActivity(
     });
   };
 
-  const closeModal = () => {
+  const closeDialog = () => {
     const pendingMeta = newActivityMetaRef.current;
     if (selectedActivity && pendingMeta && selectedActivity.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
       newActivityMetaRef.current = null;
@@ -229,7 +229,7 @@ export function useSelectedActivity(
     changeDay,
     changePosition,
     addBlankAndSelect,
-    closeModal,
+    closeDialog,
     save,
     deleteActivity: deleteActivityById,
     changeColor,

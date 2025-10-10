@@ -6,7 +6,7 @@ import { DollarSign } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -49,7 +49,7 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
   if (!open) return null;
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={handleClose}
       overlayClassName="backdrop-overlay"
@@ -97,6 +97,6 @@ export default function ActivitiesBudget({ open, days, onUpdate, onClose }: Acti
           </div>
         ))}
       </div>
-    </Modal>
+    </Dialog>
   );
 }

@@ -1,4 +1,4 @@
-// src/features/planner/components/modal/ActivityModalForm.tsx
+// src/features/planner/components/dialog/ActivityDialogForm.tsx
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
@@ -13,13 +13,13 @@ import { LocationSearchInput } from '@/shared/ui/input';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
-interface ActivityModalFormProps {
+interface ActivityDialogFormProps {
   activity: Activity;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
 }
 
-export default function ActivityModalForm({ activity, onSave, color }: ActivityModalFormProps) {
+export default function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);

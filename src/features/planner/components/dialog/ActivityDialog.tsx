@@ -1,17 +1,17 @@
-// src/features/planner/components/modal/ActivityModal.tsx
+// src/features/planner/components/dialog/ActivityDialog.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import ActivityModalHeader from '@/features/planner/components/modal/ActivityModalHeader';
-import ActivityModalForm from '@/features/planner/components/modal/ActivityModalForm';
+import ActivityDialogHeader from '@/features/planner/components/dialog/ActivityDialogHeader';
+import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
-export default function ActivityModal() {
+export default function ActivityDialog() {
   const {
     selectedActivity: activity,
-    closeModal,
+    closeDialog,
     save,
     deleteActivity,
     changeColor,
@@ -34,28 +34,28 @@ export default function ActivityModal() {
   }
 
   return (
-    <Modal
+    <Dialog
       open={open}
-      onClose={closeModal}
+      onClose={closeDialog}
       overlayClassName="backdrop-overlay"
-      aria-labelledby="activity-modal-title"
+      aria-labelledby="activity-dialog-title"
       className="bg-background focus:ring-primary flex w-[95%] max-w-[452px] flex-col rounded-lg shadow-xl focus:ring-2 focus:outline-none"
     >
-      <h2 id="activity-modal-title" className="sr-only">
+      <h2 id="activity-dialog-title" className="sr-only">
         Edit Activity
       </h2>
-      <ActivityModalHeader
+      <ActivityDialogHeader
         activity={draft}
         bgColor={activity.color}
         onDelete={deleteActivity}
-        onClose={closeModal}
+        onClose={closeDialog}
         onColorChange={(color) => changeColor(activity.id, color)}
         availableDays={days}
         onChangeDay={(dayId) => changeDay(activity.id, dayId)}
         onChangePosition={(idx) => changePosition(activity.id, idx)}
         onImageChange={handleImageChange}
       />
-      <ActivityModalForm activity={draft} onSave={save} color={activity.color} />
-    </Modal>
+      <ActivityDialogForm activity={draft} onSave={save} color={activity.color} />
+    </Dialog>
   );
 }

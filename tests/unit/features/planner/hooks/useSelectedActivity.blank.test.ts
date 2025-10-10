@@ -26,7 +26,7 @@ function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeo
     setDays,
     selectedActivity: selected.selectedActivity,
     addBlankAndSelect: selected.addBlankAndSelect,
-    closeModal: selected.closeModal,
+    closeDialog: selected.closeDialog,
     save: selected.save,
     changeDay: selected.changeDay,
     changePosition: selected.changePosition,
@@ -53,7 +53,7 @@ describe('useSelectedActivity blank placeholders', () => {
     expect(result.current.days[0].activities).toHaveLength(0);
 
     await act(async () => {
-      result.current.closeModal();
+      result.current.closeDialog();
     });
 
     expect(result.current.days[0].activities).toHaveLength(0);
@@ -137,7 +137,7 @@ describe('useSelectedActivity blank placeholders', () => {
     idSpy.mockRestore();
   });
 
-  it('removes blank activities that arrive from the server when closing the modal', async () => {
+  it('removes blank activities that arrive from the server when closing the dialog', async () => {
     const persistSpy = vi.fn().mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
 
@@ -159,7 +159,7 @@ describe('useSelectedActivity blank placeholders', () => {
     });
 
     await act(async () => {
-      result.current.closeModal();
+      result.current.closeDialog();
     });
 
     expect(result.current.days[0].activities).toHaveLength(0);

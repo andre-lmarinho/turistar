@@ -1,18 +1,18 @@
-// src/features/planner/components/onboarding/OnboardingModal.tsx
+// src/features/planner/components/onboarding/OnboardingDialog.tsx
 'use client';
 
 import React from 'react';
 import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { Button } from '@/shared/ui/button';
-import { Modal } from '@/shared/ui/modal';
+import { Dialog } from '@/shared/ui/dialog';
 
-export default function OnboardingModal() {
+export default function OnboardingDialog() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();
   const onClose = () => setShowOnboarding(false);
 
   return (
-    <Modal
+    <Dialog
       open={open}
       onClose={onClose}
       overlayClassName="backdrop-overlay"
@@ -32,6 +32,6 @@ export default function OnboardingModal() {
       <div className="flex items-center justify-center">
         <OnboardingCarousel baseWidth={384} onFinish={onClose} />
       </div>
-    </Modal>
+    </Dialog>
   );
 }

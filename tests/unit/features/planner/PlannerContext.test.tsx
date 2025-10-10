@@ -59,7 +59,7 @@ vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
     setSelectedActivity: vi.fn(),
     changeDay: vi.fn(),
     addBlankAndSelect: vi.fn(),
-    closeModal: vi.fn(),
+    closeDialog: vi.fn(),
     save: vi.fn(),
     deleteActivity: vi.fn(),
     changeColor: vi.fn(),

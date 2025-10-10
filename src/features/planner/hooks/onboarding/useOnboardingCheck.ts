@@ -5,8 +5,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 /**
- * Handles onboarding modal visibility based on localStorage.
- * Shows the modal once per plan ID and persists the flag.
+ * Handles onboarding dialog visibility based on localStorage.
+ * Shows the dialog once per plan ID and persists the flag.
  */
 export function useOnboardingCheck(planId: string) {
   const key = `planner-onboarding-shown-${planId}`;

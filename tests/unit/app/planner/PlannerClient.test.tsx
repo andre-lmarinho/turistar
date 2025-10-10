@@ -35,7 +35,7 @@ const onboardingMocks = vi.hoisted(() => {
     return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
   };
 
-  const OnboardingModal = () => {
+  const OnboardingDialog = () => {
     const { showOnboarding } = useOnboardingContext();
     const planId = mockPlanId;
 
@@ -46,7 +46,7 @@ const onboardingMocks = vi.hoisted(() => {
     return showOnboarding ? <div>Your planner is ready</div> : null;
   };
 
-  return { OnboardingProvider, useOnboardingContext, OnboardingModal };
+  return { OnboardingProvider, useOnboardingContext, OnboardingDialog };
 });
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
@@ -75,7 +75,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/components/modal/ActivityModal', () => ({
+vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   default: () => null,
 }));
@@ -107,9 +107,9 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   useOnboardingContext: onboardingMocks.useOnboardingContext,
 }));
 
-vi.mock('@/features/planner/components/onboarding/OnboardingModal', () => ({
+vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: onboardingMocks.OnboardingModal,
+  default: onboardingMocks.OnboardingDialog,
 }));
 
 vi.mock('@/shared/ui/calendar', async () => {
@@ -130,8 +130,8 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-describe('PlannerClient onboarding', () => {
-  it('shows onboarding for a new plan id even if another plan was seen', () => {
+describe('PlannerClient onboarding dialog', () => {
+  it('shows onboarding dialog for a new plan id even if another plan was seen', () => {
     localStorage.setItem('planner-onboarding-shown-plan1', 'true');
     mockPlanId = 'plan2';
     render(<PlannerClient title="Trip" />);
