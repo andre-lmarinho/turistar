@@ -1,4 +1,3 @@
-// src/features/planner/ui/buttons/AddCardButton.tsx
 'use client';
 
 import React from 'react';
@@ -7,8 +6,6 @@ import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
-import { KEY_BINDS } from '@/features/planner/domain/constants/keyBinds';
-import { TooltipKeyHint } from '@/shared/ui/tooltip';
 
 export type AddCardButtonPosition = 'new' | 'insert';
 
@@ -30,7 +27,7 @@ export default function AddCardButton({
   if (position === 'new') {
     const baseColor = baseBg;
 
-    const button = (
+    return (
       <button
         type="button"
         onClick={() => onAddActivity(dayId, index)}
@@ -41,11 +38,6 @@ export default function AddCardButton({
           New Card
         </span>
       </button>
-    );
-    return (
-      <TooltipKeyHint shortcut={KEY_BINDS.newCard} content="New Card" position="bottom">
-        {button}
-      </TooltipKeyHint>
     );
   }
 
