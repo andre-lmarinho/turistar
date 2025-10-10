@@ -1,13 +1,10 @@
-// src/features/planner/components/budget/BudgetPanelHeader.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Info, DollarSign } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
-import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import { InfoPopover } from '@/shared/ui/popover';
 import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 
@@ -57,11 +54,8 @@ export default function BudgetPanelHeader() {
 
         {/* Total Budget */}
         <div className="flex flex-wrap items-center justify-between">
-          <label htmlFor="budget-input" className="flex items-center gap-1 text-sm">
+          <label htmlFor="budget-input" className="text-sm">
             Total Budget
-            <InfoPopover content={BUDGET_INFO.totalBudget}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
           </label>
 
           <Input
@@ -83,23 +77,13 @@ export default function BudgetPanelHeader() {
 
         {/* Total Spend */}
         <div className="flex flex-wrap items-center justify-between">
-          <span className="flex items-center gap-1 text-sm">
-            Total Spent
-            <InfoPopover content={BUDGET_INFO.totalSpent}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
-          </span>
+          <span className="text-sm">Total Spent</span>
           <SummaryValue amount={totalSpent} ariaLabel={`Total spent: $${totalSpent.toFixed(2)}`} />
         </div>
 
         {/* Difference */}
         <div className="flex flex-wrap items-center justify-between">
-          <span className="flex items-center gap-1 text-sm">
-            Difference
-            <InfoPopover content={BUDGET_INFO.difference}>
-              <Info size={12} aria-hidden="true" className="text-muted-foreground" />
-            </InfoPopover>
-          </span>
+          <span className="text-sm">Difference</span>
           <SummaryValue amount={difference} ariaLabel={`Difference: $${difference.toFixed(2)}`} />
         </div>
       </div>

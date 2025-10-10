@@ -1,13 +1,9 @@
-// src/features/planner/components/budget/ExpenseTable.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Info } from 'lucide-react';
-import { BUDGET_INFO } from '@/features/planner/domain/constants/budgetInfo';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import BudgetRow from '@/features/planner/components/budget/BudgetRow';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import { InfoPopover } from '@/shared/ui/popover';
 
 export default function ExpenseTable() {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
@@ -42,37 +38,17 @@ export default function ExpenseTable() {
       </caption>
       <thead role="rowgroup" className="bg-card">
         <tr role="row">
-          <th scope="col" className="p-2 text-left">
-            <span className="flex items-center gap-1 font-normal">
-              Description
-              <InfoPopover content={BUDGET_INFO.description}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </InfoPopover>
-            </span>
+          <th scope="col" className="p-2 text-left font-normal">
+            Description
           </th>
-          <th scope="col" className="p-2 text-left">
-            <span className="flex items-center gap-1 font-normal">
-              Category
-              <InfoPopover content={BUDGET_INFO.category}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </InfoPopover>
-            </span>
+          <th scope="col" className="p-2 text-left font-normal">
+            Category
           </th>
-          <th scope="col" className="w-32 p-2 text-right">
-            <span className="flex items-center justify-end gap-1 font-normal">
-              Amount
-              <InfoPopover content={BUDGET_INFO.amount}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </InfoPopover>
-            </span>
+          <th scope="col" className="w-32 p-2 text-right font-normal">
+            Amount
           </th>
-          <th scope="col" className="p-2 text-right">
-            <span className="flex items-center justify-end gap-1 font-normal">
-              Actions
-              <InfoPopover content={BUDGET_INFO.actions}>
-                <Info aria-hidden="true" size={12} className="text-muted-foreground" />
-              </InfoPopover>
-            </span>
+          <th scope="col" className="p-2 text-right font-normal">
+            Actions
           </th>
         </tr>
       </thead>

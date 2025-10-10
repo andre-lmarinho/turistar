@@ -1,4 +1,3 @@
-// src/features/planner/components/PlannerClient.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -16,7 +15,6 @@ import { OnboardingProvider } from '@/features/planner/hooks/onboarding/Onboardi
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/calendar';
 import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
-import { useKeyBinds } from '@/features/planner/hooks/internal/useKeyBinds';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import { motion } from 'framer-motion';
@@ -58,8 +56,7 @@ function PlannerClientInner({
 }) {
   const [mode, setMode] = useState<Mode>('planner');
 
-  const { planId, dest, days, currentRange, handleRangeChange, addBlankAndSelect } =
-    usePlannerContext();
+  const { planId, dest, currentRange, handleRangeChange } = usePlannerContext();
 
   const { title, setTitle, saveTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
   const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
@@ -68,15 +65,6 @@ function PlannerClientInner({
   });
 
   const headingText = title?.trim().length ? title : (dest ?? 'Your trip plan');
-
-  useKeyBinds({
-    onPlanner: () => setMode('planner'),
-    onMap: () => setMode('map'),
-    onBudget: () => setMode('budget'),
-    onNewCard: () => {
-      if (days[0]) addBlankAndSelect(days[0].id);
-    },
-  });
 
   const activeIdx = modeOrder.indexOf(mode);
 
