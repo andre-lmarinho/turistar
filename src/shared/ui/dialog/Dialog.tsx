@@ -125,10 +125,12 @@ export const DialogContent = forwardRef<
     preventCloseOnOutsideClick,
     onEscapeKeyDown,
     onPointerDownOutside,
-    ...props
+    ...restProps
   },
   ref
 ) {
+  const { 'aria-modal': ariaModal, ...contentProps } = restProps;
+
   return (
     <DialogPortal>
       {!hideOverlay ? <DialogOverlay appearance={overlayAppearance} /> : null}
@@ -147,7 +149,8 @@ export const DialogContent = forwardRef<
           }
           onPointerDownOutside?.(event);
         }}
-        {...props}
+        aria-modal={ariaModal ?? true}
+        {...contentProps}
       >
         {children}
       </DialogPrimitive.Content>

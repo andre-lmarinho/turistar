@@ -59,10 +59,14 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
         aria-labelledby="activities-budget-title"
         aria-describedby={undefined}
       >
-        <DialogHeader className="border-b px-4 py-3 text-left">
+        <DialogHeader className="flex items-center justify-between border-b px-4 py-3 text-left">
           <DialogTitle id="activities-budget-title" className="text-lg font-semibold">
             Budget Your Activities
           </DialogTitle>
+
+          <DialogClose asChild>
+            <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={handleClose} />
+          </DialogClose>
         </DialogHeader>
 
         <div
@@ -92,11 +96,6 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
           ))}
         </div>
 
-        <div className="flex justify-end border-t px-4 py-3">
-          <DialogClose asChild>
-            <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={handleClose} />
-          </DialogClose>
-        </div>
       </DialogContent>
     </Dialog>
   );

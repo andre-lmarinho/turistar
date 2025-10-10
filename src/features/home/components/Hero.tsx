@@ -5,7 +5,6 @@ import Image from 'next/image';
 
 import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
@@ -27,9 +26,6 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [open]);
 
-  const openForm = () => setOpen(true);
-  const closeForm = () => setOpen(false);
-
   return (
     <section className="relative mx-auto w-full max-w-screen-lg overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
       {/* Left column */}
@@ -39,7 +35,12 @@ export default function Hero() {
             Less time planning. More time traveling.
           </h1>
           <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>
-          <Button onClick={openForm}>Start Your Planning</Button>
+          <PlanForm
+            trigger={<Button type="button">Start Your Planning</Button>}
+            dialogTitleId={dialogTitleId}
+            open={open}
+            onOpenChange={setOpen}
+          />
         </div>
 
         {/* Right column */}
@@ -59,33 +60,6 @@ export default function Hero() {
         </div>
       </div>
 
-      <Dialog open={open} onClose={closeForm}>
-        <DialogContent
-          size="sm"
-          className="w-full max-w-md p-6"
-          aria-labelledby={dialogTitleId}
-          aria-describedby={undefined}
-        >
-          <DialogHeader className="sr-only">
-            <DialogTitle id={dialogTitleId}>Start planning your trip</DialogTitle>
-          </DialogHeader>
-
-          <div className="flex w-full justify-end">
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="icon"
-                size="icon"
-                title="Close"
-                icon="x"
-                onClick={closeForm}
-              />
-            </DialogClose>
-          </div>
-
-          <PlanForm />
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }

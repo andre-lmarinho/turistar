@@ -42,7 +42,7 @@ export default function ActivityDialog() {
     <Dialog open={open} onClose={closeDialog}>
       <DialogContent
         size="md"
-        className="flex w-[95%] max-w-[452px] flex-col"
+        className="flex w-[95%] max-w-[452px] flex-col p-0"
         aria-labelledby="activity-dialog-title"
         aria-describedby={undefined}
       >
