@@ -11,7 +11,7 @@ import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from './useDnDPlanner';
 import { buildInitialDays } from '@/features/planner/services/initialDays';
 import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
-import { setPlanDateRange } from '@/app/planner/actions/updatePlan';
+import { setPlanDateRange } from '@/app/(web)/planner/actions/updatePlan';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface UsePlannerOptions {

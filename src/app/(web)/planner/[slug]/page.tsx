@@ -1,4 +1,4 @@
-// src/app/planner/[slug]/page.tsx
+// src/app/(web)/planner/[slug]/page.tsx
 
 import PlannerClient from '@/features/planner/components/PlannerClient';
 import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';

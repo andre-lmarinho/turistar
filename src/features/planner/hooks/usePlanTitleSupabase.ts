@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { capitalize } from '@/shared/utils/capitalize';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
-import { updatePlanTitle } from '@/app/planner/actions/updatePlanTitle';
+import { updatePlanTitle } from '@/app/(web)/planner/actions/updatePlanTitle';
 import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {

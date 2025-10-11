@@ -10,7 +10,7 @@ vi.mock('@/features/home/components/FeaturePreview', () => ({
   default: () => <div data-testid="feature-preview" />,
 }));
 
-import Home from '@/app/page';
+import Home from '@/app/(marketing)/page';
 
 describe('Accessibility — Home page (full)', () => {
   it('has no a11y violations', async () => {

@@ -1,4 +1,6 @@
 // src/shared/components/SeoJsonLd.tsx
+'use client';
+
 import Script from 'next/script';
 import { SITE_URL } from '@/shared/constants/site';
 const logoUrl = `${SITE_URL}/favicon.ico`;

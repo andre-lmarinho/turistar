@@ -1,4 +1,4 @@
-// src/app/inspiration/[city]/page.tsx
+// src/app/(web)/inspiration/[city]/page.tsx
 
 import { InspirationPlanner } from '@/features/planner/contracts/inspiration/InspirationPlanner';
 import { getInspirationExperienceProps } from '@/features/inspiration/server/getInspirationExperienceProps';
