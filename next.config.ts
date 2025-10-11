@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'upload.wikimedia.org', pathname: '/**' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'upload.wikimedia.org', pathname: '/**' },
+      { protocol: 'https', hostname: 'i.pravatar.cc', pathname: '/**' },
+      { protocol: 'https', hostname: 'pravatar.cc', pathname: '/**' },
+    ],
   },
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';

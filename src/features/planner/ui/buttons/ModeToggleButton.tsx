@@ -68,7 +68,7 @@ export default function ModeToggleButton({ value, onChange }: ModeToggleButtonPr
         ref={containerRef}
         role="tablist"
         aria-label="View mode selector"
-        className="relative flex min-w-[200px] overflow-hidden rounded-[var(--radius)] bg-[var(--border)]"
+        className="bg-background border-border relative flex min-w-[200px] overflow-hidden rounded-[var(--radius)] border"
       >
         {ready && (
           <motion.div

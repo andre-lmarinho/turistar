@@ -10,52 +10,29 @@ const content: PlanningPageContent = {
     primaryAction: { label: 'Start a vacation plan', href: '/signup' },
     secondaryAction: { label: 'See all planning types', href: '/planning' },
   },
-  howItWorks: {
-    title: 'Plan together without the stress',
-    subtitle: 'Keep everyone aligned from inspiration to final booking.',
-    steps: [
-      {
-        title: 'Gather your must-dos',
-        description:
-          'Save restaurants, sights, and experiences from any device for the group to review.',
-      },
-      {
-        title: 'Design the perfect pace',
-        description:
-          'Balance downtime and adventure with timeline tools made for easy adjustments.',
-      },
-      {
-        title: 'Stay on top of logistics',
-        description:
-          'Track reservations, confirmations, and travel docs so nothing slips through the cracks.',
-      },
-    ],
-  },
-  features: {
-    title: 'Features tuned for leisure travel',
-    items: [
-      {
-        title: 'Shared wishlists',
-        description: 'Vote on favorite experiences and lock in the agenda everyone loves.',
-      },
-      {
-        title: 'Calendar sync',
-        description: 'Push confirmed activities into personal calendars automatically.',
-      },
-      {
-        title: 'Packing prompts',
-        description:
-          'Generate personalized packing reminders based on trip length and destination.',
-      },
-    ],
-  },
-  ctaMidPage: {
-    eyebrow: 'Try it now',
-    title: 'Turn daydreams into confirmed plans',
+  keyBenefits: {
+    title: 'Make vacation planning easy',
     description:
-      'Use our templates to map travel days, assign tasks, and finalize bookings faster.',
-    action: { label: 'Create your free account', href: '/signup' },
+      'Take the stress out of vacation preparation with tools that simplify planning, mapping and budgeting.',
+    benefits: [
+      {
+        title: 'Organize days easily',
+        description:
+          'Arrange each day of your holiday with drag and drop cards. Add or move activities and know your changes are always saved.',
+      },
+      {
+        title: 'See everywhere together',
+        description:
+          'Use the map view to place sightseeing, meals and excursions across days. Check distances, group stops by area and keep your itinerary visually aligned.',
+      },
+      {
+        title: 'Manage travel funds',
+        description:
+          'Monitor lodging, dining and activity costs by category. Adjust totals as you go and make sure your holiday stays within budget.',
+      },
+    ],
   },
+  ctaMidPageAction: { label: 'Create your free account', href: '/signup' },
   faq: {
     title: 'Vacation planning FAQ',
     items: [
@@ -70,15 +47,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  testimonial: {
-    quote:
-      'Travel Planner helped our family escape the group-chat chaos and enjoy a perfectly paced beach getaway.',
-    author: 'Mariana Costa',
-    role: 'Family trip organizer',
-  },
   ctaFinal: {
-    title: 'Bring your getaway to life',
-    description: 'Start planning with collaborative tools designed for effortless vacations.',
     primaryAction: { label: 'Plan my vacation', href: '/signup' },
     secondaryAction: { label: 'Compare pricing options', href: '/pricing' },
   },

@@ -1,38 +1,41 @@
 import CtaFinal from '@/shared/ui/sections/CtaFinal';
-import type { CtaFinalProps } from '@/shared/ui/sections/CtaFinal';
+import type { CtaFinalAction } from '@/shared/ui/sections/CtaFinal';
 import CtaMidPage from '@/shared/ui/sections/CtaMidPage';
-import type { CtaMidPageProps } from '@/shared/ui/sections/CtaMidPage';
+import type { CtaMidPageAction } from '@/shared/ui/sections/CtaMidPage';
 import Features from '@/shared/ui/sections/Features';
-import type { FeaturesProps } from '@/shared/ui/sections/Features';
 import Faq from '@/shared/ui/sections/Faq';
 import type { FaqProps } from '@/shared/ui/sections/Faq';
 import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
 import type { HeroTwoColumnsProps } from '@/shared/ui/sections/HeroTwoColumns';
-import HowItWorks from '@/shared/ui/sections/HowItWorks';
-import type { HowItWorksProps } from '@/shared/ui/sections/HowItWorks';
+import KeyBenefits from '@/shared/ui/sections/KeyBenefits';
+import type { KeyBenefitsProps } from '@/shared/ui/sections/KeyBenefits';
 import Testimonial from '@/shared/ui/sections/Testimonial';
-import type { TestimonialProps } from '@/shared/ui/sections/Testimonial';
 
 export interface PlanningPageContent {
   hero: HeroTwoColumnsProps;
-  howItWorks: HowItWorksProps;
-  features: FeaturesProps;
-  ctaMidPage: CtaMidPageProps;
+  keyBenefits: KeyBenefitsProps;
   faq: FaqProps;
-  testimonial: TestimonialProps;
-  ctaFinal: CtaFinalProps;
+  ctaMidPageAction?: CtaMidPageAction;
+  ctaFinal: {
+    primaryAction: CtaFinalAction;
+    secondaryAction?: CtaFinalAction;
+  };
 }
 
 export function PlanningPageTemplate({ content }: { content: PlanningPageContent }) {
   return (
     <main id="main-content" className="space-y-16">
       <HeroTwoColumns {...content.hero} />
-      <HowItWorks {...content.howItWorks} />
-      <Features {...content.features} />
-      <CtaMidPage {...content.ctaMidPage} />
+      <KeyBenefits {...content.keyBenefits} />
+      <Features />
+      <CtaMidPage action={content.ctaMidPageAction} />
       <Faq {...content.faq} />
-      <Testimonial {...content.testimonial} />
-      <CtaFinal {...content.ctaFinal} />
+      <Testimonial />
+      <CtaFinal
+        variant="planning"
+        primaryAction={content.ctaFinal.primaryAction}
+        secondaryAction={content.ctaFinal.secondaryAction}
+      />
     </main>
   );
 }

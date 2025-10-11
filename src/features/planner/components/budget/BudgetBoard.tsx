@@ -42,7 +42,7 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
           <button
             type="button"
             onClick={() => setEditActivities(true)}
-            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
+            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
           >
             Budget Your Activities
           </button>

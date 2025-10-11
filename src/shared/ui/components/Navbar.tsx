@@ -103,17 +103,17 @@ export default function MarketingNavbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="bg-background sticky top-0 z-50 border-b border-white/10 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 md:gap-8">
+    <header className="bg-background sticky top-0 z-50 justify-center px-4 lg:bg-transparent">
+      <div className="bg-background mx-auto flex w-full max-w-6xl items-center justify-between gap-3 rounded-lg px-4 py-2 backdrop-blur md:gap-8 lg:m-2 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:border">
         <Link
           href="/"
-          className="text-foreground inline-flex items-center gap-2 rounded-lg p-2 text-lg font-semibold tracking-tight md:text-xl"
+          className="text-foreground inline-flex items-center gap-2 justify-self-start rounded-lg p-2 text-lg font-semibold tracking-tight md:text-xl"
         >
           <span className="after:bg-primary/70 relative inline-flex items-center after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:rounded-lg">
             Turistar
           </span>
         </Link>
-        <nav className="hidden flex-1 items-center justify-center gap-6 lg:flex">
+        <nav className="relative hidden items-center justify-center lg:flex lg:justify-self-center">
           <div
             className="relative"
             onMouseEnter={() => setIsDesktopSolutionsOpen(true)}
@@ -163,8 +163,8 @@ export default function MarketingNavbar() {
                             href={item.href}
                             className="hover:bg-muted/60 group hover:border-border/60 flex items-center gap-3 rounded-2xl border border-transparent p-3 transition-all duration-200 hover:shadow-sm"
                           >
-                            <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors">
-                              <item.icon className="size-4" aria-hidden="true" />
+                            <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
+                              <item.icon className="size-6" aria-hidden="true" />
                             </span>
                             <span className="flex flex-col justify-center gap-[2px] text-[15px] leading-5">
                               <p className="text-foreground leading-5 font-semibold">
@@ -188,8 +188,8 @@ export default function MarketingNavbar() {
                             href={item.href}
                             className="hover:bg-muted/60 group hover:border-border/60 flex items-center gap-3 rounded-2xl border border-transparent p-3 transition-all duration-200 hover:shadow-sm"
                           >
-                            <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors">
-                              <item.icon className="size-4" aria-hidden="true" />
+                            <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
+                              <item.icon className="size-6" aria-hidden="true" />
                             </span>
                             <span className="text-foreground flex flex-col justify-center text-[15px] leading-5 font-semibold">
                               {item.label}
@@ -217,15 +217,15 @@ export default function MarketingNavbar() {
           </div>
           <Link
             href="/pricing"
-            className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 absolute top-1/2 left-full ml-6 -translate-y-1/2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
           >
             Pricing
           </Link>
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2 lg:ml-0 lg:justify-self-end">
           <Link
             href="/inspiration/rome"
-            className="border-border bg-background text-foreground hover:bg-muted/60 focus-visible:ring-primary/60 inline-flex h-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="text-foreground hover:text-muted-foreground focus-visible:ring-primary/60 inline-flex h-10 items-center justify-center rounded-lg px-3 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
           >
             Try a demo
           </Link>
@@ -298,7 +298,7 @@ export default function MarketingNavbar() {
                             }}
                           >
                             <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
-                              <item.icon className="size-5" aria-hidden="true" />
+                              <item.icon className="size-6" aria-hidden="true" />
                             </span>
                             <span className="flex flex-col justify-center">
                               <p className="text-foreground text-[15px] leading-5 font-semibold">
@@ -329,7 +329,7 @@ export default function MarketingNavbar() {
                             }}
                           >
                             <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
-                              <item.icon className="size-7" aria-hidden="true" />
+                              <item.icon className="size-6" aria-hidden="true" />
                             </span>
                             <span className="text-foreground text-[15px] leading-5 font-semibold">
                               {item.label}
@@ -359,7 +359,7 @@ export default function MarketingNavbar() {
             <div className="flex flex-col gap-3">
               <Link
                 href="/inspiration/rome"
-                className="border-border bg-background text-foreground hover:bg-muted/60 focus-visible:ring-primary/60 inline-flex h-12 items-center justify-center rounded-lg border px-4 text-[15px] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="text-foreground hover:text-muted-foreground focus-visible:ring-primary/60 inline-flex h-10 items-center justify-center rounded-lg px-3 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Try a demo

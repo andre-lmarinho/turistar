@@ -82,7 +82,7 @@ export default function ActivityDialogHeader({
         {editedImageUrl && (
           <button
             type="button"
-            className={`bg-background/80 text-foreground hover:bg-background absolute right-2 bottom-2 z-20 inline-flex items-center rounded-md px-3 py-1 text-xs font-medium transition-colors ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            className={`bg-background/80 text-foreground hover:bg-background absolute right-2 bottom-2 z-20 inline-flex cursor-pointer items-center rounded-md px-3 py-1 text-xs font-medium transition-colors ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
             onClick={(e) => {
               e.stopPropagation();
               setShowRemove(false);
@@ -102,7 +102,7 @@ export default function ActivityDialogHeader({
                 <button
                   ref={dayPopover.triggerRef}
                   type="button"
-                  className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors"
+                  className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors"
                 >
                   {availableDays.find((d) => d.id === activity.dayId)?.label ?? 'Change Day'}
                   <ChevronDown className="size-4" aria-hidden="true" />
@@ -126,9 +126,9 @@ export default function ActivityDialogHeader({
               type="button"
               title="Delete"
               onClick={onDelete}
-              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+              className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
             >
-              <Trash2 className="size-4" aria-hidden="true" />
+              <Trash2 className="size-5" aria-hidden="true" />
               <span className="sr-only">Delete</span>
             </button>
             <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
@@ -137,9 +137,9 @@ export default function ActivityDialogHeader({
                   ref={colorPopover.triggerRef}
                   type="button"
                   title="Card Color"
-                  className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+                  className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
                 >
-                  <Palette className="size-4" aria-hidden="true" />
+                  <Palette className="size-5" aria-hidden="true" />
                   <span className="sr-only">Card color</span>
                 </button>
               </PopoverTrigger>
@@ -157,9 +157,9 @@ export default function ActivityDialogHeader({
               type="button"
               title="Close"
               onClick={onClose}
-              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+              className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
             >
-              <X className="size-4" aria-hidden="true" />
+              <X className="size-5" aria-hidden="true" />
               <span className="sr-only">Close</span>
             </button>
           </div>

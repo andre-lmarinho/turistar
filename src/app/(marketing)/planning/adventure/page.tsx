@@ -10,49 +10,29 @@ const content: PlanningPageContent = {
     primaryAction: { label: 'Draft an adventure', href: '/signup' },
     secondaryAction: { label: 'Invite travel partners', href: '/friends' },
   },
-  howItWorks: {
-    title: 'Own your itinerary from trailhead to hostel',
-    subtitle: 'Organize routes, transport, and contingencies in one place.',
-    steps: [
-      {
-        title: 'Plot adaptable stages',
-        description:
-          'Break down travel legs with buffer days and alternate options to stay nimble.',
-      },
-      {
-        title: 'Sync gear checklists',
-        description: 'Assign equipment, verify supplies, and track what is packed or borrowed.',
-      },
-      {
-        title: 'Prepare for offline mode',
-        description: 'Download key itineraries and contacts for use when connectivity fades.',
-      },
-    ],
-  },
-  features: {
-    title: 'Tools backpackers rely on',
-    items: [
-      {
-        title: 'Route versions',
-        description: 'Compare alternate trails, travel times, and budgets side by side.',
-      },
-      {
-        title: 'Task assignments',
-        description: 'Coordinate who books transport, secures permits, and handles food planning.',
-      },
-      {
-        title: 'Offline exports',
-        description: 'Save PDFs and offline maps to access your plan from anywhere.',
-      },
-    ],
-  },
-  ctaMidPage: {
-    eyebrow: 'Adventure-ready',
-    title: 'Keep every leg of the journey organized',
+  keyBenefits: {
+    title: 'Adventure planning made simple',
     description:
-      'Log campsites, overnight buses, and must-see stops with adaptable scheduling tools.',
-    action: { label: 'Plan a backpacking route', href: '/signup' },
+      'Focus on your next thrill while our planner keeps your routes, stops and budget in order.',
+    benefits: [
+      {
+        title: 'Arrange epic days',
+        description:
+          'Drag and drop gear runs, excursions and breaks across your itinerary. Move items freely and trust that every update stays saved across devices.',
+      },
+      {
+        title: 'Navigate wild terrain',
+        description:
+          'Use the interactive map to plot trails, campsites and climbs. Measure distances and keep your route overview always visible while organising each day.',
+      },
+      {
+        title: 'Track expedition costs',
+        description:
+          'Budget for gear, guides and transport with category totals. Tweak amounts as you spend and make sure your adventure stays financially sustainable.',
+      },
+    ],
   },
+  ctaMidPageAction: { label: 'Plan a backpacking route', href: '/signup' },
   faq: {
     title: 'Adventure planning FAQ',
     items: [
@@ -67,16 +47,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  testimonial: {
-    quote:
-      'Our trek through Patagonia stayed on track thanks to synced gear lists and offline itineraries.',
-    author: 'Diego Martins',
-    role: 'Backpacking guide',
-  },
   ctaFinal: {
-    title: 'Chart your next adventure',
-    description:
-      'Use Travel Planner to prepare routes, pack smarter, and stay coordinated anywhere.',
     primaryAction: { label: 'Start a free plan', href: '/signup' },
     secondaryAction: { label: 'Review feature set', href: '/pricing' },
   },

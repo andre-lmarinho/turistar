@@ -13,40 +13,10 @@ export default function PlanningOverviewPage() {
         secondaryAction={{ label: 'Browse trip types', href: '#trip-types' }}
       />
       <section id="trip-types">
-        <Features
-          title="Trip types we support"
-          subtitle="Each template comes with curated workflows and guidance."
-          items={[
-            {
-              title: 'Vacations & Getaways',
-              description: 'Relaxing escapes with collaborative agendas and packing reminders.',
-            },
-            {
-              title: 'Adventure & Backpacking',
-              description: 'Flexible itineraries, offline tools, and gear coordination.',
-            },
-            {
-              title: 'Road Trips',
-              description: 'Routes, fuel planning, and driver handoffs made simple.',
-            },
-            {
-              title: 'Event-based Trips',
-              description: 'Centralized logistics for conferences, weddings, and celebrations.',
-            },
-            {
-              title: 'Group Getaways',
-              description: 'Shared budgets, votes, and decisions for every travel crew.',
-            },
-            {
-              title: 'Digital Nomad Trips',
-              description: 'Balance productivity with exploration across time zones.',
-            },
-          ]}
-        />
+        <Features />
       </section>
       <CtaFinal
-        title="Ready to explore a template?"
-        description="Jump into any planning experience and customize it for your group."
+        variant="planning"
         primaryAction={{ label: 'Create an account', href: '/signup' }}
         secondaryAction={{ label: 'View pricing', href: '/pricing' }}
       />

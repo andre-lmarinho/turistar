@@ -82,8 +82,6 @@ export default function PricingPage() {
         ]}
       />
       <CtaFinal
-        title="Ready to start planning?"
-        description="Pick a plan now and upgrade when your adventures grow."
         primaryAction={{ label: 'Create account', href: '/signup' }}
         secondaryAction={{ label: 'Talk with sales', href: '/contact' }}
       />

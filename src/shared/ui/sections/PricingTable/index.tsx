@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 
+import { cn } from '@/shared/utils/cn';
+import MarketingSection from '@/shared/ui/sections/MarketingSection';
+
 export type PricingTableAction = {
   href: string;
   label: string;
@@ -44,27 +47,46 @@ function renderAction(plan: PricingTablePlan) {
 
 export default function PricingTable({ title, subtitle, plans }: PricingTableProps) {
   return (
-    <section>
-      <header>
-        <h2>{title}</h2>
-        {subtitle ? <p>{subtitle}</p> : null}
+    <MarketingSection>
+      <header className="mx-auto max-w-3xl text-center">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
+        {subtitle ? <p className="text-muted-foreground mt-4 text-lg">{subtitle}</p> : null}
       </header>
-      <div>
+      <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {plans.map((plan) => (
-          <article key={plan.name}>
-            <h3>{plan.name}</h3>
-            <p>{plan.price}</p>
-            {plan.description ? <p>{plan.description}</p> : null}
-            <ul>
+          <article
+            key={plan.name}
+            className={cn(
+              'bg-muted/30 border-border flex flex-col rounded-2xl border p-6 text-left shadow-sm transition-shadow hover:shadow-md',
+              plan.highlighted && 'border-primary bg-primary/10 shadow-md'
+            )}
+          >
+            <div className="space-y-1">
+              <h3 className="text-foreground text-xl font-semibold">{plan.name}</h3>
+              <p className="text-foreground text-3xl font-bold">{plan.price}</p>
+              {plan.description ? (
+                <p className="text-muted-foreground text-sm">{plan.description}</p>
+              ) : null}
+            </div>
+            <ul className="text-muted-foreground mt-6 flex-1 space-y-2 text-sm">
               {plan.features.map((feature) => (
-                <li key={feature}>{feature}</li>
+                <li key={feature} className="flex items-start gap-2">
+                  <span className="bg-primary mt-1 h-1.5 w-1.5 rounded-full" aria-hidden="true" />
+                  <span>{feature}</span>
+                </li>
               ))}
             </ul>
-            {renderAction(plan)}
-            {plan.highlighted ? <span>Highlighted</span> : null}
+            <div className="mt-6 flex flex-col gap-3">
+              {renderAction(plan)}
+              {plan.highlighted ? (
+                <span className="text-primary text-xs font-semibold tracking-wide uppercase">
+                  Most popular
+                </span>
+              ) : null}
+            </div>
           </article>
         ))}
       </div>
-    </section>
+    </MarketingSection>
   );
 }

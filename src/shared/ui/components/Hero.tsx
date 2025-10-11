@@ -23,7 +23,7 @@ export default function Hero() {
       {/* Left column */}
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
         <div className="m-auto flex w-full max-w-lg flex-col items-center text-center lg:items-start lg:text-left">
-          <h1 className="mb-6 leading-[1.1] font-semibold tracking-tight">
+          <h1 className="mb-6 text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
             Less time planning. More time traveling.
           </h1>
           <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>

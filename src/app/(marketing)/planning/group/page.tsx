@@ -10,49 +10,29 @@ const content: PlanningPageContent = {
     primaryAction: { label: 'Plan a group trip', href: '/signup' },
     secondaryAction: { label: 'Discover collaboration tools', href: '/friends' },
   },
-  howItWorks: {
-    title: 'Everyone knows the plan',
-    subtitle: 'Give the group a shared space to vote, decide, and stay on budget.',
-    steps: [
+  keyBenefits: {
+    title: 'Improve group travel',
+    description:
+      'Create, update and share itineraries for large and small groups while keeping schedules and costs clear.',
+    benefits: [
       {
-        title: 'Set shared expectations',
+        title: 'Simplify group coordination',
         description:
-          'Outline budget ranges, travel styles, and destination ideas for quick alignment.',
+          'Use drag and drop to arrange days, activities and meals for multiple travellers. Edits save instantly so everyone stays aligned.',
       },
       {
-        title: 'Vote on the itinerary',
+        title: 'Visualise group routes',
         description:
-          'Use reactions and polls to finalize dates, activities, and meal plans together.',
+          'Present routes and meeting points on an interactive map. See distances between stops and make sure the itinerary works for all participants.',
       },
       {
-        title: 'Track commitments',
-        description: 'Assign payments and tasks so every traveler knows what to do next.',
+        title: 'Balance shared budgets',
+        description:
+          'Monitor group expenses across categories like transport, lodging and activities. Update totals collaboratively and keep spending transparent to maintain trust.',
       },
     ],
   },
-  features: {
-    title: 'Purpose-built for group coordination',
-    items: [
-      {
-        title: 'Shared budgets',
-        description: 'Set contribution goals and monitor who has paid or still owes.',
-      },
-      {
-        title: 'Decision tracking',
-        description: 'Log choices and reasoning so everyone understands the final plan.',
-      },
-      {
-        title: 'Availability survey',
-        description: 'Collect availability automatically to choose dates that work for all.',
-      },
-    ],
-  },
-  ctaMidPage: {
-    eyebrow: 'Collaborative planning',
-    title: 'Give the group one source of truth',
-    description: 'Reduce back-and-forth with a shared workspace that updates instantly.',
-    action: { label: 'Launch a group workspace', href: '/signup' },
-  },
+  ctaMidPageAction: { label: 'Launch a group workspace', href: '/signup' },
   faq: {
     title: 'Group planning FAQ',
     items: [
@@ -66,14 +46,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  testimonial: {
-    quote: 'The shared budget view kept our reunion transparent and stress-free for every friend.',
-    author: 'Camila Ribeiro',
-    role: 'Group trip organizer',
-  },
   ctaFinal: {
-    title: 'Plan your group getaway',
-    description: 'Give every traveler clarity on budgets, tasks, and the itinerary in minutes.',
     primaryAction: { label: 'Start organizing', href: '/signup' },
     secondaryAction: { label: 'See collaboration pricing', href: '/pricing' },
   },

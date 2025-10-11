@@ -10,48 +10,29 @@ const content: PlanningPageContent = {
     primaryAction: { label: 'Build a nomad plan', href: '/signup' },
     secondaryAction: { label: 'Share with your crew', href: '/friends' },
   },
-  howItWorks: {
-    title: 'Productive days, memorable nights',
-    subtitle: 'Coordinate reliable Wi-Fi, time zones, and free time in one schedule.',
-    steps: [
+  keyBenefits: {
+    title: 'Balance work and adventure',
+    description:
+      'Stay productive on the road while tracking locations, routines and expenses across multiple stops.',
+    benefits: [
       {
-        title: 'Outline work blocks',
-        description: 'Map dedicated focus hours, meetings, and quiet zones for every teammate.',
-      },
-      {
-        title: 'Reserve work-friendly spots',
+        title: 'Organize daily life',
         description:
-          'Track co-working passes, cafés, and stay locations with connectivity details.',
+          'Schedule coworking sessions, calls and sightseeing using drag and drop. Rearrange tasks and know your plan syncs to any device.',
       },
       {
-        title: 'Slot in local experiences',
-        description: 'Plan shared meals and excursions so you can explore together after work.',
+        title: 'Map your lifestyle',
+        description:
+          'Pin cafes, offices and attractions on a single map. Evaluate commutes and choose accommodations that fit your work rhythm while exploring.',
+      },
+      {
+        title: 'Track long term costs',
+        description:
+          'Monitor monthly housing, co working and leisure expenses. Adjust budget categories as your route evolves and stay financially aware throughout your journey.',
       },
     ],
   },
-  features: {
-    title: 'Features nomads depend on',
-    items: [
-      {
-        title: 'Time zone intelligence',
-        description: 'Visualize overlapping availability across continents instantly.',
-      },
-      {
-        title: 'Workspace database',
-        description: 'Log Wi-Fi speeds, amenities, and access info for your favorite spots.',
-      },
-      {
-        title: 'Wellness reminders',
-        description: 'Add prompts for movement, breaks, and hydration during intense work periods.',
-      },
-    ],
-  },
-  ctaMidPage: {
-    eyebrow: 'Work + travel',
-    title: 'Keep the team aligned across time zones',
-    description: 'Share a single plan that respects workloads while celebrating new cities.',
-    action: { label: 'Start a nomad workspace', href: '/signup' },
-  },
+  ctaMidPageAction: { label: 'Start a nomad workspace', href: '/signup' },
   faq: {
     title: 'Digital nomad FAQ',
     items: [
@@ -65,14 +46,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  testimonial: {
-    quote: 'Our remote squad stayed productive across Lisbon and Berlin with shared work blocks.',
-    author: 'Thiago Moreira',
-    role: 'Remote team lead',
-  },
   ctaFinal: {
-    title: 'Design your next work-from-anywhere plan',
-    description: 'Blend productivity and discovery with organized itineraries for remote teams.',
     primaryAction: { label: 'Start planning today', href: '/signup' },
     secondaryAction: { label: 'Evaluate pricing', href: '/pricing' },
   },

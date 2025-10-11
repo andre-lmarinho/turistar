@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import MarketingSection from '@/shared/ui/sections/MarketingSection';
+
 export type HeroCentralizedAction = {
   href: string;
   label: string;
@@ -31,37 +33,44 @@ export default function HeroCentralized({
   media,
 }: HeroCentralizedProps) {
   return (
-    <section>
-      <div>
-        {eyebrow ? <p>{eyebrow}</p> : null}
-        <h1>{title}</h1>
-        {description ? <p>{description}</p> : null}
-        {primaryAction || secondaryAction ? (
-          <div>
-            {primaryAction ? (
-              <Link
-                href={primaryAction.href}
-                target={primaryAction.target}
-                rel={primaryAction.rel}
-                className={PRIMARY_CLASSES}
-              >
-                {primaryAction.label}
-              </Link>
-            ) : null}
-            {secondaryAction ? (
-              <Link
-                href={secondaryAction.href}
-                target={secondaryAction.target}
-                rel={secondaryAction.rel}
-                className={SECONDARY_CLASSES}
-              >
-                {secondaryAction.label}
-              </Link>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
-      {media ? <div>{media}</div> : null}
-    </section>
+    <MarketingSection
+      className="py-20 sm:py-24 lg:py-28"
+      innerClassName="flex flex-col items-center gap-6 text-center"
+    >
+      {eyebrow ? (
+        <p className="text-primary bg-primary/10 inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{title}</h1>
+      {description ? (
+        <p className="text-muted-foreground text-lg leading-relaxed">{description}</p>
+      ) : null}
+      {primaryAction || secondaryAction ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
+          {primaryAction ? (
+            <Link
+              href={primaryAction.href}
+              target={primaryAction.target}
+              rel={primaryAction.rel}
+              className={PRIMARY_CLASSES}
+            >
+              {primaryAction.label}
+            </Link>
+          ) : null}
+          {secondaryAction ? (
+            <Link
+              href={secondaryAction.href}
+              target={secondaryAction.target}
+              rel={secondaryAction.rel}
+              className={SECONDARY_CLASSES}
+            >
+              {secondaryAction.label}
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+      {media ? <div className="w-full">{media}</div> : null}
+    </MarketingSection>
   );
 }

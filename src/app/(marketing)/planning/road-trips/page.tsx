@@ -10,47 +10,29 @@ const content: PlanningPageContent = {
     primaryAction: { label: 'Map a road trip', href: '/signup' },
     secondaryAction: { label: 'Share with co-drivers', href: '/friends' },
   },
-  howItWorks: {
-    title: 'Every stop accounted for',
-    subtitle: 'Plan daily distances, rest breaks, and sightseeing without spreadsheets.',
-    steps: [
+  keyBenefits: {
+    title: 'Own your road trip',
+    description:
+      'Plan each leg of the journey, monitor mileage and costs, and keep everything organised in one place.',
+    benefits: [
       {
-        title: 'Draft the master route',
-        description: 'Plot segments, estimated drive times, and scenic detours across the map.',
+        title: 'Design every leg',
+        description:
+          'Move stops, meals and lodgings between days with intuitive drag and drop. Any adjustments save instantly across your devices, keeping your timeline tidy.',
       },
       {
-        title: 'Log essential stops',
-        description: 'Track fuel, meals, and overnight stays with reminders for reservations.',
+        title: 'Map your route',
+        description:
+          'Plot every leg on the map, visualise driving distances, and quickly see how detours affect your overall schedule before you go.',
       },
       {
-        title: 'Keep the crew updated',
-        description: 'Share live itineraries and adjust plans together as the journey unfolds.',
-      },
-    ],
-  },
-  features: {
-    title: 'Features for road trip strategists',
-    items: [
-      {
-        title: 'Segment budgeting',
-        description: 'Estimate tolls, fuel, and lodging costs for each stretch of the drive.',
-      },
-      {
-        title: 'Vehicle checklists',
-        description: 'Stay on top of maintenance tasks before departure and on the road.',
-      },
-      {
-        title: 'Shared navigation links',
-        description: 'Launch navigation apps from itinerary cards with pre-filled addresses.',
+        title: 'Balance your budget',
+        description:
+          'Keep fuel, lodging and activity expenses under control. Review totals per category and update amounts whenever plans change to stay on track.',
       },
     ],
   },
-  ctaMidPage: {
-    eyebrow: 'Road-tested',
-    title: 'Create a smooth drive from start to finish',
-    description: 'Coordinate drivers, playlists, and pit stops in a single view.',
-    action: { label: 'Start planning your drive', href: '/signup' },
-  },
+  ctaMidPageAction: { label: 'Start planning your drive', href: '/signup' },
   faq: {
     title: 'Road trip FAQ',
     items: [
@@ -64,16 +46,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  testimonial: {
-    quote:
-      'We crossed three states without a hitch thanks to coordinated stops and shared navigation links.',
-    author: 'Laura Campos',
-    role: 'Road trip planner',
-  },
   ctaFinal: {
-    title: 'Hit the road with a plan',
-    description:
-      'Use Travel Planner to align routes, responsibilities, and budgets before you drive.',
     primaryAction: { label: 'Plan my drive', href: '/signup' },
     secondaryAction: { label: 'View pricing tiers', href: '/pricing' },
   },

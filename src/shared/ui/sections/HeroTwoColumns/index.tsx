@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import MarketingSection from '@/shared/ui/sections/MarketingSection';
+
 export type HeroTwoColumnsAction = {
   href: string;
   label: string;
@@ -33,13 +35,22 @@ export default function HeroTwoColumns({
   additionalContent,
 }: HeroTwoColumnsProps) {
   return (
-    <section>
-      <div>
-        {eyebrow ? <p>{eyebrow}</p> : null}
-        <h1>{title}</h1>
-        {description ? <p>{description}</p> : null}
+    <MarketingSection
+      className="py-20 sm:py-24 lg:py-28"
+      innerClassName="grid gap-12 lg:grid-cols-[minmax(0,0.55fr)_1fr] lg:items-center"
+    >
+      <div className="space-y-6">
+        {eyebrow ? (
+          <p className="text-primary bg-primary/10 inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+            {eyebrow}
+          </p>
+        ) : null}
+        <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{title}</h1>
+        {description ? (
+          <p className="text-muted-foreground text-lg leading-relaxed">{description}</p>
+        ) : null}
         {primaryAction || secondaryAction ? (
-          <div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
             {primaryAction ? (
               <Link
                 href={primaryAction.href}
@@ -64,7 +75,7 @@ export default function HeroTwoColumns({
         ) : null}
         {additionalContent}
       </div>
-      {media ? <div>{media}</div> : null}
-    </section>
+      {media ? <div className="relative flex justify-center lg:justify-end">{media}</div> : null}
+    </MarketingSection>
   );
 }

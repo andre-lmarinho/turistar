@@ -80,7 +80,7 @@
   --info-foreground: oklch(1 0 0);
 
   /* Structure - borders, inputs, focus rings */
-  --border: oklch(0.9 0.02 80);
+  --border: #e1e2e3;
   --input: oklch(0.9 0.02 80);
   --ring: oklch(0.58 0.17 200);
   --gray-200: oklch(0.9 0 0);

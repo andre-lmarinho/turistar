@@ -29,7 +29,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
         <button
           type="button"
           className={cn(
-            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex w-64 items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
+            'border-border bg-background text-foreground inline-flex w-64 cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
             !value?.from && 'text-muted-foreground',
             className
           )}
