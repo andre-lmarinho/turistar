@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
 import ActivityDialogHeader from '@/features/planner/components/dialog/ActivityDialogHeader';
+import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -16,6 +17,7 @@ export default function ActivityDialog() {
     days,
     changeDay,
     changePosition,
+    save,
   } = usePlannerContext();
   const open = Boolean(activity);
 
@@ -39,20 +41,25 @@ export default function ActivityDialog() {
           aria-labelledby="activity-dialog-title"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-[452px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
-          <Dialog.Title asChild>
-            <h2 className="text-lg font-semibold">Edit card</h2>
-          </Dialog.Title>
-
           <ActivityDialogHeader
             activity={draft}
-            bgColor={activity.color}
+            bgColor={draft.color ?? activity.color}
             onDelete={deleteActivity}
             onClose={closeDialog}
-            onColorChange={(color) => changeColor(activity.id, color)}
+            onColorChange={(color) => {
+              setDraft((prev) => ({ ...prev, color }));
+              changeColor(activity.id, color);
+            }}
             availableDays={days}
             onChangeDay={(dayId) => changeDay(activity.id, dayId)}
             onChangePosition={(idx) => changePosition(activity.id, idx)}
             onImageChange={handleImageChange}
+          />
+
+          <ActivityDialogForm
+            activity={draft}
+            color={draft.color ?? activity.color}
+            onSave={(patch) => save({ ...patch, imageUrl: draft.imageUrl })}
           />
         </Dialog.Content>
       </Dialog.Portal>
