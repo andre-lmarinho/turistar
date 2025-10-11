@@ -1,6 +1,6 @@
 import FeatureCarousel from '@/shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
-import { Check } from '@/shared/ui/icon';
+import { Sparkles } from '@/shared/ui/icon';
 import MarketingSection from '@/shared/ui/sections/MarketingSection';
 
 const CAROUSEL_IMAGE_SOURCES = [
@@ -24,12 +24,12 @@ export default function KeyBenefits({ title, description, benefits }: KeyBenefit
   }));
 
   return (
-    <MarketingSection innerClassName="grid gap-12 lg:grid-cols-[minmax(0,0.4fr)_1fr] lg:items-center">
-      <div className="max-w-xl">
-        <p className="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
-          <Check className="size-4" aria-hidden="true" />
+    <MarketingSection>
+      <div className="mb-12 max-w-xl">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
+          <Sparkles className="size-4" aria-hidden="true" />
           Key benefits
-        </p>
+        </label>
         <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
         <p className="text-muted-foreground mt-4 text-lg">{description}</p>
       </div>

@@ -85,7 +85,7 @@ function FeatureCarouselCard({
   onSelect,
 }: FeatureCarouselCardProps) {
   const cardClassName = cn(
-    'relative w-full overflow-hidden rounded p-6 text-left',
+    'relative w-full bg-background overflow-hidden rounded p-6 text-left',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60 focus-visible:outline-offset-0',
     'transition-[transform,box-shadow,background-color] duration-200 ease-out',
     'cursor-default md:cursor-pointer',

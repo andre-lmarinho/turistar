@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { cn } from '@/shared/utils/cn';
 import MarketingSection from '@/shared/ui/sections/MarketingSection';
+import { Flame } from '@/shared/ui/icon';
 
 export type PricingTableAction = {
   href: string;
@@ -49,6 +50,10 @@ export default function PricingTable({ title, subtitle, plans }: PricingTablePro
   return (
     <MarketingSection>
       <header className="mx-auto max-w-3xl text-center">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
+          <Flame className="size-4" aria-hidden="true" />
+          Features
+        </label>
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
         {subtitle ? <p className="text-muted-foreground mt-4 text-lg">{subtitle}</p> : null}
       </header>

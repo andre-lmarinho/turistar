@@ -29,10 +29,10 @@ export default function CtaMidPage({ action }: CtaMidPageProps) {
       variant="card"
       innerClassName="mx-auto flex max-w-3xl flex-col items-center text-center"
     >
-      <p className="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+      <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
         <Map className="size-4" aria-hidden="true" />
         Web app
-      </p>
+      </label>
       <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">Start planning now</h2>
       <p className="text-muted-foreground mt-4 text-lg">Access our app to build your trip today.</p>
       <Link

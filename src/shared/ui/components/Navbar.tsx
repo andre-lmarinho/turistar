@@ -32,6 +32,12 @@ const travelerSolutions: SolutionItem[] = [
     description: 'Keep every friend on-plan.',
     icon: Users,
   },
+  {
+    href: '/agency',
+    label: 'Agency',
+    description: 'Organize client trips easily.',
+    icon: Users,
+  },
 ];
 
 const travelGoalSolutions: SolutionItem[] = [
@@ -103,8 +109,8 @@ export default function MarketingNavbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="bg-background sticky top-0 z-50 justify-center px-4 lg:bg-transparent">
-      <div className="bg-background mx-auto flex w-full max-w-6xl items-center justify-between gap-3 rounded-lg px-4 py-2 backdrop-blur md:gap-8 lg:m-2 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:border">
+    <header className="relative sticky top-2 z-50 mx-auto max-w-6xl justify-center px-4 lg:bg-transparent">
+      <div className="bg-background mx-auto flex w-full justify-between gap-3 rounded-lg px-4 py-2 md:gap-8 lg:m-2 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:border">
         <Link
           href="/"
           className="text-foreground inline-flex items-center gap-2 justify-self-start rounded-lg p-2 text-lg font-semibold tracking-tight md:text-xl"
@@ -171,7 +177,7 @@ export default function MarketingNavbar() {
                                 {item.label}
                               </p>
                               {item.description ? (
-                                <p className="text-muted-foreground">{item.description}</p>
+                                <p className="text-muted-foreground text-xs">{item.description}</p>
                               ) : null}
                             </span>
                           </Link>
@@ -216,8 +222,14 @@ export default function MarketingNavbar() {
             </div>
           </div>
           <Link
+            href="/agency"
+            className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 left-full ml-6 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          >
+            Agencies
+          </Link>
+          <Link
             href="/pricing"
-            className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 absolute top-1/2 left-full ml-6 -translate-y-1/2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 left-full ml-6 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
           >
             Pricing
           </Link>
@@ -349,6 +361,13 @@ export default function MarketingNavbar() {
                 </div>
               )}
             </div>
+            <Link
+              href="/agency"
+              className="text-foreground hover:text-primary text-[15px] font-semibold transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Agencies
+            </Link>
             <Link
               href="/pricing"
               className="text-foreground hover:text-primary text-[15px] font-semibold transition-colors"

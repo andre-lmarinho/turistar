@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 
 import SeoJsonLd from '@/shared/components/SeoJsonLd';
 import { SITE_URL } from '@/shared/constants/site';
-import MarketingNavbar from '@/shared/ui/components/Navbar';
+import Navbar from '@/shared/ui/components/Navbar';
+import Footer from '@/shared/ui/components/HomeFooter';
 
 const previewImage = new URL('/previews/preview_01.png', SITE_URL).toString();
 
@@ -70,12 +71,11 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
       <a href="#main-content" className="sr-only focus:not-sr-only">
         Skip to content
       </a>
-      <div className="flex min-h-screen flex-col">
-        <MarketingNavbar />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-      </div>
+      <>
+        <Navbar />
+        <main id="main-content">{children}</main>
+        <Footer />
+      </>
     </>
   );
 }

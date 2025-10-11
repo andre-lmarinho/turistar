@@ -1,5 +1,3 @@
-// src/features/home/ui/HomeFooter.tsx
-
 import Link from 'next/link';
 
 export default function HomeFooter() {

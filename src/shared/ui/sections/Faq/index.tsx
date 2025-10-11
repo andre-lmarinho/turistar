@@ -1,3 +1,4 @@
+import { UserStar } from '@/shared/ui/icon';
 import MarketingSection from '@/shared/ui/sections/MarketingSection';
 
 export interface FaqItem {
@@ -14,6 +15,10 @@ export default function Faq({ title, items }: FaqProps) {
   return (
     <MarketingSection>
       <div className="mx-auto max-w-3xl text-center">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide">
+          <UserStar className="size-4" aria-hidden="true" />
+          FAQ
+        </label>
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
       </div>
       <dl className="mt-12 space-y-6">

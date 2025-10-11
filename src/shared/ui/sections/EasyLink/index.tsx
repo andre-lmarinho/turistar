@@ -5,10 +5,10 @@ export default function EasyLink() {
   return (
     <MarketingSection innerClassName="grid gap-12 lg:grid-cols-2 lg:items-center">
       <div className="order-2 lg:order-1">
-        <p className="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
           <ArrowLeftRight className="size-4" aria-hidden="true" />
           Easy link
-        </p>
+        </label>
         <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
           Share plans effortlessly
         </h2>

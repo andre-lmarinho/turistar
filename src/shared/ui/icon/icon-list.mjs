@@ -25,6 +25,7 @@ export const lucideIconNames = [
   'shopping-cart',
   'user',
   'users',
+  'userStar',
   'ticket',
   'trash-2',
   'utensils',

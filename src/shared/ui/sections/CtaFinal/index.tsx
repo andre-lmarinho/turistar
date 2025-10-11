@@ -31,7 +31,7 @@ export default function CtaFinal({
     <MarketingSection
       variant="card"
       className="py-16 sm:py-20 lg:py-24"
-      innerClassName="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center"
+      innerClassName="mx-auto py-16 flex max-w-3xl flex-col items-center gap-6 text-center"
     >
       <h2 className="text-3xl font-semibold tracking-tight">{TITLES[variant]}</h2>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">

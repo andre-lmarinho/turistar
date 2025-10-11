@@ -38,9 +38,9 @@ export default function HeroCentralized({
       innerClassName="flex flex-col items-center gap-6 text-center"
     >
       {eyebrow ? (
-        <p className="text-primary bg-primary/10 inline-flex items-center rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
           {eyebrow}
-        </p>
+        </label>
       ) : null}
       <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{title}</h1>
       {description ? (

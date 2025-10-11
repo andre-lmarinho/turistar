@@ -32,10 +32,10 @@ export default function Features() {
   return (
     <MarketingSection>
       <div className="mx-auto max-w-3xl text-center">
-        <p className="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold tracking-wide uppercase">
+        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
           <Calendar className="size-4" aria-hidden="true" />
           Adicional features
-        </p>
+        </label>
         <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
           Extra planning tools
         </h2>
