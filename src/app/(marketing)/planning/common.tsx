@@ -1,17 +1,17 @@
-import CtaFinal from '@/features/marketing/sections/CtaFinal';
-import type { CtaFinalProps } from '@/features/marketing/sections/CtaFinal';
-import CtaMidPage from '@/features/marketing/sections/CtaMidPage';
-import type { CtaMidPageProps } from '@/features/marketing/sections/CtaMidPage';
-import Features from '@/features/marketing/sections/Features';
-import type { FeaturesProps } from '@/features/marketing/sections/Features';
-import Faq from '@/features/marketing/sections/Faq';
-import type { FaqProps } from '@/features/marketing/sections/Faq';
-import HeroTwoColumns from '@/features/marketing/sections/HeroTwoColumns';
-import type { HeroTwoColumnsProps } from '@/features/marketing/sections/HeroTwoColumns';
-import HowItWorks from '@/features/marketing/sections/HowItWorks';
-import type { HowItWorksProps } from '@/features/marketing/sections/HowItWorks';
-import Testimonial from '@/features/marketing/sections/Testimonial';
-import type { TestimonialProps } from '@/features/marketing/sections/Testimonial';
+import CtaFinal from '@/shared/ui/sections/CtaFinal';
+import type { CtaFinalProps } from '@/shared/ui/sections/CtaFinal';
+import CtaMidPage from '@/shared/ui/sections/CtaMidPage';
+import type { CtaMidPageProps } from '@/shared/ui/sections/CtaMidPage';
+import Features from '@/shared/ui/sections/Features';
+import type { FeaturesProps } from '@/shared/ui/sections/Features';
+import Faq from '@/shared/ui/sections/Faq';
+import type { FaqProps } from '@/shared/ui/sections/Faq';
+import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
+import type { HeroTwoColumnsProps } from '@/shared/ui/sections/HeroTwoColumns';
+import HowItWorks from '@/shared/ui/sections/HowItWorks';
+import type { HowItWorksProps } from '@/shared/ui/sections/HowItWorks';
+import Testimonial from '@/shared/ui/sections/Testimonial';
+import type { TestimonialProps } from '@/shared/ui/sections/Testimonial';
 
 export interface PlanningPageContent {
   hero: HeroTwoColumnsProps;

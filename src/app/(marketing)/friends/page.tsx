@@ -1,11 +1,11 @@
-import CtaFinal from '@/features/marketing/sections/CtaFinal';
-import CtaMidPage from '@/features/marketing/sections/CtaMidPage';
-import Features from '@/features/marketing/sections/Features';
-import GroupDynamics from '@/features/marketing/sections/GroupDynamics';
-import HeroTwoColumns from '@/features/marketing/sections/HeroTwoColumns';
-import HowItWorks from '@/features/marketing/sections/HowItWorks';
-import Testimonial from '@/features/marketing/sections/Testimonial';
-import UseCases from '@/features/marketing/sections/UseCases';
+import CtaFinal from '@/shared/ui/sections/CtaFinal';
+import CtaMidPage from '@/shared/ui/sections/CtaMidPage';
+import Features from '@/shared/ui/sections/Features';
+import GroupDynamics from '@/shared/ui/sections/GroupDynamics';
+import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
+import HowItWorks from '@/shared/ui/sections/HowItWorks';
+import Testimonial from '@/shared/ui/sections/Testimonial';
+import UseCases from '@/shared/ui/sections/UseCases';
 
 export default function FriendsPage() {
   return (

@@ -1,7 +1,7 @@
-import CtaFinal from '@/features/marketing/sections/CtaFinal';
-import FeatureBreakdown from '@/features/marketing/sections/FeatureBreakdown';
-import HeroCentralized from '@/features/marketing/sections/HeroCentralized';
-import PricingTable from '@/features/marketing/sections/PricingTable';
+import CtaFinal from '@/shared/ui/sections/CtaFinal';
+import FeatureBreakdown from '@/shared/ui/sections/FeatureBreakdown';
+import HeroCentralized from '@/shared/ui/sections/HeroCentralized';
+import PricingTable from '@/shared/ui/sections/PricingTable';
 
 export default function PricingPage() {
   return (

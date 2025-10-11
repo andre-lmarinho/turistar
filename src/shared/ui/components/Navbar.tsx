@@ -8,12 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 const solutionLinks = [
   {
-    href: '/planning/vacations-and-getaways',
+    href: '/planning/vacations',
     label: 'Vacations & Getaways',
     description: 'Spark inspiration and align on dreamy escapes together.',
   },
   {
-    href: '/planning/adventure-and-backpacking',
+    href: '/planning/adventure',
     label: 'Adventure & Backpacking',
     description: 'Stay flexible offline with collaborative, mobile-friendly plans.',
   },
@@ -23,17 +23,17 @@ const solutionLinks = [
     description: 'Design scenic routes, stops, and overnight stays with ease.',
   },
   {
-    href: '/planning/event-based-trips',
+    href: '/planning/event-based',
     label: 'Event-based Trips',
     description: 'Coordinate complex itineraries around weddings, festivals, and more.',
   },
   {
-    href: '/planning/group-getaways',
+    href: '/planning/group',
     label: 'Group Getaways',
     description: 'Keep budgets, RSVPs, and shared decisions perfectly in sync.',
   },
   {
-    href: '/planning/digital-nomad-trips',
+    href: '/planning/digital-nomad',
     label: 'Digital Nomad Trips',
     description: 'Blend remote work and leisure with timezone-aware scheduling.',
   },

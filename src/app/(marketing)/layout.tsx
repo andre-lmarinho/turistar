@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import MarketingNavbar from '@/features/marketing/components/Navbar';
+import MarketingNavbar from '@/shared/ui/components/Navbar';
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (

@@ -1,6 +1,6 @@
-import CtaFinal from '@/features/marketing/sections/CtaFinal';
-import Features from '@/features/marketing/sections/Features';
-import HeroCentralized from '@/features/marketing/sections/HeroCentralized';
+import CtaFinal from '@/shared/ui/sections/CtaFinal';
+import Features from '@/shared/ui/sections/Features';
+import HeroCentralized from '@/shared/ui/sections/HeroCentralized';
 
 export default function PlanningOverviewPage() {
   return (

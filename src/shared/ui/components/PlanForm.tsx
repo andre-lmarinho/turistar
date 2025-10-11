@@ -160,7 +160,7 @@ export default function PlanForm({ className, title, description }: PlanFormProp
         </form>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden justify-between px-8 pb-8 sm:flex">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 hidden justify-between sm:flex">
         <Image
           src="/images/background_1_.webp"
           alt=""

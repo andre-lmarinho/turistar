@@ -1,4 +1,4 @@
-import PlanForm from '@/features/home/components/PlanForm';
+import PlanForm from '@/shared/ui/components/PlanForm';
 
 export interface PlanFormSectionProps {
   id?: string;
