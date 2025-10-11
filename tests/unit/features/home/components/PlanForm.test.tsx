@@ -25,12 +25,6 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock('@/shared/ui/button', () => ({
-  Button: ({ children }: { children: React.ReactNode }) => (
-    <button type="button">{children}</button>
-  ),
-}));
-
 vi.mock('@/shared/ui/calendar', () => ({
   DateRangePicker: () => <div />,
 }));

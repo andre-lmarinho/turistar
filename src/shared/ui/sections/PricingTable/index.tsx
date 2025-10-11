@@ -1,14 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import type { ComponentProps } from 'react';
-
-import { Button } from '@/shared/ui/button';
 
 export type PricingTableAction = {
   href: string;
   label: string;
-  variant?: ComponentProps<typeof Button>['variant'];
   target?: string;
   rel?: string;
 };
@@ -34,27 +30,15 @@ function renderAction(plan: PricingTablePlan) {
     return null;
   }
 
-  const { href, label, variant, target, rel } = action;
-  const isExternal = !href.startsWith('/');
-  const relValue = rel ?? (isExternal && target === '_blank' ? 'noopener noreferrer' : undefined);
-  const resolvedVariant = variant ?? (plan.highlighted ? 'accent' : 'default');
-
-  if (isExternal) {
-    return (
-      <Button asChild variant={resolvedVariant}>
-        <a href={href} target={target} rel={relValue}>
-          {label}
-        </a>
-      </Button>
-    );
-  }
+  const { href, label, target, rel } = action;
+  const className = plan.highlighted
+    ? 'inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
+    : 'inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60';
 
   return (
-    <Button asChild variant={resolvedVariant}>
-      <Link href={href} target={target} rel={relValue}>
-        {label}
-      </Link>
-    </Button>
+    <Link href={href} target={target} rel={rel} className={className}>
+      {label}
+    </Link>
   );
 }
 

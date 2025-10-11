@@ -3,7 +3,6 @@
 import { ChevronDown, Menu } from 'lucide-react';
 import Link from 'next/link';
 
-import { Button } from '@/shared/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 
 const solutionLinks = [
@@ -54,14 +53,13 @@ export default function MarketingNavbar() {
         <div className="flex flex-1 items-center justify-end gap-3">
           <Popover>
             <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:border-border hover:text-foreground flex size-10 items-center justify-center rounded-full border border-transparent lg:hidden"
+              <button
+                type="button"
+                className="text-muted-foreground hover:border-border hover:text-foreground flex size-10 items-center justify-center rounded-full border border-transparent transition-colors lg:hidden"
                 aria-label="Open navigation menu"
               >
                 <Menu className="size-5" />
-              </Button>
+              </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="border-border/60 w-64 p-0 lg:hidden">
               <div className="border-border/60 border-b">
@@ -101,14 +99,13 @@ export default function MarketingNavbar() {
           >
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="group text-muted-foreground hover:text-foreground h-10 px-4 text-sm font-medium"
+                <button
+                  type="button"
+                  className="group text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition-colors"
                 >
                   <span>Solutions</span>
                   <ChevronDown className="ml-2 size-4 transition-transform group-data-[state=open]:rotate-180" />
-                </Button>
+                </button>
               </PopoverTrigger>
               <PopoverContent align="start" className="border-border/60 w-[360px] p-0">
                 <ul className="divide-border/60 divide-y">
@@ -137,12 +134,18 @@ export default function MarketingNavbar() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" size="sm" className="h-10 rounded-full px-4 text-sm">
-              <Link href="/inspiration/rome">Try a demo</Link>
-            </Button>
-            <Button asChild size="sm" className="h-10 rounded-full px-4 text-sm">
-              <Link href="/signup">Get started</Link>
-            </Button>
+            <Link
+              href="/inspiration/rome"
+              className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex h-10 items-center justify-center rounded-full border px-4 text-sm font-medium transition-colors"
+            >
+              Try a demo
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition-colors"
+            >
+              Get started
+            </Link>
           </div>
         </div>
       </div>

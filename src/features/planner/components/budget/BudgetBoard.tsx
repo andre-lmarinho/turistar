@@ -6,7 +6,6 @@ import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
 import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
 import BudgetDialog from '@/features/planner/components/budget/BudgetDialog';
-import { Button } from '@/shared/ui/button';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 interface Props {
@@ -40,9 +39,13 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
       >
         <div className="flex justify-between pb-4">
           <h2 className="text-3xl font-semibold">Traveling Budget</h2>
-          <Button variant="icon" size="sm" onClick={() => setEditActivities(true)}>
+          <button
+            type="button"
+            onClick={() => setEditActivities(true)}
+            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
+          >
             Budget Your Activities
-          </Button>
+          </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3">
           <BudgetPanelHeader />

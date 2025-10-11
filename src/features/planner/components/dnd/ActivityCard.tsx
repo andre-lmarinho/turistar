@@ -1,9 +1,9 @@
 'use client';
 
+import { Pencil } from 'lucide-react';
 import React, { useEffect } from 'react';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
-import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent } from '@/shared/ui/dialog';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
@@ -80,19 +80,18 @@ export default function ActivityCard({
         </button>
 
         {!editing && (
-          <Button
-            variant="icon"
-            size="icon"
-            title="Edit Card"
-            position="bottom"
+          <button
             type="button"
-            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
-            icon="pencil"
+            title="Edit Card"
+            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground absolute top-1 right-1 inline-flex size-9 items-center justify-center rounded-full border opacity-0 transition-colors group-hover:opacity-100"
             onClick={(e) => {
               e.stopPropagation();
               start();
             }}
-          />
+          >
+            <Pencil className="size-4" aria-hidden="true" />
+            <span className="sr-only">Edit card</span>
+          </button>
         )}
       </div>
 

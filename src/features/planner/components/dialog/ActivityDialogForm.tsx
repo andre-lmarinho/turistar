@@ -6,7 +6,6 @@ import { DollarSign, Hourglass } from 'lucide-react';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
-import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { LocationSearchInput } from '@/shared/ui/input';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
@@ -207,14 +206,14 @@ export default function ActivityDialogForm({ activity, onSave, color }: Activity
 
       {/* Update */}
       <div className="flex justify-center gap-2 pb-4">
-        <Button
+        <button
           type="button"
           disabled={!canSave}
           onClick={handleSave}
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         >
           Update
-        </Button>
+        </button>
       </div>
     </>
   );

@@ -1,14 +1,9 @@
-'use client';
-
 import Link from 'next/link';
-import type { ComponentProps, ReactNode } from 'react';
-
-import { Button } from '@/shared/ui/button';
+import type { ReactNode } from 'react';
 
 export type HeroCentralizedAction = {
   href: string;
   label: string;
-  variant?: ComponentProps<typeof Button>['variant'];
   target?: string;
   rel?: string;
 };
@@ -22,36 +17,10 @@ export interface HeroCentralizedProps {
   media?: ReactNode;
 }
 
-function HeroActionButton({
-  action,
-  fallbackVariant,
-}: {
-  action: HeroCentralizedAction;
-  fallbackVariant?: ComponentProps<typeof Button>['variant'];
-}) {
-  const { href, label, variant, target, rel } = action;
-  const resolvedVariant = variant ?? fallbackVariant ?? 'default';
-  const isExternal = !href.startsWith('/');
-  const relValue = rel ?? (isExternal && target === '_blank' ? 'noopener noreferrer' : undefined);
-
-  if (isExternal) {
-    return (
-      <Button asChild variant={resolvedVariant}>
-        <a href={href} target={target} rel={relValue}>
-          {label}
-        </a>
-      </Button>
-    );
-  }
-
-  return (
-    <Button asChild variant={resolvedVariant}>
-      <Link href={href} target={target} rel={relValue}>
-        {label}
-      </Link>
-    </Button>
-  );
-}
+const PRIMARY_CLASSES =
+  'inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90';
+const SECONDARY_CLASSES =
+  'inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60';
 
 export default function HeroCentralized({
   eyebrow,
@@ -69,9 +38,25 @@ export default function HeroCentralized({
         {description ? <p>{description}</p> : null}
         {primaryAction || secondaryAction ? (
           <div>
-            {primaryAction ? <HeroActionButton action={primaryAction} /> : null}
+            {primaryAction ? (
+              <Link
+                href={primaryAction.href}
+                target={primaryAction.target}
+                rel={primaryAction.rel}
+                className={PRIMARY_CLASSES}
+              >
+                {primaryAction.label}
+              </Link>
+            ) : null}
             {secondaryAction ? (
-              <HeroActionButton action={secondaryAction} fallbackVariant="outline" />
+              <Link
+                href={secondaryAction.href}
+                target={secondaryAction.target}
+                rel={secondaryAction.rel}
+                className={SECONDARY_CLASSES}
+              >
+                {secondaryAction.label}
+              </Link>
             ) : null}
           </div>
         ) : null}

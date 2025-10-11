@@ -2,12 +2,11 @@
 'use client';
 
 import React, { useId } from 'react';
-import { DollarSign } from 'lucide-react';
+import { Check, DollarSign, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import type { Entry } from '@/features/planner/types/budget/budget';
-import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 
 // Props -------------------------------------------------------------
@@ -200,28 +199,24 @@ export default function BudgetRow(props: BudgetRowProps) {
     if (props.mode === 'view') {
       return (
         <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
-          <Button
-            size="icon"
-            variant="ghost"
+          <button
             type="button"
             onClick={() => props.onEdit(props.index)}
             aria-label="Edit entry"
-            className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            icon="pencil"
-            iconProps={{ className: 'size-4' }}
-          />
-          {props.onDelete && (
-            <Button
-              size="icon"
-              variant="ghost"
+            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+          >
+            <Pencil className="size-4" aria-hidden="true" />
+          </button>
+          {props.onDelete ? (
+            <button
               type="button"
               onClick={() => props.onDelete && props.onDelete(props.index)}
               aria-label="Delete entry"
-              className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-              icon="trash-2"
-              iconProps={{ className: 'size-4' }}
-            />
-          )}
+              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            >
+              <Trash2 className="size-4" aria-hidden="true" />
+            </button>
+          ) : null}
         </td>
       );
     }
@@ -229,26 +224,22 @@ export default function BudgetRow(props: BudgetRowProps) {
     if (props.mode === 'edit') {
       return (
         <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
-          <Button
-            size="icon"
-            variant="ghost"
+          <button
             type="button"
             onClick={() => props.onSave(props.index, props.editEntry)}
             aria-label="Save entry"
-            className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            icon="check"
-            iconProps={{ className: 'size-4' }}
-          />
-          <Button
-            size="icon"
-            variant="ghost"
+            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+          >
+            <Check className="size-4" aria-hidden="true" />
+          </button>
+          <button
             type="button"
             onClick={props.onCancel}
             aria-label="Cancel edit"
-            className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            icon="x"
-            iconProps={{ className: 'size-4' }}
-          />
+            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </button>
         </td>
       );
     }
@@ -256,16 +247,14 @@ export default function BudgetRow(props: BudgetRowProps) {
     // mode === 'new'
     return (
       <td role="gridcell" className="p-2 text-right">
-        <Button
-          variant="icon"
-          size="icon"
+        <button
           type="button"
           onClick={props.onAdd}
           aria-label="Add expense"
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          icon="plus"
-          iconProps={{ className: 'size-4' }}
-        />
+          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+        </button>
       </td>
     );
   };

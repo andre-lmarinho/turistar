@@ -1,17 +1,10 @@
 'use client';
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { DollarSign } from 'lucide-react';
+import { DollarSign, X } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/shared/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -24,7 +17,10 @@ interface BudgetDialogProps {
 
 export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProps) {
   const activities = useMemo(
-    () => days.flatMap((day) => day.activities.map((activity) => ({ ...activity, dayLabel: day.label }))),
+    () =>
+      days.flatMap((day) =>
+        day.activities.map((activity) => ({ ...activity, dayLabel: day.label }))
+      ),
     [days]
   );
 
@@ -65,7 +61,15 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
           </DialogTitle>
 
           <DialogClose asChild>
-            <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={handleClose} />
+            <button
+              type="button"
+              title="Close"
+              onClick={handleClose}
+              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            >
+              <X className="size-4" aria-hidden="true" />
+              <span className="sr-only">Close</span>
+            </button>
           </DialogClose>
         </DialogHeader>
 
@@ -75,7 +79,11 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
           className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
         >
           {activities.map((activity, index) => (
-            <div key={activity.id} role="listitem" className="flex items-center justify-between gap-2">
+            <div
+              key={activity.id}
+              role="listitem"
+              className="flex items-center justify-between gap-2"
+            >
               <span className="flex-1 truncate text-sm">
                 {activity.title || 'Untitled'} – {activity.dayLabel}
               </span>
@@ -95,7 +103,6 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
             </div>
           ))}
         </div>
-
       </DialogContent>
     </Dialog>
   );

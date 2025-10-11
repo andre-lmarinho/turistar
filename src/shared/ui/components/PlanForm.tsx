@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { addDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@/shared/ui/button';
 import { DateRangePicker } from '@/shared/ui/calendar';
 import { LocationSearchInput } from '@/shared/ui/input';
 import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
@@ -148,9 +147,13 @@ export default function PlanForm({ className, title, description }: PlanFormProp
             </div>
           </fieldset>
 
-          <Button className="mx-auto w-full max-w-sm" type="submit" disabled={loading}>
+          <button
+            className="bg-primary text-primary-foreground hover:bg-primary/90 mx-auto w-full max-w-sm rounded-md px-4 py-2 text-sm font-medium transition-colors"
+            type="submit"
+            disabled={loading}
+          >
             Start Your Planning
-          </Button>
+          </button>
 
           {error ? (
             <p id="date-error" role="alert" className="text-sm text-[var(--destructive)]">

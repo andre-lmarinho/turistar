@@ -1,17 +1,11 @@
 'use client';
 
 import React from 'react';
+import { X } from 'lucide-react';
 
 import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
-import { Button } from '@/shared/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/shared/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 
 export default function OnboardingDialog() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();
@@ -31,7 +25,15 @@ export default function OnboardingDialog() {
 
         <div className="flex items-center justify-end pb-4">
           <DialogClose asChild>
-            <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+            <button
+              type="button"
+              title="Close"
+              onClick={onClose}
+              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            >
+              <X className="size-4" aria-hidden="true" />
+              <span className="sr-only">Close</span>
+            </button>
           </DialogClose>
         </div>
 

@@ -1,10 +1,10 @@
 'use client';
 
+import { ArrowLeftRight, Palette, Trash2 } from 'lucide-react';
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { Button } from '@/shared/ui/button';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
 import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { cn } from '@/shared/utils/cn';
@@ -73,9 +73,13 @@ export default function ActivityCardEditing({
   return (
     <>
       <div className="relative z-50 mt-2 flex">
-        <Button type="button" size="sm" className="cursor-pointer" onClick={() => onSave(editedImageUrl)}>
+        <button
+          type="button"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
+          onClick={() => onSave(editedImageUrl)}
+        >
           Update
-        </Button>
+        </button>
       </div>
       {coords
         ? ReactDOM.createPortal(
@@ -89,16 +93,14 @@ export default function ActivityCardEditing({
             >
               <Popover open={dayPopover.open} onOpenChange={dayPopover.onOpenChange}>
                 <PopoverTrigger asChild>
-                  <Button
+                  <button
                     ref={dayPopover.triggerRef}
-                    size="sm"
-                    variant="icon"
                     type="button"
-                    icon="arrow-left-right"
-                    iconProps={{ className: 'size-4' }}
+                    className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors"
                   >
+                    <ArrowLeftRight className="size-4" aria-hidden="true" />
                     Move
-                  </Button>
+                  </button>
                 </PopoverTrigger>
                 {dayPopover.content ? (
                   <PopoverContent
@@ -115,16 +117,14 @@ export default function ActivityCardEditing({
 
               <Popover open={colorPopover.open} onOpenChange={colorPopover.onOpenChange}>
                 <PopoverTrigger asChild>
-                  <Button
+                  <button
                     ref={colorPopover.triggerRef}
-                    size="sm"
-                    variant="icon"
                     type="button"
-                    icon="palette"
-                    iconProps={{ className: 'size-4' }}
+                    className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors"
                   >
+                    <Palette className="size-4" aria-hidden="true" />
                     Card Colors
-                  </Button>
+                  </button>
                 </PopoverTrigger>
                 <PopoverContent
                   side="right"
@@ -137,16 +137,14 @@ export default function ActivityCardEditing({
                 </PopoverContent>
               </Popover>
 
-              <Button
-                size="sm"
-                variant="icon"
+              <button
                 type="button"
                 onClick={onDelete}
-                icon="trash-2"
-                iconProps={{ className: 'size-4' }}
+                className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors"
               >
+                <Trash2 className="size-4" aria-hidden="true" />
                 Delete
-              </Button>
+              </button>
             </div>,
             document.body
           )

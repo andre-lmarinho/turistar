@@ -49,12 +49,6 @@ vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   default: () => <div />, // not used in this test
 }));
 
-vi.mock('@/shared/ui/button', () => ({
-  __esModule: true,
-  Button: (props: React.ComponentProps<'button'>) => <button {...props} />,
-  buttonVariants: () => '',
-}));
-
 let setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;
 let setBounds: React.Dispatch<React.SetStateAction<Bounds>>;
 var getPlannerContext: () => PlannerCtx;

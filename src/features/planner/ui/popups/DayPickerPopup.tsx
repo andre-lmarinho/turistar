@@ -2,8 +2,8 @@
 'use client';
 
 import React from 'react';
+import { X } from 'lucide-react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { Button } from '@/shared/ui/button';
 
 interface Props {
   days: DayPlan[];
@@ -33,7 +33,15 @@ export default function DayPickerPopup({
         <h3 id="day-picker-popup-title" className="font-bold">
           Change Day
         </h3>
-        <Button type="button" variant="icon" size="icon" title="Close" icon="x" onClick={onClose} />
+        <button
+          type="button"
+          title="Close"
+          onClick={onClose}
+          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+        >
+          <X className="size-4" aria-hidden="true" />
+          <span className="sr-only">Close</span>
+        </button>
       </div>
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">

@@ -5,8 +5,8 @@ import React, { useState, useRef } from 'react';
 import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
-import { NavCircleButton } from '@/shared/ui/button';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;
@@ -122,12 +122,14 @@ export default function OnboardingCarousel({ baseWidth = 300, onFinish }: Onboar
     >
       {/* Previous button */}
       {currentIndex !== 0 && (
-        <NavCircleButton
-          direction="left"
+        <button
+          type="button"
           onClick={() => setCurrentIndex((p) => p - 1)}
           aria-label="Previous step"
-          className="absolute top-1/2 left-2 z-20 -translate-y-1/2"
-        />
+          className="border-border bg-background text-foreground hover:bg-muted/60 absolute top-1/2 left-2 z-20 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors"
+        >
+          <ChevronLeft className="size-5" aria-hidden="true" />
+        </button>
       )}
 
       {/* Draggable track */}
@@ -160,14 +162,16 @@ export default function OnboardingCarousel({ baseWidth = 300, onFinish }: Onboar
       </motion.div>
 
       {/* Next button */}
-      <NavCircleButton
-        direction="right"
+      <button
+        type="button"
         onClick={() =>
           currentIndex === steps.length - 1 ? onFinish?.() : setCurrentIndex((p) => p + 1)
         }
         aria-label="Next step"
-        className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
-      />
+        className="border-border bg-background text-foreground hover:bg-muted/60 absolute top-1/2 right-2 z-20 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors"
+      >
+        <ChevronRight className="size-5" aria-hidden="true" />
+      </button>
 
       {/* Dots navigation */}
       <div role="tablist" aria-label="Slide navigation" className="mt-4 flex w-full justify-center">

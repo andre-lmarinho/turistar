@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Button } from '@/shared/ui/button';
-
 export default function Hero() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -29,9 +27,12 @@ export default function Hero() {
             Less time planning. More time traveling.
           </h1>
           <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>
-          <Button asChild>
-            <Link href="/signup">Start Your Planning</Link>
-          </Button>
+          <Link
+            href="/signup"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold transition-colors"
+          >
+            Start Your Planning
+          </Link>
         </div>
 
         {/* Right column */}

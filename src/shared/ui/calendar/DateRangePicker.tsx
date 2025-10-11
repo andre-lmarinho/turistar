@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 import { Calendar } from './Calendar';
-import { Button } from '../button';
 import { cn } from '@/shared/utils/cn';
 
 interface Props {
@@ -26,19 +26,14 @@ export function DateRangePicker({ className, value, onChange }: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
           className={cn(
-            'w-64 justify-between gap-4 text-sm font-normal',
+            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex w-64 items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
             !value?.from && 'text-muted-foreground',
             className
           )}
           aria-label={label}
-          icon="calendar"
-          iconPosition="right"
-          iconProps={{ className: 'text-muted-foreground h-4 w-4' }}
         >
           <span
             className={cn(
@@ -48,7 +43,8 @@ export function DateRangePicker({ className, value, onChange }: Props) {
           >
             {label}
           </span>
-        </Button>
+          <CalendarIcon className="text-muted-foreground h-4 w-4" aria-hidden="true" />
+        </button>
       </PopoverTrigger>
 
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
@@ -77,16 +73,17 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="icon"
-          size="icon"
-          position="bottom"
+        <button
+          type="button"
           title={label}
           aria-label={label}
-          className={className}
-          icon="calendar"
-          iconProps={{ className: 'h-4 w-4' }}
-        />
+          className={cn(
+            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-10 items-center justify-center rounded-full border transition-colors',
+            className
+          )}
+        >
+          <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+        </button>
       </PopoverTrigger>
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
         <Calendar
