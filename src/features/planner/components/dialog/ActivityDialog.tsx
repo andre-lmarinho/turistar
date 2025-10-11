@@ -41,6 +41,8 @@ export default function ActivityDialog() {
           aria-labelledby="activity-dialog-title"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-[452px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
+          <Dialog.Title className="sr-only">Edit card</Dialog.Title>
+
           <ActivityDialogHeader
             activity={draft}
             bgColor={draft.color ?? activity.color}

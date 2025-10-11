@@ -19,10 +19,9 @@ export default function OnboardingDialog() {
           aria-labelledby="onboarding-carousel-title"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
+          <Dialog.Title className="sr-only">Welcome Onboarding</Dialog.Title>
+
           <div className="flex items-center justify-between pb-4">
-            <Dialog.Title asChild>
-              <h2 className="text-lg font-semibold">Welcome</h2>
-            </Dialog.Title>
             <Dialog.Close asChild>
               <button
                 type="button"

@@ -1,6 +1,5 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
 import React, { useEffect, useState, useRef } from 'react';
 import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
@@ -89,19 +88,17 @@ export default function ActivityDialogForm({ activity, onSave, color }: Activity
       <label htmlFor="title" className="sr-only">
         Title
       </label>
-      <Dialog.Title asChild>
-        <input
-          id="title"
-          name="title"
-          ref={titleInputRef}
-          value={editedTitle}
-          onChange={(e) => setEditedTitle(e.target.value)}
-          placeholder={EMPTY_ACTIVITY_TITLE}
-          required
-          aria-required="true"
-          className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
-      </Dialog.Title>
+      <input
+        id="title"
+        name="title"
+        ref={titleInputRef}
+        value={editedTitle}
+        onChange={(e) => setEditedTitle(e.target.value)}
+        placeholder={EMPTY_ACTIVITY_TITLE}
+        required
+        aria-required="true"
+        className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+      />
 
       {/* Duration & Budget group */}
       <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
