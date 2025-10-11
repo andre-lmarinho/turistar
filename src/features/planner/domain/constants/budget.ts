@@ -1,6 +1,4 @@
-// src/features/planner/domain/constants/budget.ts
-
-import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from 'lucide-react';
+import { Bus, Hotel, Utensils, Ticket, ShoppingCart, FileText } from '@/shared/ui/icon';
 
 export const CATEGORIES = [
   { key: 'transport', label: 'Transportation', icon: Bus },

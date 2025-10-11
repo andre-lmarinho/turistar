@@ -1,23 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 
 import ActivityDialogHeader from '@/features/planner/components/dialog/ActivityDialogHeader';
-import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/shared/ui/dialog';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export default function ActivityDialog() {
   const {
     selectedActivity: activity,
     closeDialog,
-    save,
     deleteActivity,
     changeColor,
     days,
@@ -39,30 +32,30 @@ export default function ActivityDialog() {
   }
 
   return (
-    <Dialog open={open} onClose={closeDialog}>
-      <DialogContent
-        size="md"
-        className="flex w-[95%] max-w-[452px] flex-col p-0"
-        aria-labelledby="activity-dialog-title"
-        aria-describedby={undefined}
-      >
-        <DialogHeader className="sr-only">
-          <DialogTitle id="activity-dialog-title">Edit Activity</DialogTitle>
-        </DialogHeader>
+    <Dialog.Root open={open} onOpenChange={(nextOpen) => !nextOpen && closeDialog()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-40 backdrop-blur-sm" />
+        <Dialog.Content
+          aria-labelledby="activity-dialog-title"
+          className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-[452px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        >
+          <Dialog.Title asChild>
+            <h2 className="text-lg font-semibold">Edit card</h2>
+          </Dialog.Title>
 
-        <ActivityDialogHeader
-          activity={draft}
-          bgColor={activity.color}
-          onDelete={deleteActivity}
-          onClose={closeDialog}
-          onColorChange={(color) => changeColor(activity.id, color)}
-          availableDays={days}
-          onChangeDay={(dayId) => changeDay(activity.id, dayId)}
-          onChangePosition={(idx) => changePosition(activity.id, idx)}
-          onImageChange={handleImageChange}
-        />
-        <ActivityDialogForm activity={draft} onSave={save} color={activity.color} />
-      </DialogContent>
-    </Dialog>
+          <ActivityDialogHeader
+            activity={draft}
+            bgColor={activity.color}
+            onDelete={deleteActivity}
+            onClose={closeDialog}
+            onColorChange={(color) => changeColor(activity.id, color)}
+            availableDays={days}
+            onChangeDay={(dayId) => changeDay(activity.id, dayId)}
+            onChangePosition={(idx) => changePosition(activity.id, idx)}
+            onImageChange={handleImageChange}
+          />
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

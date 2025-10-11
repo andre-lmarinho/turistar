@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Palette, Trash2, X } from 'lucide-react';
+import { ChevronDown, Palette, Trash2, X } from '@/shared/ui/icon';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import Image from 'next/image';
 import { useActivityPopupControls } from '@/features/planner/hooks/internal/useActivityPopupControls';
@@ -59,8 +59,6 @@ export default function ActivityDialogHeader({
     setEditedImageUrl(activity.imageUrl ?? '');
   }, [activity.imageUrl]);
 
-  const currentDayLabel = availableDays.find((d) => d.id === activity.dayId)?.label;
-
   return (
     <>
       <div
@@ -106,7 +104,7 @@ export default function ActivityDialogHeader({
                   type="button"
                   className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors"
                 >
-                  {currentDayLabel ?? 'Change Day'}
+                  {availableDays.find((d) => d.id === activity.dayId)?.label ?? 'Change Day'}
                   <ChevronDown className="size-4" aria-hidden="true" />
                 </button>
               </PopoverTrigger>

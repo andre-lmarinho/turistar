@@ -1,8 +1,7 @@
-// src/features/planner/ui/popups/CardColorsPopup.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { X } from '@/shared/ui/icon';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 

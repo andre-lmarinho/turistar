@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { X } from '@/shared/ui/icon';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface Props {

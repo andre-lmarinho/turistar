@@ -1,8 +1,7 @@
-// src/features/planner/components/budget/BudgetRow.tsx
 'use client';
 
 import React, { useId } from 'react';
-import { Check, DollarSign, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { Check, DollarSign, Pencil, Plus, Trash2, X } from '@/shared/ui/icon';
 import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';

@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { DollarSign, X } from 'lucide-react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { DollarSign, X } from '@/shared/ui/icon';
 
 import { Input } from '@/shared/ui/input';
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -40,70 +40,72 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
     prevOpen.current = open;
   }, [open, activities]);
 
-  const handleClose = () => {
+  const handleDialogClose = useCallback(() => {
     for (const [id, value] of Object.entries(inputs)) {
       onUpdate(id, normalizeAmount(value));
     }
     onClose();
-  };
+  }, [inputs, onUpdate, onClose]);
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogContent
-        size="md"
-        className="w-[95%] max-w-md p-0"
-        aria-labelledby="activities-budget-title"
-        aria-describedby={undefined}
-      >
-        <DialogHeader className="flex items-center justify-between border-b px-4 py-3 text-left">
-          <DialogTitle id="activities-budget-title" className="text-lg font-semibold">
-            Budget Your Activities
-          </DialogTitle>
-
-          <DialogClose asChild>
-            <button
-              type="button"
-              title="Close"
-              onClick={handleClose}
-              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
-            >
-              <X className="size-4" aria-hidden="true" />
-              <span className="sr-only">Close</span>
-            </button>
-          </DialogClose>
-        </DialogHeader>
-
-        <div
-          role="list"
+    <Dialog.Root open={open} onOpenChange={(nextOpen) => !nextOpen && handleDialogClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-40 backdrop-blur-sm" />
+        <Dialog.Content
           aria-labelledby="activities-budget-title"
-          className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
+          className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[95%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
-          {activities.map((activity, index) => (
-            <div
-              key={activity.id}
-              role="listitem"
-              className="flex items-center justify-between gap-2"
-            >
-              <span className="flex-1 truncate text-sm">
-                {activity.title || 'Untitled'} – {activity.dayLabel}
-              </span>
-              <Input
-                autoFocus={index === 0 && shouldAutoFocus}
-                onFocus={index === 0 ? () => setShouldAutoFocus(false) : undefined}
-                autoComplete="off"
-                labelId={`budget-${activity.id}`}
-                value={inputs[activity.id] ?? ''}
-                onValueChange={(value) => setInputs((prev) => ({ ...prev, [activity.id]: value }))}
-                inputSize="sm"
-                background="default"
-                placeholder="Budget"
-                aria-label={`Budget for ${activity.title || 'untitled'} – ${activity.dayLabel}`}
-                icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-              />
-            </div>
-          ))}
-        </div>
-      </DialogContent>
-    </Dialog>
+          <div className="flex items-center justify-between border-b px-4 py-3 text-left">
+            <Dialog.Title asChild>
+              <h2 className="text-lg font-semibold">Budget Your Activities</h2>
+            </Dialog.Title>
+
+            <Dialog.Close asChild>
+              <button
+                type="button"
+                title="Close"
+                className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+              >
+                <X className="size-4" aria-hidden="true" />
+                <span className="sr-only">Close</span>
+              </button>
+            </Dialog.Close>
+          </div>
+
+          <div
+            role="list"
+            aria-labelledby="activities-budget-title"
+            className="scrollbar-thin scrollbar-thumb-rounded scrollbar-track-transparent max-h-[70vh] space-y-2 overflow-y-auto p-4"
+          >
+            {activities.map((activity, index) => (
+              <div
+                key={activity.id}
+                role="listitem"
+                className="flex items-center justify-between gap-2"
+              >
+                <span className="flex-1 truncate text-sm">
+                  {activity.title || 'Untitled'} – {activity.dayLabel}
+                </span>
+                <Input
+                  autoFocus={index === 0 && shouldAutoFocus}
+                  onFocus={index === 0 ? () => setShouldAutoFocus(false) : undefined}
+                  autoComplete="off"
+                  labelId={`budget-${activity.id}`}
+                  value={inputs[activity.id] ?? ''}
+                  onValueChange={(value) =>
+                    setInputs((prev) => ({ ...prev, [activity.id]: value }))
+                  }
+                  inputSize="sm"
+                  background="default"
+                  placeholder="Budget"
+                  aria-label={`Budget for ${activity.title || 'untitled'} – ${activity.dayLabel}`}
+                  icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
+                />
+              </div>
+            ))}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

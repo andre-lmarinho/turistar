@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus } from '@/shared/ui/icon';
 import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
   DEFAULT_COLORS,

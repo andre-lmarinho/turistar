@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { AlignLeft, MapPin } from 'lucide-react';
-import { DollarSign, Hourglass } from 'lucide-react';
+import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';

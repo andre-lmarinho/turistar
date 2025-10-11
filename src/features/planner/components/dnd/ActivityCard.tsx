@@ -1,11 +1,8 @@
 'use client';
 
-import { Pencil } from 'lucide-react';
 import React, { useEffect } from 'react';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
-import { Dialog, DialogContent } from '@/shared/ui/dialog';
-import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
 import { useActivityCardEditor } from '@/features/planner/hooks/useActivityCardEditor';
 import { useCardColors } from '@/features/planner/hooks/internal/useCardColors';
 import ActivityCardBase from './ActivityCardBase';
@@ -30,14 +27,10 @@ export default function ActivityCard({
     bgColor
   );
 
-  const { editing, draft, setDraft, inputRef, cardRef, start, save, cancel } =
-    useActivityCardEditor({
-      title,
-      onTitleSave,
-    });
-
-  const { rect: cardRect } = useElementMeasure({ ref: cardRef, rect: true });
-  const dialogTitleId = `activity-card-editor-${activity.id}`;
+  const { editing, draft, setDraft, inputRef, cardRef, save } = useActivityCardEditor({
+    title,
+    onTitleSave,
+  });
 
   useEffect(() => {
     if (editing) {
@@ -78,54 +71,7 @@ export default function ActivityCard({
             borderColorClass={borderColorClass}
           />
         </button>
-
-        {!editing && (
-          <button
-            type="button"
-            title="Edit Card"
-            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground absolute top-1 right-1 inline-flex size-9 items-center justify-center rounded-full border opacity-0 transition-colors group-hover:opacity-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              start();
-            }}
-          >
-            <Pencil className="size-4" aria-hidden="true" />
-            <span className="sr-only">Edit card</span>
-          </button>
-        )}
       </div>
-
-      <Dialog open={editing} onClose={cancel}>
-        {cardRect ? (
-          <DialogContent
-            position="inline"
-            scroll="body"
-            className="pointer-events-auto bg-transparent p-0 shadow-none"
-            style={{ top: cardRect.top, left: cardRect.left, width: cardRect.width }}
-            aria-labelledby={dialogTitleId}
-            aria-describedby={undefined}
-          >
-            <h2 id={dialogTitleId} className="sr-only">
-              Edit activity card
-            </h2>
-            <ActivityCardBase
-              editing
-              title={title}
-              draftTitle={draft}
-              onDraftTitleChange={setDraft}
-              onSave={() => {
-                save();
-              }}
-              inputRef={inputRef}
-              imageUrl={imageUrl}
-              duration={duration}
-              twBg={twBg}
-              budget={budget}
-              borderColorClass={borderColorClass}
-            />
-          </DialogContent>
-        ) : null}
-      </Dialog>
     </>
   );
 }

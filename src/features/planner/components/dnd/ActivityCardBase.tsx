@@ -1,9 +1,8 @@
-// src/features/planner/components/dnd/ActivityCardBase.tsx
 'use client';
 
 import React from 'react';
 import Image from 'next/image';
-import { DollarSign, Hourglass } from 'lucide-react';
+import { DollarSign, Hourglass } from '@/shared/ui/icon';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
 
 interface ActivityCardBaseProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeftRight, Palette, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, Palette, Trash2 } from '@/shared/ui/icon';
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 
