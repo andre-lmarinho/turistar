@@ -5,9 +5,7 @@ import PlanForm from '@/features/home/components/PlanForm';
 
 describe('Accessibility — PlanForm', () => {
   it('has no a11y violations', async () => {
-    const { container } = render(
-      <PlanForm trigger={<button type="button">Open</button>} dialogTitleId="plan-form-a11y" defaultOpen />
-    );
+    const { container } = render(<PlanForm />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

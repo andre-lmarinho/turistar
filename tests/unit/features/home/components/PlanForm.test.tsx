@@ -63,13 +63,7 @@ describe('PlanForm destination autocomplete wiring', () => {
   });
 
   it('uses the home destination autocomplete hook', () => {
-    render(
-      <PlanForm
-        trigger={<button type="button">Open</button>}
-        dialogTitleId="plan-form-test-dialog"
-        defaultOpen
-      />
-    );
+    render(<PlanForm />);
 
     const props = getCapturedProps() as
       | { autocompleteHook?: unknown; placeholder?: string }

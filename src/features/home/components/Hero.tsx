@@ -2,20 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
-import PlanForm from './PlanForm';
 import { Button } from '@/shared/ui/button';
 
 export default function Hero() {
-  const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dialogTitleId = 'hero-plan-dialog-title';
 
   useEffect(() => {
-    if (open) {
-      return undefined;
-    }
-
     const interval = setInterval(() => {
       setPosition({
         x: Math.random() * 20 - 10,
@@ -24,7 +18,7 @@ export default function Hero() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [open]);
+  }, []);
 
   return (
     <section className="relative mx-auto w-full max-w-screen-lg overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
@@ -35,12 +29,9 @@ export default function Hero() {
             Less time planning. More time traveling.
           </h1>
           <p className="mb-6 text-xl">Shape your trip in minutes and keep everything in sync.</p>
-          <PlanForm
-            trigger={<Button type="button">Start Your Planning</Button>}
-            dialogTitleId={dialogTitleId}
-            open={open}
-            onOpenChange={setOpen}
-          />
+          <Button asChild>
+            <Link href="/signup">Start Your Planning</Link>
+          </Button>
         </div>
 
         {/* Right column */}
@@ -59,7 +50,6 @@ export default function Hero() {
           />
         </div>
       </div>
-
     </section>
   );
 }
