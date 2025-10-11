@@ -203,7 +203,7 @@ export default function BudgetRow(props: BudgetRowProps) {
             type="button"
             onClick={() => props.onEdit(props.index)}
             aria-label="Edit entry"
-            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full border transition-colors"
           >
             <Pencil className="size-4" aria-hidden="true" />
           </button>
@@ -212,7 +212,7 @@ export default function BudgetRow(props: BudgetRowProps) {
               type="button"
               onClick={() => props.onDelete && props.onDelete(props.index)}
               aria-label="Delete entry"
-              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+              className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full border transition-colors"
             >
               <Trash2 className="size-4" aria-hidden="true" />
             </button>
@@ -228,7 +228,7 @@ export default function BudgetRow(props: BudgetRowProps) {
             type="button"
             onClick={() => props.onSave(props.index, props.editEntry)}
             aria-label="Save entry"
-            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full border transition-colors"
           >
             <Check className="size-4" aria-hidden="true" />
           </button>
@@ -236,7 +236,7 @@ export default function BudgetRow(props: BudgetRowProps) {
             type="button"
             onClick={props.onCancel}
             aria-label="Cancel edit"
-            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full border transition-colors"
           >
             <X className="size-4" aria-hidden="true" />
           </button>
@@ -251,7 +251,7 @@ export default function BudgetRow(props: BudgetRowProps) {
           type="button"
           onClick={props.onAdd}
           aria-label="Add expense"
-          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full border transition-colors"
         >
           <Plus className="size-4" aria-hidden="true" />
         </button>
