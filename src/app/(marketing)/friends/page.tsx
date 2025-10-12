@@ -1,15 +1,15 @@
-import CtaFinal from '@/shared/ui/sections/CtaFinal';
-import CtaMidPage from '@/shared/ui/sections/CtaMidPage';
-import EasyLink from '@/shared/ui/sections/EasyLink';
-import Features from '@/shared/ui/sections/Features';
-import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
-import KeyBenefits from '@/shared/ui/sections/KeyBenefits';
-import Testimonial from '@/shared/ui/sections/Testimonial';
-import UseCases from '@/shared/ui/sections/UseCases';
+import CtaFinal from '@/features/website/sections/CTAFinal';
+import CtaMidPage from '@/features/website/sections/CTAMidPage';
+import EasyLink from '@/features/website/sections/EasyLink';
+import Features from '@/features/website/sections/Features';
+import HeroTwoColumns from '@/features/website/sections/HeroTwoColumns';
+import KeyBenefits from '@/features/website/sections/KeyBenefits';
+import Testimonial from '@/features/website/sections/Testimonial';
+import UseCases from '@/features/website/sections/UseCases';
 
 export default function FriendsPage() {
   return (
-    <main id="main-content" className="space-y-16">
+    <main id="main-content">
       <HeroTwoColumns
         eyebrow="Plan with friends"
         title="Keep every friend aligned on the itinerary"
@@ -43,10 +43,7 @@ export default function FriendsPage() {
       <CtaMidPage />
       <UseCases />
       <Testimonial />
-      <CtaFinal
-        primaryAction={{ label: 'Start a group plan', href: '/signup' }}
-        secondaryAction={{ label: 'Compare pricing', href: '/pricing' }}
-      />
+      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
     </main>
   );
 }

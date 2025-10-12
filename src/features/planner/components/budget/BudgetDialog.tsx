@@ -64,7 +64,7 @@ export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDi
               <button
                 type="button"
                 title="Close"
-                className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-9 items-center justify-center rounded-full transition-colors"
+                className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
               >
                 <X className="size-4" aria-hidden="true" />
                 <span className="sr-only">Close</span>

@@ -1,11 +1,11 @@
-import CtaFinal from '@/shared/ui/sections/CtaFinal';
-import FeatureBreakdown from '@/shared/ui/sections/FeatureBreakdown';
-import HeroCentralized from '@/shared/ui/sections/HeroCentralized';
-import PricingTable from '@/shared/ui/sections/PricingTable';
+import CtaFinal from '@/features/website/sections/CTAFinal';
+import FeatureBreakdown from '@/features/website/sections/FeatureBreakdown';
+import HeroCentralized from '@/features/website/sections/HeroCentralized';
+import PricingTable from '@/features/website/sections/PricingTable';
 
 export default function PricingPage() {
   return (
-    <main id="main-content" className="space-y-16">
+    <main id="main-content">
       <HeroCentralized
         eyebrow="Pricing"
         title="Choose the plan that fits your travel style"
@@ -81,10 +81,7 @@ export default function PricingPage() {
           },
         ]}
       />
-      <CtaFinal
-        primaryAction={{ label: 'Create account', href: '/signup' }}
-        secondaryAction={{ label: 'Talk with sales', href: '/contact' }}
-      />
+      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
     </main>
   );
 }

@@ -48,8 +48,7 @@ const content: PlanningPageContent = {
     ],
   },
   ctaFinal: {
-    primaryAction: { label: 'Plan my vacation', href: '/signup' },
-    secondaryAction: { label: 'Compare pricing options', href: '/pricing' },
+    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

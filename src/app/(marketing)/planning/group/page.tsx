@@ -47,8 +47,7 @@ const content: PlanningPageContent = {
     ],
   },
   ctaFinal: {
-    primaryAction: { label: 'Start organizing', href: '/signup' },
-    secondaryAction: { label: 'See collaboration pricing', href: '/pricing' },
+    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

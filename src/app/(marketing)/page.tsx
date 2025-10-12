@@ -1,17 +1,17 @@
-import ContinuePlanningBanner from '@/shared/ui/components/ContinuePlanningBanner';
-import FeaturePreview from '@/shared/ui/components/FeaturePreview';
-import FinalCta from '@/shared/ui/components/FinalCta';
-import Hero from '@/shared/ui/components/Hero';
-import InspirationLink from '@/shared/ui/components/InspirationLink';
+import FeaturePreview from '@/features/website/components/FeaturePreview';
+import Hero from '@/features/website/components/Hero';
+import Testimonial from '@/features/website/sections/Testimonial';
+import InspirationLink from '@/features/website/components/InspirationLink';
+import CtaFinal from '@/features/website/sections/CTAFinal';
 
 export default function MarketingHomePage() {
   return (
     <main id="main-content">
-      <ContinuePlanningBanner />
       <Hero />
       <FeaturePreview />
       <InspirationLink />
-      <FinalCta />
+      <Testimonial />
+      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
     </main>
   );
 }

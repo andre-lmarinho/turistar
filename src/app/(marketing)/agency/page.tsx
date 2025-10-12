@@ -1,13 +1,13 @@
-import CtaFinal from '@/shared/ui/sections/CtaFinal';
-import Features from '@/shared/ui/sections/Features';
-import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
-import KeyBenefits from '@/shared/ui/sections/KeyBenefits';
-import Testimonial from '@/shared/ui/sections/Testimonial';
-import UseCases from '@/shared/ui/sections/UseCases';
+import CtaFinal from '@/features/website/sections/CTAFinal';
+import Features from '@/features/website/sections/Features';
+import HeroTwoColumns from '@/features/website/sections/HeroTwoColumns';
+import KeyBenefits from '@/features/website/sections/KeyBenefits';
+import Testimonial from '@/features/website/sections/Testimonial';
+import UseCases from '@/features/website/sections/UseCases';
 
 export default function AgencyPage() {
   return (
-    <main id="main-content" className="space-y-16">
+    <main id="main-content">
       <HeroTwoColumns
         eyebrow="For travel agencies"
         title="Serve clients better"
@@ -39,10 +39,7 @@ export default function AgencyPage() {
       <Features />
       <UseCases />
       <Testimonial />
-      <CtaFinal
-        primaryAction={{ label: 'Launch agency workspace', href: '/signup' }}
-        secondaryAction={{ label: 'Compare pricing', href: '/pricing' }}
-      />
+      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
     </main>
   );
 }

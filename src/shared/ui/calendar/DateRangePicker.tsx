@@ -29,7 +29,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
         <button
           type="button"
           className={cn(
-            'border-border bg-background text-foreground inline-flex w-64 cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
+            'border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
             !value?.from && 'text-muted-foreground',
             className
           )}
@@ -43,11 +43,15 @@ export function DateRangePicker({ className, value, onChange }: Props) {
           >
             {label}
           </span>
-          <CalendarIcon className="text-muted-foreground h-4 w-4" aria-hidden="true" />
+          <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
         </button>
       </PopoverTrigger>
 
-      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
+      <PopoverContent
+        className="mt-2 w-full max-w-[27rem] p-0 shadow-lg"
+        align="start"
+        side="bottom"
+      >
         <Calendar
           mode="range"
           selected={value}
@@ -78,11 +82,11 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           title={label}
           aria-label={label}
           className={cn(
-            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-10 items-center justify-center rounded-full border transition-colors',
+            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors',
             className
           )}
         >
-          <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+          <CalendarIcon className="size-4" aria-hidden="true" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">

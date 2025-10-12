@@ -105,7 +105,7 @@ function PlannerClientInner({
           <DateRangePicker
             value={currentRange}
             onChange={handleRangeChange}
-            className="hidden md:flex"
+            className="hidden w-full md:flex md:w-64"
           />
         </div>
 

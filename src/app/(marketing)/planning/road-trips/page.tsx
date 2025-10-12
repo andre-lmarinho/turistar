@@ -47,8 +47,7 @@ const content: PlanningPageContent = {
     ],
   },
   ctaFinal: {
-    primaryAction: { label: 'Plan my drive', href: '/signup' },
-    secondaryAction: { label: 'View pricing tiers', href: '/pricing' },
+    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

@@ -5,6 +5,7 @@ export type LucideIconName =
   | 'arrow-left-right'
   | 'bus'
   | 'calendar'
+  | 'circle-check'
   | 'check'
   | 'chevron-down'
   | 'chevron-left'

@@ -98,7 +98,7 @@ export default function LocationSearchInput({
         placeholder={placeholder}
         className={
           inputClassName ??
-          'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none'
+          'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none'
         }
         autoComplete="off"
       />

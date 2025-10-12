@@ -1,15 +1,15 @@
-import CtaFinal from '@/shared/ui/sections/CtaFinal';
-import type { CtaFinalAction } from '@/shared/ui/sections/CtaFinal';
-import CtaMidPage from '@/shared/ui/sections/CtaMidPage';
-import type { CtaMidPageAction } from '@/shared/ui/sections/CtaMidPage';
-import Features from '@/shared/ui/sections/Features';
-import Faq from '@/shared/ui/sections/Faq';
-import type { FaqProps } from '@/shared/ui/sections/Faq';
-import HeroTwoColumns from '@/shared/ui/sections/HeroTwoColumns';
-import type { HeroTwoColumnsProps } from '@/shared/ui/sections/HeroTwoColumns';
-import KeyBenefits from '@/shared/ui/sections/KeyBenefits';
-import type { KeyBenefitsProps } from '@/shared/ui/sections/KeyBenefits';
-import Testimonial from '@/shared/ui/sections/Testimonial';
+import CtaFinal from '@/features/website/sections/CTAFinal';
+import type { CtaFinalAction } from '@/features/website/sections/CTAFinal';
+import CtaMidPage from '@/features/website/sections/CTAMidPage';
+import type { CtaMidPageAction } from '@/features/website/sections/CTAMidPage';
+import Features from '@/features/website/sections/Features';
+import Faq from '@/features/website/sections/FAQ';
+import type { FaqProps } from '@/features/website/sections/FAQ';
+import HeroTwoColumns from '@/features/website/sections/HeroTwoColumns';
+import type { HeroTwoColumnsProps } from '@/features/website/sections/HeroTwoColumns';
+import KeyBenefits from '@/features/website/sections/KeyBenefits';
+import type { KeyBenefitsProps } from '@/features/website/sections/KeyBenefits';
+import Testimonial from '@/features/website/sections/Testimonial';
 
 export interface PlanningPageContent {
   hero: HeroTwoColumnsProps;
@@ -18,24 +18,19 @@ export interface PlanningPageContent {
   ctaMidPageAction?: CtaMidPageAction;
   ctaFinal: {
     primaryAction: CtaFinalAction;
-    secondaryAction?: CtaFinalAction;
   };
 }
 
 export function PlanningPageTemplate({ content }: { content: PlanningPageContent }) {
   return (
-    <main id="main-content" className="space-y-16">
+    <main id="main-content">
       <HeroTwoColumns {...content.hero} />
       <KeyBenefits {...content.keyBenefits} />
       <Features />
-      <CtaMidPage action={content.ctaMidPageAction} />
+      <CtaMidPage primaryAction={content.ctaMidPageAction} />
       <Faq {...content.faq} />
       <Testimonial />
-      <CtaFinal
-        variant="planning"
-        primaryAction={content.ctaFinal.primaryAction}
-        secondaryAction={content.ctaFinal.secondaryAction}
-      />
+      <CtaFinal variant="planning" primaryAction={content.ctaFinal.primaryAction} />
     </main>
   );
 }

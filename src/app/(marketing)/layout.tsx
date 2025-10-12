@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import SeoJsonLd from '@/shared/components/SeoJsonLd';
+import SeoJsonLd from '@/features/website/seo/SeoJsonLd';
 import { SITE_URL } from '@/shared/constants/site';
-import Navbar from '@/shared/ui/components/Navbar';
-import Footer from '@/shared/ui/components/HomeFooter';
+import Navbar from '@/features/website/ui/layout/Navbar/Navbar';
+import Footer from '@/features/website/ui/layout/Footer';
 
 const previewImage = new URL('/previews/preview_01.png', SITE_URL).toString();
 

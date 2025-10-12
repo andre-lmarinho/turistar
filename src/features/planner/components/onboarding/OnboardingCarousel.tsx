@@ -125,9 +125,9 @@ export default function OnboardingCarousel({ baseWidth = 300, onFinish }: Onboar
           type="button"
           onClick={() => setCurrentIndex((p) => p - 1)}
           aria-label="Previous step"
-          className="border-border bg-background text-foreground hover:bg-muted/60 absolute top-1/2 left-2 z-20 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors"
+          className="border-border bg-background text-foreground hover:bg-border absolute top-1/2 left-2 z-20 inline-flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border transition-colors"
         >
-          <ChevronLeft className="size-5" aria-hidden="true" />
+          <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
       )}
 
@@ -167,13 +167,17 @@ export default function OnboardingCarousel({ baseWidth = 300, onFinish }: Onboar
           currentIndex === steps.length - 1 ? onFinish?.() : setCurrentIndex((p) => p + 1)
         }
         aria-label="Next step"
-        className="border-border bg-background text-foreground hover:bg-muted/60 absolute top-1/2 right-2 z-20 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full border transition-colors"
+        className="border-border bg-background text-foreground hover:bg-border absolute top-1/2 right-2 z-20 inline-flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border transition-colors"
       >
-        <ChevronRight className="size-5" aria-hidden="true" />
+        <ChevronRight className="size-4" aria-hidden="true" />
       </button>
 
       {/* Dots navigation */}
-      <div role="tablist" aria-label="Slide navigation" className="mt-4 flex w-full justify-center">
+      <div
+        role="tablist"
+        aria-label="Slide navigation"
+        className="mt-4 flex w-full justify-center gap-2"
+      >
         {ONBOARDING_STEPS.map((_, i) => (
           <button
             key={i}

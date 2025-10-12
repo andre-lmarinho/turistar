@@ -48,8 +48,7 @@ const content: PlanningPageContent = {
     ],
   },
   ctaFinal: {
-    primaryAction: { label: 'Start a free plan', href: '/signup' },
-    secondaryAction: { label: 'Review feature set', href: '/pricing' },
+    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

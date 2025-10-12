@@ -22,16 +22,14 @@ export default function AddCardButton({
   position,
   onAddActivity,
 }: AddCardButtonProps) {
-  const { bg: baseBg, border: borderColor } = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
+  const { border: borderColor } = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
 
   if (position === 'new') {
-    const baseColor = baseBg;
-
     return (
       <button
         type="button"
         onClick={() => onAddActivity(dayId, index)}
-        className={`cursor-pointer p-2 ${borderColor} ${baseColor} bg-background flex h-10 w-full items-center rounded-lg transition`}
+        className={`cursor-pointer border ${borderColor} bg-background hover:bg-border flex h-10 w-full items-center rounded-lg p-2 transition`}
       >
         <Plus size={18} aria-hidden="true" className="mr-2" />
         <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>

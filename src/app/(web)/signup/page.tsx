@@ -1,9 +1,5 @@
-import PlanForm from '@/shared/ui/components/PlanForm';
+import PlanForm from '@/features/website/components/PlanForm';
 
 export default function SignupPage() {
-  return (
-    <div className="space-y-16">
-      <PlanForm />
-    </div>
-  );
+  return <PlanForm />;
 }
