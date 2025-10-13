@@ -7,7 +7,7 @@ import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
 import { Input } from '@/shared/ui/input';
 import { LocationSearchInput } from '@/shared/ui/input';
-import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
+import { useAddressAutocomplete } from '@/features/planner/hooks/modules/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface ActivityDialogFormProps {

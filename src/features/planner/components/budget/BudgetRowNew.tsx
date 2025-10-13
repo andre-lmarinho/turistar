@@ -3,8 +3,8 @@
 import React, { useId } from 'react';
 import { Plus } from '@/shared/ui/icon';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
-import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import { useBudgetRowInputs } from '@/features/planner/hooks/budget/useBudgetRowInputs';
+import { useBudgetContext } from '@/features/planner/hooks/BudgetContext';
+import { useBudgetRowInputs } from '@/features/planner/hooks/ui/useBudgetRowInputs';
 
 type BudgetRowNewProps = {
   amountInput: string;

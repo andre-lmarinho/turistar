@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
+import { BudgetProvider } from '@/features/planner/hooks/BudgetContext';
 import { BudgetPanelHeader } from '@/features/planner/components/budget/BudgetPanelHeader';
 import { ExpenseTable } from '@/features/planner/components/budget/ExpenseTable';
 import { BudgetDialog } from '@/features/planner/components/budget/BudgetDialog';

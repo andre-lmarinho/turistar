@@ -8,7 +8,7 @@ import { Popover, PopoverTrigger } from '@/shared/ui/popover';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/shared/constants/ui';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
-import { useCardPopups } from '@/features/planner/hooks/internal/useCardPopups';
+import { useCardPopups } from '@/features/planner/hooks/ui/useCardPopups';
 import { CardColorsPopover } from './PopoverCardColors';
 import { DayPickerPopover } from './PopoverDayPicker';
 

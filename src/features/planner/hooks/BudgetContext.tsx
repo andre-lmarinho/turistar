@@ -1,10 +1,10 @@
 'use client';
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';
-import { useBudget } from './useBudget';
+import { useBudget } from './state/budget/useBudget';
 import type { Entry } from '@/features/planner/types/budget';
 
-const [BudgetProvider, useBudgetContext] = createContextProvider(
+export const [BudgetProvider, useBudgetContext] = createContextProvider(
   ({
     planId,
     activitiesTotal,
@@ -20,5 +20,3 @@ const [BudgetProvider, useBudgetContext] = createContextProvider(
   }) => useBudget(planId, activitiesTotal, { initialBudget, initialEntries, persist }),
   'useBudgetContext must be inside BudgetProvider'
 );
-
-export { BudgetProvider, useBudgetContext };

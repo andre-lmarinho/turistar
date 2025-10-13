@@ -6,7 +6,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
 import { DayColumn } from '@/features/planner/components/dnd/DayColumn';
 import { SortableItem } from '@/features/planner/components/dnd/SortableItem';
-import { useActivitiesById } from '@/features/planner/hooks/useActivitiesById';
+import { useActivitiesById } from '@/features/planner/hooks/state/planner/useActivitiesById';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 /**

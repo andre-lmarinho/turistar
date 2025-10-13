@@ -144,3 +144,5 @@ export const MapBoard = React.memo(function MapBoard() {
 });
 
 MapBoard.displayName = 'MapBoard';
+
+export default MapBoard;

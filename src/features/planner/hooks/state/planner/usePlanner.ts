@@ -7,7 +7,7 @@ import { DateRange } from 'react-day-picker';
 import { eachDayOfInterval } from 'date-fns';
 
 import { useTripRange } from './useTripRange';
-import { useDnDPlanner } from './useDnDPlanner';
+import { useDnDPlanner } from '../dnd/useDnDPlanner';
 import { buildInitialDays } from '@/features/planner/services/days/initialDays';
 import { syncDaysWithTripRange } from '@/features/planner/services/days/syncDaysWithTripRange';
 import { setPlanDateRange } from '@/app/(web)/planner/actions/updatePlan';

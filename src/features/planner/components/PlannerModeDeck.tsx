@@ -1,10 +1,14 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 
 import { PlannerBoard } from './dnd/PlannerBoard';
 import { BudgetBoard } from './budget/BudgetBoard';
-import { MapBoard } from './map/MapBoard';
+
+const MapBoard = dynamic(() => import('./map/MapBoard'), {
+  ssr: false,
+});
 
 import type { Entry } from '@/features/planner/types/budget';
 

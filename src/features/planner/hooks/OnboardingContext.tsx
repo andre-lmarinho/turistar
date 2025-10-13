@@ -1,11 +1,9 @@
 'use client';
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';
-import { useOnboardingCheck } from './useOnboardingCheck';
+import { useOnboardingCheck } from './modules/useOnboardingCheck';
 
-const [OnboardingProvider, useOnboardingContext] = createContextProvider(
+export const [OnboardingProvider, useOnboardingContext] = createContextProvider(
   ({ planId }: { planId: string }) => useOnboardingCheck(planId),
   'useOnboardingContext must be inside OnboardingProvider'
 );
-
-export { OnboardingProvider, useOnboardingContext };

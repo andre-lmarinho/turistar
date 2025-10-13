@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { DollarSign } from '@/shared/ui/icon';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
 import { CategoryProgressBar } from '@/features/planner/components/budget/CategoryProgressBar';
-import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
+import { useBudgetContext } from '@/features/planner/hooks/BudgetContext';
 import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 

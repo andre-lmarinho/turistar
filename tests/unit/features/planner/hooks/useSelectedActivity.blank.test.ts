@@ -3,9 +3,9 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { useActivityState } from '@/features/planner/hooks/useActivityState';
-import { useSelectedActivity } from '@/features/planner/hooks/useSelectedActivity';
-import { usePersistedPlannerDays } from '@/features/planner/hooks/usePersistedPlannerDays';
+import { useActivityState } from '@/features/planner/hooks/state/dnd/useActivityState';
+import { useSelectedActivity } from '@/features/planner/hooks/state/planner/useSelectedActivity';
+import { usePersistedPlannerDays } from '@/features/planner/hooks/state/planner/usePersistedPlannerDays';
 import * as placeholders from '@/features/planner/domain/utils/activityPlaceholders';
 
 function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeof vi.fn>) {

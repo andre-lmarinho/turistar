@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { Entry } from '@/features/planner/types/budget';
-import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
+import { useBudgetContext } from '@/features/planner/hooks/BudgetContext';
 import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowView';
 import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';
 import { BudgetRowNew } from '@/features/planner/components/budget/BudgetRowNew';

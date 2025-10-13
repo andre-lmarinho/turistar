@@ -7,7 +7,7 @@ import type {
   PlanEventInsert,
   PlanSnapshot,
 } from '@/features/planner/domain/types/PlanEvent';
-import { usePlanCollaboration } from '@/features/planner/hooks/usePlanCollaboration';
+import { usePlanCollaboration } from '@/features/planner/hooks/data/usePlanCollaboration';
 
 const supabaseMocks = vi.hoisted(() => {
   const fetchSnapshot = vi.fn<() => Promise<PlanSnapshot>>();

@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useTripRange } from '@/features/planner/hooks/useTripRange';
+import { useTripRange } from '@/features/planner/hooks/state/planner/useTripRange';
 import { vi } from 'vitest';
 
 let params = new URLSearchParams();
