@@ -15,7 +15,7 @@ interface BudgetDialogProps {
   onClose: () => void;
 }
 
-export default function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProps) {
+export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProps) {
   const activities = useMemo(
     () =>
       days.flatMap((day) =>

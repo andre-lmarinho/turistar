@@ -1,4 +1,3 @@
-// src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
 import { promises as fs } from 'fs';
 import { join } from 'path';

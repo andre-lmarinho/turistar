@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/budget/useBudget.test.ts
-
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import { useBudget } from '@/features/planner/hooks/budget/useBudget';

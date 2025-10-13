@@ -20,7 +20,7 @@ const TITLES: Record<'default' | 'planning', string> = {
   planning: 'Plan your next adventure with Turistar now',
 };
 
-export default function CtaFinal({ variant = 'default', primaryAction }: CtaFinalProps) {
+export function CtaFinal({ variant = 'default', primaryAction }: CtaFinalProps) {
   return (
     <MarketingSection variant="card">
       <div className="flex flex-col items-center gap-4">

@@ -1,5 +1,3 @@
-// tests/unit/shared/ui/LocationSearchInput.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';

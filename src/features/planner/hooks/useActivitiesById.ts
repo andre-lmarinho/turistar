@@ -1,5 +1,3 @@
-// src/features/planner/hooks/useActivitiesById.ts
-
 import { useMemo } from 'react';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 

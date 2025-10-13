@@ -20,7 +20,7 @@ interface ModeToggleButtonProps {
   onChange: (mode: Mode) => void;
 }
 
-export default function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
+export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
   const { ref: containerRef, rect: containerRect } = useElementMeasure<HTMLDivElement>({
     rect: true,
   });

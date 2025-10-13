@@ -29,7 +29,7 @@ const FEATURE_ITEMS = [
   },
 ];
 
-export default function Features() {
+export function Features() {
   return (
     <MarketingSection>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">

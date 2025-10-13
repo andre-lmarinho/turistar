@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/formatDayPlan.test.ts
-
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import { parseISO } from 'date-fns';
 

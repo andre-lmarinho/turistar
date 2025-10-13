@@ -31,7 +31,7 @@ const IMAGE_LIST_CLASSES =
 
 const IMAGE_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start';
 
-export default function FeatureCarousel({ features }: FeatureCarouselProps) {
+export function FeatureCarousel({ features }: FeatureCarouselProps) {
   const cardsRef = useRef<HTMLUListElement | null>(null);
   const imagesRef = useRef<HTMLUListElement | null>(null);
 

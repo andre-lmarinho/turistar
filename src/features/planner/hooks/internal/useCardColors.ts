@@ -1,4 +1,3 @@
-// src/features/planner/hooks/internal/useCardColors.ts
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
 
 export function useCardColors(twBg?: string, bgColor?: string) {

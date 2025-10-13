@@ -1,11 +1,11 @@
-import CtaFinal from '@/features/website/sections/CTAFinal';
-import CtaMidPage from '@/features/website/sections/CTAMidPage';
-import EasyLink from '@/features/website/sections/EasyLink';
-import Features from '@/features/website/sections/Features';
-import HeroTwoColumns from '@/features/website/sections/HeroTwoColumns';
-import KeyBenefits from '@/features/website/sections/KeyBenefits';
-import Testimonial from '@/features/website/sections/Testimonial';
-import UseCases from '@/features/website/sections/UseCases';
+import { CtaFinal } from '@/features/website/sections/CTAFinal';
+import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
+import { EasyLink } from '@/features/website/sections/EasyLink';
+import { Features } from '@/features/website/sections/Features';
+import { HeroTwoColumns } from '@/features/website/sections/HeroTwoColumns';
+import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
+import { Testimonial } from '@/features/website/sections/Testimonial';
+import { UseCases } from '@/features/website/sections/UseCases';
 
 export default function FriendsPage() {
   return (

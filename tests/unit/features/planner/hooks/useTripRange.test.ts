@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/useTripRange.test.ts
-
 import { renderHook, act } from '@testing-library/react';
 import { useTripRange } from '@/features/planner/hooks/useTripRange';
 import { vi } from 'vitest';

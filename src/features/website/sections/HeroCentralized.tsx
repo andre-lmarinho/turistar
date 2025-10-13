@@ -19,7 +19,7 @@ export interface HeroCentralizedProps {
   media?: ReactNode;
 }
 
-export default function HeroCentralized({
+export function HeroCentralized({
   eyebrow,
   title,
   description,

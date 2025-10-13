@@ -1,5 +1,3 @@
-// tests/unit/a11y/activity-dialog.a11y.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
@@ -42,7 +40,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-import ActivityDialog from '@/features/planner/components/dialog/ActivityDialog';
+import { ActivityDialog } from '@/features/planner/components/dialog/ActivityDialog';
 
 describe('Accessibility — ActivityDialog', () => {
   it('exposes dialog semantics and closes on Escape', async () => {

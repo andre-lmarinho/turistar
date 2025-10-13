@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/diffPlanEvents.test.ts
-
 import { describe, expect, it } from 'vitest';
 
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';

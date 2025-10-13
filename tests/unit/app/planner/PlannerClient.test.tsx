@@ -1,9 +1,7 @@
-// tests/unit/app/planner/PlannerClient.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 let mockPlanId = 'plan1';
 

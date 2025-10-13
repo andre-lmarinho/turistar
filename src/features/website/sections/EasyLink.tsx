@@ -2,7 +2,7 @@ import { ArrowLeftRight } from '@/shared/ui/icon';
 import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
-export default function EasyLink() {
+export function EasyLink() {
   return (
     <MarketingSection>
       <div className="flex flex-col items-center gap-4 text-center">

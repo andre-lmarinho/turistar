@@ -1,5 +1,3 @@
-// src/features/planner/services/supabase/planEventsRepository.ts
-
 import { supabase } from '@/shared/lib/supabaseClient';
 import type {
   PostgrestMaybeSingleResponse,

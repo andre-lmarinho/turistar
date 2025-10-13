@@ -13,7 +13,7 @@ export interface ActivityCardProps {
   bgColor: string;
 }
 
-export default function ActivityCard({ activity, onSelect, bgColor }: ActivityCardProps) {
+export function ActivityCard({ activity, onSelect, bgColor }: ActivityCardProps) {
   const { title, duration, budget, color, imageUrl } = activity;
 
   const { twBg, border: borderColorClass } = useCardColors(

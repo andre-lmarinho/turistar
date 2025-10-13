@@ -18,7 +18,7 @@ export interface SortableItemProps {
   bgColor: string;
 }
 
-export default function SortableItem({
+export function SortableItem({
   id,
   activity,
   onSelect,

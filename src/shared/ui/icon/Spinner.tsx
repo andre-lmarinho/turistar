@@ -1,4 +1,3 @@
-// src/shared/ui/icon/Spinner.tsx
 'use client';
 
 import React from 'react';
@@ -8,7 +7,7 @@ interface SpinnerProps {
   className?: string;
 }
 
-export default function Spinner({ className }: SpinnerProps) {
+export function Spinner({ className }: SpinnerProps) {
   return (
     <span
       className={cn(

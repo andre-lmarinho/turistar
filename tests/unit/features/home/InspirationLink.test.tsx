@@ -1,5 +1,3 @@
-// tests/unit/features/home/InspirationLink.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 

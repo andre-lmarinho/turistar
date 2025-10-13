@@ -42,7 +42,7 @@ function renderAction(plan: PricingTablePlan) {
   );
 }
 
-export default function PricingTable({ title, subtitle, plans }: PricingTableProps) {
+export function PricingTable({ title, subtitle, plans }: PricingTableProps) {
   return (
     <MarketingSection className="py-20 sm:py-24 lg:py-28">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">

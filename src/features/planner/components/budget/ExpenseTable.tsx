@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import type { Entry } from '@/features/planner/types/budget/budget';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
-import BudgetRowView from '@/features/planner/components/budget/BudgetRowView';
-import BudgetRowEdit from '@/features/planner/components/budget/BudgetRowEdit';
-import BudgetRowNew from '@/features/planner/components/budget/BudgetRowNew';
+import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowView';
+import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';
+import { BudgetRowNew } from '@/features/planner/components/budget/BudgetRowNew';
 
-export default function ExpenseTable() {
+export function ExpenseTable() {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);

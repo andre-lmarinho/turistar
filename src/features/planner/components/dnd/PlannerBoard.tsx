@@ -4,8 +4,8 @@ import React from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import DayColumn from '@/features/planner/components/dnd/DayColumn';
-import SortableItem from '@/features/planner/components/dnd/SortableItem';
+import { DayColumn } from '@/features/planner/components/dnd/DayColumn';
+import { SortableItem } from '@/features/planner/components/dnd/SortableItem';
 import { useActivitiesById } from '@/features/planner/hooks/useActivitiesById';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
@@ -13,7 +13,7 @@ import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
-function PlannerBoard() {
+function PlannerBoardComponent() {
   const {
     days,
     activeId,
@@ -73,4 +73,8 @@ function PlannerBoard() {
   );
 }
 
-export default React.memo(PlannerBoard);
+const PlannerBoard = React.memo(PlannerBoardComponent);
+
+PlannerBoard.displayName = 'PlannerBoard';
+
+export { PlannerBoard };

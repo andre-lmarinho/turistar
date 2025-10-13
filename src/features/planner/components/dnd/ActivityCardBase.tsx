@@ -19,7 +19,7 @@ interface ActivityCardBaseProps {
   borderColorClass?: string;
 }
 
-export default function ActivityCardBase({
+export function ActivityCardBase({
   title,
   draftTitle,
   onDraftTitleChange,

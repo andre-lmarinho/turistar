@@ -29,7 +29,7 @@ const USE_CASES = [
   },
 ];
 
-export default function UseCases() {
+export function UseCases() {
   return (
     <MarketingSection>
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">

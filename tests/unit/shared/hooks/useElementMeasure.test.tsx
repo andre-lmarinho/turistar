@@ -1,5 +1,3 @@
-// tests/unit/shared/hooks/useElementMeasure.test.tsx
-
 import { render } from '@testing-library/react';
 import React, { useEffect } from 'react';
 import { vi } from 'vitest';

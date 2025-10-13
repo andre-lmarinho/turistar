@@ -26,7 +26,7 @@ export interface CtaMidPageProps {
   secondaryAction?: CtaMidPageAction;
 }
 
-export default function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPageProps) {
+export function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPageProps) {
   const primary = primaryAction ?? DEFAULT_PRIMARY;
   const secondary = secondaryAction ?? DEFAULT_SECONDARY;
 

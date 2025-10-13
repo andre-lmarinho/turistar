@@ -1,8 +1,6 @@
-// tests/unit/features/onboarding/components/OnboardingDialog.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import OnboardingDialog from '@/features/planner/components/onboarding/OnboardingDialog';
+import { OnboardingDialog } from '@/features/planner/components/onboarding/OnboardingDialog';
 import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
 import { vi } from 'vitest';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';

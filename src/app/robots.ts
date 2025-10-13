@@ -1,4 +1,3 @@
-// src/app/robots.ts
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/shared/constants/site';
 const isProd = !/localhost|127\.0\.0\.1/.test(SITE_URL);

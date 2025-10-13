@@ -1,4 +1,3 @@
-// src/features/inspiration/server/pageMetadata.ts
 import type { Metadata } from 'next';
 
 import { generateInspirationMetadata } from './generateInspirationMetadata';

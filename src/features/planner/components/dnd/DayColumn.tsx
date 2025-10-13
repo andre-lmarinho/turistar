@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core';
 
 import SortableItem from './SortableItem';
-import AddCardButton from '@/features/planner/ui/buttons/AddCardButton';
+import { AddCardButton } from '@/features/planner/ui/buttons/AddCardButton';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 interface DayColumnProps {
@@ -19,12 +19,7 @@ interface DayColumnProps {
  * Renders one day's column of activities as a droppable list.
  * Supports click-to-edit and adding new blank cards.
  */
-export default function DayColumn({
-  day,
-  onSelectActivity,
-  onAddActivity,
-  onUpdateTitle,
-}: DayColumnProps) {
+export function DayColumn({ day, onSelectActivity, onAddActivity, onUpdateTitle }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const scrollRef = useRef<HTMLDivElement>(null);
 

@@ -12,7 +12,7 @@ type BudgetRowNewProps = {
   onAdd: () => void;
 };
 
-export default function BudgetRowNew({ amountInput, setAmountInput, onAdd }: BudgetRowNewProps) {
+export function BudgetRowNew({ amountInput, setAmountInput, onAdd }: BudgetRowNewProps) {
   const { desc, setDesc, cat, setCat, setAmount } = useBudgetContext();
   const baseId = useId();
 

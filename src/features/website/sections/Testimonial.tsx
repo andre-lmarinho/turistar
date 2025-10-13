@@ -46,7 +46,7 @@ const TESTIMONIALS = [
 
 const AUTO_ADVANCE_INTERVAL = 4000;
 
-export default function Testimonial() {
+export function Testimonial() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

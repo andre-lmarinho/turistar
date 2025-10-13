@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
-import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
-import ExpenseTable from '@/features/planner/components/budget/ExpenseTable';
-import BudgetDialog from '@/features/planner/components/budget/BudgetDialog';
+import { BudgetPanelHeader } from '@/features/planner/components/budget/BudgetPanelHeader';
+import { ExpenseTable } from '@/features/planner/components/budget/ExpenseTable';
+import { BudgetDialog } from '@/features/planner/components/budget/BudgetDialog';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   persist?: boolean;
 }
 
-function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
+function BudgetBoardComponent({ initialBudget, initialEntries, persist = true }: Props) {
   const { planId, days, updateActivity } = usePlannerContext();
   const activitiesTotal = days.reduce(
     (sum, day) => sum + day.activities.reduce((acc, act) => acc + (act.budget ?? 0), 0),
@@ -71,4 +71,8 @@ function BudgetBoard({ initialBudget, initialEntries, persist = true }: Props) {
   );
 }
 
-export default React.memo(BudgetBoard);
+const BudgetBoard = React.memo(BudgetBoardComponent);
+
+BudgetBoard.displayName = 'BudgetBoard';
+
+export { BudgetBoard };

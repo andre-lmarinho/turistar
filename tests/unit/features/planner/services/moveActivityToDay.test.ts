@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/moveActivityToDay.test.ts
-
 import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 

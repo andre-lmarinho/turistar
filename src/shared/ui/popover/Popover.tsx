@@ -29,4 +29,6 @@ const PopoverContent = React.forwardRef<
   );
 });
 
+PopoverContent.displayName = 'PopoverContent';
+
 export { Popover, PopoverTrigger, PopoverContent, PopoverClose };

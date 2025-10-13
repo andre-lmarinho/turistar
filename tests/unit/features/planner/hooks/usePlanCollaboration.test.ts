@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/usePlanCollaboration.test.ts
-
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 

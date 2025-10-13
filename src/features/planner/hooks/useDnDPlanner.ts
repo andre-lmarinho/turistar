@@ -1,4 +1,3 @@
-// src/features/planner/hooks/useDnDPlanner.ts
 'use client';
 
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';

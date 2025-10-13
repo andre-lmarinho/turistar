@@ -11,7 +11,7 @@ export interface FaqProps {
   items: FaqItem[];
 }
 
-export default function Faq({ title, items }: FaqProps) {
+export function Faq({ title, items }: FaqProps) {
   return (
     <MarketingSection>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">

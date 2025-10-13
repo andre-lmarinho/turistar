@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import Section from '@/features/website/ui/section/Wrapper';
+import { MarketingSection as Section } from '@/features/website/ui/section/Wrapper';
 
 export const metadata: Metadata = {
   title: {

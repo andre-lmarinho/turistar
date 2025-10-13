@@ -24,7 +24,7 @@ const features: FeatureCarouselFeature[] = [
   },
 ];
 
-export default function FeaturePreview() {
+export function FeaturePreview() {
   return (
     <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
       <div className="mb-10 md:max-w-[60%]">

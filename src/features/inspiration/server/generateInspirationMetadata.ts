@@ -1,4 +1,3 @@
-// src/features/inspiration/server/generateInspirationMetadata.ts
 import type { Metadata } from 'next';
 import { capitalize } from '@/shared/utils/capitalize';
 import { SITE_URL } from '@/shared/constants/site';

@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import ActivityDialog from '@/features/planner/components/dialog/ActivityDialog';
+import { ActivityDialog } from '@/features/planner/components/dialog/ActivityDialog';
 import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import { usePlanTitle } from '@/features/planner/hooks/usePlanTitleSupabase';
-import OnboardingDialog from '@/features/planner/components/onboarding/OnboardingDialog';
+import { OnboardingDialog } from '@/features/planner/components/onboarding/OnboardingDialog';
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
-import ModeToggleButton from '@/features/planner/ui/buttons/ModeToggleButton';
+import { ModeToggleButton } from '@/features/planner/ui/buttons/ModeToggleButton';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget/budget';
 
@@ -87,7 +87,7 @@ function PlannerClientInner({
   );
 }
 
-export default function PlannerClient({
+export function PlannerClient({
   initialDays,
   planId,
   slug,

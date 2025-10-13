@@ -1,4 +1,3 @@
-// tests/utils/silenceConsole.ts
 // Utility to silence known noisy console warnings/errors in tests.
 // Use sparingly and with specific patterns to avoid hiding real issues.
 

@@ -1,5 +1,3 @@
-// src/features/planner/domain/events/gapOrdering.ts
-
 const SCALE = 1024;
 
 function toNumber(position?: string): number {

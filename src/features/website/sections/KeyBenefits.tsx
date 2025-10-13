@@ -1,4 +1,4 @@
-import FeatureCarousel from '@/shared/ui/carousel/FeatureCarousel';
+import { FeatureCarousel } from '@/shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
 import { Sparkles } from '@/shared/ui/icon';
 import { MarketingSection } from '@/features/website/ui/section/Wrapper';
@@ -18,7 +18,7 @@ export interface KeyBenefitsProps {
   benefits: KeyBenefit[];
 }
 
-export default function KeyBenefits({ title, description, benefits }: KeyBenefitsProps) {
+export function KeyBenefits({ title, description, benefits }: KeyBenefitsProps) {
   const carouselFeatures: FeatureCarouselFeature[] = benefits.map((benefit, index) => ({
     ...benefit,
     imgSrc: CAROUSEL_IMAGE_SOURCES[index % CAROUSEL_IMAGE_SOURCES.length],

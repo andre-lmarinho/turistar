@@ -5,7 +5,7 @@ import React from 'react';
 import { differenceInCalendarDays } from 'date-fns';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
 
-export default function ResumePlan() {
+export function ResumePlan() {
   const { recentPlan } = useRecentPlan();
   if (!recentPlan) return null;
 

@@ -1,4 +1,3 @@
-// src/shared/ui/input/LocationSearchInput.tsx
 'use client';
 
 import React from 'react';
@@ -22,7 +21,7 @@ export interface LocationSearchInputProps {
   autocompleteHook: LocationAutocompleteHook;
 }
 
-export default function LocationSearchInput({
+export function LocationSearchInput({
   value,
   onChange,
   id = 'location-input',

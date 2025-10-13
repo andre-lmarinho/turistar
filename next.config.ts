@@ -1,7 +1,6 @@
-// next.config.ts
 import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
-import getSecurityHeaders from './securityHeaders';
+import { getSecurityHeaders } from './securityHeaders';
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,

@@ -1,5 +1,3 @@
-// tests/unit/shared/hooks/createLocationAutocompleteHook.test.ts
-
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createLocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
 

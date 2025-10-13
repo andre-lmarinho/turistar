@@ -1,5 +1,3 @@
-// tests/unit/shared/hooks/useDebounce.test.ts
-
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { useDebounce } from '@/shared/hooks/useDebounce';

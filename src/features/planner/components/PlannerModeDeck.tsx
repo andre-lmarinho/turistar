@@ -22,7 +22,7 @@ interface PlannerModeDeckProps {
   initialEntries?: Entry[];
 }
 
-export default function PlannerModeDeck({
+export function PlannerModeDeck({
   mode,
   onModeChange,
   persist,

@@ -16,7 +16,7 @@ import { DayPickerPopover } from './PopoverDayPicker';
  * Color strip shown at the very top of ActivityDialog.
  * - Background colour = current card colour.
  */
-export default function ActivityDialogHeader({
+export function ActivityDialogHeader({
   activity,
   bgColor,
   onDelete,

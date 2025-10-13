@@ -15,7 +15,7 @@ interface PlannerHeaderProps {
   onRangeChange: (range: DateRange | undefined) => void;
 }
 
-export default function PlannerHeader({
+export function PlannerHeader({
   title,
   onTitleChange,
   onTitleBlur,

@@ -1,5 +1,3 @@
-// tests/integration/planner/plannerClientMode.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -84,7 +82,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {

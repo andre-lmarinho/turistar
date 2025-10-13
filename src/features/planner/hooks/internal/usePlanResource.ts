@@ -1,4 +1,3 @@
-// src/features/planner/hooks/internal/usePlanResource.ts
 import { supabase } from '@/shared/lib/supabaseClient';
 import { useSupabaseResource } from '@/shared/hooks/useSupabaseResource';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';

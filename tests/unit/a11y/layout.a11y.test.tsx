@@ -1,5 +1,3 @@
-// tests/unit/a11y/layout.a11y.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';

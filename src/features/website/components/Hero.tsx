@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Hero() {
+export function Hero() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {

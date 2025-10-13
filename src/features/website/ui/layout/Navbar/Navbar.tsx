@@ -15,7 +15,7 @@ import {
   Users,
   Sparkles,
 } from '@/shared/ui/icon';
-import ResumePlan from './ResumePlan';
+import { ResumePlan } from './ResumePlan';
 import { cn } from '@/shared/utils/cn';
 import { Button } from '@/shared/ui/button';
 
@@ -294,7 +294,7 @@ const MobileMenu = ({
   </div>
 );
 
-export default function Navbar() {
+export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSolutionsOpen, setIsMobileSolutionsOpen] = useState(false);
 

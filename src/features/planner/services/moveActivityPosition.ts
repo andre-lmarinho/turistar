@@ -1,5 +1,3 @@
-// src/features/planner/services/moveActivityPosition.ts
-
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { cloneDays } from '@/features/planner/services/cloneDays';
 

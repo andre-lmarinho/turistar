@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/moveActivityPosition.test.ts
-
 import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 

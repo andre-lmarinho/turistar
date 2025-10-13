@@ -16,7 +16,7 @@ type BudgetRowEditProps = {
   onCancel: () => void;
 };
 
-export default function BudgetRowEdit({
+export function BudgetRowEdit({
   index,
   editEntry,
   setEditEntry,

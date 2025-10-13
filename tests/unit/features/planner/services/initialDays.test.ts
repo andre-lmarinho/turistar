@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/initialDays.test.ts
-
 import { buildInitialDays } from '@/features/planner/services/initialDays';
 import { parseISO } from 'date-fns';
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import InspirationCard from '../../../shared/ui/card/Card';
+import { InspirationCard } from '../../../shared/ui/card/Card';
 import romeJson from '@/features/inspiration/data/rome.json';
 import boipebaJson from '@/features/inspiration/data/boipeba.json';
 import type { InspirationDocument } from '@/features/inspiration/server/types';
@@ -20,7 +20,7 @@ const toDestinationPreview = ({ slug, doc }: { slug: string; doc: InspirationPre
   images: doc.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
 });
 
-export default function InspirationLink() {
+export function InspirationLink() {
   const destinations = inspirationSources.map(toDestinationPreview);
 
   return (

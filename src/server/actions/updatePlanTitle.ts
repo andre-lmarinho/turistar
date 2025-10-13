@@ -1,4 +1,3 @@
-// src/server/actions/updatePlanTitle.ts
 'use server';
 
 import type { SupabaseClient } from '@supabase/supabase-js';

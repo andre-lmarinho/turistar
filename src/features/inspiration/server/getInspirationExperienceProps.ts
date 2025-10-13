@@ -1,4 +1,3 @@
-// src/features/inspiration/server/getInspirationExperienceProps.ts
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { buildDaysFromInspirationData } from '@/features/planner/contracts/inspiration/buildDaysFromInspirationData';
 import type { Entry } from '@/features/planner/contracts/inspiration/types';

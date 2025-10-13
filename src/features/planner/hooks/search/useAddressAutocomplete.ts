@@ -1,4 +1,3 @@
-// src/features/planner/hooks/search/useAddressAutocomplete.ts
 'use client';
 
 import { createLocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';

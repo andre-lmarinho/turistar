@@ -1,5 +1,3 @@
-// src/features/planner/domain/utils/activityPlaceholders.ts
-
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export const BLANK_ACTIVITY_PREFIX = 'blank-';

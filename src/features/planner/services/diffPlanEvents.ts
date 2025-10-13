@@ -1,5 +1,3 @@
-// src/features/planner/services/diffPlanEvents.ts
-
 import { midpoint } from '@/features/planner/domain/events/gapOrdering';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';

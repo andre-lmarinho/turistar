@@ -1,4 +1,3 @@
-// src/features/planner/hooks/usePersistedPlannerDays.ts
 'use client';
 import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';

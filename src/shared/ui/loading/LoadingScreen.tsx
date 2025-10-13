@@ -8,7 +8,7 @@ interface LoadingScreenProps {
   text?: string;
 }
 
-export default function LoadingScreen({ text = 'Loading…' }: LoadingScreenProps) {
+export function LoadingScreen({ text = 'Loading…' }: LoadingScreenProps) {
   return (
     <div
       role="status"

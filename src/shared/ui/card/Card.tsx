@@ -11,7 +11,7 @@ export type InspirationCardProps = {
   intervalMs?: number;
 };
 
-export default function InspirationCard({
+export function InspirationCard({
   title,
   imageUrls,
   intervalMs = DEFAULT_INTERVAL_MS,

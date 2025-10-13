@@ -1,4 +1,3 @@
-// src/features/planner/hooks/internal/useCardPopups.ts
 'use client';
 
 import { useState } from 'react';

@@ -1,4 +1,3 @@
-// src/features/planner/hooks/onboarding/OnboardingContext.tsx
 'use client';
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';

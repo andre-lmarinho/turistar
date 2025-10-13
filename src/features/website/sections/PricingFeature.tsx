@@ -12,7 +12,7 @@ export interface FeatureBreakdownProps {
   categories: FeatureBreakdownCategory[];
 }
 
-export default function PricingFeature({ categories }: FeatureBreakdownProps) {
+export function PricingFeature({ categories }: FeatureBreakdownProps) {
   return (
     <MarketingSection>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">

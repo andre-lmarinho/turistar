@@ -1,5 +1,3 @@
-// src/features/planner/domain/events/planEventReducer.ts
-
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { PlanEvent, PlanSnapshot, PlanState } from '@/features/planner/domain/types/PlanEvent';
 

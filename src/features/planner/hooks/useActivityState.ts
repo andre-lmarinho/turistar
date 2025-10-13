@@ -1,4 +1,3 @@
-// src/features/planner/hooks/useActivityState.ts
 'use client';
 
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';

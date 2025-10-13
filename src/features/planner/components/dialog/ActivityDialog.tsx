@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
-import ActivityDialogHeader from '@/features/planner/components/dialog/ActivityDialogHeader';
-import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
+import { ActivityDialogHeader } from '@/features/planner/components/dialog/ActivityDialogHeader';
+import { ActivityDialogForm } from '@/features/planner/components/dialog/ActivityDialogForm';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
-export default function ActivityDialog() {
+export function ActivityDialog() {
   const {
     selectedActivity: activity,
     closeDialog,

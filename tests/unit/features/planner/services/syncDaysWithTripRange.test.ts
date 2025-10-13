@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/syncDaysWithTripRange.test.ts
-
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
 import { parseISO } from 'date-fns';

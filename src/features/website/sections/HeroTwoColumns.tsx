@@ -23,7 +23,7 @@ export interface HeroTwoColumnsProps {
 const EYEBROW_CLASSES =
   'text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none';
 
-export default function HeroTwoColumns({
+export function HeroTwoColumns({
   eyebrow,
   title,
   description,

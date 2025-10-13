@@ -1,9 +1,7 @@
-// tests/unit/app/planner/MapView.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import MapBoard from '@/features/planner/components/map/MapBoard';
+import { MapBoard } from '@/features/planner/components/map/MapBoard';
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 

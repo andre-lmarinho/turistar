@@ -1,4 +1,3 @@
-// tests/unit/shared/lib/geoapify.test.ts
 import { vi } from 'vitest';
 
 const originalFetch = global.fetch;

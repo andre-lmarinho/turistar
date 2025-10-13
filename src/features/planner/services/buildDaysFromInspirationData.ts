@@ -1,5 +1,3 @@
-// src/features/planner/services/buildDaysFromInspirationData.ts
-
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import {

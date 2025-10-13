@@ -12,7 +12,7 @@ type BudgetRowViewProps = {
   onDelete?: (index: number) => void;
 };
 
-export default function BudgetRowView({ index, entry, onEdit, onDelete }: BudgetRowViewProps) {
+export function BudgetRowView({ index, entry, onEdit, onDelete }: BudgetRowViewProps) {
   return (
     <tr role="row" className="border-t">
       <th scope="row" role="gridcell" className="p-2 text-left font-medium">

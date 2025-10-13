@@ -3,10 +3,10 @@
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
-import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
+import { OnboardingCarousel } from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
 
-export default function OnboardingDialog() {
+export function OnboardingDialog() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();
   const onClose = () => setShowOnboarding(false);
 

@@ -1,5 +1,3 @@
-// src/features/planner/domain/constants/onboarding.ts
-
 export interface OnboardingStep {
   title: string;
   description: string;

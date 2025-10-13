@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/useSelectedActivity.blank.test.ts
-
 import { useState } from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';

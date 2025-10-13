@@ -79,7 +79,7 @@ function Slide({
   );
 }
 
-export default function OnboardingCarousel({ baseWidth = 300, onFinish }: OnboardingCarouselProps) {
+export function OnboardingCarousel({ baseWidth = 300, onFinish }: OnboardingCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   // explicitly type x as a MotionValue<number>
   const x = useMotionValue<number>(0);

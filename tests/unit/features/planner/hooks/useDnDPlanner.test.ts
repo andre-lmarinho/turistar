@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/useDnDPlanner.test.ts
-
 import { renderHook, act } from '@testing-library/react';
 import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';

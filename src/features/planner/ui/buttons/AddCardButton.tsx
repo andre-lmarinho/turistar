@@ -16,12 +16,7 @@ export interface AddCardButtonProps {
   onAddActivity: (dayId: string, index?: number) => void;
 }
 
-export default function AddCardButton({
-  dayId,
-  index,
-  position,
-  onAddActivity,
-}: AddCardButtonProps) {
+export function AddCardButton({ dayId, index, position, onAddActivity }: AddCardButtonProps) {
   const { border: borderColor } = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX];
 
   if (position === 'new') {

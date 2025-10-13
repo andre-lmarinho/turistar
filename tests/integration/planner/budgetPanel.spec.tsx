@@ -1,5 +1,3 @@
-// tests/integration/planner/budgetPanel.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -43,7 +41,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 });
 
 import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import BudgetBoard from '@/features/planner/components/budget/BudgetBoard';
+import { BudgetBoard } from '@/features/planner/components/budget/BudgetBoard';
 
 describe('budget panel', () => {
   beforeEach(() => {

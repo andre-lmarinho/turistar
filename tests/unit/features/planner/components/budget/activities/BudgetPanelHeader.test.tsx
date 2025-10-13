@@ -1,9 +1,7 @@
-// tests/unit/features/planner/components/budget/activities/BudgetPanelHeader.test.tsx
-
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import BudgetPanelHeader from '@/features/planner/components/budget/BudgetPanelHeader';
+import { BudgetPanelHeader } from '@/features/planner/components/budget/BudgetPanelHeader';
 import { BudgetProvider } from '@/features/planner/hooks/budget/BudgetContext';
 
 const mockFrom = vi.fn();

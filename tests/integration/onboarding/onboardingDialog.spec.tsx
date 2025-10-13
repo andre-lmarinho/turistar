@@ -1,5 +1,3 @@
-// tests/integration/onboarding/onboardingDialog.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -116,7 +114,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 describe('onboarding dialog visibility', () => {
   it('shows dialog initially and hides after finish', async () => {

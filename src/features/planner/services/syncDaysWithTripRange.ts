@@ -1,5 +1,3 @@
-// src/features/planner/services/syncDaysWithTripRange.ts
-
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
 import { parseISO, isBefore, isAfter } from 'date-fns';

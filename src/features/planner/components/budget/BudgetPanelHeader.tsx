@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign } from '@/shared/ui/icon';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
-import CategoryProgressBar from '@/features/planner/components/budget/CategoryProgressBar';
+import { CategoryProgressBar } from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
@@ -27,7 +27,7 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
   );
 }
 
-export default function BudgetPanelHeader() {
+export function BudgetPanelHeader() {
   const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } =
     useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');

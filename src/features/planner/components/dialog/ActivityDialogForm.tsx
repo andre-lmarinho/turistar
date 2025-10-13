@@ -16,7 +16,7 @@ interface ActivityDialogFormProps {
   color: string;
 }
 
-export default function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
+export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);

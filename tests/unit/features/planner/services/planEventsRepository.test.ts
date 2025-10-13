@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/planEventsRepository.test.ts
-
 import { describe, expect, it, vi } from 'vitest';
 
 import type { SupabaseClient } from '@supabase/supabase-js';

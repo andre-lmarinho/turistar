@@ -1,4 +1,3 @@
-// src/features/inspiration/server/inspirationData.ts
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { notFound } from 'next/navigation';

@@ -1,5 +1,3 @@
-// tests/unit/features/planner/hooks/usePlanner.test.ts
-
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 import { usePlanner } from '@/features/planner/hooks/usePlanner';
