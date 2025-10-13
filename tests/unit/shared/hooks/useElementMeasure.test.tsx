@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React, { useEffect } from 'react';
 import { vi } from 'vitest';
-import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
+import { useElementMeasure } from '@/features/planner/hooks/ui/useElementMeasure';
 
 function TestHarness({ text, onMeasure }: { text: string; onMeasure: (width?: number) => void }) {
   const { ref, width } = useElementMeasure<HTMLInputElement>({ width: true, text });

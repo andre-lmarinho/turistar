@@ -1,7 +1,7 @@
-import { CtaFinal } from '@/features/website/components/CTAFinal';
-import { CtaMidPage } from '@/features/website/components/CTAMidPage';
-import { PricingFeature } from '@/features/website/components/PricingFeature';
-import { HeroPricing } from '@/features/website/components/HeroPricing';
+import { CtaFinal } from '@/features/website/sections/CTAFinal';
+import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
+import { PricingFeature } from '@/features/website/sections/PricingFeature';
+import { HeroPricing } from '@/features/website/sections/HeroPricing';
 
 export default function PricingPage() {
   return (

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { differenceInCalendarDays } from 'date-fns';
-import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
 
 export function ResumePlan() {
   const { recentPlan } = useRecentPlan();

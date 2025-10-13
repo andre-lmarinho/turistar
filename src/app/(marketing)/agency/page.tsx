@@ -1,8 +1,8 @@
-import { CtaFinal } from '@/features/website/components/CTAFinal';
-import { HeroTwoColumns } from '@/features/website/components/HeroTwoColumns';
-import { KeyBenefits } from '@/features/website/components/KeyBenefits';
-import { Testimonial } from '@/features/website/components/Testimonial';
-import { UseCases } from '@/features/website/components/UseCases';
+import { CtaFinal } from '@/features/website/sections/CTAFinal';
+import { HeroTwoColumns } from '@/features/website/sections/HeroTwoColumns';
+import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
+import { Testimonial } from '@/features/website/sections/Testimonial';
+import { UseCases } from '@/features/website/sections/UseCases';
 
 export default function AgencyPage() {
   return (

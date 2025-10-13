@@ -1,6 +1,6 @@
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { buildDaysFromInspirationData } from '@/features/planner/contracts/inspiration/buildDaysFromInspirationData';
-import type { Entry } from '@/features/planner/contracts/inspiration/types';
+import { buildDaysFromInspirationData } from '@/features/planner/services/days/buildDaysFromInspirationData';
+import type { Entry } from '@/features/planner/types/budget';
 
 import { assertValidCitySlug, safeReadInspirationData } from './inspirationData';
 import type { InspirationDocument } from './types';

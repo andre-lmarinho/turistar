@@ -1,5 +1,5 @@
-import { FeatureCarousel } from '@/shared/ui/carousel/FeatureCarousel';
-import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
+import { FeatureCarousel } from './components/FeatureCarousel';
+import type { FeatureCarouselFeature } from './components/FeatureCarousel';
 import { Sparkles } from '@/shared/ui/icon';
 import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';

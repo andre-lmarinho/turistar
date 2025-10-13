@@ -1,2 +1,2 @@
 export * from './Footer';
-export * from './Navbar/Navbar';
+export * from './Navbar';

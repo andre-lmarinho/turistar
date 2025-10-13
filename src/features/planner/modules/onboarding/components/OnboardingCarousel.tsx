@@ -5,7 +5,7 @@ import { motion, PanInfo, useMotionValue, useTransform } from 'framer-motion';
 import type { Transition, MotionValue } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from '@/shared/ui/icon';
-import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
+import { ONBOARDING_STEPS } from '../steps';
 
 interface OnboardingCarouselProps {
   baseWidth?: number;

@@ -9,13 +9,13 @@ import { useRouter } from 'next/navigation';
 import { Plane, Kanban, LandPlot } from '@/shared/ui/icon';
 
 import { DateRangePicker } from '@/shared/ui/calendar';
-import { LocationSearchInput } from '../../ui/input/LocationSearchInput';
+import { LocationSearchInput } from '@/features/planner/ui/input/LocationSearchInput';
 import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 import { LoadingScreen } from '@/shared/ui/loading/LoadingScreen';
 
-import { createPlannerPlan } from '@/features/planner/contracts/marketing/createPlannerPlan';
-import { usePlanEditTokens } from '@/features/planner/contracts/marketing/usePlanEditTokens';
-import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import { createPlannerPlan } from '@/features/planner/server/createPlan';
+import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
+import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
 
 import type { AutocompletePlace } from '@/features/planner/types/locations';
 

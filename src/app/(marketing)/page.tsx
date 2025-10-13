@@ -1,8 +1,8 @@
-import { HeroHome } from '@/features/website/components/HeroHome';
-import { Testimonial } from '@/features/website/components/Testimonial';
-import { KeyBenefits } from '@/features/website/components/KeyBenefits';
-import { InspirationLink } from '@/features/website/components/InspirationLink';
-import { CtaFinal } from '@/features/website/components/CTAFinal';
+import { HeroHome } from '@/features/website/sections/HeroHome';
+import { Testimonial } from '@/features/website/sections/Testimonial';
+import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
+import { InspirationLink } from '@/features/website/sections/InspirationLink';
+import { CtaFinal } from '@/features/website/sections/CTAFinal';
 
 export default function MarketingHomePage() {
   return (

@@ -33,7 +33,6 @@ See [Planner Realtime Collaboration](./planner/realtime-collaboration.md) for a 
 ## Vertical Slice Decisions
 
 - **Feature-owned orchestration**: Routes delegate to feature entry points (e.g., `/inspiration/[city]` re-exports the page from `features/inspiration`). Each slice exposes a single composition component so the `app/` layer stays thin.
-- **Collocated infrastructure**: Inspiration JSON fixtures now reside in `features/inspiration/data`, and the slice owns the loaders that parse them. Future migrations should continue moving persistence, server actions, and DTO mapping into their respective features.
 - **Shared layer is minimal**: `src/shared` remains reserved for UI atoms, pure utilities, and framework adapters. Domain-specific helpers (like inspiration metadata builders) live with the slice that consumes them to avoid cross-feature coupling.
 
 ## UI Folder Conventions

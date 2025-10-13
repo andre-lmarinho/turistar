@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import { InspirationLink } from '@/features/website/components/InspirationLink';
-import romeJson from '@/features/planner/inspiration/data/rome.json';
-import boipebaJson from '@/features/planner/inspiration/data/boipeba.json';
+import { InspirationLink } from '@/features/website/sections/InspirationLink';
+import romeJson from '@/features/planner/modules/inspiration/data/rome.json';
+import boipebaJson from '@/features/planner/modules/inspiration/data/boipeba.json';
 
 const rome = romeJson as { title_inspiration: string };
 const boipeba = boipebaJson as { title_inspiration: string };

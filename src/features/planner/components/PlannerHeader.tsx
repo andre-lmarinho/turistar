@@ -4,7 +4,7 @@ import React from 'react';
 import { DateRange } from 'react-day-picker';
 
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/calendar';
-import { useElementMeasure } from '@/shared/hooks/ui/useElementMeasure';
+import { useElementMeasure } from '@/features/planner/hooks/ui/useElementMeasure';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface PlannerHeaderProps {

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { capitalize } from '@/shared/utils/capitalize';
-import { SITE_URL } from '@/shared/constants/site';
+import { SITE_URL } from '@/shared/utils/siteUrl';
 
 import { assertValidCitySlug, safeReadInspirationData } from './inspirationData';
 

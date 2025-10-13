@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
 
-import { scrollToChild } from '@/shared/utils/scrollToChild';
+import { scrollToChild } from '../utils/scrollToChild';
 
 export type PointerDragHandlers = {
   onRelease?: (nearestIndex: number) => void;

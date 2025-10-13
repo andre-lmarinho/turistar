@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { InspirationCard } from '../../../shared/ui/card/Card';
 import { Wrapper } from '@/features/website/ui/section/Wrapper';
 
-import romeJson from '@/features/planner/inspiration/data/rome.json';
-import boipebaJson from '@/features/planner/inspiration/data/boipeba.json';
-import type { InspirationDocument } from '@/features/planner/inspiration/server/types';
+import romeJson from '@/features/planner/modules/inspiration/data/rome.json';
+import boipebaJson from '@/features/planner/modules/inspiration/data/boipeba.json';
+import type { InspirationDocument } from '@/features/planner/modules/inspiration/server/types';
 
 type InspirationPreview = InspirationDocument & { title_inspiration: string };
 

@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/shared/utils/cn';
 
-import { useIsDesktop } from '@/shared/hooks/ui/useIsDesktop';
-import { usePointerDragScroll } from '@/shared/hooks/ui/usePointerDragScroll';
-import { useSyncedPointerCarousels } from '@/shared/hooks/ui/useSyncedPointerCarousels';
+import { useIsDesktop } from '@/features/website/sections/KeyBenefits/hooks/useIsDesktop';
+import { usePointerDragScroll } from '../hooks/usePointerDragScroll';
+import { useSyncedPointerCarousels } from '../hooks/useSyncedPointerCarousels';
 
 import { FeatureCarouselCard } from './FeatureCarouselCard';
 import { FeatureCarouselNavDots } from './FeatureCarouselNavDots';

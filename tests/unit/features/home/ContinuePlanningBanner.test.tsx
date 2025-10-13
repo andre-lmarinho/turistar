@@ -4,7 +4,7 @@ import { hydrateRoot, type Root } from 'react-dom/client';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 
 import { ResumePlan } from '@/features/website/ui/layout/Navbar/ResumePlan';
-import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
+import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
 
 vi.mock('next/link', () => ({
   default: ({

@@ -3,8 +3,8 @@
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 
-import { OnboardingCarousel } from '@/features/planner/components/onboarding/OnboardingCarousel';
-import { useOnboardingContext } from '@/features/planner/hooks/OnboardingContext';
+import { OnboardingCarousel } from './OnboardingCarousel';
+import { useOnboardingContext } from '../hooks/OnboardingContext';
 import { X } from '@/shared/ui/icon';
 
 export function OnboardingDialog() {

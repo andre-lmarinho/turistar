@@ -1,7 +1,7 @@
 'use client';
 
 import Script from 'next/script';
-import { SITE_URL } from '@/shared/constants/site';
+import { SITE_URL } from '@/shared/utils/siteUrl';
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
 export default function SeoJsonLd() {

@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { useIsDesktop } from '@/shared/hooks/ui/useIsDesktop';
+import { useIsDesktop } from '@/features/website/sections/KeyBenefits/hooks/useIsDesktop';
 
 type Listener = (event: MediaQueryListEvent) => void;
 

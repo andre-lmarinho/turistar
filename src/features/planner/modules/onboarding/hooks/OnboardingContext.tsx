@@ -1,7 +1,7 @@
 'use client';
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';
-import { useOnboardingCheck } from './onboarding/useOnboardingCheck';
+import { useOnboardingCheck } from './useOnboardingCheck';
 
 export const [OnboardingProvider, useOnboardingContext] = createContextProvider(
   ({ planId }: { planId: string }) => useOnboardingCheck(planId),

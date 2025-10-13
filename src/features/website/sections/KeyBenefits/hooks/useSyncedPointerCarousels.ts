@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 
-import { scrollToChild } from '@/shared/utils/scrollToChild';
+import { scrollToChild } from '../utils/scrollToChild';
 import type { PointerDragHandlers } from './usePointerDragScroll';
 
 type SyncedCarouselRegistration = RefObject<HTMLUListElement | null>;

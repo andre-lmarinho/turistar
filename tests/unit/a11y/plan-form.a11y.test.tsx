@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import { SignupPage } from '@/features/planner/components/signup/SignupPage';
+import { SignupPage } from '@/features/planner/modules/signup/SignupPage';
 
 describe('Accessibility — PlanForm', () => {
   it('has no a11y violations', async () => {

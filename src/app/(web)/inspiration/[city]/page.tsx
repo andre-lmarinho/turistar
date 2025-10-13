@@ -1,6 +1,6 @@
-import { InspirationPlanner } from '@/features/planner/contracts/inspiration/InspirationPlanner';
-import { getInspirationExperienceProps } from '@/features/planner/inspiration/server/getInspirationExperienceProps';
-import { inspirationPageMetadata } from '@/features/planner/inspiration/server/pageMetadata';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
+import { getInspirationExperienceProps } from '@/features/planner/modules/inspiration/server/getInspirationExperienceProps';
+import { inspirationPageMetadata } from '@/features/planner/modules/inspiration/server/pageMetadata';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,5 +18,5 @@ export default async function InspirationCityPage({ params }: InspirationPagePro
   const { city } = await params;
   const experienceProps = await getInspirationExperienceProps(city);
 
-  return <InspirationPlanner {...experienceProps} />;
+  return <PlannerClient {...experienceProps} />;
 }
