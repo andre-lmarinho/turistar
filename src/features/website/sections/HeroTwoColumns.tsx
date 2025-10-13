@@ -37,12 +37,8 @@ export default function HeroTwoColumns({
   additionalContent,
 }: HeroTwoColumnsProps) {
   return (
-    <MarketingSection
-      variant="card"
-      className="py-20 sm:py-24 lg:py-28"
-      innerClassName="grid gap-12 lg:grid-cols-[minmax(0,0.55fr)_1fr] lg:items-center"
-    >
-      <div className="space-y-6">
+    <MarketingSection variant="card" className="py-20 sm:py-24 lg:py-28">
+      <div className="flex flex-col items-start gap-4">
         {eyebrow ? <label className={EYEBROW_CLASSES}>{eyebrow}</label> : null}
         <h1 className="text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.1] font-bold text-balance">
           {title}

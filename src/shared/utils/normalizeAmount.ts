@@ -1,5 +1,3 @@
-// src/shared/utils/normalizeAmount.ts
-
 /**
  * Parses a currency string into a numeric value.
  * Strips non-numeric characters and handles commas and leading zeros.

@@ -1,5 +1,3 @@
-// src/shared/lib/geoapify.ts
-
 // Helpers for fetching POIs from the Geoapify API.
 
 import type { AutocompletePlace } from '@/shared/types/locations';

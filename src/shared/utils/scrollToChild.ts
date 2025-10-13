@@ -1,5 +1,3 @@
-// src/shared/utils/scrollToChild.ts
-
 export function scrollToChild(
   el: HTMLUListElement,
   idx: number,

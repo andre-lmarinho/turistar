@@ -1,4 +1,3 @@
-// src/shared/hooks/useLocalStorage.ts
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';

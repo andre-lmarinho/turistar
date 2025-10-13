@@ -1,4 +1,3 @@
-// src/shared/hooks/ui/useElementMeasure.ts
 'use client';
 
 import { useRef, useState, useLayoutEffect, RefObject, useCallback } from 'react';

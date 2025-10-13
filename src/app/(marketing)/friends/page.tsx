@@ -9,7 +9,7 @@ import UseCases from '@/features/website/sections/UseCases';
 
 export default function FriendsPage() {
   return (
-    <main id="main-content">
+    <>
       <HeroTwoColumns
         eyebrow="Plan with friends"
         title="Keep every friend aligned on the itinerary"
@@ -44,6 +44,6 @@ export default function FriendsPage() {
       <UseCases />
       <Testimonial />
       <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
-    </main>
+    </>
   );
 }

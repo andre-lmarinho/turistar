@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import InspirationCard from '../../../shared/ui/card/Card';
 import romeJson from '@/features/inspiration/data/rome.json';
-import parisJson from '@/features/inspiration/data/paris.json';
 import boipebaJson from '@/features/inspiration/data/boipeba.json';
 import type { InspirationDocument } from '@/features/inspiration/server/types';
 
@@ -12,7 +11,6 @@ type InspirationPreview = InspirationDocument & { title_inspiration: string };
 
 const inspirationSources: Array<{ slug: string; doc: InspirationPreview }> = [
   { slug: 'rome', doc: romeJson as InspirationPreview },
-  { slug: 'paris', doc: parisJson as InspirationPreview },
   { slug: 'boipeba', doc: boipebaJson as InspirationPreview },
 ];
 

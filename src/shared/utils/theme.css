@@ -155,3 +155,9 @@
 .leaflet-container .leaflet-control-container {
   z-index: 0 !important;
 }
+
+@layer component {
+  .eyebrow {
+    @apply text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none;
+  }
+}

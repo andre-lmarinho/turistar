@@ -1,5 +1,3 @@
-// src/shared/hooks/ui/useFlexibleRef.ts
-
 import { useRef } from 'react';
 
 /**

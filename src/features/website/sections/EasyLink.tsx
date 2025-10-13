@@ -5,21 +5,21 @@ import MarketingSection from '@/features/website/ui/section/Wrapper';
 
 export default function EasyLink() {
   return (
-    <MarketingSection innerClassName="flex flex-col items-center gap-12 text-center">
-      <div className="flex flex-col items-center">
-        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
+    <MarketingSection>
+      <div className="flex flex-col items-center gap-4 text-center">
+        <p className="eyebrow">
           <ArrowLeftRight className="size-4" aria-hidden="true" />
           Easy link
-        </label>
-        <h2 className="mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
+        </p>
+        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
           Share plans effortlessly
         </h2>
-        <p className="text-muted-foreground mt-4 max-w-2xl text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
+        <p className="text-muted-foreground max-w-2xl text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
           Send a unique link to friends so they can view or clone your itinerary instantly.
         </p>
         <Link
           href="/signup"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 mt-6 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
         >
           Get started
         </Link>

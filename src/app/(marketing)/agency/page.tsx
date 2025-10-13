@@ -1,5 +1,4 @@
 import CtaFinal from '@/features/website/sections/CTAFinal';
-import Features from '@/features/website/sections/Features';
 import HeroTwoColumns from '@/features/website/sections/HeroTwoColumns';
 import KeyBenefits from '@/features/website/sections/KeyBenefits';
 import Testimonial from '@/features/website/sections/Testimonial';
@@ -7,7 +6,7 @@ import UseCases from '@/features/website/sections/UseCases';
 
 export default function AgencyPage() {
   return (
-    <main id="main-content">
+    <>
       <HeroTwoColumns
         eyebrow="For travel agencies"
         title="Serve clients better"
@@ -36,10 +35,9 @@ export default function AgencyPage() {
           },
         ]}
       />
-      <Features />
       <UseCases />
       <Testimonial />
       <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
-    </main>
+    </>
   );
 }

@@ -14,12 +14,12 @@ export interface FaqProps {
 export default function Faq({ title, items }: FaqProps) {
   return (
     <MarketingSection>
-      <div className="mx-auto max-w-3xl text-center">
-        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+        <p className="eyebrow">
           <UserStar className="size-4" aria-hidden="true" />
           FAQ
-        </label>
-        <h2 className="mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
+        </p>
+        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
           {title}
         </h2>
       </div>

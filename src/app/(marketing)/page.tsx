@@ -6,12 +6,12 @@ import CtaFinal from '@/features/website/sections/CTAFinal';
 
 export default function MarketingHomePage() {
   return (
-    <main id="main-content">
+    <>
       <Hero />
       <FeaturePreview />
       <InspirationLink />
       <Testimonial />
       <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
-    </main>
+    </>
   );
 }

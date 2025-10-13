@@ -23,7 +23,7 @@ export interface PlanningPageContent {
 
 export function PlanningPageTemplate({ content }: { content: PlanningPageContent }) {
   return (
-    <main id="main-content">
+    <>
       <HeroTwoColumns {...content.hero} />
       <KeyBenefits {...content.keyBenefits} />
       <Features />
@@ -31,6 +31,6 @@ export function PlanningPageTemplate({ content }: { content: PlanningPageContent
       <Faq {...content.faq} />
       <Testimonial />
       <CtaFinal variant="planning" primaryAction={content.ctaFinal.primaryAction} />
-    </main>
+    </>
   );
 }

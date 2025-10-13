@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { cn } from '@/shared/utils/cn';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
-import { Flame } from '@/shared/ui/icon';
+import { HandCoins } from '@/shared/ui/icon';
 
 export type PricingTableAction = {
   href: string;
@@ -48,15 +48,17 @@ function renderAction(plan: PricingTablePlan) {
 
 export default function PricingTable({ title, subtitle, plans }: PricingTableProps) {
   return (
-    <MarketingSection>
-      <header className="mx-auto max-w-3xl text-center">
-        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
-          <Flame className="size-4" aria-hidden="true" />
-          Features
-        </label>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
-        {subtitle ? <p className="text-muted-foreground mt-4 text-lg">{subtitle}</p> : null}
-      </header>
+    <MarketingSection className="py-20 sm:py-24 lg:py-28">
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+        <p className="eyebrow">
+          <HandCoins className="size-4" aria-hidden="true" />
+          Pricing
+        </p>
+        <h1 className="text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.1] font-bold text-balance">
+          {title}
+        </h1>
+        {subtitle ? <p className="text-muted-foreground text-lg">{subtitle}</p> : null}
+      </div>
       <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {plans.map((plan) => (
           <article

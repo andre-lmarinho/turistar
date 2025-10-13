@@ -3,15 +3,25 @@
 import {
   useEffect,
   useState,
-  type ComponentType,
+  useRef,
   type Dispatch,
   type FocusEvent,
-  type KeyboardEvent,
   type SetStateAction,
+  type ComponentType,
 } from 'react';
 import Link from 'next/link';
 
-import { Calendar, ChevronDown, Hotel, Laptop, Map, Mountain, User, Users } from '@/shared/ui/icon';
+import {
+  Calendar,
+  ChevronDown,
+  Hotel,
+  Laptop,
+  Map,
+  Mountain,
+  User,
+  Users,
+  Sparkles,
+} from '@/shared/ui/icon';
 import ResumePlan from './ResumePlan';
 import { cn } from '@/shared/utils/cn';
 
@@ -28,7 +38,6 @@ type SolutionCategory = {
 };
 type NavLink = { href: string; label: string };
 type ToggleHandler = Dispatch<SetStateAction<boolean>>;
-type MenuKeyHandler = (event: KeyboardEvent<HTMLDivElement>) => void;
 
 const travelerSolutions: SolutionItem[] = [
   { href: '/signup', label: 'Individual', description: 'Tailored solo trip guidance.', icon: User },
@@ -46,15 +55,8 @@ const travelGoalSolutions: SolutionItem[] = [
 ];
 
 const solutionCategories: SolutionCategory[] = [
-  {
-    title: 'By traveler type',
-    items: travelerSolutions,
-    showDescription: true,
-  },
-  {
-    title: 'By travel goal',
-    items: travelGoalSolutions,
-  },
+  { title: 'By traveler type', items: travelerSolutions, showDescription: true },
+  { title: 'By travel goal', items: travelGoalSolutions },
 ];
 
 const navLinks: NavLink[] = [
@@ -64,20 +66,13 @@ const navLinks: NavLink[] = [
 
 const CTA_BASE = {
   ghost:
-    'text-foreground hover:text-muted-foreground focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none',
+    'text-foreground hover:text-muted-foreground focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none h-8 px-3',
   primary:
-    'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none',
+    'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none h-8 px-3',
 };
 
-const CTA_SIZES = { md: 'h-10 px-3', lg: 'h-12 px-4 text-[15px]' };
-const demoCallout = {
-  title: 'Try a curated experience',
-  description: 'Explore Rome like a local with ready-to-book activities and recommendations.',
-  href: '/inspiration/rome',
-  label: 'Explore the demo',
-};
 const mobileMenuLinkClass =
-  'text-foreground hover:text-primary flex w-full items-center justify-between text-left  p-4 text-[15px] font-semibold transition-colors';
+  'text-foreground hover:text-primary flex w-full items-center justify-between text-left p-4 text-[15px] font-semibold transition-colors';
 
 const LogoLink = () => (
   <Link
@@ -103,25 +98,11 @@ type CtaLinkProps = {
   href: string;
   label: string;
   variant: keyof typeof CTA_BASE;
-  size?: keyof typeof CTA_SIZES;
-  fullWidth?: boolean;
   className?: string;
   onClick?: () => void;
 };
-const CtaLink = ({
-  href,
-  label,
-  variant,
-  size = 'md',
-  fullWidth,
-  className,
-  onClick,
-}: CtaLinkProps) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className={cn(CTA_BASE[variant], CTA_SIZES[size], fullWidth && 'w-full', className)}
-  >
+const CtaLink = ({ href, label, variant, className, onClick }: CtaLinkProps) => (
+  <Link href={href} onClick={onClick} className={cn(CTA_BASE[variant], className)}>
     {label}
   </Link>
 );
@@ -133,20 +114,21 @@ type SolutionLinkProps = {
 };
 const SolutionLink = ({ item, showDescription, onSelect }: SolutionLinkProps) => {
   const hasDescription = Boolean(showDescription && item.description);
-
   return (
     <Link
       href={item.href}
       className="hover:bg-muted/60 group hover:border-border/60 flex h-min items-center gap-3 rounded-2xl border border-transparent p-3 transition-all duration-200 hover:shadow-sm"
       onClick={onSelect}
     >
-      <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 h-20 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
+      <span className="bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-lg transition-colors">
         <item.icon className="size-6" aria-hidden="true" />
       </span>
       <span>
-        <p className="text-foreground leading-5 font-semibold">{item.label}</p>
+        <h3 className="text-foreground leading-5 font-semibold">{item.label}</h3>
         {hasDescription ? (
-          <p className="text-muted-foreground text-xs">{item.description}</p>
+          <p data-desc className="text-muted-foreground text-xs">
+            {item.description}
+          </p>
         ) : null}
       </span>
     </Link>
@@ -160,16 +142,21 @@ type SolutionsCategoryProps = {
 const SolutionsCategory = ({ category, onSelect }: SolutionsCategoryProps) => (
   <div className="pb-4">
     <p className="text-muted-foreground pl-4 text-sm font-semibold">{category.title}</p>
-    <ul className={'grid h-min grid-cols-2 gap-1'}>
-      {category.items.map((item) => (
-        <li key={item.href}>
-          <SolutionLink
-            item={item}
-            showDescription={category.showDescription}
-            onSelect={onSelect}
-          />
-        </li>
-      ))}
+    <ul className="flex flex-wrap items-stretch gap-1">
+      {category.items.map((item) => {
+        return (
+          <li
+            key={item.href}
+            className="min-w-0 flex-[0_0_calc(50%-0.125rem)] has-[p[data-desc]]:flex-[0_0_100%]"
+          >
+            <SolutionLink
+              item={item}
+              showDescription={category.showDescription}
+              onSelect={onSelect}
+            />
+          </li>
+        );
+      })}
     </ul>
   </div>
 );
@@ -183,24 +170,47 @@ const SolutionsCategories = ({ onSelect }: { onSelect?: () => void }) => (
 );
 
 const SolutionsCallout = () => (
-  <div className="border-primary/30 from-primary/10 via-primary/15 to-primary/5 rounded-2xl border bg-gradient-to-br p-5">
-    <p className="text-primary text-sm font-semibold">{demoCallout.title}</p>
-    <p className="text-muted-foreground mt-1 text-xs leading-5">{demoCallout.description}</p>
-    <CtaLink
-      href={demoCallout.href}
-      label={demoCallout.label}
-      variant="primary"
-      className="mt-4 w-full rounded-xl text-sm font-semibold"
-    />
-  </div>
+  <Link
+    href="/inspiration/rome"
+    aria-label="Explore Rome demo"
+    className="group group text-foreground focus-visible:ring-primary/60 border-primary/30 from-primary/10 via-primary/15 to-primary/5 text-background m-2 block grid grid-rows-[auto_1fr_auto] rounded-2xl border bg-gradient-to-br p-5 text-center transition-[background-color,box-shadow,transform] duration-200 ease-out hover:shadow-sm focus-visible:ring-2 focus-visible:outline-none active:scale-[0.995]"
+  >
+    <p className="eyebrow self-start justify-self-end">
+      <Sparkles className="size-4" aria-hidden="true" />
+      Try it now!
+    </p>
+
+    <h3 className="place-self-center text-3xl font-semibold">Explore Rome</h3>
+    <p className="mt-0 self-end justify-self-start text-xs leading-5">
+      Explore Rome like a local with ready-to-book activities.
+    </p>
+  </Link>
 );
+
+function SolutionsContent({
+  onSelect,
+  containerClassName,
+  gridClassName,
+}: {
+  onSelect?: () => void;
+  containerClassName?: string;
+  gridClassName?: string;
+}) {
+  return (
+    <div className={cn(containerClassName)}>
+      <div className={cn('grid', gridClassName)}>
+        <SolutionsCategories onSelect={onSelect} />
+        <SolutionsCallout />
+      </div>
+    </div>
+  );
+}
 
 type DesktopSolutionsMenuProps = {
   isOpen: boolean;
   onOpenChange: ToggleHandler;
-  onKeyDown: MenuKeyHandler;
 };
-const DesktopSolutionsMenu = ({ isOpen, onOpenChange, onKeyDown }: DesktopSolutionsMenuProps) => {
+const DesktopSolutionsMenu = ({ isOpen, onOpenChange }: DesktopSolutionsMenuProps) => {
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
     const nextFocused = event.relatedTarget as Node | null;
     if (!nextFocused || !event.currentTarget.contains(nextFocused)) onOpenChange(false);
@@ -213,13 +223,14 @@ const DesktopSolutionsMenu = ({ isOpen, onOpenChange, onKeyDown }: DesktopSoluti
       onMouseLeave={() => onOpenChange(false)}
       onFocus={() => onOpenChange(true)}
       onBlur={handleBlur}
-      onKeyDown={onKeyDown}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onOpenChange(false);
+      }}
     >
       <button
         type="button"
         onClick={() => onOpenChange((prev) => !prev)}
-        onFocus={() => onOpenChange(true)}
-        className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 inline-flex items-center gap-1 rounded-lg p-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
         aria-expanded={isOpen}
       >
         Solutions
@@ -230,19 +241,17 @@ const DesktopSolutionsMenu = ({ isOpen, onOpenChange, onKeyDown }: DesktopSoluti
           })}
         />
       </button>
+
       <div
         className={cn(
-          'pointer-events-none absolute top-[4.5rem] left-1/2 z-50 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 pt-6 transition-opacity duration-150 ease-out',
+          'pointer-events-none absolute top-full left-1/2 z-50 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 transition-opacity duration-150 ease-out',
           isOpen ? 'pointer-events-auto opacity-100' : 'opacity-0'
         )}
       >
-        <div className="pointer-events-none absolute top-2 left-0 h-4 w-full" aria-hidden="true" />
-        <div className="border-border/70 bg-popover rounded-[32px] border p-5 shadow-[0_24px_60px_-25px_rgba(15,23,42,0.45)]">
-          <div className="grid gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]">
-            <SolutionsCategories />
-            <SolutionsCallout />
-          </div>
-        </div>
+        <SolutionsContent
+          containerClassName="border-border/70 bg-popover rounded-[32px] border p-5 shadow-[0_24px_60px_-25px_rgba(15,23,42,0.45)]"
+          gridClassName="gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]"
+        />
       </div>
     </div>
   );
@@ -251,20 +260,11 @@ const DesktopSolutionsMenu = ({ isOpen, onOpenChange, onKeyDown }: DesktopSoluti
 type DesktopNavigationProps = {
   isSolutionsOpen: boolean;
   onSolutionsChange: ToggleHandler;
-  onSolutionsKeyDown: MenuKeyHandler;
 };
-const DesktopNavigation = ({
-  isSolutionsOpen,
-  onSolutionsChange,
-  onSolutionsKeyDown,
-}: DesktopNavigationProps) => (
+const DesktopNavigation = ({ isSolutionsOpen, onSolutionsChange }: DesktopNavigationProps) => (
   <nav className="relative hidden items-center lg:flex lg:justify-self-center">
     <div className="flex items-center gap-6">
-      <DesktopSolutionsMenu
-        isOpen={isSolutionsOpen}
-        onOpenChange={onSolutionsChange}
-        onKeyDown={onSolutionsKeyDown}
-      />
+      <DesktopSolutionsMenu isOpen={isSolutionsOpen} onOpenChange={onSolutionsChange} />
       {navLinks.map((link) => (
         <NavLinkItem key={link.href} {...link} />
       ))}
@@ -273,7 +273,7 @@ const DesktopNavigation = ({
 );
 
 const DesktopActions = () => (
-  <div className="ml-auto flex items-center gap-2 lg:ml-0 lg:justify-self-end">
+  <div className="ml-auto flex items-center gap-6 lg:ml-0 lg:justify-self-end">
     <CtaLink href="/inspiration/rome" label="Try a demo" variant="ghost" />
     <CtaLink href="/signup" label="Get started" variant="primary" />
   </div>
@@ -283,12 +283,11 @@ type MenuToggleButtonProps = { isOpen: boolean; onToggle: () => void };
 const MenuToggleButton = ({ isOpen, onToggle }: MenuToggleButtonProps) => (
   <button
     type="button"
-    className="border-border/70 bg-background/90 hover:border-foreground/50 focus-visible:ring-primary/60 relative ml-2 flex h-12 w-12 items-center justify-center rounded-lg border transition-colors focus-visible:ring-2 focus-visible:outline-none lg:hidden"
+    className="focus-visible:ring-primary/60 relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:outline-none lg:hidden"
     onClick={onToggle}
     aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
     aria-expanded={isOpen}
   >
-    <span className="sr-only">Toggle navigation</span>
     <span
       className={cn(
         'bg-foreground absolute h-[2px] w-5 rounded-lg transition-transform duration-300 ease-in-out',
@@ -322,11 +321,11 @@ const MobileMenu = ({
   onToggleSolutions,
   onSelectSolution,
 }: MobileMenuProps) => (
-  <div className="bg-background fixed inset-x-0 top-[4.5rem] z-40 h-[calc(100dvh-4.5rem)] overflow-y-auto pt-6 pb-10">
+  <div className="bg-background fixed inset-x-0 top-12 z-40 h-[calc(100dvh-4rem)] overflow-y-auto pt-6 pb-10">
     <div className="mx-auto flex w-full max-w-6xl flex-col">
       <button
         type="button"
-        className={cn(mobileMenuLinkClass, 'justify-between')}
+        className={mobileMenuLinkClass}
         onClick={onToggleSolutions}
         aria-expanded={isSolutionsOpen}
       >
@@ -338,19 +337,12 @@ const MobileMenu = ({
           })}
         />
       </button>
+
       {isSolutionsOpen ? (
-        <div>
-          <SolutionsCategories onSelect={onSelectSolution} />
-          <CtaLink
-            href={demoCallout.href}
-            label={demoCallout.label}
-            variant="primary"
-            fullWidth
-            size="lg"
-            className="font-semibold"
-            onClick={onSelectSolution}
-          />
-        </div>
+        <SolutionsContent
+          onSelect={onSelectSolution}
+          gridClassName="gap-4 md:gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]"
+        />
       ) : null}
 
       {navLinks.map((link) => (
@@ -377,10 +369,6 @@ export default function Navbar() {
     setIsMobileSolutionsOpen(false);
   };
 
-  const handleDesktopMenuKeyDown: MenuKeyHandler = (event) => {
-    if (event.key === 'Escape') setIsDesktopSolutionsOpen(false);
-  };
-
   useEffect(() => {
     if (!isMobileMenuOpen) return;
 
@@ -399,19 +387,42 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = shellRef.current;
+
+    if (!el) return;
+    const getScrollY = () =>
+      window.scrollY ?? document.documentElement.scrollTop ?? document.body.scrollTop ?? 0;
+    const set = () => el.setAttribute('data-elevated', getScrollY() > 0 ? 'true' : 'false');
+    set();
+    window.addEventListener('scroll', set, { passive: true });
+    return () => window.removeEventListener('scroll', set);
+  }, []);
+
   return (
-    <header className="relative sticky top-2 z-50 mx-auto max-w-6xl justify-center px-4 lg:bg-transparent">
+    <header
+      className="bg-background fixed top-0 z-50 my-2 w-full lg:mb-0 lg:bg-transparent"
+      data-elevated="false"
+    >
       <ResumePlan />
-      <div className="bg-background mx-auto flex w-full justify-between gap-3 rounded-lg px-4 py-2 md:gap-8 lg:m-2 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:border">
-        <LogoLink />
-        <DesktopNavigation
-          isSolutionsOpen={isDesktopSolutionsOpen}
-          onSolutionsChange={setIsDesktopSolutionsOpen}
-          onSolutionsKeyDown={handleDesktopMenuKeyDown}
-        />
-        <DesktopActions />
-        <MenuToggleButton isOpen={isMobileMenuOpen} onToggle={toggleMobileMenu} />
+      <div
+        ref={shellRef}
+        data-elevated="false"
+        className="data-[elevated=true]:bg-background data-[elevated=true]:lg:border-border mx-auto max-w-6xl rounded-2xl border border-transparent bg-transparent px-4 transition-[background-color,border-color] duration-300 ease-out lg:px-8 data-[elevated=true]:lg:border"
+      >
+        <div className="flex items-center justify-between gap-3 md:gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+          <LogoLink />
+          <DesktopNavigation
+            isSolutionsOpen={isDesktopSolutionsOpen}
+            onSolutionsChange={setIsDesktopSolutionsOpen}
+          />
+          <DesktopActions />
+          <MenuToggleButton isOpen={isMobileMenuOpen} onToggle={toggleMobileMenu} />
+        </div>
       </div>
+
       {isMobileMenuOpen ? (
         <MobileMenu
           onClose={closeMobileMenu}

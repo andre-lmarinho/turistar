@@ -16,7 +16,7 @@ export default function MarketingSection({
 }: MarketingSectionProps) {
   return (
     <>
-      <div className="mx-3 mx-auto w-full max-w-[1200px] border-x px-3">
+      <div className="mx-3 mx-auto w-full max-w-[1200px] border-x px-3 first:pt-[96px]">
         <div
           className={cn(
             'relative',

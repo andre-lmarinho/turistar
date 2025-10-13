@@ -1,4 +1,3 @@
-// src/shared/hooks/search/createLocationAutocompleteHook.ts
 'use client';
 
 import { useQuery } from '@tanstack/react-query';

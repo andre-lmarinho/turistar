@@ -32,37 +32,36 @@ export default function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPag
   const secondary = secondaryAction ?? DEFAULT_SECONDARY;
 
   return (
-    <MarketingSection
-      variant="card"
-      innerClassName="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center"
-    >
-      <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
-        <Map className="size-4" aria-hidden="true" />
-        Web app
-      </label>
-      <h2 className="mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
-        Start planning now
-      </h2>
-      <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
-        Access our app to build your trip today.
-      </p>
-      <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
-        <Link
-          href={primary.href}
-          target={primary.target}
-          rel={primary.rel}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors"
-        >
-          {primary.label}
-        </Link>
-        <Link
-          href={secondary.href}
-          target={secondary.target}
-          rel={secondary.rel}
-          className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-5 py-2.5 text-sm font-semibold transition-colors"
-        >
-          {secondary.label}
-        </Link>
+    <MarketingSection variant="card">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <p className="eyebrow">
+          <Map className="size-4" aria-hidden="true" />
+          Web app
+        </p>
+        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
+          Start planning now
+        </h2>
+        <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
+          Access our app to build your trip today.
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
+          <Link
+            href={primary.href}
+            target={primary.target}
+            rel={primary.rel}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          >
+            {primary.label}
+          </Link>
+          <Link
+            href={secondary.href}
+            target={secondary.target}
+            rel={secondary.rel}
+            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-5 py-2.5 text-sm font-semibold transition-colors"
+          >
+            {secondary.label}
+          </Link>
+        </div>
       </div>
     </MarketingSection>
   );

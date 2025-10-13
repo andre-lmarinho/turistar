@@ -1,5 +1,3 @@
-// src/shared/hooks/ui/usePopupDismiss.ts
-
 import { RefObject, useEffect, useRef, useMemo } from 'react';
 import { useKeyListener } from './useKeyListener';
 

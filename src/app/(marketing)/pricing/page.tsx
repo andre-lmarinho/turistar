@@ -1,19 +1,12 @@
 import CtaFinal from '@/features/website/sections/CTAFinal';
-import FeatureBreakdown from '@/features/website/sections/FeatureBreakdown';
-import HeroCentralized from '@/features/website/sections/HeroCentralized';
-import PricingTable from '@/features/website/sections/PricingTable';
+import CtaMidPage from '@/features/website/sections/CTAMidPage';
+import PricingFeature from '@/features/website/sections/PricingFeature';
+import HeroPricing from '@/features/website/sections/HeroPricing';
 
 export default function PricingPage() {
   return (
-    <main id="main-content">
-      <HeroCentralized
-        eyebrow="Pricing"
-        title="Choose the plan that fits your travel style"
-        description="Flexible options for solo planners, adventure crews, and growing teams."
-        primaryAction={{ label: 'Start for free', href: '/signup' }}
-        secondaryAction={{ label: 'Talk to sales', href: '/contact' }}
-      />
-      <PricingTable
+    <>
+      <HeroPricing
         title="Simple, transparent pricing"
         subtitle="Every plan includes core planning tools, secure storage, and unlimited itineraries."
         plans={[
@@ -49,8 +42,8 @@ export default function PricingPage() {
           },
         ]}
       />
-      <FeatureBreakdown
-        title="Compare features by plan"
+      <CtaMidPage />
+      <PricingFeature
         categories={[
           {
             title: 'Collaboration',
@@ -82,6 +75,6 @@ export default function PricingPage() {
         ]}
       />
       <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
-    </main>
+    </>
   );
 }

@@ -61,15 +61,15 @@ export default function Testimonial() {
 
   return (
     <MarketingSection variant="card">
-      <div className="flex max-w-3xl flex-col items-center">
-        <label className="text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none">
+      <div className="flex max-w-3xl flex-col items-center gap-4 text-center">
+        <p className="eyebrow">
           <UserStar className="size-4" aria-hidden="true" />
           Testimonials
-        </label>
-        <h2 className="mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
+        </p>
+        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
           Don’t just take our word for it
         </h2>
-        <p className="text-muted-foreground mt-4 text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
+        <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
           Our users are our best ambassadors. Discover why we&apos;re the top choice for planning
           unforgettable journeys.
         </p>

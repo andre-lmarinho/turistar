@@ -23,18 +23,20 @@ const TITLES: Record<'default' | 'planning', string> = {
 
 export default function CtaFinal({ variant = 'default', primaryAction }: CtaFinalProps) {
   return (
-    <MarketingSection variant="card" className="py-16 sm:py-20 lg:py-24">
-      <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
-        {TITLES[variant]}
-      </h2>
-      <Link
-        href={primaryAction.href}
-        target={primaryAction.target}
-        rel={primaryAction.rel}
-        className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold transition-colors"
-      >
-        {primaryAction.label}
-      </Link>
+    <MarketingSection variant="card">
+      <div className="flex flex-col items-center gap-4">
+        <h2 className="text-center text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
+          {TITLES[variant]}
+        </h2>
+        <Link
+          href={primaryAction.href}
+          target={primaryAction.target}
+          rel={primaryAction.rel}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+        >
+          {primaryAction.label}
+        </Link>
+      </div>
     </MarketingSection>
   );
 }

@@ -1,7 +1,4 @@
-// src/features/planner/server/getPublicPlannerExperience.ts
-
 import { notFound } from 'next/navigation';
-
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 import {
