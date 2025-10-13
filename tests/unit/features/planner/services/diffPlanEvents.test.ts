@@ -6,7 +6,7 @@ import type {
   ActivityUpdatedPayload,
   DayCreatedPayload,
 } from '@/features/planner/domain/types/PlanEvent';
-import { diffPlanEvents } from '@/features/planner/services/diffPlanEvents';
+import { diffPlanEvents } from '@/features/planner/services/events/diffPlanEvents';
 
 const baseDay = {
   label: 'Day',

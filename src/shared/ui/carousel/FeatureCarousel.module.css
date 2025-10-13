@@ -1,10 +1,13 @@
-:global(.is-dragging) {
+.dragContext {
+}
+
+:global(.is-dragging).dragContext {
   user-select: none;
   scroll-snap-type: none !important;
   scroll-behavior: auto !important;
   cursor: grabbing !important;
 }
 
-:global(.no-snap) {
+:global(.no-snap).dragContext {
   scroll-snap-type: none !important;
 }

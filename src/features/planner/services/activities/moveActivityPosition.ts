@@ -1,5 +1,5 @@
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { cloneDays } from '@/features/planner/services/cloneDays';
+import { cloneDays } from '@/features/planner/services/activities/cloneDays';
 
 /**
  * Moves an activity to a new index within its current day.

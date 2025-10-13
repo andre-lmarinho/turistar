@@ -18,16 +18,11 @@ const defaultProps = {
 };
 
 describe('ActivityCard', () => {
-  it('renders edit button and enters edit mode on click', () => {
+  it('renders the activity title without exposing an edit action', () => {
     render(<ActivityCard {...defaultProps} />);
 
-    const editBtn = screen.getByRole('button', { name: /edit card/i });
-    expect(editBtn).toBeInTheDocument();
-    expect(editBtn.querySelector('svg')).toBeInTheDocument();
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
-
-    fireEvent.click(editBtn);
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(screen.getByText('Visit museum')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /edit card/i })).not.toBeInTheDocument();
   });
 
   it('calls onSelect when activated with Enter or Space', () => {

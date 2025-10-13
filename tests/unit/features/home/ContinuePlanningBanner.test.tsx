@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { hydrateRoot, type Root } from 'react-dom/client';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 
-import ContinuePlanningBanner from '@/features/home/components/ContinuePlanningBanner';
+import { ResumePlan } from '@/features/website/ui/layout/Navbar/ResumePlan';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
 
 vi.mock('next/link', () => ({
@@ -18,7 +18,7 @@ vi.mock('next/link', () => ({
   ),
 }));
 
-describe('ContinuePlanningBanner hydration', () => {
+describe('ResumePlan hydration', () => {
   afterEach(() => {
     if (typeof window !== 'undefined') {
       window.localStorage.clear();
@@ -38,7 +38,7 @@ describe('ContinuePlanningBanner hydration', () => {
     const originalWindow = globalThis.window;
     // @ts-ignore simulate server environment
     globalThis.window = undefined;
-    const serverHtml = renderToString(<ContinuePlanningBanner />);
+    const serverHtml = renderToString(<ResumePlan />);
     globalThis.window = originalWindow;
 
     document.body.innerHTML = `<div id="root">${serverHtml}</div>`;
@@ -50,7 +50,7 @@ describe('ContinuePlanningBanner hydration', () => {
 
     let root: Root;
     await act(() => {
-      root = hydrateRoot(container, <ContinuePlanningBanner />);
+      root = hydrateRoot(container, <ResumePlan />);
       expect(serverHtml).not.toContain('Continue your');
       expect(container.innerHTML).toBe(serverHtml);
     });

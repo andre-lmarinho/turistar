@@ -5,29 +5,29 @@ import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { HandCoins } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 
-export type PricingTableAction = {
+type HeroPricingAction = {
   href: string;
   label: string;
   target?: string;
   rel?: string;
 };
 
-export interface PricingTablePlan {
+interface HeroPricingPlan {
   name: string;
   price: string;
   description?: string;
   features: string[];
-  action?: PricingTableAction;
+  action?: HeroPricingAction;
   highlighted?: boolean;
 }
 
-export interface PricingTableProps {
+interface HeroPricingProps {
   title: string;
   subtitle?: string;
-  plans: PricingTablePlan[];
+  plans: HeroPricingPlan[];
 }
 
-function renderAction(plan: PricingTablePlan) {
+function renderAction(plan: HeroPricingPlan) {
   const action = plan.action;
   if (!action) {
     return null;
@@ -42,7 +42,7 @@ function renderAction(plan: PricingTablePlan) {
   );
 }
 
-export function PricingTable({ title, subtitle, plans }: PricingTableProps) {
+export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
   return (
     <MarketingSection className="py-20 sm:py-24 lg:py-28">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">

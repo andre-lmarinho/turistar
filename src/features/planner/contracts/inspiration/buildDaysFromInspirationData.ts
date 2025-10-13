@@ -1,1 +1,1 @@
-export { buildDaysFromInspirationData } from '@/features/planner/services/buildDaysFromInspirationData';
+export { buildDaysFromInspirationData } from '@/features/planner/services/days/buildDaysFromInspirationData';

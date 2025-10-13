@@ -5,6 +5,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 
 import { OnboardingCarousel } from '@/features/planner/components/onboarding/OnboardingCarousel';
 import { useOnboardingContext } from '@/features/planner/hooks/onboarding/OnboardingContext';
+import { X } from '@/shared/ui/icon';
 
 export function OnboardingDialog() {
   const { showOnboarding: open, setShowOnboarding } = useOnboardingContext();
@@ -19,6 +20,16 @@ export function OnboardingDialog() {
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <Dialog.Title className="sr-only">Welcome Onboarding</Dialog.Title>
+
+          <Dialog.Close asChild>
+            <button
+              type="button"
+              aria-label="Close"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted/60 focus-visible:outline-primary absolute top-4 right-4 inline-flex size-8 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <X className="size-4" aria-hidden="true" />
+            </button>
+          </Dialog.Close>
 
           <div className="flex items-center justify-center">
             <OnboardingCarousel baseWidth={384} onFinish={onClose} />

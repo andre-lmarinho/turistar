@@ -44,7 +44,7 @@ vi.mock('@/shared/ui/calendar', () => ({
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
-  default: () => <div />, // not used in this test
+  ModeToggleButton: () => <div />, // not used in this test
 }));
 
 let setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;
@@ -58,7 +58,7 @@ export const handleRangeChange = vi.fn(() => {
 // Planner feature mocks
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
@@ -146,7 +146,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 // Onboarding mocks
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: () => null,
+  OnboardingDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
@@ -159,7 +159,8 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
   const React = require('react');
   return {
-    default: function PlannerBoardMock() {
+    __esModule: true,
+    PlannerBoard: function PlannerBoardMock() {
       const { days } = getPlannerContext();
       return <div data-testid="planner-board">{days.map((d: DayPlan) => d.id).join(',')}</div>;
     },
@@ -169,7 +170,8 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
 vi.mock('@/features/planner/components/map/MapBoard', () => {
   const React = require('react');
   return {
-    default: function MapViewMock() {
+    __esModule: true,
+    MapBoard: function MapViewMock() {
       const ctx =
         typeof getPlannerContext === 'function'
           ? getPlannerContext()
@@ -185,7 +187,8 @@ vi.mock('@/features/planner/components/map/MapBoard', () => {
 });
 
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  BudgetBoard: () => <div />,
 }));
 
 // Next.js router mocks

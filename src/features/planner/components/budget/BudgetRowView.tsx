@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Pencil, Trash2 } from '@/shared/ui/icon';
-import type { Entry } from '@/features/planner/types/budget/budget';
+import type { Entry } from '@/features/planner/types/budget';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
 
 type BudgetRowViewProps = {

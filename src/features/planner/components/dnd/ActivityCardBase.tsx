@@ -7,13 +7,8 @@ import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
 
 interface ActivityCardBaseProps {
   title: string;
-  draftTitle?: string;
-  onDraftTitleChange?: (value: string) => void;
-  onSave?: () => void;
-  inputRef?: React.RefObject<HTMLTextAreaElement | null>;
   imageUrl?: string;
   duration?: number;
-  editing?: boolean;
   twBg?: string;
   budget?: number;
   borderColorClass?: string;
@@ -21,13 +16,8 @@ interface ActivityCardBaseProps {
 
 export function ActivityCardBase({
   title,
-  draftTitle,
-  onDraftTitleChange,
-  onSave,
-  inputRef,
   imageUrl,
   duration,
-  editing = false,
   twBg,
   budget,
   borderColorClass,
@@ -35,7 +25,6 @@ export function ActivityCardBase({
   return (
     <div
       className={`group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 bg-[var(--background)] text-left transition ${borderColorClass} ${twBg ?? ''}`}
-      style={{ zIndex: editing ? 50 : undefined }}
     >
       {/* Image */}
       {imageUrl && (
@@ -50,31 +39,7 @@ export function ActivityCardBase({
 
       <div className="px-3 pt-2 pb-1">
         {/* Title */}
-        {editing ? (
-          <textarea
-            id="activity-card-title"
-            name="activity-card-title"
-            ref={inputRef}
-            value={draftTitle}
-            rows={1}
-            onChange={(e) => onDraftTitleChange?.(e.target.value)}
-            onInput={(e) => {
-              const ta = e.currentTarget;
-              ta.style.height = 'auto';
-              ta.style.height = `${ta.scrollHeight}px`;
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                onSave?.();
-              }
-            }}
-            className="mb-1 min-h-[5rem] w-full resize-none overflow-hidden px-2 py-1 text-sm"
-            style={{ verticalAlign: 'top' }}
-          />
-        ) : (
-          <h4 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
-        )}
+        <h4 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
 
         {/* Meta */}
         {(duration! > 0 || budget! > 0) && (

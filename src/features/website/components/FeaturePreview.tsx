@@ -1,6 +1,6 @@
 'use client';
 
-import FeatureCarousel from '../../../shared/ui/carousel/FeatureCarousel';
+import { FeatureCarousel } from '../../../shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '../../../shared/ui/carousel/FeatureCarousel';
 
 const features: FeatureCarouselFeature[] = [

@@ -1,5 +1,5 @@
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
+import { formatDayPlan } from '@/features/planner/services/days/formatDayPlan';
 import { parseISO, isBefore, isAfter } from 'date-fns';
 
 /**

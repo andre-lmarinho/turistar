@@ -12,8 +12,8 @@ import {
   DEFAULT_COLORS,
   DEFAULT_NEW_CARD_COLOR_INDEX,
 } from '@/features/planner/domain/constants/colors';
-import { moveActivityToDay } from '@/features/planner/services/moveActivityToDay';
-import { moveActivityPosition } from '@/features/planner/services/moveActivityPosition';
+import { moveActivityToDay } from '@/features/planner/services/activities/moveActivityToDay';
+import { moveActivityPosition } from '@/features/planner/services/activities/moveActivityPosition';
 
 /**
  * Manages the currently selected activity for editing in the planner.

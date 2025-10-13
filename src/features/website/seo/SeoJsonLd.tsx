@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { SITE_URL } from '@/shared/constants/site';
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
-export function SeoJsonLd() {
+export default function SeoJsonLd() {
   const org = {
     '@context': 'https://schema.org',
     '@type': 'Organization',

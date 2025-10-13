@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { PlanEventsRepository } from '@/features/planner/services/supabase/planEventsRepository';
+import { fetchPlanSnapshot } from '@/features/planner/services/supabase/planEventsQueries';
 import type { Database } from '@/shared/types/supabase';
 
 const createSnapshotClient = (response: { data: unknown; error: unknown }) => {
@@ -18,12 +18,11 @@ const createSnapshotClient = (response: { data: unknown; error: unknown }) => {
   return { client, maybeSingle };
 };
 
-describe('PlanEventsRepository.fetchSnapshot', () => {
+describe('fetchPlanSnapshot', () => {
   it('returns the default empty snapshot when no row exists', async () => {
     const { client, maybeSingle } = createSnapshotClient({ data: null, error: null });
-    const repository = new PlanEventsRepository(client);
 
-    await expect(repository.fetchSnapshot('plan-1')).resolves.toEqual({
+    await expect(fetchPlanSnapshot('plan-1', client)).resolves.toEqual({
       version: 0,
       days: [],
       updatedAt: new Date(0).toISOString(),
@@ -55,9 +54,8 @@ describe('PlanEventsRepository.fetchSnapshot', () => {
     };
 
     const { client } = createSnapshotClient({ data: persisted, error: null });
-    const repository = new PlanEventsRepository(client);
 
-    await expect(repository.fetchSnapshot('plan-1')).resolves.toEqual({
+    await expect(fetchPlanSnapshot('plan-1', client)).resolves.toEqual({
       version: 3,
       updatedAt: '2024-01-01T00:00:00.000Z',
       days: [

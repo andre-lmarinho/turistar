@@ -9,7 +9,7 @@ import { clientEnv } from '@/shared/lib/clientEnv';
  * Client-side context providers (React Query, Theme, etc.).
  * Keeps RootLayout as a Server Component.
  */
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   // one QueryClient per browser tab
   const [queryClient] = useState(() => new QueryClient());
 

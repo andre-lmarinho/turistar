@@ -50,7 +50,10 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
   return (
     <Dialog.Root open={open} onOpenChange={(nextOpen) => !nextOpen && handleDialogClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-40 backdrop-blur-sm" />
+        <Dialog.Overlay
+          data-radix-dialog-overlay=""
+          className="bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-40 backdrop-blur-sm"
+        />
         <Dialog.Content
           aria-labelledby="activities-budget-title"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[95%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"

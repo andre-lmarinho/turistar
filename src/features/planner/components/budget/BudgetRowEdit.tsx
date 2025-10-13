@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useId } from 'react';
-import type { Entry } from '@/features/planner/types/budget/budget';
+import type { Entry } from '@/features/planner/types/budget';
 import { Check, X } from '@/shared/ui/icon';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetRowInputs } from '@/features/planner/hooks/budget/useBudgetRowInputs';

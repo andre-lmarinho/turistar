@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import PlanForm from '@/features/home/components/PlanForm';
+import { PlanForm } from '@/features/website/components/PlanForm';
 import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
@@ -29,9 +29,9 @@ vi.mock('@/shared/ui/calendar', () => ({
   DateRangePicker: () => <div />,
 }));
 
-vi.mock('@/shared/components/LoadingScreen', () => ({
+vi.mock('@/shared/ui/loading/LoadingScreen', () => ({
   __esModule: true,
-  default: () => null,
+  LoadingScreen: () => null,
 }));
 
 vi.mock('@/shared/ui/input', () => ({

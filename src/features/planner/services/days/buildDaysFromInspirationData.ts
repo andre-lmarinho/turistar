@@ -1,4 +1,4 @@
-import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
+import { formatDayPlan } from '@/features/planner/services/days/formatDayPlan';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import {
   DEFAULT_COLORS,

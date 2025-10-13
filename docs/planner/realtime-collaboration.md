@@ -16,7 +16,7 @@ Each section below expands on the responsibilities and provides implementation r
 
 ## Realtime connection
 
-- `PlanEventsRepository.subscribeToPlan` registers a Supabase Realtime `postgres_changes` listener filtered by `plan_id`. Every incoming row is validated with Zod before being converted to a domain event. (`src/features/planner/services/supabase/planEventsRepository.ts`)
+- `subscribeToPlanEvents` registers a Supabase Realtime `postgres_changes` listener filtered by `plan_id`. Every incoming row is validated with Zod before being converted to a domain event. (`src/features/planner/services/supabase/planEventsRealtime.ts`)
 - `usePlanCollaboration` owns the lifecycle of that channel. When mounted, it loads the latest snapshot, subscribes to the channel, and streams new events into local reducers. Disconnecting (unmounting) tears the channel down safely. (`src/features/planner/hooks/usePlanCollaboration.ts`)
 - The hook exposes the consolidated plan state alongside helpers (`persistEvents`, `persistDays`) so consuming components continue using a single interface while benefiting from realtime updates.
 
@@ -42,7 +42,7 @@ The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events
 
 1. The initial snapshot fetched from `plan_snapshots` returns `{ version, days }`. Missing rows default to version `0` with empty days so new plans load predictably.
 2. Every client tracks the current `version`. When a user performs an action, `diffPlanEvents.ts` compares the previous and next state, emitting the minimal set of events along with the observed `baseVersion`.
-3. `PlanEventsRepository.appendEvents` calls the `append_plan_events` RPC, which validates the `baseVersion` server-side before writing rows. The RPC responds with the committed `version` and a canonical copy of the inserted events.
+3. `appendPlanEvents` calls the `append_plan_events` RPC, which validates the `baseVersion` server-side before writing rows. The RPC responds with the committed `version` and a canonical copy of the inserted events.
 4. While the RPC is in-flight, the UI already reflects the optimistic state returned by the reducer. If Supabase confirms the write, the optimistic entry is reconciled against the canonical payload; otherwise the hook reloads the snapshot + latest events and reapplies them to heal divergence.
 
 ## Conflict resolution and ordering
@@ -53,7 +53,7 @@ The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events
 
 ## Persistence and recovery
 
-- Snapshots persist in `plan_snapshots.state`. When a client reconnects, `usePlanCollaboration` fetches the newest snapshot and then calls `fetchEvents(planId, snapshot.version)` to replay missed changes.
+- Snapshots persist in `plan_snapshots.state`. When a client reconnects, `usePlanCollaboration` fetches the newest snapshot and then calls `fetchPlanEvents(planId, snapshot.version)` to replay missed changes.
 - If the realtime channel disconnects, the hook automatically resubscribes using the latest known version, so the UI catches up seamlessly without a full page reload.
 - Local storage can cache lightweight preferences, but the canonical data source remains Supabase Postgres. Any future offline mode should serialize a snapshot + unpersisted events and sync them through the same RPC once connectivity returns.
 
@@ -62,6 +62,6 @@ The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events
 When extending the planner, make sure to:
 
 - Add new event types to `PlanEvent.ts`, update reducers/tests, and document payload semantics here.
-- Maintain Zod schemas in `planEventsRepository` to validate Supabase rows when tables evolve.
+- Maintain Zod schemas in `planEventsSchemas.ts` to validate Supabase rows when tables evolve.
 - Update the Supabase migration + RPC whenever the event schema changes so optimistic writes continue to be atomic.
 - Keep the architecture section in `docs/ARCHITECTURE.md` aligned with this reference.

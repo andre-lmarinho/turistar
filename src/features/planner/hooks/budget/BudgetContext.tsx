@@ -2,7 +2,7 @@
 
 import { createContextProvider } from '@/shared/lib/createContextProvider';
 import { useBudget } from './useBudget';
-import type { Entry } from '@/features/planner/types/budget/budget';
+import type { Entry } from '@/features/planner/types/budget';
 
 const [BudgetProvider, useBudgetContext] = createContextProvider(
   ({

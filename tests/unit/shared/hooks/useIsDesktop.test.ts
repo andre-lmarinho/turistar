@@ -5,46 +5,54 @@ import { useIsDesktop } from '@/shared/hooks/ui/useIsDesktop';
 
 type Listener = (event: MediaQueryListEvent) => void;
 
+type MutableMediaQueryList = Omit<
+  MediaQueryList,
+  'matches' | 'addEventListener' | 'removeEventListener' | 'addListener' | 'removeListener'
+> & {
+  matches: boolean;
+  addEventListener?: (type: string, listener: EventListenerOrEventListenerObject) => void;
+  removeEventListener?: (type: string, listener: EventListenerOrEventListenerObject) => void;
+  addListener: (listener: EventListenerOrEventListenerObject) => void;
+  removeListener: (listener: EventListenerOrEventListenerObject) => void;
+};
+
 function createMatchMedia(initialMatches: boolean, options?: { legacy?: boolean }) {
   const listeners = new Set<Listener>();
 
-  const addListener = (listener: EventListenerOrEventListenerObject) => {
+  const add = (listener: EventListenerOrEventListenerObject) => {
     if (typeof listener === 'function') {
       listeners.add(listener as Listener);
     }
   };
 
-  const removeListener = (listener: EventListenerOrEventListenerObject) => {
+  const remove = (listener: EventListenerOrEventListenerObject) => {
     if (typeof listener === 'function') {
       listeners.delete(listener as Listener);
     }
   };
 
-  const mediaQueryList: MediaQueryList = {
+  const mediaQueryList: MutableMediaQueryList = {
     matches: initialMatches,
     media: '(min-width: 768px)',
     onchange: null,
     addEventListener: vi.fn((_, listener: EventListenerOrEventListenerObject) => {
-      addListener(listener);
+      add(listener);
     }),
     removeEventListener: vi.fn((_, listener: EventListenerOrEventListenerObject) => {
-      removeListener(listener);
+      remove(listener);
     }),
     addListener: vi.fn((listener: EventListenerOrEventListenerObject) => {
-      addListener(listener);
+      add(listener);
     }),
     removeListener: vi.fn((listener: EventListenerOrEventListenerObject) => {
-      removeListener(listener);
+      remove(listener);
     }),
     dispatchEvent: vi.fn(() => true),
   };
 
   if (options?.legacy) {
-    (mediaQueryList as { addEventListener?: MediaQueryList['addEventListener'] }).addEventListener =
-      undefined;
-    (
-      mediaQueryList as { removeEventListener?: MediaQueryList['removeEventListener'] }
-    ).removeEventListener = undefined;
+    mediaQueryList.addEventListener = undefined;
+    mediaQueryList.removeEventListener = undefined;
   }
 
   const notify = (matches: boolean) => {
@@ -70,11 +78,11 @@ afterEach(() => {
 describe('useIsDesktop', () => {
   test('returns the current match state and reacts to changes', async () => {
     const { mediaQueryList, notify } = createMatchMedia(false);
-    const mockMatchMedia = vi.fn(() => mediaQueryList);
+    const mockMatchMedia = vi.fn(() => mediaQueryList as unknown as MediaQueryList);
     Object.defineProperty(window, 'matchMedia', {
       configurable: true,
       writable: true,
-      value: mockMatchMedia,
+      value: mockMatchMedia as unknown as typeof window.matchMedia,
     });
 
     const { result, unmount } = renderHook(() => useIsDesktop('(min-width: 1024px)'));
@@ -102,11 +110,11 @@ describe('useIsDesktop', () => {
 
   test('falls back to legacy listener APIs when addEventListener is unavailable', async () => {
     const { mediaQueryList, notify } = createMatchMedia(true, { legacy: true });
-    const mockMatchMedia = vi.fn(() => mediaQueryList);
+    const mockMatchMedia = vi.fn(() => mediaQueryList as unknown as MediaQueryList);
     Object.defineProperty(window, 'matchMedia', {
       configurable: true,
       writable: true,
-      value: mockMatchMedia,
+      value: mockMatchMedia as unknown as typeof window.matchMedia,
     });
 
     const { result, unmount } = renderHook(() => useIsDesktop());

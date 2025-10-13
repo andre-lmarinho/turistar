@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowView';
 import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';
 import { BudgetRowNew } from '@/features/planner/components/budget/BudgetRowNew';
-import type { Entry, CategoryKey } from '@/features/planner/types/budget/budget';
+import type { Entry, CategoryKey } from '@/features/planner/types/budget';
 
 const setDescMock = vi.fn();
 const setCatMock = vi.fn();

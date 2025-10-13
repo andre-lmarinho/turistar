@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
-import { cloneDays } from '@/features/planner/services/cloneDays';
+import { cloneDays } from '@/features/planner/services/activities/cloneDays';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {

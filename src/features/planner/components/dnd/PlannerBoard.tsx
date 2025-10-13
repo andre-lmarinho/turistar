@@ -13,7 +13,7 @@ import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
-function PlannerBoardComponent() {
+export const PlannerBoard = React.memo(function PlannerBoard() {
   const {
     days,
     activeId,
@@ -24,7 +24,6 @@ function PlannerBoardComponent() {
     handleDragEnd,
     setSelectedActivity,
     addBlankAndSelect,
-    updateActivity,
   } = usePlannerContext();
 
   const byId = useActivitiesById(days);
@@ -52,7 +51,6 @@ function PlannerBoardComponent() {
               day={d}
               onAddActivity={(dayId, idx) => addBlankAndSelect(dayId, idx)}
               onSelectActivity={(a) => setSelectedActivity(a)}
-              onUpdateTitle={(id, title) => updateActivity(id, { title })}
             />
           </div>
         ))}
@@ -71,10 +69,6 @@ function PlannerBoardComponent() {
       </DragOverlay>
     </DndContext>
   );
-}
-
-const PlannerBoard = React.memo(PlannerBoardComponent);
+});
 
 PlannerBoard.displayName = 'PlannerBoard';
-
-export { PlannerBoard };

@@ -7,12 +7,12 @@ const { closeSpy } = vi.hoisted(() => ({ closeSpy: vi.fn() }));
 
 vi.mock('@/features/planner/components/dialog/ActivityDialogHeader', () => ({
   __esModule: true,
-  default: () => <div data-testid="activity-dialog-header" />,
+  ActivityDialogHeader: () => <div data-testid="activity-dialog-header" />,
 }));
 
 vi.mock('@/features/planner/components/dialog/ActivityDialogForm', () => ({
   __esModule: true,
-  default: () => <form aria-label="Activity form" />,
+  ActivityDialogForm: () => <form aria-label="Activity form" />,
 }));
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({

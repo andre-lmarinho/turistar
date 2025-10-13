@@ -9,27 +9,35 @@ import type {
 } from '@/features/planner/domain/types/PlanEvent';
 import { usePlanCollaboration } from '@/features/planner/hooks/usePlanCollaboration';
 
-const fetchSnapshot = vi.fn<() => Promise<PlanSnapshot>>();
-const fetchEvents = vi.fn<(planId: string, version: number) => Promise<PlanEvent[]>>();
-const appendEvents =
-  vi.fn<
-    (
-      planId: string,
-      baseVersion: number,
-      events: PlanEventInsert[]
-    ) => Promise<{ version: number; events: PlanEvent[] }>
-  >();
-const subscribeToPlan =
-  vi.fn<(planId: string, handler: (event: PlanEvent) => void) => { unsubscribe: () => void }>();
+const supabaseMocks = vi.hoisted(() => {
+  const fetchSnapshot = vi.fn<() => Promise<PlanSnapshot>>();
+  const fetchEvents = vi.fn<(planId: string, version: number) => Promise<PlanEvent[]>>();
+  const appendEvents =
+    vi.fn<
+      (
+        planId: string,
+        baseVersion: number,
+        events: PlanEventInsert[]
+      ) => Promise<{ version: number; events: PlanEvent[] }>
+    >();
+  const subscribeToPlan =
+    vi.fn<(planId: string, handler: (event: PlanEvent) => void) => { unsubscribe: () => void }>();
+  return { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan };
+});
 
-vi.mock('@/features/planner/services/supabase/planEventsRepository', () => ({
-  PlanEventsRepository: vi.fn().mockImplementation(() => ({
-    fetchSnapshot,
-    fetchEvents,
-    appendEvents,
-    subscribeToPlan,
-  })),
+vi.mock('@/features/planner/services/supabase/planEventsQueries', () => ({
+  __esModule: true,
+  fetchPlanSnapshot: supabaseMocks.fetchSnapshot,
+  fetchPlanEvents: supabaseMocks.fetchEvents,
+  appendPlanEvents: supabaseMocks.appendEvents,
 }));
+
+vi.mock('@/features/planner/services/supabase/planEventsRealtime', () => ({
+  __esModule: true,
+  subscribeToPlanEvents: supabaseMocks.subscribeToPlan,
+}));
+
+const { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan } = supabaseMocks;
 
 describe('usePlanCollaboration', () => {
   const baseDay: DayPlan = {

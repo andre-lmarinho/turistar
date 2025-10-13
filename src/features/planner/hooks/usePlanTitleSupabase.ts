@@ -1,29 +1,44 @@
 import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { capitalize } from '@/shared/utils/capitalize';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import { updatePlanTitle } from '@/app/(web)/planner/actions/updatePlanTitle';
-import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';
+import { supabase } from '@/shared/lib/supabaseClient';
+
+type PlanTitleRow = { title: string | null };
 
 export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
   const initialTitle = capitalize(defaultTitle);
 
   const { getEditToken } = usePlanEditTokens();
+  const qc = useQueryClient();
+  const queryKey = ['plan_title', planId] as const;
 
-  const { data: fetchedTitleRaw, mutate } = usePlanResource<string, string>({
-    planId,
-    resource: 'plan_title',
-    table: 'plans',
-    column: 'title',
+  const { data: fetchedTitleRaw } = useQuery<string | null>({
+    queryKey,
     enabled: persist,
-    persistFn: async (id, newTitle) => {
-      const token = getEditToken(id);
+    queryFn: async (): Promise<string | null> => {
+      const { data, error } = (await supabase
+        .from('plans')
+        .select('title')
+        .eq('id', planId)
+        .single()) as { data: PlanTitleRow | null; error: unknown };
+      if (error) throw error;
+      return data?.title ?? null;
+    },
+  });
+
+  const fetchedTitle = fetchedTitleRaw ?? initialTitle;
+
+  const { mutate } = useMutation({
+    mutationFn: async (newTitle: string) => {
+      const token = getEditToken(planId);
       if (!token) throw new Error('Missing edit token');
-      await updatePlanTitle(id, token, newTitle);
+      await updatePlanTitle(planId, token, newTitle);
       return newTitle;
     },
-    onSuccess: (t, qc) => qc.setQueryData(['plan_title', planId], t),
+    onSuccess: (title: string) => qc.setQueryData(queryKey, title),
   });
-  const fetchedTitle = fetchedTitleRaw ?? initialTitle;
 
   const [localTitle, setLocalTitle] = useState(fetchedTitle);
 

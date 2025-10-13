@@ -44,7 +44,7 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
   return null;
 }
 
-function MapBoardComponent() {
+export const MapBoard = React.memo(function MapBoard() {
   const { days, setSelectedActivity, destCoords } = usePlannerContext();
   const centerCoords = destCoords ?? undefined;
   const dayPaths = useMemo(
@@ -141,10 +141,6 @@ function MapBoardComponent() {
       </MapContainer>
     </div>
   );
-}
-
-const MapBoard = React.memo(MapBoardComponent);
+});
 
 MapBoard.displayName = 'MapBoard';
-
-export { MapBoard };

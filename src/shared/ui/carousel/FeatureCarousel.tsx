@@ -9,7 +9,7 @@ import { useSyncedPointerCarousels } from '@/shared/hooks/ui/useSyncedPointerCar
 
 import { FeatureCarouselCard } from './FeatureCarouselCard';
 import { FeatureCarouselNavDots } from './FeatureCarouselNavDots';
-import './FeatureCarousel.module.css';
+import styles from './FeatureCarousel.module.css';
 
 export type FeatureCarouselFeature = {
   title: string;
@@ -21,13 +21,11 @@ export type FeatureCarouselProps = {
   features: FeatureCarouselFeature[];
 };
 
-const CARD_LIST_CLASSES =
-  'scrollbar-hidden m-0 flex w-full snap-x snap-proximity gap-4 overflow-x-auto p-0 cursor-grab [touch-action:pan-y] md:flex-col md:gap-4 md:overflow-visible md:cursor-auto md:[touch-action:auto] md:snap-none';
+const CARD_LIST_CLASSES = `scrollbar-hidden m-0 flex w-full snap-x snap-proximity gap-4 overflow-x-auto p-0 cursor-grab [touch-action:pan-y] md:flex-col md:gap-4 md:overflow-visible md:cursor-auto md:[touch-action:auto] md:snap-none ${styles.dragContext}`;
 
 const CARD_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start md:min-w-0 md:basis-auto';
 
-const IMAGE_LIST_CLASSES =
-  'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0';
+const IMAGE_LIST_CLASSES = `scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 ${styles.dragContext}`;
 
 const IMAGE_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start';
 

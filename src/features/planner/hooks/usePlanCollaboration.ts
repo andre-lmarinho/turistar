@@ -3,13 +3,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { PlanEvent, PlanEventInsert } from '@/features/planner/domain/types/PlanEvent';
-import { PlanEventsRepository } from '@/features/planner/services/supabase/planEventsRepository';
+import {
+  appendPlanEvents,
+  fetchPlanEvents,
+  fetchPlanSnapshot,
+} from '@/features/planner/services/supabase/planEventsQueries';
+import { subscribeToPlanEvents } from '@/features/planner/services/supabase/planEventsRealtime';
 import {
   applyPlanEvent,
   reducePlanEvents,
 } from '@/features/planner/domain/events/planEventReducer';
-import { diffPlanEvents } from '@/features/planner/services/diffPlanEvents';
-import { cloneDays } from '@/features/planner/services/cloneDays';
+import { diffPlanEvents } from '@/features/planner/services/events/diffPlanEvents';
+import { cloneDays } from '@/features/planner/services/activities/cloneDays';
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;
@@ -32,7 +37,6 @@ export function usePlanCollaboration(
   persistDays: PersistMutation;
   version: number;
 } {
-  const repoRef = useRef(new PlanEventsRepository());
   const versionRef = useRef(0);
   const snapshotRef = useRef<DayPlan[]>([]);
   const pendingEventIdsRef = useRef(new Set<string>());
@@ -45,8 +49,8 @@ export function usePlanCollaboration(
     if (!planId || !enabled) return;
     setIsLoading(true);
     try {
-      const snapshot = await repoRef.current.fetchSnapshot(planId);
-      const events = await repoRef.current.fetchEvents(planId, snapshot.version);
+      const snapshot = await fetchPlanSnapshot(planId);
+      const events = await fetchPlanEvents(planId, snapshot.version);
       const reduced = reducePlanEvents(snapshot, events);
       versionRef.current = reduced.version;
       snapshotRef.current = cloneDays(reduced.days);
@@ -85,7 +89,7 @@ export function usePlanCollaboration(
 
   useEffect(() => {
     if (!planId || !enabled) return;
-    const channel = repoRef.current.subscribeToPlan(planId, handleRealtimeEvent);
+    const channel = subscribeToPlanEvents(planId, handleRealtimeEvent);
     return () => {
       void channel.unsubscribe();
     };
@@ -93,11 +97,7 @@ export function usePlanCollaboration(
 
   const appendEvents = useCallback(
     async (events: PlanEventInsert[], baseVersion: number, previous: DayPlan[]) => {
-      const { version, events: storedEvents } = await repoRef.current.appendEvents(
-        planId,
-        baseVersion,
-        events
-      );
+      const { version, events: storedEvents } = await appendPlanEvents(planId, baseVersion, events);
       let updated = cloneDays(previous);
       for (const ev of storedEvents) {
         pendingEventIdsRef.current.delete(ev.id);

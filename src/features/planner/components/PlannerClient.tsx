@@ -10,10 +10,10 @@ import { OnboardingDialog } from '@/features/planner/components/onboarding/Onboa
 import { OnboardingProvider } from '@/features/planner/hooks/onboarding/OnboardingContext';
 import { ModeToggleButton } from '@/features/planner/ui/buttons/ModeToggleButton';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import type { Entry } from '@/features/planner/types/budget/budget';
+import type { Entry } from '@/features/planner/types/budget';
 
-import PlannerHeader from './PlannerHeader';
-import PlannerModeDeck, { type PlannerMode } from './PlannerModeDeck';
+import { PlannerHeader } from './PlannerHeader';
+import { PlannerModeDeck, type PlannerMode } from './PlannerModeDeck';
 
 /**
  * Top-level client component for the planner experience.

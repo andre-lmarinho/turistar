@@ -75,7 +75,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
 
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
@@ -96,17 +96,20 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: onboardingMocks.OnboardingDialog,
+  OnboardingDialog: onboardingMocks.OnboardingDialog,
 }));
 
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  PlannerBoard: () => <div />,
 }));
 vi.mock('@/features/planner/components/map/MapBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  MapBoard: () => <div />,
 }));
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  BudgetBoard: () => <div />,
 }));
 
 vi.mock('next/navigation', () => ({

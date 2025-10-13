@@ -75,7 +75,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
 
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
@@ -94,10 +94,12 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
-  default: () => <div data-testid="board" />,
+  __esModule: true,
+  PlannerBoard: () => <div data-testid="board" />,
 }));
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div data-testid="budget" />,
+  __esModule: true,
+  BudgetBoard: () => <div data-testid="budget" />,
 }));
 vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
@@ -107,7 +109,7 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: onboardingMocks.OnboardingDialog,
+  OnboardingDialog: onboardingMocks.OnboardingDialog,
 }));
 
 vi.mock('@/shared/ui/calendar', async () => {
@@ -121,7 +123,7 @@ vi.mock('@/shared/ui/calendar', async () => {
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
-  default: () => <div data-testid="mode-toggle" />,
+  ModeToggleButton: () => <div data-testid="mode-toggle" />,
 }));
 
 beforeEach(() => {

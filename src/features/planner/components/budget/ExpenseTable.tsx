@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { Entry } from '@/features/planner/types/budget/budget';
+import type { Entry } from '@/features/planner/types/budget';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
 import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowView';
 import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';

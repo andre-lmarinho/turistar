@@ -1,8 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/shared/lib/supabaseClient';
 import type { CategoryKey } from '@/features/planner/domain/constants/budget';
-import type { Entry } from '@/features/planner/types/budget/budget';
-import { usePlanResource } from '@/features/planner/hooks/internal/usePlanResource';
+import type { Entry } from '@/features/planner/types/budget';
+
+type BudgetQueryResult = { budget: number; entries: Entry[] };
 
 export function useBudget(
   planId: string,
@@ -21,20 +23,23 @@ export function useBudget(
   const hasLoadedRef = useRef(false);
   const initialBudgetRef = useRef(0);
   const [persistError, setPersistError] = useState<string | null>(null);
+  const qc = useQueryClient();
 
-  const { data: loaded } = usePlanResource<{ budget: number; entries: Entry[] }>({
-    planId,
-    resource: 'budget',
-    fetcher: async (id) => {
+  const queryKey = ['budget', planId] as const;
+
+  const budgetQuery = useQuery<BudgetQueryResult, Error, BudgetQueryResult, typeof queryKey>({
+    queryKey,
+    enabled: persist,
+    queryFn: async (): Promise<BudgetQueryResult> => {
       const budgetRes = (await supabase
         .from('plans')
         .select('budget')
-        .eq('id', id)
-        .single()) as unknown as { data: { budget: number | null } | null };
+        .eq('id', planId)
+        .single()) as unknown as { data: { budget: number | null } | null; error: unknown };
       const entryRes = (await supabase
         .from('budget_entries')
         .select('*')
-        .eq('plan_id', id)) as unknown as {
+        .eq('plan_id', planId)) as unknown as {
         data:
           | {
               id: string;
@@ -43,7 +48,12 @@ export function useBudget(
               amount: number | null;
             }[]
           | null;
+        error: unknown;
       };
+
+      if (budgetRes.error) throw budgetRes.error;
+      if (entryRes.error) throw entryRes.error;
+
       return {
         budget: budgetRes.data?.budget ?? 0,
         entries:
@@ -55,19 +65,29 @@ export function useBudget(
           })) ?? [],
       };
     },
-    enabled: persist,
   });
+  const loaded = budgetQuery.data as BudgetQueryResult | undefined;
 
-  const { mutate: saveBudget } = usePlanResource<number, number>({
-    planId,
-    resource: 'budget',
-    table: 'plans',
-    column: 'budget',
-    onSuccess: (b) => {
-      initialBudgetRef.current = b as number;
+  const saveBudgetMutation = useMutation({
+    mutationFn: async (newBudget: number) => {
+      const { data, error } = (await supabase
+        .from('plans')
+        .update({ budget: newBudget })
+        .eq('id', planId)
+        .select('budget')
+        .single()) as { data: { budget: number | null } | null; error: unknown };
+      if (error) throw error;
+      return (data?.budget ?? newBudget) as number;
+    },
+    onSuccess: (b: number) => {
+      initialBudgetRef.current = b;
+      qc.setQueryData<BudgetQueryResult>(queryKey, (prev) =>
+        prev ? { ...prev, budget: b } : { budget: b, entries: [] }
+      );
     },
     onError: () => setPersistError('Failed to persist budget'),
   });
+  const saveBudget = saveBudgetMutation.mutate;
 
   useEffect(() => {
     hasLoadedRef.current = false;
@@ -81,9 +101,10 @@ export function useBudget(
       return;
     }
     if (loaded) {
-      setBudget(loaded.budget);
-      initialBudgetRef.current = loaded.budget;
-      setEntries(loaded.entries);
+      const loadedData = loaded as BudgetQueryResult;
+      setBudget(loadedData.budget);
+      initialBudgetRef.current = loadedData.budget;
+      setEntries(loadedData.entries);
       hasLoadedRef.current = true;
       setHasLoaded(true);
     }
@@ -95,7 +116,7 @@ export function useBudget(
     if (budget === initialBudgetRef.current) return;
     setPersistError(null);
     saveBudget(budget);
-  }, [budget, planId, persist, saveBudget]);
+  }, [budget, persist, saveBudget]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {
@@ -117,21 +138,12 @@ export function useBudget(
     [categoryTotals]
   );
 
-  const { mutateAsync: addEntryMut } = usePlanResource<
-    string,
-    {
-      description: string;
-      category: CategoryKey;
-      amount: number;
-    }
-  >({
-    planId,
-    resource: 'budget',
-    persistFn: async (id, payload) => {
+  const addEntryMutation = useMutation({
+    mutationFn: async (payload: { description: string; category: CategoryKey; amount: number }) => {
       const res = (await supabase
         .from('budget_entries')
         .insert({
-          plan_id: id,
+          plan_id: planId,
           description: payload.description,
           category: payload.category,
           amount: payload.amount,
@@ -142,10 +154,12 @@ export function useBudget(
         error: unknown;
       };
       if (res.error || !res.data) throw res.error;
+      qc.invalidateQueries({ queryKey });
       return res.data.id;
     },
     onError: () => setPersistError('Failed to persist budget'),
   });
+  const addEntryMut = addEntryMutation.mutateAsync;
 
   const handleAdd = async () => {
     if (!desc || amount <= 0) return;
@@ -169,10 +183,8 @@ export function useBudget(
     setAmount(0);
   };
 
-  const { mutateAsync: updateEntryMut } = usePlanResource<void, Entry>({
-    planId,
-    resource: 'budget',
-    persistFn: async (_id, updated) => {
+  const updateEntryMutation = useMutation({
+    mutationFn: async (updated: Entry) => {
       const { error } = (await supabase
         .from('budget_entries')
         .update({
@@ -182,9 +194,11 @@ export function useBudget(
         })
         .eq('id', updated.id)) as unknown as { error: unknown };
       if (error) throw error;
+      qc.invalidateQueries({ queryKey });
     },
     onError: () => setPersistError('Failed to persist budget'),
   });
+  const updateEntryMut = updateEntryMutation.mutateAsync;
 
   const handleUpdateEntry = async (index: number, updated: Entry) => {
     setEntries((prev) => {
@@ -196,19 +210,19 @@ export function useBudget(
     await updateEntryMut(updated);
   };
 
-  const { mutateAsync: deleteEntryMut } = usePlanResource<void, string>({
-    planId,
-    resource: 'budget',
-    persistFn: async (_id, id) => {
+  const deleteEntryMutation = useMutation({
+    mutationFn: async (id: string) => {
       const { error } = (await supabase
         .from('budget_entries')
         // @ts-expect-error Supabase typings omit delete, but runtime supports it
         .delete()
         .eq('id', id)) as unknown as { error: unknown };
       if (error) throw error;
+      qc.invalidateQueries({ queryKey });
     },
     onError: () => setPersistError('Failed to persist budget'),
   });
+  const deleteEntryMut = deleteEntryMutation.mutateAsync;
 
   const handleDeleteEntry = async (index: number) => {
     const entry = entries[index];
