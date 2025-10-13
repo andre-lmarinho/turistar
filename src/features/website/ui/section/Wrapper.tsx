@@ -10,10 +10,7 @@ export interface MarketingSectionProps {
   className?: string;
 }
 
-export default function MarketingSection({
-  children,
-  variant = 'transparent',
-}: MarketingSectionProps) {
+export function MarketingSection({ children, variant = 'transparent' }: MarketingSectionProps) {
   return (
     <>
       <div className="mx-3 mx-auto w-full max-w-[1200px] border-x px-3 first:pt-[96px]">

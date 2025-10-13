@@ -1,7 +1,7 @@
 import FeatureCarousel from '@/shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
 import { Sparkles } from '@/shared/ui/icon';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 const CAROUSEL_IMAGE_SOURCES = [

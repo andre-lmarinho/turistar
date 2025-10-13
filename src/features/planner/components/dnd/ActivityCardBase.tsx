@@ -34,7 +34,7 @@ export default function ActivityCardBase({
 }: ActivityCardBaseProps) {
   return (
     <div
-      className={`group bg-[var(--background)]text-left relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 transition ${borderColorClass} ${twBg ?? ''}`}
+      className={`group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 bg-[var(--background)] text-left transition ${borderColorClass} ${twBg ?? ''}`}
       style={{ zIndex: editing ? 50 : undefined }}
     >
       {/* Image */}

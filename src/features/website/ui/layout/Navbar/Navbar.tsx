@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  useEffect,
-  useState,
-  useRef,
-  type Dispatch,
-  type FocusEvent,
-  type SetStateAction,
-  type ComponentType,
-} from 'react';
+import { useEffect, useState, useRef, type ComponentType } from 'react';
 import Link from 'next/link';
+import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 
 import {
   Calendar,
@@ -38,8 +31,6 @@ type SolutionCategory = {
   showDescription?: boolean;
 };
 type NavLink = { href: string; label: string };
-type ToggleHandler = Dispatch<SetStateAction<boolean>>;
-
 const travelerSolutions: SolutionItem[] = [
   { href: '/signup', label: 'Individual', description: 'Tailored solo trip guidance.', icon: User },
   { href: '/friends', label: 'Friends', description: 'Keep every friend on-plan.', icon: Users },
@@ -187,69 +178,35 @@ function SolutionsContent({
   );
 }
 
-type DesktopSolutionsMenuProps = {
-  isOpen: boolean;
-  onOpenChange: ToggleHandler;
-};
-const DesktopSolutionsMenu = ({ isOpen, onOpenChange }: DesktopSolutionsMenuProps) => {
-  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
-    const nextFocused = event.relatedTarget as Node | null;
-    if (!nextFocused || !event.currentTarget.contains(nextFocused)) onOpenChange(false);
-  };
+const DesktopSolutionsMenu = () => (
+  <NavigationMenu.Root className="relative">
+    <NavigationMenu.List className="flex list-none items-center gap-6 p-0">
+      <NavigationMenu.Item>
+        <NavigationMenu.Trigger className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 group inline-flex items-center gap-1 rounded-lg p-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none">
+          Solutions
+          <ChevronDown
+            aria-hidden="true"
+            className="size-4 origin-center transition-transform duration-200 ease-out group-data-[state=open]:-scale-y-100"
+          />
+        </NavigationMenu.Trigger>
+        <NavigationMenu.Content className="w-[min(56rem,calc(100vw-2rem))]">
+          <SolutionsContent
+            containerClassName="border-border/70 bg-popover rounded-[32px] border p-5 shadow-[0_24px_60px_-25px_rgba(15,23,42,0.45)]"
+            gridClassName="gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]"
+          />
+        </NavigationMenu.Content>
+      </NavigationMenu.Item>
+    </NavigationMenu.List>
+    <NavigationMenu.Viewport className="pointer-events-none absolute top-full left-1/2 z-50 h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)] -translate-x-1/2 transition-[opacity,transform,width,height] duration-150 ease-out data-[state=closed]:-translate-y-2 data-[state=closed]:opacity-0 data-[state=open]:pointer-events-auto data-[state=open]:translate-y-0 data-[state=open]:opacity-100" />
+  </NavigationMenu.Root>
+);
 
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => onOpenChange(true)}
-      onMouseLeave={() => onOpenChange(false)}
-      onFocus={() => onOpenChange(true)}
-      onBlur={handleBlur}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') onOpenChange(false);
-      }}
-    >
-      <button
-        type="button"
-        onClick={() => onOpenChange((prev) => !prev)}
-        className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 inline-flex items-center gap-1 rounded-lg p-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-        aria-expanded={isOpen}
-      >
-        Solutions
-        <ChevronDown
-          aria-hidden="true"
-          className={cn('size-4 origin-center transition-transform duration-200 ease-out', {
-            '-scale-y-100': isOpen,
-          })}
-        />
-      </button>
-
-      <div
-        className={cn(
-          'pointer-events-none absolute top-full left-1/2 z-50 w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 transition-opacity duration-150 ease-out',
-          isOpen ? 'pointer-events-auto opacity-100' : 'opacity-0'
-        )}
-      >
-        <SolutionsContent
-          containerClassName="border-border/70 bg-popover rounded-[32px] border p-5 shadow-[0_24px_60px_-25px_rgba(15,23,42,0.45)]"
-          gridClassName="gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]"
-        />
-      </div>
-    </div>
-  );
-};
-
-type DesktopNavigationProps = {
-  isSolutionsOpen: boolean;
-  onSolutionsChange: ToggleHandler;
-};
-const DesktopNavigation = ({ isSolutionsOpen, onSolutionsChange }: DesktopNavigationProps) => (
-  <nav className="relative hidden items-center lg:flex lg:justify-self-center">
-    <div className="flex items-center gap-6">
-      <DesktopSolutionsMenu isOpen={isSolutionsOpen} onOpenChange={onSolutionsChange} />
-      {navLinks.map((link) => (
-        <NavLinkItem key={link.href} {...link} />
-      ))}
-    </div>
+const DesktopNavigation = () => (
+  <nav className="relative hidden items-center lg:flex lg:gap-6 lg:justify-self-center">
+    <DesktopSolutionsMenu />
+    {navLinks.map((link) => (
+      <NavLinkItem key={link.href} {...link} />
+    ))}
   </nav>
 );
 
@@ -339,7 +296,6 @@ const MobileMenu = ({
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDesktopSolutionsOpen, setIsDesktopSolutionsOpen] = useState(false);
   const [isMobileSolutionsOpen, setIsMobileSolutionsOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -397,10 +353,7 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between gap-3 md:gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
           <LogoLink />
-          <DesktopNavigation
-            isSolutionsOpen={isDesktopSolutionsOpen}
-            onSolutionsChange={setIsDesktopSolutionsOpen}
-          />
+          <DesktopNavigation />
           <DesktopActions />
           <MenuToggleButton isOpen={isMobileMenuOpen} onToggle={toggleMobileMenu} />
         </div>

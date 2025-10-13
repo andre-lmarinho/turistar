@@ -1,5 +1,5 @@
 import { Users } from '@/shared/ui/icon';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 const USE_CASES = [

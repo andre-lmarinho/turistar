@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { UserStar } from '@/shared/ui/icon';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 
 const TESTIMONIALS = [
   {

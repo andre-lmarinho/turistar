@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import type { Entry } from '@/features/planner/types/budget/budget';
-import BudgetRow from '@/features/planner/components/budget/BudgetRow';
 import { useBudgetContext } from '@/features/planner/hooks/budget/BudgetContext';
+import BudgetRowView from '@/features/planner/components/budget/BudgetRowView';
+import BudgetRowEdit from '@/features/planner/components/budget/BudgetRowEdit';
+import BudgetRowNew from '@/features/planner/components/budget/BudgetRowNew';
 
 export default function ExpenseTable() {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
@@ -53,39 +55,32 @@ export default function ExpenseTable() {
         </tr>
       </thead>
       <tbody role="rowgroup">
-        {entries.map((e, idx) =>
-          editIndex === idx && editEntry ? (
-            <BudgetRow
-              key={idx}
-              mode="edit"
-              index={idx}
+        {entries.map((entry, index) =>
+          editIndex === index && editEntry ? (
+            <BudgetRowEdit
+              key={entry.id}
+              index={index}
               editEntry={editEntry}
               setEditEntry={setEditEntry}
               editAmountInput={editAmountInput}
               setEditAmountInput={setEditAmountInput}
-              onSave={(index, entry) => {
-                handleUpdateEntry(index, entry);
+              onSave={(idx, updated) => {
+                handleUpdateEntry(idx, updated);
                 cancelEdit();
               }}
               onCancel={cancelEdit}
             />
           ) : (
-            <BudgetRow
-              key={idx}
-              mode="view"
-              index={idx}
-              entry={e}
+            <BudgetRowView
+              key={entry.id}
+              index={index}
+              entry={entry}
               onEdit={startEdit}
               onDelete={handleDeleteEntry}
             />
           )
         )}
-        <BudgetRow
-          mode="new"
-          amountInput={amountInput}
-          setAmountInput={setAmountInput}
-          onAdd={handleAdd}
-        />
+        <BudgetRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
       </tbody>
     </table>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export type CtaFinalAction = {

@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/shared/utils/cn';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { HandCoins } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 

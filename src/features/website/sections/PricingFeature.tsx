@@ -1,5 +1,5 @@
 import { Flame } from '@/shared/ui/icon';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export interface FeatureBreakdownCategory {

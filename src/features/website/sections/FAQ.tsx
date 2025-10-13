@@ -1,5 +1,5 @@
 import { UserStar } from '@/shared/ui/icon';
-import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { MarketingSection } from '@/features/website/ui/section/Wrapper';
 
 export interface FaqItem {
   question: string;
