@@ -24,7 +24,7 @@ export default function MarketingSection({
               'border-border bg-card rounded-xl border py-14 shadow-[rgba(36,_36,_36,_0.7)_0px_1px_5px_-4px,rgba(36,_36,_36,_0.05)_0px_4px_8px_0px]'
           )}
         >
-          <section className="mx-auto w-full max-w-[1048px] py-[clamp(48px,5vw,96px)]">
+          <section className="mx-auto w-full max-w-[1048px] space-y-12 py-[clamp(48px,5vw,96px)]">
             {children}
           </section>
         </div>

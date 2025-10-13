@@ -52,7 +52,7 @@ export default function Features() {
           Get started
         </Link>
       </div>
-      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURE_ITEMS.map((feature) => (
           <article
             key={feature.title}
