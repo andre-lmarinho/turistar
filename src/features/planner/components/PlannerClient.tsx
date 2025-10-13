@@ -8,7 +8,7 @@ import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/Pla
 import { usePlanTitle } from '@/features/planner/hooks/data/usePlanTitleSupabase';
 import { OnboardingDialog } from '@/features/planner/components/onboarding/OnboardingDialog';
 import { OnboardingProvider } from '@/features/planner/hooks/OnboardingContext';
-import { ModeToggleButton } from '@/features/planner/ui/buttons/ModeToggleButton';
+import { ModeToggleButton } from '@/features/planner/ui/button/ModeToggleButton';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { createLocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
+import { createLocationAutocompleteHook } from '@/features/planner/hooks/search/createLocationAutocompleteHook';
 
 /**
  * Planner-specific Geoapify autocomplete that narrows results to street-level addresses.

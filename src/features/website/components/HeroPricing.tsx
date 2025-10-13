@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/shared/utils/cn';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { HandCoins } from '@/shared/ui/icon';
 import { Button } from '@/shared/ui/button';
 
@@ -44,7 +44,7 @@ function renderAction(plan: HeroPricingPlan) {
 
 export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
   return (
-    <MarketingSection className="py-20 sm:py-24 lg:py-28">
+    <Wrapper className="py-20 sm:py-24 lg:py-28">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <HandCoins className="size-4" aria-hidden="true" />
@@ -90,6 +90,6 @@ export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
           </article>
         ))}
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

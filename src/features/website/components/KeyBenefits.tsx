@@ -1,7 +1,7 @@
 import { FeatureCarousel } from '@/shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
 import { Sparkles } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 const CAROUSEL_IMAGE_SOURCES = [
@@ -25,7 +25,7 @@ export function KeyBenefits({ title, description, benefits }: KeyBenefitsProps) 
   }));
 
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="mb-12 flex max-w-xl flex-col items-start gap-4">
         <p className="eyebrow">
           <Sparkles className="size-4" aria-hidden="true" />
@@ -38,6 +38,6 @@ export function KeyBenefits({ title, description, benefits }: KeyBenefitsProps) 
         <Button href="/signup">Get started</Button>
       </div>
       <FeatureCarousel features={carouselFeatures} />
-    </MarketingSection>
+    </Wrapper>
   );
 }

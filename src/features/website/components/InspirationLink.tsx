@@ -3,9 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { InspirationCard } from '../../../shared/ui/card/Card';
-import romeJson from '@/features/inspiration/data/rome.json';
-import boipebaJson from '@/features/inspiration/data/boipeba.json';
-import type { InspirationDocument } from '@/features/inspiration/server/types';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
+
+import romeJson from '@/features/planner/inspiration/data/rome.json';
+import boipebaJson from '@/features/planner/inspiration/data/boipeba.json';
+import type { InspirationDocument } from '@/features/planner/inspiration/server/types';
 
 type InspirationPreview = InspirationDocument & { title_inspiration: string };
 
@@ -24,7 +26,7 @@ export function InspirationLink() {
   const destinations = inspirationSources.map(toDestinationPreview);
 
   return (
-    <section className="mx-auto w-full max-w-screen-lg p-8 py-40 sm:py-16 md:py-24 lg:py-32">
+    <Wrapper>
       <div className="mb-10 md:max-w-[60%]">
         <h2 className="pb-6 text-2xl leading-[1.1] font-semibold tracking-tight md:text-4xl">
           Be inspired by fellow travellers
@@ -43,6 +45,6 @@ export function InspirationLink() {
           </li>
         ))}
       </ul>
-    </section>
+    </Wrapper>
   );
 }

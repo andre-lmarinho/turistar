@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { DollarSign, Hourglass } from '@/shared/ui/icon';
-import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
+import { EMPTY_ACTIVITY_TITLE } from '@/features/planner/domain/constants/activity';
 
 interface ActivityCardBaseProps {
   title: string;

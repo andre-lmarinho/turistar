@@ -1,7 +1,7 @@
 'use client';
 
 import { Map } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export type CtaMidPageAction = {
@@ -31,7 +31,7 @@ export function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPageProps) 
   const secondary = secondaryAction ?? DEFAULT_SECONDARY;
 
   return (
-    <MarketingSection variant="card">
+    <Wrapper variant="card">
       <div className="flex flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <Map className="size-4" aria-hidden="true" />
@@ -57,6 +57,6 @@ export function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPageProps) 
           </Button>
         </div>
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

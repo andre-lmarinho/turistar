@@ -1,5 +1,5 @@
-import { PlanForm } from '@/features/website/components/PlanForm';
+import { SignupPage as Signup } from '@/features/planner/components/signup/SignupPage';
 
 export default function SignupPage() {
-  return <PlanForm />;
+  return <Signup />;
 }

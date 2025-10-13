@@ -1,7 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { LocationSearchInput, type LocationAutocompleteHook } from '@/shared/ui/input';
+import {
+  LocationSearchInput,
+  type LocationAutocompleteHook,
+} from '@/features/planner/ui/input/LocationSearchInput';
 
 const { mockUseDebounce } = vi.hoisted(() => {
   return {

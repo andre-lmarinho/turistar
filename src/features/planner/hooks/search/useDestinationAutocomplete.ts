@@ -1,6 +1,6 @@
 'use client';
 
-import { createLocationAutocompleteHook } from '@/shared/hooks/search/createLocationAutocompleteHook';
+import { createLocationAutocompleteHook } from '@/features/planner/hooks/search/createLocationAutocompleteHook';
 
 /**
  * Geoapify autocomplete tailored to city/state/country lookups for the marketing home page.

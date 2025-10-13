@@ -6,7 +6,7 @@ import { ChevronDown, Palette, Trash2, X } from '@/shared/ui/icon';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { Popover, PopoverTrigger } from '@/shared/ui/popover';
 import { DEFAULT_COLORS } from '@/features/planner/domain/constants/colors';
-import { MAX_FILE_SIZE } from '@/shared/constants/ui';
+import { MAX_FILE_SIZE } from '@/features/planner/domain/constants/activity';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 import { useCardPopups } from '@/features/planner/hooks/ui/useCardPopups';
 import { CardColorsPopover } from './PopoverCardColors';

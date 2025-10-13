@@ -2,8 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { PlanForm } from '@/features/website/components/PlanForm';
-import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
+import { SignupPage } from '@/features/planner/components/signup/SignupPage';
+import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
   let captured: unknown;
@@ -57,7 +57,7 @@ describe('PlanForm destination autocomplete wiring', () => {
   });
 
   it('uses the home destination autocomplete hook', () => {
-    render(<PlanForm />);
+    render(<SignupPage />);
 
     const props = getCapturedProps() as
       | { autocompleteHook?: unknown; placeholder?: string }

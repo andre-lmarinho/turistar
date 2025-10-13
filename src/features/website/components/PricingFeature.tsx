@@ -1,5 +1,5 @@
 import { Flame } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export interface FeatureBreakdownCategory {
@@ -14,7 +14,7 @@ export interface FeatureBreakdownProps {
 
 export function PricingFeature({ categories }: FeatureBreakdownProps) {
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <Flame className="size-4" aria-hidden="true" />
@@ -49,6 +49,6 @@ export function PricingFeature({ categories }: FeatureBreakdownProps) {
           </article>
         ))}
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

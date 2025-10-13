@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 import { UserStar } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 
 const TESTIMONIALS = [
   {
@@ -60,7 +60,7 @@ export function Testimonial() {
   const activeTestimonial = TESTIMONIALS[activeIndex];
 
   return (
-    <MarketingSection variant="card">
+    <Wrapper variant="card">
       <div className="flex max-w-3xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <UserStar className="size-4" aria-hidden="true" />
@@ -110,6 +110,6 @@ export function Testimonial() {
           />
         ))}
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

@@ -1,5 +1,5 @@
 import { Calendar, CircleCheck } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 const FEATURE_ITEMS = [
@@ -31,7 +31,7 @@ const FEATURE_ITEMS = [
 
 export function Features() {
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <Calendar className="size-4" aria-hidden="true" />
@@ -66,6 +66,6 @@ export function Features() {
           </article>
         ))}
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

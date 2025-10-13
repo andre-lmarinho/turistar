@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export type HeroTwoColumnsAction = {
@@ -33,7 +33,7 @@ export function HeroTwoColumns({
   additionalContent,
 }: HeroTwoColumnsProps) {
   return (
-    <MarketingSection variant="card" className="py-20 sm:py-24 lg:py-28">
+    <Wrapper variant="card" className="py-20 sm:py-24 lg:py-28">
       <div className="flex flex-col items-start gap-4">
         {eyebrow ? <label className={EYEBROW_CLASSES}>{eyebrow}</label> : null}
         <h1 className="text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.1] font-bold text-balance">
@@ -70,6 +70,6 @@ export function HeroTwoColumns({
         {additionalContent}
       </div>
       {media ? <div className="relative flex justify-center lg:justify-end">{media}</div> : null}
-    </MarketingSection>
+    </Wrapper>
   );
 }

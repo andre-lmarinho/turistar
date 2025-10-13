@@ -9,20 +9,22 @@ import { useRouter } from 'next/navigation';
 import { Plane, Kanban, LandPlot } from '@/shared/ui/icon';
 
 import { DateRangePicker } from '@/shared/ui/calendar';
-import { LocationSearchInput } from '@/shared/ui/input';
-import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
+import { LocationSearchInput } from '../../ui/input/LocationSearchInput';
+import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 import { LoadingScreen } from '@/shared/ui/loading/LoadingScreen';
+
 import { createPlannerPlan } from '@/features/planner/contracts/marketing/createPlannerPlan';
 import { usePlanEditTokens } from '@/features/planner/contracts/marketing/usePlanEditTokens';
 import { useRecentPlan } from '@/features/planner/contracts/marketing/useRecentPlan';
-import type { AutocompletePlace } from '@/shared/types/locations';
 
-interface PlanFormProps {
+import type { AutocompletePlace } from '@/features/planner/types/locations';
+
+interface SignupPageProps {
   title?: string;
   description?: string;
 }
 
-export function PlanForm({}: PlanFormProps) {
+export function SignupPage({}: SignupPageProps) {
   const router = useRouter();
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(),

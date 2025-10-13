@@ -4,10 +4,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
-import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
+import { EMPTY_ACTIVITY_TITLE } from '@/features/planner/domain/constants/activity';
 import { Input } from '@/shared/ui/input';
-import { LocationSearchInput } from '@/shared/ui/input';
-import { useAddressAutocomplete } from '@/features/planner/hooks/modules/useAddressAutocomplete';
+import { LocationSearchInput } from '../../ui/input/LocationSearchInput';
+import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 interface ActivityDialogFormProps {

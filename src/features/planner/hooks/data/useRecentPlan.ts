@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { useLocalStorage } from '@/features/planner/hooks/data/useLocalStorage';
 
 export interface RecentPlan {
   id: string;

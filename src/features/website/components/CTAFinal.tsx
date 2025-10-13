@@ -1,6 +1,6 @@
 'use client';
 
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export type CtaFinalAction = {
@@ -22,7 +22,7 @@ const TITLES: Record<'default' | 'planning', string> = {
 
 export function CtaFinal({ variant = 'default', primaryAction }: CtaFinalProps) {
   return (
-    <MarketingSection variant="card">
+    <Wrapper variant="card">
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-center text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
           {TITLES[variant]}
@@ -31,6 +31,6 @@ export function CtaFinal({ variant = 'default', primaryAction }: CtaFinalProps) 
           {primaryAction.label}
         </Button>
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

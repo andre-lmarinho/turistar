@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export function Hero() {
+export function HeroHome() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative mx-auto w-full max-w-screen-lg overflow-hidden px-6 pt-24 sm:pt-28 lg:pt-32">
+    <Wrapper className="py-20 sm:py-24 lg:py-28">
       {/* Left column */}
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
         <div className="m-auto flex w-full max-w-lg flex-col items-center text-center lg:items-start lg:text-left">
@@ -51,6 +52,6 @@ export function Hero() {
           />
         </div>
       </div>
-    </section>
+    </Wrapper>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { AutocompletePlace } from '@/shared/types/locations';
+import type { AutocompletePlace } from '@/features/planner/types/locations';
 
 interface LocationAutocompleteOptions {
   enabled?: boolean;

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 type HeroCentralizedAction = {
@@ -28,7 +28,7 @@ export function HeroCentralized({
   media,
 }: HeroCentralizedProps) {
   return (
-    <MarketingSection variant="card" className="py-20 sm:py-24 lg:py-28">
+    <Wrapper variant="card" className="py-20 sm:py-24 lg:py-28">
       <div className="flex flex-col items-center gap-4 text-center">
         {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
         <h1 className="text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.1] font-bold text-balance">
@@ -64,6 +64,6 @@ export function HeroCentralized({
         ) : null}
       </div>
       {media ? <div className="w-full">{media}</div> : null}
-    </MarketingSection>
+    </Wrapper>
   );
 }

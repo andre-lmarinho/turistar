@@ -1,6 +1,6 @@
 import { InspirationPlanner } from '@/features/planner/contracts/inspiration/InspirationPlanner';
-import { getInspirationExperienceProps } from '@/features/inspiration/server/getInspirationExperienceProps';
-import { inspirationPageMetadata } from '@/features/inspiration/server/pageMetadata';
+import { getInspirationExperienceProps } from '@/features/planner/inspiration/server/getInspirationExperienceProps';
+import { inspirationPageMetadata } from '@/features/planner/inspiration/server/pageMetadata';
 
 export const dynamic = 'force-dynamic';
 

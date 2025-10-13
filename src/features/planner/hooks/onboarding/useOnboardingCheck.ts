@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { useLocalStorage } from '@/features/planner/hooks/data/useLocalStorage';
 
 /**
  * Handles onboarding dialog visibility based on localStorage.

@@ -3,12 +3,6 @@ import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import { vi } from 'vitest';
 
-// Stub FeaturePreview group to avoid CSS import side-effects
-vi.mock('@/features/website/components/FeaturePreview', () => ({
-  __esModule: true,
-  FeaturePreview: () => <div data-testid="feature-preview" />,
-}));
-
 import Home from '@/app/(marketing)/page';
 
 const createMatchMedia = (matches = false): MediaQueryList =>

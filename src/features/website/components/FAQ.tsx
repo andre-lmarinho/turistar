@@ -1,5 +1,5 @@
 import { UserStar } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 
 export interface FaqItem {
   question: string;
@@ -13,7 +13,7 @@ export interface FaqProps {
 
 export function Faq({ title, items }: FaqProps) {
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <UserStar className="size-4" aria-hidden="true" />
@@ -34,6 +34,6 @@ export function Faq({ title, items }: FaqProps) {
           </div>
         ))}
       </dl>
-    </MarketingSection>
+    </Wrapper>
   );
 }

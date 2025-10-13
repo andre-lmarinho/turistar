@@ -2,15 +2,15 @@ import type { ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 import { PlusDivider } from './Divider';
 
-type MarketingSectionVariant = 'transparent' | 'card';
+type WrapperVariant = 'transparent' | 'card';
 
-export interface MarketingSectionProps {
+interface WrapperProps {
   children: ReactNode;
-  variant?: MarketingSectionVariant;
+  variant?: WrapperVariant;
   className?: string;
 }
 
-export function MarketingSection({ children, variant = 'transparent' }: MarketingSectionProps) {
+export function Wrapper({ children, variant = 'transparent' }: WrapperProps) {
   return (
     <>
       <div className="mx-3 mx-auto w-full max-w-[1200px] border-x px-3 first:pt-[96px]">

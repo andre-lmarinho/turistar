@@ -1,10 +1,10 @@
 import { ArrowLeftRight } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 export function EasyLink() {
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="flex flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <ArrowLeftRight className="size-4" aria-hidden="true" />
@@ -23,6 +23,6 @@ export function EasyLink() {
           Preview placeholder
         </div>
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

@@ -1,5 +1,5 @@
 import { Users } from '@/shared/ui/icon';
-import { MarketingSection } from '@/features/website/ui/section/Wrapper';
+import { Wrapper } from '@/features/website/ui/section/Wrapper';
 import { Button } from '@/shared/ui/button';
 
 const USE_CASES = [
@@ -31,7 +31,7 @@ const USE_CASES = [
 
 export function UseCases() {
   return (
-    <MarketingSection>
+    <Wrapper>
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
         <p className="eyebrow">
           <Users className="size-4" aria-hidden="true" />
@@ -58,6 +58,6 @@ export function UseCases() {
           </article>
         ))}
       </div>
-    </MarketingSection>
+    </Wrapper>
   );
 }

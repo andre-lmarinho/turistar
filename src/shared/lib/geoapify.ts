@@ -1,6 +1,6 @@
 // Helpers for fetching POIs from the Geoapify API.
 
-import type { AutocompletePlace } from '@/shared/types/locations';
+import type { AutocompletePlace } from '@/features/planner/types/locations';
 import { clientEnv } from './clientEnv';
 
 const isE2E = process.env.NEXT_PUBLIC_E2E === '1';
