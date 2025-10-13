@@ -10,28 +10,28 @@ export default function AgencyPage() {
       <HeroTwoColumns
         eyebrow="For travel agencies"
         title="Serve clients better"
-        description="Streamline your agency's workflow by organising, visualising and budgeting trips in one place."
+        description="Streamline your agency's workflow by organizing, visualizing and budgeting trips in one place."
         primaryAction={{ label: 'Start planning for clients', href: '/signup' }}
         secondaryAction={{ label: 'View pricing', href: '/pricing' }}
       />
       <KeyBenefits
         title="Serve clients better"
-        description="Streamline your agency's workflow by organising, visualising and budgeting trips in one place."
+        description="Streamline your agency's workflow by organizing, visualizing and budgeting trips in one place."
         benefits={[
           {
-            title: 'Optimise operations quickly',
+            title: 'Optimize operations quickly',
             description:
               'Use drag and drop planning to update itineraries without spreadsheets. Save time and reduce mistakes with real time saving across your team.',
           },
           {
-            title: 'Visualise journeys clearly',
+            title: 'Visualize journeys clearly',
             description:
               'Present routes, destinations and schedules on an interactive map. Help clients picture their trip and make informed decisions faster during consultations.',
           },
           {
             title: 'Manage client budgets',
             description:
-              'Organise costs by service, accommodation and transport. Provide transparent totals and adjust quickly to meet financial expectations for your customers.',
+              'Organize costs by service, accommodation and transport. Provide transparent totals and adjust quickly to meet financial expectations for your customers.',
           },
         ]}
       />

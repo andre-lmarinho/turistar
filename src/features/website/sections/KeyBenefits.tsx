@@ -1,9 +1,8 @@
-import Link from 'next/link';
-
 import FeatureCarousel from '@/shared/ui/carousel/FeatureCarousel';
 import type { FeatureCarouselFeature } from '@/shared/ui/carousel/FeatureCarousel';
 import { Sparkles } from '@/shared/ui/icon';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 const CAROUSEL_IMAGE_SOURCES = [
   '/images/home/feature_01.webp',
@@ -36,12 +35,7 @@ export default function KeyBenefits({ title, description, benefits }: KeyBenefit
         <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5]">
           {description}
         </p>
-        <Link
-          href="/signup"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors"
-        >
-          Get started
-        </Link>
+        <Button href="/signup">Get started</Button>
       </div>
       <FeatureCarousel features={carouselFeatures} />
     </MarketingSection>

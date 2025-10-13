@@ -1,7 +1,6 @@
-import Link from 'next/link';
-
 import { Flame } from '@/shared/ui/icon';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 export interface FeatureBreakdownCategory {
   title: string;
@@ -25,12 +24,7 @@ export default function PricingFeature({ categories }: FeatureBreakdownProps) {
         <p className="text-muted-foreground max-w-2xl text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
           Compare our Free and Agendy plans to see why we are the better choice.
         </p>
-        <Link
-          href="/signup"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-        >
-          Get started
-        </Link>
+        <Button href="/signup">Get started</Button>
       </div>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {categories.map((category) => (

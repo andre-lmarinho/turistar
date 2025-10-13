@@ -19,7 +19,7 @@ export default function FriendsPage() {
       />
       <KeyBenefits
         title="Plan together with ease"
-        description="Empower couples and friends to organise shared itineraries by combining planning, mapping and budgeting tools."
+        description="Empower couples and friends to organize shared itineraries by combining planning, mapping and budgeting tools."
         benefits={[
           {
             title: 'Coordinate schedules easily',
@@ -29,7 +29,7 @@ export default function FriendsPage() {
           {
             title: 'Agree on routes',
             description:
-              "Use the map to visualise everyone's favourite stops. Compare distances and adjust days until the route suits the whole group.",
+              "Use the map to visualize everyone's favorite stops. Compare distances and adjust days until the route suits the whole group.",
           },
           {
             title: 'Share expenses fairly',

@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-
 import { Map } from '@/shared/ui/icon';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 export type CtaMidPageAction = {
   href: string;
@@ -45,22 +44,17 @@ export default function CtaMidPage({ primaryAction, secondaryAction }: CtaMidPag
           Access our app to build your trip today.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
-          <Link
-            href={primary.href}
-            target={primary.target}
-            rel={primary.rel}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-          >
+          <Button href={primary.href} target={primary.target} rel={primary.rel}>
             {primary.label}
-          </Link>
-          <Link
+          </Button>
+          <Button
             href={secondary.href}
             target={secondary.target}
             rel={secondary.rel}
-            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-5 py-2.5 text-sm font-semibold transition-colors"
+            variant="ghost"
           >
             {secondary.label}
-          </Link>
+          </Button>
         </div>
       </div>
     </MarketingSection>

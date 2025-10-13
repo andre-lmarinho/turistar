@@ -18,10 +18,10 @@ const content: PlanningPageContent = {
       {
         title: 'Simplify group coordination',
         description:
-          'Use drag and drop to arrange days, activities and meals for multiple travellers. Edits save instantly so everyone stays aligned.',
+          'Use drag and drop to arrange days, activities and meals for multiple travelers. Edits save instantly so everyone stays aligned.',
       },
       {
-        title: 'Visualise group routes',
+        title: 'Visualize group routes',
         description:
           'Present routes and meeting points on an interactive map. See distances between stops and make sure the itinerary works for all participants.',
       },

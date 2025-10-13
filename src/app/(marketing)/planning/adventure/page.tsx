@@ -23,7 +23,7 @@ const content: PlanningPageContent = {
       {
         title: 'Navigate wild terrain',
         description:
-          'Use the interactive map to plot trails, campsites and climbs. Measure distances and keep your route overview always visible while organising each day.',
+          'Use the interactive map to plot trails, campsites and climbs. Measure distances and keep your route overview always visible while organizing each day.',
       },
       {
         title: 'Track expedition costs',

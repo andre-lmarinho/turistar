@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 export type CtaFinalAction = {
   href: string;
@@ -28,14 +27,9 @@ export default function CtaFinal({ variant = 'default', primaryAction }: CtaFina
         <h2 className="text-center text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
           {TITLES[variant]}
         </h2>
-        <Link
-          href={primaryAction.href}
-          target={primaryAction.target}
-          rel={primaryAction.rel}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex h-8 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-        >
+        <Button href={primaryAction.href} target={primaryAction.target} rel={primaryAction.rel}>
           {primaryAction.label}
-        </Link>
+        </Button>
       </div>
     </MarketingSection>
   );

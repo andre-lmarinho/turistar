@@ -13,7 +13,7 @@ const content: PlanningPageContent = {
   keyBenefits: {
     title: 'Own your road trip',
     description:
-      'Plan each leg of the journey, monitor mileage and costs, and keep everything organised in one place.',
+      'Plan each leg of the journey, monitor mileage and costs, and keep everything organized in one place.',
     benefits: [
       {
         title: 'Design every leg',
@@ -23,7 +23,7 @@ const content: PlanningPageContent = {
       {
         title: 'Map your route',
         description:
-          'Plot every leg on the map, visualise driving distances, and quickly see how detours affect your overall schedule before you go.',
+          'Plot every leg on the map, visualize driving distances, and quickly see how detours affect your overall schedule before you go.',
       },
       {
         title: 'Balance your budget',

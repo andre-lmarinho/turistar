@@ -14,6 +14,7 @@ export {
   ChevronRight,
   ChevronRightIcon,
   DollarSign,
+  HandCoins,
   Flame,
   FileText,
   Hotel,

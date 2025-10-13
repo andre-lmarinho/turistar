@@ -24,6 +24,7 @@ import {
 } from '@/shared/ui/icon';
 import ResumePlan from './ResumePlan';
 import { cn } from '@/shared/utils/cn';
+import { Button } from '@/shared/ui/button';
 
 type SolutionItem = {
   href: string;
@@ -64,13 +65,6 @@ const navLinks: NavLink[] = [
   { href: '/pricing', label: 'Pricing' },
 ];
 
-const CTA_BASE = {
-  ghost:
-    'text-foreground hover:text-muted-foreground focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none h-8 px-3',
-  primary:
-    'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/60 inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none h-8 px-3',
-};
-
 const mobileMenuLinkClass =
   'text-foreground hover:text-primary flex w-full items-center justify-between text-left p-4 text-[15px] font-semibold transition-colors';
 
@@ -90,19 +84,6 @@ const NavLinkItem = ({ href, label }: NavLink) => (
     href={href}
     className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
   >
-    {label}
-  </Link>
-);
-
-type CtaLinkProps = {
-  href: string;
-  label: string;
-  variant: keyof typeof CTA_BASE;
-  className?: string;
-  onClick?: () => void;
-};
-const CtaLink = ({ href, label, variant, className, onClick }: CtaLinkProps) => (
-  <Link href={href} onClick={onClick} className={cn(CTA_BASE[variant], className)}>
     {label}
   </Link>
 );
@@ -274,8 +255,10 @@ const DesktopNavigation = ({ isSolutionsOpen, onSolutionsChange }: DesktopNaviga
 
 const DesktopActions = () => (
   <div className="ml-auto flex items-center gap-6 lg:ml-0 lg:justify-self-end">
-    <CtaLink href="/inspiration/rome" label="Try a demo" variant="ghost" />
-    <CtaLink href="/signup" label="Get started" variant="primary" />
+    <Button href="/inspiration/rome" variant="ghost">
+      Try a demo
+    </Button>
+    <Button href="/signup">Get started</Button>
   </div>
 );
 

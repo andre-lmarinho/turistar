@@ -13,6 +13,7 @@ export const lucideIconNames = [
   'dollar-sign',
   'file-text',
   'flame',
+  'hand-coins',
   'hotel',
   'hourglass',
   'kanban',

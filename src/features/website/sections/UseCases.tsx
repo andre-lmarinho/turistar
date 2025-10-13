@@ -1,7 +1,6 @@
-import Link from 'next/link';
-
 import { Users } from '@/shared/ui/icon';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 const USE_CASES = [
   {
@@ -44,12 +43,7 @@ export default function UseCases() {
         <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
           See how Turistar fits different agency offerings and workflows.
         </p>
-        <Link
-          href="/signup"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors"
-        >
-          Get started
-        </Link>
+        <Button href="/signup">Get started</Button>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {USE_CASES.map((useCase) => (

@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-
 import { cn } from '@/shared/utils/cn';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
 import { HandCoins } from '@/shared/ui/icon';
+import { Button } from '@/shared/ui/button';
 
 export type PricingTableAction = {
   href: string;
@@ -35,14 +34,11 @@ function renderAction(plan: PricingTablePlan) {
   }
 
   const { href, label, target, rel } = action;
-  const className = plan.highlighted
-    ? 'inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90'
-    : 'inline-flex items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60';
 
   return (
-    <Link href={href} target={target} rel={rel} className={className}>
+    <Button href={href} target={target} rel={rel} variant={plan.highlighted ? 'primary' : 'ghost'}>
       {label}
-    </Link>
+    </Button>
   );
 }
 

@@ -1,7 +1,6 @@
-import Link from 'next/link';
-
 import { Calendar, CircleCheck } from '@/shared/ui/icon';
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 const FEATURE_ITEMS = [
   {
@@ -45,12 +44,7 @@ export default function Features() {
           Enhance your trips with these helpful tools that streamline planning, mapping and
           budgeting.
         </p>
-        <Link
-          href="/signup"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold transition-colors"
-        >
-          Get started
-        </Link>
+        <Button href="/signup">Get started</Button>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURE_ITEMS.map((feature) => (

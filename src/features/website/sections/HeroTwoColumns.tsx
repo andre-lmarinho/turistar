@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import MarketingSection from '@/features/website/ui/section/Wrapper';
+import { Button } from '@/shared/ui/button';
 
 export type HeroTwoColumnsAction = {
   href: string;
@@ -22,10 +22,6 @@ export interface HeroTwoColumnsProps {
 
 const EYEBROW_CLASSES =
   'text-primary bg-primary/10 pointer-events-none inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold tracking-wide select-none';
-const PRIMARY_CLASSES =
-  'inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90';
-const SECONDARY_CLASSES =
-  'inline-flex items-center justify-center rounded-md border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60';
 
 export default function HeroTwoColumns({
   eyebrow,
@@ -51,24 +47,23 @@ export default function HeroTwoColumns({
         {primaryAction || secondaryAction ? (
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
             {primaryAction ? (
-              <Link
+              <Button
                 href={primaryAction.href}
                 target={primaryAction.target}
                 rel={primaryAction.rel}
-                className={PRIMARY_CLASSES}
               >
                 {primaryAction.label}
-              </Link>
+              </Button>
             ) : null}
             {secondaryAction ? (
-              <Link
+              <Button
                 href={secondaryAction.href}
                 target={secondaryAction.target}
                 rel={secondaryAction.rel}
-                className={SECONDARY_CLASSES}
+                variant="ghost"
               >
                 {secondaryAction.label}
-              </Link>
+              </Button>
             ) : null}
           </div>
         ) : null}
