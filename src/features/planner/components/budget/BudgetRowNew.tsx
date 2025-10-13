@@ -5,6 +5,7 @@ import { Plus } from '@/shared/ui/icon';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetContext } from '@/features/planner/hooks/BudgetContext';
 import { useBudgetRowInputs } from '@/features/planner/hooks/ui/useBudgetRowInputs';
+import { BudgetRowInputs } from '@/features/planner/components/budget/BudgetRowInputs';
 
 type BudgetRowNewProps = {
   amountInput: string;
@@ -16,7 +17,7 @@ export function BudgetRowNew({ amountInput, setAmountInput, onAdd }: BudgetRowNe
   const { desc, setDesc, cat, setCat, setAmount } = useBudgetContext();
   const baseId = useId();
 
-  const { descriptionCell, categoryCell, amountCell } = useBudgetRowInputs({
+  const budgetRowInputs = useBudgetRowInputs({
     description: {
       id: `description-${baseId}`,
       value: desc,
@@ -47,9 +48,7 @@ export function BudgetRowNew({ amountInput, setAmountInput, onAdd }: BudgetRowNe
 
   return (
     <tr role="row" className="border-t">
-      {descriptionCell}
-      {categoryCell}
-      {amountCell}
+      <BudgetRowInputs {...budgetRowInputs} />
       <td role="gridcell" className="p-2 text-right">
         <button
           type="button"

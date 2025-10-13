@@ -4,7 +4,6 @@ import React, { useId } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 
-/* Variants ------------------------------------------------------------ */
 const inputVariants = cva('grid grid-cols-[auto_1fr] items-center overflow-hidden rounded border', {
   variants: {
     inputSize: {
@@ -23,7 +22,6 @@ const inputVariants = cva('grid grid-cols-[auto_1fr] items-center overflow-hidde
   },
 });
 
-/* Input Component -------------------------------------------- */
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {
@@ -33,7 +31,7 @@ interface InputProps
   icon?: React.ReactNode;
 }
 
-function Input({
+export function Input({
   value,
   onValueChange,
   labelId,
@@ -64,5 +62,3 @@ function Input({
     </div>
   );
 }
-
-export { Input, inputVariants };

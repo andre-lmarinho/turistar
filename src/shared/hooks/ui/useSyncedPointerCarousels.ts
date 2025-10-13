@@ -4,8 +4,9 @@ import type { RefObject } from 'react';
 import { scrollToChild } from '@/shared/utils/scrollToChild';
 import type { PointerDragHandlers } from './usePointerDragScroll';
 
-export type SyncedCarouselRegistration = RefObject<HTMLUListElement | null>;
-export type UseSyncedPointerCarouselsOptions = {
+type SyncedCarouselRegistration = RefObject<HTMLUListElement | null>;
+
+type UseSyncedPointerCarouselsOptions = {
   initialIndex?: number;
   onChange?: (index: number) => void;
 };

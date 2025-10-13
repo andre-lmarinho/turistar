@@ -3,7 +3,7 @@
 import { X } from '@/shared/ui/icon';
 import { PopoverClose, PopoverContent } from '@/shared/ui/popover';
 
-export interface CardColorsPopoverProps {
+interface CardColorsPopoverProps {
   titleId?: string;
   imageUrl?: string;
   onRemoveImage?: () => void;

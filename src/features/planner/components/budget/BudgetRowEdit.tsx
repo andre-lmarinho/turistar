@@ -5,6 +5,7 @@ import type { Entry } from '@/features/planner/types/budget';
 import { Check, X } from '@/shared/ui/icon';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import { useBudgetRowInputs } from '@/features/planner/hooks/ui/useBudgetRowInputs';
+import { BudgetRowInputs } from '@/features/planner/components/budget/BudgetRowInputs';
 
 type BudgetRowEditProps = {
   index: number;
@@ -27,7 +28,7 @@ export function BudgetRowEdit({
 }: BudgetRowEditProps) {
   const baseId = useId();
 
-  const { descriptionCell, categoryCell, amountCell } = useBudgetRowInputs({
+  const budgetRowInputs = useBudgetRowInputs({
     description: {
       id: `description-${baseId}`,
       value: editEntry.description,
@@ -57,9 +58,7 @@ export function BudgetRowEdit({
 
   return (
     <tr role="row" className="border-t">
-      {descriptionCell}
-      {categoryCell}
-      {amountCell}
+      <BudgetRowInputs {...budgetRowInputs} />
       <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
         <button
           type="button"

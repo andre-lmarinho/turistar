@@ -8,7 +8,7 @@ import { cn } from '@/shared/utils/cn';
 import { ActivityCard } from './ActivityCard';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
-export interface SortableItemProps {
+interface SortableItemProps {
   id: string;
   activity: Activity & { dayId?: string };
   onSelect?: () => void;

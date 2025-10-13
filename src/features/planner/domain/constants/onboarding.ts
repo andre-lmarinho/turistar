@@ -1,4 +1,4 @@
-export interface OnboardingStep {
+interface OnboardingStep {
   title: string;
   description: string;
   image: string;

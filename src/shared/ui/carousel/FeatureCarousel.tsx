@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
+import { cn } from '@/shared/utils/cn';
 
 import { useIsDesktop } from '@/shared/hooks/ui/useIsDesktop';
 import { usePointerDragScroll } from '@/shared/hooks/ui/usePointerDragScroll';
@@ -17,17 +18,9 @@ export type FeatureCarouselFeature = {
   imgSrc: string;
 };
 
-export type FeatureCarouselProps = {
+type FeatureCarouselProps = {
   features: FeatureCarouselFeature[];
 };
-
-const CARD_LIST_CLASSES = `scrollbar-hidden m-0 flex w-full snap-x snap-proximity gap-4 overflow-x-auto p-0 cursor-grab [touch-action:pan-y] md:flex-col md:gap-4 md:overflow-visible md:cursor-auto md:[touch-action:auto] md:snap-none ${styles.dragContext}`;
-
-const CARD_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start md:min-w-0 md:basis-auto';
-
-const IMAGE_LIST_CLASSES = `scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 ${styles.dragContext}`;
-
-const IMAGE_ITEM_CLASSES = 'min-w-full shrink-0 basis-full snap-start';
 
 export function FeatureCarousel({ features }: FeatureCarouselProps) {
   const cardsRef = useRef<HTMLUListElement | null>(null);
@@ -87,9 +80,18 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
       />
       <div className="order-1 flex flex-col gap-8 md:order-2 md:grid md:grid-cols-3 md:gap-8">
         <div className="order-2 md:order-none">
-          <ul ref={cardsRef} className={CARD_LIST_CLASSES}>
+          <ul
+            ref={cardsRef}
+            className={cn(
+              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 md:cursor-auto md:[touch-action:auto] md:snap-none md:flex-col md:gap-4 md:overflow-visible',
+              styles.dragContext
+            )}
+          >
             {features.map((feature, index) => (
-              <li key={feature.title} className={CARD_ITEM_CLASSES}>
+              <li
+                key={feature.title}
+                className={cn('min-w-full shrink-0 basis-full snap-start md:min-w-0 md:basis-auto')}
+              >
                 <FeatureCarouselCard
                   feature={feature}
                   isActive={index === activeIndex}
@@ -102,9 +104,17 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
         </div>
 
         <div className="order-1 overflow-hidden md:order-none md:col-span-2">
-          <ul ref={imagesRef} tabIndex={-1} aria-hidden="true" className={IMAGE_LIST_CLASSES}>
+          <ul
+            ref={imagesRef}
+            tabIndex={-1}
+            aria-hidden="true"
+            className={cn(
+              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0',
+              styles.dragContext
+            )}
+          >
             {features.map((feature, index) => (
-              <li key={feature.title} className={IMAGE_ITEM_CLASSES}>
+              <li key={feature.title} className="min-w-full shrink-0 basis-full snap-start">
                 <div className="select-none">
                   <Image
                     src={feature.imgSrc}
@@ -126,8 +136,3 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
     </div>
   );
 }
-
-export { FeatureCarouselCard } from './FeatureCarouselCard';
-export type { FeatureCarouselCardProps } from './FeatureCarouselCard';
-export { FeatureCarouselNavDots } from './FeatureCarouselNavDots';
-export type { FeatureCarouselNavDotsProps } from './FeatureCarouselNavDots';

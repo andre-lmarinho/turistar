@@ -3,13 +3,13 @@
 import { useQuery } from '@tanstack/react-query';
 import type { AutocompletePlace } from '@/shared/types/locations';
 
-export interface LocationAutocompleteOptions {
+interface LocationAutocompleteOptions {
   enabled?: boolean;
   latitude?: number;
   longitude?: number;
 }
 
-export interface LocationAutocompleteConfig {
+interface LocationAutocompleteConfig {
   /** Endpoint that proxies Geoapify autocomplete results. */
   endpoint: string;
   /** Prefix used for the TanStack Query cache key. */

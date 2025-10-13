@@ -12,7 +12,7 @@ export function assertValidCitySlug(city: string) {
   }
 }
 
-export async function readInspirationData(city: string): Promise<InspirationDocument> {
+async function readInspirationData(city: string): Promise<InspirationDocument> {
   const filePath = join(DATA_DIR, `${city}.json`);
   const raw = await fs.readFile(filePath, 'utf8');
   return JSON.parse(raw) as InspirationDocument;

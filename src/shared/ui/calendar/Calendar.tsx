@@ -6,7 +6,7 @@ import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { cn } from '@/shared/utils/cn';
 
-function Calendar({
+export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
@@ -168,5 +168,3 @@ function CalendarDayButton({
     />
   );
 }
-
-export { Calendar, CalendarDayButton };

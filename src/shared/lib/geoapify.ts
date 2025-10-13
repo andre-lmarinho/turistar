@@ -11,7 +11,6 @@ type GeoapifyAutocompleteProvider = (
   lon?: number
 ) => Promise<AutocompletePlace[]>;
 
-/* Types */
 type GeoapifyFeature = {
   properties: {
     place_id: string | number;
@@ -30,7 +29,7 @@ type GeoapifyFeature = {
 type GeoapifyResponse = { features: GeoapifyFeature[] };
 
 /* Helpers */
-export function getGeoapifyKey(): string {
+function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
 }
 
@@ -129,10 +128,6 @@ if (isE2E) {
       )
       .map((place) => ({ ...place }));
   };
-}
-
-export function setGeoapifyAutocompleteProvider(provider: GeoapifyAutocompleteProvider) {
-  autocompleteProvider = provider;
 }
 
 export async function fetchGeoapifyAutocomplete(

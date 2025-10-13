@@ -7,9 +7,9 @@ import {
   DEFAULT_COLORS,
 } from '@/features/planner/domain/constants/colors';
 
-export type AddCardButtonPosition = 'new' | 'insert';
+type AddCardButtonPosition = 'new' | 'insert';
 
-export interface AddCardButtonProps {
+interface AddCardButtonProps {
   dayId: string;
   index?: number;
   position: AddCardButtonPosition;

@@ -33,11 +33,11 @@ type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
 };
 
-export type ButtonProps = (AnchorButtonProps | NativeButtonProps) & {
+type ButtonProps = (AnchorButtonProps | NativeButtonProps) & {
   className?: string;
 };
 
-const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
   ({ className, variant, href, ...props }, ref) => {
     if (href) {
       const anchorProps = props as React.AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -66,5 +66,3 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
-
-export { Button, buttonVariants };

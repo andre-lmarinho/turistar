@@ -8,7 +8,7 @@ import { useFlexibleRef } from '@/shared/hooks/ui/useFlexibleRef';
  * Provides trigger refs and exposes the active popup identifier.
  */
 
-export type CardPopupType = 'color' | 'date' | null;
+type CardPopupType = 'color' | 'date' | null;
 
 export function useCardPopups() {
   const colorButtonRef = useFlexibleRef();

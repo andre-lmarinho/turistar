@@ -2,7 +2,7 @@ import { cn } from '@/shared/utils/cn';
 
 import type { FeatureCarouselFeature } from './FeatureCarousel';
 
-export type FeatureCarouselCardProps = {
+type FeatureCarouselCardProps = {
   feature: FeatureCarouselFeature;
   isActive: boolean;
   interactive: boolean;

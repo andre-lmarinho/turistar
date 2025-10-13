@@ -6,7 +6,7 @@ import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { useCardColors } from '@/features/planner/hooks/ui/useCardColors';
 import { ActivityCardBase } from './ActivityCardBase';
 
-export interface ActivityCardProps {
+interface ActivityCardProps {
   activity: Activity & { dayId?: string };
   onSelect?: () => void;
   bgColor: string;

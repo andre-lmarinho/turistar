@@ -2,7 +2,7 @@ import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 export const BLANK_ACTIVITY_PREFIX = 'blank-';
 
-export function isBlankActivityTitle(title: string | undefined | null): boolean {
+function isBlankActivityTitle(title: string | undefined | null): boolean {
   return !title || title.trim().length === 0;
 }
 

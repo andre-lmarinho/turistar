@@ -1,6 +1,6 @@
 import { cn } from '@/shared/utils/cn';
 
-export type FeatureCarouselNavDotsProps = {
+type FeatureCarouselNavDotsProps = {
   total: number;
   current: number;
   onSelect: (index: number) => void;

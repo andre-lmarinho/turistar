@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { OnboardingDialog } from '@/features/planner/components/onboarding/OnboardingDialog';
 import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
 import { vi } from 'vitest';
-import { OnboardingProvider } from '@/features/planner/hooks/context/OnboardingContext';
+import { OnboardingProvider } from '@/features/planner/hooks/OnboardingContext';
 
 const mockSetShowOnboarding = vi.fn();
 vi.mock('@/features/planner/hooks/onboarding/useOnboardingCheck', () => ({

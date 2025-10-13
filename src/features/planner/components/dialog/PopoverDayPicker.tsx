@@ -4,7 +4,7 @@ import { X } from '@/shared/ui/icon';
 import { PopoverClose, PopoverContent } from '@/shared/ui/popover';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
-export interface DayPickerPopoverProps {
+interface DayPickerPopoverProps {
   titleId?: string;
   days: DayPlan[];
   selectedDayId?: string;
