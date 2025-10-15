@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Curate relaxing escapes with ease',
     description:
       'Craft weekend breaks or dream holidays with collaborative itineraries, synced checklists, and reminders.',
-    primaryAction: { label: 'Start a vacation plan', href: '/signup' },
-    secondaryAction: { label: 'See all planning types', href: '/planning' },
   },
   keyBenefits: {
     title: 'Make vacation planning easy',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Create your free account', href: '/signup' },
   faq: {
-    title: 'Vacation planning FAQ',
     items: [
       {
         question: 'Can I import ideas from other apps?',
@@ -46,9 +42,6 @@ const content: PlanningPageContent = {
         answer: 'Send automatic daily summaries to each traveler with the latest schedule updates.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

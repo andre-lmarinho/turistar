@@ -1,6 +1,7 @@
+import { Section, Container } from '@/features/website/ui/wrapper';
+import { H2, P, Eyebrow } from '@/features/website/ui/typography';
+import { CTAButton } from '@/features/website/ui/button';
 import { Flame } from '@/shared/ui/icon';
-import { Wrapper } from '@/features/website/ui/section/Wrapper';
-import { Button } from '@/shared/ui/button';
 
 export interface FeatureBreakdownCategory {
   title: string;
@@ -14,18 +15,16 @@ export interface FeatureBreakdownProps {
 
 export function PricingFeature({ categories }: FeatureBreakdownProps) {
   return (
-    <Wrapper>
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
-        <p className="eyebrow">
+    <Section>
+      <Container>
+        <Eyebrow>
           <Flame className="size-4" aria-hidden="true" />
           Adicional features
-        </p>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Feature breakdown</h2>
-        <p className="text-muted-foreground max-w-2xl text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
-          Compare our Free and Agendy plans to see why we are the better choice.
-        </p>
-        <Button href="/signup">Get started</Button>
-      </div>
+        </Eyebrow>
+        <H2>Feature breakdown</H2>
+        <P>Compare our Free and Agendy plans to see why we are the better choice.</P>
+        <CTAButton />
+      </Container>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {categories.map((category) => (
           <article
@@ -49,6 +48,6 @@ export function PricingFeature({ categories }: FeatureBreakdownProps) {
           </article>
         ))}
       </div>
-    </Wrapper>
+    </Section>
   );
 }

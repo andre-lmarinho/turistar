@@ -1,6 +1,5 @@
 import React from 'react';
 import { CATEGORIES, CategoryKey } from '@/features/planner/domain/constants/budget';
-import { Input } from '@/shared/ui/input';
 import { DollarSign } from '@/shared/ui/icon';
 import type { UseBudgetRowInputsResult } from '../../hooks/ui/useBudgetRowInputs';
 
@@ -51,20 +50,22 @@ export function BudgetRowInputs({
         <label htmlFor={amount.id} className="sr-only">
           {amount.ariaLabel ?? 'Amount'}
         </label>
-        <Input
-          id={amount.id}
-          value={amount.value}
-          onValueChange={amount.onValueChange}
-          onBlur={amount.onBlur}
-          inputSize="default"
-          background="default"
-          inputMode="decimal"
-          autoComplete="off"
-          placeholder={amount.placeholder}
-          aria-label={amount.ariaLabel ?? 'Amount'}
-          icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
-        />
+        <div className="bg-background grid grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
+          <span className="bg-muted border-r-1">
+            <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
+          </span>
+          <input
+            id={amount.id}
+            value={amount.value}
+            onChange={(event) => amount.onValueChange(event.target.value)}
+            onBlur={amount.onBlur}
+            inputMode="decimal"
+            autoComplete="off"
+            placeholder={amount.placeholder}
+            aria-label={amount.ariaLabel ?? 'Amount'}
+            className="focus:ring-primary w-full bg-transparent px-2 py-1 text-right outline-none focus:ring-2 focus:ring-offset-2"
+          />
+        </div>
       </td>
     </>
   );

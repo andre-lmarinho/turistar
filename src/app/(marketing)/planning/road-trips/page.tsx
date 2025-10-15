@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Design scenic drives with confidence',
     description:
       'Build routes with fuel stops, lodging, and playlists so every mile feels effortless.',
-    primaryAction: { label: 'Map a road trip', href: '/signup' },
-    secondaryAction: { label: 'Share with co-drivers', href: '/friends' },
   },
   keyBenefits: {
     title: 'Own your road trip',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Start planning your drive', href: '/signup' },
   faq: {
-    title: 'Road trip FAQ',
     items: [
       {
         question: 'Can I reuse my packing lists?',
@@ -45,9 +41,6 @@ const content: PlanningPageContent = {
         answer: 'Add notes, attachments, and custom reminders for every waypoint.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

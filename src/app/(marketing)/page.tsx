@@ -1,13 +1,16 @@
-import { HeroHome } from '@/features/website/sections/HeroHome';
+import { HeroHome } from '@/features/website/sections/Hero/Home';
 import { Testimonial } from '@/features/website/sections/Testimonial';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
 import { InspirationLink } from '@/features/website/sections/InspirationLink';
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
+import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
+import { TrustedBy } from '@/features/website/sections/TrustedBy';
 
 export default function MarketingHomePage() {
   return (
     <>
       <HeroHome />
+      <TrustedBy />
       <KeyBenefits
         title="Planner. Map. Budget."
         description="Great trips start with a plan you can see, a map that makes sense, and a budget that keeps
@@ -33,7 +36,9 @@ export default function MarketingHomePage() {
       />
       <InspirationLink />
       <Testimonial />
-      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
+      <CtaMidPage />
+      <TrustedBy />
+      <CtaFinal />
     </>
   );
 }

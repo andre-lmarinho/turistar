@@ -1,19 +1,15 @@
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import { HeroTwoColumns } from '@/features/website/sections/HeroTwoColumns';
+import { HeroAgencies } from '@/features/website/sections/Hero/Agencies';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
 import { Testimonial } from '@/features/website/sections/Testimonial';
 import { UseCases } from '@/features/website/sections/UseCases';
+import { TrustedBy } from '@/features/website/sections/TrustedBy';
 
 export default function AgencyPage() {
   return (
     <>
-      <HeroTwoColumns
-        eyebrow="For travel agencies"
-        title="Serve clients better"
-        description="Streamline your agency's workflow by organizing, visualizing and budgeting trips in one place."
-        primaryAction={{ label: 'Start planning for clients', href: '/signup' }}
-        secondaryAction={{ label: 'View pricing', href: '/pricing' }}
-      />
+      <HeroAgencies />
+      <TrustedBy />
       <KeyBenefits
         title="Serve clients better"
         description="Streamline your agency's workflow by organizing, visualizing and budgeting trips in one place."
@@ -37,7 +33,7 @@ export default function AgencyPage() {
       />
       <UseCases />
       <Testimonial />
-      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
+      <CtaFinal />
     </>
   );
 }

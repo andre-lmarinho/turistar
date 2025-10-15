@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Balance work and exploration anywhere',
     description:
       'Plan remote work sprints, co-working days, and local adventures without losing focus.',
-    primaryAction: { label: 'Build a nomad plan', href: '/signup' },
-    secondaryAction: { label: 'Share with your crew', href: '/friends' },
   },
   keyBenefits: {
     title: 'Balance work and adventure',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Start a nomad workspace', href: '/signup' },
   faq: {
-    title: 'Digital nomad FAQ',
     items: [
       {
         question: 'Can I integrate meeting tools?',
@@ -45,9 +41,6 @@ const content: PlanningPageContent = {
         answer: 'Store required paperwork, deadlines, and status updates in shared trackers.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import { HeroHome } from '@/features/website/sections/HeroHome';
+import { HeroHome } from '@/features/website/sections/Hero/Home';
 
 describe('Accessibility — Hero component', () => {
   it('has no a11y violations', async () => {

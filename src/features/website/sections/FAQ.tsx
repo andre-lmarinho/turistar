@@ -1,5 +1,7 @@
-import { UserStar } from '@/shared/ui/icon';
-import { Wrapper } from '@/features/website/ui/section/Wrapper';
+import { Section, Container } from '@/features/website/ui/wrapper';
+import { H2, P, Eyebrow } from '@/features/website/ui/typography';
+import { CTAButton } from '@/features/website/ui/button';
+import { CircleQuestionMark } from '@/shared/ui/icon';
 
 export interface FaqItem {
   question: string;
@@ -7,22 +9,21 @@ export interface FaqItem {
 }
 
 export interface FaqProps {
-  title: string;
   items: FaqItem[];
 }
 
-export function Faq({ title, items }: FaqProps) {
+export function Faq({ items }: FaqProps) {
   return (
-    <Wrapper>
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
-        <p className="eyebrow">
-          <UserStar className="size-4" aria-hidden="true" />
+    <Section>
+      <Container>
+        <Eyebrow>
+          <CircleQuestionMark className="size-4" aria-hidden="true" />
           FAQ
-        </p>
-        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
-          {title}
-        </h2>
-      </div>
+        </Eyebrow>
+        <H2>Frequently asked questions</H2>
+        <P> These are some of our most frequently asked questions.</P>
+        <CTAButton />
+      </Container>
       <dl className="mt-12 space-y-6">
         {items.map((item, index) => (
           <div
@@ -34,6 +35,6 @@ export function Faq({ title, items }: FaqProps) {
           </div>
         ))}
       </dl>
-    </Wrapper>
+    </Section>
   );
 }

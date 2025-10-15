@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Plan flexible routes for rugged trips',
     description:
       'Map multi-stop adventures, offline checklists, and gear prep so you can roam with confidence.',
-    primaryAction: { label: 'Draft an adventure', href: '/signup' },
-    secondaryAction: { label: 'Invite travel partners', href: '/friends' },
   },
   keyBenefits: {
     title: 'Adventure planning made simple',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Plan a backpacking route', href: '/signup' },
   faq: {
-    title: 'Adventure planning FAQ',
     items: [
       {
         question: 'Can I duplicate an itinerary?',
@@ -46,9 +42,6 @@ const content: PlanningPageContent = {
         answer: 'Track contributions by traveler and mark reimbursements in shared ledgers.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

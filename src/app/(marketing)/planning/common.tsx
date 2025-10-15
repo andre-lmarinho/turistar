@@ -1,36 +1,33 @@
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import type { CtaFinalAction } from '@/features/website/sections/CTAFinal';
 import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
-import type { CtaMidPageAction } from '@/features/website/sections/CTAMidPage';
 import { Features } from '@/features/website/sections/Features';
 import { Faq } from '@/features/website/sections/FAQ';
 import type { FaqProps } from '@/features/website/sections/FAQ';
-import { HeroTwoColumns } from '@/features/website/sections/HeroTwoColumns';
-import type { HeroTwoColumnsProps } from '@/features/website/sections/HeroTwoColumns';
+import { HeroPlanning } from '@/features/website/sections/Hero/Planning';
+import type { HeroPlanningProps } from '@/features/website/sections/Hero/Planning';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
 import type { KeyBenefitsProps } from '@/features/website/sections/KeyBenefits';
 import { Testimonial } from '@/features/website/sections/Testimonial';
+import { TrustedBy } from '@/features/website/sections/TrustedBy';
 
 export interface PlanningPageContent {
-  hero: HeroTwoColumnsProps;
+  hero: HeroPlanningProps;
   keyBenefits: KeyBenefitsProps;
   faq: FaqProps;
-  ctaMidPageAction?: CtaMidPageAction;
-  ctaFinal: {
-    primaryAction: CtaFinalAction;
-  };
 }
 
 export function PlanningPageTemplate({ content }: { content: PlanningPageContent }) {
   return (
     <>
-      <HeroTwoColumns {...content.hero} />
+      <HeroPlanning {...content.hero} />
+      <TrustedBy />
       <KeyBenefits {...content.keyBenefits} />
       <Features />
-      <CtaMidPage primaryAction={content.ctaMidPageAction} />
+      <CtaMidPage />
       <Faq {...content.faq} />
       <Testimonial />
-      <CtaFinal variant="planning" primaryAction={content.ctaFinal.primaryAction} />
+      <TrustedBy />
+      <CtaFinal variant="planning" />
     </>
   );
 }

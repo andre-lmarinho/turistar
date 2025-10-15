@@ -6,6 +6,7 @@ export const lucideIconNames = [
   'bus',
   'calendar',
   'circle-check',
+  'CircleQuestionMark',
   'check',
   'chevron-down',
   'chevron-left',

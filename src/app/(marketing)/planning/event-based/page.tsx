@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Coordinate travel around milestone moments',
     description:
       'From weddings to conferences, keep attendees aligned on logistics, tickets, and schedules.',
-    primaryAction: { label: 'Organize an event trip', href: '/signup' },
-    secondaryAction: { label: 'Share with attendees', href: '/friends' },
   },
   keyBenefits: {
     title: 'Keep your event organized',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Plan an event trip', href: '/signup' },
   faq: {
-    title: 'Event travel FAQ',
     items: [
       {
         question: 'Can I segment attendees?',
@@ -45,9 +41,6 @@ const content: PlanningPageContent = {
         answer: 'Update the itinerary once and broadcast notifications to everyone automatically.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

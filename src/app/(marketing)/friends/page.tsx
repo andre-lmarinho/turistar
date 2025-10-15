@@ -2,21 +2,17 @@ import { CtaFinal } from '@/features/website/sections/CTAFinal';
 import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
 import { EasyLink } from '@/features/website/sections/EasyLink';
 import { Features } from '@/features/website/sections/Features';
-import { HeroTwoColumns } from '@/features/website/sections/HeroTwoColumns';
+import { HeroFriends } from '@/features/website/sections/Hero/Friends';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
 import { Testimonial } from '@/features/website/sections/Testimonial';
 import { UseCases } from '@/features/website/sections/UseCases';
+import { TrustedBy } from '@/features/website/sections/TrustedBy';
 
 export default function FriendsPage() {
   return (
     <>
-      <HeroTwoColumns
-        eyebrow="Plan with friends"
-        title="Keep every friend aligned on the itinerary"
-        description="Shared boards, polls, and budgets bring clarity to every group conversation."
-        primaryAction={{ label: 'Launch group planning', href: '/signup' }}
-        secondaryAction={{ label: 'See pricing', href: '/pricing' }}
-      />
+      <HeroFriends />
+      <TrustedBy />
       <KeyBenefits
         title="Plan together with ease"
         description="Empower couples and friends to organize shared itineraries by combining planning, mapping and budgeting tools."
@@ -43,7 +39,7 @@ export default function FriendsPage() {
       <CtaMidPage />
       <UseCases />
       <Testimonial />
-      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
+      <CtaFinal />
     </>
   );
 }

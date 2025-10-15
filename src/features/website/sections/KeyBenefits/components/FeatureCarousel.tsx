@@ -10,7 +10,7 @@ import { useSyncedPointerCarousels } from '../hooks/useSyncedPointerCarousels';
 
 import { FeatureCarouselCard } from './FeatureCarouselCard';
 import { FeatureCarouselNavDots } from './FeatureCarouselNavDots';
-import styles from './FeatureCarousel.module.css';
+import styles from '../FeatureCarousel.module.css';
 
 export type FeatureCarouselFeature = {
   title: string;

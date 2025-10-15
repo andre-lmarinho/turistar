@@ -1,14 +1,13 @@
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
 import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
 import { PricingFeature } from '@/features/website/sections/PricingFeature';
-import { HeroPricing } from '@/features/website/sections/HeroPricing';
+import { HeroPricing } from '@/features/website/sections/Hero/Pricing';
+import { TrustedBy } from '@/features/website/sections/TrustedBy';
 
 export default function PricingPage() {
   return (
     <>
       <HeroPricing
-        title="Simple, transparent pricing"
-        subtitle="Every plan includes core planning tools, secure storage, and unlimited itineraries."
         plans={[
           {
             name: 'Starter',
@@ -42,6 +41,7 @@ export default function PricingPage() {
           },
         ]}
       />
+      <TrustedBy />
       <CtaMidPage />
       <PricingFeature
         categories={[
@@ -74,7 +74,7 @@ export default function PricingPage() {
           },
         ]}
       />
-      <CtaFinal primaryAction={{ label: 'Get started', href: '/signup' }} />
+      <CtaFinal />
     </>
   );
 }

@@ -2,8 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
+
+import { Section, Container } from '@/features/website/ui/wrapper';
+import { H2, P } from '@/features/website/ui/typography';
 import { InspirationCard } from '../../../shared/ui/card/Card';
-import { Wrapper } from '@/features/website/ui/section/Wrapper';
 
 import romeJson from '@/features/planner/modules/inspiration/data/rome.json';
 import boipebaJson from '@/features/planner/modules/inspiration/data/boipeba.json';
@@ -26,16 +28,14 @@ export function InspirationLink() {
   const destinations = inspirationSources.map(toDestinationPreview);
 
   return (
-    <Wrapper>
-      <div className="mb-10 md:max-w-[60%]">
-        <h2 className="pb-6 text-2xl leading-[1.1] font-semibold tracking-tight md:text-4xl">
-          Be inspired by fellow travellers
-        </h2>
-        <p className="pb-4 text-xl">
+    <Section>
+      <Container>
+        <H2>Be inspired by fellow travellers</H2>
+        <P>
           Explore a curated list of other travellers trip itineraries and get inspired for your next
           trip. If you like a trip , you can clone it and make it your own.
-        </p>
-      </div>
+        </P>
+      </Container>
       <ul className="mx-auto flex flex-wrap justify-center gap-6">
         {destinations.map((d) => (
           <li key={d.city}>
@@ -45,6 +45,6 @@ export function InspirationLink() {
           </li>
         ))}
       </ul>
-    </Wrapper>
+    </Section>
   );
 }

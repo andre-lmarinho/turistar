@@ -5,7 +5,6 @@ import { DollarSign } from '@/shared/ui/icon';
 import { CATEGORIES } from '@/features/planner/domain/constants/budget';
 import { CategoryProgressBar } from '@/features/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/planner/hooks/BudgetContext';
-import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 
 interface SummaryValueProps {
@@ -58,21 +57,26 @@ export function BudgetPanelHeader() {
             Total Budget
           </label>
 
-          <Input
-            labelId="budget-input"
-            value={budgetInput}
-            onValueChange={setBudgetInput}
-            inputSize="default"
-            background="default"
-            autoComplete="off"
-            placeholder="Budget"
-            icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-            onBlur={() => {
-              const val = normalizeAmount(budgetInput);
-              setBudget(val);
-              setBudgetInput(val ? String(val) : '0');
-            }}
-          />
+          <div className="bg-background grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
+            <span className="bg-muted border-r-1">
+              <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
+            </span>
+            <input
+              id="budget-input"
+              value={budgetInput}
+              onChange={(event) => setBudgetInput(event.target.value)}
+              autoComplete="off"
+              placeholder="Budget"
+              className="focus:ring-primary w-full bg-transparent px-2 py-1 text-right outline-none focus:ring-2 focus:ring-offset-2"
+              inputMode="decimal"
+              aria-label="Total Budget"
+              onBlur={() => {
+                const val = normalizeAmount(budgetInput);
+                setBudget(val);
+                setBudgetInput(val ? String(val) : '0');
+              }}
+            />
+          </div>
         </div>
 
         {/* Total Spend */}

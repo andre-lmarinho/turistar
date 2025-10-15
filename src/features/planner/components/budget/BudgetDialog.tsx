@@ -4,7 +4,6 @@ import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import * as Dialog from '@radix-ui/react-dialog';
 import { DollarSign, X } from '@/shared/ui/icon';
 
-import { Input } from '@/shared/ui/input';
 import { normalizeAmount } from '@/shared/utils/normalizeAmount';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
@@ -89,21 +88,25 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
                 <span className="flex-1 truncate text-sm">
                   {activity.title || 'Untitled'} – {activity.dayLabel}
                 </span>
-                <Input
-                  autoFocus={index === 0 && shouldAutoFocus}
-                  onFocus={index === 0 ? () => setShouldAutoFocus(false) : undefined}
-                  autoComplete="off"
-                  labelId={`budget-${activity.id}`}
-                  value={inputs[activity.id] ?? ''}
-                  onValueChange={(value) =>
-                    setInputs((prev) => ({ ...prev, [activity.id]: value }))
-                  }
-                  inputSize="sm"
-                  background="default"
-                  placeholder="Budget"
-                  aria-label={`Budget for ${activity.title || 'untitled'} – ${activity.dayLabel}`}
-                  icon={<DollarSign aria-hidden="true" className="text-muted-foreground size-4" />}
-                />
+                <div className="bg-background grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
+                  <span className="bg-muted border-r-1">
+                    <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
+                  </span>
+                  <input
+                    id={`budget-${activity.id}`}
+                    autoFocus={index === 0 && shouldAutoFocus}
+                    onFocus={index === 0 ? () => setShouldAutoFocus(false) : undefined}
+                    autoComplete="off"
+                    value={inputs[activity.id] ?? ''}
+                    onChange={(event) =>
+                      setInputs((prev) => ({ ...prev, [activity.id]: event.target.value }))
+                    }
+                    placeholder="Budget"
+                    aria-label={`Budget for ${activity.title || 'untitled'} – ${activity.dayLabel}`}
+                    className="focus:ring-primary w-full bg-transparent px-2 py-1 text-right outline-none focus:ring-2 focus:ring-offset-2"
+                    inputMode="decimal"
+                  />
+                </div>
               </div>
             ))}
           </div>

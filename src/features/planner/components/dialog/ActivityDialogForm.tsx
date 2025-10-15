@@ -5,7 +5,6 @@ import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/features/planner/domain/constants/activity';
-import { Input } from '@/shared/ui/input';
 import { LocationSearchInput } from '../../ui/input/LocationSearchInput';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
@@ -108,48 +107,40 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
 
         {/* Duration */}
         <div>
-          <label
-            htmlFor="activity-notes"
-            className="mb-1 flex items-center gap-1 text-xs font-bold"
-          >
+          <label htmlFor="duration" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <Hourglass size={12} aria-hidden="true" />
             <span>Duration</span>
           </label>
-          <Input
-            labelId="duration"
+          <input
+            id="duration"
             value={duration === 0 ? '' : String(duration)}
-            onValueChange={(val) => setDuration(Number(val))}
+            onChange={(event) => setDuration(Number(event.target.value))}
             aria-label="Duration in hours"
-            inputSize="sm"
-            background="default"
             type="number"
             placeholder="Hrs"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            className="focus:ring-primary w-22 rounded border px-2 py-1 text-right text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             autoComplete="off"
             min={0}
+            inputMode="decimal"
           />
         </div>
         {/* Budget */}
         <div>
-          <label
-            htmlFor="activity-notes"
-            className="mb-1 flex items-center gap-1 text-xs font-bold"
-          >
+          <label htmlFor="budget" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <DollarSign size={12} aria-hidden="true" />
             <span>Budget</span>
           </label>
-          <Input
-            labelId="budget"
+          <input
+            id="budget"
             value={budget === 0 ? '' : String(budget)}
-            onValueChange={(val) => setBudget(Number(val))}
+            onChange={(event) => setBudget(Number(event.target.value))}
             aria-label="Budget amount"
             type="number"
-            inputSize="sm"
-            background="default"
             placeholder="Budget"
+            className="focus:ring-primary w-22 rounded border px-2 py-1 text-right text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             min={0}
             autoComplete="off"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            inputMode="decimal"
           />
         </div>
       </fieldset>

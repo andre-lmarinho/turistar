@@ -1,6 +1,7 @@
+import { Section, Container } from '@/features/website/ui/wrapper';
+import { H2, P, Eyebrow } from '@/features/website/ui/typography';
+import { CTAButton } from '@/features/website/ui/button';
 import { Users } from '@/shared/ui/icon';
-import { Wrapper } from '@/features/website/ui/section/Wrapper';
-import { Button } from '@/shared/ui/button';
 
 const USE_CASES = [
   {
@@ -31,21 +32,17 @@ const USE_CASES = [
 
 export function UseCases() {
   return (
-    <Wrapper>
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-        <p className="eyebrow">
+    <Section>
+      <Container>
+        <Eyebrow>
           <Users className="size-4" aria-hidden="true" />
           Use cases
-        </p>
-        <h2 className="text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-balance">
-          Ways to work
-        </h2>
-        <p className="text-muted-foreground text-[clamp(1rem,2.2vw,1.125rem)] leading-[1.5] text-balance">
-          See how Turistar fits different agency offerings and workflows.
-        </p>
-        <Button href="/signup">Get started</Button>
-      </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        </Eyebrow>
+        <H2>Ways to work</H2>
+        <P>See how Turistar fits different agency offerings and workflows.</P>
+        <CTAButton />
+      </Container>
+      <Container size="wide" align="left" gap="3" className="md:grid-cols-2">
         {USE_CASES.map((useCase) => (
           <article
             key={useCase.title}
@@ -57,7 +54,7 @@ export function UseCases() {
             </div>
           </article>
         ))}
-      </div>
-    </Wrapper>
+      </Container>
+    </Section>
   );
 }

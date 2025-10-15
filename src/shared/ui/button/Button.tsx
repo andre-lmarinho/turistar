@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import React, { forwardRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-
 import { cn } from '@/shared/utils/cn';
 
 const buttonVariants = cva(
@@ -15,9 +14,7 @@ const buttonVariants = cva(
         ghost: 'bg-background text-foreground hover:bg-background/90',
       },
     },
-    defaultVariants: {
-      variant: 'primary',
-    },
+    defaultVariants: { variant: 'primary' },
   }
 );
 
@@ -35,32 +32,35 @@ type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 type ButtonProps = (AnchorButtonProps | NativeButtonProps) & {
   className?: string;
+  children?: React.ReactNode;
 };
 
 export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
-  ({ className, variant, href, ...props }, ref) => {
+  ({ children, className, variant, href, ...props }, ref) => {
     if (href) {
       const anchorProps = props as React.AnchorHTMLAttributes<HTMLAnchorElement>;
-
       return (
         <Link
           {...anchorProps}
           href={href}
           ref={ref as React.ForwardedRef<HTMLAnchorElement>}
           className={cn(buttonVariants({ variant }), className)}
-        />
+        >
+          {children}
+        </Link>
       );
     }
 
     const buttonProps = props as React.ButtonHTMLAttributes<HTMLButtonElement>;
-
     return (
       <button
         {...buttonProps}
         ref={ref as React.ForwardedRef<HTMLButtonElement>}
         type={buttonProps.type ?? 'button'}
         className={cn(buttonVariants({ variant }), className)}
-      />
+      >
+        {children}
+      </button>
     );
   }
 );

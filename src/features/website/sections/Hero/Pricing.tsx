@@ -1,9 +1,9 @@
 'use client';
 
 import { cn } from '@/shared/utils/cn';
-import { Wrapper } from '@/features/website/ui/section/Wrapper';
+import { Section, Container } from '@/features/website/ui/wrapper';
+import { H1, P, Eyebrow } from '@/features/website/ui/typography';
 import { HandCoins } from '@/shared/ui/icon';
-import { Button } from '@/shared/ui/button';
 
 type HeroPricingAction = {
   href: string;
@@ -22,39 +22,20 @@ interface HeroPricingPlan {
 }
 
 interface HeroPricingProps {
-  title: string;
-  subtitle?: string;
   plans: HeroPricingPlan[];
 }
 
-function renderAction(plan: HeroPricingPlan) {
-  const action = plan.action;
-  if (!action) {
-    return null;
-  }
-
-  const { href, label, target, rel } = action;
-
+export function HeroPricing({ plans }: HeroPricingProps) {
   return (
-    <Button href={href} target={target} rel={rel} variant={plan.highlighted ? 'primary' : 'ghost'}>
-      {label}
-    </Button>
-  );
-}
-
-export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
-  return (
-    <Wrapper className="py-20 sm:py-24 lg:py-28">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
-        <p className="eyebrow">
+    <Section>
+      <Container>
+        <Eyebrow>
           <HandCoins className="size-4" aria-hidden="true" />
           Pricing
-        </p>
-        <h1 className="text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.1] font-bold text-balance">
-          {title}
-        </h1>
-        {subtitle ? <p className="text-muted-foreground text-lg">{subtitle}</p> : null}
-      </div>
+        </Eyebrow>
+        <H1>Simple, transparent pricing</H1>
+        <P>Every plan includes core planning tools, secure storage, and unlimited itineraries.</P>
+      </Container>
       <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {plans.map((plan) => (
           <article
@@ -80,7 +61,6 @@ export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
               ))}
             </ul>
             <div className="mt-6 flex flex-col gap-3">
-              {renderAction(plan)}
               {plan.highlighted ? (
                 <span className="text-primary text-xs font-semibold tracking-wide uppercase">
                   Most popular
@@ -90,6 +70,6 @@ export function HeroPricing({ title, subtitle, plans }: HeroPricingProps) {
           </article>
         ))}
       </div>
-    </Wrapper>
+    </Section>
   );
 }

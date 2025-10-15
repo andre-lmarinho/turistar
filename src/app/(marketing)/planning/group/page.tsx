@@ -7,8 +7,6 @@ const content: PlanningPageContent = {
     title: 'Coordinate shared escapes with clarity',
     description:
       'Align friends or family on budgets, schedules, and responsibilities without endless chats.',
-    primaryAction: { label: 'Plan a group trip', href: '/signup' },
-    secondaryAction: { label: 'Discover collaboration tools', href: '/friends' },
   },
   keyBenefits: {
     title: 'Improve group travel',
@@ -32,9 +30,7 @@ const content: PlanningPageContent = {
       },
     ],
   },
-  ctaMidPageAction: { label: 'Launch a group workspace', href: '/signup' },
   faq: {
-    title: 'Group planning FAQ',
     items: [
       {
         question: 'Can travelers pay different amounts?',
@@ -45,9 +41,6 @@ const content: PlanningPageContent = {
         answer: 'Assign bookings, groceries, and other tasks with due dates and reminders.',
       },
     ],
-  },
-  ctaFinal: {
-    primaryAction: { label: 'Get started', href: '/signup' },
   },
 };
 

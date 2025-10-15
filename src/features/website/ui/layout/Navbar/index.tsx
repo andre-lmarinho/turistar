@@ -1,5 +1,6 @@
 'use client';
 
+import { Eyebrow } from '@/features/website/ui/typography';
 import { useEffect, useState, useRef, type ComponentType } from 'react';
 import Link from 'next/link';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
@@ -147,10 +148,10 @@ const SolutionsCallout = () => (
     aria-label="Explore Rome demo"
     className="group group text-foreground focus-visible:ring-primary/60 border-primary/30 from-primary/10 via-primary/15 to-primary/5 text-background m-2 block grid grid-rows-[auto_1fr_auto] rounded-2xl border bg-gradient-to-br p-5 text-center transition-[background-color,box-shadow,transform] duration-200 ease-out hover:shadow-sm focus-visible:ring-2 focus-visible:outline-none active:scale-[0.995]"
   >
-    <p className="eyebrow self-start justify-self-end">
+    <Eyebrow className="self-start justify-self-end">
       <Sparkles className="size-4" aria-hidden="true" />
       Try it now!
-    </p>
+    </Eyebrow>
 
     <h3 className="place-self-center text-3xl font-semibold">Explore Rome</h3>
     <p className="mt-0 self-end justify-self-start text-xs leading-5">
@@ -342,7 +343,7 @@ export function Navbar() {
 
   return (
     <header
-      className="bg-background fixed top-0 z-50 my-2 w-full lg:mb-0 lg:bg-transparent"
+      className="bg-background fixed top-0 z-50 my-0 w-full px-6 py-2 lg:my-2 lg:mb-0 lg:bg-transparent lg:py-0"
       data-elevated="false"
     >
       <ResumePlan />
