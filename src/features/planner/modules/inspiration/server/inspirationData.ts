@@ -3,7 +3,15 @@ import { join } from 'path';
 import { notFound } from 'next/navigation';
 import type { InspirationDocument } from './types';
 
-const DATA_DIR = join(process.cwd(), 'src', 'features', 'inspiration', 'data');
+const DATA_DIR = join(
+  process.cwd(),
+  'src',
+  'features',
+  'planner',
+  'modules',
+  'inspiration',
+  'data'
+);
 const CITY_SLUG_REGEX = /^[a-z0-9-]+$/;
 
 export function assertValidCitySlug(city: string) {

@@ -1,5 +1,3 @@
-'use client';
-
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButtons } from '@/features/website/ui/button';

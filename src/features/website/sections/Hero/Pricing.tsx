@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@/shared/utils/cn';
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H1, P, Eyebrow } from '@/features/website/ui/typography';

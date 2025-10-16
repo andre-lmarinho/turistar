@@ -31,12 +31,6 @@ A Map View lets you preview your itinerary locations on an interactive map.
 
 ![Turistar Planner Screenshot](./public/previews/preview_01.png)
 
-![Attractions Card Screenshot](./public/previews/preview_03.png)
-
-![Attractions Card Screenshot - Right Click](./public/previews/preview_04.png)
-
-![Map View Screenshot](./public/previews/preview_05.png)
-
 ---
 
 ## Key Features

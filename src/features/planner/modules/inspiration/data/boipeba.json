@@ -50,7 +50,7 @@
           "duration": 1,
           "address": "O Céu de Boipeba, Velha Boipeba, Cairu – BA, Brazil",
           "color": "bg-[var(--color-0)]",
-          "imageUrl": "/images/inspirations/boipeba/Ceu_de_Boipeba.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Ceu_de_Boipeba.jpg",
           "latitude": -13.59,
           "longitude": -38.91
         },
@@ -60,7 +60,7 @@
           "duration": 2,
           "address": "Praça Santo Antônio, Velha Boipeba, Cairu – BA",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/images/inspirations/boipeba/Vila_Boipeba.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Vila_Boipeba.jpg",
           "latitude": -13.62333,
           "longitude": -38.90639,
           "budget": 5
@@ -71,7 +71,7 @@
           "duration": 2.5,
           "address": "Mangroves of Rio do Inferno, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/images/inspirations/boipeba/Canoa_Manguezal.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Canoa_Manguezal.jpg",
           "latitude": -13.6,
           "longitude": -38.91,
           "budget": 22
@@ -82,7 +82,7 @@
           "duration": 2,
           "address": "O Céu de Boipeba viewpoint, Velha Boipeba, Cairu – BA",
           "color": "bg-[var(--color-2)]",
-          "imageUrl": "/images/inspirations/boipeba/Por_do_Sol_Ceu.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Por_do_Sol_Ceu.jpg",
           "latitude": -13.59,
           "longitude": -38.91,
           "budget": 12
@@ -98,7 +98,7 @@
           "duration": 7,
           "address": "Boca da Barra pier, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/images/inspirations/boipeba/Volta_Ilha.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Volta_Ilha.jpg",
           "latitude": -13.58108,
           "longitude": -38.925214,
           "budget": 40
@@ -109,7 +109,7 @@
           "duration": 2,
           "address": "Guido’s Restaurant, Cueira Beach, Boipeba",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/images/inspirations/boipeba/Restaurante_Guido.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Restaurante_Guido.jpg",
           "latitude": -13.6,
           "longitude": -38.9,
           "budget": 20
@@ -120,7 +120,7 @@
           "duration": 2,
           "address": "Portal das Ostras, Rio do Inferno, Boipeba",
           "color": "bg-[var(--color-2)]",
-          "imageUrl": "/images/inspirations/boipeba/Portal_das_Ostras.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Portal_das_Ostras.jpg",
           "latitude": -13.57,
           "longitude": -38.91,
           "budget": 8
@@ -136,7 +136,7 @@
           "duration": 8,
           "address": "Departure from Boca da Barra pier, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/images/inspirations/boipeba/Tinhare_Tour.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Tinhare_Tour.jpg",
           "latitude": -13.58108,
           "longitude": -38.925214,
           "budget": 48
@@ -147,7 +147,7 @@
           "duration": 1.5,
           "address": "Convent and Church of Saint Anthony, Cairu – BA",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/images/inspirations/boipeba/Convento_Cairu.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Convento_Cairu.jpg",
           "latitude": -13.48681,
           "longitude": -39.04511,
           "budget": 5
@@ -158,7 +158,7 @@
           "duration": 2,
           "address": "Jorge do Som Restaurant, Vila Square, Boipeba",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/images/inspirations/boipeba/Jorge_do_Som.jpg",
+          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Jorge_do_Som.jpg",
           "latitude": -13.598,
           "longitude": -38.913,
           "budget": 20
