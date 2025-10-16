@@ -3,7 +3,10 @@
 export const lucideIconNames = [
   'align-left',
   'arrow-left-right',
+  'badge-check',
   'bus',
+  'briefcase',
+  'building2',
   'calendar',
   'circle-check',
   'CircleQuestionMark',
@@ -24,6 +27,7 @@ export const lucideIconNames = [
   'map',
   'map-pin',
   'menu',
+  'megaphone',
   'mountain',
   'palette',
   'pencil',

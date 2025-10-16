@@ -10,7 +10,7 @@ import { Button } from '@/shared/ui/button';
 export function HeroHome() {
   return (
     <Section variant="card">
-      <Container size="wide" align="left" gap="16" className="lg:grid-cols-2">
+      <Container size="wide" className="gap-16 lg:grid-cols-2">
         <div className="space-y-4">
           <Eyebrow>Turistar launches v1.2</Eyebrow>
           <H1>Less time planning. More time traveling.</H1>

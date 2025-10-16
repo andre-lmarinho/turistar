@@ -1,32 +1,55 @@
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButton } from '@/features/website/ui/button';
-import { Users } from '@/shared/ui/icon';
+import { CTAButtons } from '@/features/website/ui/button';
+import {
+  Users,
+  Briefcase,
+  Map as MapIcon,
+  Building2,
+  Megaphone,
+  BadgeCheck,
+} from '@/shared/ui/icon';
+import type { ElementType } from 'react';
 
-const USE_CASES = [
+type UseCase = {
+  title: string;
+  description: string;
+  Icon: ElementType;
+};
+
+const USE_CASES: UseCase[] = [
   {
-    title: 'Tours',
-    description: 'Build multi day itineraries for different tour packages.',
+    title: 'Independent Agents',
+    description:
+      'Create proposals and itineraries in minutes with templates and drag-and-drop planning.',
+    Icon: Briefcase,
   },
   {
-    title: 'Groups',
-    description: 'Organise group travel with clear schedules and budgets.',
+    title: 'Tour Operators',
+    description:
+      'Standardize packages, documents, and deadlines with checklists and shared timelines.',
+    Icon: MapIcon,
   },
   {
-    title: 'Incentives',
-    description: 'Plan corporate incentive trips with transparent costs.',
+    title: 'Corporate',
+    description: 'Apply policies and approvals, track budgets, and deliver on-demand trip reports.',
+    Icon: Building2,
   },
   {
-    title: 'Packages',
-    description: 'Create flexible packages that agents can reuse.',
+    title: 'Marketing',
+    description: 'Share beautiful, branded proposals by link and capture leads that convert.',
+    Icon: Megaphone,
   },
   {
-    title: 'Custom',
-    description: 'Tailor unique itineraries for special client needs.',
+    title: 'Customer Success',
+    description: 'Delight clients with real-time updates, reminders, and centralized travel docs.',
+    Icon: BadgeCheck,
   },
   {
-    title: 'Reports',
-    description: 'Export cost breakdowns and schedules for presentations.',
+    title: 'Groups & MICE',
+    description:
+      'Coordinate rooming lists, transfers, and tasks without spreadsheets or email chaos.',
+    Icon: Users,
   },
 ];
 
@@ -38,21 +61,22 @@ export function UseCases() {
           <Users className="size-4" aria-hidden="true" />
           Use cases
         </Eyebrow>
-        <H2>Ways to work</H2>
-        <P>See how Turistar fits different agency offerings and workflows.</P>
-        <CTAButton />
+        <H2>Built for every agency</H2>
+        <P>Empower every travel business with a single planning tool.</P>
+        <CTAButtons />
       </Container>
-      <Container size="wide" align="left" gap="3" className="md:grid-cols-2">
-        {USE_CASES.map((useCase) => (
-          <article
-            key={useCase.title}
-            className="bg-muted/40 border-border h-full rounded-xl border p-6 text-left transition-shadow hover:shadow-md"
-          >
-            <div className="flex flex-col gap-4">
-              <h3 className="text-lg leading-[1.3] font-bold">{useCase.title}</h3>
-              <p className="text-muted-foreground text-sm">{useCase.description}</p>
-            </div>
-          </article>
+
+      <Container size="wide" className="md:grid-cols-3 md:gap-16">
+        {USE_CASES.map(({ title, description, Icon }) => (
+          <ul key={title} className="h-full text-left">
+            <li className="flex flex-col">
+              <div className="mb-1 flex items-center gap-2">
+                <Icon className="size-5" aria-hidden="true" />
+                <h3 className="text-lg leading-[1.3] font-bold">{title}</h3>
+              </div>
+              <p className="text-muted-foreground text-sm">{description}</p>
+            </li>
+          </ul>
         ))}
       </Container>
     </Section>

@@ -3,7 +3,10 @@ export type { LucideIcon } from 'lucide-react';
 export {
   AlignLeft,
   ArrowLeftRight,
+  BadgeCheck,
   Bus,
+  Briefcase,
+  Building2,
   Calendar,
   CircleCheck,
   CircleQuestionMark,
@@ -27,6 +30,7 @@ export {
   Map,
   MapPin,
   Menu,
+  Megaphone,
   Mountain,
   Palette,
   Pencil,

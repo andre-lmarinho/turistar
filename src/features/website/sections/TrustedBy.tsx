@@ -97,7 +97,7 @@ function UlAvatarMarquee({
 export function TrustedBy() {
   return (
     <Section variant="flush">
-      <Container size="wide" align="left" className="md:grid-cols-[1fr_5fr]">
+      <Container size="wide" className="md:grid-cols-[1fr_5fr]">
         <div className="flex items-center justify-center md:justify-start">
           <p className="text-center text-xs md:text-left">
             Trusted by mom, friends and suspiciously happy clients.

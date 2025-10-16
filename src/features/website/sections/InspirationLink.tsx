@@ -33,9 +33,10 @@ export function InspirationLink() {
         <H2>Be inspired by fellow travellers</H2>
         <P>
           Explore a curated list of other travellers trip itineraries and get inspired for your next
-          trip. If you like a trip , you can clone it and make it your own.
+          trip. If you like a traveling, you can clone it and make it your own.
         </P>
       </Container>
+
       <ul className="mx-auto flex flex-wrap justify-center gap-6">
         {destinations.map((d) => (
           <li key={d.city}>

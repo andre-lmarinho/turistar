@@ -19,7 +19,7 @@ const TITLES: Record<'default' | 'planning', string> = {
 export function CtaFinal({ variant = 'default' }: CtaFinalProps) {
   return (
     <Section variant="card">
-      <Container gap="8">
+      <Container className="gap-8">
         <H2 className="z-1">{TITLES[variant]}</H2>
         <Button href="/signup">Get started</Button>
         <Image

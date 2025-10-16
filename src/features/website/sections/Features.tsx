@@ -45,7 +45,7 @@ export function Features() {
         </P>
         <CTAButton />
       </Container>
-      <Container size="wide" align="left" gap="3" className="md:grid-cols-2">
+      <Container size="wide" className="gap-3 md:grid-cols-2">
         {FEATURE_ITEMS.map((feature) => (
           <article
             key={feature.title}

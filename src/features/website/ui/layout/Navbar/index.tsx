@@ -1,9 +1,9 @@
 'use client';
 
-import { Eyebrow } from '@/features/website/ui/typography';
 import { useEffect, useState, useRef, type ComponentType } from 'react';
 import Link from 'next/link';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { cn } from '@/shared/utils/cn';
 
 import {
   Calendar,
@@ -17,8 +17,8 @@ import {
   Sparkles,
 } from '@/shared/ui/icon';
 import { ResumePlan } from './ResumePlan';
-import { cn } from '@/shared/utils/cn';
 import { Button } from '@/shared/ui/button';
+import { Eyebrow } from '@/features/website/ui/typography';
 
 type SolutionItem = {
   href: string;

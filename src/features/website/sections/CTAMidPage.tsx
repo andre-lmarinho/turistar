@@ -8,7 +8,7 @@ import { Map } from '@/shared/ui/icon';
 export function CtaMidPage() {
   return (
     <Section variant="card">
-      <Container size="wide" align="left" className="md:grid-cols-[3fr_2fr]">
+      <Container size="wide" className="md:grid-cols-[3fr_2fr]">
         <div className="space-y-4">
           <Eyebrow>
             <Map className="size-4" aria-hidden="true" />
