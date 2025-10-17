@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import mascot from 'src/shared/media/mascot_1_.webp';
 import { Spinner } from './Spinner';
 
 interface LoadingScreenProps {
@@ -19,7 +20,7 @@ export function LoadingScreen({ text = 'Loading…' }: LoadingScreenProps) {
       {/* Mascot */}
       <div className="relative mb-6 h-32 w-32">
         <Image
-          src="/images/mascot_1_.webp"
+          src={mascot}
           alt=""
           role="presentation"
           aria-hidden="true"

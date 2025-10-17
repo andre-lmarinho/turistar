@@ -6,6 +6,8 @@ import { DateRange } from 'react-day-picker';
 import { DateRangePicker, DateRangePickerIcon } from '@/shared/ui/calendar';
 import { useElementMeasure } from '@/features/planner/hooks/ui/useElementMeasure';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
+import { ModeToggleButton } from '@/features/planner/ui/button/ModeToggleButton';
+import type { PlannerMode } from './PlannerModeDeck';
 
 interface PlannerHeaderProps {
   title: string;
@@ -13,6 +15,8 @@ interface PlannerHeaderProps {
   onTitleBlur: () => void;
   currentRange: DateRange | undefined;
   onRangeChange: (range: DateRange | undefined) => void;
+  mode: PlannerMode;
+  onModeChange: (mode: PlannerMode) => void;
 }
 
 export function PlannerHeader({
@@ -21,6 +25,8 @@ export function PlannerHeader({
   onTitleBlur,
   currentRange,
   onRangeChange,
+  mode,
+  onModeChange,
 }: PlannerHeaderProps) {
   const { dest } = usePlannerContext();
   const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
@@ -59,6 +65,10 @@ export function PlannerHeader({
 
       <div className="hidden w-full md:flex md:items-center md:justify-end">
         <DateRangePicker value={currentRange} onChange={onRangeChange} className="w-64" />
+      </div>
+
+      <div className="order-3 mx-auto flex w-full max-w-screen-xl items-center justify-center gap-4 py-2 md:order-2 md:justify-start md:pt-0 md:pb-4">
+        <ModeToggleButton value={mode} onChange={onModeChange} />
       </div>
     </header>
   );

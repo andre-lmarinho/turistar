@@ -1,11 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import bg from './media/background.webp';
 
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2 } from '@/features/website/ui/typography';
 import { Button } from '@/shared/ui/button';
+import backgroundImage from './media/background.webp';
 
 export interface CtaFinalProps {
   variant?: 'default' | 'planning';
@@ -23,7 +23,7 @@ export function CtaFinal({ variant = 'default' }: CtaFinalProps) {
         <H2 className="z-1">{TITLES[variant]}</H2>
         <Button href="/signup">Get started</Button>
         <Image
-          src={bg}
+          src={backgroundImage}
           alt=""
           aria-hidden="true"
           role="presentation"

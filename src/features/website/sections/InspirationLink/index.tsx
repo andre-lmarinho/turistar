@@ -5,17 +5,17 @@ import Link from 'next/link';
 
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P } from '@/features/website/ui/typography';
-import { InspirationCard } from '../../../shared/ui/card/Card';
+import { InspirationCard } from './components/InspirationCard';
 
-import romeJson from '@/features/planner/modules/inspiration/data/rome.json';
-import boipebaJson from '@/features/planner/modules/inspiration/data/boipeba.json';
 import type { InspirationDocument } from '@/features/planner/modules/inspiration/server/types';
+import boipeba from '@/features/planner/modules/inspiration/data/boipeba.json';
+import rome from '@/features/planner/modules/inspiration/data/rome.json';
 
 type InspirationPreview = InspirationDocument & { title_inspiration: string };
 
 const inspirationSources: Array<{ slug: string; doc: InspirationPreview }> = [
-  { slug: 'rome', doc: romeJson as InspirationPreview },
-  { slug: 'boipeba', doc: boipebaJson as InspirationPreview },
+  { slug: 'rome', doc: rome as InspirationPreview },
+  { slug: 'boipeba', doc: boipeba as InspirationPreview },
 ];
 
 const toDestinationPreview = ({ slug, doc }: { slug: string; doc: InspirationPreview }) => ({
@@ -29,7 +29,7 @@ export function InspirationLink() {
 
   return (
     <Section>
-      <Container>
+      <Container id="inspiration">
         <H2>Be inspired by fellow travellers</H2>
         <P>
           Explore a curated list of other travellers trip itineraries and get inspired for your next

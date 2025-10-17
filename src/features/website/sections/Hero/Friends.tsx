@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import hero from './media/group-mock.webp';
 
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H1, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButtons } from '@/features/website/ui/button';
+import groupMock from './media/group-mock.webp';
 
 export function HeroFriends() {
   return (
@@ -15,7 +15,7 @@ export function HeroFriends() {
         <CTAButtons />
         <div className="relative mt-6 -mb-[clamp(48px,5vw,96px)]">
           <Image
-            src={hero}
+            src={groupMock}
             alt=""
             priority
             className="relative left-1/2 z-0 block h-auto w-[clamp(720px,90vw,1236px)] max-w-none -translate-x-1/2 select-none"

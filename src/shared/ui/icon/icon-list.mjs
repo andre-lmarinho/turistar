@@ -3,9 +3,11 @@
 export const lucideIconNames = [
   'align-left',
   'arrow-left-right',
+  'backpack',
   'badge-check',
   'bus',
   'briefcase',
+  'binoculars',
   'building2',
   'calendar',
   'circle-check',

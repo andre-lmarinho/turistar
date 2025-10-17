@@ -68,12 +68,9 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <SeoJsonLd />
-      <a href="#main-content" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
       <>
         <Navbar />
-        <main id="main-content">{children}</main>
+        <main>{children}</main>
         <Footer />
       </>
     </>

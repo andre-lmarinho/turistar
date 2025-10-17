@@ -43,18 +43,17 @@ export function Footer() {
             <Link href="planning/event-based">Event</Link>
             <Link href="planning/group">Group</Link>
             <Link href="planning/road-trip">Road Trip</Link>
-            <Link href="planning/vacations">Vacation</Link>
+            <Link href="planning/vacation">Vacation</Link>
           </div>
 
           <div className="flex flex-col gap-4">
             <p className="font-semibold">Resources</p>
-            <Link href="/inspiration">Inspirations</Link>
+            <Link href="/#inspiration">Inspirations</Link>
             <Link href="/friends">Friends</Link>
           </div>
 
           <div className="flex flex-col gap-4">
             <p className="font-semibold">Company</p>
-            <Link href="/about">About</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </div>

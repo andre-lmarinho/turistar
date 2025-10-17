@@ -26,7 +26,7 @@
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Rome City Walking Tour.jpg",
+          "imageUrl": "/inspiration/rome/rome-city-walking-tour.jpg",
           "latitude": 41.8902,
           "longitude": 12.4922,
           "budget": 112
@@ -37,7 +37,7 @@
           "duration": 3,
           "address": "Cortile della Pigna, 00120 Vatican City",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Tour of the Vatican, Sistine Chapel & St. Peter's Basilica.jpg",
+          "imageUrl": "/inspiration/rome/tour-of-the-vatican.jpg",
           "latitude": 41.9065,
           "longitude": 12.4533,
           "budget": 134
@@ -48,7 +48,7 @@
           "duration": 2,
           "address": "Via dei Vascellari, 29, 00153 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Trattoria da Enzo al 29.jpg",
+          "imageUrl": "/inspiration/rome/trattoria-da-enzo.jpg",
           "latitude": 41.8896,
           "longitude": 12.4744,
           "budget": 66
@@ -64,7 +64,7 @@
           "duration": 2,
           "address": "Via della Salara Vecchia, 5/6, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Roman Forum.jpg",
+          "imageUrl": "/inspiration/rome/roman-forum.jpg",
           "latitude": 41.8925,
           "longitude": 12.4853
         },
@@ -74,7 +74,7 @@
           "duration": 1,
           "address": "Via Labicana, 125, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Ristorante Aroma.jpg",
+          "imageUrl": "/inspiration/rome/ristorante-aroma.jpg",
           "latitude": 41.8911,
           "longitude": 12.4954,
           "budget": 278
@@ -85,7 +85,7 @@
           "duration": 3,
           "address": "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Rome City Walking Tour.jpg",
+          "imageUrl": "/inspiration/rome/rome-city-walking-tour.jpg",
           "latitude": 41.8902,
           "longitude": 12.4922,
           "budget": 86
@@ -96,7 +96,7 @@
           "duration": 2,
           "address": "Via delle Coppelle, 16/17, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Spaghetteria L'Archeologia.jpg",
+          "imageUrl": "/inspiration/rome/spaghetteria-l-archeologia.jpg",
           "latitude": 41.9002,
           "longitude": 12.4769,
           "budget": 134
@@ -112,7 +112,7 @@
           "duration": 1.5,
           "address": "Piazza della Rotonda, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Pantheon.jpg",
+          "imageUrl": "/inspiration/rome/pantheon.jpg",
           "latitude": 41.8986,
           "longitude": 12.4769,
           "budget": 12
@@ -123,7 +123,7 @@
           "duration": 1.5,
           "address": "Piazza Navona, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Piazza Navona.jpg",
+          "imageUrl": "/inspiration/rome/piazza-navona.jpg",
           "latitude": 41.8992,
           "longitude": 12.4731
         },
@@ -133,7 +133,7 @@
           "duration": 1,
           "address": "Piazza Navona, 28, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Ristorante Tre Scalini.jpg",
+          "imageUrl": "/inspiration/rome/ristorante-tre-scalini.jpg",
           "latitude": 41.8993,
           "longitude": 12.4733,
           "budget": 66
@@ -144,7 +144,7 @@
           "duration": 1,
           "address": "Piazza di Trevi, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Trevi Fountain.jpg",
+          "imageUrl": "/inspiration/rome/trevi-fountain.jpg",
           "latitude": 41.9009,
           "longitude": 12.4833
         },
@@ -154,7 +154,7 @@
           "duration": 2,
           "address": "Via del Corso, 00186 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Via del Corso.jpg",
+          "imageUrl": "/inspiration/rome/via-del-corso.jpg",
           "latitude": 41.9022,
           "longitude": 12.4797
         },
@@ -164,7 +164,7 @@
           "duration": 2,
           "address": "Via del Boschetto, 73, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Hostaria Romana.jpg",
+          "imageUrl": "/inspiration/rome/hostaria-romana.jpg",
           "latitude": 41.8972,
           "longitude": 12.4889,
           "budget": 78
@@ -180,7 +180,7 @@
           "duration": 2,
           "address": "Piazzale Napoleone I, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Villa Borghese Gardens.jpg",
+          "imageUrl": "/inspiration/rome/villa-borghese-gardens.jpg",
           "latitude": 41.9142,
           "longitude": 12.486
         },
@@ -190,17 +190,17 @@
           "duration": 1,
           "address": "Piazza di Spagna, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Spanish Steps.jpg",
+          "imageUrl": "/inspiration/rome/spanish-steps.jpg",
           "latitude": 41.9058,
           "longitude": 12.4824
         },
         {
-          "title": "Lunch at Caffè Greco",
+          "title": "Lunch at Caffe Greco",
           "startTime": "13:00",
           "duration": 1.5,
           "address": "Via dei Condotti, 86, 00187 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Caffè Greco.jpg",
+          "imageUrl": "/inspiration/rome/caffe-greco.jpg",
           "latitude": 41.9052,
           "longitude": 12.482,
           "budget": 44
@@ -211,7 +211,7 @@
           "duration": 2,
           "address": "Piazzale Scipione Borghese, 5, 00197 Roma RM, Italy",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Borghese Gallery.jpg",
+          "imageUrl": "/inspiration/rome/borghese-gallery.jpg",
           "latitude": 41.9145,
           "longitude": 12.4922,
           "budget": 34
@@ -222,7 +222,7 @@
           "duration": 2,
           "address": "Via Garibaldi, 5, 00184 Roma RM, Italy",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/rome/Osteria Antica.jpg",
+          "imageUrl": "/inspiration/rome/osteria-antica.jpg",
           "latitude": 41.8881,
           "longitude": 12.4669,
           "budget": 88

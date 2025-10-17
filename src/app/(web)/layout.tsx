@@ -5,12 +5,7 @@ import Providers from '@/app/(web)/providers';
 export default function WebAppLayout({ children }: { children: ReactNode }) {
   return (
     <Providers>
-      <a href="#main-content" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
-      <main id="main-content" className="min-h-screen">
-        {children}
-      </main>
+      <main className="min-h-screen">{children}</main>
     </Providers>
   );
 }

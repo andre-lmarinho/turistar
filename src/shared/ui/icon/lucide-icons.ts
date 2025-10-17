@@ -3,7 +3,9 @@ export type { LucideIcon } from 'lucide-react';
 export {
   AlignLeft,
   ArrowLeftRight,
+  Backpack,
   BadgeCheck,
+  Binoculars,
   Bus,
   Briefcase,
   Building2,

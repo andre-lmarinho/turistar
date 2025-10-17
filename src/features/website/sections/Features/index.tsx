@@ -1,4 +1,4 @@
-import { Calendar, CircleCheck } from '@/shared/ui/icon';
+import { Binoculars, CircleCheck } from '@/shared/ui/icon';
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButton } from '@/features/website/ui/button';
@@ -35,7 +35,7 @@ export function Features() {
     <Section>
       <Container>
         <Eyebrow>
-          <Calendar className="size-4" aria-hidden="true" />
+          <Binoculars className="size-4" aria-hidden="true" />
           Adicional features
         </Eyebrow>
         <H2>Extra planning tools</H2>
@@ -45,20 +45,20 @@ export function Features() {
         </P>
         <CTAButton />
       </Container>
-      <Container size="wide" className="gap-3 md:grid-cols-2">
+      <Container size="wide" className="gap-3 md:grid-cols-3">
         {FEATURE_ITEMS.map((feature) => (
           <article
             key={feature.title}
             className="bg-muted/40 border-border h-full rounded-xl border p-6 text-left transition-shadow hover:shadow-md"
           >
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
               <h3 className="text-lg leading-[1.3] font-bold">
                 <span className="text-foreground inline-flex items-center gap-2">
                   <CircleCheck className="size-4" aria-hidden="true" />
                   {feature.title}
                 </span>
               </h3>
-              <P>{feature.description}</P>
+              <p className="text-muted-foreground text-sm">{feature.description}</p>
             </div>
           </article>
         ))}

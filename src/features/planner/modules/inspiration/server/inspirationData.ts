@@ -1,35 +1,33 @@
-import { promises as fs } from 'fs';
-import { join } from 'path';
 import { notFound } from 'next/navigation';
 import type { InspirationDocument } from './types';
+import boipeba from '../data/boipeba.json';
+import rome from '../data/rome.json';
 
-const DATA_DIR = join(
-  process.cwd(),
-  'src',
-  'features',
-  'planner',
-  'modules',
-  'inspiration',
-  'data'
-);
 const CITY_SLUG_REGEX = /^[a-z0-9-]+$/;
 
-export function assertValidCitySlug(city: string) {
-  if (!CITY_SLUG_REGEX.test(city)) {
-    notFound();
-  }
+const CITY_DOCUMENTS = {
+  boipeba: boipeba as InspirationDocument,
+  rome: rome as InspirationDocument,
+} as const;
+
+type CitySlug = keyof typeof CITY_DOCUMENTS;
+
+const CITY_SLUGS = Object.keys(CITY_DOCUMENTS) as CitySlug[];
+
+function isValidCitySlug(city: string): city is CitySlug {
+  return CITY_SLUG_REGEX.test(city) && CITY_SLUGS.includes(city as CitySlug);
 }
 
-async function readInspirationData(city: string): Promise<InspirationDocument> {
-  const filePath = join(DATA_DIR, `${city}.json`);
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw) as InspirationDocument;
+export function assertValidCitySlug(city: string) {
+  if (!isValidCitySlug(city)) {
+    notFound();
+  }
 }
 
 export async function safeReadInspirationData(city: string): Promise<InspirationDocument> {
-  try {
-    return await readInspirationData(city);
-  } catch {
+  if (!isValidCitySlug(city)) {
     notFound();
   }
+
+  return CITY_DOCUMENTS[city];
 }

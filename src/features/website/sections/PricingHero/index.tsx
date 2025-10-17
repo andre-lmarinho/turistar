@@ -34,7 +34,7 @@ export function HeroPricing({ plans }: HeroPricingProps) {
         <H1>Simple, transparent pricing</H1>
         <P>Every plan includes core planning tools, secure storage, and unlimited itineraries.</P>
       </Container>
-      <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <Container className="gap-1 sm:grid-cols-2 md:grid-cols-4">
         {plans.map((plan) => (
           <article
             key={plan.name}
@@ -67,7 +67,7 @@ export function HeroPricing({ plans }: HeroPricingProps) {
             </div>
           </article>
         ))}
-      </div>
+      </Container>
     </Section>
   );
 }

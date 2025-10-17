@@ -4,12 +4,11 @@ import { Sparkles } from '@/shared/ui/icon';
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButton } from '@/features/website/ui/button';
+import feature01 from './media/feature_01.webp';
+import feature02 from './media/feature_02.webp';
+import feature03 from './media/feature_03.webp';
 
-const CAROUSEL_IMAGE_SOURCES = [
-  '/images/home/feature_01.webp',
-  '/images/home/feature_02.webp',
-  '/images/home/feature_03.webp',
-] as const;
+const CAROUSEL_IMAGE_SOURCES = [feature01.src, feature02.src, feature03.src] as const;
 
 type KeyBenefit = Pick<FeatureCarouselFeature, 'title' | 'description'>;
 

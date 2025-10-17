@@ -3,14 +3,14 @@
   "title_inspiration": "A weekend in Boipeba",
   "duration_days": 3,
   "destination": "Boipeba and surroundings",
-  "description": "This itinerary explores the islands of Boipeba and Tinharé over 3 days, combining paradisiacal beaches, boat trips to natural pools, mangroves, historical culture in Cairu and Morro de São Paulo, and the flavors of Bahian cuisine.",
+  "description": "This itinerary explores the islands of Boipeba and Tinhare over 3 days, combining paradisiacal beaches, boat trips to natural pools, mangroves, historical culture in Cairu and Morro de Sao Paulo, and the flavors of Bahian cuisine.",
   "budget": {
     "currency": "USD",
     "amount": 700
   },
   "expenses": [
     {
-      "description": "Transfers Salvador–Boipeba (ferry + bus + speedboat)",
+      "description": "Transfers Salvador-Boipeba (ferry + bus + speedboat)",
       "category": "transport",
       "amount": 30
     },
@@ -20,12 +20,12 @@
       "amount": 20
     },
     {
-      "description": "Lodging (O Céu de Boipeba, 3 nights)",
+      "description": "Lodging (O Ceu de Boipeba, 3 nights)",
       "category": "lodging",
       "amount": 258
     },
     {
-      "description": "Tours & activities (Island tour, mangrove, Tinharé)",
+      "description": "Tours & activities (Island tour, mangrove, Tinhare)",
       "category": "activities",
       "amount": 170
     },
@@ -36,7 +36,7 @@
     },
     {
       "description": "Miscellaneous & extras",
-      "category": "activitie",
+      "category": "activities",
       "amount": 42
     }
   ],
@@ -45,12 +45,12 @@
       "day": 1,
       "activities": [
         {
-          "title": "Arrival and check-in at O Céu de Boipeba",
+          "title": "Arrival and check-in at O Ceu de Boipeba",
           "startTime": "11:00",
           "duration": 1,
-          "address": "O Céu de Boipeba, Velha Boipeba, Cairu – BA, Brazil",
+          "address": "O Ceu de Boipeba, Velha Boipeba, Cairu - BA, Brazil",
           "color": "bg-[var(--color-0)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Ceu_de_Boipeba.jpg",
+          "imageUrl": "/inspiration/boipeba/ceu-de-boipeba.jpg",
           "latitude": -13.59,
           "longitude": -38.91
         },
@@ -58,9 +58,9 @@
           "title": "Explore Velha Boipeba village and Church of the Holy Spirit",
           "startTime": "12:30",
           "duration": 2,
-          "address": "Praça Santo Antônio, Velha Boipeba, Cairu – BA",
+          "address": "Praca Santo Antonio, Velha Boipeba, Cairu - BA",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Vila_Boipeba.jpg",
+          "imageUrl": "/inspiration/boipeba/vila-boipeba.jpg",
           "latitude": -13.62333,
           "longitude": -38.90639,
           "budget": 5
@@ -71,18 +71,18 @@
           "duration": 2.5,
           "address": "Mangroves of Rio do Inferno, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Canoa_Manguezal.jpg",
+          "imageUrl": "/inspiration/boipeba/canoa-manguezal.jpg",
           "latitude": -13.6,
           "longitude": -38.91,
           "budget": 22
         },
         {
-          "title": "Sunset at O Céu de Boipeba viewpoint with drinks",
+          "title": "Sunset at O Ceu de Boipeba viewpoint with drinks",
           "startTime": "18:30",
           "duration": 2,
-          "address": "O Céu de Boipeba viewpoint, Velha Boipeba, Cairu – BA",
+          "address": "O Ceu de Boipeba viewpoint, Velha Boipeba, Cairu - BA",
           "color": "bg-[var(--color-2)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Por_do_Sol_Ceu.jpg",
+          "imageUrl": "/inspiration/boipeba/por-do-sol-ceu.jpg",
           "latitude": -13.59,
           "longitude": -38.91,
           "budget": 12
@@ -98,18 +98,18 @@
           "duration": 7,
           "address": "Boca da Barra pier, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Volta_Ilha.jpg",
+          "imageUrl": "/inspiration/boipeba/volta-ilha.jpg",
           "latitude": -13.58108,
           "longitude": -38.925214,
           "budget": 40
         },
         {
-          "title": "Lunch at Guido’s Restaurant (Cueira Beach)",
+          "title": "Lunch at Guido's Restaurant (Cueira Beach)",
           "startTime": "12:30",
           "duration": 2,
-          "address": "Guido’s Restaurant, Cueira Beach, Boipeba",
+          "address": "Guido's Restaurant, Cueira Beach, Boipeba",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Restaurante_Guido.jpg",
+          "imageUrl": "/inspiration/boipeba/restaurante-guido.jpg",
           "latitude": -13.6,
           "longitude": -38.9,
           "budget": 20
@@ -120,7 +120,7 @@
           "duration": 2,
           "address": "Portal das Ostras, Rio do Inferno, Boipeba",
           "color": "bg-[var(--color-2)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Portal_das_Ostras.jpg",
+          "imageUrl": "/inspiration/boipeba/portal-das-ostras.jpg",
           "latitude": -13.57,
           "longitude": -38.91,
           "budget": 8
@@ -131,12 +131,12 @@
       "day": 3,
       "activities": [
         {
-          "title": "Tinharé Island excursion (Garapuá, Morro de São Paulo & Cairu)",
+          "title": "Tinhare Island excursion (Garapua, Morro de Sao Paulo & Cairu)",
           "startTime": "08:00",
           "duration": 8,
           "address": "Departure from Boca da Barra pier, Boipeba",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Tinhare_Tour.jpg",
+          "imageUrl": "/inspiration/boipeba/tinhare-tour.jpg",
           "latitude": -13.58108,
           "longitude": -38.925214,
           "budget": 48
@@ -145,9 +145,9 @@
           "title": "Visit to the Convent of Saint Anthony in Cairu",
           "startTime": "16:30",
           "duration": 1.5,
-          "address": "Convent and Church of Saint Anthony, Cairu – BA",
+          "address": "Convent and Church of Saint Anthony, Cairu - BA",
           "color": "bg-[var(--color-3)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Convento_Cairu.jpg",
+          "imageUrl": "/inspiration/boipeba/convento-cairu.jpg",
           "latitude": -13.48681,
           "longitude": -39.04511,
           "budget": 5
@@ -158,7 +158,7 @@
           "duration": 2,
           "address": "Jorge do Som Restaurant, Vila Square, Boipeba",
           "color": "bg-[var(--color-4)]",
-          "imageUrl": "/src/features/planner/modules/inspiration/media/boipeba/Jorge_do_Som.jpg",
+          "imageUrl": "/inspiration/boipeba/jorge-do-som.jpg",
           "latitude": -13.598,
           "longitude": -38.913,
           "budget": 20

@@ -1,11 +1,9 @@
-'use client';
-
 import Image from 'next/image';
-import hero from './media/hero-app-mock.webp';
 
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H1, P, Eyebrow } from '@/features/website/ui/typography';
 import { Button } from '@/shared/ui/button';
+import heroMock from './media/hero-app-mock.webp';
 
 export function HeroHome() {
   return (
@@ -27,7 +25,7 @@ export function HeroHome() {
         <div className="mx-auto max-w-[min(1003px,100%)] justify-self-center lg:mx-0 lg:mr-[calc(50%-50vw-1.5rem)] lg:max-w-none lg:justify-self-auto">
           <div className="border-default bg-muted/30 block rounded-2xl border border-dashed p-1">
             <Image
-              src={hero}
+              src={heroMock}
               alt=""
               className="block"
               aria-hidden="true"

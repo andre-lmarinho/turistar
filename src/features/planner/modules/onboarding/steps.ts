@@ -1,9 +1,9 @@
 import type { StaticImageData } from 'next/image';
 
-import onboardingStepOne from './media/Onboarding_001_.jpg';
-import onboardingStepTwo from './media/Onboarding_002_.jpg';
-import onboardingStepThree from './media/Onboarding_003_.jpg';
-import onboardingStepFour from './media/Onboarding_004_.jpg';
+import onboardingStepOne from './media/onboarding_001_.jpg';
+import onboardingStepTwo from './media/onboarding_002_.jpg';
+import onboardingStepThree from './media/onboarding_003_.jpg';
+import onboardingStepFour from './media/onboarding_004_.jpg';
 
 interface OnboardingStep {
   title: string;
@@ -24,7 +24,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     title: 'Set your trip budget',
-    description: 'Define the total amount you’re willing to spend.',
+    description: 'Define the total amount you are willing to spend.',
     image: onboardingStepThree,
   },
   {

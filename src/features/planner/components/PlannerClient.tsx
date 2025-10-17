@@ -8,7 +8,6 @@ import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/Pla
 import { usePlanTitle } from '@/features/planner/hooks/data/usePlanTitleSupabase';
 import { OnboardingDialog } from '@/features/planner/modules/onboarding/components/OnboardingDialog';
 import { OnboardingProvider } from '@/features/planner/modules/onboarding/hooks/OnboardingContext';
-import { ModeToggleButton } from '@/features/planner/ui/button/ModeToggleButton';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget';
 
@@ -55,21 +54,16 @@ function PlannerClientInner({
 
   return (
     <OnboardingProvider planId={planId}>
-      <main
-        id="main-content"
-        className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12"
-      >
+      <main className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
         <PlannerHeader
           title={title}
           onTitleChange={setTitle}
           onTitleBlur={saveTitle}
           currentRange={currentRange}
           onRangeChange={handleRangeChange}
+          mode={mode}
+          onModeChange={setMode}
         />
-
-        <div className="order-3 mx-auto flex w-full max-w-screen-xl items-center justify-center gap-4 py-2 md:order-2 md:justify-start md:pt-0 md:pb-4">
-          <ModeToggleButton value={mode} onChange={setMode} />
-        </div>
 
         <PlannerModeDeck
           mode={mode}

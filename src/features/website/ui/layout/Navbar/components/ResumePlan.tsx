@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import React from 'react';
 import { differenceInCalendarDays } from 'date-fns';
+import { Button } from '@/shared/ui/button';
 import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
 
 export function ResumePlan() {
@@ -14,16 +14,13 @@ export function ResumePlan() {
   const query = new URLSearchParams({ dest, start, end }).toString();
 
   return (
-    <div className="bg-card flex justify-center gap-10 p-4 text-center">
+    <div className="bg-card fixed right-2 bottom-3 left-2 flex justify-center gap-10 rounded-2xl border p-4 text-center">
       <p className="my-auto">
         Continue your {tripLength} {tripLength === 1 ? 'day' : 'days'} trip to {dest}
       </p>
-      <Link
-        href={`/planner/${slug}?${query}`}
-        className="bg-accent text-accent-foreground hover:bg-accent/90 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors"
-      >
+      <Button href={`/planner/${slug}?${query}`} variant="accent">
         Continue Planning
-      </Link>
+      </Button>
     </div>
   );
 }
