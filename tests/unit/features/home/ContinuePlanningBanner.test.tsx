@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { hydrateRoot, type Root } from 'react-dom/client';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 
-import { ResumePlan } from '@/features/website/ui/layout/Navbar/components/ResumePlan';
+import { DesktopActions } from '@/features/website/ui/layout/Navbar/components/DesktopActions';
 import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
 
 vi.mock('next/link', () => ({
@@ -18,7 +18,7 @@ vi.mock('next/link', () => ({
   ),
 }));
 
-describe('ResumePlan hydration', () => {
+describe('Resume planning actions', () => {
   afterEach(() => {
     if (typeof window !== 'undefined') {
       window.localStorage.clear();
@@ -38,7 +38,7 @@ describe('ResumePlan hydration', () => {
     const originalWindow = globalThis.window;
     // @ts-ignore simulate server environment
     globalThis.window = undefined;
-    const serverHtml = renderToString(<ResumePlan />);
+    const serverHtml = renderToString(<DesktopActions />);
     globalThis.window = originalWindow;
 
     document.body.innerHTML = `<div id="root">${serverHtml}</div>`;
@@ -50,12 +50,15 @@ describe('ResumePlan hydration', () => {
 
     let root: Root;
     await act(() => {
-      root = hydrateRoot(container, <ResumePlan />);
-      expect(serverHtml).not.toContain('Continue your');
+      root = hydrateRoot(container, <DesktopActions />);
+      expect(serverHtml).not.toContain('Continue Planning');
       expect(container.innerHTML).toBe(serverHtml);
     });
 
-    expect(await screen.findByText(/Continue your 2 days trip to Paris/)).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: 'Continue Planning' })).toHaveAttribute(
+      'href',
+      '/planner/trip?dest=Paris&start=2023-01-01&end=2023-01-02'
+    );
 
     expect(consoleError).not.toHaveBeenCalled();
 

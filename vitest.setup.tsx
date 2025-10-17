@@ -10,6 +10,20 @@ import React from 'react';
 // jest-axe matcher registration (cast to satisfy TS in Vitest env)
 expect.extend(toHaveNoViolations as unknown as Parameters<typeof expect.extend>[0]);
 
+function createSupabaseClientMock() {
+  const channel = {
+    on: vi.fn().mockReturnThis(),
+    subscribe: vi.fn(() => ({ unsubscribe: vi.fn().mockResolvedValue({ error: null }) })),
+  };
+
+  return {
+    from: vi.fn(),
+    rpc: vi.fn(),
+    auth: { getSession: vi.fn(), getUser: vi.fn() },
+    channel: vi.fn(() => channel),
+  };
+}
+
 class ResizeObserverMock {
   observe = vi.fn();
   unobserve = vi.fn();
@@ -86,11 +100,12 @@ HTMLCanvasElement.prototype.getContext = vi.fn(
     }) as unknown as CanvasRenderingContext2D
 ) as unknown as HTMLCanvasElement['getContext'];
 
+vi.mock('@supabase/ssr', () => ({
+  createBrowserClient: () => createSupabaseClientMock(),
+}));
+
 vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => ({
-    from: vi.fn(),
-    auth: { getSession: vi.fn(), getUser: vi.fn() },
-  }),
+  createClient: () => createSupabaseClientMock(),
 }));
 
 vi.mock('next/navigation', () => ({

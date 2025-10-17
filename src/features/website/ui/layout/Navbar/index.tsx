@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { ResumePlan } from './components/ResumePlan';
 import { DesktopActions } from './components/DesktopActions';
 import { DesktopNavigation } from './components/DesktopNavigation';
 import { LogoLink } from './components/LogoLink';
@@ -60,7 +59,6 @@ export function Navbar() {
       className="bg-background fixed top-0 z-50 my-0 w-full px-6 py-2 lg:my-2 lg:mb-0 lg:bg-transparent lg:py-0"
       data-elevated="false"
     >
-      <ResumePlan />
       <div
         ref={shellRef}
         data-elevated="false"
