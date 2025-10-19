@@ -1,5 +1,5 @@
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import { HeroAgencies } from '@/features/website/sections/Hero/Agencies';
+import { HeroAgencies } from '@/features/website/sections/Hero';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
 import { Testimonial } from '@/features/website/sections/Testimonial';
 import { UseCases } from '@/features/website/sections/UseCases';

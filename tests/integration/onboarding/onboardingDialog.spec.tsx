@@ -103,10 +103,14 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
   PlannerBoard: () => <div />,
 }));
-vi.mock('@/features/planner/components/map/MapBoard', () => ({
-  __esModule: true,
-  MapBoard: () => <div />,
-}));
+vi.mock('@/features/planner/components/map/MapBoard', () => {
+  const MockMapBoard = () => <div />;
+  return {
+    __esModule: true,
+    default: MockMapBoard,
+    MapBoard: MockMapBoard,
+  };
+});
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   __esModule: true,
   BudgetBoard: () => <div />,

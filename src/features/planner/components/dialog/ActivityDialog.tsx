@@ -43,7 +43,12 @@ export function ActivityDialog() {
           aria-modal="true"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-[452px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
-          <Dialog.Title className="sr-only">Edit Activity</Dialog.Title>
+          <Dialog.Title id="activity-dialog-title" className="sr-only">
+            Edit Activity
+          </Dialog.Title>
+          <Dialog.Description id="activity-dialog-description" className="sr-only">
+            Update the details of the selected activity.
+          </Dialog.Description>
 
           <ActivityDialogHeader
             activity={draft}

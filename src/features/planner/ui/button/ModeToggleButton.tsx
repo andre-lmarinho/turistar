@@ -66,7 +66,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
     <div className="inline-flex">
       <div
         ref={containerRef}
-        role="tablist"
+        role="group"
         aria-label="View mode selector"
         className="bg-background border-border relative flex min-w-[200px] overflow-hidden rounded-[var(--radius)] border"
       >
@@ -85,10 +85,9 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
           return (
             <button
               key={mode}
-              role="tab"
               type="button"
               onClick={() => onChange(mode)}
-              aria-selected={selected}
+              aria-pressed={selected}
               className={`relative z-10 h-10 flex-1 cursor-pointer px-2 text-sm font-medium transition-colors ${
                 selected
                   ? 'text-[var(--primary-foreground)]'

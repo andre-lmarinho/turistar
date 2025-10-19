@@ -71,10 +71,14 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
   PlannerBoard: () => <div data-testid="planner-board" />,
 }));
-vi.mock('@/features/planner/components/map/MapBoard', () => ({
-  __esModule: true,
-  MapBoard: () => <div data-testid="map-view" />,
-}));
+vi.mock('@/features/planner/components/map/MapBoard', () => {
+  const MockMapBoard = () => <div data-testid="map-view" />;
+  return {
+    __esModule: true,
+    default: MockMapBoard,
+    MapBoard: MockMapBoard,
+  };
+});
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
   __esModule: true,
   BudgetBoard: () => <div data-testid="budget-panel" />,

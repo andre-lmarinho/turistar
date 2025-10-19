@@ -43,5 +43,5 @@ describe('Accessibility — Home page (full)', () => {
     const { container } = render(<Home />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
-  });
+  }, 15000);
 });

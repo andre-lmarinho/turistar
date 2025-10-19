@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@/shared/ui/icon';
 import { DateRange } from 'react-day-picker';
@@ -17,7 +17,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, 'LLL dd')} – ${format(value.to, 'LLL dd, y')}`
+      ? `${format(value.from, 'LLL dd')} - ${format(value.to, 'LLL dd, y')}`
       : format(value.from, 'LLL dd, y')
     : 'Pick a date range';
 
@@ -68,7 +68,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, 'LLL dd')} – ${format(value.to, 'LLL dd, y')}`
+      ? `${format(value.from, 'LLL dd')} - ${format(value.to, 'LLL dd, y')}`
       : format(value.from, 'LLL dd, y')
     : 'Pick a date range';
 
@@ -79,6 +79,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           type="button"
           title={label}
           aria-label={label}
+          data-testid="date-picker"
           className={cn(
             'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-[var(--radius)] border px-2 transition-colors',
             className

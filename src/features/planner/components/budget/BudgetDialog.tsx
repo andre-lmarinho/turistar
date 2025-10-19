@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -55,12 +55,18 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
         />
         <Dialog.Content
           aria-labelledby="activities-budget-title"
+          aria-describedby="activities-budget-description"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[95%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <div className="flex items-center justify-between border-b px-4 py-3 text-left">
             <Dialog.Title asChild>
-              <h2 className="text-lg font-semibold">Budget Your Activities</h2>
+              <h2 id="activities-budget-title" className="text-lg font-semibold">
+                Budget Your Activities
+              </h2>
             </Dialog.Title>
+            <Dialog.Description id="activities-budget-description" className="sr-only">
+              Adjust the budget assigned to each planned activity.
+            </Dialog.Description>
 
             <Dialog.Close asChild>
               <button
@@ -86,7 +92,7 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
                 className="flex items-center justify-between gap-2"
               >
                 <span className="flex-1 truncate text-sm">
-                  {activity.title || 'Untitled'} – {activity.dayLabel}
+                  {activity.title || 'Untitled'} - {activity.dayLabel}
                 </span>
                 <div className="bg-background grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
                   <span className="bg-muted border-r-1">
@@ -102,7 +108,7 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
                       setInputs((prev) => ({ ...prev, [activity.id]: event.target.value }))
                     }
                     placeholder="Budget"
-                    aria-label={`Budget for ${activity.title || 'untitled'} – ${activity.dayLabel}`}
+                    aria-label={`Budget for ${activity.title || 'untitled'} - ${activity.dayLabel}`}
                     className="focus:ring-primary w-full bg-transparent px-2 py-1 text-right outline-none focus:ring-2 focus:ring-offset-2"
                     inputMode="decimal"
                   />

@@ -3,8 +3,7 @@ import type { ReactNode } from 'react';
 
 import SeoJsonLd from '@/features/website/seo/SeoJsonLd';
 import { SITE_URL } from '@/shared/utils/siteUrl';
-import { Navbar } from '@/features/website/ui/layout/Navbar';
-import { Footer } from '@/features/website/ui/layout/Footer';
+import { Navbar, Footer } from '@/features/website/ui/layout';
 
 const previewImage = new URL('/previews/preview_01.png', SITE_URL).toString();
 

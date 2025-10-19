@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import { OnboardingProvider } from '@/features/planner/modules/onboarding/hooks/OnboardingContext';
 
 const mockSetShowOnboarding = vi.fn();
-vi.mock('@/features/planner/onboarding/useOnboardingCheck', () => ({
+vi.mock('@/features/planner/modules/onboarding/hooks/useOnboardingCheck', () => ({
   useOnboardingCheck: () => ({ showOnboarding: true, setShowOnboarding: mockSetShowOnboarding }),
 }));
 

@@ -39,7 +39,19 @@ vi.mock('@/shared/ui/calendar', () => ({
       Pick dates
     </button>
   ),
-  DateRangePickerIcon: () => <div />,
+  DateRangePickerIcon: ({
+    onChange,
+  }: {
+    value: DateRange | undefined;
+    onChange: (r: DateRange | undefined) => void;
+  }) => (
+    <button
+      data-testid="date-picker"
+      onClick={() => onChange({ from: new Date('2025-01-01'), to: new Date('2025-01-02') })}
+    >
+      Pick dates
+    </button>
+  ),
 }));
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
@@ -169,20 +181,22 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
 
 vi.mock('@/features/planner/components/map/MapBoard', () => {
   const React = require('react');
+  function MapViewMock() {
+    const ctx =
+      typeof getPlannerContext === 'function'
+        ? getPlannerContext()
+        : {
+            bounds: {
+              sw: [0, 0] as [number, number],
+              ne: [1, 1] as [number, number],
+            },
+          };
+    return <div data-testid="map-view">{JSON.stringify(ctx.bounds)}</div>;
+  }
   return {
     __esModule: true,
-    MapBoard: function MapViewMock() {
-      const ctx =
-        typeof getPlannerContext === 'function'
-          ? getPlannerContext()
-          : {
-              bounds: {
-                sw: [0, 0] as [number, number],
-                ne: [1, 1] as [number, number],
-              },
-            };
-      return <div data-testid="map-view">{JSON.stringify(ctx.bounds)}</div>;
-    },
+    default: MapViewMock,
+    MapBoard: MapViewMock,
   };
 });
 

@@ -17,9 +17,15 @@ export function OnboardingDialog() {
         <Dialog.Overlay className="bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in data-[state=closed]:fade-out fixed inset-0 z-40 backdrop-blur-sm" />
         <Dialog.Content
           aria-labelledby="onboarding-carousel-title"
+          aria-describedby="onboarding-carousel-description"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
-          <Dialog.Title className="sr-only">Welcome Onboarding</Dialog.Title>
+          <Dialog.Title id="onboarding-carousel-title" className="sr-only">
+            Welcome to the planner onboarding
+          </Dialog.Title>
+          <Dialog.Description id="onboarding-carousel-description" className="sr-only">
+            Follow the onboarding steps to learn how to use the travel planner.
+          </Dialog.Description>
 
           <Dialog.Close asChild>
             <button

@@ -1,15 +1,15 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
-import mascot from 'src/shared/media/mascot_1_.webp';
+import mascot from '@/shared/media/mascot_1_.webp';
 import { Spinner } from './Spinner';
 
 interface LoadingScreenProps {
   text?: string;
 }
 
-export function LoadingScreen({ text = 'Loading…' }: LoadingScreenProps) {
+export function LoadingScreen({ text = 'Loading...' }: LoadingScreenProps) {
   return (
     <div
       role="status"
