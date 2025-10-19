@@ -33,12 +33,39 @@ const content: PlanningPageContent = {
   faq: {
     items: [
       {
-        question: 'Can I integrate meeting tools?',
-        answer: 'Link calendar invites and video rooms to itinerary blocks for quick access.',
+        question: 'How do I balance client calls with sightseeing days?',
+        answer:
+          'Drag and drop work blocks, focus sessions, and outings between days. Duration and notes fields keep agendas clear while everything stays synced across devices.',
       },
       {
-        question: 'How do we manage visas and docs?',
-        answer: 'Store required paperwork, deadlines, and status updates in shared trackers.',
+        question: 'Can I plan multi-month stays across several cities?',
+        answer:
+          'Yes. Pick the full date range you need, whether it is a week or a season, and add as many days and destinations as your route requires.',
+      },
+      {
+        question: 'Where do I store Wi-Fi details, meeting links, or coworking passes?',
+        answer:
+          'Each activity includes rich notes, so you can save passwords, booking references, and video call URLs right next to the schedule.',
+      },
+      {
+        question: 'How do I track recurring housing or coworking fees?',
+        answer:
+          'Budget mode lets you log monthly rent, day passes, visas, and other costs by category, while activity-level budgets cover ad-hoc expenses on the itinerary.',
+      },
+      {
+        question: 'Will teammates see updates instantly?',
+        answer:
+          'Yes. Supabase Realtime keeps collaborators on the same plan in sync, so rearranged tasks or new expenses appear the moment you save them.',
+      },
+      {
+        question: 'Does the planner integrate with my calendar?',
+        answer:
+          'Native calendar sync is not available yet, but you can paste meeting links or calendar invite URLs into activity notes for quick access.',
+      },
+      {
+        question: 'Can I manage visa reminders or paperwork deadlines?',
+        answer:
+          'Create dedicated activities for document tasks, set durations or budgets for fees, and keep the latest status in notes so administrative work lives beside your travel days.',
       },
     ],
   },

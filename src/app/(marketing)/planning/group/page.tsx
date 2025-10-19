@@ -33,12 +33,39 @@ const content: PlanningPageContent = {
   faq: {
     items: [
       {
-        question: 'Can travelers pay different amounts?',
-        answer: 'Set suggested contributions per traveler and track balances individually.',
+        question: 'How do we keep everyone aligned without endless chat threads?',
+        answer:
+          'Share the plan link generated at signup. Any edits you make save instantly, so friends can refresh the itinerary instead of asking for the latest version.',
       },
       {
-        question: 'How do we divide responsibilities?',
-        answer: 'Assign bookings, groceries, and other tasks with due dates and reminders.',
+        question: 'Can multiple friends edit the plan at the same time?',
+        answer:
+          'Yes. Supabase Realtime lets collaborators move cards or update notes simultaneously while the board resolves changes in place.',
+      },
+      {
+        question: 'How do we handle shared expenses during the trip?',
+        answer:
+          'Use Budget mode to log costs by category (transport, lodging, food, activities) and note who covered each line. Per-person balance calculations are not automated yet, but the totals stay transparent.',
+      },
+      {
+        question: 'Where do we note who is responsible for bookings or errands?',
+        answer:
+          'Add a card for each task and capture the owner, confirmation numbers, and checklists inside the notes so responsibilities stay visible to the group.',
+      },
+      {
+        question: 'What if travelers arrive or leave on different days?',
+        answer:
+          'Extend the date range to cover everyone, then create activities (e.g., airport pickups, late check-ins) on the relevant days. The map view shows where overlapping plans meet.',
+      },
+      {
+        question: 'Can the planner track individual budgets automatically?',
+        answer:
+          'Not yet. Today you can keep separate categories or notes per traveler, and we will surface per-person summaries in a future update.',
+      },
+      {
+        question: "Will the itinerary work on everyone's phones?",
+        answer:
+          'Yes. The planner UI is responsive, so the same shared link opens on mobile browsers, tablets, or laptops without installing anything.',
       },
     ],
   },

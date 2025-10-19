@@ -17,7 +17,7 @@ export function HeroHome() {
             friends planning yours next trip, event or nomad adventure.
           </P>
 
-          <Button className="lg:w-full" href="/signup">
+          <Button className="w-full" href="/signup">
             Start Your Planning
           </Button>
         </div>

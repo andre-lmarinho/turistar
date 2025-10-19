@@ -25,6 +25,7 @@ export {
   FileText,
   Hotel,
   Hourglass,
+  Info,
   Kanban,
   Laptop,
   LandPlot,

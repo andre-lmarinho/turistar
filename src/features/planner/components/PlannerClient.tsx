@@ -54,7 +54,7 @@ function PlannerClientInner({
 
   return (
     <OnboardingProvider planId={planId}>
-      <main className="bg-card flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
+      <main className="bg-card relative flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
         <PlannerHeader
           title={title}
           onTitleChange={setTitle}

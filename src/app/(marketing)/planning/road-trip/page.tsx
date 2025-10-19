@@ -33,12 +33,39 @@ const content: PlanningPageContent = {
   faq: {
     items: [
       {
-        question: 'Can I reuse my packing lists?',
-        answer: 'Yes, copy lists between plans and customize them for each adventure.',
+        question: 'How detailed can I make each leg of the drive?',
+        answer:
+          'Add activities for every stop, then fill in duration, notes, and optional budgets so meal breaks, detours, and scenic outlooks stay organized.',
       },
       {
-        question: 'How detailed can I get with stops?',
-        answer: 'Add notes, attachments, and custom reminders for every waypoint.',
+        question: 'Does the map show the full route and fuel stops?',
+        answer:
+          'Yes. Map mode displays every activity with coordinates, helping you spot gaps between gas stations, hotels, or attractions before you depart.',
+      },
+      {
+        question: 'How do I plan fuel, food, or rest breaks?',
+        answer:
+          'Create dedicated cards for each stop, add driving notes, and drag them into the right time slot. Distances remain clear on the map while the main board shows the schedule.',
+      },
+      {
+        question: 'How do I manage lodging and attraction costs?',
+        answer:
+          'Use Budget mode to categorize expenses like lodging, activities, food, or tolls. Per-stop budget fields feed the same totals so you always know where money is going.',
+      },
+      {
+        question: 'What happens if I add a detour or reorder stops mid-trip?',
+        answer:
+          'Simply drag the stop to its new day or position. The plan saves instantly, and anyone viewing the itinerary sees the updated order right away.',
+      },
+      {
+        question: 'Does the planner provide navigation or offline maps?',
+        answer:
+          'Turn-by-turn directions are not built in. Keep using your preferred GPS app, then store key addresses and notes in the planner for context.',
+      },
+      {
+        question: 'Can passengers follow along on the road?',
+        answer:
+          'Yes. Share the public plan link so riders can open the itinerary on their phones and check what is coming up next.',
       },
     ],
   },

@@ -80,11 +80,11 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           title={label}
           aria-label={label}
           className={cn(
-            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors',
+            'border-border bg-background text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-[var(--radius)] border px-2 transition-colors',
             className
           )}
         >
-          <CalendarIcon className="size-4" aria-hidden="true" />
+          <CalendarIcon className="size-5" aria-hidden="true" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">

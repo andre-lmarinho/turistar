@@ -1,8 +1,8 @@
 import { CtaFinal } from '@/features/website/sections/CTAFinal';
 import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
 import { Features } from '@/features/website/sections/Features';
-import { Faq } from '@/features/website/sections/FAQ';
-import type { FaqProps } from '@/features/website/sections/FAQ';
+import { Faq } from '@/features/website/sections/PlanningFAQ';
+import type { FaqProps } from '@/features/website/sections/PlanningFAQ';
 import { HeroPlanning } from '@/features/website/sections/Hero/Planning';
 import type { HeroPlanningProps } from '@/features/website/sections/Hero/Planning';
 import { KeyBenefits } from '@/features/website/sections/KeyBenefits';

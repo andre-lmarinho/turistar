@@ -7,40 +7,7 @@ import { TrustedBy } from '@/features/website/sections/TrustedBy';
 export default function PricingPage() {
   return (
     <>
-      <HeroPricing
-        plans={[
-          {
-            name: 'Starter',
-            price: 'Free',
-            description: 'Ideal for solo travelers planning occasional trips.',
-            features: [
-              'Unlimited itineraries',
-              'Collaboration with up to 3 guests',
-              'Basic packing lists',
-            ],
-            action: { label: 'Create free account', href: '/signup' },
-          },
-          {
-            name: 'Collaborator',
-            price: '$12/month',
-            description: 'Best for friend groups and families planning multiple trips per year.',
-            features: [
-              'Unlimited collaborators',
-              'Budget tracking and polls',
-              'Shared document library',
-            ],
-            action: { label: 'Start trial', href: '/signup' },
-            highlighted: true,
-          },
-          {
-            name: 'Navigator',
-            price: '$29/month',
-            description: 'Advanced controls for teams, retreat planners, and travel pros.',
-            features: ['Workflow automations', 'Approval flows and reporting', 'Priority support'],
-            action: { label: 'Contact sales', href: '/contact' },
-          },
-        ]}
-      />
+      <HeroPricing />
       <TrustedBy />
       <CtaMidPage />
       <PricingFeature

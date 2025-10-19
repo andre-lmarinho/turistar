@@ -33,13 +33,39 @@ const content: PlanningPageContent = {
   faq: {
     items: [
       {
-        question: 'Can I duplicate an itinerary?',
+        question: 'How quickly can I reshuffle activities when the forecast changes?',
         answer:
-          'Clone any plan to reuse packing lists and base schedules for your next expedition.',
+          'Drag and drop hikes, transfers, or rest days between the schedule. Every move saves immediately through Supabase so co-leads always open the latest plan.',
       },
       {
-        question: 'How do I manage split expenses?',
-        answer: 'Track contributions by traveler and mark reimbursements in shared ledgers.',
+        question: 'Will my co-leads see edits as they happen?',
+        answer:
+          'Yes. The planner streams updates over Supabase Realtime channels, so anyone on the same plan ID watches changes appear without refreshing.',
+      },
+      {
+        question: 'How do I pin remote campsites or trailheads that lack clear addresses?',
+        answer:
+          'Paste GPS coordinates or place names into the activity address field. We geocode with OpenStreetMap, and if nothing matches you still keep the directions in notes while the itinerary stays organized.',
+      },
+      {
+        question: 'What details can I track for gear checks and safety briefings?',
+        answer:
+          'Activities support notes, estimated duration, and optional budget amounts, letting you log pack inspections, nutrition plans, or emergency drills alongside the route.',
+      },
+      {
+        question: 'Can I monitor permits, guides, and resupplies in one budget view?',
+        answer:
+          'Switch to Budget mode to categorize spending (transport, lodging, documents, etc.) and add line items. Activity-level budgets roll into the same totals so nothing gets missed.',
+      },
+      {
+        question: 'Does the planner work when we lose signal in the backcountry?',
+        answer:
+          'You need an internet connection to load or sync edits. Review or print the itinerary before heading out, then add updates once you are back online.',
+      },
+      {
+        question: 'Can I review the full route on a map before departure?',
+        answer:
+          'Yes. Map mode plots every activity with coordinates on an interactive map so you can double-check trailheads, camps, and approach distances.',
       },
     ],
   },

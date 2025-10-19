@@ -22,6 +22,7 @@ export const lucideIconNames = [
   'hand-coins',
   'hotel',
   'hourglass',
+  'info',
   'kanban',
   'land-plot',
   'laptop',

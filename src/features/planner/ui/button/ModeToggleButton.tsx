@@ -89,7 +89,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
               type="button"
               onClick={() => onChange(mode)}
               aria-selected={selected}
-              className={`relative z-10 flex-1 cursor-pointer px-2 py-1 text-sm font-medium transition-colors ${
+              className={`relative z-10 h-10 flex-1 cursor-pointer px-2 text-sm font-medium transition-colors ${
                 selected
                   ? 'text-[var(--primary-foreground)]'
                   : 'text-[var(--foreground)] hover:text-[var(--foreground)]'

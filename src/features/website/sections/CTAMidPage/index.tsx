@@ -2,6 +2,7 @@ import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButtons } from '@/features/website/ui/button';
 import { Map } from '@/shared/ui/icon';
+
 import { EmojiTicker } from './components/EmojiTicker';
 
 export function CtaMidPage() {

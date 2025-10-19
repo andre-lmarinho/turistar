@@ -1,3 +1,5 @@
+import type { ElementType } from 'react';
+
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButtons } from '@/features/website/ui/button';
@@ -9,7 +11,6 @@ import {
   Megaphone,
   BadgeCheck,
 } from '@/shared/ui/icon';
-import type { ElementType } from 'react';
 
 type UseCase = {
   title: string;

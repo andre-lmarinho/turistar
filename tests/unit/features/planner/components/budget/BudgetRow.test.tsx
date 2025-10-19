@@ -11,7 +11,7 @@ const setDescMock = vi.fn();
 const setCatMock = vi.fn();
 const setAmountMock = vi.fn();
 
-vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
+vi.mock('@/features/planner/hooks/BudgetContext', () => ({
   useBudgetContext: () => ({
     desc: '',
     setDesc: setDescMock as unknown as Dispatch<SetStateAction<string>>,

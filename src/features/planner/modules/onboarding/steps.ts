@@ -1,9 +1,9 @@
 import type { StaticImageData } from 'next/image';
 
-import onboardingStepOne from './media/onboarding_001_.jpg';
-import onboardingStepTwo from './media/onboarding_002_.jpg';
-import onboardingStepThree from './media/onboarding_003_.jpg';
-import onboardingStepFour from './media/onboarding_004_.jpg';
+import onboardingStepOne from './media/onboarding_001.jpg';
+import onboardingStepTwo from './media/onboarding_002.jpg';
+import onboardingStepThree from './media/onboarding_003.jpg';
+import onboardingStepFour from './media/onboarding_004.jpg';
 
 interface OnboardingStep {
   title: string;

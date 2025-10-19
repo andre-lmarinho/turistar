@@ -1,6 +1,16 @@
 import { type ComponentType } from 'react';
 
-import { Calendar, Hotel, Laptop, Map, Mountain, Sparkles, User, Users } from '@/shared/ui/icon';
+import {
+  Briefcase,
+  Calendar,
+  Hotel,
+  Laptop,
+  Map,
+  Mountain,
+  Sparkles,
+  User,
+  Users,
+} from '@/shared/ui/icon';
 
 export type SolutionItem = {
   href: string;
@@ -38,7 +48,7 @@ export const SOLUTION_CATEGORIES: SolutionCategory[] = [
         href: '/agency',
         label: 'Agency',
         description: 'Organize client trips easily.',
-        icon: Users,
+        icon: Briefcase,
       },
     ],
   },
@@ -48,9 +58,9 @@ export const SOLUTION_CATEGORIES: SolutionCategory[] = [
       { href: '/planning/adventure', label: 'Adventure', icon: Mountain },
       { href: '/planning/digital-nomad', label: 'Nomad', icon: Laptop },
       { href: '/planning/event-based', label: 'Event', icon: Calendar },
-      { href: '/planning/road-trips', label: 'Road trips', icon: Map },
-      { href: '/planning/vacations', label: 'Vacations', icon: Hotel },
-      { href: '/planning/group', label: 'Groups', icon: Users },
+      { href: '/planning/road-trip', label: 'Road trip', icon: Map },
+      { href: '/planning/vacation', label: 'Vacation', icon: Hotel },
+      { href: '/planning/group', label: 'Group', icon: Users },
     ],
   },
 ];

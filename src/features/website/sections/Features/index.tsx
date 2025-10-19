@@ -1,7 +1,7 @@
-import { Binoculars, CircleCheck } from '@/shared/ui/icon';
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P, Eyebrow } from '@/features/website/ui/typography';
 import { CTAButton } from '@/features/website/ui/button';
+import { Binoculars, CircleCheck } from '@/shared/ui/icon';
 
 const FEATURE_ITEMS = [
   {
