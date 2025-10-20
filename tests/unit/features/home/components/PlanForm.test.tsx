@@ -34,7 +34,7 @@ vi.mock('@/shared/ui/loading/LoadingScreen', () => ({
   LoadingScreen: () => null,
 }));
 
-vi.mock('@/features/planner/ui/input/LocationSearchInput', () => ({
+vi.mock('@/features/planner/components/ui/LocationSearchInput', () => ({
   __esModule: true,
   LocationSearchInput: mockLocationSearchInput,
 }));

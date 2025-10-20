@@ -55,19 +55,12 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
         />
         <Dialog.Content
           aria-labelledby="activities-budget-title"
-          aria-describedby="activities-budget-description"
           className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 w-[95%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <div className="flex items-center justify-between border-b px-4 py-3 text-left">
             <Dialog.Title asChild>
-              <h2 id="activities-budget-title" className="text-lg font-semibold">
-                Budget Your Activities
-              </h2>
+              <h2 className="text-lg font-semibold">Budget Your Activities</h2>
             </Dialog.Title>
-            <Dialog.Description id="activities-budget-description" className="sr-only">
-              Adjust the budget assigned to each planned activity.
-            </Dialog.Description>
-
             <Dialog.Close asChild>
               <button
                 type="button"

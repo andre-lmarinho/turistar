@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core';
 
 import { SortableItem } from './SortableItem';
-import { AddCardButton } from '@/features/planner/ui/button/AddCardButton';
+import { AddCardButton } from './AddCardButton';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 interface DayColumnProps {
@@ -33,9 +33,9 @@ export function DayColumn({ day, onSelectActivity, onAddActivity }: DayColumnPro
       ref={setNodeRef}
       className={`flex h-full flex-1 flex-col ${isOver ? 'ring-primary/40 ring-2' : ''}`}
     >
-      <header className="m-2 flex text-[var(--muted-foreground)]">
-        <h2 className="text-sm font-medium">{day.label}</h2>
-      </header>
+      <div className="flex px-3 pt-2 text-[var(--muted-foreground)]">
+        <h2 className="text-sm font-semibold">{day.label}</h2>
+      </div>
 
       <SortableContext
         key={day.id}
@@ -43,29 +43,28 @@ export function DayColumn({ day, onSelectActivity, onAddActivity }: DayColumnPro
         items={day.activities.map((a) => a.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div ref={scrollRef} data-testid="day-scroll" className="overflow-y-auto pr-1">
+        <div ref={scrollRef} data-testid="day-scroll" className="overflow-y-auto pt-2">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
+              {idx < day.activities.length - 0 && (
+                <AddCardButton
+                  position="insert"
+                  dayId={day.id}
+                  index={idx}
+                  onAddActivity={onAddActivity}
+                />
+              )}
               <SortableItem
                 id={activity.id}
                 activity={{ ...activity, dayId: day.id }}
                 onSelect={() => onSelectActivity?.({ ...activity, dayId: day.id })}
                 bgColor={activity.color}
               />
-              {idx < day.activities.length - 1 && (
-                <AddCardButton
-                  position="insert"
-                  dayId={day.id}
-                  index={idx + 1}
-                  onAddActivity={onAddActivity}
-                />
-              )}
             </React.Fragment>
           ))}
         </div>
       </SortableContext>
-
-      <div className="mt-4 flex justify-center">
+      <div className="py-2">
         <AddCardButton
           position="new"
           dayId={day.id}

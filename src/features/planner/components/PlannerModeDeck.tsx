@@ -34,7 +34,7 @@ export function PlannerModeDeck({
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
-    <div className="relative order-2 mx-auto w-full max-w-screen-xl flex-1 overflow-visible md:order-3">
+    <div className="relative mx-auto w-full max-w-screen-xl flex-1 overflow-visible">
       {modeOrder.map((currentMode, idx) => {
         const isActive = idx === activeIdx;
         const relativeIndex = idx - activeIdx;

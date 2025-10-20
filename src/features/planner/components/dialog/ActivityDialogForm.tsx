@@ -5,7 +5,7 @@ import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/features/planner/domain/constants/activity';
-import { LocationSearchInput } from '../../ui/input/LocationSearchInput';
+import { LocationSearchInput } from '../ui/LocationSearchInput';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 

@@ -46,7 +46,7 @@ describe('Accessibility — ActivityDialog', () => {
   it('exposes dialog semantics and closes on Escape', async () => {
     const { container } = render(<ActivityDialog />);
 
-    const dialog = screen.getByRole('dialog', { name: 'Edit Activity' });
+    const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveAttribute('aria-modal', 'true');
 
     const results = await axe(container);

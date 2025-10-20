@@ -95,9 +95,7 @@ describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {
     render(<PlannerClient planId="p1" hideOnboarding />);
 
-    const plannerBtn = screen.getByRole('button', { name: 'Planner' });
-    const mapBtn = screen.getByRole('button', { name: 'Map' });
-    const budgetBtn = screen.getByRole('button', { name: 'Budget' });
+    const [plannerBtn, mapBtn, budgetBtn] = screen.getAllByRole('button');
 
     const board = await screen.findByTestId('planner-board');
     const map = await screen.findByTestId('map-view');

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { DateRangePicker } from '@/shared/ui/calendar';
 import { LoadingScreen } from '@/shared/ui/loading/LoadingScreen';
-import { LocationSearchInput } from '@/features/planner/ui/input/LocationSearchInput';
+import { LocationSearchInput } from '@/features/planner/components/ui/LocationSearchInput';
 
 import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';

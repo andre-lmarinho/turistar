@@ -13,6 +13,7 @@ import type { Entry } from '@/features/planner/types/budget';
 
 import { PlannerHeader } from './PlannerHeader';
 import { PlannerModeDeck, type PlannerMode } from './PlannerModeDeck';
+import { ModeToggleButton } from '@/features/planner/components/ui/ModeToggleButton';
 
 /**
  * Top-level client component for the planner experience.
@@ -74,6 +75,10 @@ function PlannerClientInner({
         />
 
         <ActivityDialog />
+
+        <div className="flex flex-none items-center gap-2 self-center p-6 md:hidden">
+          <ModeToggleButton value={mode} onChange={setMode} />
+        </div>
 
         {!hideOnboarding && <OnboardingDialog />}
       </main>

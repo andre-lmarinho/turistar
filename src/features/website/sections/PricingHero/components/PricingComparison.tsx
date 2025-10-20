@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 
+import { Eyebrow } from '@/features/website/ui/typography';
 import { Button } from '@/shared/ui/button';
 import { Check } from '@/shared/ui/icon';
 
@@ -41,10 +42,10 @@ const TEAMS: Tier = {
   title: 'Companions',
   startsAt: 'per month/user',
   headline: '$5',
-  chip: '14 day free trial',
+  chip: 'Free trial',
   emphasis: true,
   description: 'For friends and families.',
-  cta: { label: 'Get started', href: '/signup' },
+  cta: { label: 'Get started', href: '#' },
   sectionLabel: 'Explorer plan features, plus:',
   features: [
     { label: 'Group trip editing' },
@@ -60,7 +61,7 @@ const ORGANIZATIONS: Tier = {
   startsAt: 'per month/user',
   headline: '$57',
   description: 'Built for travel professionals.',
-  cta: { label: 'Get started', href: '/signup' },
+  cta: { label: 'Get started', href: '#' },
   sectionLabel: 'Companions plan features, plus:',
   features: [
     { label: 'Multi-itinerary manager' },
@@ -76,7 +77,7 @@ const ENTERPRISE: Tier = {
   title: 'Corporate',
   headline: 'Contact us',
   description: 'Advanced tools for teams.',
-  cta: { label: 'Get a Quote', href: '/signup' },
+  cta: { label: 'Get a Quote', href: '#' },
   sectionLabel: 'Agencies plan features, plus:',
   features: [
     { label: 'Travel policy controls' },
@@ -114,17 +115,14 @@ function TierCard({
   features,
 }: Tier) {
   const base =
-    'relative flex h-full flex-col rounded-xl border p-6 shadow-sm transition-shadow bg-card text-card-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+    'relative flex h-full flex-col rounded-xl border p-6 shadow-sm transition-shadow text-card-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
   return (
     <div
       aria-labelledby={`${title}-heading`}
-      className={[
-        base,
-        emphasis
-          ? 'text-primary-foreground border-primary/20 bg-primary shadow-none'
-          : 'border-border',
-      ].join(' ')}
+      className={[base, emphasis ? 'border-primary/20 bg-card shadow-none' : 'border-border'].join(
+        ' '
+      )}
     >
       {/* Header */}
       <div className="flex flex-col gap-4">
@@ -135,18 +133,7 @@ function TierCard({
           >
             {title}
           </span>
-          {chip && (
-            <span
-              className={[
-                'ml-auto rounded-full px-2 py-1 text-xs',
-                emphasis
-                  ? 'bg-primary-foreground/15 text-primary-foreground'
-                  : 'bg-secondary text-secondary-foreground',
-              ].join(' ')}
-            >
-              {chip}
-            </span>
-          )}
+          {chip && <Eyebrow>{chip}</Eyebrow>}
         </h2>
 
         <h3 className="flex items-end gap-4">
@@ -175,9 +162,7 @@ function TierCard({
         </p>
         <ul className="space-y-3">
           {features.map((f, i) => (
-            <FeatureItem key={`${f.label}-${i}`} emphasis={!!emphasis}>
-              {f.label}
-            </FeatureItem>
+            <FeatureItem key={`${f.label}-${i}`}>{f.label}</FeatureItem>
           ))}
         </ul>
       </div>
@@ -185,16 +170,11 @@ function TierCard({
   );
 }
 
-function FeatureItem({ children, emphasis }: { children: ReactNode; emphasis?: boolean }) {
+function FeatureItem({ children }: { children: ReactNode }) {
   return (
     <li className="flex items-start gap-3 text-sm">
       <span
-        className={[
-          'mt-[2px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm',
-          emphasis
-            ? 'bg-primary-foreground/15 text-primary-foreground'
-            : 'bg-muted text-muted-foreground',
-        ].join(' ')}
+        className="bg-muted text-muted-foreground mt-[2px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm"
         aria-hidden
       >
         <Check className="h-3.5 w-3.5" />
