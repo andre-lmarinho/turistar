@@ -13,6 +13,7 @@
     "dev": "next dev --turbopack",
     "dev:e2e": "NEXT_PUBLIC_E2E=1 next dev --turbopack --port 3100",
     "build": "next build",
+    "postbuild": "rimraf .next/cache/webpack",
     "build:prod": "next build",
     "start": "next start",
     "serve:prod": "next start --hostname 0.0.0.0 --port 3000",
