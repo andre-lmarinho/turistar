@@ -49,17 +49,19 @@ export function usePersistedPlannerDays({
 }: UsePersistedPlannerDaysParams) {
   const { days, setDays } = planner;
   const metaRef = useRef<PersistMeta | null>(null);
-  if (!metaRef.current) {
+  const persistChainRef = useRef<Promise<void>>(Promise.resolve());
+  const lastRequestedRef = useRef<string>('');
+  const needsReplayRef = useRef(false);
+
+  if (metaRef.current == null) {
     const snapshot = snapshotDays(storedDays ?? days);
-    metaRef.current = {
+    const initialMeta: PersistMeta = {
       ready: storedDays !== undefined,
       lastSaved: storedDays ? snapshot.serialized : '',
       fallback: snapshot.state,
     };
+    metaRef.current = initialMeta;
   }
-  const persistChainRef = useRef<Promise<void>>(Promise.resolve());
-  const lastRequestedRef = useRef<string>(metaRef.current.lastSaved);
-  const needsReplayRef = useRef(false);
 
   useEffect(() => {
     if (storedDays == null) return;
