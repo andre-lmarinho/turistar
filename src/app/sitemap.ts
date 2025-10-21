@@ -1,8 +1,7 @@
-// src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import { SITE_URL } from '@/shared/constants/site';
+import { SITE_URL } from '@/shared/utils/siteUrl';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes: MetadataRoute.Sitemap = [

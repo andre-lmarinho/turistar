@@ -4,16 +4,16 @@ import React from 'react';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 
-import DayColumn from '@/features/planner/components/dnd/DayColumn';
-import SortableItem from '@/features/planner/components/dnd/SortableItem';
-import { useActivitiesById } from '@/features/planner/hooks/useActivitiesById';
+import { DayColumn } from '@/features/planner/components/dnd/DayColumn';
+import { SortableItem } from '@/features/planner/components/dnd/SortableItem';
+import { useActivitiesById } from '@/features/planner/hooks/state/planner/useActivitiesById';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
 /**
  * Presentation component to render the DnD board.
  * Receives state and handlers from parent via props.
  */
-function PlannerBoard() {
+export const PlannerBoard = React.memo(function PlannerBoard() {
   const {
     days,
     activeId,
@@ -24,7 +24,6 @@ function PlannerBoard() {
     handleDragEnd,
     setSelectedActivity,
     addBlankAndSelect,
-    updateActivity,
   } = usePlannerContext();
 
   const byId = useActivitiesById(days);
@@ -52,7 +51,6 @@ function PlannerBoard() {
               day={d}
               onAddActivity={(dayId, idx) => addBlankAndSelect(dayId, idx)}
               onSelectActivity={(a) => setSelectedActivity(a)}
-              onUpdateTitle={(id, title) => updateActivity(id, { title })}
             />
           </div>
         ))}
@@ -71,6 +69,6 @@ function PlannerBoard() {
       </DragOverlay>
     </DndContext>
   );
-}
+});
 
-export default React.memo(PlannerBoard);
+PlannerBoard.displayName = 'PlannerBoard';

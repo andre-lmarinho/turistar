@@ -1,26 +1,23 @@
-// src/shared/ui/calendar/Calendar.tsx
 'use client';
 
 import * as React from 'react';
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@/shared/ui/icon';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { cn } from '@/shared/utils/cn';
-import { Button, buttonVariants } from '../button';
 
-function Calendar({
+export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
   captionLayout = 'label',
-  buttonVariant = 'ghost',
   formatters,
   components,
   ...props
-}: React.ComponentProps<typeof DayPicker> & {
-  buttonVariant?: React.ComponentProps<typeof Button>['variant'];
-}) {
+}: React.ComponentProps<typeof DayPicker>) {
   const defaultClassNames = getDefaultClassNames();
+  const navButtonClasses =
+    'inline-flex items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-muted/60 size-(--cell-size) p-0 select-none aria-disabled:opacity-50';
 
   return (
     <DayPicker
@@ -44,16 +41,8 @@ function Calendar({
           'flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between',
           defaultClassNames.nav
         ),
-        button_previous: cn(
-          buttonVariants({ variant: buttonVariant }),
-          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none',
-          defaultClassNames.button_previous
-        ),
-        button_next: cn(
-          buttonVariants({ variant: buttonVariant }),
-          'size-(--cell-size) aria-disabled:opacity-50 p-0 select-none',
-          defaultClassNames.button_next
-        ),
+        button_previous: cn(navButtonClasses, defaultClassNames.button_previous),
+        button_next: cn(navButtonClasses, defaultClassNames.button_next),
         month_caption: cn(
           'flex items-center justify-center h-(--cell-size) w-full px-(--cell-size)',
           defaultClassNames.month_caption
@@ -157,10 +146,9 @@ function CalendarDayButton({
   }, [modifiers.focused]);
 
   return (
-    <Button
+    <button
+      type="button"
       ref={ref}
-      variant="ghost"
-      size="icon"
       data-day={day.date.toLocaleDateString()}
       data-selected-single={
         modifiers.selected &&
@@ -172,7 +160,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-primary/20 data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70',
+        'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-primary/20 data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 hover:bg-muted/60 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal transition-colors group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70',
         defaultClassNames.day,
         className
       )}
@@ -180,5 +168,3 @@ function CalendarDayButton({
     />
   );
 }
-
-export { Calendar, CalendarDayButton };

@@ -5,24 +5,22 @@ import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 
 import { cn } from '@/shared/utils/cn';
-import ActivityCard from './ActivityCard';
+import { ActivityCard } from './ActivityCard';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
-export interface SortableItemProps {
+interface SortableItemProps {
   id: string;
   activity: Activity & { dayId?: string };
   onSelect?: () => void;
-  onTitleSave?: (newTitle: string) => void;
   dragOverlay?: boolean;
   className?: string;
   bgColor: string;
 }
 
-export default function SortableItem({
+export function SortableItem({
   id,
   activity,
   onSelect,
-  onTitleSave,
   bgColor,
   dragOverlay = false,
   className,
@@ -39,12 +37,7 @@ export default function SortableItem({
           className
         )}
       >
-        <ActivityCard
-          activity={activity}
-          onSelect={onSelect}
-          onTitleSave={onTitleSave}
-          bgColor={bgColor}
-        />
+        <ActivityCard activity={activity} onSelect={onSelect} bgColor={bgColor} />
       </div>
     );
   }
@@ -68,12 +61,7 @@ export default function SortableItem({
       role="listitem"
     >
       <div className={cn(isDragging && 'opacity-0')}>
-        <ActivityCard
-          activity={activity}
-          onSelect={onSelect}
-          onTitleSave={onTitleSave}
-          bgColor={bgColor}
-        />
+        <ActivityCard activity={activity} onSelect={onSelect} bgColor={bgColor} />
       </div>
       {isDragging && (
         <div className="bg-background border-border absolute inset-0 rounded-lg border-2 border-dashed" />

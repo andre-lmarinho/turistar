@@ -1,8 +1,6 @@
-// tests/unit/features/planner/hooks/usePlanner.test.ts
-
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
-import { usePlanner } from '@/features/planner/hooks/usePlanner';
+import { usePlanner } from '@/features/planner/hooks/state/planner/usePlanner';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 let params = new URLSearchParams();

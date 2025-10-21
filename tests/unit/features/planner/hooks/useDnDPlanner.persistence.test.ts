@@ -3,8 +3,8 @@ import type { DragStartEvent, DragOverEvent } from '@dnd-kit/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
-import { useDnDPlanner } from '@/features/planner/hooks/useDnDPlanner';
-import { usePersistedPlannerDays } from '@/features/planner/hooks/usePersistedPlannerDays';
+import { useDnDPlanner } from '@/features/planner/hooks/state/dnd/useDnDPlanner';
+import { usePersistedPlannerDays } from '@/features/planner/hooks/state/planner/usePersistedPlannerDays';
 
 describe('useDnDPlanner with persistence', () => {
   const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };

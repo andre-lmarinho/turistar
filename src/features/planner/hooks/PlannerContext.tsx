@@ -1,16 +1,15 @@
-// src/features/planner/hooks/PlannerContext.tsx
 'use client';
 
-import { usePlanner } from '@/features/planner/hooks/usePlanner';
-import { useSelectedActivity } from '@/features/planner/hooks/useSelectedActivity';
-import { usePlanCollaboration } from '@/features/planner/hooks/usePlanCollaboration';
+import { usePlanner } from '@/features/planner/hooks/state/planner/usePlanner';
+import { useSelectedActivity } from '@/features/planner/hooks/state/planner/useSelectedActivity';
+import { usePlanCollaboration } from '@/features/planner/hooks/data/usePlanCollaboration';
 import { createContextProvider } from '@/shared/lib/createContextProvider';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { usePersistedPlannerDays } from './usePersistedPlannerDays';
+import { usePersistedPlannerDays } from './state/planner/usePersistedPlannerDays';
 
 type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;
 
-function usePlannerContextValue({
+export function usePlannerContextValue({
   initialDays,
   planId,
   dest,
@@ -45,9 +44,7 @@ function usePlannerContextValue({
   return { ...planner, days, setDays, ...selected };
 }
 
-const [PlannerProvider, usePlannerContext] = createContextProvider(
+export const [PlannerProvider, usePlannerContext] = createContextProvider(
   usePlannerContextValue,
   'usePlannerContext must be inside PlannerProvider'
 );
-
-export { PlannerProvider, usePlannerContext };

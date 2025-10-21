@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext } from 'react';
 
 export function createStrictContext<T>(errorMessage: string) {

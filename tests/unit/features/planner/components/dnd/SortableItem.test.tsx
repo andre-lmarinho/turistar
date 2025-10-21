@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { DndContext } from '@dnd-kit/core';
-import SortableItem from '@/features/planner/components/dnd/SortableItem';
+import { SortableItem } from '@/features/planner/components/dnd/SortableItem';
 
 describe('SortableItem', () => {
   const activity = { id: 'x', title: 'Hello', color: 'bg-[var(--color-1)]' } as const;

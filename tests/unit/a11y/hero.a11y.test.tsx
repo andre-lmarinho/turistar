@@ -1,13 +1,11 @@
-// tests/unit/a11y/hero.a11y.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import Hero from '@/features/home/components/Hero';
+import { HeroHome } from '@/features/website/sections/Hero/Home';
 
 describe('Accessibility — Hero component', () => {
   it('has no a11y violations', async () => {
-    const { container } = render(<Hero />);
+    const { container } = render(<HeroHome />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

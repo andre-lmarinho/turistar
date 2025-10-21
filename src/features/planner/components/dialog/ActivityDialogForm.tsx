@@ -1,14 +1,11 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { AlignLeft, MapPin } from 'lucide-react';
-import { DollarSign, Hourglass } from 'lucide-react';
+import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
-import { EMPTY_ACTIVITY_TITLE } from '@/shared/constants/ui';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { LocationSearchInput } from '@/shared/ui/input';
+import { EMPTY_ACTIVITY_TITLE } from '@/features/planner/domain/constants/activity';
+import { LocationSearchInput } from '../ui/LocationSearchInput';
 import { useAddressAutocomplete } from '@/features/planner/hooks/search/useAddressAutocomplete';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
 
@@ -18,7 +15,7 @@ interface ActivityDialogFormProps {
   color: string;
 }
 
-export default function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
+export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
@@ -110,48 +107,40 @@ export default function ActivityDialogForm({ activity, onSave, color }: Activity
 
         {/* Duration */}
         <div>
-          <label
-            htmlFor="activity-notes"
-            className="mb-1 flex items-center gap-1 text-xs font-bold"
-          >
+          <label htmlFor="duration" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <Hourglass size={12} aria-hidden="true" />
             <span>Duration</span>
           </label>
-          <Input
-            labelId="duration"
+          <input
+            id="duration"
             value={duration === 0 ? '' : String(duration)}
-            onValueChange={(val) => setDuration(Number(val))}
+            onChange={(event) => setDuration(Number(event.target.value))}
             aria-label="Duration in hours"
-            inputSize="sm"
-            background="default"
             type="number"
             placeholder="Hrs"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            className="focus:ring-primary w-22 rounded border px-2 py-1 text-right text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             autoComplete="off"
             min={0}
+            inputMode="decimal"
           />
         </div>
         {/* Budget */}
         <div>
-          <label
-            htmlFor="activity-notes"
-            className="mb-1 flex items-center gap-1 text-xs font-bold"
-          >
+          <label htmlFor="budget" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <DollarSign size={12} aria-hidden="true" />
             <span>Budget</span>
           </label>
-          <Input
-            labelId="budget"
+          <input
+            id="budget"
             value={budget === 0 ? '' : String(budget)}
-            onValueChange={(val) => setBudget(Number(val))}
+            onChange={(event) => setBudget(Number(event.target.value))}
             aria-label="Budget amount"
             type="number"
-            inputSize="sm"
-            background="default"
             placeholder="Budget"
+            className="focus:ring-primary w-22 rounded border px-2 py-1 text-right text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             min={0}
             autoComplete="off"
-            className="focus:ring-primary text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            inputMode="decimal"
           />
         </div>
       </fieldset>
@@ -207,14 +196,14 @@ export default function ActivityDialogForm({ activity, onSave, color }: Activity
 
       {/* Update */}
       <div className="flex justify-center gap-2 pb-4">
-        <Button
+        <button
           type="button"
           disabled={!canSave}
           onClick={handleSave}
-          className="focus:ring-primary focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         >
           Update
-        </Button>
+        </button>
       </div>
     </>
   );

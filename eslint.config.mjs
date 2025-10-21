@@ -1,4 +1,3 @@
-// eslint.config.mjs
 import { FlatCompat } from '@eslint/eslintrc';
 import path from 'path';
 import { fileURLToPath } from 'url';

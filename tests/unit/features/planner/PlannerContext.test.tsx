@@ -1,5 +1,3 @@
-// tests/unit/features/planner/PlannerContext.test.tsx
-
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
@@ -8,7 +6,7 @@ import { PlannerProvider, usePlannerContext } from '@/features/planner/hooks/Pla
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 // Mock hooks used inside PlannerContext
-vi.mock('@/features/planner/hooks/usePlanner', () => {
+vi.mock('@/features/planner/hooks/state/planner/usePlanner', () => {
   const React = require('react');
   return {
     usePlanner: ({ initialDays }: { initialDays?: DayPlan[] }) => {
@@ -53,7 +51,7 @@ vi.mock('@/features/planner/hooks/usePlanner', () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+vi.mock('@/features/planner/hooks/state/planner/useSelectedActivity', () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),
@@ -65,7 +63,7 @@ vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
     changeColor: vi.fn(),
   }),
 }));
-vi.mock('@/features/planner/hooks/usePlanCollaboration', () => ({
+vi.mock('@/features/planner/hooks/data/usePlanCollaboration', () => ({
   usePlanCollaboration: () => ({
     data: storedDays,
     persistDays,

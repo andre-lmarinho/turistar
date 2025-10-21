@@ -1,12 +1,10 @@
-// tests/integration/planner/dateRangeChange.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 type Bounds = { sw: [number, number]; ne: [number, number] };
 interface PlannerCtx {
@@ -41,18 +39,24 @@ vi.mock('@/shared/ui/calendar', () => ({
       Pick dates
     </button>
   ),
-  DateRangePickerIcon: () => <div />,
+  DateRangePickerIcon: ({
+    onChange,
+  }: {
+    value: DateRange | undefined;
+    onChange: (r: DateRange | undefined) => void;
+  }) => (
+    <button
+      data-testid="date-picker"
+      onClick={() => onChange({ from: new Date('2025-01-01'), to: new Date('2025-01-02') })}
+    >
+      Pick dates
+    </button>
+  ),
 }));
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
-  default: () => <div />, // not used in this test
-}));
-
-vi.mock('@/shared/ui/button', () => ({
-  __esModule: true,
-  Button: (props: React.ComponentProps<'button'>) => <button {...props} />,
-  buttonVariants: () => '',
+  ModeToggleButton: () => <div />, // not used in this test
 }));
 
 let setDays: React.Dispatch<React.SetStateAction<DayPlan[]>>;
@@ -66,7 +70,7 @@ export const handleRangeChange = vi.fn(() => {
 // Planner feature mocks
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
@@ -154,7 +158,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
 // Onboarding mocks
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: () => null,
+  OnboardingDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
@@ -167,7 +171,8 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
   const React = require('react');
   return {
-    default: function PlannerBoardMock() {
+    __esModule: true,
+    PlannerBoard: function PlannerBoardMock() {
       const { days } = getPlannerContext();
       return <div data-testid="planner-board">{days.map((d: DayPlan) => d.id).join(',')}</div>;
     },
@@ -176,24 +181,28 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
 
 vi.mock('@/features/planner/components/map/MapBoard', () => {
   const React = require('react');
+  function MapViewMock() {
+    const ctx =
+      typeof getPlannerContext === 'function'
+        ? getPlannerContext()
+        : {
+            bounds: {
+              sw: [0, 0] as [number, number],
+              ne: [1, 1] as [number, number],
+            },
+          };
+    return <div data-testid="map-view">{JSON.stringify(ctx.bounds)}</div>;
+  }
   return {
-    default: function MapViewMock() {
-      const ctx =
-        typeof getPlannerContext === 'function'
-          ? getPlannerContext()
-          : {
-              bounds: {
-                sw: [0, 0] as [number, number],
-                ne: [1, 1] as [number, number],
-              },
-            };
-      return <div data-testid="map-view">{JSON.stringify(ctx.bounds)}</div>;
-    },
+    __esModule: true,
+    default: MapViewMock,
+    MapBoard: MapViewMock,
   };
 });
 
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  BudgetBoard: () => <div />,
 }));
 
 // Next.js router mocks

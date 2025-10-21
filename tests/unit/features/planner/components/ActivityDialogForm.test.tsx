@@ -1,9 +1,7 @@
-// tests/unit/features/planner/components/ActivityDialogForm.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import ActivityDialogForm from '@/features/planner/components/dialog/ActivityDialogForm';
+import { ActivityDialogForm } from '@/features/planner/components/dialog/ActivityDialogForm';
 import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 const { mockUseAddressAutocomplete, mockUseDebounce } = vi.hoisted(() => {

@@ -12,7 +12,7 @@ type TooltipProps = {
   position?: 'top' | 'bottom';
 } & Omit<TooltipPrimitive.TooltipContentProps, 'children' | 'side'>;
 
-export default function Tooltip({
+export function Tooltip({
   children,
   content,
   delayDuration = 100,

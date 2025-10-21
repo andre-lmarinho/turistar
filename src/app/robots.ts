@@ -1,6 +1,5 @@
-// src/app/robots.ts
 import type { MetadataRoute } from 'next';
-import { SITE_URL } from '@/shared/constants/site';
+import { SITE_URL } from '@/shared/utils/siteUrl';
 const isProd = !/localhost|127\.0\.0\.1/.test(SITE_URL);
 
 export default function robots(): MetadataRoute.Robots {

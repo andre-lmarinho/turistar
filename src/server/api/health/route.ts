@@ -1,4 +1,3 @@
-// src/server/api/health/route.ts
 import { NextResponse } from 'next/server';
 import pkg from '../../../../package.json';
 type PackageJson = { version?: string };

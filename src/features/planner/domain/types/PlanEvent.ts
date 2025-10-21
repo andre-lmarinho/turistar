@@ -1,5 +1,3 @@
-// src/features/planner/domain/types/PlanEvent.ts
-
 import type { Activity, DayPlan } from './PlannerEntities';
 
 export type PlanEventType =

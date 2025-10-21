@@ -1,4 +1,3 @@
-// src/server/api/autocomplete/addresses/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
 import { fetchGeoapifyAddressAutocomplete } from '@/shared/lib/geoapify';

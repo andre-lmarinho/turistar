@@ -1,5 +1,3 @@
-// src/features/planner/services/supabase/planDaysMapper.ts
-
 import {
   DEFAULT_COLORS,
   DEFAULT_NEW_CARD_COLOR_INDEX,

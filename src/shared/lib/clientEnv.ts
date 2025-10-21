@@ -1,4 +1,3 @@
-// src/shared/lib/clientEnv.ts
 import { z } from 'zod';
 
 const clientEnvSchema = z.object({

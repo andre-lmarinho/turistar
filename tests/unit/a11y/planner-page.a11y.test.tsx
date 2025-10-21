@@ -1,5 +1,3 @@
-// tests/unit/a11y/planner-page.a11y.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { axe } from 'jest-axe';
@@ -10,7 +8,7 @@ vi.mock('next/dynamic', () => ({
   default: () => () => <div data-testid="mocked-dynamic-component" />,
 }));
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 describe('Accessibility — Planner page', () => {
   it('has no a11y violations', async () => {

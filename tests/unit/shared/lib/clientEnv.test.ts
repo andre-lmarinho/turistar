@@ -1,4 +1,3 @@
-// tests/unit/shared/lib/clientEnv.test.ts
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const ORIGINAL_ENV = { ...process.env };

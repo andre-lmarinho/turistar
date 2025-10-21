@@ -2,8 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import PlanForm from '@/features/home/components/PlanForm';
-import { useDestinationAutocomplete } from '@/shared/hooks/search/useDestinationAutocomplete';
+import { SignupPage } from '@/features/planner/modules/signup/SignupPage';
+import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
   let captured: unknown;
@@ -25,35 +25,29 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock('@/shared/ui/button', () => ({
-  Button: ({ children }: { children: React.ReactNode }) => (
-    <button type="button">{children}</button>
-  ),
-}));
-
 vi.mock('@/shared/ui/calendar', () => ({
   DateRangePicker: () => <div />,
 }));
 
-vi.mock('@/shared/components/LoadingScreen', () => ({
+vi.mock('@/shared/ui/loading/LoadingScreen', () => ({
   __esModule: true,
-  default: () => null,
+  LoadingScreen: () => null,
 }));
 
-vi.mock('@/shared/ui/input', () => ({
+vi.mock('@/features/planner/components/ui/LocationSearchInput', () => ({
   __esModule: true,
   LocationSearchInput: mockLocationSearchInput,
 }));
 
-vi.mock('@/features/planner/contracts/marketing/createPlannerPlan', () => ({
+vi.mock('@/features/planner/server/createPlan', () => ({
   createPlannerPlan: vi.fn(),
 }));
 
-vi.mock('@/features/planner/contracts/marketing/usePlanEditTokens', () => ({
+vi.mock('@/features/planner/infrastructure/supabase/planEditToken', () => ({
   usePlanEditTokens: () => ({ saveEditToken: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/contracts/marketing/useRecentPlan', () => ({
+vi.mock('@/features/planner/hooks/data/useRecentPlan', () => ({
   useRecentPlan: () => ({ saveRecentPlan: vi.fn() }),
 }));
 
@@ -63,13 +57,7 @@ describe('PlanForm destination autocomplete wiring', () => {
   });
 
   it('uses the home destination autocomplete hook', () => {
-    render(
-      <PlanForm
-        trigger={<button type="button">Open</button>}
-        dialogTitleId="plan-form-test-dialog"
-        defaultOpen
-      />
-    );
+    render(<SignupPage />);
 
     const props = getCapturedProps() as
       | { autocompleteHook?: unknown; placeholder?: string }

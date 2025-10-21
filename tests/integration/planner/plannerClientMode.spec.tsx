@@ -1,5 +1,3 @@
-// tests/integration/planner/plannerClientMode.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -8,7 +6,7 @@ type Mode = 'planner' | 'map' | 'budget';
 
 vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
-  default: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
+  ModeToggleButton: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
     <div>
       <button onClick={() => onChange('planner')}>Planner</button>
       <button onClick={() => onChange('map')}>Map</button>
@@ -25,7 +23,7 @@ vi.mock('@/shared/ui/calendar', () => ({
 
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
@@ -60,7 +58,7 @@ vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
 
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: () => null,
+  OnboardingDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
@@ -70,13 +68,20 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 }));
 
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
-  default: () => <div data-testid="planner-board" />,
+  __esModule: true,
+  PlannerBoard: () => <div data-testid="planner-board" />,
 }));
-vi.mock('@/features/planner/components/map/MapBoard', () => ({
-  default: () => <div data-testid="map-view" />,
-}));
+vi.mock('@/features/planner/components/map/MapBoard', () => {
+  const MockMapBoard = () => <div data-testid="map-view" />;
+  return {
+    __esModule: true,
+    default: MockMapBoard,
+    MapBoard: MockMapBoard,
+  };
+});
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div data-testid="budget-panel" />,
+  __esModule: true,
+  BudgetBoard: () => <div data-testid="budget-panel" />,
 }));
 
 vi.mock('next/navigation', () => ({
@@ -84,15 +89,13 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {
     render(<PlannerClient planId="p1" hideOnboarding />);
 
-    const plannerBtn = screen.getByRole('button', { name: 'Planner' });
-    const mapBtn = screen.getByRole('button', { name: 'Map' });
-    const budgetBtn = screen.getByRole('button', { name: 'Budget' });
+    const [plannerBtn, mapBtn, budgetBtn] = screen.getAllByRole('button');
 
     const board = await screen.findByTestId('planner-board');
     const map = await screen.findByTestId('map-view');

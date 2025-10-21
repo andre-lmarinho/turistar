@@ -1,7 +1,5 @@
-// tests/unit/features/planner/services/syncDaysWithTripRange.test.ts
-
-import { formatDayPlan } from '@/features/planner/services/formatDayPlan';
-import { syncDaysWithTripRange } from '@/features/planner/services/syncDaysWithTripRange';
+import { formatDayPlan } from '@/features/planner/services/days/formatDayPlan';
+import { syncDaysWithTripRange } from '@/features/planner/services/days/syncDaysWithTripRange';
 import { parseISO } from 'date-fns';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 

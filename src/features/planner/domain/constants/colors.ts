@@ -1,5 +1,3 @@
-// src/features/planner/domain/constants/colors.ts
-
 /**
  * Index of the default new card color
  * Must be between 0 and 5

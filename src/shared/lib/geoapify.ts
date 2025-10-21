@@ -1,8 +1,6 @@
-// src/shared/lib/geoapify.ts
-
 // Helpers for fetching POIs from the Geoapify API.
 
-import type { AutocompletePlace } from '@/shared/types/locations';
+import type { AutocompletePlace } from '@/features/planner/types/locations';
 import { clientEnv } from './clientEnv';
 
 const isE2E = process.env.NEXT_PUBLIC_E2E === '1';
@@ -13,7 +11,6 @@ type GeoapifyAutocompleteProvider = (
   lon?: number
 ) => Promise<AutocompletePlace[]>;
 
-/* Types */
 type GeoapifyFeature = {
   properties: {
     place_id: string | number;
@@ -32,7 +29,7 @@ type GeoapifyFeature = {
 type GeoapifyResponse = { features: GeoapifyFeature[] };
 
 /* Helpers */
-export function getGeoapifyKey(): string {
+function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
 }
 
@@ -131,10 +128,6 @@ if (isE2E) {
       )
       .map((place) => ({ ...place }));
   };
-}
-
-export function setGeoapifyAutocompleteProvider(provider: GeoapifyAutocompleteProvider) {
-  autocompleteProvider = provider;
 }
 
 export async function fetchGeoapifyAutocomplete(

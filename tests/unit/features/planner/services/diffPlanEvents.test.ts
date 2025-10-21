@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/diffPlanEvents.test.ts
-
 import { describe, expect, it } from 'vitest';
 
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
@@ -8,7 +6,7 @@ import type {
   ActivityUpdatedPayload,
   DayCreatedPayload,
 } from '@/features/planner/domain/types/PlanEvent';
-import { diffPlanEvents } from '@/features/planner/services/diffPlanEvents';
+import { diffPlanEvents } from '@/features/planner/services/events/diffPlanEvents';
 
 const baseDay = {
   label: 'Day',

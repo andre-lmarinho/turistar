@@ -1,14 +1,19 @@
-// next.config.ts
 import type { NextConfig } from 'next';
-import getSecurityHeaders from './securityHeaders';
+import createMDX from '@next/mdx';
+import { getSecurityHeaders } from './securityHeaders';
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+});
 
 const nextConfig: NextConfig = {
   // Strengthen defaults for production readiness
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'upload.wikimedia.org', pathname: '/**' }],
+    remotePatterns: [{ protocol: 'https', hostname: 'i.pravatar.cc', pathname: '/**' }],
   },
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';
@@ -28,4 +33,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withMDX(nextConfig);

@@ -1,9 +1,7 @@
-// tests/unit/features/onboarding/components/OnboardingCarousel.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import OnboardingCarousel from '@/features/planner/components/onboarding/OnboardingCarousel';
-import { ONBOARDING_STEPS } from '@/features/planner/domain/constants/onboarding';
+import { OnboardingCarousel } from '@/features/planner/modules/onboarding/components/OnboardingCarousel';
+import { ONBOARDING_STEPS } from '@/features/planner/modules/onboarding/steps';
 
 describe('OnboardingCarousel', () => {
   it('renders all onboarding steps', () => {

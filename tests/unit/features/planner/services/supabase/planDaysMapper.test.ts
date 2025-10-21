@@ -1,5 +1,3 @@
-// tests/unit/features/planner/services/supabase/planDaysMapper.test.ts
-
 import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,

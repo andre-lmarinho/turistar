@@ -1,9 +1,8 @@
-// src/features/planner/server/createPlan.ts
 'use server';
 
 import { createPlan as createPlanAction } from '@/server/actions/createPlan';
 
-export interface PlannerDestination {
+interface PlannerDestination {
   name: string;
   latitude?: number;
   longitude?: number;
@@ -16,7 +15,7 @@ export interface CreatePlannerPlanInput {
   endDate: string;
 }
 
-export interface PlannerRecentPlanPayload {
+interface PlannerRecentPlanPayload {
   id: string;
   slug: string;
   dest: string;

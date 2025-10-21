@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import BudgetDialog from '@/features/planner/components/budget/BudgetDialog';
+import { BudgetDialog } from '@/features/planner/components/budget/BudgetDialog';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 describe('BudgetDialog', () => {

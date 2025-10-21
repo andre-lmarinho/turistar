@@ -1,4 +1,3 @@
-// src/shared/utils/url.ts
 /**
  * Resolve the public site origin in a safe and predictable way.
  *

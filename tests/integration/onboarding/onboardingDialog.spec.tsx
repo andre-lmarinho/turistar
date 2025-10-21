@@ -1,5 +1,3 @@
-// tests/integration/onboarding/onboardingDialog.spec.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
@@ -77,7 +75,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
 
 vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
-  default: () => null,
+  ActivityDialog: () => null,
 }));
 
 vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
@@ -98,17 +96,24 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 
 vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
-  default: onboardingMocks.OnboardingDialog,
+  OnboardingDialog: onboardingMocks.OnboardingDialog,
 }));
 
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  PlannerBoard: () => <div />,
 }));
-vi.mock('@/features/planner/components/map/MapBoard', () => ({
-  default: () => <div />,
-}));
+vi.mock('@/features/planner/components/map/MapBoard', () => {
+  const MockMapBoard = () => <div />;
+  return {
+    __esModule: true,
+    default: MockMapBoard,
+    MapBoard: MockMapBoard,
+  };
+});
 vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
-  default: () => <div />,
+  __esModule: true,
+  BudgetBoard: () => <div />,
 }));
 
 vi.mock('next/navigation', () => ({
@@ -116,7 +121,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import PlannerClient from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/planner/components/PlannerClient';
 
 describe('onboarding dialog visibility', () => {
   it('shows dialog initially and hides after finish', async () => {

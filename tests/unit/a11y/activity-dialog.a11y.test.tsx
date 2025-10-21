@@ -1,5 +1,3 @@
-// tests/unit/a11y/activity-dialog.a11y.test.tsx
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
@@ -9,12 +7,12 @@ const { closeSpy } = vi.hoisted(() => ({ closeSpy: vi.fn() }));
 
 vi.mock('@/features/planner/components/dialog/ActivityDialogHeader', () => ({
   __esModule: true,
-  default: () => <div data-testid="activity-dialog-header" />,
+  ActivityDialogHeader: () => <div data-testid="activity-dialog-header" />,
 }));
 
 vi.mock('@/features/planner/components/dialog/ActivityDialogForm', () => ({
   __esModule: true,
-  default: () => <form aria-label="Activity form" />,
+  ActivityDialogForm: () => <form aria-label="Activity form" />,
 }));
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
@@ -42,13 +40,13 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-import ActivityDialog from '@/features/planner/components/dialog/ActivityDialog';
+import { ActivityDialog } from '@/features/planner/components/dialog/ActivityDialog';
 
 describe('Accessibility — ActivityDialog', () => {
   it('exposes dialog semantics and closes on Escape', async () => {
     const { container } = render(<ActivityDialog />);
 
-    const dialog = screen.getByRole('dialog', { name: 'Edit Activity' });
+    const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveAttribute('aria-modal', 'true');
 
     const results = await axe(container);

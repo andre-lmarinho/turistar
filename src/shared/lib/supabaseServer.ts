@@ -1,5 +1,3 @@
-// src/shared/lib/supabaseServer.ts
-
 import { createServerClient } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/shared/types/supabase';
