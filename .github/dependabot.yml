@@ -5,9 +5,6 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
-    commit-message:
-      prefix: '⬆️'
-      prefix-development: '⬆️'
     labels:
       - dependencies
     groups:
@@ -15,3 +12,9 @@ updates:
         dependency-type: 'production'
       devDependencies:
         dependency-type: 'development'
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
