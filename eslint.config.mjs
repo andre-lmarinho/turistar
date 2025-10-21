@@ -48,6 +48,9 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
     },
     settings: {
       react: { version: 'detect' },
