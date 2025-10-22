@@ -1,32 +1,45 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 
 import { SortableItem } from './SortableItem';
 import { AddCardButton } from './AddCardButton';
+import { InlineCard } from './InlineCard';
 import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
 
 interface DayColumnProps {
   day: DayPlan;
   onSelectActivity?: (activity: Activity & { dayId: string }) => void;
-  onAddActivity: (dayId: string, index?: number) => void;
 }
 
 /**
  * Renders one day's column of activities as a droppable list.
  * Supports click-to-edit and adding new blank cards.
  */
-export function DayColumn({ day, onSelectActivity, onAddActivity }: DayColumnProps) {
+export function DayColumn({ day, onSelectActivity }: DayColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeInlineIndex, setActiveInlineIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (day.activities.length <= 1) {
       scrollRef.current?.scrollTo(0, 0);
     }
   }, [day.activities.length]);
+
+  const handleOpenInline = useCallback((index: number) => {
+    setActiveInlineIndex(index);
+  }, []);
+
+  const handleCloseInline = useCallback(() => {
+    setActiveInlineIndex(null);
+  }, []);
+
+  const handleAdvanceInline = useCallback((nextIndex: number) => {
+    setActiveInlineIndex(nextIndex);
+  }, []);
 
   return (
     <section
@@ -46,12 +59,21 @@ export function DayColumn({ day, onSelectActivity, onAddActivity }: DayColumnPro
         <div ref={scrollRef} data-testid="day-scroll" className="overflow-y-auto pt-2">
           {day.activities.map((activity, idx) => (
             <React.Fragment key={activity.id}>
-              {idx < day.activities.length - 0 && (
-                <AddCardButton
-                  position="insert"
+              {activeInlineIndex === idx ? (
+                <InlineCard
                   dayId={day.id}
-                  index={idx}
-                  onAddActivity={onAddActivity}
+                  insertIndex={idx}
+                  className="my-2"
+                  onClose={handleCloseInline}
+                  onAdvanceInline={handleAdvanceInline}
+                />
+              ) : (
+                <AddCardButton
+                  placement="between"
+                  dayId={day.id}
+                  insertIndex={idx}
+                  onInlineOpen={handleOpenInline}
+                  isInlineOpen={activeInlineIndex === idx}
                 />
               )}
               <SortableItem
@@ -65,12 +87,22 @@ export function DayColumn({ day, onSelectActivity, onAddActivity }: DayColumnPro
         </div>
       </SortableContext>
       <div className="py-2">
-        <AddCardButton
-          position="new"
-          dayId={day.id}
-          index={day.activities.length}
-          onAddActivity={onAddActivity}
-        />
+        {activeInlineIndex === day.activities.length ? (
+          <InlineCard
+            dayId={day.id}
+            insertIndex={day.activities.length}
+            onClose={handleCloseInline}
+            onAdvanceInline={handleAdvanceInline}
+          />
+        ) : (
+          <AddCardButton
+            dayId={day.id}
+            insertIndex={day.activities.length}
+            onInlineOpen={handleOpenInline}
+            isInlineOpen={activeInlineIndex === day.activities.length}
+            isHidden={activeInlineIndex !== null}
+          />
+        )}
       </div>
     </section>
   );

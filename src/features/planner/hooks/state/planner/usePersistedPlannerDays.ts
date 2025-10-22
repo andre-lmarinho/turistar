@@ -25,7 +25,11 @@ interface PersistMeta {
 
 function removeBlankActivities(days: DayPlan[]): DayPlan[] {
   return days.map((day) => {
-    const filtered = day.activities.filter((activity) => !isPlaceholderActivity(activity));
+    const filtered = day.activities.filter((activity) => {
+      if (isPlaceholderActivity(activity)) return false;
+      if ((activity as { _optimistic?: boolean })._optimistic) return false;
+      return true;
+    });
     return filtered.length === day.activities.length ? day : { ...day, activities: filtered };
   });
 }

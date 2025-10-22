@@ -94,6 +94,8 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
     changeColor: (...args: unknown[]) => void;
     removeActivity: (...args: unknown[]) => void;
     updateActivity: (...args: unknown[]) => void;
+    insertActivityAt: (...args: unknown[]) => void;
+    replaceActivity: (...args: unknown[]) => void;
     sensors: unknown;
     collisionDetection: (...args: unknown[]) => void;
     handleDragStart: (...args: unknown[]) => void;
@@ -131,6 +133,8 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       changeDay: vi.fn(),
       changePosition: vi.fn(),
       changeColor: vi.fn(),
+      insertActivityAt: vi.fn(),
+      replaceActivity: vi.fn(),
       removeActivity: vi.fn(),
       updateActivity: vi.fn(),
       sensors: undefined,

@@ -66,6 +66,8 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     removeActivity,
     updateActivity,
     addBlankActivity,
+    insertActivityAt,
+    replaceActivity,
   } = useDnDPlanner(initialDnDDays);
 
   function persistOnDragEnd(event?: Parameters<typeof handleDragEnd>[0]) {
@@ -117,5 +119,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     removeActivity,
     updateActivity,
     addBlankActivity,
+    insertActivityAt,
+    replaceActivity,
   };
 }

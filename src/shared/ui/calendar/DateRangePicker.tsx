@@ -81,7 +81,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           aria-label={label}
           data-testid="date-picker"
           className={cn(
-            'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-[var(--radius)] px-2 transition-colors',
+            'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
             className
           )}
         >
