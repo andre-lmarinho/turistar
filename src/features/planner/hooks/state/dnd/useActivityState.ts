@@ -38,12 +38,33 @@ function computeInsertPosition(
   return { boundedIndex, position };
 }
 
-function mergeMeta<T extends ActivityWithMeta>(activity: T): ActivityWithMeta {
-  const { _optimistic, _tempId, ...rest } = activity as ActivityWithMeta;
-  const merged: ActivityWithMeta = { ...rest };
-  if (_optimistic) merged._optimistic = _optimistic;
-  if (_tempId) merged._tempId = _tempId;
-  return merged;
+type NormalizeActivityOptions = {
+  existing?: ActivityWithMeta;
+  fallbackPosition?: string;
+};
+
+function normalizeActivityForState(
+  activity: Activity | ActivityWithMeta,
+  { existing, fallbackPosition }: NormalizeActivityOptions = {}
+): ActivityWithMeta {
+  const incoming = activity as ActivityWithMeta;
+  const normalized: ActivityWithMeta = {
+    ...(existing ?? {}),
+    ...incoming,
+    title: sanitizeTitle(incoming.title ?? existing?.title),
+    color: incoming.color || existing?.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+    position: incoming.position ?? fallbackPosition ?? existing?.position,
+  };
+
+  const optimistic = incoming._optimistic || existing?._optimistic;
+  if (optimistic) normalized._optimistic = optimistic;
+  else delete normalized._optimistic;
+
+  const tempId = incoming._tempId || existing?._tempId;
+  if (tempId) normalized._tempId = tempId;
+  else delete normalized._tempId;
+
+  return normalized;
 }
 
 /**
@@ -59,21 +80,13 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       if (!copy[dayIndex]) {
         copy[dayIndex] = { id: `temp-${Date.now()}`, label: `Day ${dayIndex + 1}`, activities: [] };
       }
-      const nextActivity: Activity = {
-        ...act,
-        title: sanitizeTitle(act.title),
-        color: act.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-      };
+      const nextActivity = normalizeActivityForState(act);
       const activities = copy[dayIndex].activities;
       if (!activities.some((a) => a.id === act.id)) {
         if (insertIndex == null || insertIndex < 0 || insertIndex > activities.length) {
-          activities.push({
-            ...nextActivity,
-          });
+          activities.push(nextActivity);
         } else {
-          activities.splice(insertIndex, 0, {
-            ...nextActivity,
-          });
+          activities.splice(insertIndex, 0, nextActivity);
         }
       }
       return copy;
@@ -143,23 +156,18 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       const day = next[dayIdx];
       const activities = [...day.activities];
       const { boundedIndex, position } = computeInsertPosition(activities, insertIndex);
-      const base: ActivityWithMeta = {
-        ...activity,
-        title: sanitizeTitle(activity.title),
-        color: activity.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-        position: activity.position ?? position,
-      };
-      const withMeta = mergeMeta(base);
-      const existingIndex = activities.findIndex((a) => a.id === withMeta.id);
+      const existingIndex = activities.findIndex((a) => a.id === activity.id);
       if (existingIndex >= 0) {
-        activities[existingIndex] = {
-          ...mergeMeta(activities[existingIndex] as ActivityWithMeta),
-          ...withMeta,
-        };
-        inserted = activities[existingIndex] as ActivityWithMeta;
+        const merged = normalizeActivityForState(activity, {
+          existing: activities[existingIndex] as ActivityWithMeta,
+          fallbackPosition: position,
+        });
+        activities[existingIndex] = merged;
+        inserted = merged;
       } else {
-        activities.splice(boundedIndex, 0, withMeta);
-        inserted = withMeta;
+        const normalized = normalizeActivityForState(activity, { fallbackPosition: position });
+        activities.splice(boundedIndex, 0, normalized);
+        inserted = normalized;
       }
       next[dayIdx] = { ...day, activities };
       return next;
@@ -177,15 +185,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       if (index === -1) return prev;
 
       const current = activities[index] as ActivityWithMeta;
-      const merged = mergeMeta({
-        ...current,
-        ...nextActivity,
-        id: nextActivity.id,
-        title: sanitizeTitle(nextActivity.title ?? current.title),
-        color:
-          nextActivity.color || current.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-        position: nextActivity.position ?? current.position,
-      });
+      const merged = normalizeActivityForState(nextActivity, { existing: current });
       delete merged._tempId;
       delete merged._optimistic;
 
