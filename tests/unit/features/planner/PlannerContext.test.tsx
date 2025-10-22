@@ -67,9 +67,13 @@ vi.mock('@/features/planner/hooks/data/usePlanCollaboration', () => ({
   usePlanCollaboration: () => ({
     data: storedDays,
     persistDays,
-    isLoading: false,
-    error: null,
-    version: 1,
+    status: {
+      state: 'ready',
+      isLoading: false,
+      isPending: persistDays.isPending,
+      error: null,
+      version: 1,
+    },
   }),
 }));
 vi.mock('@/shared/hooks/useDebounce', () => ({

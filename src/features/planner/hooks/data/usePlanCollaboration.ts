@@ -1,20 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { PlanEvent, PlanEventInsert } from '@/features/planner/domain/types/PlanEvent';
-import {
-  appendPlanEvents,
-  fetchPlanEvents,
-  fetchPlanSnapshot,
-} from '@/features/planner/services/supabase/planEventsQueries';
-import { subscribeToPlanEvents } from '@/features/planner/services/supabase/planEventsRealtime';
-import {
-  applyPlanEvent,
-  reducePlanEvents,
-} from '@/features/planner/domain/events/planEventReducer';
-import { diffPlanEvents } from '@/features/planner/services/events/diffPlanEvents';
+import { appendPlanEvents } from '@/features/planner/services/supabase/planEventsQueries';
 import { cloneDays } from '@/features/planner/services/activities/cloneDays';
+
+import {
+  createPlanEventsCoordinator,
+  type PlanEventsCoordinator,
+  type PlanSnapshotState,
+} from '@/features/planner/services/events/planEventsCoordinator';
+import {
+  usePlanSnapshot,
+  type SnapshotStatus,
+} from '@/features/planner/hooks/data/usePlanSnapshot';
+import { usePlanRealtime } from '@/features/planner/hooks/data/usePlanRealtime';
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;
@@ -27,160 +29,162 @@ interface PersistMutation {
   isPending: boolean;
 }
 
+interface PlanCollaborationStatus {
+  state: SnapshotStatus;
+  isLoading: boolean;
+  isPending: boolean;
+  error?: unknown;
+  version: number;
+}
+
+interface UsePlanCollaborationResult {
+  data?: DayPlan[];
+  status: PlanCollaborationStatus;
+  persistDays: PersistMutation;
+}
+
+function toSnapshotState(snapshot?: PlanSnapshotState): PlanSnapshotState {
+  if (snapshot) {
+    return {
+      version: snapshot.version,
+      days: cloneDays(snapshot.days),
+    };
+  }
+  return { version: 0, days: [] };
+}
+
+function getCoordinator(): PlanEventsCoordinator {
+  return createPlanEventsCoordinator();
+}
+
 export function usePlanCollaboration(
   planId: string,
   { enabled = true, actorId }: UsePlanCollaborationOptions = {}
-): {
-  data?: DayPlan[];
-  isLoading: boolean;
-  error?: unknown;
-  persistDays: PersistMutation;
-  version: number;
-} {
-  const versionRef = useRef(0);
-  const snapshotRef = useRef<DayPlan[]>([]);
-  const pendingEventIdsRef = useRef(new Set<string>());
-  const [state, setState] = useState<{ days: DayPlan[]; version: number } | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<unknown>(null);
+): UsePlanCollaborationResult {
+  const {
+    data: snapshot,
+    status: snapshotStatus,
+    error: snapshotError,
+    setSnapshot,
+    reload,
+  } = usePlanSnapshot(planId, { enabled });
+  const coordinator = useMemo(() => getCoordinator(), []);
+  const [persistError, setPersistError] = useState<unknown>();
   const [isPending, setIsPending] = useState(false);
-
-  const load = useCallback(async () => {
-    if (!planId || !enabled) return;
-    setIsLoading(true);
-    try {
-      const snapshot = await fetchPlanSnapshot(planId);
-      const events = await fetchPlanEvents(planId, snapshot.version);
-      const reduced = reducePlanEvents(snapshot, events);
-      versionRef.current = reduced.version;
-      snapshotRef.current = cloneDays(reduced.days);
-      setState(reduced);
-      setError(null);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [enabled, planId]);
-
-  useEffect(() => {
-    if (!planId || !enabled) return;
-    void load();
-  }, [enabled, load, planId]);
-
-  const handleRealtimeEvent = useCallback(
-    (event: PlanEvent) => {
-      if (!enabled) return;
-      if (pendingEventIdsRef.current.has(event.id)) {
-        pendingEventIdsRef.current.delete(event.id);
-      }
-      if (event.version <= versionRef.current) return;
-      if (event.version > versionRef.current + 1) {
-        void load();
-        return;
-      }
-      const nextDays = applyPlanEvent(snapshotRef.current, event);
-      versionRef.current = event.version;
-      snapshotRef.current = cloneDays(nextDays);
-      setState({ version: event.version, days: nextDays });
-    },
-    [enabled, load]
-  );
-
-  useEffect(() => {
-    if (!planId || !enabled) return;
-    const channel = subscribeToPlanEvents(planId, handleRealtimeEvent);
-    return () => {
-      void channel.unsubscribe();
-    };
-  }, [enabled, handleRealtimeEvent, planId]);
-
-  const appendEvents = useCallback(
-    async (events: PlanEventInsert[], baseVersion: number, previous: DayPlan[]) => {
-      const { version, events: storedEvents } = await appendPlanEvents(planId, baseVersion, events);
-      let updated = cloneDays(previous);
-      for (const ev of storedEvents) {
-        pendingEventIdsRef.current.delete(ev.id);
-        updated = applyPlanEvent(updated, ev);
-      }
-
-      const appliedVersion = storedEvents.at(-1)?.version ?? baseVersion;
-      const expectedVersion = baseVersion + storedEvents.length;
-
-      versionRef.current = appliedVersion;
-      snapshotRef.current = cloneDays(updated);
-      setState({ version: appliedVersion, days: updated });
-
-      if (version > expectedVersion || appliedVersion !== version) {
-        await load();
-        return;
-      }
-
-      versionRef.current = version;
-    },
-    [load, planId]
-  );
 
   const mutateAsync = useCallback(
     async (nextDays: DayPlan[]) => {
-      if (!planId || !enabled) return;
-      const prevSnapshot = cloneDays(snapshotRef.current);
-      const events = diffPlanEvents(planId, snapshotRef.current, nextDays, actorId);
+      if (!enabled || !planId) return;
+      const baseSnapshot = toSnapshotState(snapshot);
+      const events: PlanEventInsert[] = coordinator.diff(
+        planId,
+        baseSnapshot.days,
+        nextDays,
+        actorId
+      );
       if (events.length === 0) return;
-      const baseVersion = versionRef.current;
+
+      setPersistError(undefined);
       setIsPending(true);
-      let optimistic = cloneDays(snapshotRef.current);
-      let tempVersion = baseVersion;
-      const now = new Date().toISOString();
-      for (const event of events) {
-        pendingEventIdsRef.current.add(event.id);
-        tempVersion += 1;
-        const optimisticEvent = {
-          ...event,
-          version: tempVersion,
-          createdAt: now,
-        } as PlanEvent;
-        optimistic = applyPlanEvent(optimistic, optimisticEvent);
-      }
-      versionRef.current = tempVersion;
-      snapshotRef.current = cloneDays(optimistic);
-      setState({ version: tempVersion, days: optimistic });
+
+      const previousState: PlanSnapshotState = {
+        version: baseSnapshot.version,
+        days: cloneDays(baseSnapshot.days),
+      };
+
+      const optimisticState = coordinator.applyOptimistic({
+        base: previousState,
+        events,
+        timestamp: new Date().toISOString(),
+      });
+
+      setSnapshot(optimisticState);
 
       try {
-        await appendEvents(events, baseVersion, prevSnapshot);
-      } catch (err) {
-        for (const event of events) {
-          pendingEventIdsRef.current.delete(event.id);
+        const persisted = await appendPlanEvents(planId, previousState.version, events);
+        const reconciliation = coordinator.reconcilePersisted({
+          base: previousState,
+          events: persisted.events,
+          serverVersion: persisted.version,
+        });
+
+        setSnapshot(reconciliation.state);
+        setPersistError(undefined);
+
+        if (reconciliation.shouldReload) {
+          void reload().catch((error) => {
+            setPersistError(error);
+          });
         }
-        versionRef.current = baseVersion;
-        snapshotRef.current = prevSnapshot;
-        setState({ version: baseVersion, days: prevSnapshot });
-        setError(err);
-        void load();
-        throw err;
+      } catch (error) {
+        coordinator.rollback(events);
+        setSnapshot(previousState);
+        setPersistError(error);
+        void reload().catch(() => {
+          // Keep the persistence error if reload also fails.
+        });
+        throw error;
       } finally {
         setIsPending(false);
       }
     },
-    [actorId, appendEvents, enabled, load, planId]
+    [actorId, coordinator, enabled, planId, reload, setSnapshot, snapshot]
+  );
+
+  const handleRealtimeEvent = useCallback(
+    (event: PlanEvent) => {
+      let shouldReload = false;
+      setSnapshot((current) => {
+        if (!current) return current;
+        const result = coordinator.handleRealtime({ current, event });
+        shouldReload = result.shouldReload;
+        return result.state;
+      });
+      if (shouldReload) {
+        void reload().catch((error) => {
+          setPersistError(error);
+        });
+      }
+    },
+    [coordinator, reload, setSnapshot]
+  );
+
+  usePlanRealtime(planId, handleRealtimeEvent, { enabled });
+
+  const mutate = useCallback(
+    (value: DayPlan[]) => {
+      void mutateAsync(value);
+    },
+    [mutateAsync]
   );
 
   const persistDays = useMemo<PersistMutation>(
     () => ({
-      mutate: (value: DayPlan[]) => {
-        void mutateAsync(value);
-      },
+      mutate,
       mutateAsync,
       isPending,
     }),
-    [isPending, mutateAsync]
+    [isPending, mutate, mutateAsync]
+  );
+
+  const error = persistError ?? snapshotError;
+  const derivedState: SnapshotStatus =
+    snapshotStatus === 'error' || error ? 'error' : snapshotStatus;
+
+  const status = useMemo<PlanCollaborationStatus>(
+    () => ({
+      state: derivedState,
+      isLoading: snapshotStatus === 'loading',
+      isPending,
+      error,
+      version: snapshot?.version ?? 0,
+    }),
+    [derivedState, error, isPending, snapshot?.version, snapshotStatus]
   );
 
   return {
-    data: state?.days,
-    isLoading,
-    error,
+    data: snapshot?.days,
+    status,
     persistDays,
-    version: state?.version ?? 0,
   };
 }

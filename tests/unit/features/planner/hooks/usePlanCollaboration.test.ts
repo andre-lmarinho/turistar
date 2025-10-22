@@ -96,6 +96,8 @@ describe('usePlanCollaboration', () => {
 
     await waitFor(() => {
       expect(result.current.data).toHaveLength(1);
+      expect(result.current.status.state).toBe('ready');
+      expect(result.current.status.isLoading).toBe(false);
     });
 
     act(() => {
@@ -147,6 +149,7 @@ describe('usePlanCollaboration', () => {
     const eventsArg = appendEvents.mock.calls[0][2] as PlanEventInsert[];
     expect(eventsArg[0].type).toBe('activity.updated');
     expect(eventsArg[0].payload).toMatchObject({ activityId: 'a1' });
+    expect(wrapper.result.current.status.isPending).toBe(false);
   });
 
   test('resyncs when append response skips intermediate versions', async () => {
@@ -216,7 +219,54 @@ describe('usePlanCollaboration', () => {
 
     await waitFor(() => {
       expect(result.current.data?.[0].activities).toHaveLength(2);
-      expect(result.current.version).toBe(4);
+      expect(result.current.status.version).toBe(4);
+    });
+
+    expect(result.current.status.state).toBe('ready');
+  });
+
+  test('surfaces errors when persistence fails and reloads state', async () => {
+    const snapshot: PlanSnapshot = {
+      version: 1,
+      days: [baseDay],
+      updatedAt: new Date().toISOString(),
+    };
+
+    fetchSnapshot.mockResolvedValue(snapshot);
+    fetchEvents.mockResolvedValue([]);
+    appendEvents.mockRejectedValue(new Error('append failed'));
+
+    const { result } = renderHook(() => usePlanCollaboration('plan-error'));
+
+    await waitFor(() => expect(result.current.data).toBeTruthy());
+
+    const mutated: DayPlan[] = [
+      {
+        ...baseDay,
+        activities: [
+          {
+            ...baseDay.activities[0],
+            title: 'Breakfast at hotel',
+          },
+        ],
+      },
+    ];
+
+    let thrownError: unknown;
+    try {
+      await result.current.persistDays.mutateAsync(mutated);
+    } catch (error) {
+      thrownError = error;
+    }
+
+    expect(thrownError).toBeInstanceOf(Error);
+    expect((thrownError as Error).message).toBe('append failed');
+
+    await waitFor(() => {
+      expect(fetchSnapshot).toHaveBeenCalledTimes(2);
+      expect(result.current.status.state).toBe('error');
+      expect(result.current.status.error).toBeInstanceOf(Error);
+      expect(result.current.data?.[0].activities[0].title).toBe('Breakfast');
     });
   });
 });
