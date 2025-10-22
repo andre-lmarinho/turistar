@@ -22,6 +22,34 @@ function resolveDayIndex(days: DayPlan[], dayId: string): number {
   return days.findIndex((day) => day.id === dayId);
 }
 
+function resolveActivityLocation(
+  days: DayPlan[],
+  preferredDayId: string,
+  activityId: string
+): { dayIndex: number; activityIndex: number } {
+  const preferredDayIndex = resolveDayIndex(days, preferredDayId);
+  if (preferredDayIndex !== -1) {
+    const activityIndex = days[preferredDayIndex].activities.findIndex(
+      (activity) => activity.id === activityId
+    );
+    if (activityIndex !== -1) {
+      return { dayIndex: preferredDayIndex, activityIndex };
+    }
+  }
+
+  for (let dayIndex = 0; dayIndex < days.length; dayIndex += 1) {
+    if (dayIndex === preferredDayIndex) continue;
+    const activityIndex = days[dayIndex].activities.findIndex(
+      (activity) => activity.id === activityId
+    );
+    if (activityIndex !== -1) {
+      return { dayIndex, activityIndex };
+    }
+  }
+
+  return { dayIndex: -1, activityIndex: -1 };
+}
+
 function computeInsertPosition(
   activities: Activity[],
   insertIndex?: number
@@ -169,22 +197,13 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
   function replaceActivity(dayId: string, targetId: string, nextActivity: ActivityWithMeta): void {
     setDays((prev) => {
-      let dayIdx = resolveDayIndex(prev, dayId);
-      if (
-        dayIdx === -1 ||
-        !prev[dayIdx]?.activities.some((activity) => activity.id === targetId)
-      ) {
-        dayIdx = prev.findIndex((day) =>
-          day.activities.some((activity) => activity.id === targetId)
-        );
-      }
-      if (dayIdx === -1) return prev;
-      const day = prev[dayIdx];
-      const activities = [...day.activities];
-      const index = activities.findIndex((activity) => activity.id === targetId);
-      if (index === -1) return prev;
+      const { dayIndex, activityIndex } = resolveActivityLocation(prev, dayId, targetId);
+      if (dayIndex === -1 || activityIndex === -1) return prev;
 
-      const current = activities[index] as ActivityWithMeta;
+      const day = prev[dayIndex];
+      const activities = [...day.activities];
+
+      const current = activities[activityIndex] as ActivityWithMeta;
       const merged = mergeMeta({
         ...current,
         ...nextActivity,
@@ -199,8 +218,8 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
       const next = [...prev];
       const updatedActivities = [...activities];
-      updatedActivities[index] = merged;
-      next[dayIdx] = { ...day, activities: updatedActivities };
+      updatedActivities[activityIndex] = merged;
+      next[dayIndex] = { ...day, activities: updatedActivities };
       return next;
     });
   }

@@ -5,6 +5,11 @@ import { describe, expect, it } from 'vitest';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { useActivityState } from '@/features/planner/hooks/state/dnd/useActivityState';
 
+type ActivityWithMeta = DayPlan['activities'][number] & {
+  _optimistic?: boolean;
+  _tempId?: string;
+};
+
 describe('useActivityState.replaceActivity', () => {
   it('reconciles optimistic activities moved to a different day', () => {
     const initialDays: DayPlan[] = [
@@ -56,13 +61,15 @@ describe('useActivityState.replaceActivity', () => {
 
     expect(firstDay.activities).toHaveLength(0);
     expect(secondDay.activities).toHaveLength(1);
-    expect(secondDay.activities[0]).toMatchObject({
+    const persisted = secondDay.activities[0] as ActivityWithMeta;
+
+    expect(persisted).toMatchObject({
       id: 'server-1',
       title: 'Museum visit',
       position: 'persisted',
       color: '#123456',
     });
-    expect(secondDay.activities[0]._optimistic).toBeUndefined();
-    expect(secondDay.activities[0]._tempId).toBeUndefined();
+    expect(persisted._optimistic).toBeUndefined();
+    expect(persisted._tempId).toBeUndefined();
   });
 });
