@@ -50,7 +50,9 @@ describe('InlineCard', () => {
     render(<InlineCard dayId="d1" insertIndex={1} onClose={vi.fn()} />);
 
     const input = await screen.findByTestId('planner-inline-add-input');
-    fireEvent.keyDown(input, { key: 'Enter' });
+    const form = input.closest('form');
+    expect(form).not.toBeNull();
+    fireEvent.submit(form!);
 
     expect(mutateAsync).not.toHaveBeenCalled();
     await waitFor(() => expect(input).toHaveAttribute('aria-invalid', 'true'));
@@ -58,17 +60,23 @@ describe('InlineCard', () => {
 
   it('submits with Enter, clears the input, and keeps focus', async () => {
     mutateAsync.mockResolvedValue({});
-    render(<InlineCard dayId="d1" insertIndex={2} onClose={vi.fn()} />);
+    const onAdvanceInline = vi.fn();
+    render(
+      <InlineCard dayId="d1" insertIndex={2} onClose={vi.fn()} onAdvanceInline={onAdvanceInline} />
+    );
 
     const input = await screen.findByTestId('planner-inline-add-input');
     fireEvent.change(input, { target: { value: 'Morning coffee' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
+    const form = input.closest('form');
+    expect(form).not.toBeNull();
+    fireEvent.submit(form!);
 
     await waitFor(() =>
       expect(mutateAsync).toHaveBeenCalledWith({ dayId: 'd1', title: 'Morning coffee', index: 2 })
     );
     await waitFor(() => expect(input).toHaveValue(''));
     await waitFor(() => expect(input).toHaveFocus());
+    await waitFor(() => expect(onAdvanceInline).toHaveBeenCalledWith(3));
   });
 
   it('submits via the Add button and calls onClose afterwards', async () => {
@@ -103,6 +111,21 @@ describe('InlineCard', () => {
     await screen.findByTestId('planner-inline-add-input');
     fireEvent.pointerDown(document.body);
 
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it('submits and closes when clicking outside with a value', async () => {
+    mutateAsync.mockResolvedValue({});
+    const onClose = vi.fn();
+    render(<InlineCard dayId="d1" insertIndex={1} onClose={onClose} />);
+
+    const input = await screen.findByTestId('planner-inline-add-input');
+    fireEvent.change(input, { target: { value: 'Lunch' } });
+    fireEvent.pointerDown(document.body);
+
+    await waitFor(() =>
+      expect(mutateAsync).toHaveBeenCalledWith({ dayId: 'd1', title: 'Lunch', index: 1 })
+    );
     await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
@@ -10,6 +10,9 @@ import {
   DEFAULT_NEW_CARD_COLOR_INDEX,
 } from '@/features/planner/domain/constants/colors';
 import { useAddActivity } from '@/features/planner/hooks/useAddActivity';
+
+import { useInlineAutoFocus } from './useInlineAutoFocus';
+import { useInlineOutsideSubmit } from './useInlineOutsideSubmit';
 
 interface InlineCardProps {
   dayId: string;
@@ -34,155 +37,105 @@ export function InlineCard({
   const [error, setError] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const outsideSubmitRef = useRef(false);
 
   const copy = ACTIVITY_COPY.inlineAdd;
 
-  const focusInput = useCallback(() => {
-    const input = inputRef.current;
-    if (!input) return;
-    input.focus();
-    const length = input.value.length;
-    input.setSelectionRange(length, length);
-    if (typeof input.scrollIntoView === 'function') {
-      input.scrollIntoView({ block: 'center' });
-    }
-  }, []);
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(focusInput);
-    let viewport: VisualViewport | null = null;
-
-    if (typeof window !== 'undefined') {
-      viewport = window.visualViewport ?? null;
-      if (viewport) {
-        const handler = () => focusInput();
-        viewport.addEventListener('resize', handler);
-        return () => {
-          cancelAnimationFrame(frame);
-          viewport?.removeEventListener('resize', handler);
-        };
-      }
-    }
-
-    return () => cancelAnimationFrame(frame);
-  }, [focusInput]);
+  const focusInput = useInlineAutoFocus(inputRef);
 
   const isInvalid = useMemo(() => {
     return touched && title.trim().length === 0;
   }, [touched, title]);
 
-  const handleSubmit = useCallback(
-    async (mode: 'enter' | 'button') => {
-      setTouched(true);
-      const trimmedTitle = title.trim();
-      if (trimmedTitle.length === 0) {
-        setError(null);
-        focusInput();
+  const trySubmit = useCallback(async () => {
+    setTouched(true);
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length === 0) {
+      setError(null);
+      focusInput();
+      return false;
+    }
+
+    try {
+      setError(null);
+      await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
+      return true;
+    } catch (err) {
+      console.error(err);
+      setError(copy.errorGeneric);
+      return false;
+    }
+  }, [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]);
+
+  const handleFormSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (isPending || isComposing) {
         return;
       }
 
-      try {
-        setError(null);
-        await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
-        if (mode === 'enter') {
-          setTitle('');
-          setTouched(false);
-          onAdvanceInline?.(insertIndex + 1);
-          requestAnimationFrame(focusInput);
-        } else {
-          onClose();
-        }
-      } catch (err) {
-        console.error(err);
-        setError(copy.errorGeneric);
-      }
-    },
-    [
-      copy.errorGeneric,
-      dayId,
-      focusInput,
-      insertIndex,
-      mutateAsync,
-      onAdvanceInline,
-      onClose,
-      title,
-    ]
-  );
+      const nativeEvent = event.nativeEvent as Event & { submitter?: EventTarget | null };
+      const submitter = nativeEvent.submitter ?? null;
+      const shouldClose = submitter instanceof HTMLElement && submitter.dataset.close === 'true';
 
-  useEffect(() => {
-    const attemptSubmitOrClose = () => {
-      const trimmedTitle = title.trim();
-      if (trimmedTitle.length === 0) {
+      const didSubmit = await trySubmit();
+      if (!didSubmit) {
+        return;
+      }
+
+      if (shouldClose) {
         onClose();
         return;
       }
-      if (isPending || outsideSubmitRef.current) {
-        return;
-      }
 
-      outsideSubmitRef.current = true;
-      Promise.resolve(handleSubmit('button')).finally(() => {
+      setTitle('');
+      setTouched(false);
+      onAdvanceInline?.(insertIndex + 1);
+      requestAnimationFrame(focusInput);
+    },
+    [focusInput, insertIndex, isComposing, isPending, onAdvanceInline, onClose, trySubmit]
+  );
+
+  const handleOutsideSubmit = useCallback(() => {
+    const trimmedTitle = title.trim();
+    if (trimmedTitle.length === 0) {
+      onClose();
+      return;
+    }
+    if (isPending || outsideSubmitRef.current) {
+      return;
+    }
+
+    outsideSubmitRef.current = true;
+    void trySubmit()
+      .then((didSubmit) => {
+        if (didSubmit) {
+          onClose();
+        }
+      })
+      .finally(() => {
         outsideSubmitRef.current = false;
       });
-    };
+  }, [isPending, onClose, title, trySubmit]);
 
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!containerRef.current || !(target instanceof Node)) {
-        return;
-      }
-      if (containerRef.current.contains(target)) {
-        return;
-      }
-      attemptSubmitOrClose();
-    };
-
-    const handleFocusIn = (event: FocusEvent) => {
-      const target = event.target;
-      if (!containerRef.current || !(target instanceof Node)) {
-        return;
-      }
-      if (containerRef.current.contains(target)) {
-        return;
-      }
-      attemptSubmitOrClose();
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('focusin', handleFocusIn);
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('focusin', handleFocusIn);
-    };
-  }, [handleSubmit, isPending, onClose, title]);
+  useInlineOutsideSubmit({ containerRef, handleSubmit: handleOutsideSubmit });
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) return;
 
-      const isEnter = event.key === 'Enter' && !event.shiftKey;
-      const isModifiedEnter = event.key === 'Enter' && (event.metaKey || event.ctrlKey);
-      if (isEnter || isModifiedEnter) {
-        event.preventDefault();
-        if (!isPending) {
-          void handleSubmit('enter');
-        }
-        return;
-      }
       if (event.key === 'Escape') {
         event.preventDefault();
         onClose();
       }
     },
-    [handleSubmit, isComposing, isPending, onClose]
+    [isComposing, onClose]
   );
 
   return (
-    <div ref={containerRef} className={cn('space-y-2', className)}>
+    <form ref={containerRef} className={cn('space-y-2', className)} onSubmit={handleFormSubmit}>
       <div className={cn(NEW_CARD_COLOR.bg, NEW_CARD_COLOR.border, 'rounded-lg border border-b-3')}>
         <div
           role="group"
@@ -224,12 +177,8 @@ export function InlineCard({
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          type="button"
-          variant="primary"
-          disabled={isPending}
-          onClick={() => void handleSubmit('button')}
-        >
+        <button type="submit" className="sr-only" tabIndex={-1} aria-hidden="true"></button>
+        <Button type="submit" variant="primary" disabled={isPending} data-close="true">
           {copy.ctaAdd}
         </Button>
         <Button type="button" variant="ghost" onClick={onClose} disabled={isPending}>
@@ -245,6 +194,6 @@ export function InlineCard({
           </span>
         )}
       </div>
-    </div>
+    </form>
   );
 }
