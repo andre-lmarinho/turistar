@@ -169,7 +169,15 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
 
   function replaceActivity(dayId: string, targetId: string, nextActivity: ActivityWithMeta): void {
     setDays((prev) => {
-      const dayIdx = resolveDayIndex(prev, dayId);
+      let dayIdx = resolveDayIndex(prev, dayId);
+      if (
+        dayIdx === -1 ||
+        !prev[dayIdx]?.activities.some((activity) => activity.id === targetId)
+      ) {
+        dayIdx = prev.findIndex((day) =>
+          day.activities.some((activity) => activity.id === targetId)
+        );
+      }
       if (dayIdx === -1) return prev;
       const day = prev[dayIdx];
       const activities = [...day.activities];
