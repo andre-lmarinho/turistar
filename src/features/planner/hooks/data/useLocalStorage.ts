@@ -10,22 +10,33 @@ import type { Dispatch, SetStateAction } from 'react';
 export function useLocalStorage<T>(key: string, initial: T) {
   const [value, setValue] = useState<T>(initial);
   const [ready, setReady] = useState(false);
-  const initialized = useRef(false);
+  const initialRef = useRef(initial);
   const latestValue = useRef(value);
 
   useEffect(() => {
+    initialRef.current = initial;
+  }, [initial]);
+
+  useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    let nextValue = initialRef.current as T;
+
     try {
       const item = window.localStorage.getItem(key);
       if (item !== null) {
-        setValue(JSON.parse(item) as T);
+        nextValue = JSON.parse(item) as T;
       }
     } catch {
       /* ignore */
-    } finally {
-      initialized.current = true;
-      setReady(true);
     }
+
+    if (!Object.is(latestValue.current, nextValue)) {
+      latestValue.current = nextValue;
+      setValue(nextValue);
+    }
+
+    setReady(true);
   }, [key]);
 
   useEffect(() => {
@@ -52,15 +63,6 @@ export function useLocalStorage<T>(key: string, initial: T) {
     },
     [key]
   );
-
-  useEffect(() => {
-    if (!initialized.current || typeof window === 'undefined') return;
-    try {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      /* ignore */
-    }
-  }, [key, value]);
 
   return [value, setStoredValue, ready] as const;
 }
