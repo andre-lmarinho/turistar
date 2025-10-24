@@ -7,16 +7,12 @@ import {
 } from '@/features/planner/domain/constants/colors';
 import { generatePlaceholderActivityId } from '@/features/planner/domain/utils/activityPlaceholders';
 import { midpoint, normalizePositions } from '@/features/planner/domain/events/gapOrdering';
+import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
 
 type ActivityWithMeta = Activity & {
   _optimistic?: boolean;
   _tempId?: string;
 };
-
-function sanitizeTitle(title: string | undefined): string {
-  const trimmed = title?.trim() ?? '';
-  return trimmed.length > 0 ? trimmed : 'Untitled activity';
-}
 
 function resolveDayIndex(days: DayPlan[], dayId: string): number {
   return days.findIndex((day) => day.id === dayId);
@@ -51,7 +47,7 @@ function normalizeActivityForState(
   const normalized: ActivityWithMeta = {
     ...(existing ?? {}),
     ...incoming,
-    title: sanitizeTitle(incoming.title ?? existing?.title),
+    title: sanitizeActivityTitle(incoming.title ?? existing?.title),
     color: incoming.color || existing?.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
     position: incoming.position ?? fallbackPosition ?? existing?.position,
   };
@@ -111,7 +107,9 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
                       ...a,
                       ...patch,
                       title:
-                        patch.title && patch.title.trim().length > 0 ? patch.title.trim() : a.title,
+                        patch.title !== undefined
+                          ? sanitizeActivityTitle(patch.title, a.title)
+                          : a.title,
                     }
                   : a
               ),

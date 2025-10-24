@@ -11,8 +11,8 @@ import {
 } from '@/features/planner/domain/constants/colors';
 import { useAddActivity } from '@/features/planner/hooks/useAddActivity';
 
-import { useInlineAutoFocus } from './useInlineAutoFocus';
-import { useInlineOutsideSubmit } from './useInlineOutsideSubmit';
+import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
+import { useInlineOutsideSubmit } from '../../hooks/ui/useInlineOutsideSubmit';
 
 interface InlineCardProps {
   dayId: string;
