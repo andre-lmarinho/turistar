@@ -2,16 +2,13 @@
 
 import { useRef, useState } from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 import {
   BLANK_ACTIVITY_PREFIX,
   generateClientActivityId,
   generatePlaceholderActivityId,
   isPlaceholderActivity,
 } from '@/features/planner/domain/utils/activityPlaceholders';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
 import { moveActivityToDay } from '@/features/planner/services/activities/moveActivityToDay';
 import { moveActivityPosition } from '@/features/planner/services/activities/moveActivityPosition';
 
@@ -89,7 +86,7 @@ export function useSelectedActivity(
       title: '',
       description: '',
       duration: 0,
-      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      color: getDefaultActivityColor(),
       budget: 0,
       category: '',
     };

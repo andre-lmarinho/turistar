@@ -2,12 +2,7 @@ import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,
 } from '@/features/planner/services/supabase/planDaysMapper';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
-
-const DEFAULT_COLOR = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg;
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 
 describe('mapPlanDaysFromSupabase', () => {
   it('maps supabase rows to day plans with activity details', () => {
@@ -100,7 +95,7 @@ describe('mapPlanDaysFromSupabase', () => {
         {
           id: 'activity-2',
           title: '',
-          color: DEFAULT_COLOR,
+          color: getDefaultActivityColor(),
           position: '1',
           address: undefined,
           category: undefined,

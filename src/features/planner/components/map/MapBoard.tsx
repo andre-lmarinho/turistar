@@ -4,10 +4,7 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
 import { usePlannerContext } from '@/features/planner/hooks/PlannerContext';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls?: string): string | undefined => {
@@ -15,8 +12,6 @@ const getCssColor = (cls?: string): string | undefined => {
   const m = cls.match(/^bg-\[([^]+)\]$/);
   return m ? m[1] : cls;
 };
-
-const DEFAULT_BG_COLOR = getCssColor(DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg)!;
 
 // Fit map view to all markers whenever coordinates change
 function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
@@ -92,7 +87,7 @@ export const MapBoard = React.memo(function MapBoard() {
           <React.Fragment key={day.id}>
             {coords.map((pos, i) => {
               const act = acts[i];
-              const bg = getCssColor(act.color) ?? DEFAULT_BG_COLOR;
+              const bg = getCssColor(act.color) ?? getCssColor(getDefaultActivityColor())!;
               const number = dayIdx + 1;
               const icon = L.divIcon({
                 html: `

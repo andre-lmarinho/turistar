@@ -1,13 +1,10 @@
 'use client';
 
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import {
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-  DEFAULT_COLORS,
-} from '@/features/planner/domain/constants/colors';
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 import { generatePlaceholderActivityId } from '@/features/planner/domain/utils/activityPlaceholders';
-import { midpoint, normalizePositions } from '@/features/planner/domain/events/gapOrdering';
 import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
+import { midpoint, normalizePositions } from '@/features/planner/domain/events/gapOrdering';
 
 type ActivityWithMeta = Activity & {
   _optimistic?: boolean;
@@ -48,7 +45,7 @@ function normalizeActivityForState(
     ...(existing ?? {}),
     ...incoming,
     title: sanitizeActivityTitle(incoming.title ?? existing?.title),
-    color: incoming.color || existing?.color || DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+    color: incoming.color || existing?.color || getDefaultActivityColor(),
     position: incoming.position ?? fallbackPosition ?? existing?.position,
   };
 
@@ -125,7 +122,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       title: '',
       description: '',
       duration: 0,
-      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      color: getDefaultActivityColor(),
       budget: 0,
       category: '',
     };

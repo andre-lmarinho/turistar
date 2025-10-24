@@ -5,10 +5,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { ACTIVITY_COPY } from '@/features/planner/domain/constants/activity';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 import { useAddActivity } from '@/features/planner/hooks/useAddActivity';
 
 import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
@@ -21,8 +18,6 @@ interface InlineCardProps {
   onClose: () => void;
   onAdvanceInline?: (nextIndex: number) => void;
 }
-
-const NEW_CARD_COLOR = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX] ?? DEFAULT_COLORS[0];
 
 export function InlineCard({
   dayId,
@@ -136,7 +131,13 @@ export function InlineCard({
 
   return (
     <form ref={containerRef} className={cn('space-y-2', className)} onSubmit={handleFormSubmit}>
-      <div className={cn(NEW_CARD_COLOR.bg, NEW_CARD_COLOR.border, 'rounded-lg border border-b-3')}>
+      <div
+        className={cn(
+          getDefaultActivityColor('bg'),
+          getDefaultActivityColor('border'),
+          'rounded-lg border border-b-3'
+        )}
+      >
         <div
           role="group"
           aria-label={copy.a11yGroupLabel}
