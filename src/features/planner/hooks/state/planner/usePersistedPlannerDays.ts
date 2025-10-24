@@ -40,6 +40,11 @@ export function usePersistedPlannerDays({
 }: UsePersistedPlannerDaysParams) {
   const { days, setDays } = planner;
   const metaRef = useRef<PersistMeta | null>(null);
+  const persistChainRef = useRef<Promise<void>>(Promise.resolve());
+  const lastRequestedRef = useRef<string>('');
+  const needsReplayRef = useRef(false);
+  const viewSerializedRef = useRef('');
+  const didRollbackRef = useRef(false);
 
   if (metaRef.current == null) {
     const snapshot = snapshotDays(storedDays ?? days);
@@ -59,43 +64,75 @@ export function usePersistedPlannerDays({
 
     if (snapshot.state.length === 0 && days.length > 0) {
       meta.lastSaved = snapshot.serialized;
+      lastRequestedRef.current = meta.lastSaved;
+      viewSerializedRef.current = snapshot.serialized;
       return;
     }
 
     const hasChanged = snapshot.serialized !== meta.lastSaved;
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
+    lastRequestedRef.current = meta.lastSaved;
+    viewSerializedRef.current = snapshot.serialized;
     if (hasChanged) {
       setDays(snapshot.state);
     }
   }, [days.length, setDays, storedDays]);
 
-  const { mutateAsync, isPending } = persistDays;
+  const { mutateAsync } = persistDays;
 
   useEffect(() => {
     const meta = metaRef.current!;
     if (!persist || !meta.ready) return;
-    if (days.length === 0) return;
+    if (days.length === 0) {
+      viewSerializedRef.current = '[]';
+      return;
+    }
 
     const cleanedDays = removeBlankActivities(days);
-    if (cleanedDays.length === 0) return;
+    if (cleanedDays.length === 0) {
+      viewSerializedRef.current = '[]';
+      return;
+    }
 
     const serialized = JSON.stringify(cleanedDays);
-    if (serialized === meta.lastSaved) return;
-    if (isPending) return;
+    viewSerializedRef.current = serialized;
+    if (serialized === meta.lastSaved) {
+      lastRequestedRef.current = meta.lastSaved;
+      needsReplayRef.current = false;
+      return;
+    }
+
+    if (!needsReplayRef.current && serialized === lastRequestedRef.current) {
+      return;
+    }
 
     const snapshotState = cloneDays(cleanedDays);
+    needsReplayRef.current = false;
+    lastRequestedRef.current = serialized;
 
-    void (async () => {
+    persistChainRef.current = persistChainRef.current.finally(async () => {
+      const previousSaved = meta.lastSaved;
       try {
         await mutateAsync(snapshotState);
         meta.lastSaved = serialized;
         meta.fallback = snapshotState;
+        if (didRollbackRef.current && viewSerializedRef.current === previousSaved) {
+          didRollbackRef.current = false;
+          viewSerializedRef.current = serialized;
+          setDays(cloneDays(snapshotState));
+        } else if (didRollbackRef.current) {
+          didRollbackRef.current = false;
+        }
       } catch {
+        didRollbackRef.current = true;
+        lastRequestedRef.current = meta.lastSaved;
+        needsReplayRef.current = true;
+        viewSerializedRef.current = meta.lastSaved;
         setDays(cloneDays(meta.fallback));
       }
-    })();
-  }, [days, isPending, mutateAsync, persist, setDays]);
+    });
+  }, [days, mutateAsync, persist, setDays]);
 
   return { days, setDays };
 }
