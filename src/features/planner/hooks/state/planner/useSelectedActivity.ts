@@ -2,11 +2,10 @@
 
 import { useRef, useState } from 'react';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 import {
   BLANK_ACTIVITY_PREFIX,
   generateClientActivityId,
-  generatePlaceholderActivityId,
+  createBlankActivity,
   isPlaceholderActivity,
 } from '@/features/planner/domain/utils/activityPlaceholders';
 import { moveActivityToDay } from '@/features/planner/services/activities/moveActivityToDay';
@@ -81,15 +80,7 @@ export function useSelectedActivity(
   };
 
   const addBlankAndSelect = (dayId: string, insertIdx?: number) => {
-    const blank: Activity = {
-      id: generatePlaceholderActivityId(),
-      title: '',
-      description: '',
-      duration: 0,
-      color: getDefaultActivityColor(),
-      budget: 0,
-      category: '',
-    };
+    const blank = createBlankActivity();
 
     newActivityMetaRef.current = { dayId, insertIndex: insertIdx };
     setSelectedActivity({ ...blank, dayId });
