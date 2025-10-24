@@ -67,7 +67,6 @@ export function useAddActivity() {
       replaceActivity(context.dayId, context.tempId, {
         ...result,
         title: trimmed,
-        position: result.position ?? context.position,
       });
     },
     onError: (error, _variables, context) => {
