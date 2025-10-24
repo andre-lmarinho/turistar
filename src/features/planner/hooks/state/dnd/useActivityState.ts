@@ -2,7 +2,7 @@
 
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
-import { generatePlaceholderActivityId } from '@/features/planner/domain/utils/activityPlaceholders';
+import { createBlankActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
 import { midpoint, normalizePositions } from '@/features/planner/domain/events/gapOrdering';
 
@@ -117,15 +117,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
   }
 
   function addBlankActivity(dayIndex = 0, insertIndex?: number): Activity {
-    const blank: Activity = {
-      id: generatePlaceholderActivityId(),
-      title: '',
-      description: '',
-      duration: 0,
-      color: getDefaultActivityColor(),
-      budget: 0,
-      category: '',
-    };
+    const blank = createBlankActivity();
     setDays((prev) => {
       const copy = [...prev];
       if (!copy[dayIndex])
