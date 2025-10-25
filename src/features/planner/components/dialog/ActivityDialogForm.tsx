@@ -81,6 +81,12 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
 
   const canSave = Boolean(editedTitle.trim());
 
+  const handleTitleBlur = () => {
+    if (!editedTitle.trim()) {
+      setEditedTitle(activity.title ?? '');
+    }
+  };
+
   return (
     <>
       {/* Editable title */}
@@ -93,6 +99,7 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
         ref={titleInputRef}
         value={editedTitle}
         onChange={(e) => setEditedTitle(e.target.value)}
+        onBlur={handleTitleBlur}
         placeholder={EMPTY_ACTIVITY_TITLE}
         required
         aria-required="true"

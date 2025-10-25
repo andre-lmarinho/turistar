@@ -20,6 +20,7 @@ const eslintConfig = [
       '**/public/**',
       '**/.next/**',
       '**/.vercel/**',
+      '**/coverage/**',
     ],
   },
 
