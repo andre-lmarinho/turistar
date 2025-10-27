@@ -1,6 +1,7 @@
 import { midpoint } from '@/features/planner/domain/events/gapOrdering';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
+import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
 import type { PlanEventInsert } from '@/features/planner/domain/types/PlanEvent';
 
 function generateId(): string {
@@ -13,11 +14,6 @@ function cloneActivity(activity: Activity): Activity {
   return { ...activity };
 }
 
-function ensureTitle(title: string | undefined, fallback: string): string {
-  const trimmed = title?.trim();
-  return trimmed && trimmed.length > 0 ? trimmed : fallback;
-}
-
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
@@ -25,7 +21,7 @@ function isFiniteNumber(value: unknown): value is number {
 function sanitizeActivity(activity: Activity): Activity {
   const { latitude, longitude, ...base } = {
     ...activity,
-    title: ensureTitle(activity.title, 'Untitled activity'),
+    title: sanitizeActivityTitle(activity.title),
   };
 
   return {
@@ -67,7 +63,7 @@ function isBetween(position: string | undefined, left?: string, right?: string):
 
 function activityEquals(a: Activity, b: Activity): boolean {
   return (
-    ensureTitle(a.title, '') === ensureTitle(b.title, '') &&
+    sanitizeActivityTitle(a.title, '') === sanitizeActivityTitle(b.title, '') &&
     (a.description ?? '') === (b.description ?? '') &&
     (a.address ?? '') === (b.address ?? '') &&
     (a.duration ?? 0) === (b.duration ?? 0) &&

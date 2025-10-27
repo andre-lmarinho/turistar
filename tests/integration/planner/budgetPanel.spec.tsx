@@ -25,6 +25,8 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       changeDay: vi.fn(),
       changePosition: vi.fn(),
       changeColor: vi.fn(),
+      insertActivityAt: vi.fn(),
+      replaceActivity: vi.fn(),
       removeActivity: vi.fn(),
       addBlankAndSelect: vi.fn(),
       sensors: undefined,

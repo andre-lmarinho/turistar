@@ -5,13 +5,9 @@ import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerE
 import {
   BLANK_ACTIVITY_PREFIX,
   generateClientActivityId,
-  generatePlaceholderActivityId,
+  createBlankActivity,
   isPlaceholderActivity,
 } from '@/features/planner/domain/utils/activityPlaceholders';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
 import { moveActivityToDay } from '@/features/planner/services/activities/moveActivityToDay';
 import { moveActivityPosition } from '@/features/planner/services/activities/moveActivityPosition';
 
@@ -84,15 +80,7 @@ export function useSelectedActivity(
   };
 
   const addBlankAndSelect = (dayId: string, insertIdx?: number) => {
-    const blank: Activity = {
-      id: generatePlaceholderActivityId(),
-      title: '',
-      description: '',
-      duration: 0,
-      color: DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
-      budget: 0,
-      category: '',
-    };
+    const blank = createBlankActivity();
 
     newActivityMetaRef.current = { dayId, insertIndex: insertIdx };
     setSelectedActivity({ ...blank, dayId });

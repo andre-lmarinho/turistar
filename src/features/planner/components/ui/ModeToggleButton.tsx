@@ -68,13 +68,13 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
         ref={containerRef}
         role="group"
         aria-label="View mode selector"
-        className="bg-background border-border relative flex min-w-[200px] overflow-hidden rounded-[var(--radius)] border"
+        className="bg-background border-border relative flex min-w-[200px] overflow-hidden rounded-md border"
       >
         {ready && (
           <motion.div
             initial={false}
             style={{ x: highlightX, width: highlightW }}
-            className="absolute inset-1 rounded-[calc(var(--radius)-0.25rem)] bg-[var(--primary)]"
+            className="absolute inset-1 rounded-sm bg-[var(--primary)]"
           />
         )}
 

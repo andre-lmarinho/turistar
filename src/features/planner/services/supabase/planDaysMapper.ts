@@ -1,9 +1,7 @@
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { format, parseISO } from 'date-fns';
+
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
+import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 export interface SupabaseActivityRow {
   id: string;
@@ -31,7 +29,7 @@ function mapActivityRow(activity: SupabaseActivityRow) {
   return {
     id: activity.id,
     title: activity.title ?? '',
-    color: activity.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+    color: activity.color ?? getDefaultActivityColor(),
     address: activity.address ?? undefined,
     category: activity.category ?? undefined,
     description: activity.description ?? undefined,

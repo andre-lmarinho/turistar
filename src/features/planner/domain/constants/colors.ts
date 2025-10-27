@@ -1,13 +1,17 @@
-/**
- * Index of the default new card color
- * Must be between 0 and 5
- */
-export const DEFAULT_NEW_CARD_COLOR_INDEX = 2;
+/* Index of the default new card color */
+const DEFAULT_NEW_CARD_COLOR_INDEX = 2;
 
-/**
- * Palette of background color variables from the design system
- */
-export interface CardColor {
+type CardColorProperty = 'bg' | 'border';
+
+export function getDefaultActivityColor(property: CardColorProperty = 'bg'): string {
+  const fallbackColor = DEFAULT_COLORS[0]?.[property] ?? '';
+  const configuredColor = DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX]?.[property];
+
+  return configuredColor ?? fallbackColor;
+}
+
+/* Palette of background color variables from the design system */
+interface CardColor {
   bg: string;
   border: string;
   name: string;

@@ -1,5 +1,6 @@
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { PlanEvent, PlanSnapshot, PlanState } from '@/features/planner/domain/types/PlanEvent';
+import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
 
 function cloneActivity(activity: Activity): Activity {
   return { ...activity };
@@ -12,14 +13,9 @@ function cloneDay(day: DayPlan): DayPlan {
   };
 }
 
-function coerceTitle(title: string | undefined, fallback: string): string {
-  const trimmed = title?.trim();
-  return trimmed && trimmed.length > 0 ? trimmed : fallback;
-}
-
 function sanitizeActivity(activity: Activity): Activity {
   const sanitized: Activity = cloneActivity(activity);
-  sanitized.title = coerceTitle(activity.title, 'Untitled activity');
+  sanitized.title = sanitizeActivityTitle(activity.title);
   if (!sanitized.color) sanitized.color = 'bg-[var(--color-1)]';
   return sanitized;
 }
@@ -73,7 +69,7 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
           ...activity,
           ...patch,
         };
-        updated.title = coerceTitle(updated.title, activity.title);
+        updated.title = sanitizeActivityTitle(updated.title, activity.title);
         Object.assign(activity, updated);
         return nextDays;
       }

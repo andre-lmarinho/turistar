@@ -1,8 +1,11 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { isPlaceholderActivity } from '@/features/planner/domain/utils/activityPlaceholders';
 import { cloneDays } from '@/features/planner/services/activities/cloneDays';
+import {
+  removeBlankActivities,
+  snapshotDays,
+} from '@/features/planner/services/activities/sanitizePlannerDays';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {
@@ -23,18 +26,6 @@ interface PersistMeta {
   fallback: DayPlan[];
 }
 
-function removeBlankActivities(days: DayPlan[]): DayPlan[] {
-  return days.map((day) => {
-    const filtered = day.activities.filter((activity) => !isPlaceholderActivity(activity));
-    return filtered.length === day.activities.length ? day : { ...day, activities: filtered };
-  });
-}
-
-function snapshotDays(days: DayPlan[]) {
-  const state = cloneDays(removeBlankActivities(days));
-  return { state, serialized: JSON.stringify(state) };
-}
-
 /**
  * Persists planner days immediately with rollback safeguards.
  *
@@ -52,6 +43,8 @@ export function usePersistedPlannerDays({
   const persistChainRef = useRef<Promise<void>>(Promise.resolve());
   const lastRequestedRef = useRef<string>('');
   const needsReplayRef = useRef(false);
+  const viewSerializedRef = useRef('');
+  const didRollbackRef = useRef(false);
 
   if (metaRef.current == null) {
     const snapshot = snapshotDays(storedDays ?? days);
@@ -72,6 +65,7 @@ export function usePersistedPlannerDays({
     if (snapshot.state.length === 0 && days.length > 0) {
       meta.lastSaved = snapshot.serialized;
       lastRequestedRef.current = meta.lastSaved;
+      viewSerializedRef.current = snapshot.serialized;
       return;
     }
 
@@ -79,6 +73,7 @@ export function usePersistedPlannerDays({
     meta.lastSaved = snapshot.serialized;
     meta.fallback = snapshot.state;
     lastRequestedRef.current = meta.lastSaved;
+    viewSerializedRef.current = snapshot.serialized;
     if (hasChanged) {
       setDays(snapshot.state);
     }
@@ -89,29 +84,51 @@ export function usePersistedPlannerDays({
   useEffect(() => {
     const meta = metaRef.current!;
     if (!persist || !meta.ready) return;
-    if (days.length === 0) return;
+    if (days.length === 0) {
+      viewSerializedRef.current = '[]';
+      return;
+    }
 
     const cleanedDays = removeBlankActivities(days);
-    if (cleanedDays.length === 0) return;
+    if (cleanedDays.length === 0) {
+      viewSerializedRef.current = '[]';
+      return;
+    }
 
     const serialized = JSON.stringify(cleanedDays);
-    const shouldSkip =
-      !needsReplayRef.current &&
-      (serialized === meta.lastSaved || serialized === lastRequestedRef.current);
-    if (shouldSkip) return;
+    viewSerializedRef.current = serialized;
+    if (serialized === meta.lastSaved) {
+      lastRequestedRef.current = meta.lastSaved;
+      needsReplayRef.current = false;
+      return;
+    }
+
+    if (!needsReplayRef.current && serialized === lastRequestedRef.current) {
+      return;
+    }
 
     const snapshotState = cloneDays(cleanedDays);
     needsReplayRef.current = false;
     lastRequestedRef.current = serialized;
 
     persistChainRef.current = persistChainRef.current.finally(async () => {
+      const previousSaved = meta.lastSaved;
       try {
         await mutateAsync(snapshotState);
         meta.lastSaved = serialized;
         meta.fallback = snapshotState;
+        if (didRollbackRef.current && viewSerializedRef.current === previousSaved) {
+          didRollbackRef.current = false;
+          viewSerializedRef.current = serialized;
+          setDays(cloneDays(snapshotState));
+        } else if (didRollbackRef.current) {
+          didRollbackRef.current = false;
+        }
       } catch {
+        didRollbackRef.current = true;
         lastRequestedRef.current = meta.lastSaved;
         needsReplayRef.current = true;
+        viewSerializedRef.current = meta.lastSaved;
         setDays(cloneDays(meta.fallback));
       }
     });

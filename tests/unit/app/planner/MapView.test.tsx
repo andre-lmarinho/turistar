@@ -54,6 +54,8 @@ vi.mock('@/features/planner/hooks/usePlanner', () => ({
     removeActivity: vi.fn(),
     updateActivity: vi.fn(),
     addBlankActivity: vi.fn(),
+    insertActivityAt: vi.fn(),
+    replaceActivity: vi.fn(),
   }),
 }));
 

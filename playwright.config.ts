@@ -7,6 +7,9 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:3100';
 
 const resolveFromRepoRoot = (relativePath: string) => path.resolve(__dirname, relativePath);
 
+const webCommand = process.env.PLAYWRIGHT_WEB_COMMAND ?? 'npm run dev:e2e';
+const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === '1';
+
 export default defineConfig({
   testDir: resolveFromRepoRoot('tests/e2e'),
   timeout: 30 * 1000,
@@ -17,10 +20,12 @@ export default defineConfig({
     storageState: resolveFromRepoRoot('tests/e2e/.auth/storageState.json'),
     trace: 'on-first-retry',
   },
-  webServer: {
-    command: 'npm run dev:e2e',
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 2 * 60 * 1000,
-  },
+  webServer: skipWebServer
+    ? undefined
+    : {
+        command: webCommand,
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 2 * 60 * 1000,
+      },
 });

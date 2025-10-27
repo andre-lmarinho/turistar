@@ -1,9 +1,6 @@
 import { formatDayPlan } from '@/features/planner/services/days/formatDayPlan';
 import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import {
-  DEFAULT_COLORS,
-  DEFAULT_NEW_CARD_COLOR_INDEX,
-} from '@/features/planner/domain/constants/colors';
+import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
 import type { CategoryKey } from '@/features/planner/domain/constants/budget';
 
 /**
@@ -52,7 +49,7 @@ export function buildDaysFromInspirationData(data: InspirationData): DayPlan[] {
       imageUrl: a.imageUrl ?? '',
       latitude: a.latitude,
       longitude: a.longitude,
-      color: a.color ?? DEFAULT_COLORS[DEFAULT_NEW_CARD_COLOR_INDEX].bg,
+      color: a.color ?? getDefaultActivityColor(),
       budget: a.budget,
     }));
     return { id, label, activities };

@@ -23,7 +23,6 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
     handleDragOver,
     handleDragEnd,
     setSelectedActivity,
-    addBlankAndSelect,
   } = usePlannerContext();
 
   const byId = useActivitiesById(days);
@@ -47,11 +46,7 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
       >
         {days.map((d) => (
           <div key={d.id} role="listitem" className="w-[234px] flex-shrink-0">
-            <DayColumn
-              day={d}
-              onAddActivity={(dayId, idx) => addBlankAndSelect(dayId, idx)}
-              onSelectActivity={(a) => setSelectedActivity(a)}
-            />
+            <DayColumn day={d} onSelectActivity={(a) => setSelectedActivity(a)} />
           </div>
         ))}
       </div>
