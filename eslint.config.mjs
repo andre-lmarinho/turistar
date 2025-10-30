@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import tsParser from '@typescript-eslint/parser';
 import eslintTS from '@typescript-eslint/eslint-plugin';
-import eslintReact from 'eslint-plugin-react';
 import eslintHooks from 'eslint-plugin-react-hooks';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -40,7 +39,6 @@ const eslintConfig = [
     },
     plugins: {
       '@typescript-eslint': eslintTS,
-      react: eslintReact,
       'react-hooks': eslintHooks,
     },
     rules: {
