@@ -1,14 +1,8 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import nextConfig from 'eslint-config-next';
 import tsParser from '@typescript-eslint/parser';
 import eslintTS from '@typescript-eslint/eslint-plugin';
 import eslintReact from 'eslint-plugin-react';
 import eslintHooks from 'eslint-plugin-react-hooks';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
   {
@@ -24,9 +18,7 @@ const eslintConfig = [
     ],
   },
 
-  ...compat.config({
-    extends: ['next', 'next/core-web-vitals'],
-  }),
+  ...nextConfig,
 
   {
     files: ['**/*.{ts,tsx}'],
