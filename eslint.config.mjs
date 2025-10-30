@@ -1,13 +1,26 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import tsParser from '@typescript-eslint/parser';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import eslintTS from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import eslintReact from 'eslint-plugin-react';
 import eslintHooks from 'eslint-plugin-react-hooks';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({ baseDirectory: __dirname });
+
+if (eslintReact?.configs?.flat) {
+  delete eslintReact.configs.flat;
+}
+
+if (eslintHooks?.configs?.flat) {
+  delete eslintHooks.configs.flat;
+}
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  resolvePluginsRelativeTo: __dirname,
+});
 
 const eslintConfig = [
   {
@@ -22,11 +35,9 @@ const eslintConfig = [
       '**/coverage/**',
     ],
   },
-
   ...compat.config({
     extends: ['next', 'next/core-web-vitals'],
   }),
-
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {

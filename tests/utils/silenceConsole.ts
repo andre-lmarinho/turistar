@@ -1,7 +1,7 @@
 // Utility to silence known noisy console warnings/errors in tests.
 // Use sparingly and with specific patterns to avoid hiding real issues.
 
-import { vi } from 'vitest';
+import { vi, type MockInstance } from 'vitest';
 
 export type ConsoleMethod = 'error' | 'warn';
 
@@ -13,7 +13,7 @@ export function silenceConsole(
   patterns: Array<string | RegExp>,
   methods: ConsoleMethod[] = ['error']
 ): () => void {
-  const spies: Array<ReturnType<typeof vi.spyOn>> = [];
+  const spies: MockInstance[] = [];
 
   methods.forEach((method) => {
     const original = console[method];
