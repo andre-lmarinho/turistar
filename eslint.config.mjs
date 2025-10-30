@@ -1,8 +1,8 @@
-import nextConfig from 'eslint-config-next';
 import tsParser from '@typescript-eslint/parser';
 import eslintTS from '@typescript-eslint/eslint-plugin';
 import eslintReact from 'eslint-plugin-react';
 import eslintHooks from 'eslint-plugin-react-hooks';
+import nextPlugin from '@next/eslint-plugin-next';
 
 const eslintConfig = [
   {
@@ -18,7 +18,33 @@ const eslintConfig = [
     ],
   },
 
-  ...nextConfig,
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    ...eslintReact.configs.flat.recommended,
+  },
+
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    ...eslintHooks.configs.flat.recommended,
+  },
+
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    ...nextPlugin.flatConfig.recommended,
+  },
+
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'react/no-unknown-property': 'off',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+    },
+  },
 
   {
     files: ['**/*.{ts,tsx}'],
@@ -32,18 +58,10 @@ const eslintConfig = [
     },
     plugins: {
       '@typescript-eslint': eslintTS,
-      react: eslintReact,
-      'react-hooks': eslintHooks,
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/globals': 'off',
-      'react-hooks/preserve-manual-memoization': 'off',
     },
     settings: {
       react: { version: 'detect' },
