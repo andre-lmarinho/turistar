@@ -20,6 +20,7 @@ export default defineConfig({
     setupFiles: resolve(__dirname, './vitest.setup.tsx'),
     include: ['tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
+      enabled: process.env.CI === 'true',
       provider: 'v8',
       reportsDirectory: 'coverage',
       reporter: ['text', 'lcov'],
