@@ -1,11 +1,13 @@
 'use client';
 
-import Script, { useNonce } from 'next/script';
+import { useContext } from 'react';
+import Script from 'next/script';
+import { HeadManagerContext } from 'next/dist/shared/lib/head-manager-context.shared-runtime';
 import { SITE_URL } from '@/shared/utils/siteUrl';
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
 export default function SeoJsonLd() {
-  const nonce = useNonce();
+  const { nonce } = useContext(HeadManagerContext);
   const org = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
