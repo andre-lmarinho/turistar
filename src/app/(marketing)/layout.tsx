@@ -5,6 +5,8 @@ import SeoJsonLd from '@/features/website/seo/SeoJsonLd';
 import { SITE_URL } from '@/shared/utils/siteUrl';
 import { Navbar, Footer } from '@/features/website/layout';
 
+//export const dynamic = 'force-dynamic';
+
 const previewImage = new URL('/previews/preview_01.png', SITE_URL).toString();
 
 export const metadata: Metadata = {
