@@ -1,13 +1,12 @@
-'use client';
-
-import { useContext } from 'react';
-import Script from 'next/script';
-import { HeadManagerContext } from 'next/dist/shared/lib/head-manager-context.shared-runtime';
+import { headers } from 'next/headers';
 import { SITE_URL } from '@/shared/utils/siteUrl';
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
 export default function SeoJsonLd() {
-  const { nonce } = useContext(HeadManagerContext);
+  // Middleware injects a per-request nonce via the `x-nonce` header to satisfy our CSP.
+  // Fall back to `undefined` so React omits the attribute when no nonce is present
+  // (e.g. during local development where CSP is relaxed).
+  const nonce = headers().get('x-nonce') ?? undefined;
   const org = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -30,13 +29,13 @@ export default function SeoJsonLd() {
 
   return (
     <>
-      <Script
+      <script
         id="ld-org"
         type="application/ld+json"
         nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
       />
-      <Script
+      <script
         id="ld-website"
         type="application/ld+json"
         nonce={nonce}
