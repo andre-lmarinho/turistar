@@ -1,13 +1,8 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import eslintNext from '@next/eslint-plugin-next';
 import eslintTS from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import eslintReact from 'eslint-plugin-react';
 import eslintHooks from 'eslint-plugin-react-hooks';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 if (eslintReact?.configs?.flat) {
   delete eslintReact.configs.flat;
@@ -17,10 +12,15 @@ if (eslintHooks?.configs?.flat) {
   delete eslintHooks.configs.flat;
 }
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  resolvePluginsRelativeTo: __dirname,
-});
+const nextRules = {
+  plugins: {
+    '@next/next': eslintNext,
+  },
+  rules: {
+    ...eslintNext.configs.recommended.rules,
+    ...eslintNext.configs['core-web-vitals'].rules,
+  },
+};
 
 const eslintConfig = [
   {
@@ -35,9 +35,7 @@ const eslintConfig = [
       '**/coverage/**',
     ],
   },
-  ...compat.config({
-    extends: ['next', 'next/core-web-vitals'],
-  }),
+  nextRules,
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -51,6 +49,7 @@ const eslintConfig = [
     plugins: {
       '@typescript-eslint': eslintTS,
       'react-hooks': eslintHooks,
+      react: eslintReact,
     },
     rules: {
       'react/react-in-jsx-scope': 'off',

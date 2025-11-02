@@ -173,7 +173,6 @@ vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
 
 // Downstream components that read from planner context
 vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
-  const React = require('react');
   return {
     __esModule: true,
     PlannerBoard: function PlannerBoardMock() {
@@ -184,7 +183,6 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
 });
 
 vi.mock('@/features/planner/components/map/MapBoard', () => {
-  const React = require('react');
   function MapViewMock() {
     const ctx =
       typeof getPlannerContext === 'function'
