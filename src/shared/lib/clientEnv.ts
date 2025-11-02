@@ -21,7 +21,8 @@ const isTruthyCi = (value: unknown) => {
   return normalizedValue.length > 0 && CI_TRUTHY_VALUES.has(normalizedValue);
 };
 
-const IN_CI = isTruthyCi(process.env.CI);
+const CI_ENV_HINTS = [process.env.CI, process.env.VERCEL, process.env.GITHUB_ACTIONS];
+const IN_CI = CI_ENV_HINTS.some(isTruthyCi);
 
 const FALLBACKS = {
   NEXT_PUBLIC_SUPABASE_URL: 'http://localhost:54321',
