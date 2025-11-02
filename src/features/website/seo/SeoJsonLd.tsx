@@ -1,10 +1,11 @@
 'use client';
 
-import Script from 'next/script';
+import Script, { useNonce } from 'next/script';
 import { SITE_URL } from '@/shared/utils/siteUrl';
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
 export default function SeoJsonLd() {
+  const nonce = useNonce();
   const org = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -30,11 +31,13 @@ export default function SeoJsonLd() {
       <Script
         id="ld-org"
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
       />
       <Script
         id="ld-website"
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
       />
     </>
