@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import SeoJsonLd from '@/features/website/seo/SeoJsonLd';
 import { SITE_URL } from '@/shared/utils/siteUrl';
 import { Navbar, Footer } from '@/features/website/layout';
 
@@ -66,12 +65,9 @@ export const metadata: Metadata = {
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <SeoJsonLd />
-      <>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-      </>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </>
   );
 }
