@@ -148,7 +148,8 @@ See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testi
 
 ### Coverage reporting
 
-- `npm run test:coverage` writes coverage assets into `coverage/`, including an `lcov.info` file.
+- The Vitest configuration enables coverage automatically in CI, so `npm run test` on GitHub Actions produces the `coverage/` directory with `lcov.info`.
+- To generate coverage locally, run `CI=true npm run test` (or export `CI=true` in your shell) to mirror the CI environment.
 - Private forks need to create a Codecov token from [Codecov repository settings](https://app.codecov.io/) and add it as `CODECOV_TOKEN` in their fork's GitHub repository secrets so the CI job can upload coverage results.
 
 See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#codecov-and-private-forks) for step-by-step instructions.

@@ -24,7 +24,6 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.ts",
     "test:watch": "vitest --watch -c vitest.config.ts",
-    "test:coverage": "vitest run --coverage -c vitest.config.ts",
     "e2e": "playwright test -c playwright.config.ts",
     "e2e:update": "playwright test -c playwright.config.ts --update-snapshots",
     "warmup": "bash ./scripts/warmup.sh",
