@@ -22,15 +22,8 @@ jobs:
       - run: npm run typecheck
       - name: Build (Next.js)
         run: npm run build
-      - name: Test (coverage)
-        run: npm run test:coverage
-      - name: Upload coverage artifact
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: coverage-report
-          path: coverage/
-          if-no-files-found: warn
+      - name: Test
+        run: npm run test
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v5
