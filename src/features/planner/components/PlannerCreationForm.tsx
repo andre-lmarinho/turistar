@@ -16,17 +16,24 @@ import { createPlannerPlan } from '@/features/planner/server/createPlan';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import type { AutocompletePlace } from '@/features/planner/types/locations';
 
+import type { CreatePlannerPlanResult } from '@/features/planner/server/createPlan';
+
 interface PlannerCreationFormProps {
   title?: string;
   description?: string;
+  onPlanCreated?: (plan: CreatePlannerPlanResult) => Promise<void> | void;
 }
 
-export function PlannerCreationForm({}: PlannerCreationFormProps) {
-  const router = useRouter();
-  const [range, setRange] = useState<DateRange | undefined>({
+function getDefaultRange(): DateRange {
+  return {
     from: new Date(),
     to: addDays(new Date(), 7),
-  });
+  };
+}
+
+export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps) {
+  const router = useRouter();
+  const [range, setRange] = useState<DateRange | undefined>(getDefaultRange());
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const { saveEditToken } = usePlanEditTokens();
@@ -68,15 +75,26 @@ export function PlannerCreationForm({}: PlannerCreationFormProps) {
 
     setLoading(true);
     try {
-      const { planId, publicSlug, editToken, recentPlan } = await createPlannerPlan({
+      const planResult = await createPlannerPlan({
         title: destParam,
         destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
         startDate: range.from.toISOString(),
         endDate: range.to.toISOString(),
       });
 
+      const { planId, publicSlug, editToken, recentPlan } = planResult;
+
       saveEditToken(planId, editToken);
       saveRecentPlan(recentPlan);
+
+      if (onPlanCreated) {
+        await onPlanCreated(planResult);
+        setRange(getDefaultRange());
+        setDest('');
+        setCoords(null);
+        setLoading(false);
+        return;
+      }
 
       const query = new URLSearchParams({
         dest: recentPlan.dest,
@@ -89,6 +107,7 @@ export function PlannerCreationForm({}: PlannerCreationFormProps) {
       }
       const queryString = query.toString();
       router.push(`/planner/${publicSlug}?${queryString}`);
+      setLoading(false);
     } catch {
       setError('Failed to create plan.');
       setLoading(false);
