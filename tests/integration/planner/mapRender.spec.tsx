@@ -68,6 +68,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
     selectedActivity: null,
     currentRange: undefined,
     handleRangeChange: vi.fn(),
+    canEdit: true,
   }),
 }));
 

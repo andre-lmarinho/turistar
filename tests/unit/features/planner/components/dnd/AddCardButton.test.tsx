@@ -19,6 +19,7 @@ const addBlankAndSelect = vi.fn();
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   usePlannerContext: () => ({
     addBlankAndSelect,
+    canEdit: true,
   }),
 }));
 

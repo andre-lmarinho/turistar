@@ -143,6 +143,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       handleDragOver: vi.fn(),
       handleDragEnd: vi.fn(),
       selectedActivity: null,
+      canEdit: true,
     };
     return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>;
   }

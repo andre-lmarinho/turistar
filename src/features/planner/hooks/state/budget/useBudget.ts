@@ -9,9 +9,10 @@ type BudgetQueryResult = { budget: number; entries: Entry[] };
 export function useBudget(
   planId: string,
   activitiesTotal: number,
-  options: { initialBudget?: number; initialEntries?: Entry[]; persist?: boolean } = {}
+  options: { initialBudget?: number; initialEntries?: Entry[]; persist?: boolean; canEdit?: boolean } = {}
 ) {
-  const { initialBudget = 0, initialEntries, persist = true } = options;
+  const { initialBudget = 0, initialEntries, persist = true, canEdit = true } = options;
+  const editingEnabled = canEdit;
   const [budget, setBudget] = useState(initialBudget);
   const [entries, setEntries] = useState<Entry[]>(initialEntries ?? []);
 
@@ -114,9 +115,10 @@ export function useBudget(
     if (!persist) return;
     if (!hasLoadedRef.current) return;
     if (budget === initialBudgetRef.current) return;
+    if (!editingEnabled) return;
     setPersistError(null);
     saveBudget(budget);
-  }, [budget, persist, saveBudget]);
+  }, [budget, persist, saveBudget, editingEnabled]);
 
   const categoryTotals = useMemo(() => {
     const totals: Record<CategoryKey, number> = {
@@ -162,6 +164,7 @@ export function useBudget(
   const addEntryMut = addEntryMutation.mutateAsync;
 
   const handleAdd = async () => {
+    if (!editingEnabled) return;
     if (!desc || amount <= 0) return;
     setPersistError(null);
     if (persist) {
@@ -201,6 +204,7 @@ export function useBudget(
   const updateEntryMut = updateEntryMutation.mutateAsync;
 
   const handleUpdateEntry = async (index: number, updated: Entry) => {
+    if (!editingEnabled) return;
     setEntries((prev) => {
       const copy = [...prev];
       copy[index] = updated;
@@ -225,6 +229,7 @@ export function useBudget(
   const deleteEntryMut = deleteEntryMutation.mutateAsync;
 
   const handleDeleteEntry = async (index: number) => {
+    if (!editingEnabled) return;
     const entry = entries[index];
     setEntries((prev) => prev.filter((_, i) => i !== index));
     if (!persist) return;

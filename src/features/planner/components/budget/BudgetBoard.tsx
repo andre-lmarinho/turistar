@@ -12,12 +12,14 @@ interface Props {
   initialBudget?: number;
   initialEntries?: Entry[];
   persist?: boolean;
+  canEdit?: boolean;
 }
 
 export const BudgetBoard = React.memo(function BudgetBoard({
   initialBudget,
   initialEntries,
   persist = true,
+  canEdit = true,
 }: Props) {
   const { planId, days, updateActivity } = usePlannerContext();
   const activitiesTotal = days.reduce(
@@ -26,6 +28,7 @@ export const BudgetBoard = React.memo(function BudgetBoard({
   );
 
   const [editActivities, setEditActivities] = useState(false);
+  const isDialogDisabled = !canEdit;
 
   return (
     <BudgetProvider
@@ -34,6 +37,7 @@ export const BudgetBoard = React.memo(function BudgetBoard({
       initialBudget={initialBudget}
       initialEntries={initialEntries}
       persist={persist}
+      canEdit={canEdit}
     >
       <div
         role="region"
@@ -45,14 +49,15 @@ export const BudgetBoard = React.memo(function BudgetBoard({
           <h2 className="text-3xl font-semibold">Traveling Budget</h2>
           <button
             type="button"
-            onClick={() => setEditActivities(true)}
-            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
+            onClick={() => canEdit && setEditActivities(true)}
+            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!canEdit}
           >
             Budget Your Activities
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3">
-          <BudgetPanelHeader />
+          <BudgetPanelHeader canEdit={canEdit} />
 
           <div className="col-span-2 md:ml-12">
             <h3 id="expenses-heading" className="pb-2 font-semibold">
@@ -60,12 +65,12 @@ export const BudgetBoard = React.memo(function BudgetBoard({
             </h3>
 
             <div aria-labelledby="expenses-heading">
-              <ExpenseTable />
+              <ExpenseTable canEdit={canEdit} />
             </div>
           </div>
         </div>
         <BudgetDialog
-          open={editActivities}
+          open={editActivities && !isDialogDisabled}
           days={days}
           onUpdate={(id, amount) => updateActivity(id, { budget: amount })}
           onClose={() => setEditActivities(false)}

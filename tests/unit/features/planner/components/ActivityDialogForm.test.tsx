@@ -17,7 +17,7 @@ vi.mock('@/features/planner/hooks/search/useAddressAutocomplete', () => ({
 
 vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   __esModule: true,
-  usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 } }),
+  usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 }, canEdit: true }),
 }));
 
 vi.mock('@/shared/hooks/useDebounce', () => ({

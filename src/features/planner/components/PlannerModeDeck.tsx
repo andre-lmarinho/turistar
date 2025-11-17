@@ -20,6 +20,7 @@ interface PlannerModeDeckProps {
   mode: PlannerMode;
   onModeChange: (mode: PlannerMode) => void;
   persist: boolean;
+  canEdit?: boolean;
   initialBudget?: number;
   initialEntries?: Entry[];
 }
@@ -28,6 +29,7 @@ export function PlannerModeDeck({
   mode,
   onModeChange,
   persist,
+  canEdit = true,
   initialBudget,
   initialEntries,
 }: PlannerModeDeckProps) {
@@ -66,6 +68,7 @@ export function PlannerModeDeck({
                   initialBudget={initialBudget}
                   initialEntries={initialEntries}
                   persist={persist}
+                  canEdit={canEdit}
                 />
               )}
               {currentMode === 'map' && <MapBoard />}

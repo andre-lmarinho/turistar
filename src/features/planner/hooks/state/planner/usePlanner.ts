@@ -18,6 +18,7 @@ interface UsePlannerOptions {
   planId?: string;
   dest?: string;
   persistDays?: { mutate: (state: DayPlan[]) => void };
+  canEdit?: boolean;
 }
 export function usePlanner(options: UsePlannerOptions = {}) {
   const params = useSearchParams();
@@ -39,6 +40,8 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     currentRange,
     handleRangeChange: setRange,
   } = useTripRange(options.initialDays ?? []);
+
+  const editingEnabled = options.canEdit ?? true;
 
   /* DnD state */
   function dedupeDays(days: DayPlan[]): DayPlan[] {
@@ -71,6 +74,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
   } = useDnDPlanner(initialDnDDays);
 
   function persistOnDragEnd(event?: Parameters<typeof handleDragEnd>[0]) {
+    if (!editingEnabled) return;
     handleDragEnd(event);
     options.persistDays?.mutate(getDaysSnapshot());
   }
@@ -82,6 +86,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
    * - Syncs the local day plan state with the new range and persists it.
    */
   async function handleRangeChange(r: DateRange | undefined) {
+    if (!editingEnabled) return;
     setRange(r);
     if (!r?.from || !r?.to) return;
     try {
@@ -100,6 +105,8 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     }
   }
 
+  const noop = () => undefined;
+
   return {
     planId,
     dest,
@@ -109,17 +116,17 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     tripDays,
     currentRange,
     activeId,
-    sensors,
+    sensors: editingEnabled ? sensors : undefined,
     collisionDetection: pointerWithin,
-    handleDragStart,
-    handleDragOver,
-    handleDragEnd: persistOnDragEnd,
+    handleDragStart: editingEnabled ? handleDragStart : noop,
+    handleDragOver: editingEnabled ? handleDragOver : noop,
+    handleDragEnd: editingEnabled ? persistOnDragEnd : noop,
     handleRangeChange,
-    addActivity,
-    removeActivity,
-    updateActivity,
-    addBlankActivity,
-    insertActivityAt,
-    replaceActivity,
+    addActivity: editingEnabled ? addActivity : noop,
+    removeActivity: editingEnabled ? removeActivity : noop,
+    updateActivity: editingEnabled ? updateActivity : noop,
+    addBlankActivity: editingEnabled ? addBlankActivity : noop,
+    insertActivityAt: editingEnabled ? insertActivityAt : () => undefined,
+    replaceActivity: editingEnabled ? replaceActivity : () => undefined,
   };
 }

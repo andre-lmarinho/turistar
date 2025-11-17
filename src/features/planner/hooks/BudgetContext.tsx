@@ -11,12 +11,14 @@ export const [BudgetProvider, useBudgetContext] = createContextProvider(
     initialBudget,
     initialEntries,
     persist = true,
+    canEdit = true,
   }: {
     planId: string;
     activitiesTotal: number;
     initialBudget?: number;
     initialEntries?: Entry[];
     persist?: boolean;
-  }) => useBudget(planId, activitiesTotal, { initialBudget, initialEntries, persist }),
+    canEdit?: boolean;
+  }) => useBudget(planId, activitiesTotal, { initialBudget, initialEntries, persist, canEdit }),
   'useBudgetContext must be inside BudgetProvider'
 );

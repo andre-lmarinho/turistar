@@ -7,18 +7,21 @@ import { createContextProvider } from '@/shared/lib/createContextProvider';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import { usePersistedPlannerDays } from './state/planner/usePersistedPlannerDays';
 
-type PlannerCtx = ReturnType<typeof usePlanner> & ReturnType<typeof useSelectedActivity>;
+type PlannerCtx = ReturnType<typeof usePlanner> &
+  ReturnType<typeof useSelectedActivity> & { canEdit: boolean };
 
 export function usePlannerContextValue({
   initialDays,
   planId,
   dest,
   persist = true,
+  canEdit = true,
 }: {
   initialDays?: DayPlan[];
   planId: string;
   dest?: string;
   persist?: boolean;
+  canEdit?: boolean;
 }): PlannerCtx {
   const { data: storedDaysRaw, persistDays } = usePlanCollaboration(planId, { enabled: persist });
   const storedDays = storedDaysRaw ?? undefined;
@@ -27,6 +30,7 @@ export function usePlannerContextValue({
     planId,
     dest,
     persistDays,
+    canEdit,
   });
   const { days, setDays } = usePersistedPlannerDays({
     planner,
@@ -41,7 +45,7 @@ export function usePlannerContextValue({
     updateActivity: planner.updateActivity,
   });
 
-  return { ...planner, days, setDays, ...selected };
+  return { ...planner, days, setDays, ...selected, canEdit };
 }
 
 export const [PlannerProvider, usePlannerContext] = createContextProvider(

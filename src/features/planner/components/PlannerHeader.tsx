@@ -17,6 +17,7 @@ interface PlannerHeaderProps {
   onRangeChange: (range: DateRange | undefined) => void;
   mode: PlannerMode;
   onModeChange: (mode: PlannerMode) => void;
+  canEdit?: boolean;
 }
 
 export function PlannerHeader({
@@ -27,6 +28,7 @@ export function PlannerHeader({
   onRangeChange,
   mode,
   onModeChange,
+  canEdit = true,
 }: PlannerHeaderProps) {
   const { dest } = usePlannerContext();
   const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
@@ -54,11 +56,13 @@ export function PlannerHeader({
           onBlur={onTitleBlur}
           style={{ width: `${titleWidth}px` }}
           onFocus={(event: React.FocusEvent<HTMLInputElement>) => event.target.select()}
+          readOnly={!canEdit}
+          disabled={!canEdit}
           className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text"
         />
       </h1>
       <div className="flex flex-none items-center gap-2 self-end md:self-end">
-        <DateRangePickerIcon value={currentRange} onChange={onRangeChange} />
+        <DateRangePickerIcon value={currentRange} onChange={onRangeChange} disabled={!canEdit} />
         <div className="hidden md:inline">
           <ModeToggleButton value={mode} onChange={onModeChange} />
         </div>

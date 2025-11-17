@@ -23,10 +23,12 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
     handleDragOver,
     handleDragEnd,
     setSelectedActivity,
+    canEdit,
   } = usePlannerContext();
 
   const byId = useActivitiesById(days);
   const active = activeId ? byId[activeId] : null;
+  const handleSelect = canEdit ? (activity: Parameters<typeof setSelectedActivity>[0]) => setSelectedActivity(activity) : undefined;
 
   return (
     <DndContext
@@ -46,22 +48,24 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
       >
         {days.map((d) => (
           <div key={d.id} role="listitem" className="w-[234px] flex-shrink-0">
-            <DayColumn day={d} onSelectActivity={(a) => setSelectedActivity(a)} />
+            <DayColumn day={d} onSelectActivity={handleSelect} canEdit={canEdit} />
           </div>
         ))}
       </div>
-      <DragOverlay aria-label={active ? `Dragging ${active.title}` : undefined}>
-        {active && (
-          <SortableItem
-            dragOverlay
-            id={active.id}
-            activity={active}
-            bgColor={active.color}
-            aria-grabbed="true"
-            aria-label={`Dragging ${active.title}`}
-          />
-        )}
-      </DragOverlay>
+      {canEdit ? (
+        <DragOverlay aria-label={active ? `Dragging ${active.title}` : undefined}>
+          {active && (
+            <SortableItem
+              dragOverlay
+              id={active.id}
+              activity={active}
+              bgColor={active.color}
+              aria-grabbed="true"
+              aria-label={`Dragging ${active.title}`}
+            />
+          )}
+        </DragOverlay>
+      ) : null}
     </DndContext>
   );
 });

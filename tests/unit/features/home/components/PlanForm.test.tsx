@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { SignupPage } from '@/features/planner/modules/signup/SignupPage';
+import { PlannerCreationForm } from '@/features/planner/components/PlannerCreationForm';
 import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
@@ -51,13 +51,13 @@ vi.mock('@/features/planner/hooks/data/useRecentPlan', () => ({
   useRecentPlan: () => ({ saveRecentPlan: vi.fn() }),
 }));
 
-describe('PlanForm destination autocomplete wiring', () => {
+describe('PlannerCreationForm destination autocomplete wiring', () => {
   beforeEach(() => {
     mockLocationSearchInput.mockClear();
   });
 
   it('uses the home destination autocomplete hook', () => {
-    render(<SignupPage />);
+    render(<PlannerCreationForm persistEditTokens={false} />);
 
     const props = getCapturedProps() as
       | { autocompleteHook?: unknown; placeholder?: string }

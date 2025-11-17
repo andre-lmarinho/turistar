@@ -72,6 +72,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
     handleDragEnd: vi.fn(),
     selectedActivity: null,
     setDays: vi.fn(),
+    canEdit: true,
   }),
 }));
 

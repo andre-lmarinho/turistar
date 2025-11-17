@@ -7,7 +7,7 @@ import { PlannerCreationForm } from '@/features/planner/components/PlannerCreati
 import type { CreatePlannerPlanResult } from '@/features/planner/server/createPlan';
 import { createUserPlan } from '@/features/planner/server/createPlan';
 
-export function PlannerCreationPanel() {
+export function PlannerCreationPanel({ ownerSlug }: { ownerSlug: string }) {
   const router = useRouter();
   const [lastPlan, setLastPlan] = useState<CreatePlannerPlanResult | null>(null);
 
@@ -35,7 +35,7 @@ export function PlannerCreationPanel() {
           <button
             type="button"
             className="text-primary ml-2 font-medium hover:underline"
-            onClick={() => router.push(`/planner/${lastPlan.publicSlug}`)}
+            onClick={() => router.push(`/u/${ownerSlug}/planners/${lastPlan.planId}`)}
           >
             Open now
           </button>

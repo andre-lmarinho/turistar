@@ -7,10 +7,17 @@ import { supabase } from '@/shared/lib/supabaseClient';
 
 type PlanTitleRow = { title: string | null };
 
-export function usePlanTitle(planId: string, defaultTitle = '', persist = true) {
+export function usePlanTitle(
+  planId: string,
+  defaultTitle = '',
+  persist = true,
+  options?: { canEdit?: boolean; editToken?: string }
+) {
   const initialTitle = capitalize(defaultTitle);
 
-  const { getEditToken } = usePlanEditTokens();
+  const canEdit = options?.canEdit ?? true;
+  const providedToken = options?.editToken;
+  const { getEditToken } = usePlanEditTokens({ enabled: !providedToken });
   const qc = useQueryClient();
   const queryKey = ['plan_title', planId] as const;
 
@@ -32,7 +39,7 @@ export function usePlanTitle(planId: string, defaultTitle = '', persist = true) 
 
   const { mutate } = useMutation({
     mutationFn: async (newTitle: string) => {
-      const token = getEditToken(planId);
+      const token = providedToken ?? getEditToken(planId);
       if (!token) throw new Error('Missing edit token');
       await updatePlanTitle(planId, token, newTitle);
       return newTitle;
@@ -46,7 +53,7 @@ export function usePlanTitle(planId: string, defaultTitle = '', persist = true) 
     setLocalTitle(fetchedTitle);
   }, [fetchedTitle]);
 
-  const saveTitle = persist ? () => mutate(localTitle) : () => {};
+  const saveTitle = persist && canEdit ? () => mutate(localTitle) : () => {};
 
   return { title: localTitle, setTitle: setLocalTitle, saveTitle };
 }

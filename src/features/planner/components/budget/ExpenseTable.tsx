@@ -7,7 +7,7 @@ import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowVie
 import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';
 import { BudgetRowNew } from '@/features/planner/components/budget/BudgetRowNew';
 
-export function ExpenseTable() {
+export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
@@ -19,6 +19,7 @@ export function ExpenseTable() {
   }, [amount]);
 
   const startEdit = (index: number) => {
+    if (!canEdit) return;
     setEditIndex(index);
     setEditEntry(entries[index]);
     setEditAmountInput(String(entries[index].amount));
@@ -56,7 +57,7 @@ export function ExpenseTable() {
       </thead>
       <tbody role="rowgroup">
         {entries.map((entry, index) =>
-          editIndex === index && editEntry ? (
+          canEdit && editIndex === index && editEntry ? (
             <BudgetRowEdit
               key={entry.id}
               index={index}
@@ -76,11 +77,14 @@ export function ExpenseTable() {
               index={index}
               entry={entry}
               onEdit={startEdit}
-              onDelete={handleDeleteEntry}
+              onDelete={canEdit ? handleDeleteEntry : undefined}
+              canEdit={canEdit}
             />
           )
         )}
-        <BudgetRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
+        {canEdit ? (
+          <BudgetRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
+        ) : null}
       </tbody>
     </table>
   );

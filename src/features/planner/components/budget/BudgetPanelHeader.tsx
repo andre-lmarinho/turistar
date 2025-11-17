@@ -26,7 +26,7 @@ function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
   );
 }
 
-export function BudgetPanelHeader() {
+export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
   const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } =
     useBudgetContext();
   const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
@@ -75,6 +75,7 @@ export function BudgetPanelHeader() {
                 setBudget(val);
                 setBudgetInput(val ? String(val) : '0');
               }}
+              disabled={!canEdit}
             />
           </div>
         </div>

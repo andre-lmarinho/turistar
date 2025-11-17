@@ -38,6 +38,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       setDays: vi.fn(),
       currentRange: undefined,
       handleRangeChange: vi.fn(),
+      canEdit: true,
     }),
   };
 });

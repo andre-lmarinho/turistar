@@ -10,9 +10,10 @@ type BudgetRowViewProps = {
   entry: Entry;
   onEdit: (index: number) => void;
   onDelete?: (index: number) => void;
+  canEdit?: boolean;
 };
 
-export function BudgetRowView({ index, entry, onEdit, onDelete }: BudgetRowViewProps) {
+export function BudgetRowView({ index, entry, onEdit, onDelete, canEdit = true }: BudgetRowViewProps) {
   return (
     <tr role="row" className="border-t">
       <th scope="row" role="gridcell" className="p-2 text-left font-medium">
@@ -33,7 +34,8 @@ export function BudgetRowView({ index, entry, onEdit, onDelete }: BudgetRowViewP
           type="button"
           onClick={() => onEdit(index)}
           aria-label="Edit entry"
-          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors"
+          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+          disabled={!canEdit}
         >
           <Pencil className="size-4" aria-hidden="true" />
         </button>
@@ -42,7 +44,8 @@ export function BudgetRowView({ index, entry, onEdit, onDelete }: BudgetRowViewP
             type="button"
             onClick={() => onDelete(index)}
             aria-label="Delete entry"
-            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors"
+            className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={!canEdit}
           >
             <Trash2 className="size-4" aria-hidden="true" />
           </button>

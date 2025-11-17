@@ -98,7 +98,7 @@ export default async function DashboardPlannersPage({
                         <p className="text-sm text-muted-foreground">{formatDateRange(plan.startDate, plan.endDate)}</p>
                         <p className="text-xs text-muted-foreground">Last updated {formatUpdatedAt(plan.updatedAt)}</p>
                       </div>
-                      <PlanQuickActions plan={plan} />
+                      <PlanQuickActions plan={plan} ownerSlug={slug} />
                     </div>
                   </li>
                 ))}
@@ -106,7 +106,7 @@ export default async function DashboardPlannersPage({
             )}
           </section>
 
-          <PlannerCreationPanel />
+          <PlannerCreationPanel ownerSlug={slug} />
         </div>
       </div>
     );

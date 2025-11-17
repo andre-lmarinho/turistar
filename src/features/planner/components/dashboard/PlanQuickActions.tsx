@@ -9,9 +9,10 @@ type CopyState = 'share' | 'edit' | null;
 
 interface PlanQuickActionsProps {
   plan: UserPlannerSummary;
+  ownerSlug: string;
 }
 
-export function PlanQuickActions({ plan }: PlanQuickActionsProps) {
+export function PlanQuickActions({ plan, ownerSlug }: PlanQuickActionsProps) {
   const [copied, setCopied] = useState<CopyState>(null);
 
   const shareUrl = useMemo(() => {
@@ -42,7 +43,7 @@ export function PlanQuickActions({ plan }: PlanQuickActionsProps) {
   return (
     <div className="flex flex-wrap gap-2">
       <Link
-        href={`/planner/${plan.publicSlug}`}
+        href={`/u/${ownerSlug}/planners/${plan.id}`}
         className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-md px-3 py-1 text-sm font-medium"
       >
         Open plan

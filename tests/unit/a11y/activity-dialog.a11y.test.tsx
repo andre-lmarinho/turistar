@@ -37,6 +37,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
     changeDay: vi.fn(),
     changePosition: vi.fn(),
     save: vi.fn(),
+    canEdit: true,
   }),
 }));
 

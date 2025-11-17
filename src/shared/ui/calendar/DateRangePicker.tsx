@@ -10,9 +10,10 @@ interface Props {
   className?: string;
   value: DateRange | undefined;
   onChange: (range: DateRange | undefined) => void;
+  disabled?: boolean;
 }
 
-export function DateRangePicker({ className, value, onChange }: Props) {
+export function DateRangePicker({ className, value, onChange, disabled = false }: Props) {
   const [open, setOpen] = React.useState(false);
 
   const label = value?.from
@@ -32,6 +33,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
             className
           )}
           aria-label={label}
+          disabled={disabled}
         >
           <span
             className={cn(
@@ -56,6 +58,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
           onSelect={onChange}
           defaultMonth={value?.from}
           numberOfMonths={2}
+          disabled={disabled ? () => true : undefined}
         />
       </PopoverContent>
     </Popover>
@@ -63,7 +66,7 @@ export function DateRangePicker({ className, value, onChange }: Props) {
 }
 
 // Icon-only version matching button icon style
-export function DateRangePickerIcon({ className, value, onChange }: Props) {
+export function DateRangePickerIcon({ className, value, onChange, disabled = false }: Props) {
   const [open, setOpen] = React.useState(false);
 
   const label = value?.from
@@ -84,6 +87,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
             'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
             className
           )}
+          disabled={disabled}
         >
           <CalendarIcon className="size-5" aria-hidden="true" />
         </button>
@@ -95,6 +99,7 @@ export function DateRangePickerIcon({ className, value, onChange }: Props) {
           onSelect={onChange}
           defaultMonth={value?.from}
           numberOfMonths={2}
+          disabled={disabled ? () => true : undefined}
         />
       </PopoverContent>
     </Popover>

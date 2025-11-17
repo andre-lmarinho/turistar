@@ -10,6 +10,7 @@ import { OnboardingDialog } from '@/features/planner/modules/onboarding/componen
 import { OnboardingProvider } from '@/features/planner/modules/onboarding/hooks/OnboardingContext';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget';
+import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 
 import { PlannerHeader } from './PlannerHeader';
 import { PlannerModeDeck, type PlannerMode } from './PlannerModeDeck';
@@ -30,6 +31,8 @@ export interface PlannerClientProps {
   title?: string;
   hideOnboarding?: boolean;
   persist?: boolean;
+  canEdit?: boolean;
+  editToken?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
 }
@@ -38,12 +41,16 @@ function PlannerClientInner({
   hideOnboarding,
   persist,
   title: initialTitle,
+  canEdit,
+  editToken,
   initialBudget,
   initialEntries,
 }: {
   hideOnboarding: boolean;
   persist: boolean;
   title?: string;
+  canEdit: boolean;
+  editToken?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
 }) {
@@ -51,7 +58,10 @@ function PlannerClientInner({
 
   const { planId, dest, currentRange, handleRangeChange } = usePlannerContext();
 
-  const { title, setTitle, saveTitle } = usePlanTitle(planId, initialTitle ?? dest, persist);
+  const { title, setTitle, saveTitle } = usePlanTitle(planId, initialTitle ?? dest, persist, {
+    canEdit,
+    editToken,
+  });
 
   return (
     <OnboardingProvider planId={planId}>
@@ -64,12 +74,14 @@ function PlannerClientInner({
           onRangeChange={handleRangeChange}
           mode={mode}
           onModeChange={setMode}
+          canEdit={canEdit}
         />
 
         <PlannerModeDeck
           mode={mode}
           onModeChange={setMode}
           persist={persist}
+          canEdit={canEdit}
           initialBudget={initialBudget}
           initialEntries={initialEntries}
         />
@@ -94,24 +106,49 @@ export function PlannerClient({
   title,
   hideOnboarding = false,
   persist = true,
+  canEdit = true,
+  editToken,
   initialBudget,
   initialEntries,
 }: PlannerClientProps) {
   const router = useRouter();
   const search = useSearchParams();
+  const { saveEditToken } = usePlanEditTokens({ enabled: Boolean(editToken) });
 
   useEffect(() => {
-    if (search.toString()) {
-      router.replace(`/planner/${slug ?? planId}`, { scroll: false });
+    if (!slug) {
+      return;
     }
-  }, [search, router, slug, planId]);
+
+    if (search.toString()) {
+      router.replace(`/planner/${slug}`, { scroll: false });
+    }
+  }, [search, router, slug]);
+
+  useEffect(() => {
+    if (!planId || !editToken) {
+      return;
+    }
+
+    saveEditToken(planId, editToken);
+  }, [editToken, planId, saveEditToken]);
+
+  const persistState = persist;
 
   return (
-    <PlannerProvider initialDays={initialDays} planId={planId ?? ''} dest={dest} persist={persist}>
+    <PlannerProvider
+      initialDays={initialDays}
+      planId={planId ?? ''}
+      dest={dest}
+      persist={persistState}
+      canEdit={canEdit}
+    >
       <PlannerClientInner
         hideOnboarding={hideOnboarding}
-        persist={persist}
+        persist={persistState}
         title={title}
+        canEdit={canEdit}
+        editToken={editToken}
         initialBudget={initialBudget}
         initialEntries={initialEntries}
       />
