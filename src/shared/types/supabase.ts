@@ -183,6 +183,37 @@ export interface Database {
           },
         ];
       };
+      profiles: {
+        Row: {
+          id: string;
+          created_at: string;
+          slug: string;
+          display_name: string | null;
+          avatar_url: string | null;
+        };
+        Insert: {
+          id: string;
+          created_at?: string;
+          slug: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          slug?: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'profiles_id_fkey';
+            columns: ['id'];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       plan_events: {
         Row: {
           event_id: string;

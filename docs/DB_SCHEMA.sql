@@ -62,6 +62,18 @@ CREATE TABLE public.plans (
 CREATE TABLE public.profiles (
   id uuid NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
+  slug text NOT NULL,
+  display_name text,
+  avatar_url text,
   CONSTRAINT profiles_pkey PRIMARY KEY (id),
+  CONSTRAINT profiles_slug_key UNIQUE (slug),
   CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );
+
+-- Supabase Dashboard instructions:
+--   1. Open SQL Editor → New query.
+--   2. Paste and run supabase/migrations/20250208120000_add_profile_identity_fields.sql.
+--   3. Confirm slug uniqueness with:
+--        SELECT slug, COUNT(*) FROM public.profiles GROUP BY slug HAVING COUNT(*) > 1;
+--      (Should return zero rows.)
+--   4. Re-run the backfill block inside the migration whenever legacy rows without slugs appear.
