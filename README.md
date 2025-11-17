@@ -100,9 +100,20 @@ Prerequisites: Node.js v18+ and npm
    Copy `.env.example` to `.env.local` and set:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-side secret used by actions that require privileged Supabase access)
    - `NEXT_PUBLIC_GEOAPIFY_KEY`
 
    See [docs/DEVELOPER_GUIDE.md#environment](docs/DEVELOPER_GUIDE.md#environment) for details.
+
+   ### Supabase Auth configuration
+
+   Supabase Auth depends on the following variables:
+
+   | Variable | Scope | Purpose |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_SUPABASE_URL` | Client & Server | Base URL for your Supabase project. |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | Public anon key that allows the browser client to authenticate. |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Server only | Optional service role key for server actions that need to call privileged RPCs (e.g., inserting server-generated plans). Keep this secret out of the browser bundle. |
 
 4. Start the dev server
 
