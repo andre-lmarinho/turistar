@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation';
 
-import { SignupForm } from '@/features/auth/components/SignupForm';
+import { LoginForm } from '@/features/auth/components/LoginForm';
 import { SignupPage as SignupLayout } from '@/features/planner/modules/signup/SignupPage';
+import { LoginFooter } from '@/features/planner/modules/signup/components/LoginFooter';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
-export default async function SignupPage() {
+export default async function LoginPage() {
   const user = await getCurrentUser();
 
   if (user) {
@@ -13,14 +14,18 @@ export default async function SignupPage() {
     redirect(`/u/${slug}/planners`);
   }
 
-  async function finalizeProfileAction() {
+  async function resolveProfileAction() {
     'use server';
     return ensureProfile();
   }
 
   return (
-    <SignupLayout>
-      <SignupForm finalizeProfile={finalizeProfileAction} />
+    <SignupLayout
+      title="Welcome back"
+      description="Sign in to pick up your travel plans right where you left off."
+      footerSlot={<LoginFooter />}
+    >
+      <LoginForm resolveProfile={resolveProfileAction} />
     </SignupLayout>
   );
 }

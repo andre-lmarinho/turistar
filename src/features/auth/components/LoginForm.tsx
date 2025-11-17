@@ -1,0 +1,88 @@
+'use client';
+
+import { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { Button } from '@/shared/ui/button';
+import { supabase } from '@/shared/lib/supabaseClient';
+
+type LoginFormProps = {
+  resolveProfile: () => Promise<string>;
+};
+
+export function LoginForm({ resolveProfile }: LoginFormProps) {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError(null);
+
+    if (!email.trim() || !password.trim()) {
+      setFormError('Email and password are required.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim(),
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const slug = await resolveProfile();
+      router.push(`/u/${slug}/planners`);
+      router.refresh();
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Unable to sign you in.');
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form className="mt-12 grid gap-4" onSubmit={handleSubmit} noValidate>
+      <label className="grid gap-2 text-sm font-medium text-foreground">
+        Email
+        <input
+          type="email"
+          name="email"
+          autoComplete="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background rounded-md border bg-background px-3 py-2 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2"
+          placeholder="you@example.com"
+          required
+        />
+      </label>
+      <label className="grid gap-2 text-sm font-medium text-foreground">
+        Password
+        <input
+          type="password"
+          name="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background rounded-md border bg-background px-3 py-2 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2"
+          placeholder="Enter your password"
+          required
+        />
+      </label>
+      {formError ? (
+        <p role="alert" className="text-sm text-[var(--destructive)]">
+          {formError}
+        </p>
+      ) : null}
+      <Button type="submit" disabled={isSubmitting} className="h-12 text-base font-semibold">
+        {isSubmitting ? 'Signing in…' : 'Sign in'}
+      </Button>
+    </form>
+  );
+}

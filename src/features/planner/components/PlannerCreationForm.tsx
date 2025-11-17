@@ -16,12 +16,12 @@ import { createPlannerPlan } from '@/features/planner/server/createPlan';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
 import type { AutocompletePlace } from '@/features/planner/types/locations';
 
-interface SignupFormProps {
+interface PlannerCreationFormProps {
   title?: string;
   description?: string;
 }
 
-export function SignupForm({}: SignupFormProps) {
+export function PlannerCreationForm({}: PlannerCreationFormProps) {
   const router = useRouter();
   const [range, setRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -32,13 +32,11 @@ export function SignupForm({}: SignupFormProps) {
   const { saveEditToken } = usePlanEditTokens();
   const { saveRecentPlan } = useRecentPlan();
 
-  // Declare error state
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   function handleRangeChange(r: DateRange | undefined) {
     setRange(r);
-    // Clear any prior errors once a full range is chosen
     if (r?.from && r?.to) {
       setError('');
     }
@@ -56,7 +54,6 @@ export function SignupForm({}: SignupFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Block submission if dates are missing
     if (!range?.from || !range?.to) {
       setError('Please select your travel dates.');
       return;
