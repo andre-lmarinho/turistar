@@ -43,9 +43,14 @@ describe('createLocationAutocompleteHook', () => {
       json: mockJson,
     } as unknown as Response);
 
-    await queryFn();
+    const abortController = new AbortController();
 
-    expect(fetchSpy).toHaveBeenCalledWith('/api/autocomplete?text=Paris&lat=1&lon=2');
+    await queryFn({ signal: abortController.signal });
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/autocomplete?text=Paris&lat=1&lon=2',
+      { signal: abortController.signal }
+    );
   });
 
   it('disables the query when below the minimum length', () => {
