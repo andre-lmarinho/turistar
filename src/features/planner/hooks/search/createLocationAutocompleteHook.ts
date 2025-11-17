@@ -37,13 +37,14 @@ export function createLocationAutocompleteHook({
 
     const { data, isLoading, isError } = useQuery({
       queryKey: [queryKeyPrefix, trimmedQuery, options.latitude, options.longitude],
-      queryFn: async () => {
+      queryFn: async ({ signal }) => {
         const params = new URLSearchParams({ text: trimmedQuery });
         if (options.latitude != null && options.longitude != null) {
           params.set('lat', String(options.latitude));
           params.set('lon', String(options.longitude));
         }
-        const res = await fetch(`${endpoint}?${params.toString()}`);
+        const requestUrl = `${endpoint}?${params.toString()}`;
+        const res = await fetch(requestUrl, signal ? { signal } : undefined);
         if (!res.ok) {
           throw new Error('Failed to load suggestions');
         }
