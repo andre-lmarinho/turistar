@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { PlannerCreationForm } from '@/features/planner/components/PlannerCreationForm';
 import type { CreatePlannerPlanResult } from '@/features/planner/server/createPlan';
+import { createUserPlan } from '@/features/planner/server/createPlan';
 
 export function PlannerCreationPanel() {
   const router = useRouter();
@@ -23,7 +24,11 @@ export function PlannerCreationPanel() {
           Launch a fresh itinerary and keep building without leaving the dashboard.
         </p>
       </div>
-      <PlannerCreationForm onPlanCreated={handlePlanCreated} />
+      <PlannerCreationForm
+        onPlanCreated={handlePlanCreated}
+        createPlanFn={createUserPlan}
+        persistEditTokens={false}
+      />
       {lastPlan ? (
         <div className="bg-muted text-muted-foreground mt-4 rounded-md px-3 py-2 text-sm">
           New plan "{lastPlan.recentPlan.dest}" ready.

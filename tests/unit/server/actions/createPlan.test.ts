@@ -41,6 +41,7 @@ describe('createPlan action', () => {
       _dest_long: 4.56,
       _start_date: '2024-01-01',
       _end_date: '2024-01-05',
+      _user_id: null,
     });
     expect(result).toEqual({ id: 'plan-1', publicSlug: 'slug-1', editToken: 'token-1' });
   });
@@ -67,6 +68,7 @@ describe('createPlan action', () => {
       _dest_long: null,
       _start_date: '2024-02-01',
       _end_date: '2024-02-10',
+      _user_id: null,
     });
     expect(result).toEqual({ id: 'plan-2', publicSlug: 'slug-2', editToken: 'token-2' });
   });
@@ -79,6 +81,23 @@ describe('createPlan action', () => {
     >);
 
     await expect(createPlan('x', { name: 'Y' }, '2024-01-01', '2024-01-02')).rejects.toBe(error);
+  });
+
+  it('includes the provided user id in the RPC payload', async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: [{ plan_id: 'plan-1', public_slug: 'slug', edit_token: 'token' }],
+      error: null,
+    });
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
+
+    await createPlan('Trip', { name: 'Rome' }, '2024-01-01', '2024-01-02', 'user-123');
+
+    expect(rpc).toHaveBeenCalledWith(
+      'create_full_plan',
+      expect.objectContaining({ _user_id: 'user-123' })
+    );
   });
 
   it('throws when the RPC does not return data', async () => {

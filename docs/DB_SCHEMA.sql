@@ -77,3 +77,8 @@ CREATE TABLE public.profiles (
 --        SELECT slug, COUNT(*) FROM public.profiles GROUP BY slug HAVING COUNT(*) > 1;
 --      (Should return zero rows.)
 --   4. Re-run the backfill block inside the migration whenever legacy rows without slugs appear.
+--   5. Apply supabase/migrations/20250212121500_attach_plan_owners.sql so
+--      create_full_plan accepts the optional _user_id argument. Execute the
+--      optional UPDATE block at the end of the file once per environment to
+--      associate existing plan rows with the first UUID-based actor found in
+--      plan_events.

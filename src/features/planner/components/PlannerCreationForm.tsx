@@ -18,10 +18,14 @@ import type { AutocompletePlace } from '@/features/planner/types/locations';
 
 import type { CreatePlannerPlanResult } from '@/features/planner/server/createPlan';
 
+type PlannerPlanCreator = typeof createPlannerPlan;
+
 interface PlannerCreationFormProps {
   title?: string;
   description?: string;
   onPlanCreated?: (plan: CreatePlannerPlanResult) => Promise<void> | void;
+  createPlanFn?: PlannerPlanCreator;
+  persistEditTokens?: boolean;
 }
 
 function getDefaultRange(): DateRange {
@@ -31,12 +35,16 @@ function getDefaultRange(): DateRange {
   };
 }
 
-export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps) {
+export function PlannerCreationForm({
+  onPlanCreated,
+  createPlanFn = createPlannerPlan,
+  persistEditTokens = true,
+}: PlannerCreationFormProps) {
   const router = useRouter();
   const [range, setRange] = useState<DateRange | undefined>(getDefaultRange());
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const { saveEditToken } = usePlanEditTokens();
+  const { saveEditToken } = usePlanEditTokens({ enabled: persistEditTokens });
   const { saveRecentPlan } = useRecentPlan();
 
   const [error, setError] = useState<string>('');
@@ -75,7 +83,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
 
     setLoading(true);
     try {
-      const planResult = await createPlannerPlan({
+      const planResult = await createPlanFn({
         title: destParam,
         destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
         startDate: range.from.toISOString(),
@@ -84,7 +92,9 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
 
       const { planId, publicSlug, editToken, recentPlan } = planResult;
 
-      saveEditToken(planId, editToken);
+      if (persistEditTokens) {
+        saveEditToken(planId, editToken);
+      }
       saveRecentPlan(recentPlan);
 
       if (onPlanCreated) {

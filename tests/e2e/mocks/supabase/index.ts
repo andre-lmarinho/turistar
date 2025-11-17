@@ -30,7 +30,15 @@ type PlanEventInput = {
 };
 
 type RpcParams = {
-  create_full_plan: { _title?: string | null };
+  create_full_plan: {
+    _title?: string | null;
+    _dest_name?: string | null;
+    _dest_lat?: number | null;
+    _dest_long?: number | null;
+    _start_date?: string | null;
+    _end_date?: string | null;
+    _user_id?: string | null;
+  };
   append_plan_events: {
     plan_id: string;
     base_version?: number | string | null;

@@ -3,13 +3,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 
+type UseLocalStorageOptions = {
+  enabled?: boolean;
+};
+
 /**
  * Syncs state with localStorage for the given key.
  * Returns the stored value and a setter that persists updates.
  */
-export function useLocalStorage<T>(key: string, initial: T) {
+export function useLocalStorage<T>(key: string, initial: T, options?: UseLocalStorageOptions) {
+  const enabled = options?.enabled ?? true;
   const [value, setValue] = useState<T>(initial);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(!enabled);
   const initialRef = useRef(initial);
   const latestValue = useRef(value);
 
@@ -18,7 +23,7 @@ export function useLocalStorage<T>(key: string, initial: T) {
   }, [initial]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (!enabled || typeof window === 'undefined') return;
 
     let nextValue = initialRef.current as T;
 
@@ -37,7 +42,7 @@ export function useLocalStorage<T>(key: string, initial: T) {
     }
 
     setReady(true);
-  }, [key]);
+  }, [key, enabled]);
 
   useEffect(() => {
     latestValue.current = value;
@@ -53,15 +58,17 @@ export function useLocalStorage<T>(key: string, initial: T) {
       latestValue.current = resolvedValue;
       setValue(resolvedValue);
 
-      if (typeof window !== 'undefined') {
-        try {
-          window.localStorage.setItem(key, JSON.stringify(resolvedValue));
-        } catch {
-          /* ignore */
-        }
+      if (!enabled || typeof window === 'undefined') {
+        return;
+      }
+
+      try {
+        window.localStorage.setItem(key, JSON.stringify(resolvedValue));
+      } catch {
+        /* ignore */
       }
     },
-    [key]
+    [key, enabled]
   );
 
   return [value, setStoredValue, ready] as const;

@@ -14,6 +14,7 @@ export async function createPlan(
   dest: DestinationInfo,
   start: string,
   end: string,
+  userId?: string | null,
   client: SupabaseClient<Database> = supabaseServer()
 ) {
   const supabase = client;
@@ -31,6 +32,7 @@ export async function createPlan(
     _dest_long: longitude,
     _start_date: startDate,
     _end_date: endDate,
+    _user_id: userId ?? null,
   });
 
   if (error || !data) throw error ?? new Error('Failed to create plan');

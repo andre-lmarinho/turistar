@@ -1,5 +1,6 @@
 'use server';
 
+import { requireUser } from '@/shared/lib/auth/session';
 import { createPlan as createPlanAction } from '@/server/actions/createPlan';
 
 interface PlannerDestination {
@@ -30,12 +31,10 @@ export interface CreatePlannerPlanResult {
   recentPlan: PlannerRecentPlanPayload;
 }
 
-export async function createPlannerPlan({
-  title,
-  destination,
-  startDate,
-  endDate,
-}: CreatePlannerPlanInput): Promise<CreatePlannerPlanResult> {
+async function executePlanCreation(
+  { title, destination, startDate, endDate }: CreatePlannerPlanInput,
+  userId?: string
+): Promise<CreatePlannerPlanResult> {
   const { id, publicSlug, editToken } = await createPlanAction(
     title,
     {
@@ -44,7 +43,8 @@ export async function createPlannerPlan({
       longitude: destination.longitude,
     },
     startDate,
-    endDate
+    endDate,
+    userId
   );
 
   return {
@@ -59,4 +59,13 @@ export async function createPlannerPlan({
       end: endDate,
     },
   };
+}
+
+export async function createPlannerPlan(input: CreatePlannerPlanInput): Promise<CreatePlannerPlanResult> {
+  return executePlanCreation(input);
+}
+
+export async function createUserPlan(input: CreatePlannerPlanInput): Promise<CreatePlannerPlanResult> {
+  const user = await requireUser();
+  return executePlanCreation(input, user.id);
 }
