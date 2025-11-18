@@ -4,17 +4,14 @@ import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 
-interface UserDashboardLayoutProps {
-  children: ReactNode;
-  params: {
-    slug: string;
-  };
-}
-
 export default async function UserDashboardLayout({
   children,
-  params: { slug },
-}: UserDashboardLayoutProps) {
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   try {
     const user = await requireUser();
     const supabase = createSupabaseServerClient();
