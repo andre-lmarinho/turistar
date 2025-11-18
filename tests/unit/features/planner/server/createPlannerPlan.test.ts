@@ -30,7 +30,8 @@ describe('createPlannerPlan', () => {
       'Weekend Trip',
       { name: 'Berlin', latitude: 52.52, longitude: 13.405 },
       '2024-04-01',
-      '2024-04-03'
+      '2024-04-03',
+      undefined
     );
 
     expect(result).toEqual({
