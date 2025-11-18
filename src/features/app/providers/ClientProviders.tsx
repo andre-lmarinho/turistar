@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { useState } from 'react';
+
 import { createSupabaseBrowserClient } from '@/shared/lib/supabaseClient';
 import { clientEnv } from '@/shared/lib/clientEnv';
 
@@ -13,12 +14,7 @@ function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
   return <SessionContextProvider supabaseClient={supabaseClient}>{children}</SessionContextProvider>;
 }
 
-/**
- * Client-side context providers (React Query, Theme, etc.).
- * Keeps RootLayout as a Server Component.
- */
-export default function Providers({ children }: { children: React.ReactNode }) {
-  // one QueryClient per browser tab
+export function ClientProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (

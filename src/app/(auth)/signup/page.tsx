@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
-import { SignupForm } from '@/features/auth/components/SignupForm';
-import { SignupPage as SignupLayout } from '@/features/planner/modules/signup/SignupPage';
+import { SignupForm } from '@/features/auth/signup/SignupForm';
+import { SignupPage as SignupLayout } from '@/features/auth/signup/SignupPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 

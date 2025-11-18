@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { capitalize } from '@/shared/utils/capitalize';
 import { usePlanEditTokens } from '@/features/planner/infrastructure/supabase/planEditToken';
-import { updatePlanTitle } from '@/app/(web)/planner/actions/updatePlanTitle';
+import { updatePlanTitle } from '@/app/(webapp)/planner/actions/updatePlanTitle';
 import { supabase } from '@/shared/lib/supabaseClient';
 
 type PlanTitleRow = { title: string | null };

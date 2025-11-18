@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 
-import { LoginForm } from '@/features/auth/components/LoginForm';
-import { SignupPage as SignupLayout } from '@/features/planner/modules/signup/SignupPage';
-import { LoginFooter } from '@/features/planner/modules/signup/components/LoginFooter';
+import { LoginForm } from '@/features/auth/login/LoginForm';
+import { LoginFooter } from '@/features/auth/login/LoginFooter';
+import { SignupPage as SignupLayout } from '@/features/auth/signup/SignupPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 

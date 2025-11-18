@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { PlannerCreationPanel } from './_components/PlannerCreationPanel';
+import { PlannerCreationPanel } from '@/features/planner/components/dashboard/PlannerCreationPanel';
 import { PlanQuickActions } from '@/features/planner/components/dashboard/PlanQuickActions';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
@@ -98,7 +98,7 @@ export default async function DashboardPlannersPage({
                         <p className="text-sm text-muted-foreground">{formatDateRange(plan.startDate, plan.endDate)}</p>
                         <p className="text-xs text-muted-foreground">Last updated {formatUpdatedAt(plan.updatedAt)}</p>
                       </div>
-                      <PlanQuickActions plan={plan} ownerSlug={slug} />
+                      <PlanQuickActions plan={plan} />
                     </div>
                   </li>
                 ))}
@@ -106,7 +106,7 @@ export default async function DashboardPlannersPage({
             )}
           </section>
 
-          <PlannerCreationPanel ownerSlug={slug} />
+          <PlannerCreationPanel />
         </div>
       </div>
     );

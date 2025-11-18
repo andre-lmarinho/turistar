@@ -124,8 +124,10 @@ Prerequisites: Node.js v18+ and npm
    Visit http://localhost:3000
 
    Authenticated users land on the dashboard at `/u/{yourSlug}/planners`, which lists every owned itinerary and exposes quick
-   actions for opening the secure editor. Attempts to visit `/login` or `/signup` while already signed in automatically
-   redirect back to that dashboard entry point, while unauthenticated visitors who follow `/u/...` links are sent to `/login`.
+   actions for opening the secure editor at `/planner/{planId}`. Attempts to visit `/login` or `/signup` while already signed
+   in automatically redirect back to that dashboard entry point, while unauthenticated visitors who follow `/u/...` links are
+   sent to `/login`. Public viewers (or collaborators with edit tokens) continue to use the shareable `/planner/{publicSlug}`
+   URLs.
 
 ### Development Workflow
 

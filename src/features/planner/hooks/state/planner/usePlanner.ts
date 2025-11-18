@@ -10,7 +10,7 @@ import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from '../dnd/useDnDPlanner';
 import { buildInitialDays } from '@/features/planner/services/days/initialDays';
 import { syncDaysWithTripRange } from '@/features/planner/services/days/syncDaysWithTripRange';
-import { setPlanDateRange } from '@/app/(web)/planner/actions/updatePlan';
+import { setPlanDateRange } from '@/app/(webapp)/planner/actions/updatePlan';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 
 interface UsePlannerOptions {
