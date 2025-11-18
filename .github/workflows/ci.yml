@@ -26,7 +26,8 @@ jobs:
         run: npm run test
       - name: Upload coverage to Codecov
         if: always()
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          CODECOV_COVERAGE_FILE: coverage/lcov.info
-        run: bash ./scripts/upload-codecov.sh
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: true
