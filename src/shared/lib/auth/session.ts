@@ -24,26 +24,47 @@ export class ForbiddenError extends Error {
   }
 }
 
-export async function getCurrentSession(): Promise<SupabaseSession | null> {
-  const supabase = createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    throw error;
+function isAuthSessionMissingError(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) {
+    return false;
   }
 
-  return data as SupabaseSession;
+  const maybeError = error as { message?: string; status?: number };
+  return (
+    maybeError.status === 400 &&
+    typeof maybeError.message === 'string' &&
+    maybeError.message.toLowerCase().includes('auth session missing')
+  );
+}
+
+export async function getCurrentSession(): Promise<SupabaseSession | null> {
+  const supabase = createSupabaseServerClient();
+
+  try {
+    const { data } = await supabase.auth.getSession();
+    return data as SupabaseSession;
+  } catch (error) {
+    if (isAuthSessionMissingError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export async function getCurrentUser(): Promise<SupabaseUser | null> {
   const supabase = createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getUser();
 
-  if (error) {
+  try {
+    const { data } = await supabase.auth.getUser();
+    return data.user as SupabaseUser | null;
+  } catch (error) {
+    if (isAuthSessionMissingError(error)) {
+      return null;
+    }
+
     throw error;
   }
-
-  return data.user as SupabaseUser | null;
 }
 
 export async function requireUser(): Promise<SupabaseUser> {
