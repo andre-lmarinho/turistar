@@ -4,14 +4,14 @@ import { SignupFooter } from './components/SignupFooter';
 import { SignupShowcase } from './components/SignupShowcase';
 
 type SignupPageProps = {
-  children: ReactNode;
+  children?: ReactNode;
   title?: string;
   description?: string;
   footerSlot?: ReactNode;
 };
 
 export function SignupPage({
-  children,
+  children = null,
   title = 'Start your planning',
   description = 'Create your free plan, invite friends, and keep every detail organized in one place.',
   footerSlot,

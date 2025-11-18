@@ -13,12 +13,12 @@ interface UserDashboardLayoutProps {
 
 export default async function UserDashboardLayout({
   children,
-  params,
+  params: { slug },
 }: UserDashboardLayoutProps) {
   try {
     const user = await requireUser();
     const supabase = createSupabaseServerClient();
-    const normalizedSlug = params.slug?.trim();
+    const normalizedSlug = slug?.trim();
 
     const { data, error } = await supabase
       .from('profiles')

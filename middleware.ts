@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import type { CookieOptions } from '@supabase/ssr';
+import type { SetAllCookies } from '@supabase/ssr';
 
 import { buildCsp } from './securityHeaders';
 import { clientEnv } from './src/shared/lib/clientEnv';
@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
     return baseResponse;
   }
 
-  const pendingCookies: { name: string; value: string; options: CookieOptions }[] = [];
+  const pendingCookies: Parameters<SetAllCookies>[0] = [];
 
   const supabase = createServerClient(
     clientEnv.NEXT_PUBLIC_SUPABASE_URL,
@@ -51,14 +51,14 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookies) {
-          cookies.forEach((cookie) => {
+        setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
+          cookiesToSet.forEach((cookie) => {
             pendingCookies.push(cookie);
           });
         },
       },
       headers: {
-        get(key) {
+        get(key: string) {
           return requestHeaders.get(key) ?? undefined;
         },
       },

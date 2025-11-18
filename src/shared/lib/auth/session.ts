@@ -1,7 +1,14 @@
 import 'server-only';
 
-import type { Session, User } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+
+export type SupabaseUser = {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown> | null;
+};
+
+type SupabaseSession = { session: { user: SupabaseUser | null } | null } | null;
 
 export class UnauthorizedError extends Error {
   constructor(message = 'Authentication required.') {
@@ -17,7 +24,7 @@ export class ForbiddenError extends Error {
   }
 }
 
-export async function getCurrentSession(): Promise<Session | null> {
+export async function getCurrentSession(): Promise<SupabaseSession | null> {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase.auth.getSession();
 
@@ -25,10 +32,10 @@ export async function getCurrentSession(): Promise<Session | null> {
     throw error;
   }
 
-  return data.session;
+  return data as SupabaseSession;
 }
 
-export async function getCurrentUser(): Promise<User | null> {
+export async function getCurrentUser(): Promise<SupabaseUser | null> {
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase.auth.getUser();
 
@@ -36,10 +43,10 @@ export async function getCurrentUser(): Promise<User | null> {
     throw error;
   }
 
-  return data.user;
+  return data.user as SupabaseUser | null;
 }
 
-export async function requireUser(): Promise<User> {
+export async function requireUser(): Promise<SupabaseUser> {
   const user = await getCurrentUser();
 
   if (!user) {

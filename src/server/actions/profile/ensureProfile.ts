@@ -1,9 +1,9 @@
 'use server';
 
-import type { SupabaseClient, User } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import slugify from '@sindresorhus/slugify';
 
-import { UnauthorizedError } from '@/shared/lib/auth/session';
+import { UnauthorizedError, type SupabaseUser } from '@/shared/lib/auth/session';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { Database } from '@/shared/types/supabase';
 
@@ -44,7 +44,7 @@ export async function ensureProfile({ client }: EnsureProfileOptions = {}): Prom
   return upsertProfileWithUniqueSlug(supabase, payload);
 }
 
-function extractDisplayName(user: User): string | null {
+function extractDisplayName(user: SupabaseUser): string | null {
   const metadata = user.user_metadata as Record<string, unknown> | null;
   const candidate =
     readMetadataString(metadata, 'full_name') ??
@@ -61,13 +61,13 @@ function extractDisplayName(user: User): string | null {
   return typeof emailPrefix === 'string' && emailPrefix.length > 0 ? emailPrefix : null;
 }
 
-function extractAvatarUrl(user: User): string | null {
+function extractAvatarUrl(user: SupabaseUser): string | null {
   const metadata = user.user_metadata as Record<string, unknown> | null;
 
   return readMetadataString(metadata, 'avatar_url');
 }
 
-function buildSlugBase(user: User): string {
+function buildSlugBase(user: SupabaseUser): string {
   const metadata = user.user_metadata as Record<string, unknown> | null;
   const slugCandidate =
     readMetadataString(metadata, 'username') ??
@@ -112,15 +112,17 @@ async function upsertProfileWithUniqueSlug(
       .select('slug')
       .single();
 
-    if (!response.error && response.data) {
+    const upsertError = (response.error as { code?: string } | null) ?? null;
+
+    if (!upsertError && response.data) {
       return response.data.slug;
     }
 
-    if (response.error?.code === '23505') {
+    if (upsertError?.code === '23505') {
       continue;
     }
 
-    throw response.error ?? new Error('Failed to upsert profile');
+    throw upsertError ?? new Error('Failed to upsert profile');
   }
 
   throw new Error('Unable to allocate a unique slug for the profile');

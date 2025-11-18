@@ -102,6 +102,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
     handleDragOver: (...args: unknown[]) => void;
     handleDragEnd: (...args: unknown[]) => void;
     selectedActivity: null;
+    canEdit: boolean;
   };
 
   const PlannerContext = React.createContext<InternalPlannerCtx | null>(null);
