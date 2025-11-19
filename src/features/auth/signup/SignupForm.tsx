@@ -57,8 +57,8 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
   };
 
   return (
-    <form className="mt-12 grid gap-4" onSubmit={handleSubmit} noValidate>
-      <label className="grid gap-2 text-sm font-medium text-foreground">
+    <form className="mt-12 grid gap-6" onSubmit={handleSubmit} noValidate>
+      <label className="text-foreground grid gap-1 text-sm font-medium">
         Email
         <input
           type="email"
@@ -66,12 +66,12 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background rounded-md border bg-background px-3 py-2 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2"
+          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background bg-background rounded-md border px-3 py-2 text-base shadow-sm focus-visible:ring-2 focus-visible:outline-none"
           placeholder="you@example.com"
           required
         />
       </label>
-      <label className="grid gap-2 text-sm font-medium text-foreground">
+      <label className="text-foreground grid gap-1 text-sm font-medium">
         Password
         <input
           type="password"
@@ -79,7 +79,7 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
           autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background rounded-md border bg-background px-3 py-2 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2"
+          className="border-input focus-visible:ring-ring focus-visible:ring-offset-background bg-background rounded-md border px-3 py-2 text-base shadow-sm focus-visible:ring-2 focus-visible:outline-none"
           placeholder="Create a strong password"
           minLength={6}
           required
@@ -90,7 +90,7 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
           {formError}
         </p>
       ) : null}
-      <Button type="submit" disabled={isSubmitting} className="h-12 text-base font-semibold">
+      <Button type="submit" disabled={isSubmitting} className="text-base font-semibold">
         {isSubmitting ? 'Creating account…' : 'Create account'}
       </Button>
     </form>

@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
 
-import { LoginPage as LoginPageView } from '@/features/auth/login/LoginPage';
+import { LoginPage } from '@/features/auth/login/LoginPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
-export default async function LoginRoutePage() {
+export default async function LoginRoute() {
   const user = await getCurrentUser();
 
   if (user) {
@@ -17,5 +17,5 @@ export default async function LoginRoutePage() {
     return ensureProfile();
   }
 
-  return <LoginPageView resolveProfile={resolveProfileAction} />;
+  return <LoginPage resolveProfile={resolveProfileAction} />;
 }

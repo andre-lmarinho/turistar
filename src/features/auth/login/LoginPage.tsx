@@ -8,13 +8,13 @@ type LoginPageProps = {
 
 export function LoginPage({ resolveProfile }: LoginPageProps) {
   return (
-    <div className="bg-card flex min-h-screen items-center justify-center px-4">
-      <div className="bg-background w-full max-w-lg rounded-2xl p-8 shadow-sm sm:p-10">
-        <div className="text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">Welcome back</h1>
+    <div className="bg-card flex min-h-screen items-center justify-center px-2">
+      <div className="flex w-full max-w-md flex-col gap-6">
+        <h1 className="text-center text-3xl font-semibold tracking-tight">Welcome back</h1>
+        <div className="border-border bg-background rounded-2xl border px-4 py-10 sm:px-10">
+          <LoginForm resolveProfile={resolveProfile} />
         </div>
-        <LoginForm resolveProfile={resolveProfile} />
-        <p className="text-muted-foreground mt-8 text-center text-sm">
+        <p className="text-muted-foreground text-center text-sm">
           <Link href="/signup" className="text-foreground hover:underline">
             Don't have an account?
           </Link>

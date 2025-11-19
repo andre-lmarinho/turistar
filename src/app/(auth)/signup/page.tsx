@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
 
-import { SignupPage as SignupPageView } from '@/features/auth/signup/SignupPage';
+import { SignupPage } from '@/features/auth/signup/SignupPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
-export default async function SignupRoutePage() {
+export default async function SignupRoute() {
   const user = await getCurrentUser();
 
   if (user) {
@@ -17,5 +17,5 @@ export default async function SignupRoutePage() {
     return ensureProfile();
   }
 
-  return <SignupPageView finalizeProfile={finalizeProfileAction} />;
+  return <SignupPage finalizeProfile={finalizeProfileAction} />;
 }
