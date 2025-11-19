@@ -1,8 +1,12 @@
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
-export async function syncServerSession(event: AuthChangeEvent, session: Session | null): Promise<void> {
+export async function syncServerSession(
+  event: AuthChangeEvent,
+  session: Session | null
+): Promise<void> {
   if (!session) {
-    throw new Error('Missing Supabase session after authentication.');
+    // Sign-up flows that require email confirmation may not include a session yet.
+    return;
   }
 
   const response = await fetch('/auth/callback', {
