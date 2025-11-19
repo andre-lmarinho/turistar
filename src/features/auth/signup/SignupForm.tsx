@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui/button';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
+import type { AuthResponse } from '@supabase/auth-js';
+import type { Session } from '@supabase/supabase-js';
 
 type SignupFormProps = {
   finalizeProfile: () => Promise<string>;
@@ -30,16 +32,20 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = (await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
-      });
+      })) as AuthResponse;
 
       if (error) {
         throw new Error(error.message);
       }
 
-      await syncServerSession('SIGNED_IN', data.session);
+      const session: Session | null = data.session
+        ? { ...data.session, expires_at: data.session.expires_at ?? null }
+        : null;
+
+      await syncServerSession('SIGNED_IN', session);
 
       const slug = await finalizeProfile();
       router.push(`/u/${slug}/planners`);
