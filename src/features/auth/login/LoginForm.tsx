@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/shared/ui/button';
 import { supabase } from '@/shared/lib/supabaseClient';
+import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
 
 type LoginFormProps = {
   resolveProfile: () => Promise<string>;
@@ -29,7 +30,7 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password.trim(),
       });
@@ -37,6 +38,8 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
       if (error) {
         throw new Error(error.message);
       }
+
+      await syncServerSession('SIGNED_IN', data.session);
 
       const slug = await resolveProfile();
       router.push(`/u/${slug}/planners`);
