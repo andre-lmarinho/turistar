@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { SignupForm } from '@/features/auth/signup/SignupForm';
-import { SignupPage as SignupLayout } from '@/features/auth/signup/SignupPage';
+import { SignupPage } from '@/features/auth/signup/SignupPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
@@ -18,9 +17,5 @@ export default async function SignupPage() {
     return ensureProfile();
   }
 
-  return (
-    <SignupLayout>
-      <SignupForm finalizeProfile={finalizeProfileAction} />
-    </SignupLayout>
-  );
+  return <SignupPage finalizeProfile={finalizeProfileAction} />;
 }
