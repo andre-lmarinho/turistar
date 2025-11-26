@@ -45,13 +45,19 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
         ? { ...data.session, expires_at: data.session.expires_at ?? null }
         : null;
 
-      await syncServerSession('SIGNED_IN', session);
+      if (!session) {
+        throw new Error('No session returned from Supabase. Please verify your credentials.');
+      }
+
+      // Fire-and-forget to avoid blocking the UI if the callback is slow.
+      void syncServerSession('SIGNED_IN', session);
 
       const slug = await resolveProfile();
       router.push(`/u/${slug}/planners`);
       router.refresh();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'Unable to sign you in.');
+    } finally {
       setIsSubmitting(false);
     }
   };

@@ -88,7 +88,8 @@ export async function middleware(request: NextRequest) {
   }
 
   let response = baseResponse;
-  const normalizedPath = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+  const normalizedPath =
+    pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
 
   if (isAuthenticated && AUTH_ROUTES.has(normalizedPath)) {
     const destination = userSlug ? `/u/${userSlug}/planners` : '/';

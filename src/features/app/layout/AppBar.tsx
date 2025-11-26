@@ -41,8 +41,8 @@ export async function AppBar() {
   const targetHref = slug ? `/u/${slug}/planners` : '/login';
 
   return (
-    <header className="text-foreground border-border sticky top-0 z-40 border-b backdrop-blur">
-      <nav className="mx-auto flex w-full items-center justify-between p-1">
+    <header className="text-foreground border-border sticky top-0 z-40 h-14 shrink-0 border-b backdrop-blur">
+      <nav className="mx-auto flex h-full w-full items-center justify-between p-1">
         <Logo href={targetHref} />
         <AvatarMenu displayName={displayName} email={email} />
       </nav>

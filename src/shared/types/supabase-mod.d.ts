@@ -52,16 +52,20 @@ declare module '@supabase/supabase-js' {
     auth: {
       getSession: () => Promise<{ data: { session: Session | null }; error: unknown }>;
       getUser: () => Promise<{ data: { user: { id: string } | null }; error: unknown }>;
-      signInWithPassword: (
-        credentials: { email: string; password: string }
-      ) => Promise<{ data: unknown; error: Error | null }>;
-      signUp: (
-        credentials: { email: string; password: string }
-      ) => Promise<{ data: unknown; error: Error | null }>;
-      onAuthStateChange: (
-        callback: (event: AuthChangeEvent, session: Session | null) => void
-      ) => { data: { subscription: SupabaseAuthSubscription } };
-      setSession: (session: Session) => Promise<{ data: { session: Session | null }; error: unknown }>;
+      signInWithPassword: (credentials: {
+        email: string;
+        password: string;
+      }) => Promise<{ data: unknown; error: Error | null }>;
+      signUp: (credentials: {
+        email: string;
+        password: string;
+      }) => Promise<{ data: unknown; error: Error | null }>;
+      onAuthStateChange: (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
+        data: { subscription: SupabaseAuthSubscription };
+      };
+      setSession: (
+        session: Session
+      ) => Promise<{ data: { session: Session | null }; error: unknown }>;
       signOut: () => Promise<{ error: unknown | null }>;
     };
   }

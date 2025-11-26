@@ -109,11 +109,11 @@ Prerequisites: Node.js v18+ and npm
 
    Supabase Auth depends on the following variables:
 
-   | Variable | Scope | Purpose |
-   | --- | --- | --- |
-   | `NEXT_PUBLIC_SUPABASE_URL` | Client & Server | Base URL for your Supabase project. |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | Public anon key that allows the browser client to authenticate. |
-   | `SUPABASE_SERVICE_ROLE_KEY` | Server only | Optional service role key for server actions that need to call privileged RPCs (e.g., inserting server-generated plans). Keep this secret out of the browser bundle. |
+   | Variable                        | Scope           | Purpose                                                                                                                                                              |
+   | ------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `NEXT_PUBLIC_SUPABASE_URL`      | Client & Server | Base URL for your Supabase project.                                                                                                                                  |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | Public anon key that allows the browser client to authenticate.                                                                                                      |
+   | `SUPABASE_SERVICE_ROLE_KEY`     | Server only     | Optional service role key for server actions that need to call privileged RPCs (e.g., inserting server-generated plans). Keep this secret out of the browser bundle. |
 
 4. Start the dev server
 

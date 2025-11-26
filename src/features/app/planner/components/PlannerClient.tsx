@@ -59,7 +59,7 @@ function PlannerClientInner({
   });
 
   return (
-    <main className="bg-card relative flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
+    <main className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
       <PlannerHeader
         title={title}
         onTitleChange={setTitle}

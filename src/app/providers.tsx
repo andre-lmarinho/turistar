@@ -29,7 +29,9 @@ function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [supabaseClient]);
 
-  return <SessionContextProvider supabaseClient={supabaseClient}>{children}</SessionContextProvider>;
+  return (
+    <SessionContextProvider supabaseClient={supabaseClient}>{children}</SessionContextProvider>
+  );
 }
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {

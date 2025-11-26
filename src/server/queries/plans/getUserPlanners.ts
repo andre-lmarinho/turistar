@@ -33,17 +33,19 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
     .eq('user_id', userId)
     .order('updated_at', { ascending: false, referencedTable: 'plan_snapshots' })
     .limit(50)) as unknown as {
-    data: {
-      id: string;
-      title: string | null;
-      start_date: string | null;
-      end_date: string | null;
-      created_at: string | null;
-      public_slug: string;
-      edit_token: string;
-      plan_destinations: { destinations: { name: string | null } }[] | null;
-      plan_snapshots: { updated_at: string | null }[] | null;
-    }[] | null;
+    data:
+      | {
+          id: string;
+          title: string | null;
+          start_date: string | null;
+          end_date: string | null;
+          created_at: string | null;
+          public_slug: string;
+          edit_token: string;
+          plan_destinations: { destinations: { name: string | null } }[] | null;
+          plan_snapshots: { updated_at: string | null }[] | null;
+        }[]
+      | null;
     error: unknown;
   };
 
