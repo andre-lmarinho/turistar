@@ -49,10 +49,25 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
         throw new Error('No session returned from Supabase. Please verify your credentials.');
       }
 
-      // Fire-and-forget to avoid blocking the UI if the callback is slow.
-      void syncServerSession('SIGNED_IN', session);
+      await syncServerSession('SIGNED_IN', session);
 
-      const slug = await resolveProfile();
+      const userId = session.user?.id;
+      let slug: string | null = null;
+
+      if (userId) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('slug')
+          .eq('id', userId)
+          .maybeSingle();
+
+        slug = profile?.slug ?? null;
+      }
+
+      if (!slug) {
+        slug = await resolveProfile();
+      }
+
       router.push(`/u/${slug}/planners`);
       router.refresh();
     } catch (err) {
