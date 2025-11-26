@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DateRange } from 'react-day-picker';
 
 import { DateRangePickerIcon } from '@/shared/ui/calendar';
@@ -37,6 +37,12 @@ export function PlannerHeader({
   });
 
   const headingText = title?.trim().length ? title : (dest ?? 'Your trip plan');
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = `${headingText} | Turistar App`;
+    }
+  }, [headingText]);
 
   return (
     <div className="mx-auto flex w-full max-w-screen-xl flex-row justify-between gap-4 pb-4 md:items-center">

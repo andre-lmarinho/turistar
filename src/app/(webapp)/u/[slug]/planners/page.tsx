@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
@@ -10,6 +11,12 @@ interface DashboardPlannersPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Planners | Turistar App',
+  };
 }
 
 export default async function DashboardPlannersPage({ params }: DashboardPlannersPageProps) {
