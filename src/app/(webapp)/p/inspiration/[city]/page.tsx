@@ -21,7 +21,6 @@ export default async function InspirationPlannerPage({ params }: PageProps) {
       initialBudget={experience.initialBudget}
       initialEntries={experience.initialEntries}
       canEdit={false}
-      hideOnboarding
       persist={false}
     />
   );

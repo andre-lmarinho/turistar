@@ -59,17 +59,6 @@ vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/app/planner/components/onboarding/OnboardingDialog', () => ({
-  __esModule: true,
-  OnboardingDialog: () => null,
-}));
-
-vi.mock('@/features/app/planner/hooks/onboarding/OnboardingContext', () => ({
-  __esModule: true,
-  OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
-}));
-
 vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
   PlannerBoard: () => <div data-testid="planner-board" />,
@@ -96,7 +85,7 @@ import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {
-    render(<PlannerClient planId="p1" hideOnboarding />);
+    render(<PlannerClient planId="p1" />);
 
     const [plannerBtn, mapBtn, budgetBtn] = screen.getAllByRole('button');
 

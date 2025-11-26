@@ -1,64 +1,42 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
-let mockPlanId = 'plan1';
+type Mode = 'planner' | 'map' | 'budget';
 
-type OnboardingContextValue = {
-  showOnboarding: boolean;
-  setShowOnboarding: React.Dispatch<React.SetStateAction<boolean>>;
-};
+vi.mock('@/features/app/planner/ui/buttons/ModeToggleButton', () => ({
+  __esModule: true,
+  ModeToggleButton: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
+    <div>
+      <button onClick={() => onChange('planner')}>Planner</button>
+      <button onClick={() => onChange('map')}>Map</button>
+      <button onClick={() => onChange('budget')}>Budget</button>
+    </div>
+  ),
+}));
 
-const onboardingMocks = vi.hoisted(() => {
-  const React = require('react') as typeof import('react');
+vi.mock('@/shared/ui/calendar', () => ({
+  __esModule: true,
+  DateRangePicker: () => <div data-testid="date-picker" />,
+  DateRangePickerIcon: () => <div />,
+}));
 
-  const OnboardingContext = React.createContext<OnboardingContextValue>({
-    showOnboarding: true,
-    setShowOnboarding: () => undefined,
-  });
-
-  const useOnboardingContext = () => React.useContext(OnboardingContext);
-
-  const OnboardingProvider = ({ children }: { children: React.ReactNode }) => {
-    const [showOnboarding, setShowOnboarding] = React.useState(true);
-    const value = React.useMemo(
-      () => ({
-        showOnboarding,
-        setShowOnboarding,
-      }),
-      [showOnboarding, setShowOnboarding]
-    );
-
-    return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;
-  };
-
-  const OnboardingDialog = () => {
-    const { showOnboarding } = useOnboardingContext();
-    const planId = mockPlanId;
-
-    React.useEffect(() => {
-      localStorage.setItem(`planner-onboarding-shown-${planId}`, 'true');
-    }, [planId]);
-
-    return showOnboarding ? <div>Your planner is ready</div> : null;
-  };
-
-  return { OnboardingProvider, useOnboardingContext, OnboardingDialog };
-});
+vi.mock('@/features/app/planner/components/dialog/ActivityDialog', () => ({
+  __esModule: true,
+  ActivityDialog: () => null,
+}));
 
 vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
-    planId: mockPlanId,
+    planId: 'p1',
     dest: 'rome',
-    days: [{ id: 'd1', label: 'Day 1', activities: [] }],
-    setDays: vi.fn(),
+    days: [],
     currentRange: undefined,
     handleRangeChange: vi.fn(),
     addBlankAndSelect: vi.fn(),
-    sensors: [],
+    sensors: undefined,
     collisionDetection: vi.fn(),
     handleDragStart: vi.fn(),
     handleDragOver: vi.fn(),
@@ -76,19 +54,26 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/app/planner/components/dialog/ActivityDialog', () => ({
-  __esModule: true,
-  ActivityDialog: () => null,
-}));
-
 vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/app/planner/hooks/budget/BudgetContext', () => ({
+vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
-  BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  PlannerBoard: () => <div data-testid="planner-board" />,
+}));
+vi.mock('@/features/app/planner/components/map/MapBoard', () => {
+  const MockMapBoard = () => <div data-testid="map-view" />;
+  return {
+    __esModule: true,
+    default: MockMapBoard,
+    MapBoard: MockMapBoard,
+  };
+});
+vi.mock('@/features/app/planner/components/budget/BudgetBoard', () => ({
+  __esModule: true,
+  BudgetBoard: () => <div data-testid="budget-panel" />,
 }));
 
 vi.mock('next/navigation', () => ({
@@ -96,49 +81,35 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => ({
-  __esModule: true,
-  PlannerBoard: () => <div data-testid="board" />,
-}));
-vi.mock('@/features/app/planner/components/budget/BudgetBoard', () => ({
-  __esModule: true,
-  BudgetBoard: () => <div data-testid="budget" />,
-}));
-vi.mock('@/features/app/planner/hooks/onboarding/OnboardingContext', () => ({
-  __esModule: true,
-  OnboardingProvider: onboardingMocks.OnboardingProvider,
-  useOnboardingContext: onboardingMocks.useOnboardingContext,
-}));
+import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
-vi.mock('@/features/app/planner/components/onboarding/OnboardingDialog', () => ({
-  __esModule: true,
-  OnboardingDialog: onboardingMocks.OnboardingDialog,
-}));
+describe('PlannerClient', () => {
+  it('shows only the active panel when toggling modes', async () => {
+    render(<PlannerClient planId="p1" />);
 
-vi.mock('@/shared/ui/calendar', async () => {
-  const actual =
-    await vi.importActual<typeof import('@/shared/ui/calendar')>('@/shared/ui/calendar');
-  return {
-    ...actual,
-    DateRangePickerIcon: () => <div data-testid="date-picker" />,
-  };
-});
+    const [plannerBtn, mapBtn, budgetBtn] = screen.getAllByRole('button');
 
-vi.mock('@/features/app/planner/ui/buttons/ModeToggleButton', () => ({
-  __esModule: true,
-  ModeToggleButton: () => <div data-testid="mode-toggle" />,
-}));
+    const board = await screen.findByTestId('planner-board');
+    const map = await screen.findByTestId('map-view');
+    const budget = await screen.findByTestId('budget-panel');
 
-beforeEach(() => {
-  localStorage.clear();
-});
+    expect(board.parentElement).toHaveStyle({ pointerEvents: 'auto' });
+    expect(map.parentElement).toHaveStyle({ pointerEvents: 'none' });
+    expect(budget.parentElement).toHaveStyle({ pointerEvents: 'none' });
 
-describe('PlannerClient onboarding dialog', () => {
-  it('shows onboarding dialog for a new plan id even if another plan was seen', () => {
-    localStorage.setItem('planner-onboarding-shown-plan1', 'true');
-    mockPlanId = 'plan2';
-    render(<PlannerClient title="Trip" />);
-    expect(screen.getAllByText('Your planner is ready').length).toBeGreaterThan(0);
-    expect(localStorage.getItem('planner-onboarding-shown-plan2')).toBe('true');
+    fireEvent.click(mapBtn);
+    expect(board.parentElement).toHaveStyle({ pointerEvents: 'none' });
+    expect(map.parentElement).toHaveStyle({ pointerEvents: 'auto' });
+    expect(budget.parentElement).toHaveStyle({ pointerEvents: 'none' });
+
+    fireEvent.click(budgetBtn);
+    expect(board.parentElement).toHaveStyle({ pointerEvents: 'none' });
+    expect(map.parentElement).toHaveStyle({ pointerEvents: 'none' });
+    expect(budget.parentElement).toHaveStyle({ pointerEvents: 'auto' });
+
+    fireEvent.click(plannerBtn);
+    expect(board.parentElement).toHaveStyle({ pointerEvents: 'auto' });
+    expect(map.parentElement).toHaveStyle({ pointerEvents: 'none' });
+    expect(budget.parentElement).toHaveStyle({ pointerEvents: 'none' });
   });
 });

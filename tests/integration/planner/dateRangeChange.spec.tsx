@@ -161,18 +161,6 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', async () => {
   return { __esModule: true, PlannerProvider, usePlannerContext };
 });
 
-// Onboarding mocks
-vi.mock('@/features/app/planner/components/onboarding/OnboardingDialog', () => ({
-  __esModule: true,
-  OnboardingDialog: () => null,
-}));
-
-vi.mock('@/features/app/planner/hooks/onboarding/OnboardingContext', () => ({
-  __esModule: true,
-  OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
-}));
-
 // Downstream components that read from planner context
 vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => {
   return {
@@ -217,7 +205,7 @@ vi.mock('next/navigation', () => ({
 
 describe('date range change propagation', () => {
   it('calls handleRangeChange and updates downstream components', async () => {
-    render(<PlannerClient initialDays={initialDays} planId="p1" hideOnboarding />);
+    render(<PlannerClient initialDays={initialDays} planId="p1" />);
 
     const boardEl = screen.getByTestId('planner-board');
     expect(boardEl).toHaveTextContent('d1');

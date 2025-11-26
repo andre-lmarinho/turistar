@@ -6,8 +6,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ActivityDialog } from '@/features/app/planner/components/dialog/ActivityDialog';
 import { PlannerProvider, usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 import { usePlanTitle } from '@/features/app/planner/hooks/data/usePlanTitleSupabase';
-import { OnboardingDialog } from '@/features/app/planner/modules/onboarding/components/OnboardingDialog';
-import { OnboardingProvider } from '@/features/app/planner/modules/onboarding/hooks/OnboardingContext';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { usePlanEditTokens } from '@/features/app/planner/infrastructure/supabase/planEditToken';
@@ -29,7 +27,6 @@ export interface PlannerClientProps {
   slug?: string;
   dest?: string;
   title?: string;
-  hideOnboarding?: boolean;
   persist?: boolean;
   canEdit?: boolean;
   editToken?: string;
@@ -38,7 +35,6 @@ export interface PlannerClientProps {
 }
 
 function PlannerClientInner({
-  hideOnboarding,
   persist,
   title: initialTitle,
   canEdit,
@@ -46,7 +42,6 @@ function PlannerClientInner({
   initialBudget,
   initialEntries,
 }: {
-  hideOnboarding: boolean;
   persist: boolean;
   title?: string;
   canEdit: boolean;
@@ -64,37 +59,33 @@ function PlannerClientInner({
   });
 
   return (
-    <OnboardingProvider planId={planId}>
-      <main className="bg-card relative flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
-        <PlannerHeader
-          title={title}
-          onTitleChange={setTitle}
-          onTitleBlur={saveTitle}
-          currentRange={currentRange}
-          onRangeChange={handleRangeChange}
-          mode={mode}
-          onModeChange={setMode}
-          canEdit={canEdit}
-        />
+    <main className="bg-card relative flex h-screen flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
+      <PlannerHeader
+        title={title}
+        onTitleChange={setTitle}
+        onTitleBlur={saveTitle}
+        currentRange={currentRange}
+        onRangeChange={handleRangeChange}
+        mode={mode}
+        onModeChange={setMode}
+        canEdit={canEdit}
+      />
 
-        <PlannerModeDeck
-          mode={mode}
-          onModeChange={setMode}
-          persist={persist}
-          canEdit={canEdit}
-          initialBudget={initialBudget}
-          initialEntries={initialEntries}
-        />
+      <PlannerModeDeck
+        mode={mode}
+        onModeChange={setMode}
+        persist={persist}
+        canEdit={canEdit}
+        initialBudget={initialBudget}
+        initialEntries={initialEntries}
+      />
 
-        <ActivityDialog />
+      <ActivityDialog />
 
-        <div className="flex flex-none items-center gap-2 self-center p-6 md:hidden">
-          <ModeToggleButton value={mode} onChange={setMode} />
-        </div>
-
-        {!hideOnboarding && <OnboardingDialog />}
-      </main>
-    </OnboardingProvider>
+      <div className="flex flex-none items-center gap-2 self-center p-6 md:hidden">
+        <ModeToggleButton value={mode} onChange={setMode} />
+      </div>
+    </main>
   );
 }
 
@@ -104,7 +95,6 @@ export function PlannerClient({
   slug,
   dest,
   title,
-  hideOnboarding = false,
   persist = true,
   canEdit = true,
   editToken,
@@ -144,7 +134,6 @@ export function PlannerClient({
       canEdit={canEdit}
     >
       <PlannerClientInner
-        hideOnboarding={hideOnboarding}
         persist={persistState}
         title={title}
         canEdit={canEdit}
