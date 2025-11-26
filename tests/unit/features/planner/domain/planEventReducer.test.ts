@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { applyPlanEvent } from '@/features/planner/domain/events/planEventReducer';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import type { PlanEvent } from '@/features/planner/domain/types/PlanEvent';
+import { applyPlanEvent } from '@/features/app/planner/domain/events/planEventReducer';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { PlanEvent } from '@/features/app/planner/domain/types/PlanEvent';
 
 const baseDay: DayPlan = {
   id: 'day-1',

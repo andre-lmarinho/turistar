@@ -16,13 +16,13 @@ Each section below expands on the responsibilities and provides implementation r
 
 ## Realtime connection
 
-- `subscribeToPlanEvents` registers a Supabase Realtime `postgres_changes` listener filtered by `plan_id`. Every incoming row is validated with Zod before being converted to a domain event. (`src/features/planner/services/supabase/planEventsRealtime.ts`)
-- `usePlanCollaboration` owns the lifecycle of that channel. When mounted, it loads the latest snapshot, subscribes to the channel, and streams new events into local reducers. Disconnecting (unmounting) tears the channel down safely. (`src/features/planner/hooks/usePlanCollaboration.ts`)
+- `subscribeToPlanEvents` registers a Supabase Realtime `postgres_changes` listener filtered by `plan_id`. Every incoming row is validated with Zod before being converted to a domain event. (`src/features/app/planner/services/supabase/planEventsRealtime.ts`)
+- `usePlanCollaboration` owns the lifecycle of that channel. When mounted, it loads the latest snapshot, subscribes to the channel, and streams new events into local reducers. Disconnecting (unmounting) tears the channel down safely. (`src/features/app/planner/hooks/usePlanCollaboration.ts`)
 - The hook exposes the consolidated plan state alongside helpers (`persistEvents`, `persistDays`) so consuming components continue using a single interface while benefiting from realtime updates.
 
 ## Event payloads
 
-Events are strongly typed in [`PlanEvent.ts`](../../src/features/planner/domain/types/PlanEvent.ts). They fall into three families:
+Events are strongly typed in [`PlanEvent.ts`](../../src/features/app/planner/domain/types/PlanEvent.ts). They fall into three families:
 
 <!-- prettier-ignore -->
 | Type | Payload summary | Notes |
@@ -36,7 +36,7 @@ Events are strongly typed in [`PlanEvent.ts`](../../src/features/planner/domain/
 | `day.removed` | `{ dayId }` | Removes a day and its activities from the plan.
 | `day.reordered` | `{ dayId, position }` | Updates a day’s gap-order position.
 
-The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events/planEventReducer.ts) interpret each event and update the in-memory `PlanState`. Tests in `tests/unit/features/planner/hooks/usePlanCollaboration.test.ts` guard the behaviour.
+The reducers in [`planEventReducer.ts`](../../src/features/app/planner/domain/events/planEventReducer.ts) interpret each event and update the in-memory `PlanState`. Tests in `tests/unit/features/app/planner/hooks/usePlanCollaboration.test.ts` guard the behaviour.
 
 ## Version handling and optimistic workflow
 
@@ -48,7 +48,7 @@ The reducers in [`planEventReducer.ts`](../../src/features/planner/domain/events
 ## Conflict resolution and ordering
 
 - Conflicts occur when `baseVersion` is stale. The RPC rejects the mutation, causing `usePlanCollaboration` to refresh from the source of truth before retrying or surfacing an error.
-- Activities and days use **gap ordering** strings (e.g., `a0`, `a0m`, `a1`). Helpers in [`gapOrdering.ts`](../../src/features/planner/domain/events/gapOrdering.ts) calculate safe insertion points so concurrent inserts rarely collide and renumbering stays minimal.
+- Activities and days use **gap ordering** strings (e.g., `a0`, `a0m`, `a1`). Helpers in [`gapOrdering.ts`](../../src/features/app/planner/domain/events/gapOrdering.ts) calculate safe insertion points so concurrent inserts rarely collide and renumbering stays minimal.
 - Reducers always normalize incoming snapshots/events through `normalizePositions`, ensuring arrays remain sorted even if out-of-order payloads arrive.
 
 ## Persistence and recovery

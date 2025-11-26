@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { ACTIVITY_COPY } from '@/features/planner/domain/constants/activity';
+import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 
 type ButtonProps = {
   dayId: string;
@@ -16,7 +16,7 @@ type ButtonProps = {
 
 const addBlankAndSelect = vi.fn();
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   usePlannerContext: () => ({
     addBlankAndSelect,
     canEdit: true,
@@ -33,7 +33,7 @@ describe('AddCardButton', () => {
   });
 
   const renderButton = async (props: Partial<ButtonProps> = {}) => {
-    const addCardModule = await import('@/features/planner/components/dnd/AddCardButton');
+    const addCardModule = await import('@/features/app/planner/components/dnd/AddCardButton');
     const { AddCardButton } = addCardModule;
     return render(<AddCardButton dayId="d1" insertIndex={props.insertIndex ?? 0} {...props} />);
   };

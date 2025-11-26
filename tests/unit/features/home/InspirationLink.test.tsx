@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 import { InspirationLink } from '@/features/website/sections/InspirationLink';
-import boipeba from '@/features/planner/modules/inspiration/data/boipeba.json';
-import rome from '@/features/planner/modules/inspiration/data/rome.json';
-import type { InspirationDocument } from '@/features/planner/modules/inspiration/server/types';
+import boipeba from '@/features/app/planner/modules/inspiration/data/boipeba.json';
+import rome from '@/features/app/planner/modules/inspiration/data/rome.json';
+import type { InspirationDocument } from '@/features/app/planner/modules/inspiration/server/types';
 
 describe('InspirationLink', () => {
   it('renders destinations as links with correct hrefs', () => {

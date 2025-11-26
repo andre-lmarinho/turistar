@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useOnboardingCheck } from '@/features/planner/modules/onboarding/hooks/useOnboardingCheck';
+import { useOnboardingCheck } from '@/features/app/planner/modules/onboarding/hooks/useOnboardingCheck';
 
 beforeEach(() => {
   localStorage.clear();

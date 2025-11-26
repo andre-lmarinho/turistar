@@ -7,9 +7,9 @@ import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P } from '@/features/website/ui/typography';
 import { InspirationCard } from './components/InspirationCard';
 
-import type { InspirationDocument } from '@/features/planner/modules/inspiration/server/types';
-import boipeba from '@/features/planner/modules/inspiration/data/boipeba.json';
-import rome from '@/features/planner/modules/inspiration/data/rome.json';
+import type { InspirationDocument } from '@/features/app/planner/modules/inspiration/server/types';
+import boipeba from '@/features/app/planner/modules/inspiration/data/boipeba.json';
+import rome from '@/features/app/planner/modules/inspiration/data/rome.json';
 
 type InspirationPreview = InspirationDocument & { title_inspiration: string };
 
@@ -40,7 +40,7 @@ export function InspirationLink() {
       <ul className="mx-auto flex flex-wrap justify-center gap-6">
         {destinations.map((d) => (
           <li key={d.city}>
-            <Link href={`/inspiration/${d.city}`} className="block rounded-md">
+            <Link href={`/p/inspiration/${d.city}`} className="block rounded-md">
               <InspirationCard title={d.label} imageUrls={d.images} />
             </Link>
           </li>

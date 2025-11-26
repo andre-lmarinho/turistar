@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import { MapBoard } from '@/features/planner/components/map/MapBoard';
-import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { MapBoard } from '@/features/app/planner/components/map/MapBoard';
+import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 // Reuse the same mocks across tests
 const map = { fitBounds: vi.fn() };
@@ -35,7 +35,7 @@ vi.mock('react-leaflet', () => {
   };
 });
 
-vi.mock('@/features/planner/hooks/usePlanner', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
   usePlanner: () => ({
     planId: 'p1',
     dest: 'rome',
@@ -59,7 +59,7 @@ vi.mock('@/features/planner/hooks/usePlanner', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),

@@ -2,8 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { PlannerCreationForm } from '@/features/planner/components/PlannerCreationForm';
-import { useDestinationAutocomplete } from '@/features/planner/hooks/search/useDestinationAutocomplete';
+import { PlannerCreationForm } from '@/features/app/user/components/dashboard/PlannerCreationForm';
+import { useDestinationAutocomplete } from '@/features/app/planner/hooks/search/useDestinationAutocomplete';
 
 const { getCapturedProps, mockLocationSearchInput } = vi.hoisted(() => {
   let captured: unknown;
@@ -34,20 +34,20 @@ vi.mock('@/shared/ui/loading/LoadingScreen', () => ({
   LoadingScreen: () => null,
 }));
 
-vi.mock('@/features/planner/components/ui/LocationSearchInput', () => ({
+vi.mock('@/features/app/planner/components/ui/LocationSearchInput', () => ({
   __esModule: true,
   LocationSearchInput: mockLocationSearchInput,
 }));
 
-vi.mock('@/features/planner/server/createPlan', () => ({
+vi.mock('@/features/app/planner/server/createPlan', () => ({
   createPlannerPlan: vi.fn(),
 }));
 
-vi.mock('@/features/planner/infrastructure/supabase/planEditToken', () => ({
+vi.mock('@/features/app/planner/infrastructure/supabase/planEditToken', () => ({
   usePlanEditTokens: () => ({ saveEditToken: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/hooks/data/useRecentPlan', () => ({
+vi.mock('@/features/app/planner/hooks/data/useRecentPlan', () => ({
   useRecentPlan: () => ({ saveRecentPlan: vi.fn() }),
 }));
 

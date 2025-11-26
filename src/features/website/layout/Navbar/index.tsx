@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import { DesktopActions } from './components/DesktopActions';
 import { DesktopNavigation } from './components/DesktopNavigation';
-import { LogoLink } from './components/LogoLink';
 import { MenuToggleButton } from './components/MenuToggleButton';
 import { MobileMenu } from './components/MobileMenu';
+
+import { Logo } from '@/shared/ui/Logo';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -65,7 +66,7 @@ export function Navbar() {
         className="data-[elevated=true]:bg-background data-[elevated=true]:lg:border-border mx-auto max-w-6xl rounded-2xl border border-transparent bg-transparent px-4 transition-[background-color,border-color] duration-300 ease-out lg:px-8 data-[elevated=true]:lg:border"
       >
         <div className="flex items-center justify-between gap-3 md:gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-          <LogoLink />
+          <Logo href="/" />
           <DesktopNavigation />
           <DesktopActions />
           <MenuToggleButton isOpen={isMobileMenuOpen} onToggle={toggleMobileMenu} />

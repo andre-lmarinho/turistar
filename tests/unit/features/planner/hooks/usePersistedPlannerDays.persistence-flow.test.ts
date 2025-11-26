@@ -2,8 +2,8 @@ import { useRef, useState } from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Activity, DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import { usePersistedPlannerDays } from '@/features/planner/hooks/state/planner/usePersistedPlannerDays';
+import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { usePersistedPlannerDays } from '@/features/app/planner/hooks/state/planner/usePersistedPlannerDays';
 
 interface HarnessProps {
   initialDays: DayPlan[];

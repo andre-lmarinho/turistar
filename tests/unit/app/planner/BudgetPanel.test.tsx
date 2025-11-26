@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BudgetBoard } from '@/features/planner/components/budget/BudgetBoard';
-import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
+import { BudgetBoard } from '@/features/app/planner/components/budget/BudgetBoard';
+import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 let mockDays: DayPlan[] = [];
 
@@ -12,7 +12,7 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-vi.mock('@/features/planner/hooks/usePlanner', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
   usePlanner: () => ({
     planId: 'test',
     dest: 'rome',
@@ -36,7 +36,7 @@ vi.mock('@/features/planner/hooks/usePlanner', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),

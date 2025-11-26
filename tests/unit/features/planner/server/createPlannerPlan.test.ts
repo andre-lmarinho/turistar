@@ -4,7 +4,7 @@ vi.mock('@/server/actions/createPlan', () => ({
   createPlan: vi.fn(),
 }));
 
-import { createPlannerPlan } from '@/features/planner/server/createPlan';
+import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
 import { createPlan } from '@/server/actions/createPlan';
 
 describe('createPlannerPlan', () => {

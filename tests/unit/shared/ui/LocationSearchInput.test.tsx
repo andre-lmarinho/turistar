@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 import {
   LocationSearchInput,
   type LocationAutocompleteHook,
-} from '@/features/planner/components/ui/LocationSearchInput';
+} from '@/features/app/planner/components/ui/LocationSearchInput';
 
 const { mockUseDebounce } = vi.hoisted(() => {
   return {

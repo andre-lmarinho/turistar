@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import { ActivityDialogHeader } from '@/features/planner/components/dialog/ActivityDialogHeader';
+import { ActivityDialogHeader } from '@/features/app/planner/components/dialog/ActivityDialogHeader';
 
 describe('Accessibility — ActivityDialogHeader', () => {
   it('has labeled controls and no violations', async () => {

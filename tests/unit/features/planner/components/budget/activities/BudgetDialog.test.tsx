@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { BudgetDialog } from '@/features/planner/components/budget/BudgetDialog';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { BudgetDialog } from '@/features/app/planner/components/budget/BudgetDialog';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 describe('BudgetDialog', () => {
   const days: DayPlan[] = [

@@ -6,9 +6,9 @@ import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,
-} from '@/features/planner/services/supabase/planDaysMapper';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
-import type { Entry } from '@/features/planner/types/budget';
+} from '@/features/app/planner/services/supabase/planDaysMapper';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { Entry } from '@/features/app/planner/types/budget';
 
 export interface UserPlannerExperience {
   planId: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { OnboardingCarousel } from '@/features/planner/modules/onboarding/components/OnboardingCarousel';
-import { ONBOARDING_STEPS } from '@/features/planner/modules/onboarding/steps';
+import { OnboardingCarousel } from '@/features/app/planner/modules/onboarding/components/OnboardingCarousel';
+import { ONBOARDING_STEPS } from '@/features/app/planner/modules/onboarding/steps';
 
 describe('OnboardingCarousel', () => {
   it('renders all onboarding steps', () => {

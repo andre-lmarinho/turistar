@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 
 type Mode = 'planner' | 'map' | 'budget';
 
-vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/app/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   ModeToggleButton: ({ onChange }: { value: Mode; onChange: (m: Mode) => void }) => (
     <div>
@@ -21,12 +21,12 @@ vi.mock('@/shared/ui/calendar', () => ({
   DateRangePickerIcon: () => <div />, // not used
 }));
 
-vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
+vi.mock('@/features/app/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   ActivityDialog: () => null,
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
@@ -54,27 +54,27 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
+vi.mock('@/features/app/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
   OnboardingDialog: () => null,
 }));
 
-vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
+vi.mock('@/features/app/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
+vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
   PlannerBoard: () => <div data-testid="planner-board" />,
 }));
-vi.mock('@/features/planner/components/map/MapBoard', () => {
+vi.mock('@/features/app/planner/components/map/MapBoard', () => {
   const MockMapBoard = () => <div data-testid="map-view" />;
   return {
     __esModule: true,
@@ -82,7 +82,7 @@ vi.mock('@/features/planner/components/map/MapBoard', () => {
     MapBoard: MockMapBoard,
   };
 });
-vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
+vi.mock('@/features/app/planner/components/budget/BudgetBoard', () => ({
   __esModule: true,
   BudgetBoard: () => <div data-testid="budget-panel" />,
 }));
@@ -92,7 +92,7 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import { PlannerClient } from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
 describe('planner client mode switching', () => {
   it('shows only the active panel when toggling modes', async () => {

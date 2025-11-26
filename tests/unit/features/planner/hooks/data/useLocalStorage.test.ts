@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { useLocalStorage } from '@/features/planner/hooks/data/useLocalStorage';
+import { useLocalStorage } from '@/features/app/planner/hooks/data/useLocalStorage';
 
 describe('useLocalStorage', () => {
   afterEach(() => {

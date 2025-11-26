@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { within } from '@testing-library/react';
 import { closestCenter } from '@dnd-kit/core';
-import { PlannerBoard } from '@/features/planner/components/dnd/PlannerBoard';
-import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
+import { PlannerBoard } from '@/features/app/planner/components/dnd/PlannerBoard';
+import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
+import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 import { vi } from 'vitest';
 
 function buildActivities(prefix: string, count: number): Activity[] {
@@ -17,7 +17,7 @@ function buildActivities(prefix: string, count: number): Activity[] {
 
 let mockDays: DayPlan[] = [];
 
-vi.mock('@/features/planner/hooks/usePlanner', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
   usePlanner: () => ({
     planId: 'p1',
     dest: 'rome',
@@ -41,7 +41,7 @@ vi.mock('@/features/planner/hooks/usePlanner', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/hooks/useSelectedActivity', () => ({
+vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),

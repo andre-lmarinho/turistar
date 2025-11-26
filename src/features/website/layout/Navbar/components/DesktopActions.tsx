@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { useRecentPlan } from '@/features/planner/hooks/data/useRecentPlan';
+import { useRecentPlan } from '@/features/app/planner/hooks/data/useRecentPlan';
 import { Button } from '@/shared/ui/button';
 
 export function DesktopActions() {
@@ -14,7 +14,7 @@ export function DesktopActions() {
     const query = new URLSearchParams({ dest, start, end }).toString();
 
     continuePlanningButton = (
-      <Button href={`/planner/${slug}?${query}`} variant="accent">
+      <Button href={`/p/${slug}?${query}`} variant="accent">
         Continue Planning
       </Button>
     );

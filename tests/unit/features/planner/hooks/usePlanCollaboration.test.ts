@@ -1,13 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type {
   PlanEvent,
   PlanEventInsert,
   PlanSnapshot,
-} from '@/features/planner/domain/types/PlanEvent';
-import { usePlanCollaboration } from '@/features/planner/hooks/data/usePlanCollaboration';
+} from '@/features/app/planner/domain/types/PlanEvent';
+import { usePlanCollaboration } from '@/features/app/planner/hooks/data/usePlanCollaboration';
 
 const supabaseMocks = vi.hoisted(() => {
   const fetchSnapshot = vi.fn<() => Promise<PlanSnapshot>>();
@@ -25,14 +25,14 @@ const supabaseMocks = vi.hoisted(() => {
   return { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan };
 });
 
-vi.mock('@/features/planner/services/supabase/planEventsQueries', () => ({
+vi.mock('@/features/app/planner/services/supabase/planEventsQueries', () => ({
   __esModule: true,
   fetchPlanSnapshot: supabaseMocks.fetchSnapshot,
   fetchPlanEvents: supabaseMocks.fetchEvents,
   appendPlanEvents: supabaseMocks.appendEvents,
 }));
 
-vi.mock('@/features/planner/services/supabase/planEventsRealtime', () => ({
+vi.mock('@/features/app/planner/services/supabase/planEventsRealtime', () => ({
   __esModule: true,
   subscribeToPlanEvents: supabaseMocks.subscribeToPlan,
 }));

@@ -1,8 +1,8 @@
 import {
   mapPlanDaysFromSupabase,
   type SupabasePlanDayRow,
-} from '@/features/planner/services/supabase/planDaysMapper';
-import { getDefaultActivityColor } from '@/features/planner/domain/constants/colors';
+} from '@/features/app/planner/services/supabase/planDaysMapper';
+import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
 
 describe('mapPlanDaysFromSupabase', () => {
   it('maps supabase rows to day plans with activity details', () => {

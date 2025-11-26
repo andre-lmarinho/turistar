@@ -2,16 +2,16 @@ import React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { BudgetRowView } from '@/features/planner/components/budget/BudgetRowView';
-import { BudgetRowEdit } from '@/features/planner/components/budget/BudgetRowEdit';
-import { BudgetRowNew } from '@/features/planner/components/budget/BudgetRowNew';
-import type { Entry, CategoryKey } from '@/features/planner/types/budget';
+import { BudgetRowView } from '@/features/app/planner/components/budget/BudgetRowView';
+import { BudgetRowEdit } from '@/features/app/planner/components/budget/BudgetRowEdit';
+import { BudgetRowNew } from '@/features/app/planner/components/budget/BudgetRowNew';
+import type { Entry, CategoryKey } from '@/features/app/planner/types/budget';
 
 const setDescMock = vi.fn();
 const setCatMock = vi.fn();
 const setAmountMock = vi.fn();
 
-vi.mock('@/features/planner/hooks/BudgetContext', () => ({
+vi.mock('@/features/app/planner/hooks/BudgetContext', () => ({
   useBudgetContext: () => ({
     desc: '',
     setDesc: setDescMock as unknown as Dispatch<SetStateAction<string>>,

@@ -1,7 +1,7 @@
-import { formatDayPlan } from '@/features/planner/services/days/formatDayPlan';
-import { syncDaysWithTripRange } from '@/features/planner/services/days/syncDaysWithTripRange';
+import { formatDayPlan } from '@/features/app/planner/services/days/formatDayPlan';
+import { syncDaysWithTripRange } from '@/features/app/planner/services/days/syncDaysWithTripRange';
 import { parseISO } from 'date-fns';
-import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 
 function buildActivity(id: string): Activity {
   return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };

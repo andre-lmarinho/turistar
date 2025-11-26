@@ -5,17 +5,17 @@ import { vi } from 'vitest';
 
 const { closeSpy } = vi.hoisted(() => ({ closeSpy: vi.fn() }));
 
-vi.mock('@/features/planner/components/dialog/ActivityDialogHeader', () => ({
+vi.mock('@/features/app/planner/components/dialog/ActivityDialogHeader', () => ({
   __esModule: true,
   ActivityDialogHeader: () => <div data-testid="activity-dialog-header" />,
 }));
 
-vi.mock('@/features/planner/components/dialog/ActivityDialogForm', () => ({
+vi.mock('@/features/app/planner/components/dialog/ActivityDialogForm', () => ({
   __esModule: true,
   ActivityDialogForm: () => <form aria-label="Activity form" />,
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   usePlannerContext: () => ({
     selectedActivity: {
@@ -41,7 +41,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-import { ActivityDialog } from '@/features/planner/components/dialog/ActivityDialog';
+import { ActivityDialog } from '@/features/app/planner/components/dialog/ActivityDialog';
 
 describe('Accessibility — ActivityDialog', () => {
   it('exposes dialog semantics and closes on Escape', async () => {

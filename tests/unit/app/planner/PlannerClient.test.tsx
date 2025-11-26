@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { PlannerClient } from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
 let mockPlanId = 'plan1';
 
@@ -47,7 +47,7 @@ const onboardingMocks = vi.hoisted(() => {
   return { OnboardingProvider, useOnboardingContext, OnboardingDialog };
 });
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
@@ -76,17 +76,17 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
+vi.mock('@/features/app/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   ActivityDialog: () => null,
 }));
 
-vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
+vi.mock('@/features/app/planner/hooks/budget/BudgetContext', () => ({
   __esModule: true,
   BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
@@ -96,21 +96,21 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock('@/features/planner/components/dnd/PlannerBoard', () => ({
+vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => ({
   __esModule: true,
   PlannerBoard: () => <div data-testid="board" />,
 }));
-vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
+vi.mock('@/features/app/planner/components/budget/BudgetBoard', () => ({
   __esModule: true,
   BudgetBoard: () => <div data-testid="budget" />,
 }));
-vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
+vi.mock('@/features/app/planner/hooks/onboarding/OnboardingContext', () => ({
   __esModule: true,
   OnboardingProvider: onboardingMocks.OnboardingProvider,
   useOnboardingContext: onboardingMocks.useOnboardingContext,
 }));
 
-vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
+vi.mock('@/features/app/planner/components/onboarding/OnboardingDialog', () => ({
   __esModule: true,
   OnboardingDialog: onboardingMocks.OnboardingDialog,
 }));
@@ -124,7 +124,7 @@ vi.mock('@/shared/ui/calendar', async () => {
   };
 });
 
-vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/app/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   ModeToggleButton: () => <div data-testid="mode-toggle" />,
 }));
