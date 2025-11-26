@@ -25,6 +25,8 @@ type PlanRecord = {
   user_id: string | null;
   edit_token: string;
   budget: number | null;
+  start_date?: string | null;
+  end_date?: string | null;
 } | null;
 
 type DayRecord = SupabasePlanDayRow[] | null;
@@ -180,9 +182,7 @@ describe('getPublicPlannerExperience', () => {
     };
 
     const entryResult: SupabaseResult<EntryRecord> = {
-      data: [
-        { id: 'entry-1', description: 'Flight', category: 'travel', amount: 900 },
-      ],
+      data: [{ id: 'entry-1', description: 'Flight', category: 'travel', amount: 900 }],
       error: null,
     };
 
@@ -245,7 +245,7 @@ describe('getPublicPlannerExperience', () => {
     expect(notFound).toHaveBeenCalledTimes(1);
   });
 
-  it('calls notFound when no destination is available', async () => {
+  it('returns a fallback destination when no destination is available', async () => {
     const planResult = {
       data: {
         id: 'plan-2',
@@ -254,6 +254,8 @@ describe('getPublicPlannerExperience', () => {
         user_id: null,
         edit_token: 'token-2',
         budget: null,
+        start_date: null,
+        end_date: null,
       },
       error: null,
     };
@@ -263,8 +265,19 @@ describe('getPublicPlannerExperience', () => {
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
 
-    await expect(getPublicPlannerExperience({ slug: 'missing-dest' })).rejects.toBe(notFoundError);
-    expect(notFound).toHaveBeenCalledTimes(1);
+    const experience = await getPublicPlannerExperience({ slug: 'missing-dest' });
+
+    expect(notFound).not.toHaveBeenCalled();
+    expect(experience).toEqual({
+      planId: 'plan-2',
+      title: 'Untitled',
+      destination: 'Destination TBD',
+      initialDays: undefined,
+      initialBudget: undefined,
+      initialEntries: undefined,
+      canEdit: false,
+      editToken: undefined,
+    });
   });
 
   it('returns experience without initial days when the day query fails', async () => {

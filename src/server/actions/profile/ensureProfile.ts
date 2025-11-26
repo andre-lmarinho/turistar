@@ -3,7 +3,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import slugify from '@sindresorhus/slugify';
 
-import { UnauthorizedError, type SupabaseUser } from '@/shared/lib/auth/session';
+import {
+  UnauthorizedError,
+  isAuthSessionMissingError,
+  type SupabaseUser,
+} from '@/shared/lib/auth/session';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { Database } from '@/shared/types/supabase';
 
@@ -25,6 +29,10 @@ export async function ensureProfile({ client }: EnsureProfileOptions = {}): Prom
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
+    if (isAuthSessionMissingError(error)) {
+      throw new UnauthorizedError();
+    }
+
     throw error;
   }
 
@@ -77,7 +85,10 @@ function buildSlugBase(user: SupabaseUser): string {
     (user.email ? user.email.split('@')[0] : null) ??
     user.id;
 
-  return slugify(slugCandidate, { separator: '-', lowercase: true }) || slugify(user.id, { separator: '-', lowercase: true });
+  return (
+    slugify(slugCandidate, { separator: '-', lowercase: true }) ||
+    slugify(user.id, { separator: '-', lowercase: true })
+  );
 }
 
 function readMetadataString(metadata: Record<string, unknown> | null, key: string): string | null {

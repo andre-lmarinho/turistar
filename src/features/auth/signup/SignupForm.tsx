@@ -45,6 +45,12 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
         ? { ...data.session, expires_at: data.session.expires_at ?? null }
         : null;
 
+      if (!session) {
+        setFormError('Check your email to confirm your account before signing in.');
+        setIsSubmitting(false);
+        return;
+      }
+
       await syncServerSession('SIGNED_IN', session);
 
       const slug = await finalizeProfile();

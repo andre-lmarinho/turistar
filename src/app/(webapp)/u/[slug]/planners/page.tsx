@@ -7,9 +7,9 @@ import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
 
 interface DashboardPlannersPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 function formatDateRange(start: string | null, end: string | null) {
@@ -46,18 +46,17 @@ function formatUpdatedAt(updatedAt: string | null) {
   }).format(new Date(updatedAt));
 }
 
-export default async function DashboardPlannersPage({
-  params,
-}: DashboardPlannersPageProps) {
-  const slug = params.slug?.trim();
+export default async function DashboardPlannersPage({ params }: DashboardPlannersPageProps) {
+  const { slug } = await params;
+  const normalizedSlug = slug?.trim();
 
-  if (!slug) {
+  if (!normalizedSlug) {
     redirect('/login');
   }
 
   try {
     const user = await requireUser();
-    const profile = await getUserProfileBySlug(slug);
+    const profile = await getUserProfileBySlug(normalizedSlug);
 
     if (!profile || profile.userId !== user.id) {
       redirect('/login');
@@ -67,18 +66,22 @@ export default async function DashboardPlannersPage({
 
     return (
       <div className="flex flex-col gap-8">
-        <header className="rounded-xl border border-border bg-card p-6 shadow-sm">
-          <p className="text-sm text-muted-foreground">Welcome back</p>
+        <header className="border-border bg-card rounded-xl border p-6 shadow-sm">
+          <p className="text-muted-foreground text-sm">Welcome back</p>
           <h1 className="text-2xl font-semibold">{profile.displayName ?? `@${profile.slug}`}</h1>
-          <p className="text-sm text-muted-foreground">Manage your trips and keep planning momentum.</p>
+          <p className="text-muted-foreground text-sm">
+            Manage your trips and keep planning momentum.
+          </p>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">
-          <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <section className="border-border bg-card rounded-xl border p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">Your planners</h2>
-                <p className="text-sm text-muted-foreground">Quickly jump back into any itinerary.</p>
+                <p className="text-muted-foreground text-sm">
+                  Quickly jump back into any itinerary.
+                </p>
               </div>
             </div>
 
@@ -90,13 +93,19 @@ export default async function DashboardPlannersPage({
             ) : (
               <ul className="mt-6 space-y-4">
                 {plans.map((plan) => (
-                  <li key={plan.id} className="rounded-lg border border-border p-4">
+                  <li key={plan.id} className="border-border rounded-lg border p-4">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                       <div>
-                        <p className="text-sm text-muted-foreground">{plan.destination ?? 'Destination TBD'}</p>
+                        <p className="text-muted-foreground text-sm">
+                          {plan.destination ?? 'Destination TBD'}
+                        </p>
                         <h3 className="text-xl font-semibold">{plan.title}</h3>
-                        <p className="text-sm text-muted-foreground">{formatDateRange(plan.startDate, plan.endDate)}</p>
-                        <p className="text-xs text-muted-foreground">Last updated {formatUpdatedAt(plan.updatedAt)}</p>
+                        <p className="text-muted-foreground text-sm">
+                          {formatDateRange(plan.startDate, plan.endDate)}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          Last updated {formatUpdatedAt(plan.updatedAt)}
+                        </p>
                       </div>
                       <PlanQuickActions plan={plan} />
                     </div>

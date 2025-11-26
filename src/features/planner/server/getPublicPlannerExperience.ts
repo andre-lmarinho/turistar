@@ -7,6 +7,8 @@ import {
 } from '../services/supabase/planDaysMapper';
 import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/planner/types/budget';
+import { buildInitialDays } from '@/features/planner/services/days/initialDays';
+import { eachDayOfInterval } from 'date-fns';
 
 export interface PlannerExperiencePayload {
   planId: string;
@@ -36,7 +38,9 @@ export async function getPublicPlannerExperience({
 
   const { data: planRow, error: planErr } = (await supabase
     .from('plans')
-    .select('id, title, plan_destinations(destinations(name)), user_id, edit_token, budget')
+    .select(
+      'id, title, plan_destinations(destinations(name)), user_id, edit_token, budget, start_date, end_date'
+    )
     .eq('public_slug', slug)
     .eq('is_public', true)
     .single()) as unknown as {
@@ -47,6 +51,8 @@ export async function getPublicPlannerExperience({
       edit_token: string;
       budget: number | null;
       plan_destinations: { destinations: { name: string } }[] | null;
+      start_date: string | null;
+      end_date: string | null;
     } | null;
     error: unknown;
   };
@@ -60,11 +66,8 @@ export async function getPublicPlannerExperience({
   const planEditToken = planRow.edit_token;
   const initialBudget = planRow.budget ?? undefined;
   const title = planRow.title ?? undefined;
-  const destination = dest ?? planRow.plan_destinations?.[0]?.destinations?.name ?? undefined;
-
-  if (!destination) {
-    notFound();
-  }
+  const destination =
+    dest ?? planRow.plan_destinations?.[0]?.destinations?.name ?? 'Destination TBD';
 
   const isOwner = viewerUserId && planOwnerId && viewerUserId === planOwnerId;
   const tokenMatches = editToken && editToken === planEditToken;
@@ -80,7 +83,22 @@ export async function getPublicPlannerExperience({
     error: unknown;
   };
 
-  const initialDays = !dayErr && dayRows ? mapPlanDaysFromSupabase(dayRows) : undefined;
+  let initialDays = !dayErr && dayRows ? mapPlanDaysFromSupabase(dayRows) : undefined;
+
+  if (!initialDays || initialDays.length === 0) {
+    const startDate = planRow.start_date ? new Date(planRow.start_date) : null;
+    const endDate = planRow.end_date ? new Date(planRow.end_date) : null;
+
+    if (
+      startDate &&
+      endDate &&
+      !Number.isNaN(startDate.valueOf()) &&
+      !Number.isNaN(endDate.valueOf())
+    ) {
+      const tripDays = eachDayOfInterval({ start: startDate, end: endDate });
+      initialDays = buildInitialDays(tripDays);
+    }
+  }
 
   const { data: entryRows } = (await supabase
     .from('budget_entries')

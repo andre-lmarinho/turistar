@@ -16,9 +16,9 @@ describe('createPlan action', () => {
     const rpc = vi.fn().mockResolvedValue({
       data: [
         {
-          plan_id: 'plan-1',
-          public_slug: 'slug-1',
-          edit_token: 'token-1',
+          result_plan_id: 'plan-1',
+          result_public_slug: 'slug-1',
+          result_edit_token: 'token-1',
         },
       ],
       error: null,
@@ -49,9 +49,9 @@ describe('createPlan action', () => {
   it('supports object responses from RPC', async () => {
     const rpc = vi.fn().mockResolvedValue({
       data: {
-        plan_id: 'plan-2',
-        public_slug: 'slug-2',
-        edit_token: 'token-2',
+        result_plan_id: 'plan-2',
+        result_public_slug: 'slug-2',
+        result_edit_token: 'token-2',
       },
       error: null,
     });
@@ -85,7 +85,13 @@ describe('createPlan action', () => {
 
   it('includes the provided user id in the RPC payload', async () => {
     const rpc = vi.fn().mockResolvedValue({
-      data: [{ plan_id: 'plan-1', public_slug: 'slug', edit_token: 'token' }],
+      data: [
+        {
+          result_plan_id: 'plan-1',
+          result_public_slug: 'slug',
+          result_edit_token: 'token',
+        },
+      ],
       error: null,
     });
     vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<

@@ -42,7 +42,7 @@ export function PlanQuickActions({ plan }: PlanQuickActionsProps) {
   return (
     <div className="flex flex-wrap gap-2">
       <Link
-        href={`/planner/${plan.id}`}
+        href={`/planner/${plan.publicSlug}`}
         className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-md px-3 py-1 text-sm font-medium"
       >
         Open plan
@@ -63,7 +63,7 @@ export function PlanQuickActions({ plan }: PlanQuickActionsProps) {
       </button>
       <button
         type="button"
-        className="border-dashed border-input text-muted-foreground inline-flex items-center rounded-md border px-3 py-1 text-sm"
+        className="border-input text-muted-foreground inline-flex items-center rounded-md border border-dashed px-3 py-1 text-sm"
         disabled
         title="Rename functionality is coming soon"
       >
