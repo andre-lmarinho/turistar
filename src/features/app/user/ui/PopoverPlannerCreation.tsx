@@ -1,6 +1,7 @@
 'use client';
 
 import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
+import { createUserPlan } from '@/features/app/planner/server/createPlan';
 import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
 import { PlannerCreationForm } from './PlannerCreationForm';
 
@@ -28,7 +29,11 @@ export function PopoverPlannerCreation({
     >
       <PopoverHeader title="Create Planner" onClose={onClose} />
       <div className="space-y-2 p-4">
-        <PlannerCreationForm onPlanCreated={onPlanCreated} persistEditTokens={persistEditTokens} />
+        <PlannerCreationForm
+          onPlanCreated={onPlanCreated}
+          persistEditTokens={persistEditTokens}
+          createPlanFn={createUserPlan}
+        />
         {lastPlan ? (
           <p className="text-muted-foreground text-xs">
             Planner created: {lastPlan.recentPlan.dest}
