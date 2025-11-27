@@ -1,8 +1,11 @@
 {
+  "slug": "boipeba",
   "title": "Boipeba and Region",
   "title_inspiration": "A weekend in Boipeba",
   "duration_days": 3,
   "destination": "Boipeba and surroundings",
+  "image": "/inspiration/boipeba/preview.jpg",
+  "tag": "Template",
   "description": "This itinerary explores the islands of Boipeba and Tinhare over 3 days, combining paradisiacal beaches, boat trips to natural pools, mangroves, historical culture in Cairu and Morro de Sao Paulo, and the flavors of Bahian cuisine.",
   "budget": {
     "currency": "USD",

@@ -1,8 +1,10 @@
 {
+  "slug": "rome",
   "title": "Rome",
   "title_inspiration": "A 4 day trip to Rome",
   "duration_days": 4,
   "destination": "Rome",
+  "image": "/inspiration/rome/preview.jpg",
   "description": "",
   "budget": {
     "currency": "USD",

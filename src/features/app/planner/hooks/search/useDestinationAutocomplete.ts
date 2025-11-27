@@ -3,7 +3,7 @@
 import { createLocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
 
 /**
- * Geoapify autocomplete tailored to city/state/country lookups for the marketing home page.
+ * Geoapify autocomplete tailored to city/state/country lookups (used in creation flows).
  */
 export const useDestinationAutocomplete = createLocationAutocompleteHook({
   endpoint: '/api/autocomplete',

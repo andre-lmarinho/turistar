@@ -1,7 +1,6 @@
 'use client';
 
-import { X } from '@/shared/ui/icon';
-import { PopoverClose, PopoverContent } from '@/shared/ui/popover';
+import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
 
 interface CardColorsPopoverProps {
   titleId?: string;
@@ -32,18 +31,8 @@ export function CardColorsPopover({
       className="w-[304px] p-0"
       aria-labelledby={titleId}
     >
-      <div className="flex items-center justify-between border-b px-4 py-2">
-        <h3 id={titleId} className="font-bold">
-          Card Background
-        </h3>
-        <PopoverClose
-          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
-          aria-label="Close"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </PopoverClose>
-      </div>
-      <div className="gap-4 p-4">
+      <PopoverHeader title="Card Background" titleId={titleId} />
+      <div className="space-y-3 p-4">
         {imageUrl ? (
           <button
             type="button"
@@ -54,7 +43,7 @@ export function CardColorsPopover({
           </button>
         ) : null}
 
-        <div className="my-4 border-b-1 py-4">
+        <div>
           <span className="text-xs font-bold">Colors</span>
           <div className="mt-2 flex flex-wrap justify-between gap-2">
             {colors.map((color) => (
@@ -71,8 +60,8 @@ export function CardColorsPopover({
             ))}
           </div>
         </div>
-
-        <div className="space-y-2">
+        <hr />
+        <div>
           <label
             htmlFor={uploadInputId}
             className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"

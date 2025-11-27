@@ -1,7 +1,6 @@
 'use client';
 
-import { X } from '@/shared/ui/icon';
-import { PopoverClose, PopoverContent } from '@/shared/ui/popover';
+import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 interface DayPickerPopoverProps {
@@ -31,17 +30,7 @@ export function DayPickerPopover({
       className="w-72 p-0"
       aria-labelledby={titleId}
     >
-      <div className="flex items-center justify-between border-b px-4 py-2">
-        <h3 id={titleId} className="font-bold">
-          Change Day
-        </h3>
-        <PopoverClose
-          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
-          aria-label="Close"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </PopoverClose>
-      </div>
+      <PopoverHeader title="Change Day" titleId={titleId} />
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">
           <label htmlFor="day-select" className="text-xs font-bold">

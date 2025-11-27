@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
-import { PlannerGallery } from '@/features/app/user/components/dashboard/PlannerGallery';
+import { InspirationGallery } from '@/features/app/user/dashboard/InspirationGallery';
+import { PlannerGallery } from '@/features/app/user/dashboard/PlannerGallery';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
@@ -37,21 +37,9 @@ export default async function DashboardPlannersPage({ params }: DashboardPlanner
 
     const plans = await getUserPlanners(user.id);
 
-    const inspirationItems = [
-      { slug: 'paris', title: 'Paris escape', image: '/previews/preview_01.png' },
-      { slug: 'rome', title: 'Rome highlights', image: '/previews/preview_02.png' },
-      {
-        slug: 'boipeba',
-        title: 'Boipeba weekend',
-        image: '/previews/preview_03.png',
-        tag: 'Template',
-      },
-      { slug: 'lisbon', title: 'Lisbon vibes', image: '/previews/preview_04.png' },
-    ];
-
     return (
       <div className="flex flex-col gap-8">
-        <InspirationGallery items={inspirationItems} />
+        <InspirationGallery />
         <PlannerGallery plans={plans} />
       </div>
     );

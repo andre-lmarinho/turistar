@@ -6,15 +6,13 @@ import { addDays } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
 import { DateRangePicker } from '@/shared/ui/calendar';
-import { LoadingScreen } from '@/shared/ui/loading/LoadingScreen';
+import { LoadingScreen } from '@/shared/ui/loading';
 import { LocationSearchInput } from '@/features/app/planner/components/ui/LocationSearchInput';
-
-import { useDestinationAutocomplete } from '@/features/app/planner/hooks/search/useDestinationAutocomplete';
-import { useRecentPlan } from '@/features/app/planner/hooks/data/useRecentPlan';
 
 import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
 import { usePlanEditTokens } from '@/features/app/planner/infrastructure/supabase/planEditToken';
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
+import { useDestinationAutocomplete } from '@/features/app/planner/hooks/search/useDestinationAutocomplete';
 
 import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
 
@@ -46,7 +44,6 @@ export function PlannerCreationForm({
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const { saveEditToken } = usePlanEditTokens({ enabled: persistEditTokens });
-  const { saveRecentPlan } = useRecentPlan();
 
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -100,7 +97,6 @@ export function PlannerCreationForm({
       if (persistEditTokens) {
         saveEditToken(planId, editToken);
       }
-      saveRecentPlan(recentPlan);
 
       if (onPlanCreated) {
         await onPlanCreated(planResult);
@@ -132,54 +128,51 @@ export function PlannerCreationForm({
   return (
     <>
       {loading ? <LoadingScreen text="Creating plan..." /> : null}
+      <form onSubmit={handleSubmit} noValidate className="grid gap-4">
+        <fieldset className="grid gap-2" aria-labelledby="dest-label">
+          <legend id="dest-label" className="sr-only">
+            Destination
+          </legend>
+          <LocationSearchInput
+            id="dest-input"
+            value={dest}
+            onChange={handleDestChange}
+            placeholder="Destination"
+            autocompleteHook={useDestinationAutocomplete}
+          />
+        </fieldset>
 
-      <div className="mt-12">
-        <form onSubmit={handleSubmit} noValidate className="grid gap-4">
-          <fieldset className="grid gap-2" aria-labelledby="dest-label">
-            <legend id="dest-label" className="sr-only">
-              Destination
-            </legend>
-            <LocationSearchInput
-              id="dest-input"
-              value={dest}
-              onChange={handleDestChange}
-              placeholder="Destination"
-              autocompleteHook={useDestinationAutocomplete}
+        <fieldset className="grid gap-2" aria-labelledby="daterange-label">
+          <legend id="daterange-label" className="sr-only">
+            Travel dates
+          </legend>
+
+          {mounted ? (
+            <DateRangePicker
+              value={range}
+              onChange={handleRangeChange}
+              aria-describedby={error ? 'date-error' : undefined}
+              aria-invalid={Boolean(error)}
             />
-          </fieldset>
+          ) : (
+            <div className="bg-muted/40 border-border text-muted-foreground h-11 rounded-md border px-3 py-2 text-sm" />
+          )}
+        </fieldset>
 
-          <fieldset className="grid gap-2" aria-labelledby="daterange-label">
-            <legend id="daterange-label" className="sr-only">
-              Travel dates
-            </legend>
+        <button
+          className="bg-primary text-primary-foreground hover:bg-primary/90 mx-auto w-full rounded-md px-4 py-2 text-sm font-medium transition-colors"
+          type="submit"
+          disabled={loading}
+        >
+          Start Your Planning
+        </button>
 
-            {mounted ? (
-              <DateRangePicker
-                value={range}
-                onChange={handleRangeChange}
-                aria-describedby={error ? 'date-error' : undefined}
-                aria-invalid={Boolean(error)}
-              />
-            ) : (
-              <div className="bg-muted/40 border-border text-muted-foreground h-11 rounded-md border px-3 py-2 text-sm" />
-            )}
-          </fieldset>
-
-          <button
-            className="bg-primary text-primary-foreground hover:bg-primary/90 mx-auto w-full rounded-md px-4 py-2 text-sm font-medium transition-colors"
-            type="submit"
-            disabled={loading}
-          >
-            Start Your Planning
-          </button>
-
-          {error ? (
-            <p id="date-error" role="alert" className="text-sm text-[var(--destructive)]">
-              {error}
-            </p>
-          ) : null}
-        </form>
-      </div>
+        {error ? (
+          <p id="date-error" role="alert" className="text-sm text-[var(--destructive)]">
+            {error}
+          </p>
+        ) : null}
+      </form>
     </>
   );
 }

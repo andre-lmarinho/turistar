@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Spinner } from '@/shared/ui/loading/Spinner';
+import { Spinner } from '@/shared/ui/loading';
 import { useDebounce } from '@/features/app/planner/hooks/search/useDebounce';
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 import type { LocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';

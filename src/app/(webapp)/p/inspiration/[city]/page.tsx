@@ -1,6 +1,6 @@
 import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
-import { getInspirationExperienceProps } from '@/features/app/planner/modules/inspiration/server/getInspirationExperienceProps';
-import { inspirationPageMetadata } from '@/features/app/planner/modules/inspiration/server/pageMetadata';
+import { getInspirationExperienceProps } from '@/features/app/inspiration/server/getInspirationExperienceProps';
+import { inspirationPageMetadata } from '@/features/app/inspiration/server/pageMetadata';
 
 type PageProps = {
   params: Promise<{ city: string }>;

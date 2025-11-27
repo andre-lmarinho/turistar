@@ -7,7 +7,7 @@ import { DesktopNavigation } from './components/DesktopNavigation';
 import { MenuToggleButton } from './components/MenuToggleButton';
 import { MobileMenu } from './components/MobileMenu';
 
-import { Logo } from '@/shared/ui/Logo';
+import { Logo } from '@/shared/ui/logo';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

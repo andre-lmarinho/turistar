@@ -4,7 +4,7 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@/shared/ui/icon';
 import { DateRange } from 'react-day-picker';
-import { Popover, PopoverContent, PopoverTrigger } from '../../../shared/ui/popover';
+import { Popover, PopoverContent, PopoverTriggerButton } from '../../../shared/ui/popover';
 import { Calendar } from './Calendar';
 import { cn } from '@/shared/utils/cn';
 
@@ -26,28 +26,25 @@ export function DateRangePicker({ className, value, onChange, disabled = false }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
+      <PopoverTriggerButton
+        className={cn(
+          'border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
+          !value?.from && 'text-muted-foreground',
+          className
+        )}
+        aria-label={label}
+        disabled={disabled}
+      >
+        <span
           className={cn(
-            'border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
-            !value?.from && 'text-muted-foreground',
-            className
+            'flex-1 truncate text-left',
+            !value?.from && 'text-muted-foreground italic'
           )}
-          aria-label={label}
-          disabled={disabled}
         >
-          <span
-            className={cn(
-              'flex-1 truncate text-left',
-              !value?.from && 'text-muted-foreground italic'
-            )}
-          >
-            {label}
-          </span>
-          <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
-        </button>
-      </PopoverTrigger>
+          {label}
+        </span>
+        <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
+      </PopoverTriggerButton>
 
       <PopoverContent
         className="mt-2 w-full max-w-[27rem] p-0 shadow-lg"
@@ -88,21 +85,18 @@ export function DateRangePickerIcon({ className, value, onChange, disabled = fal
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          title={label}
-          aria-label={label}
-          data-testid="date-picker"
-          className={cn(
-            'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
-            className
-          )}
-          disabled={disabled}
-        >
-          <CalendarIcon className="size-5" aria-hidden="true" />
-        </button>
-      </PopoverTrigger>
+      <PopoverTriggerButton
+        title={label}
+        aria-label={label}
+        data-testid="date-picker"
+        className={cn(
+          'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
+          className
+        )}
+        disabled={disabled}
+      >
+        <CalendarIcon className="size-5" aria-hidden="true" />
+      </PopoverTriggerButton>
       <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
         <Calendar
           mode="range"

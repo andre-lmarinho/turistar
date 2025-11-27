@@ -4,7 +4,7 @@ import React, { useEffect, useId, useState } from 'react';
 import Image from 'next/image';
 import { ChevronDown, Palette, Trash2, X } from '@/shared/ui/icon';
 import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { Popover, PopoverTrigger } from '@/shared/ui/popover';
+import { Popover, PopoverTriggerButton } from '@/shared/ui/popover';
 import { DEFAULT_COLORS } from '@/features/app/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/features/app/planner/domain/constants/activity';
 import { isTouchDevice } from '@/shared/utils/isTouchDevice';
@@ -118,16 +118,13 @@ export function ActivityDialogHeader({
               open={activePopup === 'date'}
               onOpenChange={(open) => setActivePopup(open ? 'date' : null)}
             >
-              <PopoverTrigger asChild>
-                <button
-                  ref={dateButtonRef}
-                  type="button"
-                  className="border-border bg-background text-foreground hover:bg-border inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors"
-                >
-                  {availableDays.find((day) => day.id === activity.dayId)?.label ?? 'Change Day'}
-                  <ChevronDown className="size-4" aria-hidden="true" />
-                </button>
-              </PopoverTrigger>
+              <PopoverTriggerButton
+                ref={dateButtonRef}
+                className="border-border bg-background text-foreground hover:bg-border inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors"
+              >
+                {availableDays.find((day) => day.id === activity.dayId)?.label ?? 'Change Day'}
+                <ChevronDown className="size-4" aria-hidden="true" />
+              </PopoverTriggerButton>
               {availableDays.length > 0 ? (
                 <DayPickerPopover
                   days={availableDays}
@@ -157,17 +154,14 @@ export function ActivityDialogHeader({
               open={activePopup === 'color'}
               onOpenChange={(open) => setActivePopup(open ? 'color' : null)}
             >
-              <PopoverTrigger asChild>
-                <button
-                  ref={colorButtonRef}
-                  type="button"
-                  title="Card Color"
-                  className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
-                >
-                  <Palette className="size-4" aria-hidden="true" />
-                  <span className="sr-only">Card color</span>
-                </button>
-              </PopoverTrigger>
+              <PopoverTriggerButton
+                ref={colorButtonRef}
+                title="Card Color"
+                className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
+              >
+                <Palette className="size-4" aria-hidden="true" />
+                <span className="sr-only">Card color</span>
+              </PopoverTriggerButton>
               <CardColorsPopover
                 imageUrl={editedImageUrl}
                 onRemoveImage={handleRemoveImage}

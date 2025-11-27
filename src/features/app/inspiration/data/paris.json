@@ -1,8 +1,10 @@
 {
+  "slug": "paris",
   "title": "Paris",
   "title_inspiration": "A weekend in Paris",
   "duration_days": 2,
   "destination": "Paris",
+  "image": "/inspiration/paris/preview.jpg",
   "itinerary": [
     {
       "day": 1,
