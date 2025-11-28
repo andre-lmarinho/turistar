@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-import { ACTIVITY_COPY } from '@/features/planner/domain/constants/activity';
+import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 
-const plannerUrl = '/planner/plan-e2e-001';
+const plannerUrl = '/p/plan-e2e-001';
 
 const selectors = {
   trigger: () => ACTIVITY_COPY.inlineAdd.collapsedLabel,

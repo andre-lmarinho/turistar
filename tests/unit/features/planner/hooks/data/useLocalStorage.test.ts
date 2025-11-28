@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { useLocalStorage } from '@/features/planner/hooks/data/useLocalStorage';
+import { useLocalStorage } from '@/features/app/planner/hooks/data/useLocalStorage';
 
 describe('useLocalStorage', () => {
   afterEach(() => {
@@ -63,6 +63,22 @@ describe('useLocalStorage', () => {
     rerender({ storageKey: 'gamma' });
 
     await waitFor(() => expect(result.current[0]).toBe('fallback'));
+    expect(setItemSpy).not.toHaveBeenCalled();
+  });
+
+  it('can be disabled to avoid touching localStorage', async () => {
+    const storagePrototype = Object.getPrototypeOf(window.localStorage) as Storage;
+    const setItemSpy = vi.spyOn(storagePrototype, 'setItem');
+
+    const { result } = renderHook(() => useLocalStorage('disabled-key', 42, { enabled: false }));
+
+    expect(result.current[2]).toBe(true);
+
+    act(() => {
+      result.current[1](99);
+    });
+
+    expect(result.current[0]).toBe(99);
     expect(setItemSpy).not.toHaveBeenCalled();
   });
 });

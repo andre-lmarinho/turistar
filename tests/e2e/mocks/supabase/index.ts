@@ -30,7 +30,15 @@ type PlanEventInput = {
 };
 
 type RpcParams = {
-  create_full_plan: { _title?: string | null };
+  create_full_plan: {
+    _title?: string | null;
+    _dest_name?: string | null;
+    _dest_lat?: number | null;
+    _dest_long?: number | null;
+    _start_date?: string | null;
+    _end_date?: string | null;
+    _user_id?: string | null;
+  };
   append_plan_events: {
     plan_id: string;
     base_version?: number | string | null;
@@ -148,9 +156,9 @@ class MockSupabaseClientImpl {
         this.currentVersion = snapshot.version ?? 0;
         return {
           data: {
-            plan_id: this.plan.plan_id,
-            public_slug: this.plan.public_slug,
-            edit_token: this.plan.edit_token,
+            result_plan_id: this.plan.plan_id,
+            result_public_slug: this.plan.public_slug,
+            result_edit_token: this.plan.edit_token,
           },
           error: null,
         };

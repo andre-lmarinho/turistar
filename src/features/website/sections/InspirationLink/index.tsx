@@ -1,31 +1,12 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-
 import { Section, Container } from '@/features/website/ui/wrapper';
 import { H2, P } from '@/features/website/ui/typography';
-import { InspirationCard } from './components/InspirationCard';
-
-import type { InspirationDocument } from '@/features/planner/modules/inspiration/server/types';
-import boipeba from '@/features/planner/modules/inspiration/data/boipeba.json';
-import rome from '@/features/planner/modules/inspiration/data/rome.json';
-
-type InspirationPreview = InspirationDocument & { title_inspiration: string };
-
-const inspirationSources: Array<{ slug: string; doc: InspirationPreview }> = [
-  { slug: 'rome', doc: rome as InspirationPreview },
-  { slug: 'boipeba', doc: boipeba as InspirationPreview },
-];
-
-const toDestinationPreview = ({ slug, doc }: { slug: string; doc: InspirationPreview }) => ({
-  city: slug,
-  label: doc.title_inspiration,
-  images: doc.itinerary.flatMap((day) => day.activities.map((activity) => activity.imageUrl ?? '')),
-});
+import { getMarketingInspirationItems } from '@/features/app/inspiration/data';
+import { Card } from '@/shared/ui/card';
 
 export function InspirationLink() {
-  const destinations = inspirationSources.map(toDestinationPreview);
+  const destinations = getMarketingInspirationItems();
 
   return (
     <Section>
@@ -38,11 +19,14 @@ export function InspirationLink() {
       </Container>
 
       <ul className="mx-auto flex flex-wrap justify-center gap-6">
-        {destinations.map((d) => (
-          <li key={d.city}>
-            <Link href={`/inspiration/${d.city}`} className="block rounded-md">
-              <InspirationCard title={d.label} imageUrls={d.images} />
-            </Link>
+        {destinations.map((item) => (
+          <li key={item.slug}>
+            <Card
+              className="w-56 sm:w-60 md:w-64"
+              title={item.title}
+              href={`/p/inspiration/${item.slug}`}
+              image={item.image}
+            />
           </li>
         ))}
       </ul>

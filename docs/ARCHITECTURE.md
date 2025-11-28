@@ -15,7 +15,7 @@ For deeper feature details see the source files within `src/features`.
 ## Key Design Decisions
 
 - Next.js App Router: file-based routing and server actions. Planner routes live under `/planner`, while API helpers reside in `src/server`.
-- Drag-and-drop with DnD Kit: activities move via sensors and sortable logic encapsulated in hooks within `src/features/planner`.
+- Drag-and-drop with DnD Kit: activities move via sensors and sortable logic encapsulated in hooks within `src/features/app/plannerlanner`.
 - State management: planner data, including budget, lives in feature contexts and synchronizes to Supabase through shared hooks.
 - Geoapify search: destination search and autocomplete run through `/api/search` and client hooks.
 
@@ -28,7 +28,7 @@ The planner uses a realtime, event-driven workflow so multiple travelers can edi
 - **Optimistic persistence** – `diffPlanEvents.ts` compares the previous and next state when a user interacts with the planner, emits the minimal set of events, and persists them through the `append_plan_events` RPC. Conflicts trigger a snapshot refresh to reconcile versions.
 - **Durable snapshots** – On load, the hook fetches the latest `plan_snapshots` entry, replays missing events, and then keeps the realtime channel alive. Reconnecting clients follow the same pattern to recover.
 
-See [Planner Realtime Collaboration](./planner/realtime-collaboration.md) for a full reference covering payloads, versioning, and failure handling.
+See [Planner Realtime Collaboration](./p/realtime-collaboration.md) for a full reference covering payloads, versioning, and failure handling.
 
 ## Vertical Slice Decisions
 

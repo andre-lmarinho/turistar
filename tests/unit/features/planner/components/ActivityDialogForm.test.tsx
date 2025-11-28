@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ActivityDialogForm } from '@/features/planner/components/dialog/ActivityDialogForm';
-import type { Activity } from '@/features/planner/domain/types/PlannerEntities';
+import { ActivityDialogForm } from '@/features/app/planner/components/dialog/ActivityDialogForm';
+import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 
 const { mockUseAddressAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   return {
@@ -11,13 +11,13 @@ const { mockUseAddressAutocomplete, mockUseDebounce } = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/features/planner/hooks/search/useAddressAutocomplete', () => ({
+vi.mock('@/features/app/planner/hooks/search/useAddressAutocomplete', () => ({
   useAddressAutocomplete: mockUseAddressAutocomplete,
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
-  usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 } }),
+  usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 }, canEdit: true }),
 }));
 
 vi.mock('@/shared/hooks/useDebounce', () => ({

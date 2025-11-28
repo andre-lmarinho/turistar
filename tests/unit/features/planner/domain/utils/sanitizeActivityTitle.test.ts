@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sanitizeActivityTitle } from '@/features/planner/domain/utils/sanitizeActivityTitle';
+import { sanitizeActivityTitle } from '@/features/app/planner/domain/utils/sanitizeActivityTitle';
 
 describe('sanitizeActivityTitle', () => {
   it('trims surrounding whitespace', () => {

@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { createLocationAutocompleteHook } from '@/features/planner/hooks/search/createLocationAutocompleteHook';
+import { createLocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
 
 const { mockUseQuery } = vi.hoisted(() => ({
   mockUseQuery: vi.fn(),
@@ -47,10 +47,9 @@ describe('createLocationAutocompleteHook', () => {
 
     await queryFn({ signal: abortController.signal });
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/autocomplete?text=Paris&lat=1&lon=2',
-      { signal: abortController.signal }
-    );
+    expect(fetchSpy).toHaveBeenCalledWith('/api/autocomplete?text=Paris&lat=1&lon=2', {
+      signal: abortController.signal,
+    });
   });
 
   it('disables the query when below the minimum length', () => {

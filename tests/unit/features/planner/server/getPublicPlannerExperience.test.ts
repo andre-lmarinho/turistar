@@ -10,8 +10,8 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { getPublicPlannerExperience } from '@/features/planner/server/getPublicPlannerExperience';
-import type { SupabasePlanDayRow } from '@/features/planner/services/supabase/planDaysMapper';
+import { getPublicPlannerExperience } from '@/features/app/planner/server/getPublicPlannerExperience';
+import type { SupabasePlanDayRow } from '@/features/app/planner/services/supabase/planDaysMapper';
 
 interface SupabaseResult<T> {
   data: T;
@@ -22,9 +22,22 @@ type PlanRecord = {
   id: string;
   title: string | null;
   plan_destinations: { destinations: { name: string } }[] | null;
+  user_id: string | null;
+  edit_token: string;
+  budget: number | null;
+  start_date?: string | null;
+  end_date?: string | null;
 } | null;
 
 type DayRecord = SupabasePlanDayRow[] | null;
+type EntryRecord =
+  | {
+      id: string;
+      description: string | null;
+      category: string | null;
+      amount: number | null;
+    }[]
+  | null;
 
 interface PlanQueryChain {
   select: ReturnType<typeof vi.fn<(columns: string) => PlanQueryChain>>;
@@ -39,6 +52,13 @@ interface DayQueryChain {
     typeof vi.fn<
       (column: string, options: { ascending: boolean }) => Promise<SupabaseResult<DayRecord>>
     >
+  >;
+}
+
+interface EntryQueryChain {
+  select: ReturnType<typeof vi.fn<(columns: string) => EntryQueryChain>>;
+  eq: ReturnType<
+    typeof vi.fn<(column: string, value: unknown) => Promise<SupabaseResult<EntryRecord>>>
   >;
 }
 
@@ -73,20 +93,31 @@ function createDayQuery(result: SupabaseResult<DayRecord>) {
   return chain;
 }
 
+function createEntryQuery(result: SupabaseResult<EntryRecord>) {
+  const chain = {
+    select: vi.fn<(columns: string) => EntryQueryChain>(),
+    eq: vi.fn<(column: string, value: unknown) => Promise<SupabaseResult<EntryRecord>>>(),
+  } as unknown as EntryQueryChain;
+
+  chain.select.mockReturnValue(chain);
+  chain.eq.mockResolvedValue(result);
+
+  return chain;
+}
+
 function mockSupabase(
-  planResult: SupabaseResult<{
-    id: string;
-    title: string | null;
-    plan_destinations: { destinations: { name: string } }[] | null;
-  } | null>,
-  dayResult: SupabaseResult<SupabasePlanDayRow[] | null>
+  planResult: SupabaseResult<PlanRecord>,
+  dayResult: SupabaseResult<SupabasePlanDayRow[] | null>,
+  entryResult: SupabaseResult<EntryRecord> = { data: null, error: null }
 ) {
   const planQuery = createPlanQuery(planResult);
   const dayQuery = createDayQuery(dayResult);
+  const entryQuery = createEntryQuery(entryResult);
   const supabase = {
     from: vi.fn((table: string) => {
       if (table === 'plans') return planQuery;
       if (table === 'plan_days') return dayQuery;
+      if (table === 'budget_entries') return entryQuery;
       throw new Error(`Unexpected table ${table}`);
     }),
   };
@@ -105,11 +136,7 @@ describe('getPublicPlannerExperience', () => {
   });
 
   it('returns the planner experience with mapped days and fallback destination', async () => {
-    const planResult: SupabaseResult<{
-      id: string;
-      title: string | null;
-      plan_destinations: { destinations: { name: string } }[] | null;
-    } | null> = {
+    const planResult: SupabaseResult<PlanRecord> = {
       data: {
         id: 'plan-1',
         title: 'Summer Escape',
@@ -120,6 +147,9 @@ describe('getPublicPlannerExperience', () => {
             },
           },
         ],
+        user_id: 'owner-1',
+        edit_token: 'token-123',
+        budget: 1500,
       },
       error: null,
     };
@@ -151,7 +181,12 @@ describe('getPublicPlannerExperience', () => {
       error: null,
     };
 
-    const supabase = mockSupabase(planResult, dayResult);
+    const entryResult: SupabaseResult<EntryRecord> = {
+      data: [{ id: 'entry-1', description: 'Flight', category: 'travel', amount: 900 }],
+      error: null,
+    };
+
+    const supabase = mockSupabase(planResult, dayResult, entryResult);
     vi.mocked(supabaseServer).mockReturnValueOnce(
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
@@ -184,6 +219,17 @@ describe('getPublicPlannerExperience', () => {
           ],
         },
       ],
+      initialBudget: 1500,
+      initialEntries: [
+        {
+          id: 'entry-1',
+          description: 'Flight',
+          category: 'travel',
+          amount: 900,
+        },
+      ],
+      canEdit: false,
+      editToken: undefined,
     });
   });
 
@@ -199,12 +245,17 @@ describe('getPublicPlannerExperience', () => {
     expect(notFound).toHaveBeenCalledTimes(1);
   });
 
-  it('calls notFound when no destination is available', async () => {
+  it('returns a fallback destination when no destination is available', async () => {
     const planResult = {
       data: {
         id: 'plan-2',
         title: 'Untitled',
         plan_destinations: [],
+        user_id: null,
+        edit_token: 'token-2',
+        budget: null,
+        start_date: null,
+        end_date: null,
       },
       error: null,
     };
@@ -214,8 +265,19 @@ describe('getPublicPlannerExperience', () => {
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
 
-    await expect(getPublicPlannerExperience({ slug: 'missing-dest' })).rejects.toBe(notFoundError);
-    expect(notFound).toHaveBeenCalledTimes(1);
+    const experience = await getPublicPlannerExperience({ slug: 'missing-dest' });
+
+    expect(notFound).not.toHaveBeenCalled();
+    expect(experience).toEqual({
+      planId: 'plan-2',
+      title: 'Untitled',
+      destination: 'Destination TBD',
+      initialDays: undefined,
+      initialBudget: undefined,
+      initialEntries: undefined,
+      canEdit: false,
+      editToken: undefined,
+    });
   });
 
   it('returns experience without initial days when the day query fails', async () => {
@@ -230,6 +292,9 @@ describe('getPublicPlannerExperience', () => {
             },
           },
         ],
+        user_id: 'owner-3',
+        edit_token: 'token-3',
+        budget: null,
       },
       error: null,
     };
@@ -247,6 +312,10 @@ describe('getPublicPlannerExperience', () => {
       title: undefined,
       destination: 'Lisbon',
       initialDays: undefined,
+      initialBudget: undefined,
+      initialEntries: undefined,
+      canEdit: false,
+      editToken: undefined,
     });
   });
 });

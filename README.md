@@ -100,9 +100,20 @@ Prerequisites: Node.js v18+ and npm
    Copy `.env.example` to `.env.local` and set:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-side secret used by actions that require privileged Supabase access)
    - `NEXT_PUBLIC_GEOAPIFY_KEY`
 
    See [docs/DEVELOPER_GUIDE.md#environment](docs/DEVELOPER_GUIDE.md#environment) for details.
+
+   ### Supabase Auth configuration
+
+   Supabase Auth depends on the following variables:
+
+   | Variable                        | Scope           | Purpose                                                                                                                                                              |
+   | ------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `NEXT_PUBLIC_SUPABASE_URL`      | Client & Server | Base URL for your Supabase project.                                                                                                                                  |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | Public anon key that allows the browser client to authenticate.                                                                                                      |
+   | `SUPABASE_SERVICE_ROLE_KEY`     | Server only     | Optional service role key for server actions that need to call privileged RPCs (e.g., inserting server-generated plans). Keep this secret out of the browser bundle. |
 
 4. Start the dev server
 
@@ -111,6 +122,12 @@ Prerequisites: Node.js v18+ and npm
    ```
 
    Visit http://localhost:3000
+
+   Authenticated users land on the dashboard at `/u/{yourSlug}/planners`, which lists every owned itinerary and exposes quick
+   actions for opening the secure editor at `/planner/{planId}`. Attempts to visit `/login` or `/signup` while already signed
+   in automatically redirect back to that dashboard entry point, while unauthenticated visitors who follow `/u/...` links are
+   sent to `/login`. Public viewers (or collaborators with edit tokens) continue to use the shareable `/planner/{publicSlug}`
+   URLs.
 
 ### Development Workflow
 

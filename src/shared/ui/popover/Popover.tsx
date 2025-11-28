@@ -3,11 +3,26 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
 
+import { X } from '@/shared/ui/icon';
 import { cn } from '@/shared/utils/cn';
 
 const Popover = PopoverPrimitive.Root;
-const PopoverTrigger = PopoverPrimitive.Trigger;
-const PopoverClose = PopoverPrimitive.Close;
+
+type PopoverTriggerButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  className?: string;
+};
+
+const PopoverTriggerButton = React.forwardRef<HTMLButtonElement, PopoverTriggerButtonProps>(
+  function PopoverTriggerButton({ className, type = 'button', children, ...props }, ref) {
+    return (
+      <PopoverPrimitive.Trigger asChild>
+        <button ref={ref} type={type} className={className} {...props}>
+          {children}
+        </button>
+      </PopoverPrimitive.Trigger>
+    );
+  }
+);
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
@@ -31,4 +46,28 @@ const PopoverContent = React.forwardRef<
 
 PopoverContent.displayName = 'PopoverContent';
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverClose };
+type PopoverHeaderProps = {
+  title: string;
+  titleId?: string;
+  onClose?: () => void;
+  className?: string;
+};
+
+function PopoverHeader({ title, titleId, onClose, className }: PopoverHeaderProps) {
+  return (
+    <div className={cn('relative flex items-center justify-end p-2', className)}>
+      <h2 id={titleId} className="absolute inset-0 p-3 text-center text-sm font-medium">
+        {title}
+      </h2>
+      <PopoverPrimitive.Close
+        className="text-muted-foreground hover:bg-muted/60 hover:text-foreground z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md p-2 transition-colors"
+        aria-label="Close"
+        onClick={onClose}
+      >
+        <X className="size-4" aria-hidden="true" />
+      </PopoverPrimitive.Close>
+    </div>
+  );
+}
+
+export { Popover, PopoverTriggerButton, PopoverContent, PopoverHeader };

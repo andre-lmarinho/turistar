@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import type { DateRange } from 'react-day-picker';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
-import { PlannerClient } from '@/features/planner/components/PlannerClient';
+import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
 
 type Bounds = { sw: [number, number]; ne: [number, number] };
 interface PlannerCtx {
@@ -54,7 +54,7 @@ vi.mock('@/shared/ui/calendar', () => ({
   ),
 }));
 
-vi.mock('@/features/planner/ui/buttons/ModeToggleButton', () => ({
+vi.mock('@/features/app/planner/ui/buttons/ModeToggleButton', () => ({
   __esModule: true,
   ModeToggleButton: () => <div />, // not used in this test
 }));
@@ -68,22 +68,22 @@ export const handleRangeChange = vi.fn(() => {
 });
 
 // Planner feature mocks
-vi.mock('@/features/planner/components/dialog/ActivityDialog', () => ({
+vi.mock('@/features/app/planner/components/dialog/ActivityDialog', () => ({
   __esModule: true,
   ActivityDialog: () => null,
 }));
 
-vi.mock('@/features/planner/hooks/budget/BudgetContext', () => ({
+vi.mock('@/features/app/planner/hooks/budget/BudgetContext', () => ({
   __esModule: true,
   BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/features/planner/hooks/usePlanTitleSupabase', () => ({
+vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', async () => {
+vi.mock('@/features/app/planner/hooks/PlannerContext', async () => {
   const React = await import('react');
 
   type InternalPlannerCtx = PlannerCtx & {
@@ -102,6 +102,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
     handleDragOver: (...args: unknown[]) => void;
     handleDragEnd: (...args: unknown[]) => void;
     selectedActivity: null;
+    canEdit: boolean;
   };
 
   const PlannerContext = React.createContext<InternalPlannerCtx | null>(null);
@@ -143,6 +144,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       handleDragOver: vi.fn(),
       handleDragEnd: vi.fn(),
       selectedActivity: null,
+      canEdit: true,
     };
     return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>;
   }
@@ -159,20 +161,8 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
   return { __esModule: true, PlannerProvider, usePlannerContext };
 });
 
-// Onboarding mocks
-vi.mock('@/features/planner/components/onboarding/OnboardingDialog', () => ({
-  __esModule: true,
-  OnboardingDialog: () => null,
-}));
-
-vi.mock('@/features/planner/hooks/onboarding/OnboardingContext', () => ({
-  __esModule: true,
-  OnboardingProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  useOnboardingContext: () => ({ showOnboarding: false, setShowOnboarding: vi.fn() }),
-}));
-
 // Downstream components that read from planner context
-vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
+vi.mock('@/features/app/planner/components/dnd/PlannerBoard', () => {
   return {
     __esModule: true,
     PlannerBoard: function PlannerBoardMock() {
@@ -182,7 +172,7 @@ vi.mock('@/features/planner/components/dnd/PlannerBoard', () => {
   };
 });
 
-vi.mock('@/features/planner/components/map/MapBoard', () => {
+vi.mock('@/features/app/planner/components/map/MapBoard', () => {
   function MapViewMock() {
     const ctx =
       typeof getPlannerContext === 'function'
@@ -202,7 +192,7 @@ vi.mock('@/features/planner/components/map/MapBoard', () => {
   };
 });
 
-vi.mock('@/features/planner/components/budget/BudgetBoard', () => ({
+vi.mock('@/features/app/planner/components/budget/BudgetBoard', () => ({
   __esModule: true,
   BudgetBoard: () => <div />,
 }));
@@ -215,7 +205,7 @@ vi.mock('next/navigation', () => ({
 
 describe('date range change propagation', () => {
   it('calls handleRangeChange and updates downstream components', async () => {
-    render(<PlannerClient initialDays={initialDays} planId="p1" hideOnboarding />);
+    render(<PlannerClient initialDays={initialDays} planId="p1" />);
 
     const boardEl = screen.getByTestId('planner-board');
     expect(boardEl).toHaveTextContent('d1');

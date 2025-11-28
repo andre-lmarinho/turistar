@@ -12,10 +12,14 @@ function getE2ESupabaseClient(): SupabaseClient<Database> {
   return getSupabaseMock();
 }
 
-// Create a browser-ready Supabase client for React components
-export const supabase: SupabaseClient<Database> = isE2E
-  ? getE2ESupabaseClient()
-  : createBrowserClient<Database>(
-      clientEnv.NEXT_PUBLIC_SUPABASE_URL,
-      clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+export function createSupabaseBrowserClient(): SupabaseClient<Database> {
+  return isE2E
+    ? getE2ESupabaseClient()
+    : createBrowserClient<Database>(
+        clientEnv.NEXT_PUBLIC_SUPABASE_URL,
+        clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      );
+}
+
+// Maintain a shared instance for modules that do not need per-request isolation
+export const supabase: SupabaseClient<Database> = createSupabaseBrowserClient();

@@ -14,6 +14,7 @@ export async function createPlan(
   dest: DestinationInfo,
   start: string,
   end: string,
+  userId?: string | null,
   client: SupabaseClient<Database> = supabaseServer()
 ) {
   const supabase = client;
@@ -31,16 +32,17 @@ export async function createPlan(
     _dest_long: longitude,
     _start_date: startDate,
     _end_date: endDate,
+    _user_id: userId ?? null,
   });
 
   if (error || !data) throw error ?? new Error('Failed to create plan');
   const row = Array.isArray(data) ? data[0] : data;
 
-  const { plan_id, public_slug, edit_token } = row as {
-    plan_id: string;
-    public_slug: string;
-    edit_token: string;
+  const { result_plan_id, result_public_slug, result_edit_token } = row as {
+    result_plan_id: string;
+    result_public_slug: string;
+    result_edit_token: string;
   };
 
-  return { id: plan_id, publicSlug: public_slug, editToken: edit_token };
+  return { id: result_plan_id, publicSlug: result_public_slug, editToken: result_edit_token };
 }

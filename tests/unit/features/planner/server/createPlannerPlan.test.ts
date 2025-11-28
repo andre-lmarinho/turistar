@@ -4,7 +4,7 @@ vi.mock('@/server/actions/createPlan', () => ({
   createPlan: vi.fn(),
 }));
 
-import { createPlannerPlan } from '@/features/planner/server/createPlan';
+import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
 import { createPlan } from '@/server/actions/createPlan';
 
 describe('createPlannerPlan', () => {
@@ -30,7 +30,8 @@ describe('createPlannerPlan', () => {
       'Weekend Trip',
       { name: 'Berlin', latitude: 52.52, longitude: 13.405 },
       '2024-04-01',
-      '2024-04-03'
+      '2024-04-03',
+      undefined
     );
 
     expect(result).toEqual({

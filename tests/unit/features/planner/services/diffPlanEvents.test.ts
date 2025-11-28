@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type {
   ActivityCreatedPayload,
   ActivityUpdatedPayload,
   DayCreatedPayload,
-} from '@/features/planner/domain/types/PlanEvent';
-import { diffPlanEvents } from '@/features/planner/services/events/diffPlanEvents';
+} from '@/features/app/planner/domain/types/PlanEvent';
+import { diffPlanEvents } from '@/features/app/planner/services/events/diffPlanEvents';
 
 const baseDay = {
   label: 'Day',

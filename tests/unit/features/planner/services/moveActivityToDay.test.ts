@@ -1,5 +1,5 @@
-import { moveActivityToDay } from '@/features/planner/services/activities/moveActivityToDay';
-import type { DayPlan, Activity } from '@/features/planner/domain/types/PlannerEntities';
+import { moveActivityToDay } from '@/features/app/planner/services/activities/moveActivityToDay';
+import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 
 function buildActivity(id: string): Activity {
   return { id, title: id.toUpperCase(), color: 'bg-[var(--color-1)]' };

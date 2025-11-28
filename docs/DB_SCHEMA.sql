@@ -62,6 +62,9 @@ CREATE TABLE public.plans (
 CREATE TABLE public.profiles (
   id uuid NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
+  slug text NOT NULL UNIQUE,
+  display_name text,
+  avatar_url text,
   CONSTRAINT profiles_pkey PRIMARY KEY (id),
   CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );

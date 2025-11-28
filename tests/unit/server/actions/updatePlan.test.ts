@@ -12,13 +12,22 @@ describe('setPlanDateRange', () => {
     vi.mocked(supabaseServer).mockReset();
   });
 
-  it('formats dates and updates the plan record', async () => {
-    const eq = vi.fn().mockResolvedValue({ error: null });
+  function mockUpdateResponse(error: { message?: string } | null) {
+    const single = vi.fn().mockResolvedValue({ error });
+    const select = vi.fn(() => ({ single }));
+    const eq = vi.fn(() => ({ select }));
     const update = vi.fn(() => ({ eq }));
     const from = vi.fn(() => ({ update }));
+
     vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
       typeof supabaseServer
     >);
+
+    return { from, update, eq, select, single };
+  }
+
+  it('formats dates and updates the plan record', async () => {
+    const { from, update, eq } = mockUpdateResponse(null);
 
     await setPlanDateRange(
       'plan-1',
@@ -33,12 +42,7 @@ describe('setPlanDateRange', () => {
 
   it('throws with the Supabase error message when available', async () => {
     const error = { message: 'update failed' };
-    const eq = vi.fn().mockResolvedValue({ error });
-    const update = vi.fn(() => ({ eq }));
-    const from = vi.fn(() => ({ update }));
-    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
+    mockUpdateResponse(error);
 
     await expect(
       setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
@@ -46,12 +50,7 @@ describe('setPlanDateRange', () => {
   });
 
   it('falls back to a generic error message', async () => {
-    const eq = vi.fn().mockResolvedValue({ error: {} });
-    const update = vi.fn(() => ({ eq }));
-    const from = vi.fn(() => ({ update }));
-    vi.mocked(supabaseServer).mockReturnValueOnce({ from } as unknown as ReturnType<
-      typeof supabaseServer
-    >);
+    mockUpdateResponse({});
 
     await expect(
       setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))

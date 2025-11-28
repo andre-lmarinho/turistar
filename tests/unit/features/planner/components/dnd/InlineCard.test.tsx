@@ -2,8 +2,8 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { InlineCard } from '@/features/planner/components/dnd/InlineCard';
-import { ACTIVITY_COPY } from '@/features/planner/domain/constants/activity';
+import { InlineCard } from '@/features/app/planner/components/dnd/InlineCard';
+import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 
 declare global {
   interface Window {
@@ -14,7 +14,7 @@ declare global {
 
 const mutateAsync = vi.fn();
 
-vi.mock('@/features/planner/hooks/useAddActivity', () => ({
+vi.mock('@/features/app/planner/hooks/useAddActivity', () => ({
   useAddActivity: () => ({ mutateAsync, isPending: false }),
 }));
 

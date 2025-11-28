@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useDebounce } from '@/features/planner/hooks/search/useDebounce';
+import { useDebounce } from '@/features/app/planner/hooks/search/useDebounce';
 
 afterEach(() => {
   vi.useRealTimers();

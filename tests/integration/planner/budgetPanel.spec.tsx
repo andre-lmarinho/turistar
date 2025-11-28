@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 let mockDays: DayPlan[] = [];
 
@@ -10,10 +10,10 @@ vi.mock('@/shared/lib/supabaseClient', () => ({
   supabase: { from: (table: string) => mockFrom(table) },
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', async () => {
-  const actual = await vi.importActual<typeof import('@/features/planner/hooks/PlannerContext')>(
-    '@/features/planner/hooks/PlannerContext'
-  );
+vi.mock('@/features/app/planner/hooks/PlannerContext', async () => {
+  const actual = await vi.importActual<
+    typeof import('@/features/app/planner/hooks/PlannerContext')
+  >('@/features/app/planner/hooks/PlannerContext');
   return {
     ...actual,
     PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -38,12 +38,13 @@ vi.mock('@/features/planner/hooks/PlannerContext', async () => {
       setDays: vi.fn(),
       currentRange: undefined,
       handleRangeChange: vi.fn(),
+      canEdit: true,
     }),
   };
 });
 
-import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import { BudgetBoard } from '@/features/planner/components/budget/BudgetBoard';
+import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
+import { BudgetBoard } from '@/features/app/planner/components/budget/BudgetBoard';
 
 describe('budget panel', () => {
   beforeEach(() => {

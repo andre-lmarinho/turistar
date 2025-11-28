@@ -9,6 +9,7 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
     "style-src 'self' 'unsafe-inline' https:",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https:",
+    'frame-src https://vercel.live',
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -16,8 +17,10 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
     'upgrade-insecure-requests',
   ];
 
-  if (isDev) {
-    // Allow Next.js Dev/HMR inline scripts, eval, and websockets locally
+  const isPreview = process.env.VERCEL_ENV === 'preview';
+
+  if (isDev || isPreview) {
+    // Allow Next.js Dev/HMR inline scripts, eval, and websockets locally/preview
     common.push(
       // Broadly allow during dev; rely on strict prod CSP for security
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: http: https:",

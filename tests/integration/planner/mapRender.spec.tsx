@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
-import { MapBoard } from '@/features/planner/components/map/MapBoard';
-import { PlannerProvider } from '@/features/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/features/planner/domain/types/PlannerEntities';
+import { MapBoard } from '@/features/app/planner/components/map/MapBoard';
+import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
+import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 const map = { fitBounds: vi.fn() };
 const markers: Array<{
@@ -42,7 +42,7 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-vi.mock('@/features/planner/hooks/PlannerContext', () => ({
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
@@ -68,6 +68,7 @@ vi.mock('@/features/planner/hooks/PlannerContext', () => ({
     selectedActivity: null,
     currentRange: undefined,
     handleRangeChange: vi.fn(),
+    canEdit: true,
   }),
 }));
 

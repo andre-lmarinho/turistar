@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { fetchPlanSnapshot } from '@/features/planner/services/supabase/planEventsQueries';
+import { fetchPlanSnapshot } from '@/features/app/planner/services/supabase/planEventsQueries';
 import type { Database } from '@/shared/types/supabase';
 
 const createSnapshotClient = (response: { data: unknown; error: unknown }) => {
