@@ -62,23 +62,9 @@ CREATE TABLE public.plans (
 CREATE TABLE public.profiles (
   id uuid NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  slug text NOT NULL,
+  slug text NOT NULL UNIQUE,
   display_name text,
   avatar_url text,
   CONSTRAINT profiles_pkey PRIMARY KEY (id),
-  CONSTRAINT profiles_slug_key UNIQUE (slug),
   CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
 );
-
--- Supabase Dashboard instructions:
---   1. Open SQL Editor → New query.
---   2. Paste and run supabase/migrations/20250208120000_add_profile_identity_fields.sql.
---   3. Confirm slug uniqueness with:
---        SELECT slug, COUNT(*) FROM public.profiles GROUP BY slug HAVING COUNT(*) > 1;
---      (Should return zero rows.)
---   4. Re-run the backfill block inside the migration whenever legacy rows without slugs appear.
---   5. Apply supabase/migrations/20250212121500_attach_plan_owners.sql so
---      create_full_plan accepts the optional _user_id argument. Execute the
---      optional UPDATE block at the end of the file once per environment to
---      associate existing plan rows with the first UUID-based actor found in
---      plan_events.
