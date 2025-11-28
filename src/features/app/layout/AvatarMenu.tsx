@@ -53,7 +53,7 @@ export function AvatarMenu({ displayName, email }: AvatarMenuProps) {
         <button
           type="button"
           onClick={handleSignOut}
-          className="text-primary hover:text-primary/80 inline-flex w-full cursor-pointer items-center gap-2 text-sm hover:bg-black"
+          className="text-primary hover:text-primary/80 inline-flex w-full cursor-pointer items-center gap-2 text-sm"
         >
           Log out
         </button>
