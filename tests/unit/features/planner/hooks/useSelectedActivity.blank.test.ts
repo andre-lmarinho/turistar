@@ -8,7 +8,7 @@ import { useSelectedActivity } from '@/features/app/planner/hooks/state/planner/
 import { usePersistedPlannerDays } from '@/features/app/planner/hooks/state/planner/usePersistedPlannerDays';
 import * as placeholders from '@/features/app/planner/domain/utils/activityPlaceholders';
 
-function usePlannerHarness(initialDays: DayPlan[], mutateAsync: ReturnType<typeof vi.fn>) {
+function usePlannerHarness(initialDays: DayPlan[], mutateAsync: (state: DayPlan[]) => Promise<unknown>) {
   const [days, setDays] = useState<DayPlan[]>(initialDays);
   const activityState = useActivityState(setDays);
   const selected = useSelectedActivity(days, setDays, activityState);
@@ -39,7 +39,9 @@ describe('useSelectedActivity blank placeholders', () => {
 
   it('does not enqueue persistence when cancelling a brand new card', async () => {
     vi.useFakeTimers();
-    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const persistSpy = vi
+      .fn<(state: DayPlan[]) => Promise<unknown>>()
+      .mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
 
     const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
@@ -68,7 +70,9 @@ describe('useSelectedActivity blank placeholders', () => {
     const idSpy = vi
       .spyOn(placeholders, 'generateClientActivityId')
       .mockReturnValue('generated-id');
-    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const persistSpy = vi
+      .fn<(state: DayPlan[]) => Promise<unknown>>()
+      .mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [
       {
         id: 'day-1',
@@ -102,7 +106,9 @@ describe('useSelectedActivity blank placeholders', () => {
     const idSpy = vi
       .spyOn(placeholders, 'generateClientActivityId')
       .mockReturnValue('activity-123');
-    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const persistSpy = vi
+      .fn<(state: DayPlan[]) => Promise<unknown>>()
+      .mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [
       { id: 'day-1', label: 'Day 1', activities: [{ id: 'a', title: 'Breakfast', color: '#f00' }] },
       { id: 'day-2', label: 'Day 2', activities: [{ id: 'b', title: 'Dinner', color: '#0f0' }] },
@@ -136,7 +142,9 @@ describe('useSelectedActivity blank placeholders', () => {
   });
 
   it('removes blank activities that arrive from the server when closing the dialog', async () => {
-    const persistSpy = vi.fn().mockResolvedValue(undefined);
+    const persistSpy = vi
+      .fn<(state: DayPlan[]) => Promise<unknown>>()
+      .mockResolvedValue(undefined);
     const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [] }];
 
     const { result } = renderHook(() => usePlannerHarness(initialDays, persistSpy));
