@@ -24,7 +24,7 @@ export function ActivityCardBase({
 }: ActivityCardBaseProps) {
   return (
     <div
-      className={`group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 bg-[var(--background)] text-left transition ${borderColorClass} ${twBg ?? ''}`}
+      className={`group bg-background relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 text-left transition ${borderColorClass} ${twBg ?? ''}`}
     >
       {/* Image */}
       {imageUrl && (

@@ -77,10 +77,7 @@ export function AddCardButton({
       type="button"
       aria-expanded={isInlineOpen}
       onClick={handleClick}
-      className={cn(
-        buttonClassName,
-        'bg-background hover:bg-card text-left text-[var(--foreground)]'
-      )}
+      className={cn(buttonClassName, 'bg-background hover:bg-card text-foreground text-left')}
     >
       <Plus size={18} aria-hidden="true" />
       <span>{copy.collapsedLabel}</span>

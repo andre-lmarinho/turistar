@@ -46,7 +46,7 @@ export function EasyLink() {
               />
               <span
                 aria-hidden
-                className="absolute inset-0 bg-gradient-to-br from-black/25 to-black/50 transition-opacity group-hover:opacity-40"
+                className="absolute inset-0 bg-linear-to-br from-black/25 to-black/50 transition-opacity group-hover:opacity-40"
               />
               <span
                 aria-hidden

@@ -16,19 +16,19 @@ export function MenuToggleButton({ isOpen, onToggle }: MenuToggleButtonProps) {
     >
       <span
         className={cn(
-          'bg-foreground absolute h-[2px] w-5 rounded-lg transition-transform duration-300 ease-in-out',
+          'bg-foreground absolute h-0.5 w-5 rounded-lg transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-y-0 rotate-45' : '-translate-y-2'
         )}
       />
       <span
         className={cn(
-          'bg-foreground absolute h-[2px] w-5 rounded-lg transition-opacity duration-200 ease-in-out',
+          'bg-foreground absolute h-0.5 w-5 rounded-lg transition-opacity duration-200 ease-in-out',
           isOpen ? 'opacity-0' : 'opacity-100'
         )}
       />
       <span
         className={cn(
-          'bg-foreground absolute h-[2px] w-5 rounded-lg transition-transform duration-300 ease-in-out',
+          'bg-foreground absolute h-0.5 w-5 rounded-lg transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-y-0 -rotate-45' : 'translate-y-2'
         )}
       />

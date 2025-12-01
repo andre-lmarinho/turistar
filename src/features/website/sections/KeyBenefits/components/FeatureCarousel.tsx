@@ -79,11 +79,11 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
         className="order-2 justify-center md:order-1 md:justify-end md:self-end"
       />
       <div className="order-1 flex flex-col gap-8 md:order-2 md:grid md:grid-cols-3 md:gap-8">
-        <div className="order-2 md:order-none">
+        <div className="order-2 md:order-0">
           <ul
             ref={cardsRef}
             className={cn(
-              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 md:cursor-auto md:[touch-action:auto] md:snap-none md:flex-col md:gap-4 md:overflow-visible',
+              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 md:cursor-auto md:touch-auto md:snap-none md:flex-col md:gap-4 md:overflow-visible',
               styles.dragContext
             )}
           >
@@ -103,7 +103,7 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
           </ul>
         </div>
 
-        <div className="order-1 overflow-hidden md:order-none md:col-span-2">
+        <div className="order-1 overflow-hidden md:order-0 md:col-span-2">
           <ul
             ref={imagesRef}
             tabIndex={-1}

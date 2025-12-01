@@ -60,7 +60,7 @@ const MarkTrue = ({ last = false }: { last?: boolean }) => (
   <div
     className={cn(
       'bg-card absolute inset-x-0 top-0 bottom-0 -mt-px flex items-center justify-center border-x border-b font-medium',
-      last && 'bottom-[-1rem] rounded-b-2xl'
+      last && '-bottom-4 rounded-b-2xl'
     )}
   >
     <Check className="size-4 align-middle" aria-label="present" />

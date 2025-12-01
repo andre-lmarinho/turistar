@@ -74,7 +74,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
           <motion.div
             initial={false}
             style={{ x: highlightX, width: highlightW }}
-            className="absolute inset-1 rounded-sm bg-[var(--primary)]"
+            className="bg-primary absolute inset-1 rounded-sm"
           />
         )}
 
@@ -89,9 +89,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
               onClick={() => onChange(mode)}
               aria-pressed={selected}
               className={`relative z-10 h-10 flex-1 cursor-pointer px-2 text-sm font-medium transition-colors ${
-                selected
-                  ? 'text-[var(--primary-foreground)]'
-                  : 'text-[var(--foreground)] hover:text-[var(--foreground)]'
+                selected ? 'text-primary-foreground' : 'text-foreground hover:text-foreground'
               } `}
             >
               <div className="flex h-full w-full items-center justify-center gap-2 p-2">

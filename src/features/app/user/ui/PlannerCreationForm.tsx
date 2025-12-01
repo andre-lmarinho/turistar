@@ -168,7 +168,7 @@ export function PlannerCreationForm({
         </button>
 
         {error ? (
-          <p id="date-error" role="alert" className="text-sm text-[var(--destructive)]">
+          <p id="date-error" role="alert" className="text-destructive text-sm">
             {error}
           </p>
         ) : null}

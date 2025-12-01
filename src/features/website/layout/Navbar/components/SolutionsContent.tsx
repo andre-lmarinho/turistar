@@ -78,7 +78,7 @@ function SolutionsCallout() {
     <Link
       href={SOLUTIONS_CALLOUT.href}
       aria-label="Explore Rome demo"
-      className="group group text-foreground focus-visible:ring-primary/60 border-primary/30 from-primary/10 via-primary/15 to-primary/5 text-background m-2 block grid grid-rows-[auto_1fr_auto] rounded-2xl border bg-gradient-to-br p-5 text-center transition-[background-color,box-shadow,transform] duration-200 ease-out hover:shadow-sm focus-visible:ring-2 focus-visible:outline-none active:scale-[0.995]"
+      className="group group text-foreground focus-visible:ring-primary/60 border-primary/30 from-primary/10 via-primary/15 to-primary/5 m-2 block grid-rows-[auto_1fr_auto] rounded-2xl border bg-linear-to-br p-5 text-center transition-[background-color,box-shadow,transform] duration-200 ease-out hover:shadow-sm focus-visible:ring-2 focus-visible:outline-none active:scale-[0.995]"
     >
       <Eyebrow className="self-start justify-self-end">
         <Icon className="size-4" aria-hidden="true" />

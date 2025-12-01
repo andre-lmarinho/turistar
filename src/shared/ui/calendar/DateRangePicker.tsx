@@ -46,11 +46,7 @@ export function DateRangePicker({ className, value, onChange, disabled = false }
         <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
       </PopoverTriggerButton>
 
-      <PopoverContent
-        className="mt-2 w-full max-w-[27rem] p-0 shadow-lg"
-        align="start"
-        side="bottom"
-      >
+      <PopoverContent className="mt-2 w-full max-w-108 p-0 shadow-lg" align="start" side="bottom">
         <Calendar
           mode="range"
           selected={value}
