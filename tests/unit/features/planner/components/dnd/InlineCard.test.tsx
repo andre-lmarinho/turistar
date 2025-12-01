@@ -5,6 +5,12 @@ import { vi } from 'vitest';
 import { InlineCard } from '@/features/app/planner/components/dnd/InlineCard';
 import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
+  usePlannerContext: () => ({
+    updateActivity: vi.fn(),
+  }),
+}));
+
 declare global {
   interface Window {
     requestAnimationFrame(callback: FrameRequestCallback): number;

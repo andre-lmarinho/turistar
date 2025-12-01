@@ -29,6 +29,7 @@ vi.mock('@/shared/hooks/useDebounce', () => ({
 describe('ActivityDialogForm address autocomplete', () => {
   beforeEach(() => {
     mockUseAddressAutocomplete.mockReset();
+    mockUseAddressAutocomplete.mockReturnValue({ results: [], loading: false, error: false });
     mockUseDebounce.mockImplementation((value: unknown) => value);
     mockUseActivitySuggestions.mockReturnValue({
       suggestions: [],
@@ -136,8 +137,7 @@ describe('ActivityDialogForm address autocomplete', () => {
     );
 
     expect(fetchSpy).toHaveBeenCalledWith(
-      expect.stringContaining('place-details?placeId=pid'),
-      undefined
+      expect.stringContaining('/api/geoapify/place-details?placeId=pid')
     );
 
     fetchSpy.mockRestore();

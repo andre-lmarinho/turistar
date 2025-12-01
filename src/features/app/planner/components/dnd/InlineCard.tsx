@@ -80,11 +80,12 @@ export function InlineCard({
 
   const { updateActivity } = usePlannerContext();
 
-  const finalizeInlineActivity = () => {
+  const finalizeInlineActivity = useCallback(() => {
     setTitle('');
     setTouched(false);
     onAdvanceInline?.(insertIndex + 1);
     requestAnimationFrame(focusInput);
+  }, [focusInput, insertIndex, onAdvanceInline]);
 
   const fetchPlaceDetails = async (placeId: string) => {
     try {
@@ -162,15 +163,15 @@ export function InlineCard({
         return;
       }
 
-      if (shouldClose) {
-        onClose();
-        return;
-      }
+        if (shouldClose) {
+          onClose();
+          return;
+        }
 
-    finalizeInlineActivity();
-    },
-    [insertIndex, isComposing, isPending, onAdvanceInline, onClose, trySubmit]
-  );
+        finalizeInlineActivity();
+      },
+      [finalizeInlineActivity, isComposing, isPending, onClose, trySubmit]
+    );
 
   const handleOutsideSubmit = useCallback(() => {
     const trimmedTitle = title.trim();
