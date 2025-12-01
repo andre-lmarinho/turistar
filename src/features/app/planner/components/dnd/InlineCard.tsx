@@ -163,15 +163,15 @@ export function InlineCard({
         return;
       }
 
-        if (shouldClose) {
-          onClose();
-          return;
-        }
+      if (shouldClose) {
+        onClose();
+        return;
+      }
 
-        finalizeInlineActivity();
-      },
-      [finalizeInlineActivity, isComposing, isPending, onClose, trySubmit]
-    );
+      finalizeInlineActivity();
+    },
+    [finalizeInlineActivity, isComposing, isPending, onClose, trySubmit]
+  );
 
   const handleOutsideSubmit = useCallback(() => {
     const trimmedTitle = title.trim();
