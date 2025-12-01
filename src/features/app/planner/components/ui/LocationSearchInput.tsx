@@ -19,6 +19,7 @@ export interface LocationSearchInputProps {
   latitude?: number;
   longitude?: number;
   autocompleteHook: LocationAutocompleteHook;
+  onFocus?: () => void;
 }
 
 export function LocationSearchInput({
@@ -32,6 +33,7 @@ export function LocationSearchInput({
   latitude,
   longitude,
   autocompleteHook,
+  onFocus: onFocusProp,
 }: LocationSearchInputProps) {
   const debounced = useDebounce(value);
 
@@ -69,6 +71,10 @@ export function LocationSearchInput({
           setOpen(true);
           setActive(-1);
           onChange(e.target.value);
+        }}
+        onFocus={() => {
+          setOpen(true);
+          onFocusProp?.();
         }}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown' && results.length > 0) {

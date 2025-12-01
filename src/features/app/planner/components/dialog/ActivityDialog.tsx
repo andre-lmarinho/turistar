@@ -64,6 +64,7 @@ export function ActivityDialog() {
             activity={draft}
             color={draft.color ?? activity.color}
             onSave={(patch) => save({ ...patch, imageUrl: draft.imageUrl })}
+            onSelectSuggestion={(patch) => setDraft((prev) => ({ ...prev, ...patch }))}
           />
         </Dialog.Content>
       </Dialog.Portal>

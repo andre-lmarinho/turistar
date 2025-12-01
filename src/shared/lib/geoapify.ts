@@ -11,26 +11,101 @@ type GeoapifyAutocompleteProvider = (
   lon?: number
 ) => Promise<AutocompletePlace[]>;
 
-type GeoapifyFeature = {
-  properties: {
-    place_id: string | number;
+type GeoapifyFeatureProperties = {
+  place_id: string | number;
+  name?: string;
+  formatted?: string;
+  lat: number;
+  lon: number;
+  categories?: string[];
+  distance?: number;
+  image?: string;
+  description?: string;
+  address_line1?: string;
+  address_line2?: string;
+  street?: string;
+  postcode?: string;
+  district?: string;
+  city?: string;
+  county?: string;
+  state?: string;
+  state_code?: string;
+  country?: string;
+  country_code?: string;
+  timezone?: {
     name?: string;
-    formatted?: string;
-    lat: number;
-    lon: number;
-    categories?: string[];
-    distance?: number;
-    image?: string;
-    description?: string;
-    address_line2?: string;
-    result_type?: string;
+    offset_STD?: string;
+    offset_DST?: string;
+  };
+  result_type?: string;
+  category?: string;
+  wiki_and_media?: {
+    wikidata?: string;
   };
 };
-type GeoapifyResponse = { features: GeoapifyFeature[] };
+
+type GeoapifyFeature = {
+  properties: GeoapifyFeatureProperties;
+};
+
+type GeoapifyResponse =
+  | { features: GeoapifyFeature[] }
+  | { results: GeoapifyFeatureProperties[] };
+
+export interface GeoapifyPlaceSearchResult {
+  placeId: string;
+  name: string;
+  formatted: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  latitude: number;
+  longitude: number;
+  resultType?: string;
+  category?: string;
+  description?: string;
+}
+
+export interface GeoapifyPlaceDetails {
+  placeId: string;
+  name: string;
+  formatted: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  street?: string;
+  district?: string;
+  city?: string;
+  county?: string;
+  state?: string;
+  stateCode?: string;
+  postcode?: string;
+  country?: string;
+  countryCode?: string;
+  latitude: number;
+  longitude: number;
+  timezone?: {
+    name?: string;
+    offsetSTD?: string;
+    offsetDST?: string;
+  };
+  wikidataId?: string;
+  description?: string;
+  categories: string[];
+  resultType?: string;
+}
 
 /* Helpers */
 function getGeoapifyKey(): string {
   return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
+}
+
+function resolveGeoapifyFeatures(data: GeoapifyResponse): GeoapifyFeature[] {
+  if ('features' in data) {
+    return data.features;
+  }
+  if ('results' in data) {
+    return data.results.map((result) => ({ properties: result }));
+  }
+  return [];
 }
 
 /* Geoapify – Autocomplete */
@@ -89,7 +164,8 @@ async function fetchGeoapifyAutocompleteInternal({
   if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
 
   const data = (await res.json()) as GeoapifyResponse;
-  return data.features.filter((f) => allowedResultTypes.has(f.properties.result_type ?? ''));
+  const features = resolveGeoapifyFeatures(data);
+  return features.filter((f) => allowedResultTypes.has(f.properties.result_type ?? ''));
 }
 
 const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, lat, lon) => {
@@ -162,4 +238,108 @@ export async function fetchGeoapifyAddressAutocomplete(
     latitude: f.properties.lat,
     longitude: f.properties.lon,
   }));
+}
+
+const PLACE_SEARCH_LIMIT = 6;
+
+export async function fetchGeoapifyPlaceSearch(
+  name: string,
+  lat?: number,
+  lon?: number
+): Promise<GeoapifyPlaceSearchResult[]> {
+  const key = getGeoapifyKey();
+  const params = new URLSearchParams({
+    name,
+    format: 'json',
+    limit: String(PLACE_SEARCH_LIMIT),
+    apiKey: key,
+  });
+  if (lat != null && lon != null) {
+    params.set('bias', `proximity:${lon},${lat}`);
+  }
+
+  const requestUrl = `https://api.geoapify.com/v1/geocode/search?${params.toString()}`;
+  const res = await fetch(requestUrl, {
+    cache: 'force-cache',
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) {
+    throw new Error(`Geoapify place search failed: ${res.status}`);
+  }
+
+  const data = (await res.json()) as GeoapifyResponse;
+  const featureList =
+    'features' in data
+      ? data.features
+      : data.results
+      ? data.results.map((result) => ({ properties: result }))
+      : [];
+
+  return featureList.map(({ properties }) => ({
+    placeId: String(properties.place_id),
+    name: properties.name ?? properties.formatted ?? name,
+    formatted: properties.formatted ?? properties.name ?? name,
+    addressLine1: properties.address_line1,
+    addressLine2: properties.address_line2,
+    latitude: properties.lat,
+    longitude: properties.lon,
+    resultType: properties.result_type,
+    category: properties.category,
+    description: properties.description,
+  }));
+}
+
+export async function fetchGeoapifyPlaceDetails(placeId: string): Promise<GeoapifyPlaceDetails> {
+  const key = getGeoapifyKey();
+  const params = new URLSearchParams({
+    id: placeId,
+    format: 'json',
+    apiKey: key,
+  });
+
+  const requestUrl = `https://api.geoapify.com/v2/place-details?${params.toString()}`;
+  const res = await fetch(requestUrl, {
+    cache: 'force-cache',
+    next: { revalidate: 86400 },
+  });
+  if (!res.ok) {
+    throw new Error(`Geoapify place details failed: ${res.status}`);
+  }
+
+  const data = (await res.json()) as GeoapifyResponse;
+  const feature = resolveGeoapifyFeatures(data)[0];
+  if (!feature) {
+    throw new Error('Geoapify place details returned no features');
+  }
+
+  const properties = feature.properties;
+  return {
+    placeId: String(properties.place_id),
+    name: properties.name ?? properties.formatted ?? '',
+    formatted: properties.formatted ?? '',
+    addressLine1: properties.address_line1,
+    addressLine2: properties.address_line2,
+    street: properties.street,
+    district: properties.district,
+    city: properties.city,
+    county: properties.county,
+    state: properties.state,
+    stateCode: properties.state_code,
+    postcode: properties.postcode,
+    country: properties.country,
+    countryCode: properties.country_code,
+    latitude: properties.lat,
+    longitude: properties.lon,
+    timezone: properties.timezone
+      ? {
+          name: properties.timezone.name,
+          offsetSTD: properties.timezone.offset_STD,
+          offsetDST: properties.timezone.offset_DST,
+        }
+      : undefined,
+    wikidataId: properties.wiki_and_media?.wikidata,
+    description: properties.description,
+    categories: properties.categories ?? [],
+    resultType: properties.result_type,
+  };
 }

@@ -7,6 +7,11 @@ import { cn } from '@/shared/utils/cn';
 import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
 import { useAddActivity } from '@/features/app/planner/hooks/useAddActivity';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
+import type { ActivitySuggestion } from '@/features/app/planner/types/activitySuggestion';
+import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+
+import { ActivitySuggestionsPanel } from '@/features/app/planner/components/dialog/ActivitySuggestionsPanel';
 
 import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
 import { useInlineOutsideSubmit } from '../../hooks/ui/useInlineOutsideSubmit';
@@ -31,6 +36,8 @@ export function InlineCard({
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const suggestionsPanelRef = useRef<HTMLDivElement>(null);
 
   const containerRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +46,81 @@ export function InlineCard({
   const copy = ACTIVITY_COPY.inlineAdd;
 
   const focusInput = useInlineAutoFocus(inputRef);
+
+  const handleTitleBlur = React.useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      const related = event.relatedTarget as Node | null;
+      if (!suggestionsPanelRef.current?.contains(related)) {
+        setIsSuggestionsOpen(false);
+      }
+    },
+    []
+  );
+
+  const { suggestions, loading, error: suggestionsError } = useActivitySuggestions(title, {
+    enabled: title.trim().length >= 3,
+  });
+
+  const showSuggestionsPanel = isSuggestionsOpen && title.trim().length >= 3;
+
+  const handleTitleInputChange = (value: string) => {
+    setTitle(value);
+    if (value.trim().length > 0) {
+      setTouched(false);
+      setError(null);
+    }
+    setIsSuggestionsOpen(value.trim().length >= 3);
+  };
+
+  const handleTitleFocus = () => {
+    if (title.trim().length >= 3) {
+      setIsSuggestionsOpen(true);
+    }
+  };
+
+  const { updateActivity } = usePlannerContext();
+
+  const finalizeInlineActivity = () => {
+    setTitle('');
+    setTouched(false);
+    onAdvanceInline?.(insertIndex + 1);
+    requestAnimationFrame(focusInput);
+
+  const fetchPlaceDetails = async (placeId: string) => {
+    try {
+      const response = await fetch(`/api/geoapify/place-details?placeId=${encodeURIComponent(placeId)}`);
+      if (!response.ok) {
+        return null;
+      }
+      return await response.json();
+    } catch {
+      return null;
+    }
+  };
+
+  const handleSuggestionSelect = async (suggestion: ActivitySuggestion) => {
+    setTitle(suggestion.name);
+    setTouched(false);
+    setError(null);
+    setIsSuggestionsOpen(false);
+
+    const activity = await trySubmit();
+    if (!activity) {
+      requestAnimationFrame(() => inputRef.current?.focus());
+      return;
+    }
+
+    const body = await fetchPlaceDetails(suggestion.placeId);
+    updateActivity(activity.id, {
+      title: suggestion.name,
+      address: body?.details?.formatted ?? suggestion.formatted,
+      description: body?.details?.description ?? suggestion.description,
+      imageUrl: body?.wikidataImageUrl ?? undefined,
+      latitude: suggestion.latitude,
+      longitude: suggestion.longitude,
+    });
+    finalizeInlineActivity();
+  };
 
   const isInvalid = useMemo(() => {
     return touched && title.trim().length === 0;
@@ -50,17 +132,17 @@ export function InlineCard({
     if (trimmedTitle.length === 0) {
       setError(null);
       focusInput();
-      return false;
+      return null;
     }
 
     try {
       setError(null);
-      await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
-      return true;
+      const result = await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
+      return result;
     } catch (err) {
       console.error(err);
       setError(copy.errorGeneric);
-      return false;
+      return null;
     }
   }, [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]);
 
@@ -75,8 +157,8 @@ export function InlineCard({
       const submitter = nativeEvent.submitter ?? null;
       const shouldClose = submitter instanceof HTMLElement && submitter.dataset.close === 'true';
 
-      const didSubmit = await trySubmit();
-      if (!didSubmit) {
+      const activity = await trySubmit();
+      if (!activity) {
         return;
       }
 
@@ -85,12 +167,9 @@ export function InlineCard({
         return;
       }
 
-      setTitle('');
-      setTouched(false);
-      onAdvanceInline?.(insertIndex + 1);
-      requestAnimationFrame(focusInput);
+    finalizeInlineActivity();
     },
-    [focusInput, insertIndex, isComposing, isPending, onAdvanceInline, onClose, trySubmit]
+    [insertIndex, isComposing, isPending, onAdvanceInline, onClose, trySubmit]
   );
 
   const handleOutsideSubmit = useCallback(() => {
@@ -105,8 +184,8 @@ export function InlineCard({
 
     outsideSubmitRef.current = true;
     void trySubmit()
-      .then((didSubmit) => {
-        if (didSubmit) {
+      .then((activity) => {
+        if (activity) {
           onClose();
         }
       })
@@ -141,7 +220,7 @@ export function InlineCard({
         <div
           role="group"
           aria-label={copy.a11yGroupLabel}
-          className="flex flex-col gap-3"
+          className="relative flex flex-col gap-3"
           data-no-dnd
         >
           <label htmlFor={`inline-add-${dayId}-${insertIndex}`} className="sr-only">
@@ -152,16 +231,12 @@ export function InlineCard({
             id={`inline-add-${dayId}-${insertIndex}`}
             data-testid="planner-inline-add-input"
             value={title}
-            onChange={(event) => {
-              setTitle(event.target.value);
-              if (event.target.value.trim().length > 0) {
-                setTouched(false);
-                setError(null);
-              }
-            }}
+            onChange={(event) => handleTitleInputChange(event.target.value)}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionEnd={() => setIsComposing(false)}
             onKeyDown={handleKeyDown}
+            onFocus={handleTitleFocus}
+            onBlur={handleTitleBlur}
             placeholder={copy.placeholderTitle}
             autoCapitalize="sentences"
             autoCorrect="on"
@@ -175,6 +250,16 @@ export function InlineCard({
               isInvalid ? 'border-red-500 focus:ring-red-500' : 'border-border'
             )}
           />
+          {showSuggestionsPanel && (
+            <div className="absolute inset-x-0 top-full z-10 mt-1" ref={suggestionsPanelRef}>
+              <ActivitySuggestionsPanel
+                suggestions={suggestions}
+                loading={loading}
+                error={Boolean(suggestionsError)}
+                onSelect={handleSuggestionSelect}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">

@@ -6,16 +6,25 @@ import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
 import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
 import { LocationSearchInput } from '../ui/LocationSearchInput';
+import { ActivitySuggestionsPanel } from './ActivitySuggestionsPanel';
 import { useAddressAutocomplete } from '@/features/app/planner/hooks/search/useAddressAutocomplete';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import type { ActivitySuggestion } from '@/features/app/planner/types/activitySuggestion';
 
 interface ActivityDialogFormProps {
   activity: Activity;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
+  onSelectSuggestion?: (patch: Partial<Activity>) => void;
 }
 
-export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
+export function ActivityDialogForm({
+  activity,
+  onSave,
+  color,
+  onSelectSuggestion,
+}: ActivityDialogFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
@@ -24,6 +33,18 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
   const [latitude, setLatitude] = useState<number | undefined>(activity.latitude);
   const [longitude, setLongitude] = useState<number | undefined>(activity.longitude);
   const { destCoords } = usePlannerContext();
+  const [suggestionSource, setSuggestionSource] = useState<'title' | 'address'>('title');
+  const suggestionQuery = (suggestionSource === 'address' ? address : editedTitle).trim();
+  const {
+    suggestions,
+    loading: suggestionsLoading,
+    error: suggestionsError,
+  } = useActivitySuggestions(suggestionQuery, {
+    latitude: destCoords?.lat,
+    longitude: destCoords?.lng,
+  });
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const suggestionsPanelRef = useRef<HTMLDivElement>(null);
 
   // Update internal state when the activity prop changes
   useEffect(() => {
@@ -45,6 +66,19 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
       titleInputRef.current?.scrollIntoView({ block: 'center' });
     }
   }, []);
+
+  const handleTitleInputChange = (value: string) => {
+    setEditedTitle(value);
+    setSuggestionSource('title');
+    setIsSuggestionsOpen(value.trim().length >= 3);
+  };
+
+  const handleTitleFocus = () => {
+    setSuggestionSource('title');
+    if (editedTitle.trim().length >= 3) {
+      setIsSuggestionsOpen(true);
+    }
+  };
 
   async function handleSave() {
     let lat = latitude;
@@ -79,9 +113,62 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
     });
   }
 
+  const showSuggestionsPanel = isSuggestionsOpen && suggestionQuery.length >= 3;
+
+  async function handleSuggestionSelect(suggestion: ActivitySuggestion) {
+    setEditedTitle(suggestion.name);
+    setAddress(suggestion.formatted);
+    setLatitude(suggestion.latitude);
+    setLongitude(suggestion.longitude);
+    setEditedDescription(suggestion.description ?? '');
+    setSuggestionSource('title');
+    setIsSuggestionsOpen(false);
+
+    let selectedAddress = suggestion.formatted;
+    let selectedDescription = suggestion.description;
+    let selectedImageUrl: string | undefined;
+
+    try {
+      const response = await fetch(
+        `/api/geoapify/place-details?placeId=${encodeURIComponent(suggestion.placeId)}`
+      );
+      if (response.ok) {
+        const body = (await response.json()) as {
+          details?: { formatted?: string; description?: string };
+          wikidataImageUrl?: string;
+        };
+        if (body.details?.formatted) {
+          setAddress(body.details.formatted);
+          selectedAddress = body.details.formatted;
+        }
+        if (body.details?.description) {
+          setEditedDescription(body.details.description);
+          selectedDescription = body.details.description;
+        }
+        selectedImageUrl = body.wikidataImageUrl ?? undefined;
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      onSelectSuggestion?.({
+        title: suggestion.name,
+        address: selectedAddress,
+        latitude: suggestion.latitude,
+        longitude: suggestion.longitude,
+        description: selectedDescription,
+        imageUrl: selectedImageUrl,
+      });
+    }
+  }
+
   const canSave = Boolean(editedTitle.trim());
 
-  const handleTitleBlur = () => {
+  const handleTitleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const related = event.relatedTarget as Node | null;
+    if (!suggestionsPanelRef.current?.contains(related)) {
+      setIsSuggestionsOpen(false);
+    }
+
     if (!editedTitle.trim()) {
       setEditedTitle(activity.title ?? '');
     }
@@ -90,21 +177,34 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
   return (
     <>
       {/* Editable title */}
-      <label htmlFor="title" className="sr-only">
-        Title
-      </label>
-      <input
-        id="title"
-        name="title"
-        ref={titleInputRef}
-        value={editedTitle}
-        onChange={(e) => setEditedTitle(e.target.value)}
-        onBlur={handleTitleBlur}
-        placeholder={EMPTY_ACTIVITY_TITLE}
-        required
-        aria-required="true"
-        className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
-      />
+      <div className="relative mx-4">
+        <label htmlFor="title" className="sr-only">
+          Title
+        </label>
+        <input
+          id="title"
+          name="title"
+          ref={titleInputRef}
+          value={editedTitle}
+          onChange={(e) => handleTitleInputChange(e.target.value)}
+          onFocus={handleTitleFocus}
+          onBlur={handleTitleBlur}
+          placeholder={EMPTY_ACTIVITY_TITLE}
+          required
+          aria-required="true"
+          className="focus:ring-primary mb-4 w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+        />
+        {showSuggestionsPanel && (
+          <div className="absolute inset-x-0 top-full z-10 mt-1" ref={suggestionsPanelRef}>
+            <ActivitySuggestionsPanel
+              suggestions={suggestions}
+              loading={suggestionsLoading}
+              error={suggestionsError}
+              onSelect={handleSuggestionSelect}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Duration & Budget group */}
       <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
@@ -181,8 +281,9 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
           latitude={destCoords?.lat}
           longitude={destCoords?.lng}
           autocompleteHook={useAddressAutocomplete}
+          onFocus={() => setSuggestionSource('address')}
         />
-      </div>
+    </div>
 
       {/* Notes */}
       <div className="mb-2 px-4">
