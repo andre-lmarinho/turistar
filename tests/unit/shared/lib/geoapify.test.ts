@@ -184,7 +184,10 @@ describe('fetchGeoapifyPlaceSearch', () => {
 
     await fetchGeoapifyPlaceSearch('Forte', 1, 2);
 
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('bias=proximity:2,1'), expect.any(Object));
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('bias=proximity%3A2%2C1'),
+      expect.any(Object)
+    );
   });
 
   it('handles responses that expose a `results` array instead of features', async () => {
