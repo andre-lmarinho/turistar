@@ -5,7 +5,7 @@ import { fetchGeoapifyPlaceSearch } from '@/shared/lib/geoapify';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+async function handleLocalSearch(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const name = validateGeoapifyQuery(searchParams, 'name');
   if (typeof name !== 'string') {
@@ -26,4 +26,8 @@ export async function GET(req: NextRequest) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to search places.' }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return handleLocalSearch(req);
 }

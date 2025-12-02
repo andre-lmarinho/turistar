@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GET } from '@/server/api/geoapify/place-details/route';
+import { GET } from '@/server/api/places/details/route';
 
 const { mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceDetails: vi.fn(),
@@ -15,10 +15,10 @@ vi.mock('@/shared/lib/wikidata', () => ({
 }));
 
 const createRequest = (search: string): NextRequest => {
-  return { url: `https://example.com/api/geoapify/place-details${search}` } as NextRequest;
+  return { url: `https://example.com/api/places/details${search}` } as NextRequest;
 };
 
-describe('GET /api/geoapify/place-details', () => {
+describe('GET /api/places/details', () => {
   beforeEach(() => {
     mockFetchGeoapifyPlaceDetails.mockReset();
     mockFetchWikidataImage.mockReset();

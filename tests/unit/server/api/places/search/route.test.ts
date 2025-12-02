@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GET } from '@/server/api/geoapify/place-search/route';
+import { GET } from '@/server/api/places/search/route';
 
 const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
@@ -11,10 +11,10 @@ vi.mock('@/shared/lib/geoapify', () => ({
 }));
 
 const createRequest = (search: string): NextRequest => {
-  return { url: `https://example.com/api/geoapify/place-search${search}` } as NextRequest;
+  return { url: `https://example.com/api/places/search${search}` } as NextRequest;
 };
 
-describe('GET /api/geoapify/place-search', () => {
+describe('GET /api/places/search', () => {
   beforeEach(() => {
     mockFetchGeoapifyPlaceSearch.mockReset();
   });

@@ -5,7 +5,7 @@ import { fetchWikidataImage } from '@/shared/lib/wikidata';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+async function handleLocalDetails(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const placeId = searchParams.get('placeId');
   if (!placeId) {
@@ -22,4 +22,8 @@ export async function GET(req: NextRequest) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to load place details.' }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return handleLocalDetails(req);
 }

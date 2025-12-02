@@ -130,7 +130,7 @@ export function ActivityDialogForm({
 
     try {
       const response = await fetch(
-        `/api/geoapify/place-details?placeId=${encodeURIComponent(suggestion.placeId)}`
+        `/api/places/details?placeId=${encodeURIComponent(suggestion.placeId)}`
       );
       if (response.ok) {
         const body = (await response.json()) as {

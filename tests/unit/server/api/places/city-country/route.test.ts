@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GET } from '@/server/api/autocomplete/route';
+import { GET } from '@/server/api/places/city-country/route';
 
 const { mockFetchGeoapifyAutocomplete } = vi.hoisted(() => ({
   mockFetchGeoapifyAutocomplete: vi.fn(),
@@ -11,10 +11,10 @@ vi.mock('@/shared/lib/geoapify', () => ({
 }));
 
 const createRequest = (search: string): NextRequest => {
-  return { url: `https://example.com/api/autocomplete${search}` } as NextRequest;
+  return { url: `https://example.com/api/places/city-country${search}` } as NextRequest;
 };
 
-describe('GET /api/autocomplete', () => {
+describe('GET /api/places/city-country', () => {
   beforeEach(() => {
     mockFetchGeoapifyAutocomplete.mockReset();
   });

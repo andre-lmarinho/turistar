@@ -137,7 +137,7 @@ describe('ActivityDialogForm address autocomplete', () => {
     );
 
     expect(fetchSpy).toHaveBeenCalledWith(
-      expect.stringContaining('/api/geoapify/place-details?placeId=pid')
+      expect.stringContaining('/api/places/details?placeId=pid')
     );
 
     fetchSpy.mockRestore();

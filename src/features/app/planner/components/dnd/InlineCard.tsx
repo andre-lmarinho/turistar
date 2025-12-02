@@ -89,7 +89,7 @@ export function InlineCard({
 
   const fetchPlaceDetails = async (placeId: string) => {
     try {
-      const response = await fetch(`/api/geoapify/place-details?placeId=${encodeURIComponent(placeId)}`);
+      const response = await fetch(`/api/places/details?placeId=${encodeURIComponent(placeId)}`);
       if (!response.ok) {
         return null;
       }

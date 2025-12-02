@@ -33,7 +33,7 @@ export function useActivitySuggestions(
         params.set('lat', String(options.latitude));
         params.set('lon', String(options.longitude));
       }
-      const requestUrl = `/api/geoapify/place-search?${params.toString()}`;
+      const requestUrl = `/api/places/search?${params.toString()}`;
       const res = await fetch(requestUrl, signal ? { signal } : undefined);
       if (!res.ok) {
         throw new Error('Failed to load activity suggestions');

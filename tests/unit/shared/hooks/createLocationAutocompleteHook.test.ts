@@ -21,7 +21,7 @@ describe('createLocationAutocompleteHook', () => {
   it('builds the query key with trimmed text and coordinates', async () => {
     mockUseQuery.mockReturnValue({ data: [], isLoading: false, isError: false });
     const hook = createLocationAutocompleteHook({
-      endpoint: '/api/autocomplete',
+    endpoint: '/api/places/city-country',
       queryKeyPrefix: 'test-autocomplete',
       minimumQueryLength: 3,
     });
@@ -47,7 +47,7 @@ describe('createLocationAutocompleteHook', () => {
 
     await queryFn({ signal: abortController.signal });
 
-    expect(fetchSpy).toHaveBeenCalledWith('/api/autocomplete?text=Paris&lat=1&lon=2', {
+    expect(fetchSpy).toHaveBeenCalledWith('/api/places/city-country?text=Paris&lat=1&lon=2', {
       signal: abortController.signal,
     });
   });
@@ -55,7 +55,7 @@ describe('createLocationAutocompleteHook', () => {
   it('disables the query when below the minimum length', () => {
     mockUseQuery.mockReturnValue({ data: undefined, isLoading: false, isError: false });
     const hook = createLocationAutocompleteHook({
-      endpoint: '/api/autocomplete/addresses',
+      endpoint: '/api/places/address',
       queryKeyPrefix: 'address',
       minimumQueryLength: 5,
     });
