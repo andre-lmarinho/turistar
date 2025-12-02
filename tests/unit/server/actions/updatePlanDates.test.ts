@@ -5,9 +5,9 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 }));
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { setPlanDateRange } from '@/server/actions/updatePlan';
+import { updatePlanDates } from '@/server/actions/plans/updatePlanDates';
 
-describe('setPlanDateRange', () => {
+describe('updatePlanDates', () => {
   beforeEach(() => {
     vi.mocked(supabaseServer).mockReset();
   });
@@ -29,7 +29,7 @@ describe('setPlanDateRange', () => {
   it('formats dates and updates the plan record', async () => {
     const { from, update, eq } = mockUpdateResponse(null);
 
-    await setPlanDateRange(
+    await updatePlanDates(
       'plan-1',
       new Date('2024-03-10T10:30:00Z'),
       new Date('2024-03-15T15:45:00Z')
@@ -45,7 +45,7 @@ describe('setPlanDateRange', () => {
     mockUpdateResponse(error);
 
     await expect(
-      setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
+      updatePlanDates('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
     ).rejects.toThrow('update failed');
   });
 
@@ -53,7 +53,7 @@ describe('setPlanDateRange', () => {
     mockUpdateResponse({});
 
     await expect(
-      setPlanDateRange('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
+      updatePlanDates('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
     ).rejects.toThrow('Failed to update plan date range');
   });
 });

@@ -3,7 +3,7 @@
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { format } from 'date-fns';
 
-export async function setPlanDateRange(planId: string, from: Date, to: Date) {
+export async function updatePlanDates(planId: string, from: Date, to: Date) {
   const supabase = supabaseServer();
   const { error } = await supabase
     .from('plans')
