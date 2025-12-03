@@ -22,7 +22,7 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   __esModule: true,
   usePlannerContext: () => ({ destCoords: { lat: 1, lng: 2 }, canEdit: true }),
 }));
-vi.mock('@/shared/hooks/useDebounce', () => ({
+vi.mock('@/features/app/planner/hooks/search/useDebounce', () => ({
   useDebounce: mockUseDebounce,
 }));
 
@@ -120,8 +120,8 @@ describe('ActivityDialogForm address autocomplete', () => {
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 'For' } });
 
-    const suggestionButton = await screen.findByRole('button', { name: /Forte/ });
-    fireEvent.click(suggestionButton);
+    const suggestionOption = await screen.findByRole('option', { name: /Forte/ });
+    fireEvent.mouseDown(suggestionOption);
 
     await waitFor(() =>
       expect(handleSelectSuggestion).toHaveBeenCalledWith(

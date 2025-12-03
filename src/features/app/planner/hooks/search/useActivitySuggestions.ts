@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { useDebounce } from '@/features/app/planner/hooks/search/useDebounce';
 import type { ActivitySuggestion } from '@/features/app/planner/types/activitySuggestion';
 
 interface ActivitySuggestionOptions {
@@ -16,8 +15,7 @@ export function useActivitySuggestions(
   loading: boolean;
   error: boolean;
 } {
-  const debouncedQuery = useDebounce(query);
-  const trimmedQuery = debouncedQuery.trim();
+  const trimmedQuery = query.trim();
   const isEnabled = (options.enabled ?? true) && trimmedQuery.length >= 3;
 
   const { data, isLoading, isError } = useQuery({

@@ -11,7 +11,7 @@ const { mockUseDebounce } = vi.hoisted(() => {
     mockUseDebounce: vi.fn(),
   };
 });
-vi.mock('@/shared/hooks/useDebounce', () => ({
+vi.mock('@/features/app/planner/hooks/search/useDebounce', () => ({
   useDebounce: mockUseDebounce,
 }));
 
@@ -42,11 +42,14 @@ describe('LocationSearchInput', () => {
     const option = screen.getByRole('option', { name: 'Rome, Italy' });
     fireEvent.mouseDown(option);
 
-    expect(handleChange).toHaveBeenCalledWith({
-      name: 'Rome, Italy',
-      latitude: 0,
-      longitude: 0,
-    });
+    expect(handleChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Rome, Italy',
+        latitude: 0,
+        longitude: 0,
+        source: 'location',
+      })
+    );
   });
 
   it('allows selecting a suggestion with keyboard navigation', () => {
@@ -71,11 +74,14 @@ describe('LocationSearchInput', () => {
     fireEvent.keyDown(input, { key: 'ArrowDown' });
     fireEvent.keyDown(input, { key: 'Enter' });
 
-    expect(handleChange).toHaveBeenCalledWith({
-      name: 'London, UK',
-      latitude: 1,
-      longitude: 1,
-    });
+    expect(handleChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'London, UK',
+        latitude: 1,
+        longitude: 1,
+        source: 'location',
+      })
+    );
   });
 
   it('renders an error message when the hook returns an error', () => {
