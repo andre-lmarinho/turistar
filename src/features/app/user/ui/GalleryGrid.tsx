@@ -1,0 +1,21 @@
+'use client';
+
+import { cn } from '@/shared/utils/cn';
+
+type GalleryGridProps = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+export function GalleryGrid({ children, className }: GalleryGridProps) {
+  return (
+    <div
+      className={cn(
+        'grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-4',
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}

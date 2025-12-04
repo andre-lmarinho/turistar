@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
+import { UserSidebarLayout } from '@/features/app/user/layout/UserSidebarLayout';
 
 export default async function UserDashboardLayout({
   children,
@@ -38,5 +39,9 @@ export default async function UserDashboardLayout({
     throw error;
   }
 
-  return <div className="mx-auto w-full max-w-7xl p-4">{children}</div>;
+  return (
+    <UserSidebarLayout>
+      <div className="mx-auto w-full max-w-7xl p-4">{children}</div>
+    </UserSidebarLayout>
+  );
 }

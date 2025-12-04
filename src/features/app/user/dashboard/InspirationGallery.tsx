@@ -1,5 +1,6 @@
 import { InspirationCard } from '@/features/app/inspiration/ui/InspirationCard';
 import { getAllInspirationItems } from '@/features/app/inspiration/data';
+import { GalleryGrid } from '@/features/app/user/ui/GalleryGrid';
 
 export function InspirationGallery() {
   const items = getAllInspirationItems();
@@ -12,11 +13,11 @@ export function InspirationGallery() {
           Be inspired by fellow travellers
         </h2>
       </div>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+      <GalleryGrid>
         {items.map((item) => (
           <InspirationCard key={item.slug} {...item} />
         ))}
-      </div>
+      </GalleryGrid>
     </section>
   );
 }
