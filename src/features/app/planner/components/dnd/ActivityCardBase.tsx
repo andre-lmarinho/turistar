@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { cn } from '@/shared/utils/cn';
 import { DollarSign, Hourglass } from '@/shared/ui/icon';
 import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
 
@@ -22,9 +23,15 @@ export function ActivityCardBase({
   budget,
   borderColorClass,
 }: ActivityCardBaseProps) {
+  const backgroundClass = twBg ?? 'bg-background';
+
   return (
     <div
-      className={`group bg-background relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 text-left transition ${borderColorClass} ${twBg ?? ''}`}
+      className={cn(
+        'group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 text-left transition',
+        borderColorClass,
+        backgroundClass
+      )}
     >
       {/* Image */}
       {imageUrl && (
