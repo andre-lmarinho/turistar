@@ -33,7 +33,7 @@ export function SortableItem({
     return (
       <div
         className={cn(
-          'bg-background pointer-events-none origin-bottom rotate-[3deg] cursor-grabbing rounded-lg opacity-90 backdrop-blur-md transition-transform duration-200 ease-out',
+          'bg-background pointer-events-none origin-bottom rotate-3 cursor-grabbing rounded-lg opacity-90 backdrop-blur-md transition-transform duration-200 ease-out',
           className
         )}
       >
@@ -52,7 +52,7 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative [touch-action:none] list-none',
+        'relative touch-none list-none',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         className
       )}

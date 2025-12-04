@@ -1,44 +1,51 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { AutocompletePlace } from '@/features/app/planner/types/locations';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
 
-interface LocationAutocompleteOptions {
+interface SuggestionHookOptions {
   enabled?: boolean;
   latitude?: number;
   longitude?: number;
 }
 
-interface LocationAutocompleteConfig {
-  /** Endpoint that proxies Geoapify autocomplete results. */
+interface SuggestionHookConfig<TResult> {
   endpoint: string;
-  /** Prefix used for the TanStack Query cache key. */
   queryKeyPrefix: string;
-  /** Minimum length before the query triggers. Defaults to 4 characters. */
   minimumQueryLength?: number;
+  paramName?: string;
+  mapResults?: (body: unknown) => TResult[];
 }
 
-export type LocationAutocompleteHook = (
-  query: string,
-  options?: LocationAutocompleteOptions
-) => { results: AutocompletePlace[]; loading: boolean; error: boolean };
+export interface SuggestionHookResult<TResult> {
+  results: TResult[];
+  loading: boolean;
+  error: boolean;
+}
 
-export function createLocationAutocompleteHook({
+export type SuggestionHook<TResult> = (
+  query: string,
+  options?: SuggestionHookOptions
+) => SuggestionHookResult<TResult>;
+
+export function createGeoapifySuggestionHook<TResult>({
   endpoint,
   queryKeyPrefix,
-  minimumQueryLength = 4,
-}: LocationAutocompleteConfig): LocationAutocompleteHook {
-  return function useLocationAutocomplete(
+  minimumQueryLength = GEOAPIFY_MIN_QUERY_LENGTH,
+  paramName = 'text',
+  mapResults,
+}: SuggestionHookConfig<TResult>): SuggestionHook<TResult> {
+  return function useGeoapifySuggestions(
     query: string,
-    options: LocationAutocompleteOptions = {}
-  ) {
+    options: SuggestionHookOptions = {}
+  ): SuggestionHookResult<TResult> {
     const trimmedQuery = query.trim();
     const isEnabled = (options.enabled ?? true) && trimmedQuery.length >= minimumQueryLength;
 
     const { data, isLoading, isError } = useQuery({
       queryKey: [queryKeyPrefix, trimmedQuery, options.latitude, options.longitude],
       queryFn: async ({ signal }) => {
-        const params = new URLSearchParams({ text: trimmedQuery });
+        const params = new URLSearchParams({ [paramName]: trimmedQuery });
         if (options.latitude != null && options.longitude != null) {
           params.set('lat', String(options.latitude));
           params.set('lon', String(options.longitude));
@@ -48,8 +55,8 @@ export function createLocationAutocompleteHook({
         if (!res.ok) {
           throw new Error('Failed to load suggestions');
         }
-        const body = (await res.json()) as { results: AutocompletePlace[] };
-        return body.results;
+        const body = await res.json();
+        return mapResults ? mapResults(body) : ((body as { results?: TResult[] }).results ?? []);
       },
       enabled: isEnabled,
       staleTime: 1000 * 60,
@@ -57,7 +64,7 @@ export function createLocationAutocompleteHook({
     });
 
     return {
-      results: data ?? ([] as AutocompletePlace[]),
+      results: data ?? [],
       loading: isLoading,
       error: isError,
     };

@@ -1,12 +1,15 @@
 'use client';
 
-import { createLocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
+import { createGeoapifySuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
+import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 
 /**
  * Geoapify autocomplete tailored to city/state/country lookups (used in creation flows).
  */
-export const useDestinationAutocomplete = createLocationAutocompleteHook({
-  endpoint: '/api/autocomplete',
+export const useDestinationAutocomplete = createGeoapifySuggestionHook<AutocompletePlace>({
+  endpoint: '/api/places/city-country',
   queryKeyPrefix: 'home-destination-autocomplete',
-  minimumQueryLength: 4,
+  minimumQueryLength: GEOAPIFY_MIN_QUERY_LENGTH,
+  paramName: 'text',
 });

@@ -48,7 +48,7 @@ export function DayColumn({ day, onSelectActivity, canEdit = true }: DayColumnPr
       ref={canEdit ? setNodeRef : undefined}
       className={`flex h-full flex-1 flex-col ${isOver && canEdit ? 'ring-primary/40 ring-2' : ''}`}
     >
-      <div className="flex px-3 pt-2 text-[var(--muted-foreground)]">
+      <div className="text-muted-foreground flex px-3 pt-2">
         <h2 className="text-sm font-semibold">{day.label}</h2>
       </div>
 

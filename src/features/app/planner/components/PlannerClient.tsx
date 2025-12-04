@@ -8,7 +8,7 @@ import { PlannerProvider, usePlannerContext } from '@/features/app/planner/hooks
 import { usePlanTitle } from '@/features/app/planner/hooks/data/usePlanTitleSupabase';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
-import { usePlanEditTokens } from '@/features/app/planner/infrastructure/supabase/planEditToken';
+import { usePlanEditTokens } from '@/features/app/planner/hooks/data/usePlanEditTokens';
 
 import { PlannerHeader } from './PlannerHeader';
 import { PlannerModeDeck, type PlannerMode } from './PlannerModeDeck';

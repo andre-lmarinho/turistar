@@ -104,7 +104,7 @@ export function TestimonialCarousel() {
             <div
               key={`${i}-${t.name}`}
               onClick={() => setIdx(i)}
-              className={`h-full cursor-pointer transition-[opacity] duration-300 ${cls}`}
+              className={`h-full cursor-pointer transition-opacity duration-300 ${cls}`}
             >
               <TestimonialCard
                 quote={t.quote}

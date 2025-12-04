@@ -44,7 +44,7 @@ function DesktopSolutionsMenu() {
           </NavigationMenu.Content>
         </NavigationMenu.Item>
       </NavigationMenu.List>
-      <NavigationMenu.Viewport className="pointer-events-none absolute top-full left-1/2 z-50 h-[var(--radix-navigation-menu-viewport-height)] w-[var(--radix-navigation-menu-viewport-width)] -translate-x-1/2 transition-[opacity,transform,width,height] duration-150 ease-out data-[state=closed]:-translate-y-2 data-[state=closed]:opacity-0 data-[state=open]:pointer-events-auto data-[state=open]:translate-y-0 data-[state=open]:opacity-100" />
+      <NavigationMenu.Viewport className="pointer-events-none absolute top-full left-1/2 z-50 h-(--radix-navigation-menu-viewport-height) w-(--radix-navigation-menu-viewport-width) -translate-x-1/2 transition-[opacity,transform,width,height] duration-150 ease-out data-[state=closed]:-translate-y-2 data-[state=closed]:opacity-0 data-[state=open]:pointer-events-auto data-[state=open]:translate-y-0 data-[state=open]:opacity-100" />
     </NavigationMenu.Root>
   );
 }

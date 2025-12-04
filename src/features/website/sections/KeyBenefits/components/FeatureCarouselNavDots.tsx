@@ -24,7 +24,7 @@ export function FeatureCarouselNavDots({
             onClick={() => onSelect(index)}
             className={cn(
               'h-2 cursor-pointer rounded-full transition-[width] duration-200 ease-out',
-              isActive ? 'w-[3.75rem] bg-[var(--secondary)]' : 'w-2 bg-[var(--card-foreground)]'
+              isActive ? 'bg-secondary w-15' : 'bg-card-foreground w-2'
             )}
             aria-label={`Go to slide ${index + 1}`}
             aria-current={isActive ? 'true' : 'false'}

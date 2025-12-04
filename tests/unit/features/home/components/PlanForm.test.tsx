@@ -43,7 +43,7 @@ vi.mock('@/features/app/planner/server/createPlan', () => ({
   createPlannerPlan: vi.fn(),
 }));
 
-vi.mock('@/features/app/planner/infrastructure/supabase/planEditToken', () => ({
+vi.mock('@/features/app/planner/hooks/data/usePlanEditTokens', () => ({
   usePlanEditTokens: () => ({ saveEditToken: vi.fn() }),
 }));
 

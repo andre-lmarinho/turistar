@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
 import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
 
 describe('validateGeoapifyQuery', () => {
@@ -11,23 +12,25 @@ describe('validateGeoapifyQuery', () => {
     await expect(response.json()).resolves.toEqual({ error: 'Query is required.' });
   });
 
-  it('returns an error response when the value is shorter than four characters', async () => {
-    const params = new URLSearchParams({ text: 'abc' });
+  it('returns an error response when the value is shorter than the minimum', async () => {
+    const shortValue = 'a'.repeat(GEOAPIFY_MIN_QUERY_LENGTH - 1);
+    const params = new URLSearchParams({ text: shortValue });
     const result = validateGeoapifyQuery(params, 'text');
 
     expect(result).toBeInstanceOf(NextResponse);
     const response = result as NextResponse;
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
-      error: 'Query must be at least 4 characters.',
+      error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.`,
     });
   });
 
   it('returns the string when the parameter is valid', () => {
-    const params = new URLSearchParams({ text: 'paris' });
+    const validValue = 'a'.repeat(GEOAPIFY_MIN_QUERY_LENGTH);
+    const params = new URLSearchParams({ text: validValue });
 
     const result = validateGeoapifyQuery(params, 'text');
 
-    expect(result).toBe('paris');
+    expect(result).toBe(validValue);
   });
 });

@@ -88,7 +88,7 @@ export function BudgetDialog({ open, days, onUpdate, onClose }: BudgetDialogProp
                   {activity.title || 'Untitled'} - {activity.dayLabel}
                 </span>
                 <div className="bg-background grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
-                  <span className="bg-muted border-r-1">
+                  <span className="bg-muted border-r">
                     <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
                   </span>
                   <input

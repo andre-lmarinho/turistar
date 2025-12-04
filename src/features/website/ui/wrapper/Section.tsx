@@ -14,12 +14,12 @@ export function Section({ children, variant = 'transparent' }: SectionProps) {
   return (
     <>
       <div className="group/section mx-3">
-        <div className="mx-auto h-full w-full max-w-[1200px] border-x px-3 group-first/section:pt-[96px]">
+        <div className="mx-auto h-full w-full max-w-[1200px] border-x px-3 group-first/section:pt-24">
           <div
             className={cn(
               'relative',
               variant === 'card' &&
-                'border-border bg-card overflow-hidden rounded-xl border shadow-[rgba(36,_36,_36,_0.7)_0px_1px_5px_-4px,rgba(36,_36,_36,_0.05)_0px_4px_8px_0px]'
+                'border-border bg-card overflow-hidden rounded-xl border shadow-[rgba(36,36,36,0.7)_0px_1px_5px_-4px,rgba(36,36,36,0.05)_0px_4px_8px_0px]'
             )}
           >
             <section

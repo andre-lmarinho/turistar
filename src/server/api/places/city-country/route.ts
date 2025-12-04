@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
-import { fetchGeoapifyAddressAutocomplete } from '@/shared/lib/geoapify';
+import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify/helpers';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+async function handleCityCountryAutocomplete(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const text = validateGeoapifyQuery(searchParams, 'text');
   if (typeof text !== 'string') {
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const lon = searchParams.get('lon');
 
   try {
-    const results = await fetchGeoapifyAddressAutocomplete(
+    const results = await fetchGeoapifyAutocomplete(
       text,
       lat ? Number(lat) : undefined,
       lon ? Number(lon) : undefined
@@ -26,4 +26,8 @@ export async function GET(req: NextRequest) {
     console.error(err);
     return NextResponse.json({ error: 'Failed to load suggestions.' }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  return handleCityCountryAutocomplete(req);
 }

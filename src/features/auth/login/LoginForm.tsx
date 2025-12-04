@@ -106,7 +106,7 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
         />
       </label>
       {formError ? (
-        <p role="alert" className="text-sm text-[var(--destructive)]">
+        <p role="alert" className="text-destructive text-sm">
           {formError}
         </p>
       ) : null}

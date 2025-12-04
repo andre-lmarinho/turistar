@@ -38,5 +38,5 @@ export default async function UserDashboardLayout({
     throw error;
   }
 
-  return <div className="mx-auto w-full max-w-screen-xl p-4">{children}</div>;
+  return <div className="mx-auto w-full max-w-7xl p-4">{children}</div>;
 }

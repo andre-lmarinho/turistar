@@ -13,7 +13,10 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'i.pravatar.cc', pathname: '/**' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'i.pravatar.cc', pathname: '/**' },
+      { protocol: 'https', hostname: 'commons.wikimedia.org', pathname: '/wiki/Special:FilePath/**' },
+    ],
   },
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';

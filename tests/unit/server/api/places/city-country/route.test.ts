@@ -1,20 +1,21 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GET } from '@/server/api/autocomplete/route';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
+import { GET } from '@/server/api/places/city-country/route';
 
 const { mockFetchGeoapifyAutocomplete } = vi.hoisted(() => ({
   mockFetchGeoapifyAutocomplete: vi.fn(),
 }));
 
-vi.mock('@/shared/lib/geoapify', () => ({
+vi.mock('@/shared/lib/geoapify/helpers', () => ({
   fetchGeoapifyAutocomplete: mockFetchGeoapifyAutocomplete,
 }));
 
 const createRequest = (search: string): NextRequest => {
-  return { url: `https://example.com/api/autocomplete${search}` } as NextRequest;
+  return { url: `https://example.com/api/places/city-country${search}` } as NextRequest;
 };
 
-describe('GET /api/autocomplete', () => {
+describe('GET /api/places/city-country', () => {
   beforeEach(() => {
     mockFetchGeoapifyAutocomplete.mockReset();
   });
@@ -26,11 +27,14 @@ describe('GET /api/autocomplete', () => {
     await expect(res.json()).resolves.toEqual({ error: 'Query is required.' });
   });
 
-  it('returns 400 when the text parameter is shorter than four characters', async () => {
-    const res = await GET(createRequest('?text=car'));
+  it('returns 400 when the text parameter is shorter than the minimum characters', async () => {
+    const shortQuery = 'a'.repeat(GEOAPIFY_MIN_QUERY_LENGTH - 1);
+    const res = await GET(createRequest(`?text=${shortQuery}`));
 
     expect(res.status).toBe(400);
-    await expect(res.json()).resolves.toEqual({ error: 'Query must be at least 4 characters.' });
+    await expect(res.json()).resolves.toEqual({
+      error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.`,
+    });
   });
 
   it('proxies Geoapify autocomplete results and parses coordinates', async () => {

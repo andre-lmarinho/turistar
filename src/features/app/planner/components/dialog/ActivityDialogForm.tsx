@@ -1,21 +1,33 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+
 import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
+import { LocationSearchInput } from '../ui/LocationSearchInput';
+import { ActivitySearchInput } from '../ui/ActivitySearchInput';
+
+import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
+
+import { useAddressAutocomplete } from '@/features/app/planner/hooks/search/useAddressAutocomplete';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
+import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 
 import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
-import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
-import { LocationSearchInput } from '../ui/LocationSearchInput';
-import { useAddressAutocomplete } from '@/features/app/planner/hooks/search/useAddressAutocomplete';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
 
 interface ActivityDialogFormProps {
   activity: Activity;
   onSave: (draft: Partial<Activity>) => void;
   color: string;
+  onSelectSuggestion?: (patch: Partial<Activity>) => void;
 }
 
-export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFormProps) {
+export function ActivityDialogForm({
+  activity,
+  onSave,
+  color,
+  onSelectSuggestion,
+}: ActivityDialogFormProps) {
   const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
   const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
   const [duration, setDuration] = useState<number>(activity.duration || 0);
@@ -45,6 +57,10 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
       titleInputRef.current?.scrollIntoView({ block: 'center' });
     }
   }, []);
+
+  const handleTitleInputChange = (value: string) => {
+    setEditedTitle(value);
+  };
 
   async function handleSave() {
     let lat = latitude;
@@ -79,6 +95,75 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
     });
   }
 
+  async function handleSuggestionSelect(selection: PlaceSelection<ActivitySuggestion>) {
+    const suggestion: ActivitySuggestion =
+      selection.raw ??
+      ({
+        placeId: selection.placeId ?? '',
+        name: selection.name,
+        formatted: selection.formatted ?? selection.name,
+        addressLine1: undefined,
+        addressLine2: undefined,
+        latitude: selection.latitude,
+        longitude: selection.longitude,
+        resultType: undefined,
+        category: selection.category,
+        description: selection.description,
+      } as ActivitySuggestion);
+
+    setEditedTitle(selection.name);
+    setAddress(selection.formatted ?? suggestion.formatted);
+    setLatitude(selection.latitude);
+    setLongitude(selection.longitude);
+    setEditedDescription(selection.description ?? suggestion.description ?? '');
+
+    let selectedAddress = selection.formatted ?? suggestion.formatted;
+    let selectedDescription = selection.description ?? suggestion.description;
+    let selectedImageUrl: string | undefined;
+
+    const placeId = selection.placeId ?? suggestion.placeId;
+
+    if (placeId) {
+      try {
+        const response = await fetch(`/api/places/details?placeId=${encodeURIComponent(placeId)}`);
+        if (response.ok) {
+          const body = (await response.json()) as {
+            details?: { formatted?: string; description?: string };
+            wikidataImageUrl?: string;
+          };
+          if (body.details?.formatted) {
+            setAddress(body.details.formatted);
+            selectedAddress = body.details.formatted;
+          }
+          if (body.details?.description) {
+            setEditedDescription(body.details.description);
+            selectedDescription = body.details.description;
+          }
+          selectedImageUrl = body.wikidataImageUrl ?? undefined;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    onSelectSuggestion?.({
+      title: selection.name,
+      address: selectedAddress,
+      latitude: selection.latitude,
+      longitude: selection.longitude,
+      description: selectedDescription,
+      imageUrl: selectedImageUrl,
+    });
+  }
+
+  const handleTitleChange = (value: string | PlaceSelection<ActivitySuggestion>) => {
+    if (typeof value === 'string') {
+      handleTitleInputChange(value);
+      return;
+    }
+    void handleSuggestionSelect(value);
+  };
+
   const canSave = Boolean(editedTitle.trim());
 
   const handleTitleBlur = () => {
@@ -90,21 +175,22 @@ export function ActivityDialogForm({ activity, onSave, color }: ActivityDialogFo
   return (
     <>
       {/* Editable title */}
-      <label htmlFor="title" className="sr-only">
-        Title
-      </label>
-      <input
-        id="title"
-        name="title"
-        ref={titleInputRef}
-        value={editedTitle}
-        onChange={(e) => setEditedTitle(e.target.value)}
-        onBlur={handleTitleBlur}
-        placeholder={EMPTY_ACTIVITY_TITLE}
-        required
-        aria-required="true"
-        className="focus:ring-primary mx-4 mb-4 content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
-      />
+      <div className="relative mx-4">
+        <ActivitySearchInput
+          id="title"
+          label="Title"
+          value={editedTitle}
+          onChange={handleTitleChange}
+          placeholder={EMPTY_ACTIVITY_TITLE}
+          latitude={destCoords?.lat}
+          longitude={destCoords?.lng}
+          suggestionHook={useActivitySuggestions}
+          inputRef={titleInputRef}
+          inputClassName="focus:ring-primary mb-4 w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          onInputBlur={handleTitleBlur}
+          inputProps={{ name: 'title', required: true, 'aria-required': true }}
+        />
+      </div>
 
       {/* Duration & Budget group */}
       <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">

@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('@/server/actions/createPlan', () => ({
+vi.mock('@/server/actions/plans/createPlan', () => ({
   createPlan: vi.fn(),
 }));
 
 import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
-import { createPlan } from '@/server/actions/createPlan';
+import { createPlan } from '@/server/actions/plans/createPlan';
 
 describe('createPlannerPlan', () => {
   beforeEach(() => {

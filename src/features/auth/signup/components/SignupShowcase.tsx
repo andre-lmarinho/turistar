@@ -23,7 +23,7 @@ const FEATURES = [
 
 export const SignupShowcase = () => (
   <div className="border-border lg:bg-muted/30 mx-auto mt-24 w-full max-w-2xl flex-col justify-between rounded-l-2xl pl-4 lg:mt-0 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12">
-    <div className="border-default bg-muted/30 hidden rounded-tl-2xl rounded-br-none rounded-bl-2xl border border-r-0 border-dashed lg:block lg:py-[6px] lg:pl-[6px]">
+    <div className="border-default bg-muted/30 hidden rounded-tl-2xl rounded-br-none rounded-bl-2xl border border-r-0 border-dashed lg:block lg:py-1.5 lg:pl-1.5">
       <Image src={mock} alt="" className="block" aria-hidden="true" width={681} height={520} />
     </div>
     <div className="mt-8 mr-12 hidden h-full w-full grid-cols-3 gap-4 overflow-hidden lg:grid">

@@ -6,7 +6,13 @@ import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import { useAddActivity } from '@/features/app/planner/hooks/useAddActivity';
+import { useAddActivity } from '@/features/app/planner/hooks/state/dnd/useAddActivity';
+import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
+
+import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+
+import { ActivitySearchInput } from '@/features/app/planner/components/ui/ActivitySearchInput';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
 
 import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
 import { useInlineOutsideSubmit } from '../../hooks/ui/useInlineOutsideSubmit';
@@ -40,29 +46,105 @@ export function InlineCard({
 
   const focusInput = useInlineAutoFocus(inputRef);
 
+  const { updateActivity } = usePlannerContext();
+
+  const finalizeInlineActivity = useCallback(() => {
+    setTitle('');
+    setTouched(false);
+    onAdvanceInline?.(insertIndex + 1);
+    requestAnimationFrame(focusInput);
+  }, [focusInput, insertIndex, onAdvanceInline]);
+
+  const fetchPlaceDetails = async (placeId: string) => {
+    try {
+      const response = await fetch(`/api/places/details?placeId=${encodeURIComponent(placeId)}`);
+      if (!response.ok) {
+        return null;
+      }
+      return await response.json();
+    } catch {
+      return null;
+    }
+  };
+
+  const handleSuggestionSelect = async (selection: PlaceSelection<ActivitySuggestion>) => {
+    const suggestion: ActivitySuggestion =
+      selection.raw ??
+      ({
+        placeId: selection.placeId ?? '',
+        name: selection.name,
+        formatted: selection.formatted ?? selection.name,
+        addressLine1: undefined,
+        addressLine2: undefined,
+        latitude: selection.latitude,
+        longitude: selection.longitude,
+        resultType: undefined,
+        category: selection.category,
+        description: selection.description,
+      } as ActivitySuggestion);
+
+    const selectedTitle = selection.name;
+    setTitle(selectedTitle);
+    setTouched(false);
+    setError(null);
+
+    const activity = await trySubmit(selectedTitle);
+    if (!activity) {
+      requestAnimationFrame(() => inputRef.current?.focus());
+      return;
+    }
+
+    const placeId = selection.placeId ?? suggestion.placeId;
+    const body = placeId ? await fetchPlaceDetails(placeId) : null;
+    updateActivity(activity.id, {
+      title: selection.name,
+      address: body?.details?.formatted ?? selection.formatted ?? suggestion.formatted,
+      description: body?.details?.description ?? selection.description ?? suggestion.description,
+      imageUrl: body?.wikidataImageUrl ?? undefined,
+      latitude: selection.latitude,
+      longitude: selection.longitude,
+    });
+    finalizeInlineActivity();
+  };
+
+  const handleTitleChange = (value: string | PlaceSelection<ActivitySuggestion>) => {
+    if (typeof value === 'string') {
+      setTitle(value);
+      if (value.trim().length > 0) {
+        setTouched(false);
+        setError(null);
+      }
+      return;
+    }
+    void handleSuggestionSelect(value);
+  };
+
   const isInvalid = useMemo(() => {
     return touched && title.trim().length === 0;
   }, [touched, title]);
 
-  const trySubmit = useCallback(async () => {
-    setTouched(true);
-    const trimmedTitle = title.trim();
-    if (trimmedTitle.length === 0) {
-      setError(null);
-      focusInput();
-      return false;
-    }
+  const trySubmit = useCallback(
+    async (overrideTitle?: string) => {
+      setTouched(true);
+      const trimmedTitle = (overrideTitle ?? title).trim();
+      if (trimmedTitle.length === 0) {
+        setError(null);
+        focusInput();
+        return null;
+      }
 
-    try {
-      setError(null);
-      await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
-      return true;
-    } catch (err) {
-      console.error(err);
-      setError(copy.errorGeneric);
-      return false;
-    }
-  }, [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]);
+      try {
+        setError(null);
+        const result = await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
+        return result;
+      } catch (err) {
+        console.error(err);
+        setError(copy.errorGeneric);
+        return null;
+      }
+    },
+    [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]
+  );
 
   const handleFormSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -75,8 +157,8 @@ export function InlineCard({
       const submitter = nativeEvent.submitter ?? null;
       const shouldClose = submitter instanceof HTMLElement && submitter.dataset.close === 'true';
 
-      const didSubmit = await trySubmit();
-      if (!didSubmit) {
+      const activity = await trySubmit();
+      if (!activity) {
         return;
       }
 
@@ -85,12 +167,9 @@ export function InlineCard({
         return;
       }
 
-      setTitle('');
-      setTouched(false);
-      onAdvanceInline?.(insertIndex + 1);
-      requestAnimationFrame(focusInput);
+      finalizeInlineActivity();
     },
-    [focusInput, insertIndex, isComposing, isPending, onAdvanceInline, onClose, trySubmit]
+    [finalizeInlineActivity, isComposing, isPending, onClose, trySubmit]
   );
 
   const handleOutsideSubmit = useCallback(() => {
@@ -105,8 +184,8 @@ export function InlineCard({
 
     outsideSubmitRef.current = true;
     void trySubmit()
-      .then((didSubmit) => {
-        if (didSubmit) {
+      .then((activity) => {
+        if (activity) {
           onClose();
         }
       })
@@ -138,42 +217,32 @@ export function InlineCard({
           'rounded-lg border border-b-3'
         )}
       >
-        <div
-          role="group"
-          aria-label={copy.a11yGroupLabel}
-          className="flex flex-col gap-3"
-          data-no-dnd
-        >
-          <label htmlFor={`inline-add-${dayId}-${insertIndex}`} className="sr-only">
-            {copy.placeholderTitle}
-          </label>
-          <input
-            ref={inputRef}
+        <div role="group" aria-label={copy.a11yGroupLabel} className="relative" data-no-dnd>
+          <ActivitySearchInput
             id={`inline-add-${dayId}-${insertIndex}`}
-            data-testid="planner-inline-add-input"
+            label={copy.placeholderTitle}
             value={title}
-            onChange={(event) => {
-              setTitle(event.target.value);
-              if (event.target.value.trim().length > 0) {
-                setTouched(false);
-                setError(null);
-              }
-            }}
-            onCompositionStart={() => setIsComposing(true)}
-            onCompositionEnd={() => setIsComposing(false)}
-            onKeyDown={handleKeyDown}
+            onChange={handleTitleChange}
             placeholder={copy.placeholderTitle}
-            autoCapitalize="sentences"
-            autoCorrect="on"
-            autoComplete="off"
-            inputMode="text"
-            enterKeyHint="done"
-            aria-invalid={isInvalid || undefined}
-            aria-describedby={error ? `inline-add-error-${dayId}-${insertIndex}` : undefined}
-            className={cn(
+            inputRef={inputRef}
+            inputClassName={cn(
               'focus:ring-primary w-full rounded-lg border px-3 pt-2 pb-1 text-base shadow-sm outline-none focus:ring-2',
               isInvalid ? 'border-red-500 focus:ring-red-500' : 'border-border'
             )}
+            suggestionHook={useActivitySuggestions}
+            onInputKeyDown={handleKeyDown}
+            inputProps={{
+              'data-testid': 'planner-inline-add-input',
+              autoCapitalize: 'sentences',
+              autoCorrect: 'on',
+              autoComplete: 'off',
+              inputMode: 'text',
+              enterKeyHint: 'done',
+              'aria-invalid': isInvalid || undefined,
+              'aria-describedby': error ? `inline-add-error-${dayId}-${insertIndex}` : undefined,
+              onCompositionStart: () => setIsComposing(true),
+              onCompositionEnd: () => setIsComposing(false),
+            }}
           />
         </div>
       </div>

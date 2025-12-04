@@ -10,7 +10,7 @@ import { LoadingScreen } from '@/shared/ui/loading';
 import { LocationSearchInput } from '@/features/app/planner/components/ui/LocationSearchInput';
 
 import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
-import { usePlanEditTokens } from '@/features/app/planner/infrastructure/supabase/planEditToken';
+import { usePlanEditTokens } from '@/features/app/planner/hooks/data/usePlanEditTokens';
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 import { useDestinationAutocomplete } from '@/features/app/planner/hooks/search/useDestinationAutocomplete';
 
@@ -168,7 +168,7 @@ export function PlannerCreationForm({
         </button>
 
         {error ? (
-          <p id="date-error" role="alert" className="text-sm text-[var(--destructive)]">
+          <p id="date-error" role="alert" className="text-destructive text-sm">
             {error}
           </p>
         ) : null}

@@ -174,7 +174,7 @@ function FeatureItem({ children }: { children: ReactNode }) {
   return (
     <li className="flex items-start gap-3 text-sm">
       <span
-        className="bg-muted text-muted-foreground mt-[2px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm"
+        className="bg-muted text-muted-foreground mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm"
         aria-hidden
       >
         <Check className="h-3.5 w-3.5" />

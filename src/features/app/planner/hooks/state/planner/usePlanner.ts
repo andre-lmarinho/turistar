@@ -10,7 +10,7 @@ import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from '../dnd/useDnDPlanner';
 import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
 import { syncDaysWithTripRange } from '@/features/app/planner/services/days/syncDaysWithTripRange';
-import { setPlanDateRange } from '@/app/(webapp)/p/actions/updatePlan';
+import { updatePlanDates } from '@/app/(webapp)/p/actions/plans/updatePlanDates';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 interface UsePlannerOptions {
@@ -91,7 +91,7 @@ export function usePlanner(options: UsePlannerOptions = {}) {
     if (!r?.from || !r?.to) return;
     try {
       if (options.planId) {
-        await setPlanDateRange(options.planId, r.from, r.to);
+        await updatePlanDates(options.planId, r.from, r.to);
       }
       const newTripDays = eachDayOfInterval({ start: r.from, end: r.to });
       setDays((prev: DayPlan[]) => {

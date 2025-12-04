@@ -72,7 +72,7 @@ vi.mock('@/features/app/planner/hooks/data/usePlanCollaboration', () => ({
     version: 1,
   }),
 }));
-vi.mock('@/shared/hooks/useDebounce', () => ({
+vi.mock('@/features/app/planner/hooks/search/useDebounce', () => ({
   useDebounce: <T,>(value: T) => value,
 }));
 // Mock usePlanCollaboration hook state

@@ -29,7 +29,7 @@ export function Tooltip({
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        'text-background pointer-events-none z-50 rounded bg-[var(--foreground)] px-2 py-1 text-xs',
+        'text-background bg-foreground pointer-events-none z-50 rounded px-2 py-1 text-xs',
         className
       )}
     >
