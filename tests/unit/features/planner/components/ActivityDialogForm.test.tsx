@@ -32,7 +32,7 @@ describe('ActivityDialogForm address autocomplete', () => {
     mockUseAddressAutocomplete.mockReturnValue({ results: [], loading: false, error: false });
     mockUseDebounce.mockImplementation((value: unknown) => value);
     mockUseActivitySuggestions.mockReturnValue({
-      suggestions: [],
+      results: [],
       loading: false,
       error: false,
     });
@@ -77,7 +77,7 @@ describe('ActivityDialogForm address autocomplete', () => {
 
   it('updates the form when an activity suggestion is selected', async () => {
     mockUseActivitySuggestions.mockReturnValue({
-      suggestions: [
+      results: [
         {
           placeId: 'pid',
           name: 'Forte de Monte Serrat',

@@ -6,12 +6,13 @@ import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
 import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import { useAddActivity } from '@/features/app/planner/hooks/useAddActivity';
-import type { ActivitySuggestion } from '@/features/app/planner/types/activitySuggestion';
-import type { PlaceSelection } from '@/features/app/planner/types/locations';
+import { useAddActivity } from '@/features/app/planner/hooks/state/dnd/useAddActivity';
+import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
+
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 
 import { ActivitySearchInput } from '@/features/app/planner/components/ui/ActivitySearchInput';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
 
 import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
 import { useInlineOutsideSubmit } from '../../hooks/ui/useInlineOutsideSubmit';
@@ -212,12 +213,7 @@ export function InlineCard({
           'rounded-lg border border-b-3'
         )}
       >
-        <div
-          role="group"
-          aria-label={copy.a11yGroupLabel}
-          className="relative"
-          data-no-dnd
-        >
+        <div role="group" aria-label={copy.a11yGroupLabel} className="relative" data-no-dnd>
           <ActivitySearchInput
             id={`inline-add-${dayId}-${insertIndex}`}
             label={copy.placeholderTitle}
@@ -229,6 +225,7 @@ export function InlineCard({
               'focus:ring-primary w-full rounded-lg border px-3 pt-2 pb-1 text-base shadow-sm outline-none focus:ring-2',
               isInvalid ? 'border-red-500 focus:ring-red-500' : 'border-border'
             )}
+            suggestionHook={useActivitySuggestions}
             onInputKeyDown={handleKeyDown}
             inputProps={{
               'data-testid': 'planner-inline-add-input',

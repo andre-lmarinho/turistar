@@ -7,7 +7,7 @@ const { mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() 
   mockFetchWikidataImage: vi.fn(),
 }));
 
-vi.mock('@/shared/lib/geoapify', () => ({
+vi.mock('@/shared/lib/geoapify/helpers', () => ({
   fetchGeoapifyPlaceDetails: mockFetchGeoapifyPlaceDetails,
 }));
 vi.mock('@/shared/lib/wikidata', () => ({

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
-import { fetchGeoapifyPlaceSearch } from '@/shared/lib/geoapify';
+import { fetchGeoapifyPlaceSearch } from '@/shared/lib/geoapify/helpers';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';

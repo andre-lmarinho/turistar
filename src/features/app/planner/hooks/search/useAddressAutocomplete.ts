@@ -1,12 +1,15 @@
 'use client';
 
-import { createLocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
+import { createGeoapifySuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
+import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 
 /**
  * Planner-specific Geoapify autocomplete that narrows results to street-level addresses.
  */
-export const useAddressAutocomplete = createLocationAutocompleteHook({
+export const useAddressAutocomplete = createGeoapifySuggestionHook<AutocompletePlace>({
   endpoint: '/api/places/address',
   queryKeyPrefix: 'planner-address-autocomplete',
-  minimumQueryLength: 4,
+  minimumQueryLength: GEOAPIFY_MIN_QUERY_LENGTH,
+  paramName: 'text',
 });

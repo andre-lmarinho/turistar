@@ -1,7 +1,5 @@
-// Helpers for fetching POIs from the Geoapify API.
-
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
-import { clientEnv } from './clientEnv';
+import { clientEnv } from '../clientEnv';
 
 const isE2E = process.env.NEXT_PUBLIC_E2E === '1';
 
@@ -48,9 +46,7 @@ type GeoapifyFeature = {
   properties: GeoapifyFeatureProperties;
 };
 
-type GeoapifyResponse =
-  | { features: GeoapifyFeature[] }
-  | { results: GeoapifyFeatureProperties[] };
+type GeoapifyResponse = { features: GeoapifyFeature[] } | { results: GeoapifyFeatureProperties[] };
 
 export interface GeoapifyPlaceSearchResult {
   placeId: string;
@@ -194,7 +190,7 @@ let autocompleteProvider: GeoapifyAutocompleteProvider = defaultAutocompleteProv
 type GeoapifyFixture = { autocomplete: AutocompletePlace[] };
 
 if (isE2E) {
-  const fixture = require('../../../tests/e2e/fixtures/geoapify.json') as GeoapifyFixture;
+  const fixture = require('../../../../tests/e2e/fixtures/geoapify.json') as GeoapifyFixture;
   const fixedResults = fixture.autocomplete.map((place) => ({ ...place }));
   autocompleteProvider = async (text) => {
     const normalized = text.trim().toLowerCase();
@@ -272,8 +268,8 @@ export async function fetchGeoapifyPlaceSearch(
     'features' in data
       ? data.features
       : data.results
-      ? data.results.map((result) => ({ properties: result }))
-      : [];
+        ? data.results.map((result) => ({ properties: result }))
+        : [];
 
   return featureList.map(({ properties }) => ({
     placeId: String(properties.place_id),

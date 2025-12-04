@@ -3,18 +3,17 @@ import { vi } from 'vitest';
 const originalFetch = global.fetch;
 const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 
-let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAutocomplete;
-let fetchGeoapifyAddressAutocomplete: typeof import('@/shared/lib/geoapify').fetchGeoapifyAddressAutocomplete;
-let fetchGeoapifyPlaceSearch: typeof import('@/shared/lib/geoapify').fetchGeoapifyPlaceSearch;
-let fetchGeoapifyPlaceDetails: typeof import('@/shared/lib/geoapify').fetchGeoapifyPlaceDetails;
+let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyAutocomplete;
+let fetchGeoapifyAddressAutocomplete: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyAddressAutocomplete;
+let fetchGeoapifyPlaceSearch: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyPlaceSearch;
+let fetchGeoapifyPlaceDetails: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyPlaceDetails;
 
 describe('fetchGeoapifyAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyAutocomplete, fetchGeoapifyAddressAutocomplete } = await import(
-      '@/shared/lib/geoapify'
-    ));
+    ({ fetchGeoapifyAutocomplete, fetchGeoapifyAddressAutocomplete } =
+      await import('@/shared/lib/geoapify/helpers'));
   });
 
   afterEach(() => {
@@ -87,7 +86,7 @@ describe('fetchGeoapifyAddressAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyAddressAutocomplete } = await import('@/shared/lib/geoapify'));
+    ({ fetchGeoapifyAddressAutocomplete } = await import('@/shared/lib/geoapify/helpers'));
   });
 
   afterEach(() => {
@@ -126,7 +125,7 @@ describe('fetchGeoapifyPlaceSearch', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyPlaceSearch } = await import('@/shared/lib/geoapify'));
+    ({ fetchGeoapifyPlaceSearch } = await import('@/shared/lib/geoapify/helpers'));
   });
 
   afterEach(() => {
@@ -144,7 +143,7 @@ describe('fetchGeoapifyPlaceSearch', () => {
               place_id: 123,
               name: 'Forte de Monte Serrat',
               formatted: 'Forte de Monte Serrat, Salvador',
-              address_line1: 'Praça das APA\'s',
+              address_line1: "Praça das APA's",
               address_line2: 'Monte Serrat',
               lat: -12.9,
               lon: -38.5,
@@ -159,7 +158,10 @@ describe('fetchGeoapifyPlaceSearch', () => {
 
     const results = await fetchGeoapifyPlaceSearch('Forte');
 
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('name=Forte'), expect.any(Object));
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('name=Forte'),
+      expect.any(Object)
+    );
     expect(results).toEqual([
       {
         placeId: '123',
@@ -229,7 +231,7 @@ describe('fetchGeoapifyPlaceDetails', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyPlaceDetails } = await import('@/shared/lib/geoapify'));
+    ({ fetchGeoapifyPlaceDetails } = await import('@/shared/lib/geoapify/helpers'));
   });
 
   afterEach(() => {
@@ -258,9 +260,9 @@ describe('fetchGeoapifyPlaceDetails', () => {
               place_id: 'pid',
               name: 'Forte de Monte Serrat',
               formatted: 'Forte de Monte Serrat, Salvador',
-              address_line1: 'Praça das APA\'s',
+              address_line1: "Praça das APA's",
               address_line2: 'Monte Serrat',
-              street: 'Praça das APA\'s',
+              street: "Praça das APA's",
               district: 'Monte Serrat',
               city: 'Salvador',
               county: 'Região Metropolitana de Salvador',

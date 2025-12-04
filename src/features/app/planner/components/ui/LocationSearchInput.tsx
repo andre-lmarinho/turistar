@@ -4,10 +4,10 @@ import React from 'react';
 
 import { SuggestionCombobox, type SuggestionOption } from '@/shared/ui/input';
 
-import { useDebounce } from '@/features/app/planner/hooks/search/useDebounce';
+import { useDebouncedQuery } from '@/features/app/planner/hooks/search/useDebouncedQuery';
 
 import type { AutocompletePlace, PlaceSelection } from '@/features/app/planner/types/locations';
-import type { LocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
+import type { SuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
 
 interface LocationSearchInputProps {
   value: string;
@@ -19,7 +19,7 @@ interface LocationSearchInputProps {
   inputClassName?: string;
   latitude?: number;
   longitude?: number;
-  autocompleteHook: LocationAutocompleteHook;
+  autocompleteHook: SuggestionHook<AutocompletePlace>;
   onFocus?: () => void;
 }
 
@@ -36,12 +36,12 @@ export function LocationSearchInput({
   autocompleteHook,
   onFocus: onFocusProp,
 }: LocationSearchInputProps) {
-  const debounced = useDebounce(value);
-
   const [open, setOpen] = React.useState(false);
+  const { debounced, canSearch } = useDebouncedQuery(value);
+  const openState = open && canSearch;
 
   const { results, loading, error } = autocompleteHook(debounced, {
-    enabled: open,
+    enabled: openState,
     latitude,
     longitude,
   });
@@ -76,7 +76,7 @@ export function LocationSearchInput({
       label={label}
       placeholder={placeholder}
       value={value}
-      open={open}
+      open={openState}
       onOpenChange={setOpen}
       onInputChange={(next) => onChange(next)}
       options={options}
@@ -94,5 +94,3 @@ export function LocationSearchInput({
     />
   );
 }
-
-export type { LocationAutocompleteHook };

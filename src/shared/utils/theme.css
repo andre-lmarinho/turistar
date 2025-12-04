@@ -124,7 +124,7 @@
 }
 
 .backdrop-overlay {
-  @apply fixed inset-0 z-40 bg-[var(--backdrop)] backdrop-blur-sm;
+  @apply bg-backdrop fixed inset-0 z-40 backdrop-blur-sm;
 }
 
 .scrollbar-hidden {

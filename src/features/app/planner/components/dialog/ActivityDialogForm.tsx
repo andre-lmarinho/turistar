@@ -9,11 +9,11 @@ import { ActivitySearchInput } from '../ui/ActivitySearchInput';
 import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
 
 import { useAddressAutocomplete } from '@/features/app/planner/hooks/search/useAddressAutocomplete';
+import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 
 import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
-import type { ActivitySuggestion } from '@/features/app/planner/types/activitySuggestion';
-import type { PlaceSelection } from '@/features/app/planner/types/locations';
+import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
 
 interface ActivityDialogFormProps {
   activity: Activity;
@@ -125,9 +125,7 @@ export function ActivityDialogForm({
 
     if (placeId) {
       try {
-        const response = await fetch(
-          `/api/places/details?placeId=${encodeURIComponent(placeId)}`
-        );
+        const response = await fetch(`/api/places/details?placeId=${encodeURIComponent(placeId)}`);
         if (response.ok) {
           const body = (await response.json()) as {
             details?: { formatted?: string; description?: string };
@@ -186,6 +184,7 @@ export function ActivityDialogForm({
           placeholder={EMPTY_ACTIVITY_TITLE}
           latitude={destCoords?.lat}
           longitude={destCoords?.lng}
+          suggestionHook={useActivitySuggestions}
           inputRef={titleInputRef}
           inputClassName="focus:ring-primary mb-4 w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
           onInputBlur={handleTitleBlur}

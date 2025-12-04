@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { createLocationAutocompleteHook } from '@/features/app/planner/hooks/search/createLocationAutocompleteHook';
+import { createGeoapifySuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
 
 const { mockUseQuery } = vi.hoisted(() => ({
   mockUseQuery: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock('@tanstack/react-query', () => ({
   useQuery: mockUseQuery,
 }));
 
-describe('createLocationAutocompleteHook', () => {
+describe('createGeoapifySuggestionHook', () => {
   beforeEach(() => {
     mockUseQuery.mockReset();
   });
@@ -20,8 +20,8 @@ describe('createLocationAutocompleteHook', () => {
 
   it('builds the query key with trimmed text and coordinates', async () => {
     mockUseQuery.mockReturnValue({ data: [], isLoading: false, isError: false });
-    const hook = createLocationAutocompleteHook({
-    endpoint: '/api/places/city-country',
+    const hook = createGeoapifySuggestionHook({
+      endpoint: '/api/places/city-country',
       queryKeyPrefix: 'test-autocomplete',
       minimumQueryLength: 3,
     });
@@ -54,7 +54,7 @@ describe('createLocationAutocompleteHook', () => {
 
   it('disables the query when below the minimum length', () => {
     mockUseQuery.mockReturnValue({ data: undefined, isLoading: false, isError: false });
-    const hook = createLocationAutocompleteHook({
+    const hook = createGeoapifySuggestionHook({
       endpoint: '/api/places/address',
       queryKeyPrefix: 'address',
       minimumQueryLength: 5,

@@ -1,12 +1,13 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
 import { GET } from '@/server/api/places/search/route';
 
 const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
-vi.mock('@/shared/lib/geoapify', () => ({
+vi.mock('@/shared/lib/geoapify/helpers', () => ({
   fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch,
 }));
 
@@ -26,11 +27,14 @@ describe('GET /api/places/search', () => {
     await expect(res.json()).resolves.toEqual({ error: 'Query is required.' });
   });
 
-  it('returns 400 when the name parameter is shorter than four characters', async () => {
-    const res = await GET(createRequest('?name=car'));
+  it('returns 400 when the name parameter is shorter than the minimum characters', async () => {
+    const shortQuery = 'a'.repeat(GEOAPIFY_MIN_QUERY_LENGTH - 1);
+    const res = await GET(createRequest(`?name=${shortQuery}`));
 
     expect(res.status).toBe(400);
-    await expect(res.json()).resolves.toEqual({ error: 'Query must be at least 4 characters.' });
+    await expect(res.json()).resolves.toEqual({
+      error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.`,
+    });
   });
 
   it('calls Geoapify with the provided query and bias parameters', async () => {

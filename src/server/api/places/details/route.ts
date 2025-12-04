@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchGeoapifyPlaceDetails } from '@/shared/lib/geoapify';
+import { fetchGeoapifyPlaceDetails } from '@/shared/lib/geoapify/helpers';
 import { fetchWikidataImage } from '@/shared/lib/wikidata';
 
 export const runtime = 'edge';

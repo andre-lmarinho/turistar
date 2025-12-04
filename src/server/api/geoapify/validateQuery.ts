@@ -4,6 +4,8 @@ import { NextResponse } from 'next/server';
  * Validates that a Geoapify request contains the required query parameter.
  * Returns the original string when valid or an error response otherwise.
  */
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
+
 export function validateGeoapifyQuery(
   searchParams: URLSearchParams,
   param: string
@@ -13,8 +15,11 @@ export function validateGeoapifyQuery(
     return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
   }
 
-  if (value.length < 4) {
-    return NextResponse.json({ error: 'Query must be at least 4 characters.' }, { status: 400 });
+  if (value.length < GEOAPIFY_MIN_QUERY_LENGTH) {
+    return NextResponse.json(
+      { error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.` },
+      { status: 400 }
+    );
   }
 
   return value;
