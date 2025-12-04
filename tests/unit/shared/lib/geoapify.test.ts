@@ -159,7 +159,7 @@ describe('fetchGeoapifyPlaceSearch', () => {
     const results = await fetchGeoapifyPlaceSearch('Forte');
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('name=Forte'),
+      expect.stringContaining('text=Forte'),
       expect.any(Object)
     );
     expect(results).toEqual([

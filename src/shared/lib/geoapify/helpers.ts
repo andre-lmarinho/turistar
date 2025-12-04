@@ -239,13 +239,13 @@ export async function fetchGeoapifyAddressAutocomplete(
 const PLACE_SEARCH_LIMIT = 6;
 
 export async function fetchGeoapifyPlaceSearch(
-  name: string,
+  text: string,
   lat?: number,
   lon?: number
 ): Promise<GeoapifyPlaceSearchResult[]> {
   const key = getGeoapifyKey();
   const params = new URLSearchParams({
-    name,
+    text,
     format: 'json',
     limit: String(PLACE_SEARCH_LIMIT),
     apiKey: key,
@@ -273,8 +273,8 @@ export async function fetchGeoapifyPlaceSearch(
 
   return featureList.map(({ properties }) => ({
     placeId: String(properties.place_id),
-    name: properties.name ?? properties.formatted ?? name,
-    formatted: properties.formatted ?? properties.name ?? name,
+    name: properties.name ?? properties.formatted ?? text,
+    formatted: properties.formatted ?? properties.name ?? text,
     addressLine1: properties.address_line1,
     addressLine2: properties.address_line2,
     latitude: properties.lat,
