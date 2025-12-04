@@ -23,14 +23,12 @@ export function ActivityCardBase({
   budget,
   borderColorClass,
 }: ActivityCardBaseProps) {
-  const backgroundClass = twBg ?? 'bg-background';
-
   return (
     <div
       className={cn(
         'group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 text-left transition',
         borderColorClass,
-        backgroundClass
+        twBg
       )}
     >
       {/* Image */}
