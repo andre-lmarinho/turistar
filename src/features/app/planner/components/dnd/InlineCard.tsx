@@ -83,11 +83,12 @@ export function InlineCard({
         description: selection.description,
       } as ActivitySuggestion);
 
-    setTitle(selection.name);
+    const selectedTitle = selection.name;
+    setTitle(selectedTitle);
     setTouched(false);
     setError(null);
 
-    const activity = await trySubmit();
+    const activity = await trySubmit(selectedTitle);
     if (!activity) {
       requestAnimationFrame(() => inputRef.current?.focus());
       return;
@@ -122,25 +123,28 @@ export function InlineCard({
     return touched && title.trim().length === 0;
   }, [touched, title]);
 
-  const trySubmit = useCallback(async () => {
-    setTouched(true);
-    const trimmedTitle = title.trim();
-    if (trimmedTitle.length === 0) {
-      setError(null);
-      focusInput();
-      return null;
-    }
+  const trySubmit = useCallback(
+    async (overrideTitle?: string) => {
+      setTouched(true);
+      const trimmedTitle = (overrideTitle ?? title).trim();
+      if (trimmedTitle.length === 0) {
+        setError(null);
+        focusInput();
+        return null;
+      }
 
-    try {
-      setError(null);
-      const result = await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
-      return result;
-    } catch (err) {
-      console.error(err);
-      setError(copy.errorGeneric);
-      return null;
-    }
-  }, [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]);
+      try {
+        setError(null);
+        const result = await mutateAsync({ dayId, title: trimmedTitle, index: insertIndex });
+        return result;
+      } catch (err) {
+        console.error(err);
+        setError(copy.errorGeneric);
+        return null;
+      }
+    },
+    [copy.errorGeneric, dayId, focusInput, insertIndex, mutateAsync, title]
+  );
 
   const handleFormSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
