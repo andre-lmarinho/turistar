@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
+import { getVisitedCountries } from '@/server/queries/plans/getVisitedCountries';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
+import type { VisitedCountry } from '@/shared/types/worldMap';
 import { WorldMapBoard } from '@/features/app/user/components/worldmap/WorldMapBoard';
 
 export const metadata: Metadata = {
@@ -31,7 +33,15 @@ export default async function DashboardWorldmapPage({ params }: DashboardWorldma
       redirect('/login');
     }
 
-    return <WorldMapBoard />;
+    let visitedCountries: VisitedCountry[] = [];
+
+    try {
+      visitedCountries = await getVisitedCountries(user.id);
+    } catch (getVisitedError) {
+      console.error('Failed to load visited countries', getVisitedError);
+    }
+
+    return <WorldMapBoard visitedCountries={visitedCountries} />;
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       redirect('/login');
