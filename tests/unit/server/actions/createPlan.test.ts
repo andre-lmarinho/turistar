@@ -126,4 +126,44 @@ describe('createPlan action', () => {
       'Failed to create plan'
     );
   });
+
+  it('uses the provided country without hitting Geoapify when present', async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: {
+        result_plan_id: 'plan-3',
+        result_public_slug: 'slug-3',
+        result_edit_token: 'token-3',
+      },
+      error: null,
+    });
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
+    vi.mocked(fetchGeoapifyAutocomplete).mockClear();
+
+    await createPlan('Rome Trip', { name: 'Rome', country: ' it ' }, '2024-03-01', '2024-03-07');
+
+    expect(fetchGeoapifyAutocomplete).not.toHaveBeenCalled();
+    expect(rpc).toHaveBeenCalledWith('create_full_plan', expect.objectContaining({ _dest_country: 'IT' }));
+  });
+
+  it('continues when Geoapify lookup fails and leaves country null', async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: {
+        result_plan_id: 'plan-4',
+        result_public_slug: 'slug-4',
+        result_edit_token: 'token-4',
+      },
+      error: null,
+    });
+    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof supabaseServer
+    >);
+    const failure = new Error('network');
+    vi.mocked(fetchGeoapifyAutocomplete).mockRejectedValueOnce(failure);
+
+    await createPlan('Failure Trip', { name: 'Unknown' }, '2024-04-01', '2024-04-05');
+
+    expect(rpc).toHaveBeenCalledWith('create_full_plan', expect.objectContaining({ _dest_country: null }));
+  });
 });

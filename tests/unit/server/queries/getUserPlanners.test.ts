@@ -120,4 +120,33 @@ describe('getUserPlanners', () => {
 
     await expect(getUserPlanners('user-1')).rejects.toBe(failure);
   });
+
+  it('prefers snapshot arrays for updatedAt', async () => {
+    const result: SupabaseResult = {
+      data: [
+        {
+          id: 'plan-3',
+          title: null,
+          start_date: '2024-03-01',
+          end_date: '2024-03-05',
+          created_at: '2024-02-25T00:00:00Z',
+          public_slug: 'slug-3',
+          edit_token: 'token-3',
+          plan_destinations: [{ destinations: { name: 'Oslo' } }],
+          plan_snapshots: [
+            { updated_at: '2024-03-10T00:00:00Z' },
+            { updated_at: '2024-02-28T00:00:00Z' },
+          ],
+        },
+      ],
+      error: null,
+    };
+
+    const { supabase } = buildSupabase(result);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+
+    const planners = await getUserPlanners('user-1');
+
+    expect(planners[0].updatedAt).toBe('2024-03-10T00:00:00Z');
+  });
 });
