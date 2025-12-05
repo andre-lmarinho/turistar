@@ -43,6 +43,7 @@ export function PlannerCreationForm({
   const [range, setRange] = useState<DateRange | undefined>(getDefaultRange());
   const [dest, setDest] = useState('');
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [destCountry, setDestCountry] = useState<string | null>(null);
   const { saveEditToken } = usePlanEditTokens({ enabled: persistEditTokens });
 
   const [error, setError] = useState<string>('');
@@ -63,9 +64,11 @@ export function PlannerCreationForm({
     if (typeof val === 'string') {
       setDest(val);
       setCoords(null);
+      setDestCountry(null);
     } else {
       setDest(val.name);
       setCoords({ lat: val.latitude, lng: val.longitude });
+      setDestCountry(val.countryCode ?? val.country ?? null);
     }
   }
 
@@ -87,7 +90,12 @@ export function PlannerCreationForm({
     try {
       const planResult = await createPlanFn({
         title: destParam,
-        destination: { name: destParam, latitude: coords?.lat, longitude: coords?.lng },
+        destination: {
+          name: destParam,
+          latitude: coords?.lat,
+          longitude: coords?.lng,
+          country: destCountry ?? undefined,
+        },
         startDate: range.from.toISOString(),
         endDate: range.to.toISOString(),
       });
@@ -103,6 +111,7 @@ export function PlannerCreationForm({
         setRange(getDefaultRange());
         setDest('');
         setCoords(null);
+        setDestCountry(null);
         setLoading(false);
         return;
       }
@@ -119,6 +128,7 @@ export function PlannerCreationForm({
       const queryString = query.toString();
       router.push(`/p/${publicSlug}?${queryString}`);
       setLoading(false);
+      setDestCountry(null);
     } catch {
       setError('Failed to create plan.');
       setLoading(false);

@@ -20,6 +20,8 @@ export interface AutocompletePlace {
   formatted?: string;
   description?: string;
   category?: string;
+  country?: string;
+  countryCode?: string;
 }
 
 export interface ActivitySuggestion {

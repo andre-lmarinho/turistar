@@ -3,13 +3,21 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 vi.mock('@/shared/lib/supabaseServer', () => ({
   supabaseServer: vi.fn(),
 }));
+vi.mock('@/shared/lib/geoapify/helpers', () => ({
+  fetchGeoapifyAutocomplete: vi.fn(),
+}));
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify/helpers';
 import { createPlan } from '@/server/actions/plans/createPlan';
 
 describe('createPlan action', () => {
   beforeEach(() => {
     vi.mocked(supabaseServer).mockReset();
+    vi.mocked(fetchGeoapifyAutocomplete).mockReset();
+    vi.mocked(fetchGeoapifyAutocomplete).mockResolvedValue([
+      { name: 'Brazil', latitude: -15.78, longitude: -47.93, countryCode: 'BR' },
+    ]);
   });
 
   it('sends formatted payload and supports array responses', async () => {
@@ -39,6 +47,7 @@ describe('createPlan action', () => {
       _dest_name: 'Paris',
       _dest_lat: 1.23,
       _dest_long: 4.56,
+      _dest_country: 'BR',
       _start_date: '2024-01-01',
       _end_date: '2024-01-05',
       _user_id: null,
@@ -66,6 +75,7 @@ describe('createPlan action', () => {
       _dest_name: 'Lisbon',
       _dest_lat: null,
       _dest_long: null,
+      _dest_country: 'BR',
       _start_date: '2024-02-01',
       _end_date: '2024-02-10',
       _user_id: null,
