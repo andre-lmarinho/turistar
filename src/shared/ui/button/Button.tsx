@@ -6,13 +6,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
 
 const buttonVariants = cva(
-  'focus-visible:ring-primary/60 inline-flex h-8 cursor-pointer items-center justify-center rounded-md px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none',
+  'focus-visible:ring-primary/60 inline-flex cursor-pointer items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none',
   {
     variants: {
       variant: {
-        primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        accent: 'bg-accent text-primary-foreground hover:bg-accent/90',
-        ghost: 'bg-background text-foreground hover:bg-background/90',
+        primary: 'bg-primary text-primary-foreground',
+        accent: 'bg-accent text-primary-foreground',
+        ghost: 'bg-background text-foreground',
       },
     },
     defaultVariants: { variant: 'primary' },

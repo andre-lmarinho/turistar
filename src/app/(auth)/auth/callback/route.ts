@@ -10,7 +10,11 @@ interface AuthCallbackPayload {
 
 export async function POST(request: Request) {
   const supabase = createSupabaseServerClient();
-  const { event, session }: AuthCallbackPayload = await request.json();
+  const payloadText = await request.text();
+  if (!payloadText) {
+    return NextResponse.json({ success: true });
+  }
+  const { event, session }: AuthCallbackPayload = JSON.parse(payloadText);
 
   if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
     await supabase.auth.setSession(session);

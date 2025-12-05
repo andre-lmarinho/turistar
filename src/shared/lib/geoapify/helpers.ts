@@ -182,6 +182,8 @@ const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, l
     name: f.properties.formatted ?? f.properties.name ?? text,
     latitude: f.properties.lat,
     longitude: f.properties.lon,
+    country: f.properties.country,
+    countryCode: f.properties.country_code,
   }));
 };
 

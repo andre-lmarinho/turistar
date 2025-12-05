@@ -59,7 +59,13 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
 
   return data.map((row) => {
     const destination = row.plan_destinations?.[0]?.destinations?.name ?? null;
-    const updatedAt = row.plan_snapshots?.[0]?.updated_at ?? row.created_at ?? null;
+    const snapshots = Array.isArray(row.plan_snapshots)
+      ? row.plan_snapshots
+      : row.plan_snapshots
+      ? [row.plan_snapshots]
+      : [];
+    const snapshotUpdatedAt = snapshots[0]?.updated_at ?? null;
+    const updatedAt = snapshotUpdatedAt ?? row.created_at ?? null;
     const title = row.title ?? destination ?? 'Untitled plan';
 
     return {

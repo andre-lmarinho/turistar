@@ -1,7 +1,9 @@
-﻿'use client';
+'use client';
 
-import React from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
+
 import mascot from '@/shared/media/mascot_1_.webp';
 import { Spinner } from './Spinner';
 
@@ -10,7 +12,17 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ text = 'Loading...' }: LoadingScreenProps) {
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  return createPortal(
     <div
       role="status"
       aria-live="polite"
@@ -34,6 +46,7 @@ export function LoadingScreen({ text = 'Loading...' }: LoadingScreenProps) {
         <Spinner className="size-6" aria-hidden="true" />
         <span>{text}</span>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

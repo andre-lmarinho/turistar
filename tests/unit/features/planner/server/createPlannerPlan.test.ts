@@ -28,7 +28,7 @@ describe('createPlannerPlan', () => {
 
     expect(createPlan).toHaveBeenCalledWith(
       'Weekend Trip',
-      { name: 'Berlin', latitude: 52.52, longitude: 13.405 },
+      { name: 'Berlin', latitude: 52.52, longitude: 13.405, country: undefined },
       '2024-04-01',
       '2024-04-03',
       undefined

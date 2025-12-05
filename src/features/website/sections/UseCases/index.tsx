@@ -72,7 +72,7 @@ export function UseCases() {
           <ul key={title} className="h-full text-left">
             <li className="flex flex-col">
               <div className="mb-1 flex items-center gap-2">
-                <Icon className="size-5" aria-hidden="true" />
+                <Icon className="size-4" aria-hidden="true" />
                 <h3 className="text-lg leading-[1.3] font-bold">{title}</h3>
               </div>
               <p className="text-muted-foreground text-sm">{description}</p>

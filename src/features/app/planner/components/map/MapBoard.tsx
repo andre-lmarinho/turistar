@@ -63,7 +63,7 @@ export const MapBoard = React.memo(function MapBoard() {
       ? [centerCoords.lat, centerCoords.lng]
       : [0, 0];
   return (
-    <div className="bg-background relative h-full w-full overflow-hidden rounded-xl border">
+    <div className="relative h-full w-full overflow-hidden rounded-xl border">
       <MapContainer
         center={center}
         zoom={13}

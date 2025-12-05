@@ -1,5 +1,8 @@
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+
 import { Logo } from '@/shared/ui/logo';
+import { Button } from '@/shared/ui/button';
+
 import { AvatarMenu } from './AvatarMenu';
 
 type UserProfile = {
@@ -39,12 +42,24 @@ async function getUserProfile(): Promise<UserProfile> {
 export async function AppBar() {
   const { slug, displayName, email } = await getUserProfile();
   const targetHref = slug ? `/u/${slug}/planners` : '/login';
+  const isLoggedIn = Boolean(email);
 
   return (
     <header className="text-foreground border-border bg-background sticky top-0 z-40 h-14 shrink-0 border-b">
       <nav className="mx-auto flex h-full w-full items-center justify-between p-1">
         <Logo href={targetHref} />
-        <AvatarMenu displayName={displayName} email={email} />
+        <>
+          {isLoggedIn ? (
+            <AvatarMenu displayName={displayName} email={email} />
+          ) : (
+            <div className="flex flex-row items-center justify-start gap-3 px-2">
+              <Button href="/login" variant="ghost">
+                Log in
+              </Button>
+              <Button href="/signup">Get started</Button>
+            </div>
+          )}
+        </>
       </nav>
     </header>
   );

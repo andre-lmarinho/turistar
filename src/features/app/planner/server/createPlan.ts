@@ -7,6 +7,7 @@ interface PlannerDestination {
   name: string;
   latitude?: number;
   longitude?: number;
+  country?: string;
 }
 
 export interface CreatePlannerPlanInput {
@@ -41,6 +42,7 @@ async function executePlanCreation(
       name: destination.name,
       latitude: destination.latitude,
       longitude: destination.longitude,
+      country: destination.country,
     },
     startDate,
     endDate,
