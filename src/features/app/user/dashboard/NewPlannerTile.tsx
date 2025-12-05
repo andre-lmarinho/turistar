@@ -12,11 +12,10 @@ export function NewPlannerTile() {
   const [open, setOpen] = useState(false);
   const [lastPlan, setLastPlan] = useState<CreatePlannerPlanResult | null>(null);
 
-  function handlePlanCreated(plan: CreatePlannerPlanResult) {
+  async function handlePlanCreated(plan: CreatePlannerPlanResult) {
     setLastPlan(plan);
     setOpen(false);
-    router.push(`/p/${plan.publicSlug ?? plan.planId}`);
-    router.refresh();
+    await router.push(`/p/${plan.publicSlug ?? plan.planId}`);
   }
 
   return (

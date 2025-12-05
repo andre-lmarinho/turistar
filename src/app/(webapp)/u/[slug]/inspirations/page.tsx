@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function UserInspirationsPage() {
-  return (
-    <div className="space-y-6">
-      <InspirationGallery />
-    </div>
-  );
+  return <InspirationGallery />;
 }

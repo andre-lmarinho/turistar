@@ -1,17 +1,45 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+
+import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
+import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
+import { WorldMapPanelClient } from '@/features/app/user/worldmap/WorldMapPanelClient';
+import { worldMapMarkers } from '@/features/app/user/worldmap/mockWorldMapData';
 
 export const metadata: Metadata = {
   title: 'Worldmap | Turistar App',
 };
 
-export default function UserWorldmapPage() {
-  return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-border bg-background/60 p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold text-foreground">Worldmap</h1>
-      <p className="text-sm text-muted-foreground">
-        The global map grid is still under construction, but you will be able to explore routes,
-        inspirations, and destinations soon.
-      </p>
-    </div>
-  );
+interface DashboardWorldmapPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+export default async function DashboardWorldmapPage({ params }: DashboardWorldmapPageProps) {
+  const { slug } = await params;
+  const normalizedSlug = slug?.trim();
+
+  if (!normalizedSlug) {
+    redirect('/login');
+  }
+
+  try {
+    const user = await requireUser();
+    const profile = await getUserProfileBySlug(normalizedSlug);
+
+    if (!profile || profile.userId !== user.id) {
+      redirect('/login');
+    }
+
+    const highlightPlanId = worldMapMarkers[0]?.planId;
+
+    return <WorldMapPanelClient markers={worldMapMarkers} highlightPlanId={highlightPlanId} />;
+  } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      redirect('/login');
+    }
+
+    throw error;
+  }
 }

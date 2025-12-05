@@ -45,7 +45,7 @@ export function PlannerHeader({
   }, [headingText]);
 
   return (
-    <div className="mx-auto flex w-full max-w-screen-xl flex-row justify-between gap-4 pb-4 md:items-center">
+    <div className="mx-auto flex w-full max-w-7xl flex-row justify-between gap-4 pb-4 md:items-center">
       <h1 className="bg-card inline-flex flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
         <span id="planner-title-heading" className="sr-only">
           {headingText}

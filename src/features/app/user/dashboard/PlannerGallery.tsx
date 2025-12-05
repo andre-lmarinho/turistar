@@ -8,6 +8,11 @@ interface PlannerGalleryProps {
 }
 
 export function PlannerGallery({ plans }: PlannerGalleryProps) {
+  const sortedByUpdated = [...plans].sort((a, b) => {
+    const getTime = (value?: string | null) => (value ? new Date(value).getTime() : 0);
+    return getTime(b.updatedAt) - getTime(a.updatedAt);
+  });
+
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
@@ -18,7 +23,7 @@ export function PlannerGallery({ plans }: PlannerGalleryProps) {
       </div>
 
       <GalleryGrid>
-        {plans.map((plan, idx) => (
+        {sortedByUpdated.map((plan, idx) => (
           <PlannerCard key={plan.id} plan={plan} index={idx} />
         ))}
         <NewPlannerTile />

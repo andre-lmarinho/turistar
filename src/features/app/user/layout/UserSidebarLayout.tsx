@@ -4,7 +4,9 @@ import type { ReactNode } from 'react';
 import { usePathname, useParams } from 'next/navigation';
 
 import { Button } from '@/shared/ui/button/Button';
-import { Kanban, MapPin, Sparkles, type LucideIcon } from '@/shared/ui/icon';
+
+import type { LucideIcon } from '@/shared/ui/icon';
+import { Kanban, MapPin, Sparkles } from '@/shared/ui/icon';
 
 type UserSidebarLayoutProps = {
   children: ReactNode;
@@ -32,25 +34,28 @@ export function UserSidebarLayout({ children }: UserSidebarLayoutProps) {
     : [];
 
   return (
-    <div className="mt-10 flex min-h-screen w-full gap-6 pl-4 lg:pl-8">
-      <aside aria-label="User sidebar" className="w-64 space-y-6">
+    <main className="mt-12 flex min-h-screen w-full gap-6 pl-4 lg:pl-8">
+      <aside aria-label="User sidebar" className="w-64">
         <div className="flex flex-col gap-2 pb-2">
-          {navItems.map((item) => (
-            <Button
-              key={item.key}
-              href={item.href}
-              variant={item.isActive ? undefined : 'ghost'}
-              className="w-full justify-start"
-            >
-              <span className="flex items-center gap-2">
-                <item.icon className="size-4" aria-hidden="true" />
-                {item.label}
-              </span>
-            </Button>
-          ))}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Button
+                key={item.key}
+                href={item.href}
+                variant={item.isActive ? undefined : 'ghost'}
+                className="w-full justify-start"
+              >
+                <span className="flex items-center gap-2">
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  {item.label}
+                </span>
+              </Button>
+            );
+          })}
         </div>
       </aside>
       <section className="flex-1">{children}</section>
-    </div>
+    </main>
   );
 }

@@ -51,7 +51,7 @@ export function BudgetRowInputs({
           {amount.ariaLabel ?? 'Amount'}
         </label>
         <div className="bg-background grid grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
-          <span className="bg-muted border-r-1">
+          <span className="bg-muted border-r">
             <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
           </span>
           <input

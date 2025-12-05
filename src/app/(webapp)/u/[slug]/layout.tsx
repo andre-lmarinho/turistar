@@ -41,7 +41,7 @@ export default async function UserDashboardLayout({
 
   return (
     <UserSidebarLayout>
-      <div className="mx-auto w-full max-w-7xl p-4">{children}</div>
+      <div className="mx-auto w-full max-w-7xl px-4">{children}</div>
     </UserSidebarLayout>
   );
 }
