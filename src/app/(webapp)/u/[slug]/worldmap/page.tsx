@@ -3,8 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
-import { WorldMapPanelClient } from '@/features/app/user/worldmap/WorldMapPanelClient';
-import { worldMapMarkers } from '@/features/app/user/worldmap/mockWorldMapData';
+import { WorldMapBoard } from '@/features/app/user/components/worldmap/WorldMapBoard';
 
 export const metadata: Metadata = {
   title: 'Worldmap | Turistar App',
@@ -32,9 +31,7 @@ export default async function DashboardWorldmapPage({ params }: DashboardWorldma
       redirect('/login');
     }
 
-    const highlightPlanId = worldMapMarkers[0]?.planId;
-
-    return <WorldMapPanelClient markers={worldMapMarkers} highlightPlanId={highlightPlanId} />;
+    return <WorldMapBoard />;
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       redirect('/login');

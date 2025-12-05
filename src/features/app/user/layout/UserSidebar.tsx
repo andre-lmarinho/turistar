@@ -1,16 +1,10 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { usePathname, useParams } from 'next/navigation';
 
 import { Button } from '@/shared/ui/button/Button';
-
 import type { LucideIcon } from '@/shared/ui/icon';
 import { Kanban, MapPin, Sparkles } from '@/shared/ui/icon';
-
-type UserSidebarLayoutProps = {
-  children: ReactNode;
-};
 
 const pageSections: { key: string; label: string; route: string; icon: LucideIcon }[] = [
   { key: 'planners', label: 'Planner', route: 'planners', icon: Kanban },
@@ -18,7 +12,7 @@ const pageSections: { key: string; label: string; route: string; icon: LucideIco
   { key: 'inspirations', label: 'Inspirations', route: 'inspirations', icon: Sparkles },
 ];
 
-export function UserSidebarLayout({ children }: UserSidebarLayoutProps) {
+export function UserSidebar() {
   const pathname = usePathname() ?? '';
   const segment = pathname.split('/').filter(Boolean)[2] ?? '';
   const params = useParams();
@@ -34,28 +28,25 @@ export function UserSidebarLayout({ children }: UserSidebarLayoutProps) {
     : [];
 
   return (
-    <main className="mt-12 flex min-h-screen w-full gap-6 pl-4 lg:pl-8">
-      <aside aria-label="User sidebar" className="w-64">
-        <div className="flex flex-col gap-2 pb-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Button
-                key={item.key}
-                href={item.href}
-                variant={item.isActive ? undefined : 'ghost'}
-                className="w-full justify-start"
-              >
-                <span className="flex items-center gap-2">
-                  <Icon className="h-4 w-4" aria-hidden="true" />
-                  {item.label}
-                </span>
-              </Button>
-            );
-          })}
-        </div>
-      </aside>
-      <section className="flex-1">{children}</section>
-    </main>
+    <aside aria-label="User sidebar" className="w-64">
+      <div className="flex flex-col gap-2 pb-2">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Button
+              key={item.key}
+              href={item.href}
+              variant={item.isActive ? undefined : 'ghost'}
+              className="w-full justify-start"
+            >
+              <span className="flex items-center gap-2">
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                {item.label}
+              </span>
+            </Button>
+          );
+        })}
+      </div>
+    </aside>
   );
 }

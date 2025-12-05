@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { InspirationGallery } from '@/features/app/user/dashboard/InspirationGallery';
+import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
 
 export const metadata: Metadata = {
   title: 'Inspirations | Turistar App',

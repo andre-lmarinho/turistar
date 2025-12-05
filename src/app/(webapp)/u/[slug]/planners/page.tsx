@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { InspirationGallery } from '@/features/app/user/dashboard/InspirationGallery';
-import { PlannerGallery } from '@/features/app/user/dashboard/PlannerGallery';
+import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
+import { PlannerGallery } from '@/features/app/user/components/dashboard/PlannerGallery';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
@@ -38,10 +38,10 @@ export default async function DashboardPlannersPage({ params }: DashboardPlanner
     const plans = await getUserPlanners(user.id);
 
     return (
-      <div className="flex flex-col gap-8">
+      <>
         <InspirationGallery />
         <PlannerGallery plans={plans} />
-      </div>
+      </>
     );
   } catch (error) {
     if (error instanceof UnauthorizedError) {
