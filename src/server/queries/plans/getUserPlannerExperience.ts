@@ -18,6 +18,9 @@ export interface UserPlannerExperience {
   initialBudget?: number;
   initialEntries?: Entry[];
   editToken: string;
+  isOwner: boolean;
+  isAdmin: boolean;
+  canManageMembers: boolean;
 }
 
 export async function getUserPlannerExperience(
@@ -27,7 +30,17 @@ export async function getUserPlannerExperience(
   const supabase = createSupabaseServerClient();
   const { data, error } = (await supabase
     .from('plans')
-    .select('id, title, plan_destinations(destinations(name)), edit_token, budget, user_id')
+    .select(
+      `
+        id,
+        title,
+        plan_destinations(destinations(name)),
+        edit_token,
+        budget,
+        user_id,
+        plan_members!left(user_id, tier)
+      `
+    )
     .eq('id', planId)
     .maybeSingle()) as unknown as {
     data: {
@@ -37,6 +50,7 @@ export async function getUserPlannerExperience(
       budget: number | null;
       user_id: string | null;
       plan_destinations: { destinations: { name: string | null } }[] | null;
+      plan_members: { user_id: string; tier: string }[] | null;
     } | null;
     error: unknown;
   };
@@ -45,7 +59,17 @@ export async function getUserPlannerExperience(
     throw error;
   }
 
-  if (!data || data.user_id !== userId) {
+  if (!data) {
+    notFound();
+  }
+
+  const ownerId = data.user_id;
+  const memberRow = data.plan_members?.find((member) => member.user_id === userId) ?? null;
+  const isOwner = ownerId === userId;
+  const isMember = Boolean(memberRow);
+  const isAdmin = isOwner || memberRow?.tier === 'admin';
+
+  if (!isOwner && !isMember) {
     notFound();
   }
 
@@ -104,5 +128,8 @@ export async function getUserPlannerExperience(
     initialBudget: data.budget ?? undefined,
     initialEntries,
     editToken: data.edit_token,
+    isOwner,
+    isAdmin,
+    canManageMembers: isAdmin,
   };
 }

@@ -19,6 +19,9 @@ export interface PlannerExperiencePayload {
   initialEntries?: Entry[];
   canEdit: boolean;
   editToken?: string;
+  isOwner: boolean;
+  isAdmin: boolean;
+  canManageMembers: boolean;
 }
 
 interface GetPublicPlannerExperienceArgs {
@@ -69,9 +72,31 @@ export async function getPublicPlannerExperience({
   const destination =
     dest ?? planRow.plan_destinations?.[0]?.destinations?.name ?? 'Destination TBD';
 
-  const isOwner = viewerUserId && planOwnerId && viewerUserId === planOwnerId;
-  const tokenMatches = editToken && editToken === planEditToken;
-  const canEdit = Boolean(isOwner || tokenMatches);
+  const isOwner = Boolean(viewerUserId && planOwnerId && viewerUserId === planOwnerId);
+  const tokenMatches = Boolean(editToken && editToken === planEditToken);
+  let memberTier: string | null = null;
+
+  if (viewerUserId && !isOwner) {
+    const { data: memberRow, error: memberError } = (await supabase
+      .from('plan_members')
+      .select('tier')
+      .eq('plan_id', planId)
+      .eq('user_id', viewerUserId)
+      .maybeSingle()) as unknown as {
+      data: { tier: string } | null;
+      error: unknown;
+    };
+
+    if (memberError) {
+      throw memberError;
+    }
+
+    memberTier = memberRow?.tier ?? null;
+  }
+
+  const isMember = Boolean(memberTier);
+  const isAdmin = isOwner || memberTier === 'admin';
+  const canEdit = Boolean(isOwner || tokenMatches || isMember);
   const grantedToken = canEdit ? planEditToken : undefined;
 
   const { data: dayRows, error: dayErr } = (await supabase
@@ -130,5 +155,8 @@ export async function getPublicPlannerExperience({
     initialEntries,
     canEdit,
     editToken: grantedToken,
+    isOwner,
+    isAdmin,
+    canManageMembers: isAdmin,
   };
 }
