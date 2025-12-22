@@ -6,6 +6,7 @@ import { DateRange } from 'react-day-picker';
 import { DateRangePickerIcon } from '@/shared/ui/calendar';
 import { useElementMeasure } from '@/features/app/planner/hooks/ui/useElementMeasure';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import { SharePlannerPopover } from '@/features/app/planner/components/share/SharePlannerPopover';
 import { ModeToggleButton } from '@/features/app/planner/components/ui/ModeToggleButton';
 import type { PlannerMode } from './PlannerModeDeck';
 
@@ -30,7 +31,7 @@ export function PlannerHeader({
   onModeChange,
   canEdit = true,
 }: PlannerHeaderProps) {
-  const { dest } = usePlannerContext();
+  const { dest, planId, viewerUserId } = usePlannerContext();
   const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
     width: true,
     text: title,
@@ -69,6 +70,7 @@ export function PlannerHeader({
       </h1>
       <div className="flex flex-none items-center gap-2 self-end md:self-end">
         <DateRangePickerIcon value={currentRange} onChange={onRangeChange} disabled={!canEdit} />
+        {viewerUserId ? <SharePlannerPopover planId={planId} /> : null}
         <div className="hidden md:inline">
           <ModeToggleButton value={mode} onChange={onModeChange} />
         </div>

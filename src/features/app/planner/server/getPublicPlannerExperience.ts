@@ -1,10 +1,7 @@
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
-import {
-  mapPlanDaysFromSupabase,
-  type SupabasePlanDayRow,
-} from '../services/supabase/planDaysMapper';
+import { SnapshotRowSchema, mapSnapshot } from '../services/supabase/planEventsSchemas';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
@@ -99,16 +96,22 @@ export async function getPublicPlannerExperience({
   const canEdit = Boolean(isOwner || tokenMatches || isMember);
   const grantedToken = canEdit ? planEditToken : undefined;
 
-  const { data: dayRows, error: dayErr } = (await supabase
-    .from('plan_days')
-    .select('date, activities(*)')
+  const { data: snapshotRow, error: snapshotErr } = (await supabase
+    .from('plan_snapshots')
+    .select('plan_id, version, state, updated_at')
     .eq('plan_id', planId)
-    .order('position')) as unknown as {
-    data: SupabasePlanDayRow[] | null;
+    .maybeSingle()) as unknown as {
+    data: unknown;
     error: unknown;
   };
 
-  let initialDays = !dayErr && dayRows ? mapPlanDaysFromSupabase(dayRows) : undefined;
+  let initialDays: DayPlan[] | undefined;
+  if (!snapshotErr && snapshotRow) {
+    const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
+    if (snapshot.days.length > 0) {
+      initialDays = snapshot.days;
+    }
+  }
 
   if (!initialDays || initialDays.length === 0) {
     const startDate = planRow.start_date ? new Date(planRow.start_date) : null;

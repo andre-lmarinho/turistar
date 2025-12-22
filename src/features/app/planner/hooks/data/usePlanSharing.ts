@@ -4,9 +4,10 @@ import { addPlanMemberByEmail } from '@/app/(webapp)/p/actions/plans/addPlanMemb
 import { createPlanShareLink } from '@/app/(webapp)/p/actions/plans/createPlanShareLink';
 import { leavePlan } from '@/app/(webapp)/p/actions/plans/leavePlan';
 import { removePlanMember } from '@/app/(webapp)/p/actions/plans/removePlanMember';
+import { getPlanMembers } from '@/app/(webapp)/p/actions/plans/getPlanMembers';
+import { getPlanShareLink } from '@/app/(webapp)/p/actions/plans/getPlanShareLink';
 import { revokePlanShareLink } from '@/app/(webapp)/p/actions/plans/revokePlanShareLink';
 import { updatePlanMemberTier } from '@/app/(webapp)/p/actions/plans/updatePlanMemberTier';
-import { supabase } from '@/shared/lib/supabaseClient';
 import type { Database } from '@/shared/types/supabase';
 
 type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
@@ -46,51 +47,10 @@ export function usePlanMembers(planId: string, options: PlanSharingOptions = {})
     queryKey,
     enabled: Boolean(planId) && enabled,
     queryFn: async () => {
-      const [planResult, membersResult] = await Promise.all([
-        supabase.from('plans').select('user_id').eq('id', planId).maybeSingle() as Promise<{
-          data: { user_id: string | null } | null;
-          error: unknown;
-        }>,
-        supabase
-          .from('plan_members')
-          .select('user_id, tier, profiles(id, slug, display_name, avatar_url)')
-          .eq('plan_id', planId)
-          .order('created_at') as Promise<{
-          data:
-            | {
-                user_id: string;
-                tier: PlanMemberTier;
-                profiles: {
-                  id: string;
-                  slug: string | null;
-                  display_name: string | null;
-                  avatar_url: string | null;
-                } | null;
-              }[]
-            | null;
-          error: unknown;
-        }>,
-      ]);
-
-      if (planResult.error) {
-        throw planResult.error;
+      if (!planId) {
+        throw missingPlanIdError();
       }
-      if (membersResult.error) {
-        throw membersResult.error;
-      }
-
-      const members = (membersResult.data ?? []).map((row) => ({
-        userId: row.user_id,
-        tier: row.tier,
-        slug: row.profiles?.slug ?? null,
-        displayName: row.profiles?.display_name ?? null,
-        avatarUrl: row.profiles?.avatar_url ?? null,
-      }));
-
-      return {
-        ownerId: planResult.data?.user_id ?? null,
-        members,
-      };
+      return getPlanMembers(planId);
     },
   });
 
@@ -101,7 +61,30 @@ export function usePlanMembers(planId: string, options: PlanSharingOptions = {})
       }
       return addPlanMemberByEmail(planId, email, tier);
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey }),
+    onSuccess: (result) => {
+      qc.setQueryData<PlanMembersResponse | undefined>(queryKey, (current) => {
+        if (!current) {
+          return current;
+        }
+        if (current.members.some((member) => member.userId === result.userId)) {
+          return current;
+        }
+        return {
+          ...current,
+          members: [
+            ...current.members,
+            {
+              userId: result.userId,
+              tier: result.tier,
+              slug: null,
+              displayName: null,
+              avatarUrl: null,
+            },
+          ],
+        };
+      });
+      qc.invalidateQueries({ queryKey });
+    },
   });
 
   const updateTier = useMutation({
@@ -154,36 +137,14 @@ export function usePlanShareLink(planId: string, options: PlanSharingOptions = {
     queryKey,
     enabled: Boolean(planId) && enabled,
     queryFn: async () => {
-      const { data, error } = (await supabase
-        .from('plan_share_links')
-        .select('token, created_at, created_by, revoked_at')
-        .eq('plan_id', planId)
-        .maybeSingle()) as {
-        data:
-          | {
-              token: string;
-              created_at: string;
-              created_by: string;
-              revoked_at: string | null;
-            }
-          | null;
-        error: unknown;
-      };
-
-      if (error) {
-        throw error;
+      if (!planId) {
+        throw missingPlanIdError();
       }
-
-      if (!data || data.revoked_at) {
+      const data = await getPlanShareLink(planId);
+      if (!data || data.revokedAt) {
         return null;
       }
-
-      return {
-        token: data.token,
-        createdAt: data.created_at,
-        createdBy: data.created_by,
-        revokedAt: data.revoked_at,
-      };
+      return data;
     },
   });
 

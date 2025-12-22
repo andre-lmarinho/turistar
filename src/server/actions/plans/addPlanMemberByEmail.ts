@@ -31,13 +31,45 @@ export async function addPlanMemberByEmail(
   });
 
   if (error) {
-    throw error;
+    const rawMessage =
+      typeof (error as { message?: unknown }).message === 'string'
+        ? String((error as { message?: unknown }).message)
+        : '';
+    const message = rawMessage.toLowerCase();
+    const details = typeof (error as { details?: string }).details === 'string'
+      ? String((error as { details?: string }).details).toLowerCase()
+      : '';
+    const code = typeof (error as { code?: string }).code === 'string'
+      ? String((error as { code?: string }).code)
+      : '';
+    if (
+      message.includes('not registered') ||
+      message.includes('user not found') ||
+      message.includes('no user') ||
+      details.includes('not registered') ||
+      details.includes('user not found') ||
+      code === '23503' ||
+      code === 'P0001'
+    ) {
+      const err = new Error('USER_NOT_REGISTERED');
+      (err as { code?: string }).code = 'USER_NOT_REGISTERED';
+      throw err;
+    }
+    const err = new Error(
+      rawMessage.length > 0
+        ? rawMessage
+        : 'Unable to add member.'
+    );
+    (err as { code?: string }).code = code || undefined;
+    throw err;
   }
 
   const row = Array.isArray(data) ? (data[0] as AddPlanMemberRow | undefined) : null;
 
   if (!row) {
-    throw new Error('No member returned');
+    const err = new Error('USER_NOT_REGISTERED');
+    (err as { code?: string }).code = 'USER_NOT_REGISTERED';
+    throw err;
   }
 
   return { userId: row.user_id, tier: row.tier };

@@ -15,49 +15,109 @@ export type UserPlannerSummary = {
 
 export async function getUserPlanners(userId: string): Promise<UserPlannerSummary[]> {
   const supabase = createSupabaseServerClient();
-  const { data, error } = (await supabase
-    .from('plans')
-    .select(
-      `
-        id,
-        title,
-        start_date,
-        end_date,
-        created_at,
-        public_slug,
-        edit_token,
-        plan_destinations(destinations(name)),
-        plan_snapshots(updated_at)
-      `
-    )
-    .eq('user_id', userId)
-    .order('updated_at', { ascending: false, referencedTable: 'plan_snapshots' })
-    .limit(50)) as unknown as {
-    data:
-      | {
-          id: string;
-          title: string | null;
-          start_date: string | null;
-          end_date: string | null;
-          created_at: string | null;
-          public_slug: string;
-          edit_token: string;
-          plan_destinations: { destinations: { name: string | null } }[] | null;
-          plan_snapshots: { updated_at: string | null }[] | null;
-        }[]
-      | null;
-    error: unknown;
-  };
+  const plannerSelect = `
+    id,
+    title,
+    start_date,
+    end_date,
+    created_at,
+    public_slug,
+    edit_token,
+    plan_destinations(destinations(name)),
+    plan_snapshots(updated_at)
+  `;
 
-  if (error) {
-    throw error;
+  const [ownedResult, memberResult] = await Promise.all([
+    (await supabase
+      .from('plans')
+      .select(plannerSelect)
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false, referencedTable: 'plan_snapshots' })
+      .limit(50)) as unknown as {
+      data:
+        | {
+            id: string;
+            title: string | null;
+            start_date: string | null;
+            end_date: string | null;
+            created_at: string | null;
+            public_slug: string;
+            edit_token: string;
+            plan_destinations: { destinations: { name: string | null } }[] | null;
+            plan_snapshots: { updated_at: string | null }[] | null;
+          }[]
+        | null;
+      error: unknown;
+    },
+    (await supabase
+      .from('plan_members')
+      .select(`plan_id, plans(${plannerSelect})`)
+      .eq('user_id', userId)
+      .limit(50)) as unknown as {
+      data:
+        | {
+            plan_id: string;
+            plans:
+              | {
+                  id: string;
+                  title: string | null;
+                  start_date: string | null;
+                  end_date: string | null;
+                  created_at: string | null;
+                  public_slug: string;
+                  edit_token: string;
+                  plan_destinations: { destinations: { name: string | null } }[] | null;
+                  plan_snapshots: { updated_at: string | null }[] | null;
+                }
+              | {
+                  id: string;
+                  title: string | null;
+                  start_date: string | null;
+                  end_date: string | null;
+                  created_at: string | null;
+                  public_slug: string;
+                  edit_token: string;
+                  plan_destinations: { destinations: { name: string | null } }[] | null;
+                  plan_snapshots: { updated_at: string | null }[] | null;
+                }[]
+              | null;
+          }[]
+        | null;
+      error: unknown;
+    },
+  ]);
+
+  if (ownedResult.error) {
+    throw ownedResult.error;
+  }
+  if (memberResult.error) {
+    throw memberResult.error;
   }
 
-  if (!data) {
-    return [];
-  }
+  const plans = new Map<string, {
+    id: string;
+    title: string | null;
+    start_date: string | null;
+    end_date: string | null;
+    created_at: string | null;
+    public_slug: string;
+    edit_token: string;
+    plan_destinations: { destinations: { name: string | null } }[] | null;
+    plan_snapshots: { updated_at: string | null }[] | null;
+  }>();
 
-  return data.map((row) => {
+  (ownedResult.data ?? []).forEach((row) => {
+    plans.set(row.id, row);
+  });
+
+  (memberResult.data ?? []).forEach((row) => {
+    const plan = Array.isArray(row.plans) ? row.plans[0] : row.plans;
+    if (plan) {
+      plans.set(plan.id, plan);
+    }
+  });
+
+  return Array.from(plans.values()).map((row) => {
     const destination = row.plan_destinations?.[0]?.destinations?.name ?? null;
     const snapshots = Array.isArray(row.plan_snapshots)
       ? row.plan_snapshots

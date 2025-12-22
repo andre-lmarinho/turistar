@@ -1,6 +1,6 @@
 'use server';
 
-import { requireUser } from '@/shared/lib/auth/session';
+import { getCurrentUser, requireUser } from '@/shared/lib/auth/session';
 import { createPlan as createPlanAction } from '@/server/actions/plans/createPlan';
 
 interface PlannerDestination {
@@ -66,7 +66,8 @@ async function executePlanCreation(
 export async function createPlannerPlan(
   input: CreatePlannerPlanInput
 ): Promise<CreatePlannerPlanResult> {
-  return executePlanCreation(input);
+  const user = await getCurrentUser();
+  return executePlanCreation(input, user?.id);
 }
 
 export async function createUserPlan(

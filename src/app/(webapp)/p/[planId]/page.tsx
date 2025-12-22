@@ -65,6 +65,10 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
           dest={experience.destination}
           title={experience.title ?? experience.destination}
           canEdit
+          viewerUserId={user.id}
+          isOwner={experience.isOwner}
+          isAdmin={experience.isAdmin}
+          canManageMembers={experience.canManageMembers}
           editToken={experience.editToken}
           initialBudget={experience.initialBudget}
           initialEntries={experience.initialEntries}
@@ -99,6 +103,10 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
       initialBudget={experience.initialBudget}
       initialEntries={experience.initialEntries}
       canEdit={experience.canEdit}
+      viewerUserId={user?.id ?? null}
+      isOwner={experience.isOwner}
+      isAdmin={experience.isAdmin}
+      canManageMembers={experience.canManageMembers}
       editToken={experience.editToken}
     />
   );

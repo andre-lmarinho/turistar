@@ -8,7 +8,13 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
 import { usePersistedPlannerDays } from './state/planner/usePersistedPlannerDays';
 
 type PlannerCtx = ReturnType<typeof usePlanner> &
-  ReturnType<typeof useSelectedActivity> & { canEdit: boolean };
+  ReturnType<typeof useSelectedActivity> & {
+    canEdit: boolean;
+    viewerUserId: string | null;
+    isOwner: boolean;
+    isAdmin: boolean;
+    canManageMembers: boolean;
+  };
 
 export function usePlannerContextValue({
   initialDays,
@@ -16,12 +22,20 @@ export function usePlannerContextValue({
   dest,
   persist = true,
   canEdit = true,
+  viewerUserId = null,
+  isOwner = false,
+  isAdmin = false,
+  canManageMembers = false,
 }: {
   initialDays?: DayPlan[];
   planId: string;
   dest?: string;
   persist?: boolean;
   canEdit?: boolean;
+  viewerUserId?: string | null;
+  isOwner?: boolean;
+  isAdmin?: boolean;
+  canManageMembers?: boolean;
 }): PlannerCtx {
   const { data: storedDaysRaw, persistDays } = usePlanCollaboration(planId, { enabled: persist });
   const storedDays = storedDaysRaw ?? undefined;
@@ -45,7 +59,17 @@ export function usePlannerContextValue({
     updateActivity: planner.updateActivity,
   });
 
-  return { ...planner, days, setDays, ...selected, canEdit };
+  return {
+    ...planner,
+    days,
+    setDays,
+    ...selected,
+    canEdit,
+    viewerUserId,
+    isOwner,
+    isAdmin,
+    canManageMembers,
+  };
 }
 
 export const [PlannerProvider, usePlannerContext] = createContextProvider(

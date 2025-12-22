@@ -3,12 +3,9 @@ import 'server-only';
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import {
-  mapPlanDaysFromSupabase,
-  type SupabasePlanDayRow,
-} from '@/features/app/planner/services/supabase/planDaysMapper';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
+import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
 
 export interface UserPlannerExperience {
   planId: string;
@@ -38,6 +35,8 @@ export async function getUserPlannerExperience(
         edit_token,
         budget,
         user_id,
+        start_date,
+        end_date,
         plan_members!left(user_id, tier)
       `
     )
@@ -49,6 +48,8 @@ export async function getUserPlannerExperience(
       edit_token: string;
       budget: number | null;
       user_id: string | null;
+      start_date: string | null;
+      end_date: string | null;
       plan_destinations: { destinations: { name: string | null } }[] | null;
       plan_members: { user_id: string; tier: string }[] | null;
     } | null;
@@ -79,20 +80,24 @@ export async function getUserPlannerExperience(
     notFound();
   }
 
-  const { data: dayRows, error: dayErr } = (await supabase
-    .from('plan_days')
-    .select('date, activities(*)')
+  const { data: snapshotRow, error: snapshotErr } = (await supabase
+    .from('plan_snapshots')
+    .select('plan_id, version, state, updated_at')
     .eq('plan_id', planId)
-    .order('position')) as unknown as {
-    data: SupabasePlanDayRow[] | null;
+    .maybeSingle()) as unknown as {
+    data: unknown;
     error: unknown;
   };
 
-  if (dayErr) {
-    throw dayErr;
+  if (snapshotErr) {
+    throw snapshotErr;
   }
 
-  const initialDays = dayRows ? mapPlanDaysFromSupabase(dayRows) : undefined;
+  let initialDays: DayPlan[] | undefined;
+  if (snapshotRow) {
+    const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
+    initialDays = snapshot.days.length > 0 ? snapshot.days : undefined;
+  }
 
   const { data: entryRows, error: entryErr } = (await supabase
     .from('budget_entries')
