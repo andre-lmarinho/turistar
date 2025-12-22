@@ -26,7 +26,7 @@ type SupabaseResult = {
 function buildSupabase(result: SupabaseResult) {
   const limit = vi.fn().mockResolvedValue(result);
   const order = vi.fn().mockReturnValue({ limit });
-  const eq = vi.fn().mockReturnValue({ order });
+  const eq = vi.fn().mockReturnValue({ order, limit });
   const select = vi.fn().mockReturnValue({ eq });
   const from = vi.fn().mockReturnValue({ select });
 

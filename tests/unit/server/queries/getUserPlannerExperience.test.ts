@@ -254,7 +254,7 @@ describe('getUserPlannerExperience', () => {
       planId: 'plan-5',
       title: 'Adventure',
       destination: 'Madrid',
-      initialDays: [{ id: '2024-01-01', label: 'Day', activities: [] }],
+      initialDays: [{ id: '2024-01-01', label: 'Day', activities: [], position: '1024' }],
       initialBudget: 666,
       initialEntries: [
         { id: 'entry-1', description: '', category: 'transport', amount: 0 },

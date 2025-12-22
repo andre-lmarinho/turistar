@@ -228,6 +228,7 @@ describe('getPublicPlannerExperience', () => {
         {
           id: '2024-01-01',
           label: 'Mon, 01 Jan',
+          position: '1024',
           activities: [
             expect.objectContaining({
               id: 'activity-1',
