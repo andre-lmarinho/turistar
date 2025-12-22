@@ -1,11 +1,15 @@
 import Link from 'next/link';
 
-export const SignupFooter = () => (
+type SignupFooterProps = {
+  loginHref?: string;
+};
+
+export const SignupFooter = ({ loginHref = '/login' }: SignupFooterProps) => (
   <div className="text-muted-foreground mt-10 flex h-full flex-col justify-end pb-6 text-sm">
     <p>
       {'Already have an account? '}
-      <Link href="/login" className="text-foreground hover:underline">
-        LogIn
+      <Link href={loginHref} className="text-foreground hover:underline">
+        Log in
       </Link>
     </p>
     <p>

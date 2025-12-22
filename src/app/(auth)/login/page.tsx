@@ -4,12 +4,21 @@ import { LoginPage } from '@/features/auth/login/LoginPage';
 import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
-export default async function LoginRoute() {
+export default async function LoginRoute({
+  searchParams,
+}: {
+  searchParams?: Promise<{ next?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const rawNext =
+    typeof resolvedSearchParams?.next === 'string' ? resolvedSearchParams.next : null;
+  const nextPath =
+    rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : null;
   const user = await getCurrentUser();
 
   if (user) {
     const slug = await ensureProfile();
-    redirect(`/u/${slug}/planners`);
+    redirect(nextPath ?? `/u/${slug}/planners`);
   }
 
   async function resolveProfileAction() {
@@ -17,5 +26,5 @@ export default async function LoginRoute() {
     return ensureProfile();
   }
 
-  return <LoginPage resolveProfile={resolveProfileAction} />;
+  return <LoginPage resolveProfile={resolveProfileAction} nextPath={nextPath ?? undefined} />;
 }

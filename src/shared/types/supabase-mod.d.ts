@@ -25,7 +25,8 @@ declare module '@supabase/supabase-js' {
     user: SupabaseSessionUser | null;
   }
 
-  export interface SupabaseQueryBuilder<TData = unknown> {
+  export interface SupabaseQueryBuilder<TData = unknown>
+    extends Promise<{ data: TData; error: unknown }> {
     select: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     insert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     upsert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
@@ -59,7 +60,14 @@ declare module '@supabase/supabase-js' {
       signUp: (credentials: {
         email: string;
         password: string;
+        options?: {
+          emailRedirectTo?: string;
+          data?: Record<string, unknown>;
+        };
       }) => Promise<{ data: unknown; error: Error | null }>;
+      exchangeCodeForSession: (
+        code: string
+      ) => Promise<{ data: { session: Session | null }; error: Error | null }>;
       onAuthStateChange: (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
         data: { subscription: SupabaseAuthSubscription };
       };

@@ -11,14 +11,17 @@ import type { Session } from '@supabase/supabase-js';
 
 type SignupFormProps = {
   finalizeProfile: () => Promise<string>;
+  nextPath?: string;
 };
 
-export function SignupForm({ finalizeProfile }: SignupFormProps) {
+export function SignupForm({ finalizeProfile, nextPath }: SignupFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const safeNextPath =
+    nextPath && nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : null;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,9 +35,13 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
     setIsSubmitting(true);
 
     try {
+      const redirectTo = safeNextPath
+        ? new URL(safeNextPath, window.location.origin).toString()
+        : undefined;
       const { data, error } = (await supabase.auth.signUp({
         email: email.trim(),
         password: password.trim(),
+        options: redirectTo ? { emailRedirectTo: redirectTo } : undefined,
       })) as AuthResponse;
 
       if (error) {
@@ -54,7 +61,7 @@ export function SignupForm({ finalizeProfile }: SignupFormProps) {
       await syncServerSession('SIGNED_IN', session);
 
       const slug = await finalizeProfile();
-      router.push(`/u/${slug}/planners`);
+      router.push(safeNextPath ?? `/u/${slug}/planners`);
       router.refresh();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'Unable to create your account.');
