@@ -68,10 +68,10 @@ export function PlannerHeader({
           className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text"
         />
       </h1>
-      <div className="flex flex-none items-center gap-2 self-end md:self-end">
+      <div className="flex flex-none items-center gap-1 self-end md:self-end">
         <DateRangePickerIcon value={currentRange} onChange={onRangeChange} disabled={!canEdit} />
         {viewerUserId ? <SharePlannerDialog planId={planId} /> : null}
-        <div className="hidden md:inline">
+        <div className="hidden pl-2 md:inline">
           <ModeToggleButton value={mode} onChange={onModeChange} />
         </div>
       </div>
