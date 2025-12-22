@@ -4,17 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
-import { acceptPlanShareLink } from '@/server/actions/plans/acceptPlanShareLink';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
 
 type ShareLinkAutoJoinProps = {
   token: string;
+  acceptShareLink: (token: string) => Promise<string>;
 };
 
 type JoinStatus = 'idle' | 'joining' | 'error';
 
-export function ShareLinkAutoJoin({ token }: ShareLinkAutoJoinProps) {
+export function ShareLinkAutoJoin({ token, acceptShareLink }: ShareLinkAutoJoinProps) {
   const router = useRouter();
   const joinRef = useRef(false);
   const [status, setStatus] = useState<JoinStatus>('idle');
@@ -30,7 +30,7 @@ export function ShareLinkAutoJoin({ token }: ShareLinkAutoJoinProps) {
       setStatus('joining');
       try {
         await syncServerSession(event ?? 'SIGNED_IN', session);
-        const planId = await acceptPlanShareLink(token);
+        const planId = await acceptShareLink(token);
         if (!active) {
           return;
         }
@@ -71,7 +71,7 @@ export function ShareLinkAutoJoin({ token }: ShareLinkAutoJoinProps) {
       active = false;
       data?.subscription.unsubscribe();
     };
-  }, [router, token]);
+  }, [acceptShareLink, router, token]);
 
   if (status === 'joining') {
     return (

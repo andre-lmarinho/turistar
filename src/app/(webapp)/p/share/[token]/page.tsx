@@ -58,7 +58,7 @@ export default async function PlannerShareLinkPage({
           <p className="text-muted-foreground mt-4 text-xs">
             After signing in, return to this link to join the planner.
           </p>
-          <ShareLinkAutoJoin token={trimmed} />
+          <ShareLinkAutoJoin token={trimmed} acceptShareLink={acceptPlanShareLink} />
         </div>
       </div>
     );
