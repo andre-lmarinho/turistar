@@ -120,7 +120,7 @@ function ShareLinkContent({
                         Deleting this link will prevent anyone from using it to join the planner.
                       </p>
                       <Button
-                        className="bg-destructive hover:bg-destructive/90 w-full text-[color:var(--destructive-foreground)]"
+                        className="bg-destructive hover:bg-destructive/90 w-full text-[--destructive-foreground]"
                         onClick={() => {
                           revokeLink.mutate();
                           setConfirmOpen(false);
