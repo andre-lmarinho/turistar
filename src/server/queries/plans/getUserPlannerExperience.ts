@@ -86,6 +86,9 @@ export async function getUserPlannerExperience(
     .from('plan_snapshots')
     .select('plan_id, version, state, updated_at')
     .eq('plan_id', planId)
+    .order('version', { ascending: false })
+    .order('updated_at', { ascending: false })
+    .limit(1)
     .maybeSingle()) as unknown as {
     data: unknown;
     error: unknown;
