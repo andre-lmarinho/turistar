@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import type { Entry } from '@/features/app/planner/types/budget';
+import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
 import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
+import type { Entry } from '@/features/app/planner/types/budget';
+import { eachDayOfInterval } from 'date-fns';
 
 export interface UserPlannerExperience {
   planId: string;
@@ -97,6 +99,20 @@ export async function getUserPlannerExperience(
   if (snapshotRow) {
     const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
     initialDays = snapshot.days.length > 0 ? snapshot.days : undefined;
+  }
+  if (!initialDays || initialDays.length === 0) {
+    const startDate = data.start_date ? new Date(data.start_date) : null;
+    const endDate = data.end_date ? new Date(data.end_date) : null;
+
+    if (
+      startDate &&
+      endDate &&
+      !Number.isNaN(startDate.valueOf()) &&
+      !Number.isNaN(endDate.valueOf())
+    ) {
+      const tripDays = eachDayOfInterval({ start: startDate, end: endDate });
+      initialDays = buildInitialDays(tripDays);
+    }
   }
 
   const { data: entryRows, error: entryErr } = (await supabase
