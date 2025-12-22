@@ -12,7 +12,6 @@ import {
 } from '@/features/app/planner/hooks/data/usePlanSharing';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 import { supabase } from '@/shared/lib/supabaseClient';
-import { ensureProfile } from '@/server/actions/profile/ensureProfile';
 import { SHARE_TIERS } from './shareConstants';
 
 type MemberMenuOption = PlanMemberTier | 'leave' | 'remove';
@@ -31,6 +30,32 @@ type ShareMemberRowProps = {
   mutations: MemberMutations;
   onLeave: (member: PlanMemberProfile) => void;
 };
+
+type EnsureProfileResponse = {
+  slug?: string | null;
+};
+
+async function ensureProfileSlug(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/profile/ensure', {
+      method: 'POST',
+      credentials: 'same-origin',
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = (await response.json()) as EnsureProfileResponse;
+    if (typeof data.slug !== 'string' || data.slug.trim().length === 0) {
+      return null;
+    }
+
+    return data.slug;
+  } catch {
+    return null;
+  }
+}
 
 function ShareMemberRow({
   member,
@@ -146,12 +171,8 @@ export function ShareMembersSection({ planId }: { planId: string }) {
     if (profile?.slug) {
       return `/u/${profile.slug}/planners`;
     }
-    try {
-      const slug = await ensureProfile();
-      return `/u/${slug}/planners`;
-    } catch {
-      return '/';
-    }
+    const slug = await ensureProfileSlug();
+    return slug ? `/u/${slug}/planners` : '/';
   };
 
   const handleLeave = async (member: PlanMemberProfile) => {
