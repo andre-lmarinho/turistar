@@ -11,7 +11,6 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { getPublicPlannerExperience } from '@/features/app/planner/server/getPublicPlannerExperience';
-import type { SupabasePlanDayRow } from '@/features/app/planner/services/supabase/planDaysMapper';
 
 interface SupabaseResult<T> {
   data: T;
@@ -29,7 +28,35 @@ type PlanRecord = {
   end_date?: string | null;
 } | null;
 
-type DayRecord = SupabasePlanDayRow[] | null;
+type SnapshotRecord =
+  | {
+      plan_id: string;
+      version: number;
+      state: {
+        days: {
+          id: string;
+          label: string;
+          position?: string;
+          activities: {
+            id: string;
+            title: string;
+            color: string;
+            position?: string;
+            description?: string | null;
+            address?: string | null;
+            duration?: number | null;
+            startTime?: string | null;
+            imageUrl?: string | null;
+            budget?: number | null;
+            category?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+          }[];
+        }[];
+      };
+      updated_at: string;
+    }
+  | null;
 type EntryRecord =
   | {
       id: string;
@@ -45,14 +72,10 @@ interface PlanQueryChain {
   single: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<PlanRecord>>>>;
 }
 
-interface DayQueryChain {
-  select: ReturnType<typeof vi.fn<(columns: string) => DayQueryChain>>;
-  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => DayQueryChain>>;
-  order: ReturnType<
-    typeof vi.fn<
-      (column: string, options: { ascending: boolean }) => Promise<SupabaseResult<DayRecord>>
-    >
-  >;
+interface SnapshotQueryChain {
+  select: ReturnType<typeof vi.fn<(columns: string) => SnapshotQueryChain>>;
+  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => SnapshotQueryChain>>;
+  maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<SnapshotRecord>>>>;
 }
 
 interface EntryQueryChain {
@@ -76,19 +99,16 @@ function createPlanQuery(result: SupabaseResult<PlanRecord>) {
   return chain;
 }
 
-function createDayQuery(result: SupabaseResult<DayRecord>) {
+function createSnapshotQuery(result: SupabaseResult<SnapshotRecord>) {
   const chain = {
-    select: vi.fn<(columns: string) => DayQueryChain>(),
-    eq: vi.fn<(column: string, value: unknown) => DayQueryChain>(),
-    order:
-      vi.fn<
-        (column: string, options: { ascending: boolean }) => Promise<SupabaseResult<DayRecord>>
-      >(),
-  } as unknown as DayQueryChain;
+    select: vi.fn<(columns: string) => SnapshotQueryChain>(),
+    eq: vi.fn<(column: string, value: unknown) => SnapshotQueryChain>(),
+    maybeSingle: vi.fn<() => Promise<SupabaseResult<SnapshotRecord>>>(),
+  } as unknown as SnapshotQueryChain;
 
   chain.select.mockReturnValue(chain);
   chain.eq.mockReturnValue(chain);
-  chain.order.mockResolvedValue(result);
+  chain.maybeSingle.mockResolvedValue(result);
 
   return chain;
 }
@@ -107,16 +127,16 @@ function createEntryQuery(result: SupabaseResult<EntryRecord>) {
 
 function mockSupabase(
   planResult: SupabaseResult<PlanRecord>,
-  dayResult: SupabaseResult<SupabasePlanDayRow[] | null>,
+  snapshotResult: SupabaseResult<SnapshotRecord>,
   entryResult: SupabaseResult<EntryRecord> = { data: null, error: null }
 ) {
   const planQuery = createPlanQuery(planResult);
-  const dayQuery = createDayQuery(dayResult);
+  const snapshotQuery = createSnapshotQuery(snapshotResult);
   const entryQuery = createEntryQuery(entryResult);
   const supabase = {
     from: vi.fn((table: string) => {
       if (table === 'plans') return planQuery;
-      if (table === 'plan_days') return dayQuery;
+      if (table === 'plan_snapshots') return snapshotQuery;
       if (table === 'budget_entries') return entryQuery;
       throw new Error(`Unexpected table ${table}`);
     }),
@@ -154,30 +174,36 @@ describe('getPublicPlannerExperience', () => {
       error: null,
     };
 
-    const dayResult: SupabaseResult<SupabasePlanDayRow[] | null> = {
-      data: [
-        {
-          date: '2024-01-01',
-          activities: [
+    const snapshotResult: SupabaseResult<SnapshotRecord> = {
+      data: {
+        plan_id: 'plan-1',
+        version: 1,
+        state: {
+          days: [
             {
-              id: 'activity-1',
-              day_id: '2024-01-01',
-              title: 'Visit Louvre',
-              color: '#123456',
-              address: 'Paris, France',
-              category: 'Culture',
-              description: 'Explore the museum',
-              start_time: '09:00',
-              duration: 120,
-              latitude: 48.8606,
-              longitude: 2.3376,
-              budget: 50,
-              image_url: null,
-              position: 0,
+              id: '2024-01-01',
+              label: 'Mon, 01 Jan',
+              activities: [
+                {
+                  id: 'activity-1',
+                  title: 'Visit Louvre',
+                  color: '#123456',
+                  address: 'Paris, France',
+                  category: 'Culture',
+                  description: 'Explore the museum',
+                  startTime: '09:00',
+                  duration: 120,
+                  latitude: 48.8606,
+                  longitude: 2.3376,
+                  budget: 50,
+                  imageUrl: null,
+                },
+              ],
             },
           ],
         },
-      ],
+        updated_at: '2024-01-01T00:00:00.000Z',
+      },
       error: null,
     };
 
@@ -186,7 +212,7 @@ describe('getPublicPlannerExperience', () => {
       error: null,
     };
 
-    const supabase = mockSupabase(planResult, dayResult, entryResult);
+    const supabase = mockSupabase(planResult, snapshotResult, entryResult);
     vi.mocked(supabaseServer).mockReturnValueOnce(
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
@@ -230,13 +256,16 @@ describe('getPublicPlannerExperience', () => {
       ],
       canEdit: false,
       editToken: undefined,
+      isOwner: false,
+      isAdmin: false,
+      canManageMembers: false,
     });
   });
 
   it('calls notFound when the plan is missing or returns an error', async () => {
     const planResult = { data: null, error: new Error('plan missing') };
-    const dayResult = { data: null, error: null };
-    const supabase = mockSupabase(planResult, dayResult);
+    const snapshotResult = { data: null, error: null };
+    const supabase = mockSupabase(planResult, snapshotResult);
     vi.mocked(supabaseServer).mockReturnValueOnce(
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
@@ -259,8 +288,8 @@ describe('getPublicPlannerExperience', () => {
       },
       error: null,
     };
-    const dayResult = { data: null, error: null };
-    const supabase = mockSupabase(planResult, dayResult);
+    const snapshotResult = { data: null, error: null };
+    const supabase = mockSupabase(planResult, snapshotResult);
     vi.mocked(supabaseServer).mockReturnValueOnce(
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
@@ -277,10 +306,13 @@ describe('getPublicPlannerExperience', () => {
       initialEntries: undefined,
       canEdit: false,
       editToken: undefined,
+      isOwner: false,
+      isAdmin: false,
+      canManageMembers: false,
     });
   });
 
-  it('returns experience without initial days when the day query fails', async () => {
+  it('returns experience without initial days when the snapshot query fails', async () => {
     const planResult = {
       data: {
         id: 'plan-3',
@@ -298,8 +330,8 @@ describe('getPublicPlannerExperience', () => {
       },
       error: null,
     };
-    const dayResult = { data: null, error: new Error('days failure') };
-    const supabase = mockSupabase(planResult, dayResult);
+    const snapshotResult = { data: null, error: new Error('snapshot failure') };
+    const supabase = mockSupabase(planResult, snapshotResult);
     vi.mocked(supabaseServer).mockReturnValueOnce(
       supabase as unknown as ReturnType<typeof supabaseServer>
     );
@@ -316,6 +348,9 @@ describe('getPublicPlannerExperience', () => {
       initialEntries: undefined,
       canEdit: false,
       editToken: undefined,
+      isOwner: false,
+      isAdmin: false,
+      canManageMembers: false,
     });
   });
 });

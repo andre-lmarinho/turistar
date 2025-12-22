@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { mapPlanDaysFromSupabase } from '@/features/app/planner/services/supabase/planDaysMapper';
 import { getUserPlannerExperience } from '@/server/queries/plans/getUserPlannerExperience';
 
 vi.mock('next/navigation', () => ({
@@ -13,16 +12,14 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
-vi.mock('@/features/app/planner/services/supabase/planDaysMapper', () => ({
-  mapPlanDaysFromSupabase: vi.fn(),
-}));
-
 type PlanRecord = {
   id: string;
   title: string | null;
   edit_token: string;
   budget: number | null;
   user_id: string | null;
+  start_date: string | null;
+  end_date: string | null;
   plan_destinations: { destinations: { name: string | null } }[] | null;
 };
 
@@ -31,8 +28,34 @@ type SupabasePlanResult = {
   error: unknown;
 };
 
-type SupabaseDayResult = {
-  data: { date: string }[] | null;
+type SupabaseSnapshotResult = {
+  data:
+    | {
+        plan_id: string;
+        version: number;
+        state: {
+          days: {
+            id: string;
+            label: string;
+            activities: {
+              id: string;
+              title: string;
+              color: string;
+              address?: string | null;
+              description?: string | null;
+              category?: string | null;
+              startTime?: string | null;
+              duration?: number | null;
+              latitude?: number | null;
+              longitude?: number | null;
+              budget?: number | null;
+              imageUrl?: string | null;
+            }[];
+          }[];
+        };
+        updated_at: string;
+      }
+    | null;
   error: unknown;
 };
 
@@ -55,11 +78,11 @@ function createPlanQuery(result: SupabasePlanResult) {
   return { select, eq, maybeSingle };
 }
 
-function createDayQuery(result: SupabaseDayResult) {
-  const order = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockReturnValue({ order });
+function createSnapshotQuery(result: SupabaseSnapshotResult) {
+  const maybeSingle = vi.fn().mockResolvedValue(result);
+  const eq = vi.fn().mockReturnValue({ maybeSingle });
   const select = vi.fn().mockReturnValue({ eq });
-  return { select, eq, order };
+  return { select, eq, maybeSingle };
 }
 
 function createEntryQuery(result: SupabaseEntryResult) {
@@ -70,21 +93,21 @@ function createEntryQuery(result: SupabaseEntryResult) {
 
 function mockSupabase(
   planResult: SupabasePlanResult,
-  dayResult: SupabaseDayResult,
+  snapshotResult: SupabaseSnapshotResult,
   entryResult: SupabaseEntryResult
 ) {
   const planQuery = createPlanQuery(planResult);
-  const dayQuery = createDayQuery(dayResult);
+  const snapshotQuery = createSnapshotQuery(snapshotResult);
   const entryQuery = createEntryQuery(entryResult);
   const from = vi.fn((table: string) => {
     if (table === 'plans') return planQuery;
-    if (table === 'plan_days') return dayQuery;
+    if (table === 'plan_snapshots') return snapshotQuery;
     if (table === 'budget_entries') return entryQuery;
     throw new Error(`Unexpected table ${table}`);
   });
 
   const supabase = { from } as unknown as ReturnType<typeof createSupabaseServerClient>;
-  return { supabase, planQuery, dayQuery, entryQuery };
+  return { supabase, planQuery, entryQuery };
 }
 
 const notFoundError = new Error('NOT_FOUND');
@@ -95,7 +118,6 @@ describe('getUserPlannerExperience', () => {
       throw notFoundError;
     });
     vi.mocked(createSupabaseServerClient).mockReset();
-    vi.mocked(mapPlanDaysFromSupabase).mockReset();
   });
 
   it('calls notFound when the plan user id does not match', async () => {
@@ -106,6 +128,8 @@ describe('getUserPlannerExperience', () => {
         edit_token: 'token',
         budget: 100,
         user_id: 'owner',
+        start_date: null,
+        end_date: null,
         plan_destinations: [{ destinations: { name: 'Berlin' } }],
       },
       error: null,
@@ -125,6 +149,8 @@ describe('getUserPlannerExperience', () => {
         edit_token: 'token',
         budget: 50,
         user_id: 'user-2',
+        start_date: null,
+        end_date: null,
         plan_destinations: [{ destinations: { name: null } }],
       },
       error: null,
@@ -136,7 +162,7 @@ describe('getUserPlannerExperience', () => {
     expect(notFound).toHaveBeenCalled();
   });
 
-  it('throws when the day query fails', async () => {
+  it('throws when the snapshot query fails', async () => {
     const planResult: SupabasePlanResult = {
       data: {
         id: 'plan-3',
@@ -144,15 +170,21 @@ describe('getUserPlannerExperience', () => {
         edit_token: 'token',
         budget: null,
         user_id: 'user-3',
+        start_date: null,
+        end_date: null,
         plan_destinations: [{ destinations: { name: 'Rome' } }],
       },
       error: null,
     };
-    const dayErr = new Error('day fail');
-    const { supabase } = mockSupabase(planResult, { data: null, error: dayErr }, { data: null, error: null });
+    const snapshotErr = new Error('snapshot fail');
+    const { supabase } = mockSupabase(
+      planResult,
+      { data: null, error: snapshotErr },
+      { data: null, error: null }
+    );
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    await expect(getUserPlannerExperience('plan-3', 'user-3')).rejects.toBe(dayErr);
+    await expect(getUserPlannerExperience('plan-3', 'user-3')).rejects.toBe(snapshotErr);
   });
 
   it('throws when the entry query fails', async () => {
@@ -163,13 +195,15 @@ describe('getUserPlannerExperience', () => {
         edit_token: 'token',
         budget: 200,
         user_id: 'user-4',
+        start_date: null,
+        end_date: null,
         plan_destinations: [{ destinations: { name: 'Lisbon' } }],
       },
       error: null,
     };
     const entryErr = new Error('entry fail');
-    const dayResult: SupabaseDayResult = { data: null, error: null };
-    const { supabase } = mockSupabase(planResult, dayResult, { data: null, error: entryErr });
+    const snapshotResult: SupabaseSnapshotResult = { data: null, error: null };
+    const { supabase } = mockSupabase(planResult, snapshotResult, { data: null, error: entryErr });
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     await expect(getUserPlannerExperience('plan-4', 'user-4')).rejects.toBe(entryErr);
@@ -183,24 +217,39 @@ describe('getUserPlannerExperience', () => {
         edit_token: 'token',
         budget: 666,
         user_id: 'user-5',
+        start_date: null,
+        end_date: null,
         plan_destinations: [{ destinations: { name: 'Madrid' } }],
       },
       error: null,
     };
-    const dayRows = [{ date: '2024-01-01' }];
     const entryRows = [
       { id: 'entry-1', description: null, category: null, amount: null },
       { id: 'entry-2', description: 'Lunch', category: 'food', amount: 20 },
     ];
-    const dayResult: SupabaseDayResult = { data: dayRows, error: null };
+    const snapshotResult: SupabaseSnapshotResult = {
+      data: {
+        plan_id: 'plan-5',
+        version: 1,
+        state: {
+          days: [
+            {
+              id: '2024-01-01',
+              label: 'Day',
+              activities: [],
+            },
+          ],
+        },
+        updated_at: '2024-01-01T00:00:00.000Z',
+      },
+      error: null,
+    };
     const entryResult: SupabaseEntryResult = { data: entryRows, error: null };
-    const { supabase } = mockSupabase(planResult, dayResult, entryResult);
+    const { supabase } = mockSupabase(planResult, snapshotResult, entryResult);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
-    vi.mocked(mapPlanDaysFromSupabase).mockReturnValue([{ id: '2024-01-01', label: 'Day', activities: [] }]);
 
     const experience = await getUserPlannerExperience('plan-5', 'user-5');
 
-    expect(mapPlanDaysFromSupabase).toHaveBeenCalledWith(dayRows);
     expect(experience).toEqual({
       planId: 'plan-5',
       title: 'Adventure',
@@ -212,6 +261,9 @@ describe('getUserPlannerExperience', () => {
         { id: 'entry-2', description: 'Lunch', category: 'food', amount: 20 },
       ],
       editToken: 'token',
+      isOwner: true,
+      isAdmin: true,
+      canManageMembers: true,
     });
   });
 });
