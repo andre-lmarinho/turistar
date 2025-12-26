@@ -1,89 +1,32 @@
 # Knowledge Base - Product & Domain-Specific Information
 
-## Repo note for andre-lmarinho/travel-planner
+## Repo note for travel-planner/travel-planner
 
-This repo is a single Next.js app. Run commands from the repo root.
+The whole thing is a monorepo. You need to be working in the src/features folder.
 
 ### Linting and Formatting
 
 - Run lint: `npm run lint`
-- Run type checking: `npm run typecheck:ci`
-- Run auto-fix: `npm run lint`
+- Run type checking: `npm run typecheck`
+- Run code format: `npm run format`
 
-### Development
+### PR Requirements
 
-- Install dependencies: `npm install`
-- Set up environment:
-  - Copy `.env.example` to `.env`
-  - Generate secret values with `openssl rand -base64 32` for any non-public secrets you keep in `.env.local`
+- PR title must follow Conventional Commits specification
+- For most PRs, you only need to run linting, format and type checking
 
-## When creating PRs
+## Basic Performance Guidelines
 
-Use these recommendations to write pull requests that are easy to review, easy to test, and easy to maintain over time.
-
-- For most PRs, you only need to run linting and type checking.
-- Create pull requests in draft mode by default, so that actual human can mark it as ready for review only when it is.
-
-### Title
-
-- Use conventional commits: `feat:`, `fix:`, `refactor:`
-- Be specific: `fix: handle timezone edge case in booking creation`
-- Not generic: `fix: booking bug`
-
-### Size Limits
-
-- **Large PRs** (>500 lines or >10 files) are not recommended.
-- Guide the user how to split large PRs into smaller ones.
-
-### Description
-
-Every PR description must answer four questions:
-
-- What changed?
-- Why it changed?
-- How to test it?
-- What should reviewers watch for?
-
-Rules:
-
-- Always explain the “why”.
-- Assume the reviewer has no context.
-- Use bullet points.
-- Add screenshots for UI changes.
-
-### PR Description Template
-
-```md
-## What does this PR do?
-
-(describe the changes here)
-
-## Related tickets
-
-(link any related issues or past PRs here)
-
-## Screenshots
-
-(if applicable, add screenshots here)
-
-## How to test
-
-(steps for testing the changes)
-
-## Notes
-
-(any other information, optional)
-```
-
-## When reviewing PRs in this repository
-
-When asked to review a PR, focus on providing a clear summary of what the PR is doing and its core functionality. Avoid getting sidetracked by CI failures, testing issues, or technical implementation details unless specifically requested. The user prefers concise, focused reviews that prioritize understanding the main purpose and changes of the PR.
+- Aim for O(n) or O(n log n) complexity, avoid O(n²)
+- Use database-level filtering instead of JavaScript filtering
+- Consider pagination for large datasets
+- Use database transactions for related operations
 
 ## File Naming Conventions
 
 ### Repository Files
 
-- **Must** include `Repository` suffix, PascalCase matching class: `SupabaseRepository.ts`
+- **Must** include `Repository` suffix, PascalCase matching class: `PlannerRepository.ts`
 
 ### Service Files
 
@@ -91,54 +34,118 @@ When asked to review a PR, focus on providing a clear summary of what the PR is 
 
 ### General Files
 
-- **Components**: PascalCase (e.g., `PlannerBoard.tsx`)
-- **Utilities**: camelCase (e.g., `dateUtils.ts`)
-- **Types**: PascalCase with `.types.ts` suffix (e.g., `supabase.types.ts`)
+- **Components**: PascalCase (e.g., `ContactForm.tsx`)
+- **Utilities**: kebab-case (e.g., `date-utils.ts`)
+- **Types**: PascalCase with `.types.ts` suffix (e.g., `Contact.types.ts`)
 - **Tests**: Same as source file + `.test.ts` or `.spec.ts`
 - **Avoid**: Dot-suffixes like `.service.ts`, `.repository.ts` (except for tests, types, specs)
 
-## Next.js App Directory: Authorisation Checks in Pages
+## Avoid barrel imports
 
-This can include checking session.user exists or session.org etc.
+```typescript
+// ❌ Bad - Avoid importing from index.ts barrel files
+import { BookingService, UserService } from './services';
 
-### TL;DR:
+// ✅ Good - Import directly from source files
+import { BookingService } from './services/BookingService';
+import { UserService } from './services/UserService';
 
-Don’t put permission checks in layout.tsx! Always put them directly inside your page.tsx or relevant server components for every restricted route.
+// ❌ Bad
+import { Button } from '@src/ui';
 
-### Why Not to Use Layouts for Permission Checks
+// ✅ Good - Import directly from source files
+import { Button } from '@src/ui/components/button';
+```
 
-- Layouts don’t intercept all requests: If a user navigates directly or refreshes a protected route, layout checks might be skipped, exposing sensitive content.
-- APIs and server actions bypass layouts: Sensitive operations running on the server can’t be guarded by checks in the layout.
-- Risk of data leaks: Only page/server-level checks ensure that unauthorized users never get protected data.
+## When creating pull requests
 
-### ✅ How To Secure Routes (The Right Way)
+Create pull requests in draft mode by default, so that actual human can mark it as ready for review only when it is.
 
-- Check permissions inside page.tsx or the actual server component.
-- Perform all session/user/role validation before querying or rendering sensitive content.
-- Redirect or return nothing to unauthorized users, before running restricted code.
+When making changes to this codebase, always run type checks locally using before concluding that CI failures are unrelated to your changes. Even if errors appear in files you haven't directly modified, your changes might still be causing type issues through dependencies or type inference. Compare type check results between the main branch and your feature branch to confirm whether you've introduced new type errors.
 
-### 🛠️ Example: Page-Level Permission Check
+### Title
 
-```tsx
-// app/admin/page.tsx
+- Use conventional commits: `feat:`, `fix:`, `refactor:`
+- Be specific: `fix: handle timezone edge case in project creation`
+- Not generic: `fix: project bug`
 
-import { redirect } from 'next/navigation';
-import { getUserSession } from '@/lib/auth';
+### Size Limits
 
-export default async function AdminPage() {
-  const session = await getUserSession();
+- **Large PRs** (>500 lines or >10 files) are not recommended.
+- Guide the user how to split large PRs into smaller ones.
 
-  if (!session || session.user.role !== 'admin') {
-    redirect('/'); // Or show an error
+## When reviewing pull requests
+
+When asked to review a PR, focus on providing a clear summary of what the PR is doing and its core functionality. Avoid getting sidetracked by CI failures, testing issues, or technical implementation details unless specifically requested. The user prefers concise, focused reviews that prioritize understanding the main purpose and changes of the PR.
+
+## When handling errors
+
+### Descriptive Errors
+
+```typescript
+// ✅ Good - Provide context for failures
+throw new Error(`Failed to render special card for ${project.slug}`);
+
+// ❌ Bad - Too generic
+throw new Error('Render failed');
+```
+
+### Error Types
+
+```typescript
+// ✅ Good - Use domain-specific helpers
+function assertProject(project?: ProjectMeta): asserts project is ProjectMeta {
+  if (!project) {
+    throw new Error('Project configuration is missing');
   }
-
-  // Protected content here
-  return <div>Welcome, Admin!</div>;
 }
 ```
 
-### 🧠 Key Reminders
+## When working on type issues
 
-- Put permission guards in every restricted page.tsx.
-- Never assume layouts are secure for guarding data.
-- Validate users before any sensitive queries or rendering.
+Type casting with "as any" is strictly forbidden. When encountering Supabase type incompatibilities or other TypeScript type issues, proper type-safe solutions must be used instead, such as Supabase extensions system, type parameter constraints, repository pattern isolation, explicit type definitions, and extension composition patterns that are already established in the codebase.
+
+## When working with branches
+
+When asked to move changes to a different branch, use git commands to commit existing changes to the specified branch rather than redoing the work. This is more efficient and prevents duplication of effort. The user prefers direct branch operations over reimplementing the same changes multiple times.
+
+## When working with CI/CD
+
+When reviewing CI check failures:
+
+1. E2E tests can be flaky and may fail intermittently
+2. Focus only on CI failures that are directly related to your code changes
+3. Infrastructure-related failures (like dependency installation issues) can be disregarded if all code-specific checks (type checking, linting, unit tests) are passing
+
+## When working with git and CI systems
+
+Always push committed changes to the remote repository before waiting for or checking CI status. Waiting for CI checks on unpushed local commits is backwards - the CI runs on the remote repository state, not local commits. The proper sequence is: commit locally, run local checks, push to remote, then monitor CI status.
+
+## When adding new UI elements or text strings
+
+All UI strings must be properly translated using the i18n system. This includes:
+
+- Labels for new UI elements (like dropdown labels, settings headers)
+- Option values that are displayed to users
+- Any text that appears in the interface
+
+Even if some related strings are already translated (like "Planning" and "Insights"), new strings must be explicitly added to the translation system.
+
+## When developing Playwright tests
+
+Always ensure Playwright tests pass locally before pushing code. The user requires fast local e2e feedback loops instead of relying on CI, which is too slow for development iteration. Never push test code until those tests are passing locally first.
+
+## When fixing failing tests
+
+When fixing failing tests, take an incremental approach by addressing one file at a time rather than attempting to fix all issues simultaneously. This methodical approach makes it easier to identify and resolve specific issues without getting overwhelmed by the complexity of multiple failing tests across different files. Focus on getting each file's tests passing completely before moving on to the next file.
+
+To identify and fix issues:
+
+1. Run `npm run typecheck` to identify TypeScript type errors and get fresh results always, bypassing any caching issues
+2. Run `npm run test` to identify failing unit tests
+3. Address both type errors and failing tests before considering the task complete
+4. Type errors often need to be fixed first as they may be causing the test failures
+
+## When implementing mocks
+
+When mocking tests, prefer implementing simpler mock designs that directly implement the required interfaces rather than trying to match complex deep mock structures created with mockDeep. This approach is more maintainable and helps resolve type compatibility issues. The user encourages creative solutions and refactoring to better designs when the standard mocking approach causes persistent type errors.
