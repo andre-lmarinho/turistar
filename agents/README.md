@@ -1,6 +1,6 @@
-# Travel Planner Development Guide for AI Agents
+# Turistar Development Guide for AI Agents
 
-This directory contains comprehensive documentation for AI agents working on the Travel Planner codebase.
+This directory contains documentation for AI agents working on the travel-planner codebase.
 
 ## Quick Navigation
 
@@ -10,36 +10,36 @@ This directory contains comprehensive documentation for AI agents working on the
 
 ## Getting Started
 
-Travel Planner is a monorepo using npm workspaces for build orchestration. The main application is in `src/features/` with shared packages in `src/shared/`.
+This repository is a Next.js application (App Router) using Npm workspace. The main app code lives under `src/`.
 
 ### Key Directories
 
-- `src/app/` – Main Next.js application
-- `src/features/` – Feature modules
-- `src/shared/` – Shared components
-- `src/server/` – Server actions, API route handlers, and Geoapify proxy logic
+- `src/app/` - Main Next.js application
+- `supabase/` - Database schema and migrations
+- `src/shared/ui/` - Shared UI components
+- `src/features/` - Feature-specific code
 
 ## Architecture Overview
 
 ### Database Layer
 
-- **Supabase** with PostgreSQL
-- Schema in `supabase/migrations/`
-- Always use `select` instead of `include` for better performance
-- Never expose `credential.key` field in API responses
+- **Supabase ORM** with PostgreSQL
+- Schema in `supabase/schema.supabase`
+- Always use explicit column selection for better performance
+- Never expose secrets or privileged keys field in API responses
 
 ### API Layer
 
-- Server actions and route handlers mediate access to data workflows
-- Supabase-authenticated sessions flow through shared server utilities
-- Background tasks rely on Next.js server functions and scheduled Supabase jobs
+- Server actions and API handlers under `src/server/`
+- Routers in `src/app/` (when applicable)
+- Authentication handled via Supabase Auth
 
 ### Frontend
 
-- **Next.js 15** with App Router in some areas
-- **React 19** with TypeScript
+- **Next.js 15+** with App Router in some areas
+- **React 18** with TypeScript
 - **Tailwind CSS** for styling
-- Internationalization with `next-i18next`
+- Maps and itinerary UX may rely on Leaflet and related libraries (when present)
 
 ## Common Patterns
 
@@ -52,7 +52,8 @@ Travel Planner is a monorepo using npm workspaces for build orchestration. The m
 ### Performance
 
 - Avoid O(n²) logic in backend code
-- Use `select` queries to only fetch needed data
+- Minimize Day.js usage in performance-critical paths
+- Fetch only what you need from Supabase with explicit `.select("col1, col2")`
 
 ### Security
 
