@@ -27,53 +27,13 @@ Use these recommendations to write pull requests that are easy to review, easy t
 ### Title
 
 - Use conventional commits: `feat:`, `fix:`, `refactor:`
-- Be specific: `fix: handle timezone edge case in booking creation`
-- Not generic: `fix: booking bug`
+- Be specific: `fix: handle timezone edge case in planning creation`
+- Not generic: `fix: planning bug`
 
 ### Size Limits
 
 - **Large PRs** (>500 lines or >10 files) are not recommended.
 - Guide the user how to split large PRs into smaller ones.
-
-### Description
-
-Every PR description must answer four questions:
-
-- What changed?
-- Why it changed?
-- How to test it?
-- What should reviewers watch for?
-
-Rules:
-
-- Always explain the “why”.
-- Assume the reviewer has no context.
-- Use bullet points.
-- Add screenshots for UI changes.
-
-### PR Description Template
-
-```md
-## What does this PR do?
-
-(describe the changes here)
-
-## Related tickets
-
-(link any related issues or past PRs here)
-
-## Screenshots
-
-(if applicable, add screenshots here)
-
-## How to test
-
-(steps for testing the changes)
-
-## Notes
-
-(any other information, optional)
-```
 
 ## When reviewing PRs in this repository
 
