@@ -29,6 +29,10 @@ export interface PlannerClientProps {
   title?: string;
   persist?: boolean;
   canEdit?: boolean;
+  viewerUserId?: string | null;
+  isOwner?: boolean;
+  isAdmin?: boolean;
+  canManageMembers?: boolean;
   editToken?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
@@ -97,6 +101,10 @@ export function PlannerClient({
   title,
   persist = true,
   canEdit = true,
+  viewerUserId = null,
+  isOwner = false,
+  isAdmin = false,
+  canManageMembers = false,
   editToken,
   initialBudget,
   initialEntries,
@@ -132,6 +140,10 @@ export function PlannerClient({
       dest={dest}
       persist={persistState}
       canEdit={canEdit}
+      viewerUserId={viewerUserId}
+      isOwner={isOwner}
+      isAdmin={isAdmin}
+      canManageMembers={canManageMembers}
     >
       <PlannerClientInner
         persist={persistState}

@@ -1,0 +1,110 @@
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, beforeEach, expect, vi } from 'vitest';
+
+import { ShareMembersSection } from '@/features/app/planner/components/share/ShareMembersSection';
+
+const {
+  mockUsePlanMembers,
+  mockUsePlannerContext,
+  removeMemberMutate,
+  updateTierMutate,
+  leaveMutateAsync,
+  pushMock,
+  refreshMock,
+} = vi.hoisted(() => ({
+  mockUsePlanMembers: vi.fn(),
+  mockUsePlannerContext: vi.fn(),
+  removeMemberMutate: vi.fn(),
+  updateTierMutate: vi.fn(),
+  leaveMutateAsync: vi.fn(),
+  pushMock: vi.fn(),
+  refreshMock: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: pushMock, refresh: refreshMock }),
+}));
+
+vi.mock('@/features/app/planner/hooks/data/usePlanSharing', () => ({
+  usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
+}));
+
+vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
+  usePlannerContext: () => mockUsePlannerContext(),
+}));
+
+describe('ShareMembersSection', () => {
+  const members = [
+    {
+      userId: 'user-2',
+      tier: 'member',
+      slug: 'member-slug',
+      displayName: 'Member User',
+      avatarUrl: null,
+    },
+    {
+      userId: 'user-1',
+      tier: 'admin',
+      slug: 'owner-slug',
+      displayName: 'Owner User',
+      avatarUrl: null,
+    },
+  ];
+
+  beforeEach(() => {
+    mockUsePlanMembers.mockReset();
+    mockUsePlannerContext.mockReset();
+    removeMemberMutate.mockReset();
+    updateTierMutate.mockReset();
+    leaveMutateAsync.mockReset();
+    pushMock.mockReset();
+    refreshMock.mockReset();
+
+    mockUsePlannerContext.mockReturnValue({
+      viewerUserId: 'user-1',
+      canManageMembers: true,
+    });
+
+    mockUsePlanMembers.mockReturnValue({
+      data: { ownerId: 'user-1', members },
+      isLoading: false,
+      error: null,
+      updateTier: { mutate: updateTierMutate, isPending: false },
+      removeMember: { mutate: removeMemberMutate, isPending: false },
+      leave: { mutateAsync: leaveMutateAsync, isPending: false },
+    });
+  });
+
+  it('renders members including the owner', () => {
+    render(<ShareMembersSection planId="plan-1" />);
+
+    expect(screen.getByText('Owner User (owner)')).toBeVisible();
+    expect(screen.getByText('Member User')).toBeVisible();
+  });
+
+  it('allows admins to remove a member', async () => {
+    render(<ShareMembersSection planId="plan-1" />);
+
+    fireEvent.click(screen.getByLabelText('Member User role'));
+    fireEvent.click(await screen.findByRole('option', { name: 'Remove member' }));
+
+    expect(removeMemberMutate).toHaveBeenCalledWith({ userId: 'user-2' });
+  });
+
+  it('redirects after a member leaves the planner', async () => {
+    mockUsePlannerContext.mockReturnValue({
+      viewerUserId: 'user-2',
+      canManageMembers: false,
+    });
+
+    render(<ShareMembersSection planId="plan-1" />);
+
+    fireEvent.click(screen.getByLabelText('Member User role'));
+    fireEvent.click(await screen.findByRole('option', { name: 'Leave planner' }));
+
+    await waitFor(() => expect(leaveMutateAsync).toHaveBeenCalled());
+    expect(pushMock).toHaveBeenCalledWith('/u/member-slug/planners');
+    expect(refreshMock).toHaveBeenCalled();
+  });
+});

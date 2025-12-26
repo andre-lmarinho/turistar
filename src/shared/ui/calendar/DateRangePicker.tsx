@@ -86,14 +86,14 @@ export function DateRangePickerIcon({ className, value, onChange, disabled = fal
         aria-label={label}
         data-testid="date-picker"
         className={cn(
-          'text-foreground hover:bg-muted/60 inline-flex size-10 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
+          'text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
           className
         )}
         disabled={disabled}
       >
-        <CalendarIcon className="size-5" aria-hidden="true" />
+        <CalendarIcon className="size-4" aria-hidden="true" />
       </PopoverTriggerButton>
-      <PopoverContent className="mt-2 min-w-[500px] p-0 shadow-lg" align="start" side="bottom">
+      <PopoverContent className="mt-2 min-w-125 p-0 shadow-lg" align="start" side="bottom">
         <Calendar
           mode="range"
           selected={value}

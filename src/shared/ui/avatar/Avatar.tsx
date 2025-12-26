@@ -7,7 +7,7 @@ type AvatarProps = {
 
 export function Avatar({ displayName, size = 'sm' }: AvatarProps) {
   const initial = displayName?.trim().charAt(0)?.toUpperCase() || 'T';
-  const sizeClasses = size === 'lg' ? 'h-10 w-10 p-2 text-base' : 'h-6 w-6 p-1 text-xs';
+  const sizeClasses = size === 'lg' ? 'h-8 w-8 p-2 text-base' : 'h-6 w-6 p-1 text-xs';
 
   return (
     <div

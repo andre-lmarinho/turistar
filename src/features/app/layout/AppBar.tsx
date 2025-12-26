@@ -45,7 +45,7 @@ export async function AppBar() {
   const isLoggedIn = Boolean(email);
 
   return (
-    <header className="text-foreground border-border bg-background sticky top-0 z-40 h-14 shrink-0 border-b">
+    <header className="text-foreground border-border bg-background sticky top-0 z-40 shrink-0 border-b">
       <nav className="mx-auto flex h-full w-full items-center justify-between p-1">
         <Logo href={targetHref} />
         <>

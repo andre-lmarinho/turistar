@@ -3,12 +3,11 @@ import 'server-only';
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import {
-  mapPlanDaysFromSupabase,
-  type SupabasePlanDayRow,
-} from '@/features/app/planner/services/supabase/planDaysMapper';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
+import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
 import type { Entry } from '@/features/app/planner/types/budget';
+import { eachDayOfInterval } from 'date-fns';
 
 export interface UserPlannerExperience {
   planId: string;
@@ -18,6 +17,9 @@ export interface UserPlannerExperience {
   initialBudget?: number;
   initialEntries?: Entry[];
   editToken: string;
+  isOwner: boolean;
+  isAdmin: boolean;
+  canManageMembers: boolean;
 }
 
 export async function getUserPlannerExperience(
@@ -27,7 +29,19 @@ export async function getUserPlannerExperience(
   const supabase = createSupabaseServerClient();
   const { data, error } = (await supabase
     .from('plans')
-    .select('id, title, plan_destinations(destinations(name)), edit_token, budget, user_id')
+    .select(
+      `
+        id,
+        title,
+        plan_destinations(destinations(name)),
+        edit_token,
+        budget,
+        user_id,
+        start_date,
+        end_date,
+        plan_members!left(user_id, tier)
+      `
+    )
     .eq('id', planId)
     .maybeSingle()) as unknown as {
     data: {
@@ -36,7 +50,10 @@ export async function getUserPlannerExperience(
       edit_token: string;
       budget: number | null;
       user_id: string | null;
+      start_date: string | null;
+      end_date: string | null;
       plan_destinations: { destinations: { name: string | null } }[] | null;
+      plan_members: { user_id: string; tier: string }[] | null;
     } | null;
     error: unknown;
   };
@@ -45,7 +62,17 @@ export async function getUserPlannerExperience(
     throw error;
   }
 
-  if (!data || data.user_id !== userId) {
+  if (!data) {
+    notFound();
+  }
+
+  const ownerId = data.user_id;
+  const memberRow = data.plan_members?.find((member) => member.user_id === userId) ?? null;
+  const isOwner = ownerId === userId;
+  const isMember = Boolean(memberRow);
+  const isAdmin = isOwner || memberRow?.tier === 'admin';
+
+  if (!isOwner && !isMember) {
     notFound();
   }
 
@@ -55,20 +82,41 @@ export async function getUserPlannerExperience(
     notFound();
   }
 
-  const { data: dayRows, error: dayErr } = (await supabase
-    .from('plan_days')
-    .select('date, activities(*)')
+  const { data: snapshotRow, error: snapshotErr } = (await supabase
+    .from('plan_snapshots')
+    .select('plan_id, version, state, updated_at')
     .eq('plan_id', planId)
-    .order('position')) as unknown as {
-    data: SupabasePlanDayRow[] | null;
+    .order('version', { ascending: false })
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()) as unknown as {
+    data: unknown;
     error: unknown;
   };
 
-  if (dayErr) {
-    throw dayErr;
+  if (snapshotErr) {
+    throw snapshotErr;
   }
 
-  const initialDays = dayRows ? mapPlanDaysFromSupabase(dayRows) : undefined;
+  let initialDays: DayPlan[] | undefined;
+  if (snapshotRow) {
+    const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
+    initialDays = snapshot.days.length > 0 ? snapshot.days : undefined;
+  }
+  if (!initialDays || initialDays.length === 0) {
+    const startDate = data.start_date ? new Date(data.start_date) : null;
+    const endDate = data.end_date ? new Date(data.end_date) : null;
+
+    if (
+      startDate &&
+      endDate &&
+      !Number.isNaN(startDate.valueOf()) &&
+      !Number.isNaN(endDate.valueOf())
+    ) {
+      const tripDays = eachDayOfInterval({ start: startDate, end: endDate });
+      initialDays = buildInitialDays(tripDays);
+    }
+  }
 
   const { data: entryRows, error: entryErr } = (await supabase
     .from('budget_entries')
@@ -104,5 +152,8 @@ export async function getUserPlannerExperience(
     initialBudget: data.budget ?? undefined,
     initialEntries,
     editToken: data.edit_token,
+    isOwner,
+    isAdmin,
+    canManageMembers: isAdmin,
   };
 }

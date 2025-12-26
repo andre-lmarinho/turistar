@@ -4,12 +4,18 @@ vi.mock('@/server/actions/plans/createPlan', () => ({
   createPlan: vi.fn(),
 }));
 
+vi.mock('@/shared/lib/auth/session', () => ({
+  getCurrentUser: vi.fn(),
+}));
+
 import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
 import { createPlan } from '@/server/actions/plans/createPlan';
+import { getCurrentUser } from '@/shared/lib/auth/session';
 
 describe('createPlannerPlan', () => {
   beforeEach(() => {
     vi.mocked(createPlan).mockReset();
+    vi.mocked(getCurrentUser).mockReset();
   });
 
   it('maps the action result into the marketing payload', async () => {
@@ -18,6 +24,8 @@ describe('createPlannerPlan', () => {
       publicSlug: 'trip-42',
       editToken: 'edit-42',
     });
+
+    vi.mocked(getCurrentUser).mockResolvedValue(null);
 
     const result = await createPlannerPlan({
       title: 'Weekend Trip',

@@ -22,6 +22,55 @@ type PlanState = {
   events: PlanEventRow[];
 };
 
+type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
+
+type PlanRow = {
+  id: string;
+  public_slug: string;
+  edit_token: string;
+  title: string;
+  user_id: string | null;
+  budget: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  is_public: boolean;
+  plan_destinations: { destinations: { name: string } }[] | null;
+};
+
+type PlanMemberRow = {
+  plan_id: string;
+  user_id: string;
+  tier: PlanMemberTier;
+  created_at: string;
+};
+
+type ProfileRow = {
+  id: string;
+  slug: string | null;
+  display_name: string | null;
+  avatar_url: string | null;
+};
+
+type PlanShareLinkRow = {
+  plan_id: string;
+  token: string;
+  created_at: string;
+  created_by: string;
+  revoked_at: string | null;
+};
+
+type BudgetEntryRow = {
+  id: string;
+  plan_id: string;
+  description: string | null;
+  category: string | null;
+  amount: number | null;
+};
+
+const DEFAULT_OWNER_ID = 'e2e-owner';
+const DEFAULT_MEMBER_ID = 'e2e-member';
+const DEFAULT_DESTINATION = 'E2E Destination';
+
 type PlanEventInput = {
   id: string;
   type: string;
@@ -50,6 +99,32 @@ type RpcParams = {
     _edit_token: string;
     _new_title?: string | null;
   };
+  create_plan_share_link: {
+    _plan_id: string;
+  };
+  revoke_plan_share_link: {
+    _plan_id: string;
+  };
+  accept_plan_share_link: {
+    _token: string;
+  };
+  add_plan_member_by_email: {
+    _plan_id: string;
+    _email: string;
+    _tier: PlanMemberTier;
+  };
+  update_plan_member_tier: {
+    _plan_id: string;
+    _user_id: string;
+    _tier: PlanMemberTier;
+  };
+  remove_plan_member: {
+    _plan_id: string;
+    _user_id: string;
+  };
+  leave_plan: {
+    _plan_id: string;
+  };
 };
 
 type EqFilters = Record<string, unknown>;
@@ -62,6 +137,16 @@ type OrderFilter = {
 
 function clonePlan(): PlanState {
   return JSON.parse(JSON.stringify(planFixture.plan)) as PlanState;
+}
+
+function applyEqFilters<T extends Record<string, unknown>>(rows: T[], eq: EqFilters) {
+  const entries = Object.entries(eq);
+  if (!entries.length) {
+    return rows;
+  }
+  return rows.filter((row) =>
+    entries.every(([key, value]) => row[key as keyof T] === value)
+  );
 }
 
 class MockRealtimeChannel {
@@ -78,12 +163,20 @@ class MockRealtimeChannel {
   }
 }
 
-type TableName = 'plan_snapshots' | 'plan_events';
+type TableName =
+  | 'plan_snapshots'
+  | 'plan_events'
+  | 'plans'
+  | 'plan_members'
+  | 'profiles'
+  | 'plan_share_links'
+  | 'budget_entries';
 
 class MockQueryBuilder<TTable extends TableName> {
   private eqFilters: EqFilters = {};
   private gtFilters: GtFilters = {};
   private orderFilter: OrderFilter | null = null;
+  private limitCount: number | null = null;
 
   constructor(
     private table: TTable,
@@ -104,6 +197,11 @@ class MockQueryBuilder<TTable extends TableName> {
     return this;
   }
 
+  limit(count: number) {
+    this.limitCount = count;
+    return this;
+  }
+
   async order(column: string, options?: { ascending?: boolean }) {
     this.orderFilter = {
       column,
@@ -119,28 +217,122 @@ class MockQueryBuilder<TTable extends TableName> {
     return { data: first ?? null, error: null };
   }
 
+  async single() {
+    const rows = await this.fetchRows();
+    const [first] = rows;
+    if (!first) {
+      return { data: null, error: new Error('No rows found') };
+    }
+    return { data: first, error: null };
+  }
+
+  then<TResult1 = { data: unknown; error: null }, TResult2 = never>(
+    onfulfilled?: ((value: { data: unknown; error: null }) => TResult1 | Promise<TResult1>) | null,
+    onrejected?: ((reason: unknown) => TResult2 | Promise<TResult2>) | null
+  ) {
+    return this.execute().then(onfulfilled, onrejected);
+  }
+
   private async execute() {
     const rows = await this.fetchRows();
     return { data: rows, error: null };
   }
 
   private async fetchRows() {
-    return this.client.queryTable(this.table, this.eqFilters, this.gtFilters, this.orderFilter);
+    const rows = await this.client.queryTable(
+      this.table,
+      this.eqFilters,
+      this.gtFilters,
+      this.orderFilter
+    );
+    if (this.limitCount != null) {
+      return rows.slice(0, this.limitCount);
+    }
+    return rows;
   }
 }
 
 class MockSupabaseClientImpl {
   private plan: PlanState;
   private currentVersion: number;
+  private plans: PlanRow[] = [];
+  private profiles: ProfileRow[] = [];
+  private planMembers: PlanMemberRow[] = [];
+  private planShareLinks: PlanShareLinkRow[] = [];
+  private budgetEntries: BudgetEntryRow[] = [];
+
+  auth = {
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    exchangeCodeForSession: async () => ({ data: { session: null }, error: null }),
+    onAuthStateChange: () => ({
+      data: {
+        subscription: {
+          unsubscribe: () => undefined,
+        },
+      },
+    }),
+  };
 
   constructor() {
     this.plan = clonePlan();
     this.currentVersion = this.plan.snapshots.at(-1)?.version ?? 0;
+    this.resetState();
   }
 
   resetState() {
     this.plan = clonePlan();
     this.currentVersion = this.plan.snapshots.at(-1)?.version ?? 0;
+    const planId = this.plan.plan_id;
+    this.plans = [
+      {
+        id: planId,
+        public_slug: this.plan.public_slug,
+        edit_token: this.plan.edit_token,
+        title: this.plan.title,
+        user_id: DEFAULT_OWNER_ID,
+        budget: null,
+        start_date: '2024-01-01',
+        end_date: '2024-01-05',
+        is_public: true,
+        plan_destinations: [{ destinations: { name: DEFAULT_DESTINATION } }],
+      },
+    ];
+    this.profiles = [
+      {
+        id: DEFAULT_OWNER_ID,
+        slug: 'e2e-owner',
+        display_name: 'E2E Owner',
+        avatar_url: null,
+      },
+      {
+        id: DEFAULT_MEMBER_ID,
+        slug: 'e2e-member',
+        display_name: 'E2E Member',
+        avatar_url: null,
+      },
+    ];
+    this.planMembers = [
+      {
+        plan_id: planId,
+        user_id: DEFAULT_MEMBER_ID,
+        tier: 'member',
+        created_at: '2024-01-02T00:00:00.000Z',
+      },
+    ];
+    this.planShareLinks = [];
+    this.budgetEntries = [];
+  }
+
+  private syncPlanRow(overrides: Partial<PlanRow> = {}) {
+    const planRow = this.plans.find((row) => row.id === this.plan.plan_id);
+    if (!planRow) {
+      return;
+    }
+    planRow.title = this.plan.title;
+    planRow.edit_token = this.plan.edit_token;
+    planRow.public_slug = this.plan.public_slug;
+    Object.assign(planRow, overrides);
   }
 
   async rpc<TName extends keyof RpcParams>(
@@ -152,6 +344,14 @@ class MockSupabaseClientImpl {
         const rpcParams = params as RpcParams['create_full_plan'];
         this.resetState();
         this.plan.title = rpcParams._title ?? this.plan.title;
+        this.syncPlanRow({
+          start_date: rpcParams._start_date ?? this.plans[0]?.start_date ?? null,
+          end_date: rpcParams._end_date ?? this.plans[0]?.end_date ?? null,
+          plan_destinations: rpcParams._dest_name
+            ? [{ destinations: { name: rpcParams._dest_name } }]
+            : this.plans[0]?.plan_destinations ?? null,
+          user_id: rpcParams._user_id ?? this.plans[0]?.user_id ?? null,
+        });
         const snapshot = this.plan.snapshots[0];
         snapshot.updated_at = new Date().toISOString();
         this.currentVersion = snapshot.version ?? 0;
@@ -214,8 +414,112 @@ class MockSupabaseClientImpl {
         const rpcParams = params as RpcParams['update_plan_title'];
         if (rpcParams._plan_id === this.plan.plan_id) {
           this.plan.title = rpcParams._new_title ?? this.plan.title;
+          this.syncPlanRow();
         }
         return { data: null, error: null };
+      }
+      case 'create_plan_share_link': {
+        const rpcParams = params as RpcParams['create_plan_share_link'];
+        const planId = rpcParams._plan_id;
+        const existing = this.planShareLinks.find(
+          (link) => link.plan_id === planId && !link.revoked_at
+        );
+        if (existing) {
+          return { data: existing.token, error: null };
+        }
+        const token = `share-${planId}`;
+        this.planShareLinks.push({
+          plan_id: planId,
+          token,
+          created_at: new Date().toISOString(),
+          created_by: DEFAULT_OWNER_ID,
+          revoked_at: null,
+        });
+        return { data: token, error: null };
+      }
+      case 'revoke_plan_share_link': {
+        const rpcParams = params as RpcParams['revoke_plan_share_link'];
+        const planId = rpcParams._plan_id;
+        const link = this.planShareLinks.find(
+          (entry) => entry.plan_id === planId && !entry.revoked_at
+        );
+        if (link) {
+          link.revoked_at = new Date().toISOString();
+          return { data: true, error: null };
+        }
+        return { data: false, error: null };
+      }
+      case 'accept_plan_share_link': {
+        const rpcParams = params as RpcParams['accept_plan_share_link'];
+        const link = this.planShareLinks.find(
+          (entry) => entry.token === rpcParams._token && !entry.revoked_at
+        );
+        if (!link) {
+          return { data: null, error: new Error('Invalid share link') };
+        }
+        return { data: link.plan_id, error: null };
+      }
+      case 'add_plan_member_by_email': {
+        const rpcParams = params as RpcParams['add_plan_member_by_email'];
+        const trimmedEmail = rpcParams._email.trim();
+        if (!trimmedEmail.includes('@')) {
+          return { data: null, error: new Error('User not registered') };
+        }
+        const slug = trimmedEmail.split('@')[0] || 'member';
+        const userId = `user-${slug}`;
+        if (!this.profiles.some((profile) => profile.id === userId)) {
+          this.profiles.push({
+            id: userId,
+            slug,
+            display_name: slug,
+            avatar_url: null,
+          });
+        }
+        if (
+          !this.planMembers.some(
+            (member) => member.plan_id === rpcParams._plan_id && member.user_id === userId
+          )
+        ) {
+          this.planMembers.push({
+            plan_id: rpcParams._plan_id,
+            user_id: userId,
+            tier: rpcParams._tier,
+            created_at: new Date().toISOString(),
+          });
+        }
+        return { data: [{ user_id: userId, tier: rpcParams._tier }], error: null };
+      }
+      case 'update_plan_member_tier': {
+        const rpcParams = params as RpcParams['update_plan_member_tier'];
+        const target = this.planMembers.find(
+          (member) =>
+            member.plan_id === rpcParams._plan_id && member.user_id === rpcParams._user_id
+        );
+        if (target) {
+          target.tier = rpcParams._tier;
+        } else {
+          this.planMembers.push({
+            plan_id: rpcParams._plan_id,
+            user_id: rpcParams._user_id,
+            tier: rpcParams._tier,
+            created_at: new Date().toISOString(),
+          });
+        }
+        return { data: null, error: null };
+      }
+      case 'remove_plan_member': {
+        const rpcParams = params as RpcParams['remove_plan_member'];
+        this.planMembers = this.planMembers.filter(
+          (member) =>
+            !(
+              member.plan_id === rpcParams._plan_id &&
+              member.user_id === rpcParams._user_id
+            )
+        );
+        return { data: null, error: null };
+      }
+      case 'leave_plan': {
+        return { data: true, error: null };
       }
       default:
         return { data: null, error: new Error(`Unsupported RPC: ${name}`) };
@@ -231,25 +535,58 @@ class MockSupabaseClientImpl {
   }
 
   queryTable(table: TableName, eq: EqFilters, gt: GtFilters, order: OrderFilter | null) {
-    if (table === 'plan_snapshots') {
-      let rows = [...this.plan.snapshots];
-      if (eq.plan_id) {
-        rows = rows.filter((row) => row.plan_id === eq.plan_id);
+    switch (table) {
+      case 'plan_snapshots': {
+        const rows = applyEqFilters(this.plan.snapshots, eq);
+        return rows.map((row) => ({ ...row }));
       }
-      return rows.map((row) => ({ ...row }));
+      case 'plan_events': {
+        let rows = applyEqFilters(this.plan.events, eq);
+        if (gt.version != null) {
+          rows = rows.filter((row) => row.version > gt.version);
+        }
+        if (order?.column === 'version') {
+          rows.sort((a, b) =>
+            order.ascending ? a.version - b.version : b.version - a.version
+          );
+        }
+        return rows.map((row) => ({ ...row }));
+      }
+      case 'plans': {
+        const rows = applyEqFilters(this.plans, eq);
+        return rows.map((row) => ({ ...row }));
+      }
+      case 'plan_members': {
+        let rows = applyEqFilters(this.planMembers, eq);
+        if (order?.column === 'created_at') {
+          rows = rows
+            .slice()
+            .sort((a, b) =>
+              order.ascending
+                ? a.created_at.localeCompare(b.created_at)
+                : b.created_at.localeCompare(a.created_at)
+            );
+        }
+        return rows.map((row) => ({
+          ...row,
+          profiles: this.profiles.find((profile) => profile.id === row.user_id) ?? null,
+        }));
+      }
+      case 'profiles': {
+        const rows = applyEqFilters(this.profiles, eq);
+        return rows.map((row) => ({ ...row }));
+      }
+      case 'plan_share_links': {
+        const rows = applyEqFilters(this.planShareLinks, eq);
+        return rows.map((row) => ({ ...row }));
+      }
+      case 'budget_entries': {
+        const rows = applyEqFilters(this.budgetEntries, eq);
+        return rows.map((row) => ({ ...row }));
+      }
+      default:
+        return [];
     }
-
-    let rows = [...this.plan.events];
-    if (eq.plan_id) {
-      rows = rows.filter((row) => row.plan_id === eq.plan_id);
-    }
-    if (gt.version != null) {
-      rows = rows.filter((row) => row.version > gt.version);
-    }
-    if (order?.column === 'version') {
-      rows.sort((a, b) => (order.ascending ? a.version - b.version : b.version - a.version));
-    }
-    return rows.map((row) => ({ ...row }));
   }
 }
 

@@ -146,6 +146,86 @@ export interface Database {
           },
         ];
       };
+      plan_members: {
+        Row: {
+          plan_id: string;
+          user_id: string;
+          tier: Database['public']['Enums']['plan_member_tier'];
+          created_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          plan_id: string;
+          user_id: string;
+          tier?: Database['public']['Enums']['plan_member_tier'];
+          created_at?: string;
+          created_by?: string | null;
+        };
+        Update: {
+          plan_id?: string;
+          user_id?: string;
+          tier?: Database['public']['Enums']['plan_member_tier'];
+          created_at?: string;
+          created_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_members_created_by_fkey';
+            columns: ['created_by'];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'plan_members_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'plan_members_user_id_fkey';
+            columns: ['user_id'];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      plan_share_links: {
+        Row: {
+          plan_id: string;
+          token: string;
+          created_at: string;
+          created_by: string;
+          revoked_at: string | null;
+        };
+        Insert: {
+          plan_id: string;
+          token?: string;
+          created_at?: string;
+          created_by: string;
+          revoked_at?: string | null;
+        };
+        Update: {
+          plan_id?: string;
+          token?: string;
+          created_at?: string;
+          created_by?: string;
+          revoked_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'plan_share_links_created_by_fkey';
+            columns: ['created_by'];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'plan_share_links_plan_id_fkey';
+            columns: ['plan_id'];
+            referencedRelation: 'plans';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       plans: {
         Row: {
           id: string;
@@ -293,8 +373,78 @@ export interface Database {
           inserted_events: unknown;
         };
       };
+      add_plan_member_by_email: {
+        Args: {
+          _plan_id: string;
+          _email: string;
+          _tier?: Database['public']['Enums']['plan_member_tier'] | null;
+        };
+        Returns: {
+          user_id: string;
+          tier: Database['public']['Enums']['plan_member_tier'];
+        }[];
+      };
+      update_plan_member_tier: {
+        Args: {
+          _plan_id: string;
+          _user_id: string;
+          _tier: Database['public']['Enums']['plan_member_tier'];
+        };
+        Returns: undefined;
+      };
+      remove_plan_member: {
+        Args: {
+          _plan_id: string;
+          _user_id: string;
+        };
+        Returns: undefined;
+      };
+      leave_plan: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: undefined;
+      };
+      create_plan_share_link: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: string;
+      };
+      revoke_plan_share_link: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: boolean;
+      };
+      accept_plan_share_link: {
+        Args: {
+          _token: string;
+        };
+        Returns: string;
+      };
+      is_plan_member: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: boolean;
+      };
+      is_plan_admin: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: boolean;
+      };
+      plan_admin_count: {
+        Args: {
+          _plan_id: string;
+        };
+        Returns: number;
+      };
     };
-    Enums: Record<string, unknown>;
+    Enums: {
+      plan_member_tier: 'admin' | 'member';
+    };
     CompositeTypes: Record<string, unknown>;
   };
 }

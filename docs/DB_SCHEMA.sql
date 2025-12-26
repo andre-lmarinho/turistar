@@ -37,6 +37,27 @@ CREATE TABLE public.plan_events (
   CONSTRAINT plan_events_pkey PRIMARY KEY (event_id),
   CONSTRAINT plan_events_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
 );
+CREATE TABLE public.plan_members (
+  plan_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  tier USER-DEFINED NOT NULL DEFAULT 'member'::plan_member_tier,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  created_by uuid,
+  CONSTRAINT plan_members_pkey PRIMARY KEY (plan_id, user_id),
+  CONSTRAINT plan_members_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id),
+  CONSTRAINT plan_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id),
+  CONSTRAINT plan_members_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.profiles(id)
+);
+CREATE TABLE public.plan_share_links (
+  plan_id uuid NOT NULL,
+  token uuid NOT NULL DEFAULT gen_random_uuid() UNIQUE,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  created_by uuid NOT NULL,
+  revoked_at timestamp with time zone,
+  CONSTRAINT plan_share_links_pkey PRIMARY KEY (plan_id),
+  CONSTRAINT plan_share_links_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id),
+  CONSTRAINT plan_share_links_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.profiles(id)
+);
 CREATE TABLE public.plan_snapshots (
   plan_id uuid NOT NULL,
   version bigint NOT NULL DEFAULT 0,

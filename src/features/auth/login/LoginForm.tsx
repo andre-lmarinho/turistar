@@ -11,14 +11,17 @@ import type { Session } from '@supabase/supabase-js';
 
 type LoginFormProps = {
   resolveProfile: () => Promise<string>;
+  nextPath?: string;
 };
 
-export function LoginForm({ resolveProfile }: LoginFormProps) {
+export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const safeNextPath =
+    nextPath && nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : null;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,7 +71,7 @@ export function LoginForm({ resolveProfile }: LoginFormProps) {
         slug = await resolveProfile();
       }
 
-      router.push(`/u/${slug}/planners`);
+      router.push(safeNextPath ?? `/u/${slug}/planners`);
       router.refresh();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'Unable to sign you in.');

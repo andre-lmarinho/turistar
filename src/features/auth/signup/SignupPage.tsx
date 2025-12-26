@@ -4,9 +4,11 @@ import { SignupShowcase } from './components/SignupShowcase';
 
 type SignupPageProps = {
   finalizeProfile: () => Promise<string>;
+  nextPath?: string;
 };
 
-export function SignupPage({ finalizeProfile }: SignupPageProps) {
+export function SignupPage({ finalizeProfile, nextPath }: SignupPageProps) {
+  const loginHref = nextPath ? `/login?next=${encodeURIComponent(nextPath)}` : '/login';
   return (
     <div className="bg-card flex min-h-screen w-full flex-col items-center justify-center">
       <div className="2xl:border-border bg-background grid w-full max-w-[1440px] grid-cols-1 grid-rows-1 overflow-hidden lg:grid-cols-2 2xl:rounded-[20px] 2xl:border 2xl:py-6">
@@ -17,8 +19,8 @@ export function SignupPage({ finalizeProfile }: SignupPageProps) {
               Create your free plan, invite friends, and keep every detail organized in one place.
             </p>
           </div>
-          <SignupForm finalizeProfile={finalizeProfile} />
-          <SignupFooter />
+          <SignupForm finalizeProfile={finalizeProfile} nextPath={nextPath} />
+          <SignupFooter loginHref={loginHref} />
         </div>
         <SignupShowcase />
       </div>

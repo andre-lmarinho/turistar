@@ -6,6 +6,7 @@ import { DateRange } from 'react-day-picker';
 import { DateRangePickerIcon } from '@/shared/ui/calendar';
 import { useElementMeasure } from '@/features/app/planner/hooks/ui/useElementMeasure';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import { SharePlannerDialog } from '@/features/app/planner/components/share/SharePlannerDialog';
 import { ModeToggleButton } from '@/features/app/planner/components/ui/ModeToggleButton';
 import type { PlannerMode } from './PlannerModeDeck';
 
@@ -30,7 +31,7 @@ export function PlannerHeader({
   onModeChange,
   canEdit = true,
 }: PlannerHeaderProps) {
-  const { dest } = usePlannerContext();
+  const { dest, planId, viewerUserId } = usePlannerContext();
   const { ref: titleRef, width: titleWidth } = useElementMeasure<HTMLInputElement>({
     width: true,
     text: title,
@@ -67,9 +68,10 @@ export function PlannerHeader({
           className="focus:border-border focus:bg-background cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text"
         />
       </h1>
-      <div className="flex flex-none items-center gap-2 self-end md:self-end">
+      <div className="flex flex-none items-center gap-1 self-end md:self-end">
         <DateRangePickerIcon value={currentRange} onChange={onRangeChange} disabled={!canEdit} />
-        <div className="hidden md:inline">
+        {viewerUserId ? <SharePlannerDialog planId={planId} /> : null}
+        <div className="hidden pl-2 md:inline">
           <ModeToggleButton value={mode} onChange={onModeChange} />
         </div>
       </div>
