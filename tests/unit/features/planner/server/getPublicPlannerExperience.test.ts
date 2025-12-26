@@ -75,6 +75,8 @@ interface PlanQueryChain {
 interface SnapshotQueryChain {
   select: ReturnType<typeof vi.fn<(columns: string) => SnapshotQueryChain>>;
   eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => SnapshotQueryChain>>;
+  order: ReturnType<typeof vi.fn<(column: string, options: { ascending: boolean }) => SnapshotQueryChain>>;
+  limit: ReturnType<typeof vi.fn<(rowCount: number) => SnapshotQueryChain>>;
   maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<SnapshotRecord>>>>;
 }
 
@@ -103,11 +105,15 @@ function createSnapshotQuery(result: SupabaseResult<SnapshotRecord>) {
   const chain = {
     select: vi.fn<(columns: string) => SnapshotQueryChain>(),
     eq: vi.fn<(column: string, value: unknown) => SnapshotQueryChain>(),
+    order: vi.fn<(column: string, options: { ascending: boolean }) => SnapshotQueryChain>(),
+    limit: vi.fn<(rowCount: number) => SnapshotQueryChain>(),
     maybeSingle: vi.fn<() => Promise<SupabaseResult<SnapshotRecord>>>(),
   } as unknown as SnapshotQueryChain;
 
   chain.select.mockReturnValue(chain);
   chain.eq.mockReturnValue(chain);
+  chain.order.mockReturnValue(chain);
+  chain.limit.mockReturnValue(chain);
   chain.maybeSingle.mockResolvedValue(result);
 
   return chain;

@@ -72,17 +72,47 @@ type SupabaseEntryResult = {
 };
 
 function createPlanQuery(result: SupabasePlanResult) {
-  const maybeSingle = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  return { select, eq, maybeSingle };
+  const chain = {
+    select: vi.fn(),
+    eq: vi.fn(),
+    maybeSingle: vi.fn(),
+  } as unknown as {
+    select: ReturnType<typeof vi.fn<(columns: string) => unknown>>;
+    eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => unknown>>;
+    maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabasePlanResult>>>;
+  };
+
+  chain.select.mockReturnValue(chain);
+  chain.eq.mockReturnValue(chain);
+  chain.maybeSingle.mockResolvedValue(result);
+
+  return chain;
 }
 
 function createSnapshotQuery(result: SupabaseSnapshotResult) {
-  const maybeSingle = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  return { select, eq, maybeSingle };
+  const chain = {
+    select: vi.fn(),
+    eq: vi.fn(),
+    order: vi.fn(),
+    limit: vi.fn(),
+    maybeSingle: vi.fn(),
+  } as unknown as {
+    select: ReturnType<typeof vi.fn<(columns: string) => unknown>>;
+    eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => unknown>>;
+    order: ReturnType<
+      typeof vi.fn<(column: string, options: { ascending: boolean }) => unknown>
+    >;
+    limit: ReturnType<typeof vi.fn<(rowCount: number) => unknown>>;
+    maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseSnapshotResult>>>;
+  };
+
+  chain.select.mockReturnValue(chain);
+  chain.eq.mockReturnValue(chain);
+  chain.order.mockReturnValue(chain);
+  chain.limit.mockReturnValue(chain);
+  chain.maybeSingle.mockResolvedValue(result);
+
+  return chain;
 }
 
 function createEntryQuery(result: SupabaseEntryResult) {
