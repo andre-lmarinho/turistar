@@ -74,10 +74,8 @@ npm run typecheck        # Type check all
 npm run test             # All unit tests
 npm run e2e              # All E2E tests
 
-//TODO: create npm commands
 # Database
-yarn prisma generate  # Regenerate types after schema changes
-yarn workspace @calcom/prisma db-migrate  # Run migrations
+npm run gen:types        # Regenerate types after schema changes
 ```
 
 ## Boundaries
