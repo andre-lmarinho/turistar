@@ -2,13 +2,12 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
 
 export async function updatePlanTitle(
   planId: string,
   editToken: string,
   newTitle: string,
-  client: SupabaseClient<Database> = supabaseServer()
+  client: SupabaseClient = supabaseServer()
 ) {
   const supabase = client;
   const { error } = await supabase.rpc('update_plan_title', {

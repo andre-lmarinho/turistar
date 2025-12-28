@@ -2,8 +2,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify/helpers';
-import type { Database } from '@/shared/types/supabase';
+import { fetchGeoapifyAutocomplete } from '@/features/app/planner/services/geoapify/autocomplete';
 
 interface DestinationInfo {
   name: string;
@@ -18,7 +17,7 @@ export async function createPlan(
   start: string,
   end: string,
   userId?: string | null,
-  client: SupabaseClient<Database> = supabaseServer()
+  client: SupabaseClient = supabaseServer()
 ) {
   const supabase = client;
 

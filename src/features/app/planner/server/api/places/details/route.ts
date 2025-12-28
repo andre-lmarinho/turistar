@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import { fetchGeoapifyPlaceDetails } from '@/shared/lib/geoapify/helpers';
-import { fetchWikidataImage } from '@/shared/lib/wikidata';
+import { fetchGeoapifyPlaceDetails } from '@/features/app/planner/services/geoapify/placeDetails';
+import { fetchWikidataImage } from '@/features/app/planner/services/wikidata/fetchWikidataImage';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';

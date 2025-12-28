@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
+import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
 import { getVisitedCountries } from '@/features/app/planner/server/queries/plans/getVisitedCountries';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import type { VisitedCountry } from '@/shared/types/worldMap';

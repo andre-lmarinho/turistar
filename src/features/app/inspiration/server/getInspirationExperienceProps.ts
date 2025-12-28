@@ -1,5 +1,5 @@
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { buildDaysFromInspirationData } from '@/features/app/planner/services/days/buildDaysFromInspirationData';
+import { buildDaysFromInspirationData } from '@/features/app/planner/domain/days/buildDaysFromInspirationData';
 import type { Entry } from '@/features/app/planner/types/budget';
 
 import { assertValidCitySlug, safeReadInspirationData } from './inspirationData';

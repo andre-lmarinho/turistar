@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import { SuggestionCombobox, type SuggestionOption } from '@/shared/ui/input';
+import { SuggestionCombobox } from '@/features/app/planner/components/ui/SuggestionCombobox';
+import type { SuggestionOption } from '@/features/app/planner/components/ui/SuggestionCombobox';
 import { cn } from '@/shared/utils/cn';
 
 import { useDebouncedQuery } from '@/features/app/planner/hooks/search/useDebouncedQuery';

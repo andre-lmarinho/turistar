@@ -1,17 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { Avatar } from '@/shared/ui/avatar';
-import { SelectMenu, type SelectMenuOption } from '@/shared/ui/select';
+import { SelectMenu } from '@/features/app/planner/components/ui/SelectMenu';
+import type { SelectMenuOption } from '@/features/app/planner/components/ui/SelectMenu';
 import {
   usePlanMembers,
   type PlanMemberProfile,
   type PlanMemberTier,
 } from '@/features/app/planner/hooks/data/usePlanSharing';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { supabase } from '@/shared/lib/supabaseClient';
+import { useLeavePlannerRedirect } from '@/features/app/planner/hooks/ui/useLeavePlannerRedirect';
 import { SHARE_TIERS } from './shareConstants';
 
 type MemberMenuOption = PlanMemberTier | 'leave' | 'remove';
@@ -30,32 +30,6 @@ type ShareMemberRowProps = {
   mutations: MemberMutations;
   onLeave: (member: PlanMemberProfile) => void;
 };
-
-type EnsureProfileResponse = {
-  slug?: string | null;
-};
-
-async function ensureProfileSlug(): Promise<string | null> {
-  try {
-    const response = await fetch('/api/profile/ensure', {
-      method: 'POST',
-      credentials: 'same-origin',
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as EnsureProfileResponse;
-    if (typeof data.slug !== 'string' || data.slug.trim().length === 0) {
-      return null;
-    }
-
-    return data.slug;
-  } catch {
-    return null;
-  }
-}
 
 function ShareMemberRow({
   member,
@@ -150,41 +124,13 @@ export function ShareMembersSection({ planId }: { planId: string }) {
     enabled: Boolean(planId),
   });
   const { viewerUserId, canManageMembers } = usePlannerContext();
-  const router = useRouter();
+  const { handleLeave } = useLeavePlannerRedirect({ viewerUserId, leave });
 
   const ownerId = data?.ownerId ?? null;
   const members = data?.members ?? [];
   const adminCount = members.filter((member) => member.tier === 'admin').length;
-
-  const resolveRedirectHref = async (member: PlanMemberProfile) => {
-    if (member.slug) {
-      return `/u/${member.slug}/planners`;
-    }
-    if (!viewerUserId) {
-      return '/';
-    }
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('slug')
-      .eq('id', viewerUserId)
-      .maybeSingle();
-    if (profile?.slug) {
-      return `/u/${profile.slug}/planners`;
-    }
-    const slug = await ensureProfileSlug();
-    return slug ? `/u/${slug}/planners` : '/';
-  };
-
-  const handleLeave = async (member: PlanMemberProfile) => {
-    const redirectHref = await resolveRedirectHref(member);
-    try {
-      await leave.mutateAsync();
-      router.push(redirectHref);
-      router.refresh();
-    } catch {
-      // keep user in place if leaving fails
-    }
-  };
+  const shouldShowEmpty = !isLoading && !error && !members.length;
+  const shouldShowList = !isLoading && !error && members.length > 0;
 
   return (
     <div className="space-y-3">
@@ -208,10 +154,8 @@ export function ShareMembersSection({ planId }: { planId: string }) {
         <>
           {isLoading ? <p className="text-muted-foreground text-xs">Loading members...</p> : null}
           {error ? <p className="text-destructive text-xs">Unable to load members.</p> : null}
-          {!isLoading && !error && !members.length ? (
-            <p className="text-muted-foreground text-xs">No members yet.</p>
-          ) : null}
-          {!isLoading && !error && members.length ? (
+          {shouldShowEmpty ? <p className="text-muted-foreground text-xs">No members yet.</p> : null}
+          {shouldShowList ? (
             <div className="space-y-2">
               {members.map((member) => (
                 <ShareMemberRow

@@ -8,8 +8,8 @@ import { eachDayOfInterval } from 'date-fns';
 
 import { useTripRange } from './useTripRange';
 import { useDnDPlanner } from '../dnd/useDnDPlanner';
-import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
-import { syncDaysWithTripRange } from '@/features/app/planner/services/days/syncDaysWithTripRange';
+import { buildInitialDays } from '@/features/app/planner/domain/days/initialDays';
+import { syncDaysWithTripRange } from '@/features/app/planner/domain/days/syncDaysWithTripRange';
 import { updatePlanDates } from '@/app/(webapp)/p/actions/plans/updatePlanDates';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 

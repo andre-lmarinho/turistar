@@ -1,4 +1,4 @@
-import type { SelectMenuOption } from '@/shared/ui/select';
+import type { SelectMenuOption } from '@/features/app/planner/components/ui/SelectMenu';
 
 export type ShareTier = 'admin' | 'member';
 
