@@ -1,4 +1,4 @@
-import { moveActivityPosition } from '@/features/app/planner/services/activities/moveActivityPosition';
+import { moveActivityPosition } from '@/features/app/planner/domain/activities/moveActivityPosition';
 import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 
 function build(id: string): Activity {

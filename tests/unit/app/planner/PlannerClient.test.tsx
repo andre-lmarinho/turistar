@@ -54,7 +54,7 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
   }),
 }));
 
-vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
+vi.mock('@/features/app/planner/hooks/data/usePlanTitle', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));

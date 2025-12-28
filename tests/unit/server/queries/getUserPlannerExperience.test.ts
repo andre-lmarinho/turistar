@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { getUserPlannerExperience } from '@/server/queries/plans/getUserPlannerExperience';
+import { getUserPlannerExperience } from '@/features/app/planner/server/queries/plans/getUserPlannerExperience';
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(),

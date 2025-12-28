@@ -1,13 +1,13 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
-import { GET } from '@/server/api/places/search/route';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
+import { GET } from '@/features/app/planner/server/api/places/search/route';
 
 const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
-vi.mock('@/shared/lib/geoapify/helpers', () => ({
+vi.mock('@/features/app/planner/services/geoapify/placeSearch', () => ({
   fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch,
 }));
 

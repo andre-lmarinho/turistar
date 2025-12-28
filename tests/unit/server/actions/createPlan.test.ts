@@ -3,13 +3,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 vi.mock('@/shared/lib/supabaseServer', () => ({
   supabaseServer: vi.fn(),
 }));
-vi.mock('@/shared/lib/geoapify/helpers', () => ({
+vi.mock('@/features/app/planner/services/geoapify/autocomplete', () => ({
   fetchGeoapifyAutocomplete: vi.fn(),
 }));
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { fetchGeoapifyAutocomplete } from '@/shared/lib/geoapify/helpers';
-import { createPlan } from '@/server/actions/plans/createPlan';
+import { fetchGeoapifyAutocomplete } from '@/features/app/planner/services/geoapify/autocomplete';
+import { createPlan } from '@/features/app/planner/server/actions/plans/createPlan';
 
 describe('createPlan action', () => {
   beforeEach(() => {

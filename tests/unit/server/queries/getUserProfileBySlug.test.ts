@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
+import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
 
 vi.mock('@/shared/lib/supabaseServer', () => ({
   createSupabaseServerClient: vi.fn(),

@@ -4,37 +4,41 @@ import { vi } from 'vitest';
 import { BudgetPanelHeader } from '@/features/app/planner/components/budget/BudgetPanelHeader';
 import { BudgetProvider } from '@/features/app/planner/hooks/BudgetContext';
 
-const mockFrom = vi.fn();
-vi.mock('@/shared/lib/supabaseClient', () => ({
-  supabase: { from: (table: string) => mockFrom(table) },
+const mocks = vi.hoisted(() => ({
+  getPlanBudget: vi.fn(),
+  updatePlanBudget: vi.fn(),
+  createBudgetEntry: vi.fn(),
+  updateBudgetEntry: vi.fn(),
+  deleteBudgetEntry: vi.fn(),
+}));
+
+vi.mock('@/app/(webapp)/p/actions/plans/getPlanBudget', () => ({
+  getPlanBudget: mocks.getPlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updatePlanBudget', () => ({
+  updatePlanBudget: mocks.updatePlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/createBudgetEntry', () => ({
+  createBudgetEntry: mocks.createBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updateBudgetEntry', () => ({
+  updateBudgetEntry: mocks.updateBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/deleteBudgetEntry', () => ({
+  deleteBudgetEntry: mocks.deleteBudgetEntry,
 }));
 
 describe('BudgetPanelHeader', () => {
   beforeEach(() => {
-    mockFrom.mockReset();
+    mocks.getPlanBudget.mockReset();
+    mocks.updatePlanBudget.mockReset();
+    mocks.createBudgetEntry.mockReset();
+    mocks.updateBudgetEntry.mockReset();
+    mocks.deleteBudgetEntry.mockReset();
   });
 
   it('displays stored plan budget on load', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 123 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === 'plans') {
-        return {
-          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          update: () => ({ eq: () => ({ error: null }) }),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-          insert: vi.fn(),
-          update: vi.fn(),
-          delete: vi.fn(),
-        } as unknown;
-      }
-      return {} as unknown;
-    });
+    mocks.getPlanBudget.mockResolvedValue({ budget: 123, entries: [] });
 
     render(
       <BudgetProvider planId="p1" activitiesTotal={0}>

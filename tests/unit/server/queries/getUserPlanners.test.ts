@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
+import { getUserPlanners } from '@/features/app/planner/server/queries/plans/getUserPlanners';
 
 vi.mock('@/shared/lib/supabaseServer', () => ({
   createSupabaseServerClient: vi.fn(),
