@@ -1,4 +1,5 @@
-import { supabase } from '@/shared/lib/supabaseClient';
+import 'server-only';
+
 import type {
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
@@ -12,6 +13,7 @@ import type {
   PlanSnapshot,
 } from '@/features/app/planner/domain/types/PlanEvent';
 import type { Database } from '@/shared/types/supabase';
+import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 
 import {
   AppendEventsResponseSchema,
@@ -20,14 +22,16 @@ import {
   mapEvent,
   mapSnapshot,
 } from './planEventsSchemas';
+import { formatSupabaseError } from './supabaseErrors';
 
-export type PlannerSupabaseClient = SupabaseClient<Database>;
+type PlannerSupabaseClient = SupabaseClient;
 
 export async function fetchPlanSnapshot(
   planId: string,
-  client: PlannerSupabaseClient = supabase
+  client?: PlannerSupabaseClient
 ): Promise<PlanSnapshot> {
-  const response = (await client
+  const supabase = client ?? createSupabaseServerClient();
+  const response = (await supabase
     .from('plan_snapshots')
     .select('plan_id, version, state, updated_at')
     .eq('plan_id', planId)
@@ -35,7 +39,13 @@ export async function fetchPlanSnapshot(
     Database['public']['Tables']['plan_snapshots']['Row']
   >;
   const { data, error } = response;
-  if (error) throw error;
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPlanSnapshot',
+      identifiers: { planId },
+      error,
+    });
+  }
 
   const parsed = SnapshotRowSchema.parse(
     data ?? {
@@ -51,9 +61,10 @@ export async function fetchPlanSnapshot(
 export async function fetchPlanEvents(
   planId: string,
   sinceVersion: number,
-  client: PlannerSupabaseClient = supabase
+  client?: PlannerSupabaseClient
 ): Promise<PlanEvent[]> {
-  const response = (await client
+  const supabase = client ?? createSupabaseServerClient();
+  const response = (await supabase
     .from('plan_events')
     .select('event_id, plan_id, version, event_type, payload, created_at, actor_id')
     .eq('plan_id', planId)
@@ -62,7 +73,13 @@ export async function fetchPlanEvents(
     Database['public']['Tables']['plan_events']['Row']
   >;
   const { data, error } = response;
-  if (error) throw error;
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPlanEvents',
+      identifiers: { planId, sinceVersion },
+      error,
+    });
+  }
   if (!data) return [];
   const parsedRows = data.map((row) => EventRowSchema.parse(row));
   return parsedRows.map(mapEvent);
@@ -72,16 +89,23 @@ export async function appendPlanEvents(
   planId: string,
   baseVersion: number,
   events: PlanEventInsert[],
-  client: PlannerSupabaseClient = supabase
+  client?: PlannerSupabaseClient
 ): Promise<{ events: PlanEvent[]; version: number }> {
-  const response = (await client.rpc('append_plan_events', {
+  const supabase = client ?? createSupabaseServerClient();
+  const response = (await supabase.rpc('append_plan_events', {
     plan_id: planId,
     base_version: baseVersion,
     events,
   })) as PostgrestSingleResponse<Database['public']['Functions']['append_plan_events']['Returns']>;
   const { data, error } = response;
 
-  if (error) throw error;
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'appendPlanEvents',
+      identifiers: { planId, baseVersion, eventCount: events.length },
+      error,
+    });
+  }
   if (!data) {
     return { version: baseVersion, events: [] };
   }
