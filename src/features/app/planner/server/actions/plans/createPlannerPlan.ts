@@ -1,7 +1,7 @@
 'use server';
 
 import { getCurrentUser, requireUser } from '@/shared/lib/auth/session';
-import { createPlan as createPlanAction } from '@/server/actions/plans/createPlan';
+import { createPlan as createPlanAction } from '@/features/app/planner/server/actions/plans/createPlan';
 
 interface PlannerDestination {
   name: string;

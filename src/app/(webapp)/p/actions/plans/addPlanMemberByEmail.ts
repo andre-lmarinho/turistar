@@ -1,5 +1,5 @@
 'use server';
 
-import { addPlanMemberByEmail } from '@/server/actions/plans/addPlanMemberByEmail';
+import { addPlanMemberByEmail } from '@/features/app/planner/server/actions/plans/addPlanMemberByEmail';
 
 export { addPlanMemberByEmail };

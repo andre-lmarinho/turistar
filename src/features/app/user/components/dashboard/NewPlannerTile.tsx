@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
+import type { CreatePlannerPlanResult } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
 import { PopoverPlannerCreation } from '@/features/app/user/ui/PopoverPlannerCreation';
 import { Popover, PopoverTriggerButton } from '@/shared/ui/popover';
 

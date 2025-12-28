@@ -1,5 +1,5 @@
 'use server';
 
-import { updatePlanMemberTier } from '@/server/actions/plans/updatePlanMemberTier';
+import { updatePlanMemberTier } from '@/features/app/planner/server/actions/plans/updatePlanMemberTier';
 
 export { updatePlanMemberTier };

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
 import { PlannerGallery } from '@/features/app/user/components/dashboard/PlannerGallery';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
-import { getUserPlanners } from '@/server/queries/plans/getUserPlanners';
+import { getUserPlanners } from '@/features/app/planner/server/queries/plans/getUserPlanners';
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
 
 interface DashboardPlannersPageProps {

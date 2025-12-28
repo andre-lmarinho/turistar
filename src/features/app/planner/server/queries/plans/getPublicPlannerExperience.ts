@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
-import { SnapshotRowSchema, mapSnapshot } from '../services/supabase/planEventsSchemas';
+import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';

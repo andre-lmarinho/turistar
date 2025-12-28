@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { acceptPlanShareLink } from '@/server/actions/plans/acceptPlanShareLink';
+import { acceptPlanShareLink } from '@/features/app/planner/server/actions/plans/acceptPlanShareLink';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 import { Button } from '@/shared/ui/button';
 import { ShareLinkAutoJoin } from '@/features/app/planner/components/share/ShareLinkAutoJoin';

@@ -9,12 +9,12 @@ import { DateRangePicker } from '@/shared/ui/calendar';
 import { LoadingScreen } from '@/shared/ui/loading';
 import { LocationSearchInput } from '@/features/app/planner/components/ui/LocationSearchInput';
 
-import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
+import { createPlannerPlan } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
 import { usePlanEditTokens } from '@/features/app/planner/hooks/data/usePlanEditTokens';
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 import { useDestinationAutocomplete } from '@/features/app/planner/hooks/search/useDestinationAutocomplete';
 
-import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
+import type { CreatePlannerPlanResult } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
 
 type PlannerPlanCreator = typeof createPlannerPlan;
 

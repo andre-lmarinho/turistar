@@ -1,5 +1,5 @@
 'use server';
 
-import { getPlanShareLink } from '@/server/queries/plans/getPlanShareLink';
+import { getPlanShareLink } from '@/features/app/planner/server/queries/plans/getPlanShareLink';
 
 export { getPlanShareLink };
