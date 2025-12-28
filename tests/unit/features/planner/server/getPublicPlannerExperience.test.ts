@@ -10,7 +10,7 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 
 import { notFound } from 'next/navigation';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { getPublicPlannerExperience } from '@/features/app/planner/server/getPublicPlannerExperience';
+import { getPublicPlannerExperience } from '@/features/app/planner/server/queries/plans/getPublicPlannerExperience';
 
 interface SupabaseResult<T> {
   data: T;

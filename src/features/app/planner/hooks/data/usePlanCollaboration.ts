@@ -13,8 +13,8 @@ import {
   applyPlanEvent,
   reducePlanEvents,
 } from '@/features/app/planner/domain/events/planEventReducer';
-import { diffPlanEvents } from '@/features/app/planner/services/events/diffPlanEvents';
-import { cloneDays } from '@/features/app/planner/services/activities/cloneDays';
+import { diffPlanEvents } from '@/features/app/planner/domain/events/diffPlanEvents';
+import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;
