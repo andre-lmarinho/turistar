@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/updatePlanMemberTier.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
@@ -23,3 +24,6 @@ export async function updatePlanMemberTier(
     throw error;
   }
 }
+========
+export { updatePlanMemberTier } from '@/features/app/planner/server/actions/plans/updatePlanMemberTier';
+>>>>>>>> origin/main:src/server/actions/plans/updatePlanMemberTier.ts

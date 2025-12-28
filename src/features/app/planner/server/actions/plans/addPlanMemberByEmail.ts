@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/addPlanMemberByEmail.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
@@ -73,3 +74,6 @@ export async function addPlanMemberByEmail(
 
   return { userId: row.user_id, tier: row.tier };
 }
+========
+export { addPlanMemberByEmail } from '@/features/app/planner/server/actions/plans/addPlanMemberByEmail';
+>>>>>>>> origin/main:src/server/actions/plans/addPlanMemberByEmail.ts

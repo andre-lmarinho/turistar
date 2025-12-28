@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/leavePlan.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
@@ -17,3 +18,6 @@ export async function leavePlan(
     throw error;
   }
 }
+========
+export { leavePlan } from '@/features/app/planner/server/actions/plans/leavePlan';
+>>>>>>>> origin/main:src/server/actions/plans/leavePlan.ts

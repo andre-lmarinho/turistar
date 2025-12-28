@@ -1,5 +1,6 @@
 import 'server-only';
 
+<<<<<<<< HEAD:src/features/app/planner/server/queries/plans/getUserPlannerExperience.ts
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
@@ -157,3 +158,6 @@ export async function getUserPlannerExperience(
     canManageMembers: isAdmin,
   };
 }
+========
+export { getUserPlannerExperience } from '@/features/app/planner/server/queries/plans/getUserPlannerExperience';
+>>>>>>>> origin/main:src/server/queries/plans/getUserPlannerExperience.ts

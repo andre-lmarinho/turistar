@@ -1,5 +1,6 @@
 import 'server-only';
 
+<<<<<<<< HEAD:src/features/app/planner/server/queries/plans/getPlanMembers.ts
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 
 type PlanMemberTier = 'admin' | 'member';
@@ -112,3 +113,6 @@ export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersR
 
   return { ownerId: resolvedOwnerId, members };
 }
+========
+export { getPlanMembers } from '@/features/app/planner/server/queries/plans/getPlanMembers';
+>>>>>>>> origin/main:src/server/queries/plans/getPlanMembers.ts

@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/acceptPlanShareLink.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
@@ -32,3 +33,6 @@ export async function acceptPlanShareLink(
 
   return data as string;
 }
+========
+export { acceptPlanShareLink } from '@/features/app/planner/server/actions/plans/acceptPlanShareLink';
+>>>>>>>> origin/main:src/server/actions/plans/acceptPlanShareLink.ts

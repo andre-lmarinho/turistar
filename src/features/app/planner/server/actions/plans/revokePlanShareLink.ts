@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/revokePlanShareLink.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
@@ -19,3 +20,6 @@ export async function revokePlanShareLink(
 
   return Boolean(data);
 }
+========
+export { revokePlanShareLink } from '@/features/app/planner/server/actions/plans/revokePlanShareLink';
+>>>>>>>> origin/main:src/server/actions/plans/revokePlanShareLink.ts

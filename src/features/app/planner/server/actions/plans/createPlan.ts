@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/createPlan.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { fetchGeoapifyAutocomplete } from '@/features/app/planner/services/geoapify/autocomplete';
@@ -74,3 +75,6 @@ async function resolveCountryFromGeoapify(
     return null;
   }
 }
+========
+export { createPlan } from '@/features/app/planner/server/actions/plans/createPlan';
+>>>>>>>> origin/main:src/server/actions/plans/createPlan.ts

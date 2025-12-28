@@ -1,5 +1,6 @@
 'use server';
 
+<<<<<<<< HEAD:src/features/app/planner/server/actions/plans/createPlanShareLink.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
@@ -23,3 +24,6 @@ export async function createPlanShareLink(
 
   return data as string;
 }
+========
+export { createPlanShareLink } from '@/features/app/planner/server/actions/plans/createPlanShareLink';
+>>>>>>>> origin/main:src/server/actions/plans/createPlanShareLink.ts
