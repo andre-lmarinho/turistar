@@ -8,8 +8,8 @@ import {
   createBlankActivity,
   isPlaceholderActivity,
 } from '@/features/app/planner/domain/utils/activityPlaceholders';
-import { moveActivityToDay } from '@/features/app/planner/services/activities/moveActivityToDay';
-import { moveActivityPosition } from '@/features/app/planner/services/activities/moveActivityPosition';
+import { moveActivityToDay } from '@/features/app/planner/domain/activities/moveActivityToDay';
+import { moveActivityPosition } from '@/features/app/planner/domain/activities/moveActivityPosition';
 
 /**
  * Manages the currently selected activity for editing in the planner.

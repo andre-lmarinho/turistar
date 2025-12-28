@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { validateGeoapifyQuery } from '@/features/app/planner/server/api/geoapify/validateQuery';
-import { fetchGeoapifyAddressAutocomplete } from '@/shared/lib/geoapify/helpers';
+import { fetchGeoapifyAddressAutocomplete } from '@/features/app/planner/services/geoapify/autocomplete';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
