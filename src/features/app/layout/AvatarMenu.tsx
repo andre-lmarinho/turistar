@@ -33,7 +33,7 @@ export function AvatarMenu({ displayName, email }: AvatarMenuProps) {
         <Avatar displayName={displayName} />
       </PopoverTriggerButton>
       <PopoverContent
-        className="border-border bg-card text-foreground w-64 space-y-3 rounded-xl border shadow-lg"
+        className="border-border bg-card text-foreground w-64 space-y-3 rounded-xl border p-4 shadow-lg"
         side="bottom"
         align="end"
         sideOffset={4}

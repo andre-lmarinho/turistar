@@ -8,13 +8,13 @@ import {
   fetchPlanEvents,
   fetchPlanSnapshot,
 } from '@/features/app/planner/client/planEventsClient';
-import { subscribeToPlanEvents } from '@/features/app/planner/services/supabase/planEventsRealtime';
+import { subscribeToPlanEvents } from '@/features/app/planner/client/planEventsRealtimeClient';
 import {
   applyPlanEvent,
   reducePlanEvents,
 } from '@/features/app/planner/domain/events/planEventReducer';
-import { diffPlanEvents } from '@/features/app/planner/services/events/diffPlanEvents';
-import { cloneDays } from '@/features/app/planner/services/activities/cloneDays';
+import { diffPlanEvents } from '@/features/app/planner/domain/events/diffPlanEvents';
+import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;

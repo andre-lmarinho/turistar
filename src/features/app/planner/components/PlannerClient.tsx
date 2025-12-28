@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { ActivityDialog } from '@/features/app/planner/components/dialog/ActivityDialog';
 import { PlannerProvider, usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { usePlanTitle } from '@/features/app/planner/hooks/data/usePlanTitleSupabase';
+import { usePlanTitle } from '@/features/app/planner/hooks/data/usePlanTitle';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { usePlanEditTokens } from '@/features/app/planner/hooks/data/usePlanEditTokens';

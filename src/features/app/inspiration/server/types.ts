@@ -1,4 +1,4 @@
-import type { InspirationData } from '@/features/app/planner/services/days/buildDaysFromInspirationData';
+import type { InspirationData } from '@/features/app/planner/domain/days/buildDaysFromInspirationData';
 
 export interface InspirationDocument extends InspirationData {
   slug: string;

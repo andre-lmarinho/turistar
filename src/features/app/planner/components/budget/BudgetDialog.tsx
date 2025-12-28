@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import * as Dialog from '@radix-ui/react-dialog';
 import { DollarSign, X } from '@/shared/ui/icon';
 
-import { normalizeAmount } from '@/shared/utils/normalizeAmount';
+import { normalizeAmount } from '@/features/app/planner/domain/utils/normalizeAmount';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 interface BudgetDialogProps {

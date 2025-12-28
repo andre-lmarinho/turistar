@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { cloneDays } from '@/features/app/planner/services/activities/cloneDays';
+import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
 import {
   removeBlankActivities,
   snapshotDays,
-} from '@/features/app/planner/services/activities/sanitizePlannerDays';
+} from '@/features/app/planner/domain/activities/sanitizePlannerDays';
 import type { usePlanner } from './usePlanner';
 
 interface PersistDaysMutation {

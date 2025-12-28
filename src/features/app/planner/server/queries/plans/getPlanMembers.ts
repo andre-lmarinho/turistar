@@ -1,9 +1,8 @@
 import 'server-only';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
 
-type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
+type PlanMemberTier = 'admin' | 'member';
 
 export type PlanMemberProfile = {
   userId: string;

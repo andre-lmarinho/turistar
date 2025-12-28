@@ -5,7 +5,7 @@ import { DollarSign } from '@/shared/ui/icon';
 import { CATEGORIES } from '@/features/app/planner/domain/constants/budget';
 import { CategoryProgressBar } from '@/features/app/planner/components/budget/CategoryProgressBar';
 import { useBudgetContext } from '@/features/app/planner/hooks/BudgetContext';
-import { normalizeAmount } from '@/shared/utils/normalizeAmount';
+import { normalizeAmount } from '@/features/app/planner/domain/utils/normalizeAmount';
 
 interface SummaryValueProps {
   amount: number;

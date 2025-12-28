@@ -1,1 +1,1 @@
-export const GEOAPIFY_MIN_QUERY_LENGTH = 3;
+export { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';

@@ -37,9 +37,9 @@ export function AddCardButton({
 
   const collapsedClasses = useMemo(() => {
     if (placement === 'between') {
-      return 'group relative flex h-2 w-full items-center justify-center transition';
+      return 'group cursor-pointer relative flex h-2 w-full items-center justify-center transition';
     }
-    return 'flex h-10 w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition';
+    return 'flex h-10 cursor-pointer w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition';
   }, [placement]);
 
   const handleClick = () => {

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
+import { buildInitialDays } from '@/features/app/planner/domain/days/initialDays';
 import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { eachDayOfInterval } from 'date-fns';

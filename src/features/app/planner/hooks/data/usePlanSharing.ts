@@ -8,9 +8,8 @@ import { getPlanMembers } from '@/app/(webapp)/p/actions/plans/getPlanMembers';
 import { getPlanShareLink } from '@/app/(webapp)/p/actions/plans/getPlanShareLink';
 import { revokePlanShareLink } from '@/app/(webapp)/p/actions/plans/revokePlanShareLink';
 import { updatePlanMemberTier } from '@/app/(webapp)/p/actions/plans/updatePlanMemberTier';
-import type { Database } from '@/shared/types/supabase';
 
-type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
+type PlanMemberTier = 'admin' | 'member';
 
 type PlanMemberProfile = {
   userId: string;

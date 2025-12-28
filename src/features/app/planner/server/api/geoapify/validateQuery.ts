@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
  * Validates that a Geoapify request contains the required query parameter.
  * Returns the original string when valid or an error response otherwise.
  */
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
 
 export function validateGeoapifyQuery(
   searchParams: URLSearchParams,

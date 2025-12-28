@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/shared/ui/button';
-import { SelectMenu } from '@/shared/ui/select';
+import { SelectMenu } from '@/features/app/planner/components/ui/SelectMenu';
 import { usePlanMembers } from '@/features/app/planner/hooks/data/usePlanSharing';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
 import { SHARE_TIERS, type ShareTier } from './shareConstants';
