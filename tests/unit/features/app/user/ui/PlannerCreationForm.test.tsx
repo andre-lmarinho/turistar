@@ -4,7 +4,7 @@ import { describe, it, beforeEach, expect, vi } from 'vitest';
 
 import type { AutocompletePlace } from '@/features/app/planner/types/locations';
 import { PlannerCreationForm } from '@/features/app/user/ui/PlannerCreationForm';
-import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
+import type { CreatePlannerPlanResult } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
 
 const pushMock = vi.fn();
 const refreshMock = vi.fn();

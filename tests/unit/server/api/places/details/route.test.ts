@@ -1,16 +1,16 @@
 import type { NextRequest } from 'next/server';
 import { vi } from 'vitest';
-import { GET } from '@/server/api/places/details/route';
+import { GET } from '@/features/app/planner/server/api/places/details/route';
 
 const { mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceDetails: vi.fn(),
   mockFetchWikidataImage: vi.fn(),
 }));
 
-vi.mock('@/shared/lib/geoapify/helpers', () => ({
+vi.mock('@/features/app/planner/services/geoapify/placeDetails', () => ({
   fetchGeoapifyPlaceDetails: mockFetchGeoapifyPlaceDetails,
 }));
-vi.mock('@/shared/lib/wikidata', () => ({
+vi.mock('@/features/app/planner/services/wikidata/fetchWikidataImage', () => ({
   fetchWikidataImage: mockFetchWikidataImage,
 }));
 

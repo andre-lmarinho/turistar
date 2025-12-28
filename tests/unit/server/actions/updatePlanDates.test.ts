@@ -5,7 +5,7 @@ vi.mock('@/shared/lib/supabaseServer', () => ({
 }));
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { updatePlanDates } from '@/server/actions/plans/updatePlanDates';
+import { updatePlanDates } from '@/features/app/planner/server/actions/plans/updatePlanDates';
 
 describe('updatePlanDates', () => {
   beforeEach(() => {

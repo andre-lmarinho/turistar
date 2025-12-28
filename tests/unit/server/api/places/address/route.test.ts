@@ -2,18 +2,18 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { vi } from 'vitest';
 
-import { GET } from '@/server/api/places/address/route';
+import { GET } from '@/features/app/planner/server/api/places/address/route';
 
 const { mockValidateGeoapifyQuery, mockFetchGeoapifyAddressAutocomplete } = vi.hoisted(() => ({
   mockValidateGeoapifyQuery: vi.fn(),
   mockFetchGeoapifyAddressAutocomplete: vi.fn(),
 }));
 
-vi.mock('@/server/api/geoapify/validateQuery', () => ({
+vi.mock('@/features/app/planner/server/api/geoapify/validateQuery', () => ({
   validateGeoapifyQuery: mockValidateGeoapifyQuery,
 }));
 
-vi.mock('@/shared/lib/geoapify/helpers', () => ({
+vi.mock('@/features/app/planner/services/geoapify/autocomplete', () => ({
   fetchGeoapifyAddressAutocomplete: mockFetchGeoapifyAddressAutocomplete,
 }));
 

@@ -3,17 +3,17 @@ import { vi } from 'vitest';
 const originalFetch = global.fetch;
 const originalKey = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 
-let fetchGeoapifyAutocomplete: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyAutocomplete;
-let fetchGeoapifyAddressAutocomplete: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyAddressAutocomplete;
-let fetchGeoapifyPlaceSearch: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyPlaceSearch;
-let fetchGeoapifyPlaceDetails: typeof import('@/shared/lib/geoapify/helpers').fetchGeoapifyPlaceDetails;
+let fetchGeoapifyAutocomplete: typeof import('@/features/app/planner/services/geoapify/autocomplete').fetchGeoapifyAutocomplete;
+let fetchGeoapifyAddressAutocomplete: typeof import('@/features/app/planner/services/geoapify/autocomplete').fetchGeoapifyAddressAutocomplete;
+let fetchGeoapifyPlaceSearch: typeof import('@/features/app/planner/services/geoapify/placeSearch').fetchGeoapifyPlaceSearch;
+let fetchGeoapifyPlaceDetails: typeof import('@/features/app/planner/services/geoapify/placeDetails').fetchGeoapifyPlaceDetails;
 
 describe('fetchGeoapifyAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
     ({ fetchGeoapifyAutocomplete, fetchGeoapifyAddressAutocomplete } =
-      await import('@/shared/lib/geoapify/helpers'));
+      await import('@/features/app/planner/services/geoapify/autocomplete'));
   });
 
   afterEach(() => {
@@ -86,7 +86,9 @@ describe('fetchGeoapifyAddressAutocomplete', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyAddressAutocomplete } = await import('@/shared/lib/geoapify/helpers'));
+    ({ fetchGeoapifyAddressAutocomplete } = await import(
+      '@/features/app/planner/services/geoapify/autocomplete'
+    ));
   });
 
   afterEach(() => {
@@ -125,7 +127,9 @@ describe('fetchGeoapifyPlaceSearch', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyPlaceSearch } = await import('@/shared/lib/geoapify/helpers'));
+    ({ fetchGeoapifyPlaceSearch } = await import(
+      '@/features/app/planner/services/geoapify/placeSearch'
+    ));
   });
 
   afterEach(() => {
@@ -231,7 +235,9 @@ describe('fetchGeoapifyPlaceDetails', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.NEXT_PUBLIC_GEOAPIFY_KEY = 'test-key';
-    ({ fetchGeoapifyPlaceDetails } = await import('@/shared/lib/geoapify/helpers'));
+    ({ fetchGeoapifyPlaceDetails } = await import(
+      '@/features/app/planner/services/geoapify/placeDetails'
+    ));
   });
 
   afterEach(() => {

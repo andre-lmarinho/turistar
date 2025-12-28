@@ -1,4 +1,4 @@
-import { buildInitialDays } from '@/features/app/planner/services/days/initialDays';
+import { buildInitialDays } from '@/features/app/planner/domain/days/initialDays';
 import { parseISO } from 'date-fns';
 
 describe('buildInitialDays', () => {

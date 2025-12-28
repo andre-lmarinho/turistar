@@ -5,9 +5,28 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
 
 let mockDays: DayPlan[] = [];
 
-const mockFrom = vi.fn();
-vi.mock('@/shared/lib/supabaseClient', () => ({
-  supabase: { from: (table: string) => mockFrom(table) },
+const mocks = vi.hoisted(() => ({
+  getPlanBudget: vi.fn(),
+  updatePlanBudget: vi.fn(),
+  createBudgetEntry: vi.fn(),
+  updateBudgetEntry: vi.fn(),
+  deleteBudgetEntry: vi.fn(),
+}));
+
+vi.mock('@/app/(webapp)/p/actions/plans/getPlanBudget', () => ({
+  getPlanBudget: mocks.getPlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updatePlanBudget', () => ({
+  updatePlanBudget: mocks.updatePlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/createBudgetEntry', () => ({
+  createBudgetEntry: mocks.createBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updateBudgetEntry', () => ({
+  updateBudgetEntry: mocks.updateBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/deleteBudgetEntry', () => ({
+  deleteBudgetEntry: mocks.deleteBudgetEntry,
 }));
 
 vi.mock('@/features/app/planner/hooks/PlannerContext', async () => {
@@ -48,30 +67,17 @@ import { BudgetBoard } from '@/features/app/planner/components/budget/BudgetBoar
 
 describe('budget panel', () => {
   beforeEach(() => {
-    mockFrom.mockReset();
+    mocks.getPlanBudget.mockReset();
+    mocks.updatePlanBudget.mockReset();
+    mocks.createBudgetEntry.mockReset();
+    mocks.updateBudgetEntry.mockReset();
+    mocks.deleteBudgetEntry.mockReset();
   });
 
   it('adds expenses and updates totals', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const updateBudget = vi.fn().mockResolvedValue({ error: null });
-    const insertEntry = vi.fn().mockResolvedValue({ data: { id: 'e1' }, error: null });
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === 'plans') {
-        return {
-          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          update: () => ({ eq: () => updateBudget() }),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-          insert: () => ({ select: () => ({ single: () => insertEntry() }) }),
-        } as unknown;
-      }
-      return {} as unknown;
-    });
+    mocks.getPlanBudget.mockResolvedValue({ budget: 0, entries: [] });
+    mocks.updatePlanBudget.mockResolvedValue(0);
+    mocks.createBudgetEntry.mockResolvedValue('e1');
 
     mockDays = [
       {
@@ -88,7 +94,7 @@ describe('budget panel', () => {
     );
 
     await waitFor(() => expect(screen.getByLabelText('Total spent: $25.00')).toBeInTheDocument());
-    expect(updateBudget).not.toHaveBeenCalled();
+    expect(mocks.updatePlanBudget).not.toHaveBeenCalled();
     expect(screen.queryByText('Failed to persist budget')).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByPlaceholderText('Description'), {
@@ -99,7 +105,7 @@ describe('budget panel', () => {
     });
     fireEvent.click(screen.getByLabelText('Add expense'));
 
-    await waitFor(() => expect(insertEntry).toHaveBeenCalled());
+    await waitFor(() => expect(mocks.createBudgetEntry).toHaveBeenCalled());
     await waitFor(() => expect(screen.getByLabelText('Total spent: $75.00')).toBeInTheDocument());
   });
 });

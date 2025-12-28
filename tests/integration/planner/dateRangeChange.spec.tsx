@@ -78,7 +78,7 @@ vi.mock('@/features/app/planner/hooks/budget/BudgetContext', () => ({
   BudgetProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/features/app/planner/hooks/usePlanTitleSupabase', () => ({
+vi.mock('@/features/app/planner/hooks/data/usePlanTitle', () => ({
   __esModule: true,
   usePlanTitle: () => ({ title: 'Trip', setTitle: vi.fn(), saveTitle: vi.fn() }),
 }));

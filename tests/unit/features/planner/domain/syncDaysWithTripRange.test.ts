@@ -1,5 +1,5 @@
-import { formatDayPlan } from '@/features/app/planner/services/days/formatDayPlan';
-import { syncDaysWithTripRange } from '@/features/app/planner/services/days/syncDaysWithTripRange';
+import { formatDayPlan } from '@/features/app/planner/domain/days/formatDayPlan';
+import { syncDaysWithTripRange } from '@/features/app/planner/domain/days/syncDaysWithTripRange';
 import { parseISO } from 'date-fns';
 import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 

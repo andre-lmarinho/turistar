@@ -39,7 +39,7 @@ vi.mock('@/features/app/planner/components/ui/LocationSearchInput', () => ({
   LocationSearchInput: mockLocationSearchInput,
 }));
 
-vi.mock('@/features/app/planner/server/createPlan', () => ({
+vi.mock('@/features/app/planner/server/actions/plans/createPlannerPlan', () => ({
   createPlannerPlan: vi.fn(),
 }));
 

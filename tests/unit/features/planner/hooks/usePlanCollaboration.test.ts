@@ -25,14 +25,14 @@ const supabaseMocks = vi.hoisted(() => {
   return { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan };
 });
 
-vi.mock('@/features/app/planner/services/supabase/planEventsQueries', () => ({
+vi.mock('@/features/app/planner/client/planEventsClient', () => ({
   __esModule: true,
   fetchPlanSnapshot: supabaseMocks.fetchSnapshot,
   fetchPlanEvents: supabaseMocks.fetchEvents,
   appendPlanEvents: supabaseMocks.appendEvents,
 }));
 
-vi.mock('@/features/app/planner/services/supabase/planEventsRealtime', () => ({
+vi.mock('@/features/app/planner/client/planEventsRealtimeClient', () => ({
   __esModule: true,
   subscribeToPlanEvents: supabaseMocks.subscribeToPlan,
 }));
