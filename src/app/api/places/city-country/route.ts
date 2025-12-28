@@ -1,1 +1,1 @@
-export { GET } from '@/features/app/planner/server/api/places/city-country/route';
+export { dynamic, GET, runtime } from '@/features/app/planner/server/api/places/city-country/route';
