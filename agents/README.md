@@ -30,8 +30,8 @@ This repository is a Next.js application (App Router) using Npm workspace. The m
 
 ### API Layer
 
-- Server actions and API handlers under `src/server/`
-- Routers in `src/app/` (when applicable)
+- Zod for API schema validation and type inference.
+- Routers in `<feature>/server/api`
 - Authentication handled via Supabase Auth
 
 ### Frontend
@@ -39,7 +39,7 @@ This repository is a Next.js application (App Router) using Npm workspace. The m
 - **Next.js 15+** with App Router in some areas
 - **React 18** with TypeScript
 - **Tailwind CSS** for styling
-- Maps and itinerary UX may rely on Leaflet and related libraries (when present)
+- Leaflet for maps and itinerary UX.
 
 ## Common Patterns
 

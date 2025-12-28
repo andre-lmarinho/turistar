@@ -11,7 +11,6 @@ Turistar follows a **vertical slice** approach. Each feature (or slice) owns its
 | `src/app`      | Next.js App Router routes and route handlers. Routes should stay thin, re-export feature entry points, or compose a small set of feature sections.         | Keep this layer thin; it wires pages to feature modules.            |
 | `src/features` | Feature modules. Each slice contains its own `components/`, `hooks/`, `services/`, `domain/` and `server/` folders. Domain logic and state live here.       | Organize by capability, not by technical layer.                     |
 | `src/shared`   | Framework adapters, UI atoms and pure utilities reused by multiple slices. Avoid putting domain-specific helpers here.                                      | Keep this small; if only one slice uses it, leave it in that slice. |
-| `src/server`   | Cross-feature server actions, queries and RPC wrappers. These functions interact with external services (database, APIs) and are reused by multiple slices. | Use this for logic that spans features.                             |
 | `public`       | Static assets served by Next.js.                                                                                                                            | —                                                                   |
 
 ## Core decisions
