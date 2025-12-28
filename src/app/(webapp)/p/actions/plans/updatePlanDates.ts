@@ -1,5 +1,5 @@
 'use server';
 
-import { updatePlanDates } from '@/server/actions/plans/updatePlanDates';
+import { updatePlanDates } from '@/features/app/planner/server/actions/plans/updatePlanDates';
 
 export { updatePlanDates };

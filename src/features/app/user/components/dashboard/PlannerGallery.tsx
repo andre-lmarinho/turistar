@@ -1,4 +1,4 @@
-import type { UserPlannerSummary } from '@/server/queries/plans/getUserPlanners';
+import type { UserPlannerSummary } from '@/features/app/planner/server/queries/plans/getUserPlanners';
 import { PlannerCard } from './PlannerCard';
 import { NewPlannerTile } from './NewPlannerTile';
 import { GalleryGrid } from '@/features/app/user/ui/GalleryGrid';

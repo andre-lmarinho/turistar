@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
-import { getVisitedCountries } from '@/server/queries/plans/getVisitedCountries';
+import { getVisitedCountries } from '@/features/app/planner/server/queries/plans/getVisitedCountries';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import type { VisitedCountry } from '@/shared/types/worldMap';
 import { WorldMapBoard } from '@/features/app/user/components/worldmap/WorldMapBoard';

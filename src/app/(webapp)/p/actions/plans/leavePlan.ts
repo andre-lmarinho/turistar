@@ -1,5 +1,5 @@
 'use server';
 
-import { leavePlan } from '@/server/actions/plans/leavePlan';
+import { leavePlan } from '@/features/app/planner/server/actions/plans/leavePlan';
 
 export { leavePlan };

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
 import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
-import { getPublicPlannerExperience } from '@/features/app/planner/server/getPublicPlannerExperience';
-import { getUserPlannerExperience } from '@/server/queries/plans/getUserPlannerExperience';
+import { getPublicPlannerExperience } from '@/features/app/planner/server/queries/plans/getPublicPlannerExperience';
+import { getUserPlannerExperience } from '@/features/app/planner/server/queries/plans/getUserPlannerExperience';
 import { getCurrentUser, requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 

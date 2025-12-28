@@ -1,7 +1,7 @@
 'use client';
 
-import type { CreatePlannerPlanResult } from '@/features/app/planner/server/createPlan';
-import { createUserPlan } from '@/features/app/planner/server/createPlan';
+import type { CreatePlannerPlanResult } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
+import { createUserPlan } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
 import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
 import { PlannerCreationForm } from './PlannerCreationForm';
 
