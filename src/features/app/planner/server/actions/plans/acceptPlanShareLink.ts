@@ -2,13 +2,12 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { ensureProfile } from '@/server/actions/profile/ensureProfile';
+import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
 
 export async function acceptPlanShareLink(
   token: string,
-  client: SupabaseClient<Database> = supabaseServer()
+  client: SupabaseClient = supabaseServer()
 ): Promise<string> {
   const supabase = client;
   await ensureProfile({ client: supabase });
@@ -21,11 +20,7 @@ export async function acceptPlanShareLink(
       typeof (error as { message?: unknown }).message === 'string'
         ? String((error as { message?: unknown }).message)
         : '';
-    const err = new Error(
-      message.length > 0
-        ? message
-        : 'Unable to join planner.'
-    );
+    const err = new Error(message.length > 0 ? message : 'Unable to join planner.');
     (err as { code?: string }).code = (error as { code?: string }).code;
     (err as { details?: string }).details = (error as { details?: string }).details;
     throw err;

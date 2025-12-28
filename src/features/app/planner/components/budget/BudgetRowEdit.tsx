@@ -3,7 +3,7 @@
 import React, { useId } from 'react';
 import type { Entry } from '@/features/app/planner/types/budget';
 import { Check, X } from '@/shared/ui/icon';
-import { normalizeAmount } from '@/shared/utils/normalizeAmount';
+import { normalizeAmount } from '@/features/app/planner/domain/utils/normalizeAmount';
 import { useBudgetRowInputs } from '@/features/app/planner/hooks/ui/useBudgetRowInputs';
 import { BudgetRowInputs } from '@/features/app/planner/components/budget/BudgetRowInputs';
 

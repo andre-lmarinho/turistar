@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 import { SignupPage } from '@/features/auth/signup/SignupPage';
-import { ensureProfile } from '@/server/actions/profile/ensureProfile';
+import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
 export default async function SignupRoute({
@@ -10,10 +10,8 @@ export default async function SignupRoute({
   searchParams?: Promise<{ next?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const rawNext =
-    typeof resolvedSearchParams?.next === 'string' ? resolvedSearchParams.next : null;
-  const nextPath =
-    rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : null;
+  const rawNext = typeof resolvedSearchParams?.next === 'string' ? resolvedSearchParams.next : null;
+  const nextPath = rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : null;
   const user = await getCurrentUser();
 
   if (user) {

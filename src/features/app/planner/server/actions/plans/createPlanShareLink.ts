@@ -3,11 +3,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
 
 export async function createPlanShareLink(
   planId: string,
-  client: SupabaseClient<Database> = supabaseServer()
+  client: SupabaseClient = supabaseServer()
 ): Promise<string> {
   const supabase = client;
   const { data, error } = await supabase.rpc('create_plan_share_link', {

@@ -3,9 +3,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { supabaseServer } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
 
-type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
+type PlanMemberTier = 'admin' | 'member';
 
 type AddPlanMemberRow = {
   user_id: string;
@@ -21,7 +20,7 @@ export async function addPlanMemberByEmail(
   planId: string,
   email: string,
   tier: PlanMemberTier,
-  client: SupabaseClient<Database> = supabaseServer()
+  client: SupabaseClient = supabaseServer()
 ): Promise<AddPlanMemberResult> {
   const supabase = client;
   const { data, error } = await supabase.rpc('add_plan_member_by_email', {

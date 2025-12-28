@@ -7,7 +7,6 @@ import type { Activity, DayPlan } from '@/features/app/planner/domain/types/Plan
 import { Popover, PopoverTriggerButton } from '@/shared/ui/popover';
 import { DEFAULT_COLORS } from '@/features/app/planner/domain/constants/colors';
 import { MAX_FILE_SIZE } from '@/features/app/planner/domain/constants/activity';
-import { isTouchDevice } from '@/shared/utils/isTouchDevice';
 import { useCardPopups } from '@/features/app/planner/hooks/ui/useCardPopups';
 import { CardColorsPopover } from './PopoverCardColors';
 import { DayPickerPopover } from './PopoverDayPicker';
@@ -38,7 +37,6 @@ export function ActivityDialogHeader({
   onImageChange: (url: string) => void;
 }) {
   const [editedImageUrl, setEditedImageUrl] = useState(activity.imageUrl ?? '');
-  const [showRemove, setShowRemove] = useState(false);
   const uploadInputId = useId();
 
   const { colorButtonRef, dateButtonRef, activePopup, setActivePopup } = useCardPopups();
@@ -84,9 +82,6 @@ export function ActivityDialogHeader({
           editedImageUrl ? 'h-32' : ''
         } ${!editedImageUrl && !bgColor.startsWith('#') ? bgColor : ''}`}
         style={bgColor.startsWith('#') ? { backgroundColor: bgColor } : undefined}
-        onClick={() => {
-          if (isTouchDevice() && editedImageUrl) setShowRemove((previous) => !previous);
-        }}
       >
         {editedImageUrl && (
           <Image
@@ -100,10 +95,9 @@ export function ActivityDialogHeader({
         {editedImageUrl && (
           <button
             type="button"
-            className={`border-border bg-background text-foreground hover:bg-border absolute right-2 bottom-2 z-20 inline-flex cursor-pointer items-center rounded-md border px-3 py-1 text-xs font-medium transition-colors ${showRemove ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+            className="border-border bg-background text-foreground hover:bg-border absolute right-2 bottom-2 z-20 inline-flex cursor-pointer items-center rounded-md border px-3 py-1 text-xs font-medium transition-colors opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
             onClick={(event) => {
               event.stopPropagation();
-              setShowRemove(false);
               handleRemoveImage();
             }}
           >

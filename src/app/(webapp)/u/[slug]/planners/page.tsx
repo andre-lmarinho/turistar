@@ -5,7 +5,7 @@ import { InspirationGallery } from '@/features/app/user/components/dashboard/Ins
 import { PlannerGallery } from '@/features/app/user/components/dashboard/PlannerGallery';
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 import { getUserPlanners } from '@/features/app/planner/server/queries/plans/getUserPlanners';
-import { getUserProfileBySlug } from '@/server/queries/profile/getUserProfileBySlug';
+import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
 
 interface DashboardPlannersPageProps {
   params: Promise<{
