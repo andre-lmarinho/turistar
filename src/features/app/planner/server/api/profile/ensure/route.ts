@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { ensureProfile } from '@/server/actions/profile/ensureProfile';
+import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
 import { UnauthorizedError } from '@/shared/lib/auth/session';
 
 export async function POST() {

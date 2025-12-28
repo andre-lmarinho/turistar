@@ -1,1 +1,1 @@
-export { GET } from '@/server/api/places/details/route';
+export { GET } from '@/features/app/planner/server/api/places/details/route';
