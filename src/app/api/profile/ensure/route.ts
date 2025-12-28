@@ -1,1 +1,1 @@
-export { POST } from '@/server/api/profile/ensure/route';
+export { POST } from '@/features/app/planner/server/api/profile/ensure/route';

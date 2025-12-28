@@ -7,7 +7,7 @@ import {
   appendPlanEvents,
   fetchPlanEvents,
   fetchPlanSnapshot,
-} from '@/features/app/planner/services/supabase/planEventsQueries';
+} from '@/features/app/planner/client/planEventsClient';
 import { subscribeToPlanEvents } from '@/features/app/planner/services/supabase/planEventsRealtime';
 import {
   applyPlanEvent,
