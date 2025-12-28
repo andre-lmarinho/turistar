@@ -1,4 +1,4 @@
-import { buildDaysFromInspirationData } from '@/features/app/planner/services/days/buildDaysFromInspirationData';
+import { buildDaysFromInspirationData } from '@/features/app/planner/domain/days/buildDaysFromInspirationData';
 import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
 
 const sample = {

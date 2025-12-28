@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/shared/lib/geoapify/constants';
-import { validateGeoapifyQuery } from '@/server/api/geoapify/validateQuery';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
+import { validateGeoapifyQuery } from '@/features/app/planner/server/api/geoapify/validateQuery';
 
 describe('validateGeoapifyQuery', () => {
   it('returns an error response when the parameter is missing', async () => {

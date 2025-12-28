@@ -2,70 +2,57 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import { useBudget } from '@/features/app/planner/hooks/state/budget/useBudget';
 
-const mockFrom = vi.fn();
-vi.mock('@/shared/lib/supabaseClient', () => ({
-  supabase: { from: (table: string) => mockFrom(table) },
+const mocks = vi.hoisted(() => ({
+  getPlanBudget: vi.fn(),
+  updatePlanBudget: vi.fn(),
+  createBudgetEntry: vi.fn(),
+  updateBudgetEntry: vi.fn(),
+  deleteBudgetEntry: vi.fn(),
+}));
+
+vi.mock('@/app/(webapp)/p/actions/plans/getPlanBudget', () => ({
+  getPlanBudget: mocks.getPlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updatePlanBudget', () => ({
+  updatePlanBudget: mocks.updatePlanBudget,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/createBudgetEntry', () => ({
+  createBudgetEntry: mocks.createBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/updateBudgetEntry', () => ({
+  updateBudgetEntry: mocks.updateBudgetEntry,
+}));
+vi.mock('@/app/(webapp)/p/actions/plans/deleteBudgetEntry', () => ({
+  deleteBudgetEntry: mocks.deleteBudgetEntry,
 }));
 
 describe('useBudget hook', () => {
   beforeEach(() => {
-    mockFrom.mockReset();
+    mocks.getPlanBudget.mockReset();
+    mocks.updatePlanBudget.mockReset();
+    mocks.createBudgetEntry.mockReset();
+    mocks.updateBudgetEntry.mockReset();
+    mocks.deleteBudgetEntry.mockReset();
   });
 
   test('does not persist budget on initial load', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 100 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const updateBudget = vi.fn().mockResolvedValue({ error: new Error('fail') });
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === 'plans') {
-        return {
-          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          update: () => ({ eq: () => updateBudget() }),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-        } as unknown;
-      }
-      return {} as unknown;
-    });
+    mocks.getPlanBudget.mockResolvedValue({ budget: 100, entries: [] });
 
     const { result } = renderHook(() => useBudget('p1', 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
-    expect(updateBudget).not.toHaveBeenCalled();
+    expect(mocks.updatePlanBudget).not.toHaveBeenCalled();
     expect(result.current.persistError).toBeNull();
   });
 
   test('persists entries via budget_entries table', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({
-      data: [{ id: 'e1', description: 'Lunch', category: 'food', amount: 10 }],
-      error: null,
+    mocks.getPlanBudget.mockResolvedValue({
+      budget: 0,
+      entries: [{ id: 'e1', description: 'Lunch', category: 'food', amount: 10 }],
     });
-    const updateBudget = vi.fn().mockResolvedValue({ error: null });
-    const insertEntry = vi.fn().mockResolvedValue({ data: { id: 'e2' }, error: null });
-    const updateEntry = vi.fn().mockResolvedValue({ error: null });
-    const deleteEntry = vi.fn().mockResolvedValue({ error: null });
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === 'plans') {
-        return {
-          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          update: () => ({ eq: () => updateBudget() }),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-          insert: () => ({ select: () => ({ single: () => insertEntry() }) }),
-          update: () => ({ eq: () => updateEntry() }),
-          delete: () => ({ eq: () => deleteEntry() }),
-        } as unknown;
-      }
-      return {} as unknown;
-    });
+    mocks.updatePlanBudget.mockResolvedValue(0);
+    mocks.createBudgetEntry.mockResolvedValue('e2');
+    mocks.updateBudgetEntry.mockResolvedValue(undefined);
+    mocks.deleteBudgetEntry.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useBudget('p1', 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
@@ -79,44 +66,25 @@ describe('useBudget hook', () => {
     await act(async () => {
       await result.current.handleAdd();
     });
-    expect(insertEntry).toHaveBeenCalled();
+    expect(mocks.createBudgetEntry).toHaveBeenCalled();
     expect(result.current.entries).toHaveLength(2);
 
     await act(async () => {
       const updated = { ...result.current.entries[0], amount: 12 };
       await result.current.handleUpdateEntry(0, updated);
     });
-    expect(updateEntry).toHaveBeenCalled();
+    expect(mocks.updateBudgetEntry).toHaveBeenCalled();
 
     await act(async () => {
       await result.current.handleDeleteEntry(0);
     });
-    expect(deleteEntry).toHaveBeenCalled();
+    expect(mocks.deleteBudgetEntry).toHaveBeenCalled();
   });
 
   test('sets persistError when Supabase insert fails', async () => {
-    const selectBudget = vi.fn().mockResolvedValue({ data: { budget: 0 }, error: null });
-    const selectEntries = vi.fn().mockResolvedValue({ data: [], error: null });
-    const updateBudget = vi.fn().mockResolvedValue({ error: null });
-    const insertEntry = vi.fn().mockResolvedValue({ data: null, error: new Error('boom') });
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === 'plans') {
-        return {
-          select: () => ({ eq: () => ({ single: () => selectBudget() }) }),
-          update: () => ({ eq: () => updateBudget() }),
-        } as unknown;
-      }
-      if (table === 'budget_entries') {
-        return {
-          select: () => ({ eq: () => selectEntries() }),
-          insert: () => ({ select: () => ({ single: () => insertEntry() }) }),
-          update: () => ({ eq: () => ({}) }),
-          delete: () => ({ eq: () => ({}) }),
-        } as unknown;
-      }
-      return {} as unknown;
-    });
+    mocks.getPlanBudget.mockResolvedValue({ budget: 0, entries: [] });
+    mocks.updatePlanBudget.mockResolvedValue(0);
+    mocks.createBudgetEntry.mockRejectedValue(new Error('boom'));
 
     const { result } = renderHook(() => useBudget('p1', 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));

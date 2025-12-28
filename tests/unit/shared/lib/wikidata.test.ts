@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { fetchWikidataImage } from '@/shared/lib/wikidata';
+import { fetchWikidataImage } from '@/features/app/planner/services/wikidata/fetchWikidataImage';
 
 const originalFetch = global.fetch;
 

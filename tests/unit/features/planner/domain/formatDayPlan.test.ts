@@ -1,4 +1,4 @@
-import { formatDayPlan } from '@/features/app/planner/services/days/formatDayPlan';
+import { formatDayPlan } from '@/features/app/planner/domain/days/formatDayPlan';
 import { parseISO } from 'date-fns';
 
 describe('formatDayPlan', () => {

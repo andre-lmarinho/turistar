@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('@/server/actions/plans/createPlan', () => ({
+vi.mock('@/features/app/planner/server/actions/plans/createPlan', () => ({
   createPlan: vi.fn(),
 }));
 
@@ -8,8 +8,8 @@ vi.mock('@/shared/lib/auth/session', () => ({
   getCurrentUser: vi.fn(),
 }));
 
-import { createPlannerPlan } from '@/features/app/planner/server/createPlan';
-import { createPlan } from '@/server/actions/plans/createPlan';
+import { createPlannerPlan } from '@/features/app/planner/server/actions/plans/createPlannerPlan';
+import { createPlan } from '@/features/app/planner/server/actions/plans/createPlan';
 import { getCurrentUser } from '@/shared/lib/auth/session';
 
 describe('createPlannerPlan', () => {

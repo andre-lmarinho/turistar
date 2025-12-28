@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { UnauthorizedError, type SupabaseUser } from '@/shared/lib/auth/session';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { ensureProfile } from '@/server/actions/profile/ensureProfile';
+import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
 
 vi.mock('@/shared/lib/supabaseServer', () => ({
   createSupabaseServerClient: vi.fn(),
@@ -35,7 +35,11 @@ function createSupabaseWithResponses(responses: UpsertResponse[]) {
       }
 
       return {
-        upsert: (payload: { slug: string; display_name: string | null; avatar_url: string | null }) => {
+        upsert: (payload: {
+          slug: string;
+          display_name: string | null;
+          avatar_url: string | null;
+        }) => {
           upsertCalls.push({
             slug: payload.slug,
             display_name: payload.display_name ?? null,
@@ -66,7 +70,10 @@ describe('ensureProfile action', () => {
       from: vi.fn(),
     } as unknown as ReturnType<typeof createSupabaseServerClient>;
 
-    mockGetUser.mockResolvedValue({ data: null, error: { status: 400, message: 'Auth session missing' } });
+    mockGetUser.mockResolvedValue({
+      data: null,
+      error: { status: 400, message: 'Auth session missing' },
+    });
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     await expect(ensureProfile()).rejects.toBeInstanceOf(UnauthorizedError);
@@ -157,12 +164,17 @@ describe('ensureProfile action', () => {
       user_metadata: null,
     };
 
-    const conflictResponses = Array.from({ length: 10 }, () => ({ data: null, error: { code: '23505' } }));
+    const conflictResponses = Array.from({ length: 10 }, () => ({
+      data: null,
+      error: { code: '23505' },
+    }));
     const { supabase, upsertCalls } = createSupabaseWithResponses(conflictResponses);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
     mockGetUser.mockResolvedValue({ data: { user }, error: null });
 
-    await expect(ensureProfile()).rejects.toThrow('Unable to allocate a unique slug for the profile');
+    await expect(ensureProfile()).rejects.toThrow(
+      'Unable to allocate a unique slug for the profile'
+    );
     expect(upsertCalls).toHaveLength(10);
   });
 });
