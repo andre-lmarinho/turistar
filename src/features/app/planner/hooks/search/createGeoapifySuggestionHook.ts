@@ -53,7 +53,14 @@ export function createGeoapifySuggestionHook<TResult>({
         const requestUrl = `${endpoint}?${params.toString()}`;
         const res = await fetch(requestUrl, signal ? { signal } : undefined);
         if (!res.ok) {
-          throw new Error('Failed to load suggestions');
+          const context = [
+            'operation=geoapifySuggestions',
+            `endpoint=${endpoint}`,
+            `query=${trimmedQuery}`,
+            `lat=${options.latitude ?? 'null'}`,
+            `lon=${options.longitude ?? 'null'}`,
+          ].join(' ');
+          throw new Error(`Failed to load suggestions: ${context}`);
         }
         const body = await res.json();
         return mapResults ? mapResults(body) : ((body as { results?: TResult[] }).results ?? []);

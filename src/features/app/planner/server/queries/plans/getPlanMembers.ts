@@ -40,7 +40,7 @@ export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersR
     : await fetchPlanIdentityBySlug(trimmed, { client: supabase });
 
   if (!planRow) {
-    throw new Error('Plan not found or access denied');
+    throw new Error(`getPlanMembers: plan not found or access denied (planIdOrSlug=${trimmed})`);
   }
 
   const ownerId = planRow.ownerId ?? null;

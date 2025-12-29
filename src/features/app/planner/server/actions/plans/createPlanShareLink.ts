@@ -13,7 +13,7 @@ export async function createPlanShareLink(
   const shareLink = await createPlanShareLinkRpc(planId, { client: supabase });
 
   if (!shareLink) {
-    throw new Error('Share link not created');
+    throw new Error(`createPlanShareLink failed: planId=${planId}`);
   }
 
   return shareLink;

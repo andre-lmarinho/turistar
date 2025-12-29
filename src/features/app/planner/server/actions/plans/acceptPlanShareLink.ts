@@ -49,7 +49,10 @@ export async function acceptPlanShareLink(
     planId = await acceptPlanShareLinkRpc(token, { client: supabase });
   } catch (error) {
     const { message, details, code } = extractErrorFields(error);
-    const err = new Error(message && message.length > 0 ? message : 'Unable to join planner.');
+    const context = `operation=acceptPlanShareLink token=${token}`;
+    const err = new Error(
+      message && message.length > 0 ? `${message} (${context})` : `Unable to join planner (${context})`
+    );
     if (code) {
       (err as { code?: string }).code = code;
     }
@@ -60,7 +63,7 @@ export async function acceptPlanShareLink(
   }
 
   if (!planId) {
-    throw new Error('Share link not accepted');
+    throw new Error(`acceptPlanShareLink failed: token=${token}`);
   }
 
   return planId;

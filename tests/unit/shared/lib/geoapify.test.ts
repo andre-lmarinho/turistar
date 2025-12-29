@@ -252,7 +252,7 @@ describe('fetchGeoapifyPlaceDetails', () => {
     } as unknown as Response);
 
     await expect(fetchGeoapifyPlaceDetails('id')).rejects.toThrow(
-      'Geoapify place details returned no features'
+      'fetchGeoapifyPlaceDetails failed: placeId=id reason=no_features'
     );
   });
 

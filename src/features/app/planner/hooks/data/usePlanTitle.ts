@@ -13,7 +13,9 @@ async function fetchPlanTitle(planId: string): Promise<string | null> {
   });
 
   if (!response.ok) {
-    throw new Error(`Unable to fetch plan title: planId=${planId}`);
+    throw new Error(
+      `fetchPlanTitle failed: planId=${planId} status=${response.status}`
+    );
   }
 
   const data = (await response.json()) as PlanTitleResponse;
@@ -53,10 +55,12 @@ export function usePlanTitle(
   const { mutate } = useMutation({
     mutationFn: async (newTitle: string) => {
       if (!planId) {
-        throw new Error('Missing planId for plan title update');
+        throw new Error('updatePlanTitle failed: missing planId');
       }
       const token = providedToken ?? getEditToken(planId);
-      if (!token) throw new Error('Missing edit token');
+      if (!token) {
+        throw new Error(`updatePlanTitle failed: planId=${planId} missing edit token`);
+      }
       await updatePlanTitle(planId, token, newTitle);
       return newTitle;
     },

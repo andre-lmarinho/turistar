@@ -23,13 +23,17 @@ export async function fetchGeoapifyPlaceDetails(placeId: string): Promise<Geoapi
     next: { revalidate: 86400 },
   });
   if (!res.ok) {
-    throw new Error(`Geoapify place details failed: ${res.status}`);
+    throw new Error(
+      `fetchGeoapifyPlaceDetails failed: placeId=${placeId} status=${res.status}`
+    );
   }
 
   const data = (await res.json()) as GeoapifyResponse;
   const feature = resolveGeoapifyFeatures(data)[0];
   if (!feature) {
-    throw new Error('Geoapify place details returned no features');
+    throw new Error(
+      `fetchGeoapifyPlaceDetails failed: placeId=${placeId} reason=no_features`
+    );
   }
 
   const properties = feature.properties;

@@ -114,7 +114,9 @@ async function upsertProfileWithUniqueSlug(
     }
   }
 
-  throw new Error(`Unable to allocate a unique slug for the profile: userId=${id}`);
+  throw new Error(
+    `ensureProfile failed to allocate a unique slug: userId=${id}`
+  );
 }
 
 type BuildProfileUpsertErrorParams = {
@@ -132,7 +134,9 @@ function buildProfileUpsertError({
   const code = extractSupabaseErrorCode(error);
   const messageText = message ? ` message=${message}` : '';
   const codeText = code ? ` code=${code}` : '';
-  return new Error(`Unable to upsert profile: userId=${userId} slug=${slug}${codeText}${messageText}`);
+  return new Error(
+    `ensureProfile upsert failed: userId=${userId} slug=${slug}${codeText}${messageText}`
+  );
 }
 
 function extractSupabaseErrorCode(error: unknown): string | null {

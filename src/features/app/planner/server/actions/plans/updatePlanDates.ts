@@ -1,7 +1,9 @@
 'use server';
 
-import { supabaseServer } from '@/shared/lib/supabaseServer';
 import { format } from 'date-fns';
+
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
+import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 export async function updatePlanDates(planId: string, from: Date, to: Date) {
   const supabase = supabaseServer();
@@ -15,7 +17,10 @@ export async function updatePlanDates(planId: string, from: Date, to: Date) {
     .select('id')
     .single();
   if (error) {
-    const failure = error as { message?: string } | null;
-    throw new Error(failure?.message ?? 'Failed to update plan date range');
+    throw formatSupabaseError({
+      operation: 'updatePlanDates',
+      identifiers: { planId },
+      error,
+    });
   }
 }

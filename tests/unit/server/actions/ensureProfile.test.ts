@@ -87,7 +87,7 @@ describe('ensureProfile action', () => {
     queueUpsertResponses([buildUpsertError('123', 'boom')]);
 
     await expect(ensureProfile()).rejects.toThrow(
-      'Unable to upsert profile: userId=user-123 slug=user code=123 message=boom'
+      'ensureProfile upsert failed: userId=user-123 slug=user code=123 message=boom'
     );
   });
 
@@ -156,7 +156,7 @@ describe('ensureProfile action', () => {
     mockRequireUser.mockResolvedValue(user);
 
     await expect(ensureProfile()).rejects.toThrow(
-      'Unable to allocate a unique slug for the profile: userId=user-789'
+      'ensureProfile failed to allocate a unique slug: userId=user-789'
     );
     expect(upsertCalls).toHaveLength(10);
   });
