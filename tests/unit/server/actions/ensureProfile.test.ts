@@ -3,7 +3,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
 import { requireUser, UnauthorizedError, type SupabaseUser } from '@/shared/lib/auth/session';
 import { upsertProfile } from '@/features/app/user/server/repositories/ProfileRepository';
-import type { ProfileUpsertResult } from '@/features/app/user/server/repositories/ProfileRepository';
 
 vi.mock('@/shared/lib/auth/session', () => {
   class UnauthorizedError extends Error {
@@ -23,7 +22,7 @@ vi.mock('@/features/app/user/server/repositories/ProfileRepository', () => ({
   upsertProfile: vi.fn(),
 }));
 
-type UpsertResponse = ProfileUpsertResult;
+type UpsertResponse = { slug: string } | Error;
 
 type UpsertCall = {
   userId: string;
@@ -35,13 +34,24 @@ type UpsertCall = {
 const mockRequireUser = vi.mocked(requireUser);
 const mockUpsertProfile = vi.mocked(upsertProfile);
 
+function buildUpsertError(code: string, message: string): Error {
+  return new Error(message, { cause: { code, message } });
+}
+
 function queueUpsertResponses(responses: UpsertResponse[]) {
   const queue = [...responses];
   const calls: UpsertCall[] = [];
 
   mockUpsertProfile.mockImplementation(async (payload) => {
     calls.push(payload);
-    return queue.shift() ?? { data: null, error: null };
+    const next = queue.shift();
+    if (!next) {
+      throw new Error('Missing upsert response');
+    }
+    if (next instanceof Error) {
+      throw next;
+    }
+    return next;
   });
 
   return calls;
@@ -74,7 +84,7 @@ describe('ensureProfile action', () => {
     };
 
     mockRequireUser.mockResolvedValue(user);
-    queueUpsertResponses([{ data: null, error: { code: '123', message: 'boom' } }]);
+    queueUpsertResponses([buildUpsertError('123', 'boom')]);
 
     await expect(ensureProfile()).rejects.toThrow(
       'Unable to upsert profile: userId=user-123 slug=user code=123 message=boom'
@@ -93,9 +103,9 @@ describe('ensureProfile action', () => {
     };
 
     const upsertResponses: UpsertResponse[] = [
-      { data: null, error: { code: '23505', message: 'Supabase error' } },
-      { data: null, error: { code: '23505', message: 'Supabase error' } },
-      { data: { slug: 'cool-user-2' }, error: null },
+      buildUpsertError('23505', 'Supabase error'),
+      buildUpsertError('23505', 'Supabase error'),
+      { slug: 'cool-user-2' },
     ];
 
     const upsertCalls = queueUpsertResponses(upsertResponses);
@@ -120,7 +130,7 @@ describe('ensureProfile action', () => {
       user_metadata: null,
     };
 
-    const upsertResponses: UpsertResponse[] = [{ data: { slug: 'jane-doe' }, error: null }];
+    const upsertResponses: UpsertResponse[] = [{ slug: 'jane-doe' }];
     const upsertCalls = queueUpsertResponses(upsertResponses);
     mockRequireUser.mockResolvedValue(user);
 
@@ -139,10 +149,9 @@ describe('ensureProfile action', () => {
       user_metadata: null,
     };
 
-    const conflictResponses = Array.from({ length: 10 }, () => ({
-      data: null,
-      error: { code: '23505', message: 'Supabase error' },
-    }));
+    const conflictResponses = Array.from({ length: 10 }, () =>
+      buildUpsertError('23505', 'Supabase error')
+    );
     const upsertCalls = queueUpsertResponses(conflictResponses);
     mockRequireUser.mockResolvedValue(user);
 

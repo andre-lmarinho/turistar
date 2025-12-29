@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 
 export type UserProfileRecord = {
@@ -18,14 +19,8 @@ export type ProfileUpsertPayload = {
   avatarUrl: string | null;
 };
 
-export type ProfileRepositoryError = {
-  code?: string;
-  message: string;
-};
-
 export type ProfileUpsertResult = {
-  data: { slug: string } | null;
-  error: ProfileRepositoryError | null;
+  slug: string;
 };
 
 type ProfileRepositoryOptions = {
@@ -38,22 +33,12 @@ type ProfileRow = {
   display_name: string | null;
   avatar_url: string | null;
 };
+type ProfileSlugRow = {
+  slug: string;
+};
 
 function getClient(client?: SupabaseClient): SupabaseClient {
   return client ?? createSupabaseServerClient();
-}
-
-function toProfileRepositoryError(error: unknown): ProfileRepositoryError {
-  if (typeof error !== 'object' || error === null) {
-    return { message: 'Supabase error' };
-  }
-
-  const maybeError = error as { code?: string; message?: string };
-
-  return {
-    code: typeof maybeError.code === 'string' ? maybeError.code : undefined,
-    message: typeof maybeError.message === 'string' ? maybeError.message : 'Supabase error',
-  };
 }
 
 export async function fetchProfileBySlug(
@@ -61,21 +46,25 @@ export async function fetchProfileBySlug(
   { client }: ProfileRepositoryOptions = {}
 ): Promise<UserProfileRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from('profiles')
     .select('id, slug, display_name, avatar_url')
     .eq('slug', slug)
-    .maybeSingle();
+    .maybeSingle()) as unknown as { data: ProfileRow | null; error: unknown };
 
   if (error) {
-    throw error;
+    throw formatSupabaseError({
+      operation: 'fetchProfileBySlug',
+      identifiers: { slug },
+      error,
+    });
   }
 
   if (!data) {
     return null;
   }
 
-  const row = data as ProfileRow;
+  const row = data;
 
   return {
     userId: row.id,
@@ -90,7 +79,7 @@ export async function upsertProfile(
   { client }: ProfileRepositoryOptions = {}
 ): Promise<ProfileUpsertResult> {
   const supabase = getClient(client);
-  const { data, error } = await supabase
+  const { data, error } = (await supabase
     .from('profiles')
     .upsert(
       {
@@ -102,11 +91,22 @@ export async function upsertProfile(
       { onConflict: 'id' }
     )
     .select('slug')
-    .single();
+    .single()) as unknown as { data: ProfileSlugRow | null; error: unknown };
 
   if (error) {
-    return { data: null, error: toProfileRepositoryError(error) };
+    throw formatSupabaseError({
+      operation: 'upsertProfile',
+      identifiers: { userId, slug },
+      error,
+    });
   }
 
-  return { data: data ? { slug: (data as { slug: string }).slug } : null, error: null };
+  if (!data) {
+    throw formatSupabaseError({
+      operation: 'upsertProfile:missing-row',
+      identifiers: { userId, slug },
+    });
+  }
+
+  return { slug: data.slug };
 }

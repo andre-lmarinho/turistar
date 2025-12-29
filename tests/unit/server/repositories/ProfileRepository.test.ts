@@ -75,7 +75,16 @@ describe('ProfileRepository', () => {
       const { supabase } = buildFetchSupabase({ data: null, error: failure });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      await expect(fetchProfileBySlug('alice')).rejects.toBe(failure);
+      try {
+        await fetchProfileBySlug('alice');
+        throw new Error('Expected fetchProfileBySlug to throw');
+      } catch (error) {
+        if (!(error instanceof Error)) {
+          throw new Error('Expected an Error instance');
+        }
+        expect(error.message).toContain('fetchProfileBySlug');
+        expect(error.message).toContain('slug=alice');
+      }
     });
 
     it('maps the profile row to a UserProfileRecord', async () => {
@@ -116,7 +125,7 @@ describe('ProfileRepository', () => {
 
       const result = await upsertProfile(payload);
 
-      expect(result).toEqual({ data: { slug: 'alice' }, error: null });
+      expect(result).toEqual({ slug: 'alice' });
       expect(from).toHaveBeenCalledWith('profiles');
       expect(upsert).toHaveBeenCalledWith(
         {
@@ -131,34 +140,45 @@ describe('ProfileRepository', () => {
       expect(single).toHaveBeenCalled();
     });
 
-    it('returns a repository error when Supabase fails', async () => {
+    it('throws a formatted error when Supabase fails', async () => {
       const { supabase } = buildUpsertSupabase({
         data: null,
         error: { code: '23505', message: 'duplicate' },
       });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await upsertProfile(payload);
-
-      expect(result).toEqual({
-        data: null,
-        error: { code: '23505', message: 'duplicate' },
-      });
+      try {
+        await upsertProfile(payload);
+        throw new Error('Expected upsertProfile to throw');
+      } catch (error) {
+        if (!(error instanceof Error)) {
+          throw new Error('Expected an Error instance');
+        }
+        expect(error.message).toContain('upsertProfile');
+        expect(error.message).toContain('userId=user-1');
+        expect(error.message).toContain('slug=alice');
+        expect(error.message).toContain('code=23505');
+      }
     });
 
-    it('uses a fallback error message for unknown errors', async () => {
+    it('throws a formatted error for unknown errors', async () => {
       const { supabase } = buildUpsertSupabase({
         data: null,
         error: 'unknown',
       });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await upsertProfile(payload);
-
-      expect(result).toEqual({
-        data: null,
-        error: { message: 'Supabase error' },
-      });
+      try {
+        await upsertProfile(payload);
+        throw new Error('Expected upsertProfile to throw');
+      } catch (error) {
+        if (!(error instanceof Error)) {
+          throw new Error('Expected an Error instance');
+        }
+        expect(error.message).toContain('upsertProfile');
+        expect(error.message).toContain('userId=user-1');
+        expect(error.message).toContain('slug=alice');
+      }
     });
   });
 });

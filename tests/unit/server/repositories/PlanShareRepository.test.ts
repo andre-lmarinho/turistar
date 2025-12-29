@@ -34,7 +34,7 @@ describe('PlanShareRepository', () => {
 
     const result = await acceptPlanShareLink('token-1');
 
-    expect(result).toEqual(response);
+    expect(result).toEqual('plan-1');
     expect(rpc).toHaveBeenCalledWith('accept_plan_share_link', { _token: 'token-1' });
   });
 
@@ -45,7 +45,7 @@ describe('PlanShareRepository', () => {
 
     const result = await createPlanShareLink('plan-2');
 
-    expect(result).toEqual(response);
+    expect(result).toEqual('share-token');
     expect(rpc).toHaveBeenCalledWith('create_plan_share_link', { _plan_id: 'plan-2' });
   });
 
@@ -56,7 +56,7 @@ describe('PlanShareRepository', () => {
 
     const result = await revokePlanShareLink('plan-3');
 
-    expect(result).toEqual(response);
+    expect(result).toEqual(true);
     expect(rpc).toHaveBeenCalledWith('revoke_plan_share_link', { _plan_id: 'plan-3' });
   });
 });

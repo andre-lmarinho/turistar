@@ -3,7 +3,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { PlanEventInsert } from '@/features/app/planner/domain/types/PlanEvent';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { Database } from '@/shared/types/supabase';
 

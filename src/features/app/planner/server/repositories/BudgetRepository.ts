@@ -2,7 +2,7 @@ import 'server-only';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import type { Database } from '@/shared/types/supabase';
 

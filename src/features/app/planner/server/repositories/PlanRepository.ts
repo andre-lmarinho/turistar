@@ -3,7 +3,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 
 export type PlanDestinationRecord = {
   name: string | null;
