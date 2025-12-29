@@ -5,25 +5,28 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@/features/app/planner/server/repositories/PlanRepository', () => ({
-  fetchPlanBudgetEntries: vi.fn(),
   fetchPlanMemberTier: vi.fn(),
   fetchPublicPlanBySlug: vi.fn(),
   fetchLatestPlanSnapshot: vi.fn(),
 }));
 
+vi.mock('@/features/app/planner/server/repositories/BudgetRepository', () => ({
+  fetchPlanBudgetEntries: vi.fn(),
+}));
+
 import { notFound } from 'next/navigation';
 import { getPublicPlannerExperience } from '@/features/app/planner/server/queries/plans/getPublicPlannerExperience';
+import { fetchPlanBudgetEntries } from '@/features/app/planner/server/repositories/BudgetRepository';
 import {
-  fetchPlanBudgetEntries,
   fetchPlanMemberTier,
   fetchPublicPlanBySlug,
   fetchLatestPlanSnapshot,
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type {
-  BudgetEntryRecord,
   PlanRecord,
-  PlanSnapshotRecord,
+  PlanSnapshotRow,
 } from '@/features/app/planner/server/repositories/PlanRepository';
+import type { BudgetEntryRow } from '@/features/app/planner/server/repositories/BudgetRepository';
 
 const notFoundError = new Error('NOT_FOUND');
 
@@ -51,7 +54,7 @@ describe('getPublicPlannerExperience', () => {
       destinations: [{ name: 'Paris' }],
     };
 
-    const snapshotRow: PlanSnapshotRecord = {
+    const snapshotRow: PlanSnapshotRow = {
       plan_id: 'plan-1',
       version: 1,
       state: {
@@ -81,7 +84,7 @@ describe('getPublicPlannerExperience', () => {
       updated_at: '2024-01-01T00:00:00.000Z',
     };
 
-    const entryRows: BudgetEntryRecord[] = [
+    const entryRows: BudgetEntryRow[] = [
       { id: 'entry-1', description: 'Flight', category: 'travel', amount: 900 },
     ];
 
@@ -165,7 +168,7 @@ describe('getPublicPlannerExperience', () => {
     };
     vi.mocked(fetchPublicPlanBySlug).mockResolvedValue(plan);
     vi.mocked(fetchLatestPlanSnapshot).mockResolvedValue(null);
-    vi.mocked(fetchPlanBudgetEntries).mockResolvedValue(null);
+    vi.mocked(fetchPlanBudgetEntries).mockResolvedValue([]);
 
     const experience = await getPublicPlannerExperience({ slug: 'missing-dest' });
 
@@ -199,7 +202,7 @@ describe('getPublicPlannerExperience', () => {
     vi.mocked(fetchPublicPlanBySlug).mockResolvedValue(plan);
     const snapshotError = new Error('snapshot failure');
     vi.mocked(fetchLatestPlanSnapshot).mockRejectedValue(snapshotError);
-    vi.mocked(fetchPlanBudgetEntries).mockResolvedValue(null);
+    vi.mocked(fetchPlanBudgetEntries).mockResolvedValue([]);
 
     await expect(
       getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' })

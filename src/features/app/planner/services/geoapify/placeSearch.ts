@@ -33,7 +33,9 @@ export async function fetchGeoapifyPlaceSearch(
     next: { revalidate: 86400 },
   });
   if (!res.ok) {
-    throw new Error(`Geoapify place search failed: ${res.status}`);
+    throw new Error(
+      `fetchGeoapifyPlaceSearch failed: text=${text} status=${res.status} lat=${lat ?? 'null'} lon=${lon ?? 'null'}`
+    );
   }
 
   const data = (await res.json()) as GeoapifyResponse;

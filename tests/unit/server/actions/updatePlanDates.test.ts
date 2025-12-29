@@ -46,7 +46,7 @@ describe('updatePlanDates', () => {
 
     await expect(
       updatePlanDates('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
-    ).rejects.toThrow('update failed');
+    ).rejects.toThrow('Supabase error during updatePlanDates (planId=plan-1). update failed');
   });
 
   it('falls back to a generic error message', async () => {
@@ -54,6 +54,6 @@ describe('updatePlanDates', () => {
 
     await expect(
       updatePlanDates('plan-1', new Date('2024-01-01'), new Date('2024-01-02'))
-    ).rejects.toThrow('Failed to update plan date range');
+    ).rejects.toThrow('Supabase error during updatePlanDates (planId=plan-1).');
   });
 });

@@ -45,7 +45,9 @@ export function SignupForm({ finalizeProfile, nextPath }: SignupFormProps) {
       })) as AuthResponse;
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(
+          `signUp failed: email=${email.trim()} message=${error.message}`
+        );
       }
 
       const session: Session | null = data.session

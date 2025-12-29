@@ -4,7 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/shared/types/supabase';
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 
 type PlanMemberTier = 'admin' | 'member';
 

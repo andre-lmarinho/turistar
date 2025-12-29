@@ -8,7 +8,7 @@ export function createStrictContext<T>(errorMessage: string) {
   const useStrictContext = () => {
     const value = useContext(context);
     if (value === undefined) {
-      throw new Error(errorMessage);
+      throw new Error(`createStrictContext failed: ${errorMessage}`);
     }
     return value;
   };

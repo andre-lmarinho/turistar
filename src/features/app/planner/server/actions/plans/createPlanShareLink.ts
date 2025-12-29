@@ -3,7 +3,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { createPlanShareLink as createPlanShareLinkRpc } from '@/features/app/planner/server/repositories/PlanShareRepository';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 export async function createPlanShareLink(
@@ -11,19 +10,11 @@ export async function createPlanShareLink(
   client: SupabaseClient = supabaseServer()
 ): Promise<string> {
   const supabase = client;
-  const { data, error } = await createPlanShareLinkRpc(planId, { client: supabase });
+  const shareLink = await createPlanShareLinkRpc(planId, { client: supabase });
 
-  if (error) {
-    throw formatSupabaseError({
-      operation: 'createPlanShareLink',
-      identifiers: { planId },
-      error,
-    });
+  if (!shareLink) {
+    throw new Error(`createPlanShareLink failed: planId=${planId}`);
   }
 
-  if (!data) {
-    throw new Error('Share link not created');
-  }
-
-  return data as string;
+  return shareLink;
 }

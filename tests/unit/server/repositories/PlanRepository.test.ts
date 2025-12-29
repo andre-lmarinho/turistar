@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
 import {
-  fetchPlanBudgetEntries,
   fetchPlanByIdWithMembers,
   fetchLatestPlanSnapshot,
   fetchPlanMemberTier,
@@ -49,13 +48,6 @@ type SnapshotRow = {
   updated_at: string;
 };
 
-type BudgetEntryRow = {
-  id: string;
-  description: string | null;
-  category: string | null;
-  amount: number | null;
-};
-
 interface MaybeSingleQueryChain<T> {
   select: ReturnType<typeof vi.fn<(columns: string) => MaybeSingleQueryChain<T>>>;
   eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => MaybeSingleQueryChain<T>>>;
@@ -72,10 +64,6 @@ interface SnapshotQueryChain<T> {
   maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<T>>>>;
 }
 
-interface EntryQueryChain<T> {
-  select: ReturnType<typeof vi.fn<(columns: string) => EntryQueryChain<T>>>;
-  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => Promise<SupabaseResult<T>>>>;
-}
 
 function buildMaybeSingleQuery<T>(result: SupabaseResult<T>) {
   const chain = {
@@ -109,11 +97,6 @@ function buildSnapshotQuery<T>(result: SupabaseResult<T>) {
   return chain;
 }
 
-function buildEntryQuery<T>(result: SupabaseResult<T>) {
-  const eq = vi.fn().mockResolvedValue(result);
-  const select = vi.fn().mockReturnValue({ eq });
-  return { select, eq } as EntryQueryChain<T>;
-}
 
 function buildSupabase<T>(table: string, chain: T) {
   const from = vi.fn((tableName: string) => {
@@ -298,21 +281,4 @@ describe('PlanRepository', () => {
     });
   });
 
-  describe('fetchPlanBudgetEntries', () => {
-    it('returns budget entries', async () => {
-      const entries: BudgetEntryRow[] = [
-        { id: 'entry-1', description: 'Train', category: 'transport', amount: 45 },
-      ];
-      const entryQuery = buildEntryQuery<BudgetEntryRow[]>({ data: entries, error: null });
-      const { supabase, from } = buildSupabase('budget_entries', entryQuery);
-      vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
-
-      const result = await fetchPlanBudgetEntries('plan-40');
-
-      expect(result).toEqual(entries);
-      expect(from).toHaveBeenCalledWith('budget_entries');
-      expect(entryQuery.select).toHaveBeenCalledWith('id, description, category, amount');
-      expect(entryQuery.eq).toHaveBeenCalledWith('plan_id', 'plan-40');
-    });
-  });
 });

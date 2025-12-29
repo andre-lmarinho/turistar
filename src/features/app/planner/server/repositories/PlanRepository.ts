@@ -3,7 +3,7 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 
 export type PlanDestinationRecord = {
   name: string | null;
@@ -29,18 +29,11 @@ export type PlanWithMembersRecord = PlanRecord & {
   members: PlanMemberRecord[];
 };
 
-export type PlanSnapshotRecord = {
+export type PlanSnapshotRow = {
   plan_id: string;
   version: number;
   state: unknown;
   updated_at: string;
-};
-
-export type BudgetEntryRecord = {
-  id: string;
-  description: string | null;
-  category: string | null;
-  amount: number | null;
 };
 
 type PlanRepositoryOptions = {
@@ -215,7 +208,7 @@ export async function fetchPlanMemberTier(
 export async function fetchLatestPlanSnapshot(
   planId: string,
   { client }: PlanRepositoryOptions = {}
-): Promise<PlanSnapshotRecord | null> {
+): Promise<PlanSnapshotRow | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
     .from('plan_snapshots')
@@ -224,32 +217,11 @@ export async function fetchLatestPlanSnapshot(
     .order('version', { ascending: false })
     .order('updated_at', { ascending: false })
     .limit(1)
-    .maybeSingle()) as unknown as { data: PlanSnapshotRecord | null; error: unknown };
+    .maybeSingle()) as unknown as { data: PlanSnapshotRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
       operation: 'fetchLatestPlanSnapshot',
-      identifiers: { planId },
-      error,
-    });
-  }
-
-  return data ?? null;
-}
-
-export async function fetchPlanBudgetEntries(
-  planId: string,
-  { client }: PlanRepositoryOptions = {}
-): Promise<BudgetEntryRecord[] | null> {
-  const supabase = getClient(client);
-  const { data, error } = (await supabase
-    .from('budget_entries')
-    .select('id, description, category, amount')
-    .eq('plan_id', planId)) as unknown as { data: BudgetEntryRecord[] | null; error: unknown };
-
-  if (error) {
-    throw formatSupabaseError({
-      operation: 'fetchPlanBudgetEntries',
       identifiers: { planId },
       error,
     });

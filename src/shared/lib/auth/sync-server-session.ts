@@ -17,6 +17,9 @@ export async function syncServerSession(
   });
 
   if (!response.ok) {
-    throw new Error('Failed to synchronize authentication with the server.');
+    const userId = session.user?.id ?? 'unknown';
+    throw new Error(
+      `syncServerSession failed: event=${event} userId=${userId} status=${response.status}`
+    );
   }
 }

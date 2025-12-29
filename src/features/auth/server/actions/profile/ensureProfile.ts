@@ -6,7 +6,6 @@ import slugify from '@sindresorhus/slugify';
 import { requireUser } from '@/shared/lib/auth/session';
 import type { SupabaseUser } from '@/shared/lib/auth/session';
 import { upsertProfile } from '@/features/app/user/server/repositories/ProfileRepository';
-import type { ProfileUpsertResult } from '@/features/app/user/server/repositories/ProfileRepository';
 
 const MAX_SLUG_ATTEMPTS = 10;
 
@@ -91,48 +90,87 @@ async function upsertProfileWithUniqueSlug(
 
   for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS; attempt += 1) {
     const candidateSlug = attempt === 0 ? sanitizedBase : `${sanitizedBase}-${attempt}`;
-    const response = await upsertProfile(
-      {
+    try {
+      const result = await upsertProfile(
+        {
+          userId: id,
+          slug: candidateSlug,
+          displayName,
+          avatarUrl,
+        },
+        { client }
+      );
+      return result.slug;
+    } catch (error) {
+      if (extractSupabaseErrorCode(error) === '23505') {
+        continue;
+      }
+
+      throw buildProfileUpsertError({
         userId: id,
         slug: candidateSlug,
-        displayName,
-        avatarUrl,
-      },
-      { client }
-    );
-    const upsertError = response.error;
-
-    if (!upsertError && response.data?.slug) {
-      return response.data.slug;
+        error,
+      });
     }
-
-    if (upsertError?.code === '23505') {
-      continue;
-    }
-
-    throw buildProfileUpsertError({
-      userId: id,
-      slug: candidateSlug,
-      response,
-    });
   }
 
-  throw new Error(`Unable to allocate a unique slug for the profile: userId=${id}`);
+  throw new Error(
+    `ensureProfile failed to allocate a unique slug: userId=${id}`
+  );
 }
 
 type BuildProfileUpsertErrorParams = {
   userId: string;
   slug: string;
-  response: ProfileUpsertResult;
+  error: unknown;
 };
 
 function buildProfileUpsertError({
   userId,
   slug,
-  response,
+  error,
 }: BuildProfileUpsertErrorParams): Error {
-  const error = response.error;
-  const message = error?.message ? ` message=${error.message}` : '';
-  const code = error?.code ? ` code=${error.code}` : '';
-  return new Error(`Unable to upsert profile: userId=${userId} slug=${slug}${code}${message}`);
+  const message = extractErrorMessage(error);
+  const code = extractSupabaseErrorCode(error);
+  const messageText = message ? ` message=${message}` : '';
+  const codeText = code ? ` code=${code}` : '';
+  return new Error(
+    `ensureProfile upsert failed: userId=${userId} slug=${slug}${codeText}${messageText}`
+  );
+}
+
+function extractSupabaseErrorCode(error: unknown): string | null {
+  const direct = isRecord(error) ? error : null;
+  const cause =
+    error instanceof Error && 'cause' in error
+      ? (error as Error & { cause?: unknown }).cause
+      : null;
+  const causeRecord = isRecord(cause) ? cause : null;
+  const code = readString(causeRecord?.code) ?? readString(direct?.code);
+
+  return code ?? null;
+}
+
+function extractErrorMessage(error: unknown): string | null {
+  if (error instanceof Error && error.message.length > 0) {
+    return error.message;
+  }
+  if (typeof error === 'string' && error.length > 0) {
+    return error;
+  }
+  const direct = isRecord(error) ? error : null;
+  const cause =
+    error instanceof Error && 'cause' in error
+      ? (error as Error & { cause?: unknown }).cause
+      : null;
+  const causeRecord = isRecord(cause) ? cause : null;
+  return readString(causeRecord?.message) ?? readString(direct?.message);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function readString(value: unknown): string | null {
+  return typeof value === 'string' && value.length > 0 ? value : null;
 }

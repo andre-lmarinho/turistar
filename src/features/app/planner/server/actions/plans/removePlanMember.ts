@@ -3,7 +3,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { removePlanMember as removePlanMemberRpc } from '@/features/app/planner/server/repositories/PlanMembersRepository';
-import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 export async function removePlanMember(
