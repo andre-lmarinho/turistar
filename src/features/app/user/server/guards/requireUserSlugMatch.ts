@@ -6,7 +6,7 @@ import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile
 import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
 
 import type { SupabaseUser } from '@/shared/lib/auth/session';
-import type { UserProfileRecord } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
+import type { UserProfileRecord } from '@/features/app/user/server/repositories/ProfileRepository';
 
 function isRedirectError(error: unknown): boolean {
   if (typeof error !== 'object' || error === null) {
