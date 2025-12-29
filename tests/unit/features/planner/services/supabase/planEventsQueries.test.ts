@@ -1,34 +1,22 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-
 import { fetchPlanSnapshot } from '@/features/app/planner/services/supabase/planEventsQueries';
-import type { Database } from '@/shared/types/supabase';
+import { fetchPlanSnapshot as fetchPlanSnapshotRepository } from '@/features/app/planner/server/repositories/PlanSnapshotsRepository';
 
-const createSnapshotClient = (response: { data: unknown; error: unknown }) => {
-  const maybeSingle = vi.fn().mockResolvedValue(response);
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  const from = vi.fn().mockReturnValue({ select });
-
-  const client = {
-    from,
-  } as unknown as SupabaseClient<Database>;
-
-  return { client, maybeSingle };
-};
+vi.mock('@/features/app/planner/server/repositories/PlanSnapshotsRepository', () => ({
+  fetchPlanSnapshot: vi.fn(),
+}));
 
 describe('fetchPlanSnapshot', () => {
   it('returns the default empty snapshot when no row exists', async () => {
-    const { client, maybeSingle } = createSnapshotClient({ data: null, error: null });
+    vi.mocked(fetchPlanSnapshotRepository).mockResolvedValueOnce(null);
 
-    await expect(fetchPlanSnapshot('plan-1', client)).resolves.toEqual({
+    await expect(fetchPlanSnapshot('plan-1')).resolves.toEqual({
       version: 0,
       days: [],
       updatedAt: new Date(0).toISOString(),
     });
-
-    expect(maybeSingle).toHaveBeenCalled();
+    expect(fetchPlanSnapshotRepository).toHaveBeenCalledWith('plan-1', { client: undefined });
   });
 
   it('parses and normalizes the persisted snapshot row', async () => {
@@ -53,9 +41,9 @@ describe('fetchPlanSnapshot', () => {
       },
     };
 
-    const { client } = createSnapshotClient({ data: persisted, error: null });
+    vi.mocked(fetchPlanSnapshotRepository).mockResolvedValueOnce(persisted);
 
-    await expect(fetchPlanSnapshot('plan-1', client)).resolves.toEqual({
+    await expect(fetchPlanSnapshot('plan-1')).resolves.toEqual({
       version: 3,
       updatedAt: '2024-01-01T00:00:00.000Z',
       days: [
