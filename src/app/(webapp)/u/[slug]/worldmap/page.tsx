@@ -21,12 +21,24 @@ export default async function DashboardWorldmapPage({ params }: DashboardWorldma
   const { slug } = await params;
   const { user } = await requireUserSlugMatch(slug);
   let visitedCountries: VisitedCountry[] = [];
+  let visitedCountriesError: string | null = null;
 
   try {
     visitedCountries = await getVisitedCountries(user.id);
   } catch (getVisitedError) {
     console.error('Failed to load visited countries', getVisitedError);
+    visitedCountriesError = 'Unable to load visited countries. Please try again.';
   }
 
-  return <WorldMapBoard visitedCountries={visitedCountries} />;
+  const mapContent = visitedCountriesError ? (
+    <div className="bg-card relative max-h-dvh w-full rounded-xl border p-4">
+      <p role="alert" className="text-destructive text-sm">
+        {visitedCountriesError}
+      </p>
+    </div>
+  ) : (
+    <WorldMapBoard visitedCountries={visitedCountries} />
+  );
+
+  return <>{mapContent}</>;
 }
