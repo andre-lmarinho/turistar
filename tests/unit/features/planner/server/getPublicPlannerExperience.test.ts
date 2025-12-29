@@ -24,7 +24,7 @@ import {
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type {
   PlanRecord,
-  PlanSnapshotRecord,
+  PlanSnapshotRow,
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type { BudgetEntryRow } from '@/features/app/planner/server/repositories/BudgetRepository';
 
@@ -54,7 +54,7 @@ describe('getPublicPlannerExperience', () => {
       destinations: [{ name: 'Paris' }],
     };
 
-    const snapshotRow: PlanSnapshotRecord = {
+    const snapshotRow: PlanSnapshotRow = {
       plan_id: 'plan-1',
       version: 1,
       state: {

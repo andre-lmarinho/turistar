@@ -29,7 +29,7 @@ export type PlanWithMembersRecord = PlanRecord & {
   members: PlanMemberRecord[];
 };
 
-export type PlanSnapshotRecord = {
+export type PlanSnapshotRow = {
   plan_id: string;
   version: number;
   state: unknown;
@@ -208,7 +208,7 @@ export async function fetchPlanMemberTier(
 export async function fetchLatestPlanSnapshot(
   planId: string,
   { client }: PlanRepositoryOptions = {}
-): Promise<PlanSnapshotRecord | null> {
+): Promise<PlanSnapshotRow | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
     .from('plan_snapshots')
@@ -217,7 +217,7 @@ export async function fetchLatestPlanSnapshot(
     .order('version', { ascending: false })
     .order('updated_at', { ascending: false })
     .limit(1)
-    .maybeSingle()) as unknown as { data: PlanSnapshotRecord | null; error: unknown };
+    .maybeSingle()) as unknown as { data: PlanSnapshotRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({

@@ -8,7 +8,7 @@ import {
   fetchLatestPlanSnapshot,
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type {
-  PlanSnapshotRecord,
+  PlanSnapshotRow,
   PlanWithMembersRecord,
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type { BudgetEntryRow } from '@/features/app/planner/server/repositories/BudgetRepository';
@@ -131,7 +131,7 @@ describe('getUserPlannerExperience', () => {
       destinations: [{ name: 'Madrid' }],
       members: [],
     };
-    const snapshotRow: PlanSnapshotRecord = {
+    const snapshotRow: PlanSnapshotRow = {
       plan_id: 'plan-5',
       version: 1,
       state: {
