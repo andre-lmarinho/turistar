@@ -1,0 +1,259 @@
+import 'server-only';
+
+import type { SupabaseClient } from '@supabase/supabase-js';
+
+import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { formatSupabaseError } from '@/features/app/planner/services/supabase/supabaseErrors';
+
+export type PlanDestinationRecord = {
+  name: string | null;
+};
+
+export type PlanMemberRecord = {
+  userId: string;
+  tier: string;
+};
+
+export type PlanRecord = {
+  id: string;
+  title: string | null;
+  ownerId: string | null;
+  editToken: string;
+  budget: number | null;
+  startDate: string | null;
+  endDate: string | null;
+  destinations: PlanDestinationRecord[];
+};
+
+export type PlanWithMembersRecord = PlanRecord & {
+  members: PlanMemberRecord[];
+};
+
+export type PlanSnapshotRecord = {
+  plan_id: string;
+  version: number;
+  state: unknown;
+  updated_at: string;
+};
+
+export type BudgetEntryRecord = {
+  id: string;
+  description: string | null;
+  category: string | null;
+  amount: number | null;
+};
+
+type PlanRepositoryOptions = {
+  client?: SupabaseClient;
+};
+
+type PlanDestinationRow = {
+  destinations: { name: string | null } | null;
+};
+
+type PlanMemberRow = {
+  user_id: string;
+  tier: string;
+};
+
+type PlanRow = {
+  id: string;
+  title: string | null;
+  user_id: string | null;
+  edit_token: string;
+  budget: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  plan_destinations: PlanDestinationRow[] | null;
+};
+
+type PlanWithMembersRow = PlanRow & {
+  plan_members: PlanMemberRow[] | null;
+};
+
+function getClient(client?: SupabaseClient): SupabaseClient {
+  return client ?? createSupabaseServerClient();
+}
+
+function mapDestinations(rows: PlanDestinationRow[] | null): PlanDestinationRecord[] {
+  if (!rows) {
+    return [];
+  }
+
+  return rows.map((row) => ({
+    name: row.destinations?.name ?? null,
+  }));
+}
+
+function mapPlanRow(row: PlanRow): PlanRecord {
+  return {
+    id: row.id,
+    title: row.title,
+    ownerId: row.user_id,
+    editToken: row.edit_token,
+    budget: row.budget,
+    startDate: row.start_date,
+    endDate: row.end_date,
+    destinations: mapDestinations(row.plan_destinations),
+  };
+}
+
+function mapMembers(rows: PlanMemberRow[] | null): PlanMemberRecord[] {
+  if (!rows) {
+    return [];
+  }
+
+  return rows.map((row) => ({
+    userId: row.user_id,
+    tier: row.tier,
+  }));
+}
+
+export async function fetchPlanByIdWithMembers(
+  planId: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<PlanWithMembersRecord | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from('plans')
+    .select(
+      `
+        id,
+        title,
+        user_id,
+        edit_token,
+        budget,
+        start_date,
+        end_date,
+        plan_destinations(destinations(name)),
+        plan_members!left(user_id, tier)
+      `
+    )
+    .eq('id', planId)
+    .maybeSingle()) as unknown as { data: PlanWithMembersRow | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPlanByIdWithMembers',
+      identifiers: { planId },
+      error,
+    });
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    ...mapPlanRow(data),
+    members: mapMembers(data.plan_members),
+  };
+}
+
+export async function fetchPublicPlanBySlug(
+  slug: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<PlanRecord | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from('plans')
+    .select(
+      `
+        id,
+        title,
+        user_id,
+        edit_token,
+        budget,
+        start_date,
+        end_date,
+        plan_destinations(destinations(name))
+      `
+    )
+    .eq('public_slug', slug)
+    .eq('is_public', true)
+    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPublicPlanBySlug',
+      identifiers: { slug },
+      error,
+    });
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return mapPlanRow(data);
+}
+
+export async function fetchPlanMemberTier(
+  planId: string,
+  userId: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<string | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from('plan_members')
+    .select('tier')
+    .eq('plan_id', planId)
+    .eq('user_id', userId)
+    .maybeSingle()) as unknown as { data: { tier: string } | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPlanMemberTier',
+      identifiers: { planId, userId },
+      error,
+    });
+  }
+
+  return data?.tier ?? null;
+}
+
+export async function fetchLatestPlanSnapshot(
+  planId: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<PlanSnapshotRecord | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from('plan_snapshots')
+    .select('plan_id, version, state, updated_at')
+    .eq('plan_id', planId)
+    .order('version', { ascending: false })
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()) as unknown as { data: PlanSnapshotRecord | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchLatestPlanSnapshot',
+      identifiers: { planId },
+      error,
+    });
+  }
+
+  return data ?? null;
+}
+
+export async function fetchPlanBudgetEntries(
+  planId: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<BudgetEntryRecord[] | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from('budget_entries')
+    .select('id, description, category, amount')
+    .eq('plan_id', planId)) as unknown as { data: BudgetEntryRecord[] | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({
+      operation: 'fetchPlanBudgetEntries',
+      identifiers: { planId },
+      error,
+    });
+  }
+
+  return data ?? null;
+}
