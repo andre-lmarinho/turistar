@@ -3,6 +3,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
+import { acceptPlanShareLink as acceptPlanShareLinkRpc } from '@/features/app/planner/server/repositories/PlanShareRepository';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 export async function acceptPlanShareLink(
@@ -11,9 +12,7 @@ export async function acceptPlanShareLink(
 ): Promise<string> {
   const supabase = client;
   await ensureProfile({ client: supabase });
-  const { data, error } = await supabase.rpc('accept_plan_share_link', {
-    _token: token,
-  });
+  const { data, error } = await acceptPlanShareLinkRpc(token, { client: supabase });
 
   if (error) {
     const message =
