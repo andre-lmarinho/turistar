@@ -257,7 +257,11 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async fetchRows() {
-    const rows = await this.client.queryTable(this.table, this.eqFilters, this.gtFilters);
+    const rows = (await this.client.queryTable(
+      this.table,
+      this.eqFilters,
+      this.gtFilters
+    )) as Array<Record<string, unknown>>;
     const orderedRows = this.applyOrderFilters(rows);
     if (this.limitCount != null) {
       return orderedRows.slice(0, this.limitCount);
@@ -265,17 +269,15 @@ class MockQueryBuilder<TTable extends TableName> {
     return orderedRows;
   }
 
-  private applyOrderFilters<T extends Record<string, unknown>>(rows: T[]): T[] {
+  private applyOrderFilters(
+    rows: Array<Record<string, unknown>>
+  ): Array<Record<string, unknown>> {
     if (this.orderFilters.length === 0) {
       return rows;
     }
     return rows.slice().sort((a, b) => {
       for (const filter of this.orderFilters) {
-        const result = compareValues(
-          a[filter.column as keyof T],
-          b[filter.column as keyof T],
-          filter.ascending
-        );
+        const result = compareValues(a[filter.column], b[filter.column], filter.ascending);
         if (result !== 0) {
           return result;
         }
