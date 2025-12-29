@@ -62,7 +62,9 @@ describe('SignupForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => expect(mockSignUp).toHaveBeenCalled());
-    expect(await screen.findByRole('alert')).toHaveTextContent('Weak password');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'signUp failed: email=user@example.com message=Weak password'
+    );
   });
 
   it('creates the account, finalizes the profile, and navigates', async () => {

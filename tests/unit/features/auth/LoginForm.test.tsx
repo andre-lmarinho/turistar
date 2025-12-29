@@ -74,7 +74,9 @@ describe('LoginForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => expect(mockSignInWithPassword).toHaveBeenCalled());
-    expect(await screen.findByRole('alert')).toHaveTextContent('Bad credentials');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'signInWithPassword failed: email=user@example.com message=Bad credentials'
+    );
   });
 
   it('authenticates, reuses an existing slug, and navigates', async () => {

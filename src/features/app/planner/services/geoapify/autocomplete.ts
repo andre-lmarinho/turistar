@@ -70,7 +70,11 @@ async function fetchGeoapifyAutocompleteInternal({
     cache: 'force-cache',
     next: { revalidate: 86400 },
   });
-  if (!res.ok) throw new Error(`Geoapify request failed: ${res.status}`);
+  if (!res.ok) {
+    throw new Error(
+      `fetchGeoapifyAutocompleteInternal failed: operation=geoapifyAutocomplete text=${text} status=${res.status} lat=${lat ?? 'null'} lon=${lon ?? 'null'}`
+    );
+  }
 
   const data = (await res.json()) as GeoapifyResponse;
   const features = resolveGeoapifyFeatures(data);

@@ -41,7 +41,9 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
       })) as AuthResponse;
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(
+          `signInWithPassword failed: email=${email.trim()} message=${error.message}`
+        );
       }
 
       const session: Session | null = data.session
@@ -49,7 +51,9 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
         : null;
 
       if (!session) {
-        throw new Error('No session returned from Supabase. Please verify your credentials.');
+        throw new Error(
+          `signInWithPassword failed: email=${email.trim()} reason=no_session`
+        );
       }
 
       await syncServerSession('SIGNED_IN', session);
