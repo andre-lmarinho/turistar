@@ -149,6 +149,25 @@ function applyEqFilters<T extends Record<string, unknown>>(rows: T[], eq: EqFilt
   );
 }
 
+function compareValues(a: unknown, b: unknown, ascending: boolean): number {
+  if (a == null && b == null) {
+    return 0;
+  }
+  if (a == null) {
+    return ascending ? 1 : -1;
+  }
+  if (b == null) {
+    return ascending ? -1 : 1;
+  }
+  if (typeof a === 'number' && typeof b === 'number') {
+    return ascending ? a - b : b - a;
+  }
+  const aText = typeof a === 'string' ? a : String(a);
+  const bText = typeof b === 'string' ? b : String(b);
+  const result = aText.localeCompare(bText);
+  return ascending ? result : -result;
+}
+
 class MockRealtimeChannel {
   on() {
     return this;
@@ -175,7 +194,7 @@ type TableName =
 class MockQueryBuilder<TTable extends TableName> {
   private eqFilters: EqFilters = {};
   private gtFilters: GtFilters = {};
-  private orderFilter: OrderFilter | null = null;
+  private orderFilters: OrderFilter[] = [];
   private limitCount: number | null = null;
 
   constructor(
@@ -202,13 +221,12 @@ class MockQueryBuilder<TTable extends TableName> {
     return this;
   }
 
-  async order(column: string, options?: { ascending?: boolean }) {
-    this.orderFilter = {
+  order(column: string, options?: { ascending?: boolean }) {
+    this.orderFilters.push({
       column,
       ascending: options?.ascending ?? true,
-    };
-    const data = await this.execute();
-    return data;
+    });
+    return this;
   }
 
   async maybeSingle() {
@@ -239,16 +257,31 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async fetchRows() {
-    const rows = await this.client.queryTable(
-      this.table,
-      this.eqFilters,
-      this.gtFilters,
-      this.orderFilter
-    );
+    const rows = await this.client.queryTable(this.table, this.eqFilters, this.gtFilters);
+    const orderedRows = this.applyOrderFilters(rows);
     if (this.limitCount != null) {
-      return rows.slice(0, this.limitCount);
+      return orderedRows.slice(0, this.limitCount);
     }
-    return rows;
+    return orderedRows;
+  }
+
+  private applyOrderFilters<T extends Record<string, unknown>>(rows: T[]): T[] {
+    if (this.orderFilters.length === 0) {
+      return rows;
+    }
+    return rows.slice().sort((a, b) => {
+      for (const filter of this.orderFilters) {
+        const result = compareValues(
+          a[filter.column as keyof T],
+          b[filter.column as keyof T],
+          filter.ascending
+        );
+        if (result !== 0) {
+          return result;
+        }
+      }
+      return 0;
+    });
   }
 }
 
@@ -534,7 +567,7 @@ class MockSupabaseClientImpl {
     return new MockRealtimeChannel();
   }
 
-  queryTable(table: TableName, eq: EqFilters, gt: GtFilters, order: OrderFilter | null) {
+  queryTable(table: TableName, eq: EqFilters, gt: GtFilters) {
     switch (table) {
       case 'plan_snapshots': {
         const rows = applyEqFilters(this.plan.snapshots, eq);
@@ -545,11 +578,6 @@ class MockSupabaseClientImpl {
         if (gt.version != null) {
           rows = rows.filter((row) => row.version > gt.version);
         }
-        if (order?.column === 'version') {
-          rows.sort((a, b) =>
-            order.ascending ? a.version - b.version : b.version - a.version
-          );
-        }
         return rows.map((row) => ({ ...row }));
       }
       case 'plans': {
@@ -557,16 +585,7 @@ class MockSupabaseClientImpl {
         return rows.map((row) => ({ ...row }));
       }
       case 'plan_members': {
-        let rows = applyEqFilters(this.planMembers, eq);
-        if (order?.column === 'created_at') {
-          rows = rows
-            .slice()
-            .sort((a, b) =>
-              order.ascending
-                ? a.created_at.localeCompare(b.created_at)
-                : b.created_at.localeCompare(a.created_at)
-            );
-        }
+        const rows = applyEqFilters(this.planMembers, eq);
         return rows.map((row) => ({
           ...row,
           profiles: this.profiles.find((profile) => profile.id === row.user_id) ?? null,
