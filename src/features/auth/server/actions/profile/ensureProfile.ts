@@ -3,12 +3,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import slugify from '@sindresorhus/slugify';
 
-import {
-  UnauthorizedError,
-  isAuthSessionMissingError,
-  type SupabaseUser,
-} from '@/shared/lib/auth/session';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { requireUser } from '@/shared/lib/auth/session';
+import type { SupabaseUser } from '@/shared/lib/auth/session';
+import { upsertProfile } from '@/features/app/user/server/repositories/ProfileRepository';
+import type { ProfileUpsertResult } from '@/features/app/user/server/repositories/ProfileRepository';
 
 const MAX_SLUG_ATTEMPTS = 10;
 
@@ -24,22 +22,7 @@ type ProfileUpsertPayload = {
 };
 
 export async function ensureProfile({ client }: EnsureProfileOptions = {}): Promise<string> {
-  const supabase = client ?? createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    if (isAuthSessionMissingError(error)) {
-      throw new UnauthorizedError();
-    }
-
-    throw error;
-  }
-
-  const user = data.user;
-
-  if (!user) {
-    throw new UnauthorizedError();
-  }
+  const user = await requireUser();
 
   const payload: ProfileUpsertPayload = {
     id: user.id,
@@ -48,7 +31,7 @@ export async function ensureProfile({ client }: EnsureProfileOptions = {}): Prom
     baseSlug: buildSlugBase(user),
   };
 
-  return upsertProfileWithUniqueSlug(supabase, payload);
+  return upsertProfileWithUniqueSlug(payload, client);
 }
 
 function extractDisplayName(user: SupabaseUser): string | null {
@@ -101,30 +84,25 @@ function readMetadataString(metadata: Record<string, unknown> | null, key: strin
 }
 
 async function upsertProfileWithUniqueSlug(
-  supabase: SupabaseClient,
-  { id, displayName, avatarUrl, baseSlug }: ProfileUpsertPayload
+  { id, displayName, avatarUrl, baseSlug }: ProfileUpsertPayload,
+  client?: SupabaseClient
 ): Promise<string> {
   const sanitizedBase = baseSlug || slugify(id, { separator: '-', lowercase: true });
 
   for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS; attempt += 1) {
     const candidateSlug = attempt === 0 ? sanitizedBase : `${sanitizedBase}-${attempt}`;
-    const response = await supabase
-      .from('profiles')
-      .upsert(
-        {
-          id,
-          slug: candidateSlug,
-          display_name: displayName,
-          avatar_url: avatarUrl,
-        },
-        { onConflict: 'id' }
-      )
-      .select('slug')
-      .single();
+    const response = await upsertProfile(
+      {
+        userId: id,
+        slug: candidateSlug,
+        displayName,
+        avatarUrl,
+      },
+      { client }
+    );
+    const upsertError = response.error;
 
-    const upsertError = (response.error as { code?: string } | null) ?? null;
-
-    if (!upsertError && response.data) {
+    if (!upsertError && response.data?.slug) {
       return response.data.slug;
     }
 
@@ -132,8 +110,29 @@ async function upsertProfileWithUniqueSlug(
       continue;
     }
 
-    throw upsertError ?? new Error('Failed to upsert profile');
+    throw buildProfileUpsertError({
+      userId: id,
+      slug: candidateSlug,
+      response,
+    });
   }
 
-  throw new Error('Unable to allocate a unique slug for the profile');
+  throw new Error(`Unable to allocate a unique slug for the profile: userId=${id}`);
+}
+
+type BuildProfileUpsertErrorParams = {
+  userId: string;
+  slug: string;
+  response: ProfileUpsertResult;
+};
+
+function buildProfileUpsertError({
+  userId,
+  slug,
+  response,
+}: BuildProfileUpsertErrorParams): Error {
+  const error = response.error;
+  const message = error?.message ? ` message=${error.message}` : '';
+  const code = error?.code ? ` code=${error.code}` : '';
+  return new Error(`Unable to upsert profile: userId=${userId} slug=${slug}${code}${message}`);
 }

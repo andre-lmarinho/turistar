@@ -1,79 +1,53 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+
 import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
+import { fetchProfileBySlug } from '@/features/app/user/server/repositories/ProfileRepository';
+import type { UserProfileRecord } from '@/features/app/user/server/repositories/ProfileRepository';
 
-vi.mock('@/shared/lib/supabaseServer', () => ({
-  createSupabaseServerClient: vi.fn(),
+vi.mock('@/features/app/user/server/repositories/ProfileRepository', () => ({
+  fetchProfileBySlug: vi.fn(),
 }));
-
-type ProfileRow = {
-  id: string;
-  slug: string;
-  display_name: string | null;
-  avatar_url: string | null;
-};
-
-type SupabaseResult = {
-  data: ProfileRow | null;
-  error: unknown;
-};
-
-function buildSupabase(result: SupabaseResult) {
-  const maybeSingle = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  const from = vi.fn().mockReturnValue({ select });
-
-  const supabase = { from } as unknown as ReturnType<typeof createSupabaseServerClient>;
-  return { supabase, select, eq, maybeSingle };
-}
 
 describe('getUserProfileBySlug', () => {
   beforeEach(() => {
-    vi.mocked(createSupabaseServerClient).mockReset();
+    vi.mocked(fetchProfileBySlug).mockReset();
   });
 
   it('returns null when slug is empty or whitespace', async () => {
     const result = await getUserProfileBySlug('   ');
 
     expect(result).toBeNull();
-    expect(createSupabaseServerClient).not.toHaveBeenCalled();
+    expect(fetchProfileBySlug).not.toHaveBeenCalled();
   });
 
-  it('returns null when Supabase has no profile', async () => {
-    const { supabase } = buildSupabase({ data: null, error: null });
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+  it('returns null when repository has no profile', async () => {
+    vi.mocked(fetchProfileBySlug).mockResolvedValue(null);
 
     const profile = await getUserProfileBySlug('alice');
 
     expect(profile).toBeNull();
+    expect(fetchProfileBySlug).toHaveBeenCalledWith('alice');
   });
 
-  it('propagates Supabase errors', async () => {
+  it('propagates repository errors', async () => {
     const failure = new Error('fail');
-    const { supabase } = buildSupabase({ data: null, error: failure });
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    vi.mocked(fetchProfileBySlug).mockRejectedValue(failure);
 
     await expect(getUserProfileBySlug('alice')).rejects.toBe(failure);
   });
 
-  it('maps Supabase fields to a UserProfileRecord', async () => {
-    const data: ProfileRow = {
-      id: 'user-1',
-      slug: 'alice',
-      display_name: 'Alice',
-      avatar_url: 'https://avatar.png',
-    };
-    const { supabase } = buildSupabase({ data, error: null });
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
-
-    const profile = await getUserProfileBySlug('alice');
-
-    expect(profile).toEqual({
+  it('returns a UserProfileRecord from the repository', async () => {
+    const profile: UserProfileRecord = {
       userId: 'user-1',
       slug: 'alice',
       displayName: 'Alice',
       avatarUrl: 'https://avatar.png',
-    });
+    };
+    vi.mocked(fetchProfileBySlug).mockResolvedValue(profile);
+
+    const result = await getUserProfileBySlug(' alice ');
+
+    expect(result).toEqual(profile);
+    expect(fetchProfileBySlug).toHaveBeenCalledWith('alice');
   });
 });
