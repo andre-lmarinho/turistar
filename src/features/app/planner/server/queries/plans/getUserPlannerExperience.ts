@@ -6,8 +6,8 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
 import { buildInitialDays } from '@/features/app/planner/domain/days/initialDays';
 import { SnapshotRowSchema, mapSnapshot } from '@/features/app/planner/services/supabase/planEventsSchemas';
 import type { Entry } from '@/features/app/planner/types/budget';
+import { fetchPlanBudgetEntries } from '@/features/app/planner/server/repositories/BudgetRepository';
 import {
-  fetchPlanBudgetEntries,
   fetchPlanByIdWithMembers,
   fetchLatestPlanSnapshot,
 } from '@/features/app/planner/server/repositories/PlanRepository';
@@ -75,12 +75,15 @@ export async function getUserPlannerExperience(
 
   const entryRows = await fetchPlanBudgetEntries(planId);
 
-  const initialEntries = entryRows?.map((entry) => ({
-    id: entry.id,
-    description: entry.description ?? '',
-    category: (entry.category as Entry['category']) ?? 'transport',
-    amount: entry.amount ?? 0,
-  }));
+  const initialEntries =
+    entryRows.length > 0
+      ? entryRows.map((entry) => ({
+          id: entry.id,
+          description: entry.description ?? '',
+          category: (entry.category as Entry['category']) ?? 'transport',
+          amount: entry.amount ?? 0,
+        }))
+      : undefined;
 
   return {
     planId,

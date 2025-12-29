@@ -2,27 +2,29 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { notFound } from 'next/navigation';
 
 import { getUserPlannerExperience } from '@/features/app/planner/server/queries/plans/getUserPlannerExperience';
+import { fetchPlanBudgetEntries } from '@/features/app/planner/server/repositories/BudgetRepository';
 import {
-  fetchPlanBudgetEntries,
   fetchPlanByIdWithMembers,
   fetchLatestPlanSnapshot,
 } from '@/features/app/planner/server/repositories/PlanRepository';
 import type {
-  BudgetEntryRecord,
   PlanSnapshotRecord,
   PlanWithMembersRecord,
 } from '@/features/app/planner/server/repositories/PlanRepository';
+import type { BudgetEntryRow } from '@/features/app/planner/server/repositories/BudgetRepository';
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
 vi.mock('@/features/app/planner/server/repositories/PlanRepository', () => ({
-  fetchPlanBudgetEntries: vi.fn(),
   fetchPlanByIdWithMembers: vi.fn(),
   fetchLatestPlanSnapshot: vi.fn(),
 }));
 
+vi.mock('@/features/app/planner/server/repositories/BudgetRepository', () => ({
+  fetchPlanBudgetEntries: vi.fn(),
+}));
 const notFoundError = new Error('NOT_FOUND');
 
 describe('getUserPlannerExperience', () => {
@@ -143,7 +145,7 @@ describe('getUserPlannerExperience', () => {
       },
       updated_at: '2024-01-01T00:00:00.000Z',
     };
-    const entryRows: BudgetEntryRecord[] = [
+    const entryRows: BudgetEntryRow[] = [
       { id: 'entry-1', description: null, category: null, amount: null },
       { id: 'entry-2', description: 'Lunch', category: 'food', amount: 20 },
     ];

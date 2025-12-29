@@ -36,13 +36,6 @@ export type PlanSnapshotRecord = {
   updated_at: string;
 };
 
-export type BudgetEntryRecord = {
-  id: string;
-  description: string | null;
-  category: string | null;
-  amount: number | null;
-};
-
 type PlanRepositoryOptions = {
   client?: SupabaseClient;
 };
@@ -229,27 +222,6 @@ export async function fetchLatestPlanSnapshot(
   if (error) {
     throw formatSupabaseError({
       operation: 'fetchLatestPlanSnapshot',
-      identifiers: { planId },
-      error,
-    });
-  }
-
-  return data ?? null;
-}
-
-export async function fetchPlanBudgetEntries(
-  planId: string,
-  { client }: PlanRepositoryOptions = {}
-): Promise<BudgetEntryRecord[] | null> {
-  const supabase = getClient(client);
-  const { data, error } = (await supabase
-    .from('budget_entries')
-    .select('id, description, category, amount')
-    .eq('plan_id', planId)) as unknown as { data: BudgetEntryRecord[] | null; error: unknown };
-
-  if (error) {
-    throw formatSupabaseError({
-      operation: 'fetchPlanBudgetEntries',
       identifiers: { planId },
       error,
     });

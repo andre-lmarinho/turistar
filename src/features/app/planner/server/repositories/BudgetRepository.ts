@@ -14,7 +14,10 @@ export type BudgetPlanRow = {
   budget: Database['public']['Tables']['plans']['Row']['budget'];
 };
 
-export type BudgetEntryRow = Database['public']['Tables']['budget_entries']['Row'];
+export type BudgetEntryRow = Pick<
+  Database['public']['Tables']['budget_entries']['Row'],
+  'id' | 'description' | 'category' | 'amount'
+>;
 
 export type BudgetEntryInsertPayload = Pick<
   Database['public']['Tables']['budget_entries']['Insert'],
