@@ -2,14 +2,10 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import { addPlanMemberByEmail as addPlanMemberByEmailRpc } from '@/features/app/planner/server/repositories/PlanMembersRepository';
 import { supabaseServer } from '@/shared/lib/supabaseServer';
 
 type PlanMemberTier = 'admin' | 'member';
-
-type AddPlanMemberRow = {
-  user_id: string;
-  tier: PlanMemberTier;
-};
 
 export type AddPlanMemberResult = {
   userId: string;
@@ -23,10 +19,8 @@ export async function addPlanMemberByEmail(
   client: SupabaseClient = supabaseServer()
 ): Promise<AddPlanMemberResult> {
   const supabase = client;
-  const { data, error } = await supabase.rpc('add_plan_member_by_email', {
-    _plan_id: planId,
-    _email: email,
-    _tier: tier,
+  const { data, error } = await addPlanMemberByEmailRpc(planId, email, tier, {
+    client: supabase,
   });
 
   if (error) {
@@ -63,7 +57,7 @@ export async function addPlanMemberByEmail(
     throw err;
   }
 
-  const row = Array.isArray(data) ? (data[0] as AddPlanMemberRow | undefined) : null;
+  const row = data?.[0] ?? null;
 
   if (!row) {
     const err = new Error('USER_NOT_REGISTERED');
