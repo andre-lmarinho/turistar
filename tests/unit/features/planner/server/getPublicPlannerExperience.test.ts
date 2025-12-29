@@ -135,16 +135,21 @@ describe('getPublicPlannerExperience', () => {
     });
   });
 
-  it('calls notFound when the plan is missing or repository throws', async () => {
+  it('calls notFound when the plan is missing', async () => {
     vi.mocked(fetchPublicPlanBySlug).mockResolvedValueOnce(null);
 
     await expect(getPublicPlannerExperience({ slug: 'no-plan' })).rejects.toBe(notFoundError);
 
-    vi.mocked(fetchPublicPlanBySlug).mockRejectedValueOnce(new Error('plan missing'));
+    expect(notFound).toHaveBeenCalledTimes(1);
+  });
 
-    await expect(getPublicPlannerExperience({ slug: 'no-plan' })).rejects.toBe(notFoundError);
+  it('propagates repository errors when fetching the plan', async () => {
+    const failure = new Error('plan missing');
+    vi.mocked(fetchPublicPlanBySlug).mockRejectedValueOnce(failure);
 
-    expect(notFound).toHaveBeenCalledTimes(2);
+    await expect(getPublicPlannerExperience({ slug: 'no-plan' })).rejects.toBe(failure);
+
+    expect(notFound).not.toHaveBeenCalled();
   });
 
   it('returns a fallback destination when no destination is available', async () => {
@@ -180,7 +185,7 @@ describe('getPublicPlannerExperience', () => {
     });
   });
 
-  it('returns experience without initial days when the snapshot query fails', async () => {
+  it('propagates snapshot errors', async () => {
     const plan: PlanRecord = {
       id: 'plan-3',
       title: null,
@@ -192,24 +197,37 @@ describe('getPublicPlannerExperience', () => {
       destinations: [{ name: 'Lisbon' }],
     };
     vi.mocked(fetchPublicPlanBySlug).mockResolvedValue(plan);
-    vi.mocked(fetchLatestPlanSnapshot).mockRejectedValue(new Error('snapshot failure'));
+    const snapshotError = new Error('snapshot failure');
+    vi.mocked(fetchLatestPlanSnapshot).mockRejectedValue(snapshotError);
     vi.mocked(fetchPlanBudgetEntries).mockResolvedValue(null);
 
-    const experience = await getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' });
+    await expect(
+      getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' })
+    ).rejects.toBe(snapshotError);
 
     expect(notFound).not.toHaveBeenCalled();
-    expect(experience).toEqual({
-      planId: 'plan-3',
-      title: undefined,
-      destination: 'Lisbon',
-      initialDays: undefined,
-      initialBudget: undefined,
-      initialEntries: undefined,
-      canEdit: false,
-      editToken: undefined,
-      isOwner: false,
-      isAdmin: false,
-      canManageMembers: false,
-    });
+  });
+
+  it('propagates budget entry errors', async () => {
+    const plan: PlanRecord = {
+      id: 'plan-4',
+      title: null,
+      ownerId: 'owner-4',
+      editToken: 'token-4',
+      budget: null,
+      startDate: null,
+      endDate: null,
+      destinations: [{ name: 'Lisbon' }],
+    };
+    const entryError = new Error('budget entries failure');
+    vi.mocked(fetchPublicPlanBySlug).mockResolvedValue(plan);
+    vi.mocked(fetchLatestPlanSnapshot).mockResolvedValue(null);
+    vi.mocked(fetchPlanBudgetEntries).mockRejectedValue(entryError);
+
+    await expect(
+      getPublicPlannerExperience({ slug: 'lisbon-plan', dest: 'Lisbon' })
+    ).rejects.toBe(entryError);
+
+    expect(notFound).not.toHaveBeenCalled();
   });
 });

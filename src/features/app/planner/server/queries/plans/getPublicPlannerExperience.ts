@@ -39,7 +39,7 @@ export async function getPublicPlannerExperience({
   viewerUserId,
   editToken,
 }: GetPublicPlannerExperienceArgs): Promise<PlannerExperiencePayload> {
-  const planRow = await fetchPublicPlanBySlug(slug).catch(() => null);
+  const planRow = await fetchPublicPlanBySlug(slug);
   if (!planRow) {
     notFound();
   }
@@ -65,7 +65,7 @@ export async function getPublicPlannerExperience({
   const canEdit = Boolean(isOwner || tokenMatches || isMember);
   const grantedToken = canEdit ? planEditToken : undefined;
 
-  const snapshotRow = await fetchLatestPlanSnapshot(planId).catch(() => null);
+  const snapshotRow = await fetchLatestPlanSnapshot(planId);
   let initialDays: DayPlan[] | undefined;
   if (snapshotRow) {
     const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
@@ -89,7 +89,7 @@ export async function getPublicPlannerExperience({
     }
   }
 
-  const entryRows = await fetchPlanBudgetEntries(planId).catch(() => null);
+  const entryRows = await fetchPlanBudgetEntries(planId);
 
   const initialEntries = entryRows?.map((entry) => ({
     id: entry.id,
