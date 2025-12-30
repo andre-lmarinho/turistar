@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { cn } from '@/shared/utils/cn';
 import { Eyebrow } from '@/features/website/ui/typography';
 
-import { SOLUTION_CATEGORIES, SOLUTIONS_CALLOUT, type SolutionItem } from '../data';
+import { SOLUTION_CATEGORIES, SOLUTIONS_CALLOUT } from '../data';
+import type { SolutionItem } from '../data';
 
 type SolutionsContentProps = {
   onSelect?: () => void;

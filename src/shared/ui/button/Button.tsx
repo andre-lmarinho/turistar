@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import React, { forwardRef } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
+
+import { cva } from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 
 const buttonVariants = cva(
   'focus-visible:ring-primary/60 inline-flex cursor-pointer items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none',

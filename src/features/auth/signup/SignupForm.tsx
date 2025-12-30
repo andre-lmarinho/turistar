@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { FormEvent } from 'react';
+import type { AuthResponse } from '@supabase/auth-js';
+import type { Session } from '@supabase/supabase-js';
 
 import { Button } from '@/shared/ui/button';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
-import type { AuthResponse } from '@supabase/auth-js';
-import type { Session } from '@supabase/supabase-js';
 
 type SignupFormProps = {
   finalizeProfile: () => Promise<string>;
@@ -45,9 +46,7 @@ export function SignupForm({ finalizeProfile, nextPath }: SignupFormProps) {
       })) as AuthResponse;
 
       if (error) {
-        throw new Error(
-          `signUp failed: email=${email.trim()} message=${error.message}`
-        );
+        throw new Error(`signUp failed: email=${email.trim()} message=${error.message}`);
       }
 
       const session: Session | null = data.session

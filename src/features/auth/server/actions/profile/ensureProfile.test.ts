@@ -2,7 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { ensureProfile } from './ensureProfile';
 
-import { requireUser, UnauthorizedError, type SupabaseUser } from '@/shared/lib/auth/session';
+import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
+import type { SupabaseUser } from '@/shared/lib/auth/session';
 import { upsertProfile } from '@/features/app/user/server/repositories/ProfileRepository';
 
 vi.mock('@/shared/lib/auth/session', () => {

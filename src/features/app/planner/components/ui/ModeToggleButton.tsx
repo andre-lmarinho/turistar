@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { motion, useMotionValue, animate, type ValueAnimationTransition } from 'framer-motion';
+import { motion, useMotionValue, animate } from 'framer-motion';
+import type { ValueAnimationTransition } from 'framer-motion';
 
 import type { LucideIcon } from '@/shared/ui/icon';
 import { List, Map, DollarSign } from '@/shared/ui/icon';

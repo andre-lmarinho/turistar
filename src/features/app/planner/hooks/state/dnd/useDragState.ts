@@ -1,16 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, type SetStateAction } from 'react';
-import {
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  type DragStartEvent,
-  type DragOverEvent,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from '@dnd-kit/core';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import type { SetStateAction } from 'react';
+import { PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import type { DragStartEvent, DragOverEvent, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
+
 import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
 
 /**

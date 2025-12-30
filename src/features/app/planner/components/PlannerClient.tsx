@@ -11,7 +11,9 @@ import type { Entry } from '@/features/app/planner/types/budget';
 import { usePlanEditTokens } from '@/features/app/planner/hooks/data/usePlanEditTokens';
 
 import { PlannerHeader } from './PlannerHeader';
-import { PlannerModeDeck, type PlannerMode } from './PlannerModeDeck';
+import { PlannerModeDeck } from './PlannerModeDeck';
+import type { PlannerMode } from './PlannerModeDeck';
+
 import { ModeToggleButton } from '@/features/app/planner/components/ui/ModeToggleButton';
 
 /**

@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { FormEvent } from 'react';
+import type { AuthResponse } from '@supabase/auth-js';
+import type { Session } from '@supabase/supabase-js';
 
 import { Button } from '@/shared/ui/button';
 import { supabase } from '@/shared/lib/supabaseClient';
 import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
-import type { AuthResponse } from '@supabase/auth-js';
-import type { Session } from '@supabase/supabase-js';
 
 type LoginFormProps = {
   resolveProfile: () => Promise<string>;
@@ -51,9 +52,7 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
         : null;
 
       if (!session) {
-        throw new Error(
-          `signInWithPassword failed: email=${email.trim()} reason=no_session`
-        );
+        throw new Error(`signInWithPassword failed: email=${email.trim()} reason=no_session`);
       }
 
       await syncServerSession('SIGNED_IN', session);

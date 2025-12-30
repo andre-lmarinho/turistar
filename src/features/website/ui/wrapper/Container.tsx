@@ -1,5 +1,6 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/utils/cn';
+import { cva } from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 
 const containerVariants = cva('mx-auto grid w-full grid-cols-1 gap-4 px-3', {
   variants: {
