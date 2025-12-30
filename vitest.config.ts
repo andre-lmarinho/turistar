@@ -19,7 +19,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: resolve(__dirname, './vitest.setup.tsx'),
-    include: ['tests/{unit,integration}/**/*.{test,spec}.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
     coverage: {
       enabled: process.env.CI === 'true',
       provider: 'v8',
