@@ -6,7 +6,8 @@ import { Button } from '@/shared/ui/button';
 import { SelectMenu } from '@/features/app/planner/components/ui/SelectMenu';
 import { usePlanMembers } from '@/features/app/planner/hooks/data/usePlanSharing';
 import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { SHARE_TIERS, type ShareTier } from './shareConstants';
+import { SHARE_TIERS } from './shareConstants';
+import type { ShareTier } from './shareConstants';
 
 export function ShareInviteForm({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();

@@ -1,7 +1,8 @@
 // Utility to silence known noisy console warnings/errors in tests.
 // Use sparingly and with specific patterns to avoid hiding real issues.
 
-import { vi, type MockInstance } from 'vitest';
+import { vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 export type ConsoleMethod = 'error' | 'warn';
 

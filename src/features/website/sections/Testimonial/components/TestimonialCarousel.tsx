@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { motion, type PanInfo, type Transition } from 'framer-motion';
+
+import { motion } from 'framer-motion';
+import type { PanInfo, Transition } from 'framer-motion';
+
 import { TestimonialCard } from './TestimonialCard';
 import { TESTIMONIALS } from './Testimonial.copy';
 
