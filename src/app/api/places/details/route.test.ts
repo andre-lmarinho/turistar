@@ -61,4 +61,39 @@ describe('GET /api/places/details', () => {
 
     consoleSpy.mockRestore();
   });
+
+  it('returns details and skips Wikidata when wikidataId is missing', async () => {
+    const details = { placeId: 'pid', name: 'Forte de Monte Serrat', wikidataId: null };
+    mockFetchGeoapifyPlaceDetails.mockResolvedValue(details as never);
+
+    const res = await GET(createRequest('?placeId=pid'));
+
+    expect(mockFetchGeoapifyPlaceDetails).toHaveBeenCalledWith('pid');
+    expect(mockFetchWikidataImage).not.toHaveBeenCalled();
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toEqual({
+      details,
+      wikidataImageUrl: undefined,
+    });
+  });
+
+  it('logs and returns 500 when Wikidata image fetch fails', async () => {
+    const details = { placeId: 'pid', name: 'Forte de Monte Serrat', wikidataId: 'Q1' };
+    const error = new Error('wikidata failed');
+
+    mockFetchGeoapifyPlaceDetails.mockResolvedValue(details as never);
+    mockFetchWikidataImage.mockRejectedValue(error);
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const res = await GET(createRequest('?placeId=pid'));
+
+    expect(mockFetchGeoapifyPlaceDetails).toHaveBeenCalledWith('pid');
+    expect(mockFetchWikidataImage).toHaveBeenCalledWith('Q1');
+    expect(consoleSpy).toHaveBeenCalledWith(error);
+    expect(res.status).toBe(500);
+    await expect(res.json()).resolves.toEqual({ error: 'Failed to load place details.' });
+
+    consoleSpy.mockRestore();
+  });
 });
