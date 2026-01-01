@@ -9,7 +9,7 @@ const { mockValidateGeoapifyQuery, mockFetchGeoapifyAddressAutocomplete } = vi.h
   mockFetchGeoapifyAddressAutocomplete: vi.fn(),
 }));
 
-vi.mock('@/features/app/planner/server/api/geoapify/validateQuery', () => ({
+vi.mock('@/shared/lib/server/geoapify/validateQuery', () => ({
   validateGeoapifyQuery: mockValidateGeoapifyQuery,
 }));
 
@@ -17,9 +17,10 @@ vi.mock('@/features/app/planner/services/geoapify/autocomplete', () => ({
   fetchGeoapifyAddressAutocomplete: mockFetchGeoapifyAddressAutocomplete,
 }));
 
-const createRequest = (search: string): NextRequest => ({
-  url: `https://example.com/api/places/address${search}`,
-} as NextRequest);
+const createRequest = (search: string): NextRequest =>
+  ({
+    url: `https://example.com/api/places/address${search}`,
+  }) as NextRequest;
 
 describe('GET /api/places/address', () => {
   beforeEach(() => {
