@@ -4,11 +4,7 @@ process.env.NEXT_PUBLIC_SUPABASE_URL =
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'anon';
 process.env.NEXT_PUBLIC_GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY ?? 'test-key';
 import '@testing-library/jest-dom';
-import { expect } from 'vitest';
-import { toHaveNoViolations } from 'jest-axe';
 import React from 'react';
-// jest-axe matcher registration (cast to satisfy TS in Vitest env)
-expect.extend(toHaveNoViolations as unknown as Parameters<typeof expect.extend>[0]);
 
 function createSupabaseClientMock() {
   const channel = {
