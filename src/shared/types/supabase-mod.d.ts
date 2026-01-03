@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Lightweight Supabase typings used for tests and server actions.
 declare module '@supabase/supabase-js' {
   export type AuthChangeEvent =

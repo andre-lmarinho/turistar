@@ -54,7 +54,6 @@ vi.mock('next/image', () => ({
     // Drop non-standard props for <img>
     delete (rest as { priority?: unknown }).priority;
     delete (rest as { fill?: unknown }).fill;
-    // eslint-disable-next-line @next/next/no-img-element
     return <img alt={alt} {...rest} />;
   },
 }));
