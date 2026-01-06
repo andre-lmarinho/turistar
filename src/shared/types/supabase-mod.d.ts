@@ -1,12 +1,12 @@
 // Lightweight Supabase typings used for tests and server actions.
-declare module '@supabase/supabase-js' {
+declare module "@supabase/supabase-js" {
   export type AuthChangeEvent =
-    | 'INITIAL_SESSION'
-    | 'SIGNED_IN'
-    | 'SIGNED_OUT'
-    | 'TOKEN_REFRESHED'
-    | 'USER_UPDATED'
-    | 'PASSWORD_RECOVERY';
+    | "INITIAL_SESSION"
+    | "SIGNED_IN"
+    | "SIGNED_OUT"
+    | "TOKEN_REFRESHED"
+    | "USER_UPDATED"
+    | "PASSWORD_RECOVERY";
 
   export interface SupabaseAuthSubscription {
     unsubscribe: () => void;
@@ -24,8 +24,7 @@ declare module '@supabase/supabase-js' {
     user: SupabaseSessionUser | null;
   }
 
-  export interface SupabaseQueryBuilder<TData = unknown>
-    extends Promise<{ data: TData; error: unknown }> {
+  export interface SupabaseQueryBuilder<TData = unknown> extends Promise<{ data: TData; error: unknown }> {
     select: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     insert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     upsert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
@@ -34,8 +33,8 @@ declare module '@supabase/supabase-js' {
     gt: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     order: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     limit: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
-    single: () => Promise<{ data: any; error: unknown }>;
-    maybeSingle: () => Promise<{ data: any; error: unknown }>;
+    single: () => Promise<{ data: TData; error: unknown }>;
+    maybeSingle: () => Promise<{ data: TData | null; error: unknown }>;
   }
 
   export interface SupabaseRealtimeChannel {
@@ -70,9 +69,7 @@ declare module '@supabase/supabase-js' {
       onAuthStateChange: (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
         data: { subscription: SupabaseAuthSubscription };
       };
-      setSession: (
-        session: Session
-      ) => Promise<{ data: { session: Session | null }; error: unknown }>;
+      setSession: (session: Session) => Promise<{ data: { session: Session | null }; error: unknown }>;
       signOut: () => Promise<{ error: unknown | null }>;
     };
   }

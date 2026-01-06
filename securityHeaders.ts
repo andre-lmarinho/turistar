@@ -9,15 +9,15 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
     "style-src 'self' 'unsafe-inline' https:",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https:",
-    'frame-src https://vercel.live',
+    "frame-src https://vercel.live",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
     "object-src 'none'",
-    'upgrade-insecure-requests',
+    "upgrade-insecure-requests",
   ];
 
-  const isPreview = process.env.VERCEL_ENV === 'preview';
+  const isPreview = process.env.VERCEL_ENV === "preview";
 
   if (isDev || isPreview) {
     // Allow Next.js Dev/HMR inline scripts, eval, and websockets locally/preview
@@ -25,15 +25,12 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
       // Broadly allow during dev; rely on strict prod CSP for security
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: http: https:",
       // Do not emit script-src-elem in dev to avoid browser quirks with inline scripts
-      'connect-src http: https: ws: wss:',
-      'worker-src blob: data: http: https:'
+      "connect-src http: https: ws: wss:",
+      "worker-src blob: data: http: https:"
     );
   } else {
     // Production: disallow inline/eval
-    const scriptDirectives: string[] = [
-      "script-src 'self' https:",
-      "script-src-elem 'self' https:",
-    ];
+    const scriptDirectives: string[] = ["script-src 'self' https:", "script-src-elem 'self' https:"];
     if (nonce) {
       // Allow only scripts with our nonce and trust dynamically added scripts from those
       scriptDirectives[0] = `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https:`;
@@ -42,38 +39,32 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
     common.push(...scriptDirectives, "connect-src 'self' https:", "worker-src 'self'");
   }
 
-  return common.join('; ');
+  return common.join("; ");
 }
 
 function buildPermissionsPolicy(): string {
   // Use a conservative, broadly-supported subset to avoid browser warnings.
   // Deny by default unless explicitly needed by the app.
-  return [
-    'camera=()',
-    'microphone=()',
-    'geolocation=()',
-    'payment=()',
-    'fullscreen=(self)',
-  ].join(', ');
+  return ["camera=()", "microphone=()", "geolocation=()", "payment=()", "fullscreen=(self)"].join(", ");
 }
 
 export function getSecurityHeaders(isDev: boolean): Header[] {
   const headers: Header[] = [
     // Disable MIME type sniffing
-    { key: 'X-Content-Type-Options', value: 'nosniff' },
+    { key: "X-Content-Type-Options", value: "nosniff" },
     // Clickjacking protection
-    { key: 'X-Frame-Options', value: 'DENY' },
+    { key: "X-Frame-Options", value: "DENY" },
     // More privacy-preserving referrers
-    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+    { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     // Basic permission policy (tighten as features are added)
-    { key: 'Permissions-Policy', value: buildPermissionsPolicy() },
+    { key: "Permissions-Policy", value: buildPermissionsPolicy() },
     // Content Security Policy, environment-aware
-    { key: 'Content-Security-Policy', value: buildCsp({ isDev }) },
+    { key: "Content-Security-Policy", value: buildCsp({ isDev }) },
   ];
   if (!isDev) {
     headers.unshift({
-      key: 'Strict-Transport-Security',
-      value: 'max-age=63072000; includeSubDomains; preload',
+      key: "Strict-Transport-Security",
+      value: "max-age=63072000; includeSubDomains; preload",
     });
   }
   return headers;
