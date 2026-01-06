@@ -1,6 +1,4 @@
-const skipWarnings = ["1", "true", "yes", "on"].includes(
-  (process.env.SKIP_WARNINGS ?? "").toLowerCase()
-);
+const skipWarnings = ["1", "true", "yes", "on"].includes((process.env.SKIP_WARNINGS ?? "").toLowerCase());
 
 const quoteFiles = (files) => files.map((file) => `"${file}"`).join(" ");
 

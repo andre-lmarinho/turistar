@@ -1,13 +1,20 @@
-import type { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 
-import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
-import { getPublicPlannerExperience } from '@/features/app/planner/server/queries/plans/getPublicPlannerExperience';
-import { getUserPlannerExperience } from '@/features/app/planner/server/queries/plans/getUserPlannerExperience';
-import { getCurrentUser, requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { PlannerClient } from "@/features/app/planner/components/PlannerClient";
+import { getPublicPlannerExperience } from "@/features/app/planner/server/queries/plans/getPublicPlannerExperience";
+import { getUserPlannerExperience } from "@/features/app/planner/server/queries/plans/getUserPlannerExperience";
+import { getCurrentUser, requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-export const dynamic = 'force-dynamic';
+type PlanMetadataRow = {
+  title: string | null;
+  plan_destinations: Array<{
+    destinations: { name: string | null } | null;
+  }> | null;
+};
+
+export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
@@ -15,24 +22,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { planId } = await params;
   const supabase = createSupabaseServerClient();
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    planId
-  );
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(planId);
 
   try {
     const { data } = await supabase
-      .from('plans')
-      .select('title, plan_destinations(destinations(name))')
-      .eq(isUuid ? 'id' : 'public_slug', planId)
+      .from<PlanMetadataRow>("plans")
+      .select("title, plan_destinations(destinations(name))")
+      .eq(isUuid ? "id" : "public_slug", planId)
       .maybeSingle();
 
     const titleFromPlan = data?.title?.trim();
     const titleFromDest = data?.plan_destinations?.[0]?.destinations?.name?.trim();
-    const resolvedTitle = titleFromPlan || titleFromDest || 'Planner';
+    const resolvedTitle = titleFromPlan || titleFromDest || "Planner";
 
     return { title: `${resolvedTitle} | Turistar App` };
   } catch {
-    return { title: 'Planner | Turistar App' };
+    return { title: "Planner | Turistar App" };
   }
 }
 
@@ -76,7 +81,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
       );
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        redirect('/login');
+        redirect("/login");
       }
 
       throw error;

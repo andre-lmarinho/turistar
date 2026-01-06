@@ -1,35 +1,37 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { FormEvent } from 'react';
-import type { AuthResponse } from '@supabase/auth-js';
-import type { Session } from '@supabase/supabase-js';
+import type { AuthResponse } from "@supabase/auth-js";
+import type { Session } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import type { FormEvent } from "react";
+import { useState } from "react";
 
-import { Button } from '@/shared/ui/button';
-import { supabase } from '@/shared/lib/supabaseClient';
-import { syncServerSession } from '@/shared/lib/auth/sync-server-session';
+import { syncServerSession } from "@/shared/lib/auth/sync-server-session";
+import { supabase } from "@/shared/lib/supabaseClient";
+import type { Database } from "@/shared/types/supabase";
+import { Button } from "@/shared/ui/button";
 
 type LoginFormProps = {
   resolveProfile: () => Promise<string>;
   nextPath?: string;
 };
 
+type ProfileSlugRow = Pick<Database["public"]["Tables"]["profiles"]["Row"], "slug">;
+
 export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const safeNextPath =
-    nextPath && nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : null;
+  const safeNextPath = nextPath?.startsWith("/") && !nextPath?.startsWith("//") ? nextPath : null;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError(null);
 
     if (!email.trim() || !password.trim()) {
-      setFormError('Email and password are required.');
+      setFormError("Email and password are required.");
       return;
     }
 
@@ -42,9 +44,7 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
       })) as AuthResponse;
 
       if (error) {
-        throw new Error(
-          `signInWithPassword failed: email=${email.trim()} message=${error.message}`
-        );
+        throw new Error(`signInWithPassword failed: email=${email.trim()} message=${error.message}`);
       }
 
       const session: Session | null = data.session
@@ -55,16 +55,16 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
         throw new Error(`signInWithPassword failed: email=${email.trim()} reason=no_session`);
       }
 
-      await syncServerSession('SIGNED_IN', session);
+      await syncServerSession("SIGNED_IN", session);
 
       const userId = session.user?.id;
       let slug: string | null = null;
 
       if (userId) {
         const { data: profile } = await supabase
-          .from('profiles')
-          .select('slug')
-          .eq('id', userId)
+          .from<ProfileSlugRow>("profiles")
+          .select("slug")
+          .eq("id", userId)
           .maybeSingle();
 
         slug = profile?.slug ?? null;
@@ -77,7 +77,7 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
       router.push(safeNextPath ?? `/u/${slug}/planners`);
       router.refresh();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Unable to sign you in.');
+      setFormError(err instanceof Error ? err.message : "Unable to sign you in.");
     } finally {
       setIsSubmitting(false);
     }
@@ -117,7 +117,7 @@ export function LoginForm({ resolveProfile, nextPath }: LoginFormProps) {
         </p>
       ) : null}
       <Button type="submit" disabled={isSubmitting} className="text-base font-semibold">
-        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting ? "Signing in…" : "Sign in"}
       </Button>
     </form>
   );

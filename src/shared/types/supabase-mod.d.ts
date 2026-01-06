@@ -25,10 +25,10 @@ declare module "@supabase/supabase-js" {
   }
 
   export interface SupabaseQueryBuilder<TData = unknown> extends Promise<{ data: TData; error: unknown }> {
-    select: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
-    insert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
-    upsert: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
-    update: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
+    select: <TSelect = TData>(...args: unknown[]) => SupabaseQueryBuilder<TSelect>;
+    insert: <TInsert = TData>(...args: unknown[]) => SupabaseQueryBuilder<TInsert>;
+    upsert: <TUpsert = TData>(...args: unknown[]) => SupabaseQueryBuilder<TUpsert>;
+    update: <TUpdate = TData>(...args: unknown[]) => SupabaseQueryBuilder<TUpdate>;
     eq: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     gt: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     order: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
@@ -45,7 +45,7 @@ declare module "@supabase/supabase-js" {
 
   export interface SupabaseClient<_DB = unknown> {
     readonly _database?: _DB;
-    from: (...args: unknown[]) => SupabaseQueryBuilder;
+    from: <TData = unknown>(...args: unknown[]) => SupabaseQueryBuilder<TData>;
     rpc: (...args: unknown[]) => Promise<{ data: unknown; error: unknown }>;
     channel: (...args: unknown[]) => SupabaseRealtimeChannel;
     auth: {
