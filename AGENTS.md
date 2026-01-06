@@ -35,10 +35,10 @@ You are a senior engineer working in a Npm/Turbo monorepo. You prioritize type s
 npm run typecheck:ci
 
 # Lint single file
-npm run lint:file -- --fix path/to/file.tsx
+npx biome lint -- path/to/file.tsx
 
 # Format single file
-npx prettier --write path/to/file.tsx
+npx biome format --write -- path/to/file.tsx
 
 # Unit test specific file
 npm run test -- path/to/file.test.ts
@@ -47,10 +47,10 @@ npm run test -- path/to/file.test.ts
 npm run test -- path/to/file.test.ts --testNamePattern="specific test name"
 
 # Integration test specific file
-npm run test -- tests/integration/path/to/file.integration-test.ts
+npm run test -- path/to/file.integration.test.ts
 
 # Integration test specific file + specific test
-npm run test -- tests/integration/path/to/file.integration-test.ts --testNamePattern="specific test name"
+npm run test -- path/to/file.integration.test.ts --testNamePattern="specific test name"
 
 # E2E test specific file
 npm run e2e -- path/to/file.e2e.ts

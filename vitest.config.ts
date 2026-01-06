@@ -1,30 +1,30 @@
-import { defineConfig } from 'vitest/config';
-import { resolve } from 'path';
+import { resolve } from "node:path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: 'react',
+    jsx: "automatic",
+    jsxImportSource: "react",
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@supabase/ssr': resolve(__dirname, './tests/__mocks__/supabaseSsr.ts'),
-      '@/shared/utils/theme.css': resolve(__dirname, './tests/__mocks__/empty.css'),
-      'leaflet/dist/leaflet.css': resolve(__dirname, './tests/__mocks__/empty.css'),
-      'server-only': resolve(__dirname, './tests/__mocks__/serverOnly.ts'),
+      "@": resolve(__dirname, "./src"),
+      "@supabase/ssr": resolve(__dirname, "./tests/__mocks__/supabaseSsr.ts"),
+      "@/shared/utils/theme.css": resolve(__dirname, "./tests/__mocks__/empty.css"),
+      "leaflet/dist/leaflet.css": resolve(__dirname, "./tests/__mocks__/empty.css"),
+      "server-only": resolve(__dirname, "./tests/__mocks__/serverOnly.ts"),
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: resolve(__dirname, './vitest.setup.tsx'),
-    include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
+    setupFiles: resolve(__dirname, "./vitest.setup.tsx"),
+    include: ["src/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
     coverage: {
-      enabled: process.env.CI === 'true',
-      provider: 'v8',
-      reportsDirectory: 'coverage',
-      reporter: ['text', 'lcov'],
+      enabled: process.env.CI === "true",
+      provider: "v8",
+      reportsDirectory: "coverage",
+      reporter: ["text", "lcov"],
       thresholds: {
         statements: 50,
         branches: 40,

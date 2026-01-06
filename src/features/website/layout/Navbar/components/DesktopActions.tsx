@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { Button } from '@/shared/ui/button';
-import { supabase } from '@/shared/lib/supabaseClient';
+import { supabase } from "@/shared/lib/supabaseClient";
+import type { Database } from "@/shared/types/supabase";
+import { Button } from "@/shared/ui/button";
 
 type Profile = { slug: string | null };
+type ProfileSlugRow = Pick<Database["public"]["Tables"]["profiles"]["Row"], "slug">;
 
 export function DesktopActions() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -23,9 +25,9 @@ export function DesktopActions() {
         }
 
         const { data } = await supabase
-          .from('profiles')
-          .select('slug')
-          .eq('id', userId)
+          .from<ProfileSlugRow>("profiles")
+          .select("slug")
+          .eq("id", userId)
           .maybeSingle();
 
         if (active) {

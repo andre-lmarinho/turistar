@@ -1,14 +1,10 @@
-process.env.TZ = 'UTC';
-process.env.NEXT_PUBLIC_SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:54321';
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'anon';
-process.env.NEXT_PUBLIC_GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY ?? 'test-key';
-import '@testing-library/jest-dom';
-import { expect } from 'vitest';
-import { toHaveNoViolations } from 'jest-axe';
-import React from 'react';
-// jest-axe matcher registration (cast to satisfy TS in Vitest env)
-expect.extend(toHaveNoViolations as unknown as Parameters<typeof expect.extend>[0]);
+process.env.TZ = "UTC";
+process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://localhost:54321";
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "anon";
+process.env.NEXT_PUBLIC_GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY ?? "test-key";
+import "@testing-library/jest-dom";
+import type React from "react";
+import { createElement } from "react";
 
 function createSupabaseClientMock() {
   const channel = {
@@ -30,11 +26,10 @@ class ResizeObserverMock {
   disconnect = vi.fn();
 }
 
-(globalThis as unknown as { ResizeObserver: typeof ResizeObserverMock }).ResizeObserver =
-  ResizeObserverMock;
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserverMock }).ResizeObserver = ResizeObserverMock;
 
 // Next.js runtime component shims for testing
-vi.mock('next/link', () => ({
+vi.mock("next/link", () => ({
   __esModule: true,
   default: ({
     href,
@@ -42,45 +37,40 @@ vi.mock('next/link', () => ({
     ...props
   }: { href?: unknown; children?: React.ReactNode } & Record<string, unknown>) => (
     // Normalize href to string for test DOM
-    <a href={typeof href === 'string' ? href : '#'} {...props}>
+    <a href={typeof href === "string" ? href : "#"} {...props}>
       {children}
     </a>
   ),
 }));
 
-vi.mock('next/image', () => ({
+vi.mock("next/image", () => ({
   __esModule: true,
   // Render a plain img for tests
   default: (props: Record<string, unknown>) => {
     const source = ((props || {}) as Record<string, unknown>) ?? {};
-    const alt = (source.alt as string) ?? '';
+    const alt = (source.alt as string) ?? "";
     const rest = { ...source } as Record<string, unknown>;
     // Drop non-standard props for <img>
     delete (rest as { priority?: unknown }).priority;
     delete (rest as { fill?: unknown }).fill;
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img alt={alt} {...rest} />;
+    return createElement("img", { alt, ...rest });
   },
 }));
 
-vi.mock('@vercel/speed-insights/next', () => ({
+vi.mock("@vercel/speed-insights/next", () => ({
   SpeedInsights: () => null,
 }));
 
 // Prevent Leaflet from loading in tests (depends on browser globals)
-vi.mock('react-leaflet', () => ({
+vi.mock("react-leaflet", () => ({
   __esModule: true,
-  MapContainer: ({ children }: { children?: React.ReactNode }) => (
-    <div data-testid="map">{children}</div>
-  ),
+  MapContainer: ({ children }: { children?: React.ReactNode }) => <div data-testid="map">{children}</div>,
   TileLayer: () => null,
-  Marker: ({ children }: { children?: React.ReactNode }) => (
-    <div data-testid="marker">{children}</div>
-  ),
+  Marker: ({ children }: { children?: React.ReactNode }) => <div data-testid="marker">{children}</div>,
   useMap: () => ({ fitBounds: vi.fn(), setView: vi.fn() }),
 }));
 
-vi.mock('leaflet', () => ({
+vi.mock("leaflet", () => ({
   __esModule: true,
   default: {
     latLngBounds: (...args: unknown[]) => ({ args }),
@@ -95,20 +85,20 @@ vi.mock('leaflet', () => ({
 HTMLCanvasElement.prototype.getContext = vi.fn(
   () =>
     ({
-      font: '',
+      font: "",
       measureText: vi.fn(() => ({ width: 0 })),
     }) as unknown as CanvasRenderingContext2D
-) as unknown as HTMLCanvasElement['getContext'];
+) as unknown as HTMLCanvasElement["getContext"];
 
-vi.mock('@supabase/ssr', () => ({
+vi.mock("@supabase/ssr", () => ({
   createBrowserClient: () => createSupabaseClientMock(),
 }));
 
-vi.mock('@supabase/supabase-js', () => ({
+vi.mock("@supabase/supabase-js", () => ({
   createClient: () => createSupabaseClientMock(),
 }));
 
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
   useRouter: () => ({
     push: vi.fn(),
@@ -118,11 +108,10 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-vi.mock('@testing-library/react', async () => {
-  const actual: typeof import('@testing-library/react') =
-    await vi.importActual('@testing-library/react');
+vi.mock("@testing-library/react", async () => {
+  const actual: typeof import("@testing-library/react") = await vi.importActual("@testing-library/react");
   const { QueryClient, QueryClientProvider } =
-    await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query');
+    await vi.importActual<typeof import("@tanstack/react-query")>("@tanstack/react-query");
 
   function WithClient({ children }: { children: React.ReactNode }) {
     const client = new QueryClient();

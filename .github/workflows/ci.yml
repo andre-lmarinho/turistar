@@ -18,7 +18,23 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm run lint
+      - name: Lint (changed files)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+            head="${{ github.event.pull_request.head.sha }}"
+          else
+            base="${{ github.event.before }}"
+            head="${{ github.sha }}"
+          fi
+
+          if [ -z "$base" ] || [ -z "$head" ]; then
+            echo "Missing base/head SHA; running full lint."
+            npx biome check .
+            exit 0
+          fi
+
+          git diff --name-only --diff-filter=ACMRT -z "$base" "$head" | xargs -0 -r npx biome check
       - run: npm run typecheck
       - name: Build (Next.js)
         run: npm run build

@@ -146,8 +146,8 @@ Prerequisites: Node.js v18+ and npm
 - `npm run dev` – start development server
 - `npm run build` – compile for production
 - `npm run start` – run production build locally
-- `npm run lint` – run ESLint
-- `npm run format` – format repository files with Prettier
+- `npm run lint` – run lint
+- `npm run format` – format repository files
 - `npm run test` – run unit tests
 
 ### Local Vercel build
