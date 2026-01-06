@@ -3,7 +3,8 @@
   "root": true,
   "css": {
     "parser": {
-      "tailwindDirectives": true
+      "tailwindDirectives": true,
+      "cssModules": true
     }
   },
   "formatter": {
@@ -50,7 +51,10 @@
       "react": "recommended"
     },
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "nursery": {
+        "noUnresolvedImports": "off"
+      }
     }
   },
   "overrides": [
@@ -61,125 +65,21 @@
       }
     },
     {
-      "includes": ["src/app/**/page.tsx", "src/app/**/layout.tsx", "src/app/pages/**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noDefaultExport": "off"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["next-env.d.ts"],
-      "linter": {
-        "rules": {
-          "nursery": {
-            "noUnresolvedImports": "off"
-          }
-        }
-      }
-    },
-    {
-      "includes": [
-        "next.config.ts",
-        "middleware.ts",
-        "scripts/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}",
-        "tests/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}",
-        "src/app/**/route.ts",
-        "src/app/**/route.tsx",
-        "src/shared/lib/server/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}",
-        "src/shared/lib/clientEnv.ts",
-        "src/shared/lib/clientEnv.test.ts"
-      ],
-      "linter": {
-        "rules": {
-          "style": {
-            "noProcessEnv": "off"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["**/*"],
-      "linter": {
-        "rules": {
-          "nursery": {
-            "useQwikValidLexicalScope": "off",
-            "useExplicitType": "warn",
-            "noReactForwardRef": "warn",
-            "noTernary": "warn",
-            "noUnresolvedImports": "warn"
-          },
-          "correctness": {
-            "useImportExtensions": "warn",
-            "noProcessGlobal": "warn",
-            "useExhaustiveDependencies": "warn",
-            "noUnknownProperty": "warn",
-            "noUnreachable": "warn",
-            "noEmptyPattern": "warn",
-            "noSwitchDeclarations": "warn",
-            "useHookAtTopLevel": "warn",
-            "useJsxKeyInIterable": "warn",
-            "noUnsafeOptionalChaining": "warn"
-          },
-          "style": {
-            "useExportsLast": "warn",
-            "noProcessEnv": "warn",
-            "useNodejsImportProtocol": "error"
-          },
-          "complexity": {
-            "noExcessiveLinesPerFunction": "warn"
-          },
-          "performance": {
-            "noImgElement": "warn"
-          },
-          "suspicious": {
-            "noReactSpecificProps": "warn",
-            "noDoubleEquals": "warn",
-            "noAssignInExpressions": "warn",
-            "noExplicitAny": "warn",
-            "useIterableCallbackReturn": "warn",
-            "noImplicitAnyLet": "warn",
-            "noRedeclare": "warn",
-            "noControlCharactersInRegex": "warn",
-            "noArrayIndexKey": "warn",
-            "noShadowRestrictedNames": "warn",
-            "noAsyncPromiseExecutor": "warn"
-          },
-          "security": {
-            "noBlankTarget": "warn",
-            "noDangerouslySetInnerHtml": "warn"
-          }
-        }
-      }
-    },
-    {
-      "includes": ["**/*.test.ts", "**/*.test.tsx"],
-      "linter": {
-        "rules": {
-          "complexity": {
-            "useArrowFunction": "off",
-            "noExcessiveLinesPerFunction": "off"
-          }
-        }
-      }
-    },
-    {
       "includes": ["src/shared/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}"],
       "linter": {
         "rules": {
           "style": {
+            "noDefaultExport": "off",
             "noRestrictedImports": {
               "level": "error",
               "options": {
                 "patterns": [
                   {
-                    "group": ["@/features/**", "**/features/**"],
+                    "group": ["@/features/**"],
                     "message": "Shared should not import from features to avoid circular dependencies."
                   },
                   {
-                    "group": ["@/app/**", "**/app/**"],
+                    "group": ["@/app/**"],
                     "message": "Shared should not import from app to avoid circular dependencies."
                   }
                 ]
@@ -194,12 +94,13 @@
       "linter": {
         "rules": {
           "style": {
+            "noDefaultExport": "off",
             "noRestrictedImports": {
               "level": "error",
               "options": {
                 "patterns": [
                   {
-                    "group": ["@/app/**", "**/app/**"],
+                    "group": ["@/app/**"],
                     "message": "Features should not import from app to avoid circular dependencies."
                   }
                 ]
