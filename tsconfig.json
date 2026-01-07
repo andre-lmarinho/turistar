@@ -22,8 +22,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "types": ["vitest/globals", "node", "@playwright/test"]
+    }
   },
   "include": [
     "src",
@@ -32,8 +31,6 @@
     "**/*.tsx",
     "**/*.d.ts",
     ".next/types/**/*.ts",
-    ".next\\dev/types/**/*.ts",
-    ".next\\dev/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]

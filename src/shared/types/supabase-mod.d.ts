@@ -20,7 +20,7 @@ declare module "@supabase/supabase-js" {
   export interface Session {
     access_token: string | null;
     refresh_token: string | null;
-    expires_at: number | null;
+    expires_at?: number;
     user: SupabaseSessionUser | null;
   }
 
