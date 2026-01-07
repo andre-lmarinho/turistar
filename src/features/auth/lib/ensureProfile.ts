@@ -1,11 +1,10 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-import slugify from '@sindresorhus/slugify';
-
-import { requireUser } from '@/shared/lib/auth/session';
-import type { SupabaseUser } from '@/shared/lib/auth/session';
-import { upsertProfile } from '@/features/app/user/server/repositories/ProfileRepository';
+import slugify from "@sindresorhus/slugify";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { upsertProfile } from "@/features/app/user/server/repositories/ProfileRepository";
+import type { SupabaseUser } from "@/shared/lib/auth/session";
+import { requireUser } from "@/shared/lib/auth/session";
 
 const MAX_SLUG_ATTEMPTS = 10;
 
@@ -36,39 +35,39 @@ export async function ensureProfile({ client }: EnsureProfileOptions = {}): Prom
 function extractDisplayName(user: SupabaseUser): string | null {
   const metadata = user.user_metadata as Record<string, unknown> | null;
   const candidate =
-    readMetadataString(metadata, 'full_name') ??
-    readMetadataString(metadata, 'name') ??
-    readMetadataString(metadata, 'user_name') ??
-    readMetadataString(metadata, 'username');
+    readMetadataString(metadata, "full_name") ??
+    readMetadataString(metadata, "name") ??
+    readMetadataString(metadata, "user_name") ??
+    readMetadataString(metadata, "username");
 
   if (candidate) {
     return candidate;
   }
 
-  const emailPrefix = user.email?.split('@')[0];
+  const emailPrefix = user.email?.split("@")[0];
 
-  return typeof emailPrefix === 'string' && emailPrefix.length > 0 ? emailPrefix : null;
+  return typeof emailPrefix === "string" && emailPrefix.length > 0 ? emailPrefix : null;
 }
 
 function extractAvatarUrl(user: SupabaseUser): string | null {
   const metadata = user.user_metadata as Record<string, unknown> | null;
 
-  return readMetadataString(metadata, 'avatar_url');
+  return readMetadataString(metadata, "avatar_url");
 }
 
 function buildSlugBase(user: SupabaseUser): string {
   const metadata = user.user_metadata as Record<string, unknown> | null;
   const slugCandidate =
-    readMetadataString(metadata, 'username') ??
-    readMetadataString(metadata, 'user_name') ??
-    readMetadataString(metadata, 'preferred_username') ??
-    readMetadataString(metadata, 'full_name') ??
-    (user.email ? user.email.split('@')[0] : null) ??
+    readMetadataString(metadata, "username") ??
+    readMetadataString(metadata, "user_name") ??
+    readMetadataString(metadata, "preferred_username") ??
+    readMetadataString(metadata, "full_name") ??
+    (user.email ? user.email.split("@")[0] : null) ??
     user.id;
 
   return (
-    slugify(slugCandidate, { separator: '-', lowercase: true }) ||
-    slugify(user.id, { separator: '-', lowercase: true })
+    slugify(slugCandidate, { separator: "-", lowercase: true }) ||
+    slugify(user.id, { separator: "-", lowercase: true })
   );
 }
 
@@ -79,14 +78,14 @@ function readMetadataString(metadata: Record<string, unknown> | null, key: strin
 
   const value = metadata[key as keyof typeof metadata];
 
-  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
 async function upsertProfileWithUniqueSlug(
   { id, displayName, avatarUrl, baseSlug }: ProfileUpsertPayload,
   client?: SupabaseClient
 ): Promise<string> {
-  const sanitizedBase = baseSlug || slugify(id, { separator: '-', lowercase: true });
+  const sanitizedBase = baseSlug || slugify(id, { separator: "-", lowercase: true });
 
   for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS; attempt += 1) {
     const candidateSlug = attempt === 0 ? sanitizedBase : `${sanitizedBase}-${attempt}`;
@@ -102,7 +101,7 @@ async function upsertProfileWithUniqueSlug(
       );
       return result.slug;
     } catch (error) {
-      if (extractSupabaseErrorCode(error) === '23505') {
+      if (extractSupabaseErrorCode(error) === "23505") {
         continue;
       }
 
@@ -114,9 +113,7 @@ async function upsertProfileWithUniqueSlug(
     }
   }
 
-  throw new Error(
-    `ensureProfile failed to allocate a unique slug: userId=${id}`
-  );
+  throw new Error(`ensureProfile failed to allocate a unique slug: userId=${id}`);
 }
 
 type BuildProfileUpsertErrorParams = {
@@ -125,26 +122,18 @@ type BuildProfileUpsertErrorParams = {
   error: unknown;
 };
 
-function buildProfileUpsertError({
-  userId,
-  slug,
-  error,
-}: BuildProfileUpsertErrorParams): Error {
+function buildProfileUpsertError({ userId, slug, error }: BuildProfileUpsertErrorParams): Error {
   const message = extractErrorMessage(error);
   const code = extractSupabaseErrorCode(error);
-  const messageText = message ? ` message=${message}` : '';
-  const codeText = code ? ` code=${code}` : '';
-  return new Error(
-    `ensureProfile upsert failed: userId=${userId} slug=${slug}${codeText}${messageText}`
-  );
+  const messageText = message ? ` message=${message}` : "";
+  const codeText = code ? ` code=${code}` : "";
+  return new Error(`ensureProfile upsert failed: userId=${userId} slug=${slug}${codeText}${messageText}`);
 }
 
 function extractSupabaseErrorCode(error: unknown): string | null {
   const direct = isRecord(error) ? error : null;
   const cause =
-    error instanceof Error && 'cause' in error
-      ? (error as Error & { cause?: unknown }).cause
-      : null;
+    error instanceof Error && "cause" in error ? (error as Error & { cause?: unknown }).cause : null;
   const causeRecord = isRecord(cause) ? cause : null;
   const code = readString(causeRecord?.code) ?? readString(direct?.code);
 
@@ -155,22 +144,20 @@ function extractErrorMessage(error: unknown): string | null {
   if (error instanceof Error && error.message.length > 0) {
     return error.message;
   }
-  if (typeof error === 'string' && error.length > 0) {
+  if (typeof error === "string" && error.length > 0) {
     return error;
   }
   const direct = isRecord(error) ? error : null;
   const cause =
-    error instanceof Error && 'cause' in error
-      ? (error as Error & { cause?: unknown }).cause
-      : null;
+    error instanceof Error && "cause" in error ? (error as Error & { cause?: unknown }).cause : null;
   const causeRecord = isRecord(cause) ? cause : null;
   return readString(causeRecord?.message) ?? readString(direct?.message);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function readString(value: unknown): string | null {
-  return typeof value === 'string' && value.length > 0 ? value : null;
+  return typeof value === "string" && value.length > 0 ? value : null;
 }

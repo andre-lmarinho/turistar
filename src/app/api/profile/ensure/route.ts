@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
-import { UnauthorizedError } from '@/shared/lib/auth/session';
+import { ensureProfile } from "@/features/auth/lib/ensureProfile";
+import { UnauthorizedError } from "@/shared/lib/auth/session";
 
 export async function POST() {
   try {
@@ -13,6 +13,6 @@ export async function POST() {
     }
 
     console.error(error);
-    return NextResponse.json({ error: 'Unable to ensure profile.' }, { status: 500 });
+    return NextResponse.json({ error: "Unable to ensure profile." }, { status: 500 });
   }
 }
