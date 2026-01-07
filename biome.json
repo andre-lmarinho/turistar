@@ -65,7 +65,7 @@
       }
     },
     {
-      "includes": ["src/shared/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}"],
+      "includes": ["src/modules/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}"],
       "linter": {
         "rules": {
           "style": {
@@ -75,12 +75,8 @@
               "options": {
                 "patterns": [
                   {
-                    "group": ["@/features/**"],
-                    "message": "Shared should not import from features to avoid circular dependencies."
-                  },
-                  {
                     "group": ["@/app/**"],
-                    "message": "Shared should not import from app to avoid circular dependencies."
+                    "message": "Modules should not import from app to avoid circular dependencies."
                   }
                 ]
               }
@@ -102,6 +98,39 @@
                   {
                     "group": ["@/app/**"],
                     "message": "Features should not import from app to avoid circular dependencies."
+                  },
+                  {
+                    "group": ["@/modules/**"],
+                    "message": "Features should not import from modules to avoid circular dependencies."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/shared/**/*.{ts,tsx,js,jsx,mts,mjs,cjs,cts}"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@/app/**"],
+                    "message": "Shared should not import from app to avoid circular dependencies."
+                  },
+                  {
+                    "group": ["@/modules/**"],
+                    "message": "Shared should not import from modules to avoid circular dependencies."
+                  },
+                  {
+                    "group": ["@/features/**"],
+                    "message": "Shared should not import from features to avoid circular dependencies."
                   }
                 ]
               }
