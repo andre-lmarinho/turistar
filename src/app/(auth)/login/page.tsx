@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ensureProfile } from "@/features/auth/lib/ensureProfile";
 import { resolveNextPath } from "@/features/auth/lib/redirect";
 import { LoginView } from "@/modules/auth/login-view";
 import { getCurrentUser } from "@/shared/lib/auth/session";
+
+export const metadata: Metadata = {
+  title: "Login | Turistar App",
+};
 
 export default async function LoginRoute({ searchParams }: { searchParams?: Promise<{ next?: string }> }) {
   const resolvedSearchParams = await searchParams;
