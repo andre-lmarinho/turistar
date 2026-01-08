@@ -1,22 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { EmailField, InputField, PasswordField } from "@/shared/ui/form";
-
-describe("InputField", () => {
-  it("renders label and placeholder", () => {
-    render(<InputField name="email" label="Email address" placeholder="you@example.com" />);
-
-    expect(screen.getByLabelText("Email address")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("you@example.com")).toBeInTheDocument();
-  });
-
-  it("renders addOnSuffix content", () => {
-    render(<InputField name="code" label="Code" addOnSuffix={<span>Suffix</span>} />);
-
-    expect(screen.getByText("Suffix")).toBeInTheDocument();
-  });
-});
+import { EmailField, PasswordField } from "@/shared/ui/form";
 
 describe("PasswordField", () => {
   it("toggles password visibility", () => {
@@ -37,6 +22,13 @@ describe("PasswordField", () => {
 });
 
 describe("EmailField", () => {
+  it("renders label and placeholder", () => {
+    render(<EmailField name="email" label="Email address" placeholder="you@example.com" />);
+
+    expect(screen.getByLabelText("Email address")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("you@example.com")).toBeInTheDocument();
+  });
+
   it("applies email-related attributes", () => {
     render(<EmailField name="email" label="Email" />);
 

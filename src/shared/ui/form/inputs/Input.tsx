@@ -5,22 +5,8 @@ import { forwardRef, useState } from "react";
 import { Eye, EyeOff } from "@/shared/ui/icon/lucide-icons";
 import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 
-import { Input, InputField } from "./TextField";
-import type { InputFieldProps, InputProps } from "./types";
-
-export const EmailInput = forwardRef<HTMLInputElement, InputProps>(function EmailInput(props, ref) {
-  return (
-    <Input
-      ref={ref}
-      type="email"
-      autoCapitalize="none"
-      autoComplete="email"
-      autoCorrect="off"
-      inputMode="email"
-      {...props}
-    />
-  );
-});
+import { InputField } from "./TextField";
+import type { InputFieldProps } from "./types";
 
 export const EmailField = forwardRef<HTMLInputElement, InputFieldProps>(function EmailField(props, ref) {
   return (

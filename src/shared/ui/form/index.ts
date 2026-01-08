@@ -1,6 +1,6 @@
 export { Form } from "./inputs/Form";
 export { HintsOrErrors } from "./inputs/HintOrErrors";
-export { EmailField, EmailInput, PasswordField } from "./inputs/Input";
+export { EmailField, PasswordField } from "./inputs/Input";
 export { InputError } from "./inputs/InputError";
 export { Label } from "./inputs/Label";
 export { Input, InputField, inputStyles, TextField } from "./inputs/TextField";

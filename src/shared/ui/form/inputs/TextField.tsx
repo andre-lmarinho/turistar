@@ -12,12 +12,14 @@ import type { InputFieldProps, InputProps } from "./types";
 export const inputStyles = cva(
   [
     "rounded-md border",
+    "w-full",
     "bg-background",
     "border-input",
     "text-foreground",
     "placeholder:text-muted-foreground",
-    "focus:border-foreground",
-    "focus:ring-2",
+    "hover:border-primary",
+    "focus:border-primary",
+    "focus:ring-1",
     "focus:ring-ring",
     "disabled:bg-muted",
     "disabled:cursor-not-allowed",
@@ -37,71 +39,45 @@ export const inputStyles = cva(
 );
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { isFullWidth = true, size = "md", className, ...props },
+  { size = "md", className, ...props },
   ref
 ) {
-  return (
-    <input {...props} ref={ref} className={cn(inputStyles({ size }), isFullWidth && "w-full", className)} />
-  );
+  return <input {...props} ref={ref} className={cn(inputStyles({ size }), className)} />;
 });
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function InputField(props, ref) {
-  const id = useId();
-  const fieldName = props.name ?? "";
-  const label = props.label ?? fieldName;
+  const generatedId = useId();
   const {
-    labelProps,
-    labelClassName,
-    labelSrOnly,
-    noLabel,
+    id,
+    name,
+    label,
     className,
-    containerClassName,
-    hint,
-    hintErrors,
-    inputIsFullWidth,
-    showAsteriskIndicator,
     addOnSuffix,
-    dataTestid,
     size = "md",
     type = "text",
     readOnly,
-    LockedIcon,
     ...passThrough
   } = props;
+  const fieldName = name ?? "";
+  const resolvedLabel = label ?? fieldName;
 
   const disabled = readOnly || passThrough.disabled;
+  const inputId = typeof id === "string" && id.trim().length > 0 ? id : generatedId;
   const sharedInputProps = {
-    id,
+    ...passThrough,
+    id: inputId,
     name: fieldName || undefined,
     type,
-    "data-testid": dataTestid,
     readOnly,
-    ...passThrough,
     disabled,
   };
-  const shouldRenderLabel = !noLabel && Boolean(label);
+  const shouldRenderLabel = Boolean(resolvedLabel);
 
   return (
-    <div className={containerClassName}>
-      {shouldRenderLabel ? (
-        <Label
-          {...labelProps}
-          htmlFor={labelProps?.htmlFor ?? id}
-          className={cn(labelProps?.className, labelClassName, labelSrOnly && "sr-only")}>
-          {label}
-          {showAsteriskIndicator && passThrough.required && !readOnly ? (
-            <span className="text-destructive ml-1">*</span>
-          ) : null}
-          {LockedIcon ?? null}
-        </Label>
-      ) : null}
+    <div>
+      {shouldRenderLabel ? <Label htmlFor={inputId}>{resolvedLabel}</Label> : null}
       {addOnSuffix ? (
-        <div
-          className={cn(
-            inputStyles({ size }),
-            "flex items-center gap-2",
-            inputIsFullWidth !== false && "w-full"
-          )}>
+        <div className={cn(inputStyles({ size }), "flex items-center gap-2")}>
           <input
             {...sharedInputProps}
             className={cn("min-w-0 flex-1 bg-transparent outline-none", className)}
@@ -110,16 +86,9 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           <div className="flex items-center text-sm font-medium">{addOnSuffix}</div>
         </div>
       ) : (
-        <Input
-          {...sharedInputProps}
-          ref={ref}
-          size={size}
-          className={className}
-          isFullWidth={inputIsFullWidth !== false}
-        />
+        <Input {...sharedInputProps} ref={ref} size={size} className={className} />
       )}
-      {fieldName ? <HintsOrErrors hintErrors={hintErrors} fieldName={fieldName} /> : null}
-      {hint ? <div className="text-muted-foreground mt-2 text-sm">{hint}</div> : null}
+      {fieldName ? <HintsOrErrors fieldName={fieldName} /> : null}
     </div>
   );
 });
