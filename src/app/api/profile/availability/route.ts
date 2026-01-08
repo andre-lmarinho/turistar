@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     const available = await isUsernameAvailable(normalized);
     return NextResponse.json({ available });
   } catch (error) {
-    console.error(`profile availability failed: username=${normalized}`, error);
+    console.error("profile availability failed: username=%s", normalized, error);
     return NextResponse.json({ error: "Unable to check username availability." }, { status: 500 });
   }
 }
