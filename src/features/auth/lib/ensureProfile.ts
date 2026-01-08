@@ -3,6 +3,7 @@
 import slugify from "@sindresorhus/slugify";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { upsertProfile } from "@/features/app/user/server/repositories/ProfileRepository";
+import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import type { SupabaseUser } from "@/shared/lib/auth/session";
 import { requireUser } from "@/shared/lib/auth/session";
 
@@ -138,20 +139,6 @@ function extractSupabaseErrorCode(error: unknown): string | null {
   const code = readString(causeRecord?.code) ?? readString(direct?.code);
 
   return code ?? null;
-}
-
-function extractErrorMessage(error: unknown): string | null {
-  if (error instanceof Error && error.message.length > 0) {
-    return error.message;
-  }
-  if (typeof error === "string" && error.length > 0) {
-    return error;
-  }
-  const direct = isRecord(error) ? error : null;
-  const cause =
-    error instanceof Error && "cause" in error ? (error as Error & { cause?: unknown }).cause : null;
-  const causeRecord = isRecord(cause) ? cause : null;
-  return readString(causeRecord?.message) ?? readString(direct?.message);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
