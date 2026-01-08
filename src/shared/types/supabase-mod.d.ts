@@ -63,6 +63,14 @@ declare module "@supabase/supabase-js" {
           data?: Record<string, unknown>;
         };
       }) => Promise<{ data: unknown; error: Error | null }>;
+      resetPasswordForEmail: (
+        email: string,
+        options?: {
+          redirectTo?: string;
+          captchaToken?: string;
+        }
+      ) => Promise<{ data: Record<string, never>; error: Error | null }>;
+      updateUser: (attributes: { password?: string }) => Promise<{ data: unknown; error: Error | null }>;
       exchangeCodeForSession: (
         code: string
       ) => Promise<{ data: { session: Session | null }; error: Error | null }>;
@@ -73,4 +81,16 @@ declare module "@supabase/supabase-js" {
       signOut: () => Promise<{ error: unknown | null }>;
     };
   }
+
+  export function createClient<_DB = unknown>(
+    url: string,
+    key: string,
+    options?: {
+      auth?: {
+        autoRefreshToken?: boolean;
+        persistSession?: boolean;
+        detectSessionInUrl?: boolean;
+      };
+    }
+  ): SupabaseClient<_DB>;
 }
