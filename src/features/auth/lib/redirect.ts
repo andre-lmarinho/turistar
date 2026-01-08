@@ -20,3 +20,15 @@ export function buildEmailRedirectUrl(nextPath: string | null, origin: string): 
     return undefined;
   }
 }
+
+export function buildResetPasswordRedirectUrl(nextPath: string | null, origin: string): string | undefined {
+  try {
+    const url = new URL("/forgot-password/reset", origin);
+    if (nextPath) {
+      url.searchParams.set("next", nextPath);
+    }
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
