@@ -51,12 +51,12 @@
     "@sindresorhus/slugify": "^3.0.0",
     "@supabase/auth-helpers-react": "^0.15.0",
     "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.89.0",
-    "@tanstack/react-query": "^5.90.12",
+    "@supabase/supabase-js": "^2.90.1",
+    "@tanstack/react-query": "^5.90.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "framer-motion": "^12.23.26",
+    "framer-motion": "^12.24.12",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
     "next": "^16.1.1",
@@ -66,7 +66,7 @@
     "react-hook-form": "^7.70.0",
     "react-leaflet": "^5.0.0",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
