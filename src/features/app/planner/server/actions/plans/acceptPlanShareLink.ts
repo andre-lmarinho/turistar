@@ -1,10 +1,9 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-
-import { ensureProfile } from '@/features/auth/server/actions/profile/ensureProfile';
-import { acceptPlanShareLink as acceptPlanShareLinkRpc } from '@/features/app/planner/server/repositories/PlanShareRepository';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { acceptPlanShareLink as acceptPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
+import { ensureProfile } from "@/features/auth/lib/ensureProfile";
+import { supabaseServer } from "@/shared/lib/supabaseServer";
 
 type ErrorFields = {
   message?: string;
@@ -13,18 +12,17 @@ type ErrorFields = {
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function readString(value: unknown): string | null {
-  return typeof value === 'string' && value.length > 0 ? value : null;
+  return typeof value === "string" && value.length > 0 ? value : null;
 }
 
 function extractErrorFields(error: unknown): ErrorFields {
   const direct = isRecord(error) ? error : null;
-  const cause = error instanceof Error && 'cause' in error
-    ? (error as Error & { cause?: unknown }).cause
-    : null;
+  const cause =
+    error instanceof Error && "cause" in error ? (error as Error & { cause?: unknown }).cause : null;
   const causeRecord = isRecord(cause) ? cause : null;
   const message =
     readString(causeRecord?.message) ??

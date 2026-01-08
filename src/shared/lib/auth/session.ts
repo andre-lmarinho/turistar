@@ -1,6 +1,6 @@
-import 'server-only';
+import "server-only";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type SupabaseUser = {
   id: string;
@@ -8,48 +8,24 @@ export type SupabaseUser = {
   user_metadata?: Record<string, unknown> | null;
 };
 
-type SupabaseSession = { session: { user: SupabaseUser | null } | null } | null;
-
 export class UnauthorizedError extends Error {
-  constructor(message = 'Authentication required.') {
+  constructor(message = "Authentication required.") {
     super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
-export class ForbiddenError extends Error {
-  constructor(message = 'You do not have permission to perform this action.') {
-    super(message);
-    this.name = 'ForbiddenError';
+    this.name = "UnauthorizedError";
   }
 }
 
 export function isAuthSessionMissingError(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null) {
+  if (typeof error !== "object" || error === null) {
     return false;
   }
 
   const maybeError = error as { message?: string; status?: number };
   return (
     maybeError.status === 400 &&
-    typeof maybeError.message === 'string' &&
-    maybeError.message.toLowerCase().includes('auth session missing')
+    typeof maybeError.message === "string" &&
+    maybeError.message.toLowerCase().includes("auth session missing")
   );
-}
-
-export async function getCurrentSession(): Promise<SupabaseSession | null> {
-  const supabase = createSupabaseServerClient();
-
-  try {
-    const { data } = await supabase.auth.getSession();
-    return data as SupabaseSession;
-  } catch (error) {
-    if (isAuthSessionMissingError(error)) {
-      return null;
-    }
-
-    throw error;
-  }
 }
 
 export async function getCurrentUser(): Promise<SupabaseUser | null> {

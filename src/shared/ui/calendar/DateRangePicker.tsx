@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { format } from 'date-fns';
-import { CalendarIcon } from '@/shared/ui/icon';
-import { DateRange } from 'react-day-picker';
-import { Popover, PopoverContent, PopoverTriggerButton } from '../../../shared/ui/popover';
-import { Calendar } from './Calendar';
-import { cn } from '@/shared/utils/cn';
+import { format } from "date-fns";
+import * as React from "react";
+import type { DateRange } from "react-day-picker";
+
+import { Calendar as CalendarIcon } from "@/shared/ui/icon";
+import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
+import { cn } from "@/shared/utils/cn";
+import { Calendar } from "./Calendar";
 
 interface Props {
   className?: string;
@@ -20,27 +21,21 @@ export function DateRangePicker({ className, value, onChange, disabled = false }
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, 'LLL dd')} - ${format(value.to, 'LLL dd, y')}`
-      : format(value.from, 'LLL dd, y')
-    : 'Pick a date range';
+      ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
+      : format(value.from, "LLL dd, y")
+    : "Pick a date range";
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTriggerButton
         className={cn(
-          'border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors',
-          !value?.from && 'text-muted-foreground',
+          "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors",
+          !value?.from && "text-muted-foreground",
           className
         )}
         aria-label={label}
-        disabled={disabled}
-      >
-        <span
-          className={cn(
-            'flex-1 truncate text-left',
-            !value?.from && 'text-muted-foreground italic'
-          )}
-        >
+        disabled={disabled}>
+        <span className={cn("flex-1 truncate text-left", !value?.from && "text-muted-foreground italic")}>
           {label}
         </span>
         <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
@@ -67,9 +62,9 @@ export function DateRangePickerIcon({ className, value, onChange, disabled = fal
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, 'LLL dd')} - ${format(value.to, 'LLL dd, y')}`
-      : format(value.from, 'LLL dd, y')
-    : 'Pick a date range';
+      ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
+      : format(value.from, "LLL dd, y")
+    : "Pick a date range";
 
   React.useEffect(() => {
     setMounted(true);
@@ -86,11 +81,10 @@ export function DateRangePickerIcon({ className, value, onChange, disabled = fal
         aria-label={label}
         data-testid="date-picker"
         className={cn(
-          'text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors',
+          "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors",
           className
         )}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         <CalendarIcon className="size-4" aria-hidden="true" />
       </PopoverTriggerButton>
       <PopoverContent className="mt-2 min-w-125 p-0 shadow-lg" align="start" side="bottom">
