@@ -1,20 +1,20 @@
-import 'server-only';
+import "server-only";
 
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
-import { getUserProfileBySlug } from '@/features/app/user/server/queries/profile/getUserProfileBySlug';
-import { requireUser, UnauthorizedError } from '@/shared/lib/auth/session';
+import { getUserProfileBySlug } from "@/features/user/queries/getUserProfileBySlug";
+import type { UserProfileRecord } from "@/features/user/repositories/ProfileRepository";
 
-import type { SupabaseUser } from '@/shared/lib/auth/session';
-import type { UserProfileRecord } from '@/features/app/user/server/repositories/ProfileRepository';
+import type { SupabaseUser } from "@/shared/lib/auth/session";
+import { requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
 
 function isRedirectError(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null) {
+  if (typeof error !== "object" || error === null) {
     return false;
   }
 
   const digest = (error as { digest?: string }).digest;
-  return typeof digest === 'string' && digest.includes('NEXT_REDIRECT');
+  return typeof digest === "string" && digest.includes("NEXT_REDIRECT");
 }
 
 type RequireUserSlugMatchResult = {
@@ -26,7 +26,7 @@ export async function requireUserSlugMatch(slug: string): Promise<RequireUserSlu
   const normalizedSlug = slug?.trim();
 
   if (!normalizedSlug) {
-    redirect('/login');
+    redirect("/login");
   }
 
   try {
@@ -34,7 +34,7 @@ export async function requireUserSlugMatch(slug: string): Promise<RequireUserSlu
     const profile = await getUserProfileBySlug(normalizedSlug);
 
     if (!profile || profile.userId !== user.id) {
-      redirect('/login');
+      redirect("/login");
     }
 
     return { user, profile };
@@ -44,7 +44,7 @@ export async function requireUserSlugMatch(slug: string): Promise<RequireUserSlu
     }
 
     if (error instanceof UnauthorizedError) {
-      redirect('/login');
+      redirect("/login");
     }
 
     const cause = error instanceof Error ? error : undefined;

@@ -1,11 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { requireUserSlugMatch } from '@/features/app/user/server/guards/requireUserSlugMatch';
-
-import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
+import { InspirationGallery } from "@/features/app/user/components/dashboard/InspirationGallery";
+import { requireUserSlugMatch } from "@/features/user/guards/requireUserSlugMatch";
 
 export const metadata: Metadata = {
-  title: 'Inspirations | Turistar App',
+  title: "Inspirations | Turistar App",
 };
 
 interface UserInspirationsPageProps {

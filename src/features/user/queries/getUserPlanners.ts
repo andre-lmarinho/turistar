@@ -1,6 +1,6 @@
-import 'server-only';
+import "server-only";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type UserPlannerSummary = {
   id: string;
@@ -29,10 +29,10 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
 
   const [ownedResult, memberResult] = await Promise.all([
     (await supabase
-      .from('plans')
+      .from("plans")
       .select(plannerSelect)
-      .eq('user_id', userId)
-      .order('updated_at', { ascending: false, referencedTable: 'plan_snapshots' })
+      .eq("user_id", userId)
+      .order("updated_at", { ascending: false, referencedTable: "plan_snapshots" })
       .limit(50)) as unknown as {
       data:
         | {
@@ -50,9 +50,9 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
       error: unknown;
     },
     (await supabase
-      .from('plan_members')
+      .from("plan_members")
       .select(`plan_id, plans(${plannerSelect})`)
-      .eq('user_id', userId)
+      .eq("user_id", userId)
       .limit(50)) as unknown as {
       data:
         | {
@@ -94,17 +94,20 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
     throw memberResult.error;
   }
 
-  const plans = new Map<string, {
-    id: string;
-    title: string | null;
-    start_date: string | null;
-    end_date: string | null;
-    created_at: string | null;
-    public_slug: string;
-    edit_token: string;
-    plan_destinations: { destinations: { name: string | null } }[] | null;
-    plan_snapshots: { updated_at: string | null }[] | null;
-  }>();
+  const plans = new Map<
+    string,
+    {
+      id: string;
+      title: string | null;
+      start_date: string | null;
+      end_date: string | null;
+      created_at: string | null;
+      public_slug: string;
+      edit_token: string;
+      plan_destinations: { destinations: { name: string | null } }[] | null;
+      plan_snapshots: { updated_at: string | null }[] | null;
+    }
+  >();
 
   (ownedResult.data ?? []).forEach((row) => {
     plans.set(row.id, row);
@@ -122,11 +125,11 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
     const snapshots = Array.isArray(row.plan_snapshots)
       ? row.plan_snapshots
       : row.plan_snapshots
-      ? [row.plan_snapshots]
-      : [];
+        ? [row.plan_snapshots]
+        : [];
     const snapshotUpdatedAt = snapshots[0]?.updated_at ?? null;
     const updatedAt = snapshotUpdatedAt ?? row.created_at ?? null;
-    const title = row.title ?? destination ?? 'Untitled plan';
+    const title = row.title ?? destination ?? "Untitled plan";
 
     return {
       id: row.id,

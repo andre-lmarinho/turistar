@@ -1,7 +1,7 @@
-import type { UserPlannerSummary } from '@/features/app/planner/server/queries/plans/getUserPlanners';
-import { PlannerCard } from './PlannerCard';
-import { NewPlannerTile } from './NewPlannerTile';
-import { GalleryGrid } from '@/features/app/user/ui/GalleryGrid';
+import { GalleryGrid } from "@/features/app/user/ui/GalleryGrid";
+import type { UserPlannerSummary } from "@/features/user/queries/getUserPlanners";
+import { NewPlannerTile } from "./NewPlannerTile";
+import { PlannerCard } from "./PlannerCard";
 
 interface PlannerGalleryProps {
   plans: UserPlannerSummary[];
@@ -17,9 +17,7 @@ export function PlannerGallery({ plans }: PlannerGalleryProps) {
     <section className="space-y-3">
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-xl leading-none">📚</span>
-        <h1 className="text-foreground text-base font-semibold tracking-wide uppercase">
-          Your planners
-        </h1>
+        <h1 className="text-foreground text-base font-semibold tracking-wide uppercase">Your planners</h1>
       </div>
 
       <GalleryGrid>

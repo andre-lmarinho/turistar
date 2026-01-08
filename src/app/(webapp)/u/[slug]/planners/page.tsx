@@ -1,14 +1,13 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { getUserPlanners } from '@/features/app/planner/server/queries/plans/getUserPlanners';
-import { requireUserSlugMatch } from '@/features/app/user/server/guards/requireUserSlugMatch';
-
-import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
-import { PlannerGallery } from '@/features/app/user/components/dashboard/PlannerGallery';
+import { InspirationGallery } from "@/features/app/user/components/dashboard/InspirationGallery";
+import { PlannerGallery } from "@/features/app/user/components/dashboard/PlannerGallery";
+import { requireUserSlugMatch } from "@/features/user/guards/requireUserSlugMatch";
+import { getUserPlanners } from "@/features/user/queries/getUserPlanners";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Planners | Turistar App',
+    title: "Planners | Turistar App",
   };
 }
 

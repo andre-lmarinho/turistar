@@ -1,9 +1,9 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type UserProfileRecord = {
   userId: string;
@@ -47,14 +47,14 @@ export async function fetchProfileBySlug(
 ): Promise<UserProfileRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('profiles')
-    .select('id, slug, display_name, avatar_url')
-    .eq('slug', slug)
+    .from("profiles")
+    .select("id, slug, display_name, avatar_url")
+    .eq("slug", slug)
     .maybeSingle()) as unknown as { data: ProfileRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchProfileBySlug',
+      operation: "fetchProfileBySlug",
       identifiers: { slug },
       error,
     });
@@ -80,7 +80,7 @@ export async function upsertProfile(
 ): Promise<ProfileUpsertResult> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('profiles')
+    .from("profiles")
     .upsert(
       {
         id: userId,
@@ -88,14 +88,14 @@ export async function upsertProfile(
         display_name: displayName,
         avatar_url: avatarUrl,
       },
-      { onConflict: 'id' }
+      { onConflict: "id" }
     )
-    .select('slug')
+    .select("slug")
     .single()) as unknown as { data: ProfileSlugRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'upsertProfile',
+      operation: "upsertProfile",
       identifiers: { userId, slug },
       error,
     });
@@ -103,7 +103,7 @@ export async function upsertProfile(
 
   if (!data) {
     throw formatSupabaseError({
-      operation: 'upsertProfile:missing-row',
+      operation: "upsertProfile:missing-row",
       identifiers: { userId, slug },
     });
   }
