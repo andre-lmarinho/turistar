@@ -11,9 +11,9 @@ export function InspirationLink() {
   return (
     <Section>
       <Container id="inspiration">
-        <H2>Be inspired by fellow travellers</H2>
+        <H2>Be inspired by fellow travelers</H2>
         <P>
-          Explore a curated list of other travellers trip itineraries and get inspired for your next trip. If
+          Explore a curated list of other travelers trip itineraries and get inspired for your next trip. If
           you like a traveling, you can clone it and make it your own.
         </P>
       </Container>
