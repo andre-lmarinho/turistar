@@ -4,7 +4,7 @@ import type { UserProfileRecord } from "@/features/user/repositories/ProfileRepo
 import { fetchProfileBySlug } from "@/features/user/repositories/ProfileRepository";
 
 export async function getUserProfileBySlug(slug: string): Promise<UserProfileRecord | null> {
-  const normalizedSlug = slug?.trim();
+  const normalizedSlug = slug.trim();
 
   if (!normalizedSlug) {
     return null;
