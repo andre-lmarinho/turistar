@@ -76,11 +76,12 @@ describe("getUserPlanners", () => {
       error: null,
     };
 
-    const { supabase } = buildSupabase(result);
+    const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     const planners = await getUserPlanners("user-1");
 
+    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
     expect(planners).toEqual([
       {
         id: "plan-1",
@@ -111,7 +112,9 @@ describe("getUserPlanners", () => {
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    await expect(getUserPlanners("user-1")).rejects.toBe(failure);
+    await expect(getUserPlanners("user-1")).rejects.toThrow(
+      "Failed to fetch user planners: operation=getUserPlanners userId=user-1 error=nope"
+    );
   });
 
   it("uses latest_snapshot_at for updatedAt when available", async () => {

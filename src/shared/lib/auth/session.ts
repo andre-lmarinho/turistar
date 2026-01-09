@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type SupabaseUser = {
@@ -7,6 +8,31 @@ export type SupabaseUser = {
   email?: string | null;
   user_metadata?: Record<string, unknown> | null;
 };
+
+const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
+const E2E_USER_ID_COOKIE = "e2e-user-id";
+
+async function getE2EUserFromCookies(): Promise<SupabaseUser | null> {
+  if (!isE2E) {
+    return null;
+  }
+
+  try {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get(E2E_USER_ID_COOKIE)?.value?.trim();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      id: userId,
+      email: `${userId}@e2e.test`,
+    };
+  } catch {
+    return null;
+  }
+}
 
 export class UnauthorizedError extends Error {
   constructor(message = "Authentication required.") {
@@ -29,6 +55,11 @@ export function isAuthSessionMissingError(error: unknown): boolean {
 }
 
 export async function getCurrentUser(): Promise<SupabaseUser | null> {
+  const e2eUser = await getE2EUserFromCookies();
+  if (e2eUser) {
+    return e2eUser;
+  }
+
   const supabase = createSupabaseServerClient();
 
   try {

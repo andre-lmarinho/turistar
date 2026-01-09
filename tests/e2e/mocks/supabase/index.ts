@@ -1,8 +1,8 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/shared/types/supabase';
-import planFixture from '../../fixtures/plan.json';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/types/supabase";
+import planFixture from "../../fixtures/plan.json";
 
-type PlanSnapshotRow = (typeof planFixture)['plan']['snapshots'][number];
+type PlanSnapshotRow = (typeof planFixture)["plan"]["snapshots"][number];
 type PlanEventRow = {
   event_id: string;
   plan_id: string;
@@ -22,7 +22,7 @@ type PlanState = {
   events: PlanEventRow[];
 };
 
-type PlanMemberTier = Database['public']['Enums']['plan_member_tier'];
+type PlanMemberTier = Database["public"]["Enums"]["plan_member_tier"];
 
 type PlanRow = {
   id: string;
@@ -34,7 +34,7 @@ type PlanRow = {
   start_date: string | null;
   end_date: string | null;
   is_public: boolean;
-  plan_destinations: { destinations: { name: string } }[] | null;
+  plan_destinations: { destinations: { name: string; country?: string | null } }[] | null;
 };
 
 type PlanMemberRow = {
@@ -67,9 +67,10 @@ type BudgetEntryRow = {
   amount: number | null;
 };
 
-const DEFAULT_OWNER_ID = 'e2e-owner';
-const DEFAULT_MEMBER_ID = 'e2e-member';
-const DEFAULT_DESTINATION = 'E2E Destination';
+const DEFAULT_OWNER_ID = "e2e-owner";
+const DEFAULT_MEMBER_ID = "e2e-member";
+const DEFAULT_DESTINATION = "E2E Destination";
+const DEFAULT_DESTINATION_COUNTRY = "BR";
 
 type PlanEventInput = {
   id: string;
@@ -125,6 +126,9 @@ type RpcParams = {
   leave_plan: {
     _plan_id: string;
   };
+  get_user_planners: {
+    p_user_id: string;
+  };
 };
 
 type EqFilters = Record<string, unknown>;
@@ -144,9 +148,7 @@ function applyEqFilters<T extends Record<string, unknown>>(rows: T[], eq: EqFilt
   if (!entries.length) {
     return rows;
   }
-  return rows.filter((row) =>
-    entries.every(([key, value]) => row[key as keyof T] === value)
-  );
+  return rows.filter((row) => entries.every(([key, value]) => row[key as keyof T] === value));
 }
 
 function compareValues(a: unknown, b: unknown, ascending: boolean): number {
@@ -159,11 +161,11 @@ function compareValues(a: unknown, b: unknown, ascending: boolean): number {
   if (b == null) {
     return ascending ? -1 : 1;
   }
-  if (typeof a === 'number' && typeof b === 'number') {
+  if (typeof a === "number" && typeof b === "number") {
     return ascending ? a - b : b - a;
   }
-  const aText = typeof a === 'string' ? a : String(a);
-  const bText = typeof b === 'string' ? b : String(b);
+  const aText = typeof a === "string" ? a : String(a);
+  const bText = typeof b === "string" ? b : String(b);
   const result = aText.localeCompare(bText);
   return ascending ? result : -result;
 }
@@ -183,13 +185,13 @@ class MockRealtimeChannel {
 }
 
 type TableName =
-  | 'plan_snapshots'
-  | 'plan_events'
-  | 'plans'
-  | 'plan_members'
-  | 'profiles'
-  | 'plan_share_links'
-  | 'budget_entries';
+  | "plan_snapshots"
+  | "plan_events"
+  | "plans"
+  | "plan_members"
+  | "profiles"
+  | "plan_share_links"
+  | "budget_entries";
 
 class MockQueryBuilder<TTable extends TableName> {
   private eqFilters: EqFilters = {};
@@ -239,11 +241,12 @@ class MockQueryBuilder<TTable extends TableName> {
     const rows = await this.fetchRows();
     const [first] = rows;
     if (!first) {
-      return { data: null, error: new Error('No rows found') };
+      return { data: null, error: new Error("No rows found") };
     }
     return { data: first, error: null };
   }
 
+  // biome-ignore lint/suspicious/noThenProperty: QueryBuilder needs to be thenable to match Supabase API
   then<TResult1 = { data: unknown; error: null }, TResult2 = never>(
     onfulfilled?: ((value: { data: unknown; error: null }) => TResult1 | Promise<TResult1>) | null,
     onrejected?: ((reason: unknown) => TResult2 | Promise<TResult2>) | null
@@ -257,11 +260,9 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async fetchRows() {
-    const rows = (await this.client.queryTable(
-      this.table,
-      this.eqFilters,
-      this.gtFilters
-    )) as Array<Record<string, unknown>>;
+    const rows = (await this.client.queryTable(this.table, this.eqFilters, this.gtFilters)) as Array<
+      Record<string, unknown>
+    >;
     const orderedRows = this.applyOrderFilters(rows);
     if (this.limitCount != null) {
       return orderedRows.slice(0, this.limitCount);
@@ -269,9 +270,7 @@ class MockQueryBuilder<TTable extends TableName> {
     return orderedRows;
   }
 
-  private applyOrderFilters(
-    rows: Array<Record<string, unknown>>
-  ): Array<Record<string, unknown>> {
+  private applyOrderFilters(rows: Array<Record<string, unknown>>): Array<Record<string, unknown>> {
     if (this.orderFilters.length === 0) {
       return rows;
     }
@@ -327,23 +326,25 @@ class MockSupabaseClientImpl {
         title: this.plan.title,
         user_id: DEFAULT_OWNER_ID,
         budget: null,
-        start_date: '2024-01-01',
-        end_date: '2024-01-05',
+        start_date: "2024-01-01",
+        end_date: "2024-01-05",
         is_public: true,
-        plan_destinations: [{ destinations: { name: DEFAULT_DESTINATION } }],
+        plan_destinations: [
+          { destinations: { name: DEFAULT_DESTINATION, country: DEFAULT_DESTINATION_COUNTRY } },
+        ],
       },
     ];
     this.profiles = [
       {
         id: DEFAULT_OWNER_ID,
-        slug: 'e2e-owner',
-        display_name: 'E2E Owner',
+        slug: "e2e-owner",
+        display_name: "E2E Owner",
         avatar_url: null,
       },
       {
         id: DEFAULT_MEMBER_ID,
-        slug: 'e2e-member',
-        display_name: 'E2E Member',
+        slug: "e2e-member",
+        display_name: "E2E Member",
         avatar_url: null,
       },
     ];
@@ -351,8 +352,8 @@ class MockSupabaseClientImpl {
       {
         plan_id: planId,
         user_id: DEFAULT_MEMBER_ID,
-        tier: 'member',
-        created_at: '2024-01-02T00:00:00.000Z',
+        tier: "member",
+        created_at: "2024-01-02T00:00:00.000Z",
       },
     ];
     this.planShareLinks = [];
@@ -375,16 +376,23 @@ class MockSupabaseClientImpl {
     params: RpcParams[TName]
   ): Promise<{ data: unknown; error: Error | null }> {
     switch (name) {
-      case 'create_full_plan': {
-        const rpcParams = params as RpcParams['create_full_plan'];
+      case "create_full_plan": {
+        const rpcParams = params as RpcParams["create_full_plan"];
         this.resetState();
         this.plan.title = rpcParams._title ?? this.plan.title;
         this.syncPlanRow({
           start_date: rpcParams._start_date ?? this.plans[0]?.start_date ?? null,
           end_date: rpcParams._end_date ?? this.plans[0]?.end_date ?? null,
           plan_destinations: rpcParams._dest_name
-            ? [{ destinations: { name: rpcParams._dest_name } }]
-            : this.plans[0]?.plan_destinations ?? null,
+            ? [
+                {
+                  destinations: {
+                    name: rpcParams._dest_name,
+                    country: rpcParams._dest_country ?? null,
+                  },
+                },
+              ]
+            : (this.plans[0]?.plan_destinations ?? null),
           user_id: rpcParams._user_id ?? this.plans[0]?.user_id ?? null,
         });
         const snapshot = this.plan.snapshots[0];
@@ -399,14 +407,14 @@ class MockSupabaseClientImpl {
           error: null,
         };
       }
-      case 'append_plan_events': {
-        const rpcParams = params as RpcParams['append_plan_events'];
+      case "append_plan_events": {
+        const rpcParams = params as RpcParams["append_plan_events"];
         const planId = rpcParams.plan_id;
         const baseVersion = Number(rpcParams.base_version ?? 0);
         const events: PlanEventInput[] = rpcParams.events ?? [];
 
         if (planId !== this.plan.plan_id) {
-          return { data: null, error: new Error('Unknown plan') };
+          return { data: null, error: new Error("Unknown plan") };
         }
         if (baseVersion !== this.currentVersion) {
           return {
@@ -445,20 +453,18 @@ class MockSupabaseClientImpl {
           error: null,
         };
       }
-      case 'update_plan_title': {
-        const rpcParams = params as RpcParams['update_plan_title'];
+      case "update_plan_title": {
+        const rpcParams = params as RpcParams["update_plan_title"];
         if (rpcParams._plan_id === this.plan.plan_id) {
           this.plan.title = rpcParams._new_title ?? this.plan.title;
           this.syncPlanRow();
         }
         return { data: null, error: null };
       }
-      case 'create_plan_share_link': {
-        const rpcParams = params as RpcParams['create_plan_share_link'];
+      case "create_plan_share_link": {
+        const rpcParams = params as RpcParams["create_plan_share_link"];
         const planId = rpcParams._plan_id;
-        const existing = this.planShareLinks.find(
-          (link) => link.plan_id === planId && !link.revoked_at
-        );
+        const existing = this.planShareLinks.find((link) => link.plan_id === planId && !link.revoked_at);
         if (existing) {
           return { data: existing.token, error: null };
         }
@@ -472,35 +478,33 @@ class MockSupabaseClientImpl {
         });
         return { data: token, error: null };
       }
-      case 'revoke_plan_share_link': {
-        const rpcParams = params as RpcParams['revoke_plan_share_link'];
+      case "revoke_plan_share_link": {
+        const rpcParams = params as RpcParams["revoke_plan_share_link"];
         const planId = rpcParams._plan_id;
-        const link = this.planShareLinks.find(
-          (entry) => entry.plan_id === planId && !entry.revoked_at
-        );
+        const link = this.planShareLinks.find((entry) => entry.plan_id === planId && !entry.revoked_at);
         if (link) {
           link.revoked_at = new Date().toISOString();
           return { data: true, error: null };
         }
         return { data: false, error: null };
       }
-      case 'accept_plan_share_link': {
-        const rpcParams = params as RpcParams['accept_plan_share_link'];
+      case "accept_plan_share_link": {
+        const rpcParams = params as RpcParams["accept_plan_share_link"];
         const link = this.planShareLinks.find(
           (entry) => entry.token === rpcParams._token && !entry.revoked_at
         );
         if (!link) {
-          return { data: null, error: new Error('Invalid share link') };
+          return { data: null, error: new Error("Invalid share link") };
         }
         return { data: link.plan_id, error: null };
       }
-      case 'add_plan_member_by_email': {
-        const rpcParams = params as RpcParams['add_plan_member_by_email'];
+      case "add_plan_member_by_email": {
+        const rpcParams = params as RpcParams["add_plan_member_by_email"];
         const trimmedEmail = rpcParams._email.trim();
-        if (!trimmedEmail.includes('@')) {
-          return { data: null, error: new Error('User not registered') };
+        if (!trimmedEmail.includes("@")) {
+          return { data: null, error: new Error("User not registered") };
         }
-        const slug = trimmedEmail.split('@')[0] || 'member';
+        const slug = trimmedEmail.split("@")[0] || "member";
         const userId = `user-${slug}`;
         if (!this.profiles.some((profile) => profile.id === userId)) {
           this.profiles.push({
@@ -524,11 +528,10 @@ class MockSupabaseClientImpl {
         }
         return { data: [{ user_id: userId, tier: rpcParams._tier }], error: null };
       }
-      case 'update_plan_member_tier': {
-        const rpcParams = params as RpcParams['update_plan_member_tier'];
+      case "update_plan_member_tier": {
+        const rpcParams = params as RpcParams["update_plan_member_tier"];
         const target = this.planMembers.find(
-          (member) =>
-            member.plan_id === rpcParams._plan_id && member.user_id === rpcParams._user_id
+          (member) => member.plan_id === rpcParams._plan_id && member.user_id === rpcParams._user_id
         );
         if (target) {
           target.tier = rpcParams._tier;
@@ -542,19 +545,44 @@ class MockSupabaseClientImpl {
         }
         return { data: null, error: null };
       }
-      case 'remove_plan_member': {
-        const rpcParams = params as RpcParams['remove_plan_member'];
+      case "remove_plan_member": {
+        const rpcParams = params as RpcParams["remove_plan_member"];
         this.planMembers = this.planMembers.filter(
-          (member) =>
-            !(
-              member.plan_id === rpcParams._plan_id &&
-              member.user_id === rpcParams._user_id
-            )
+          (member) => !(member.plan_id === rpcParams._plan_id && member.user_id === rpcParams._user_id)
         );
         return { data: null, error: null };
       }
-      case 'leave_plan': {
+      case "leave_plan": {
         return { data: true, error: null };
+      }
+      case "get_user_planners": {
+        const rpcParams = params as RpcParams["get_user_planners"];
+        const userId = rpcParams.p_user_id;
+
+        // Filter plans owned by user or where user is member
+        const ownedPlans = this.plans.filter((plan) => plan.user_id === userId);
+        const memberPlanIds = this.planMembers
+          .filter((member) => member.user_id === userId)
+          .map((member) => member.plan_id);
+        const memberPlans = this.plans.filter((plan) => memberPlanIds.includes(plan.id));
+
+        const allPlans = [...ownedPlans, ...memberPlans];
+        const uniquePlans = Array.from(new Map(allPlans.map((plan) => [plan.id, plan])).values());
+
+        // Map to RPC response format
+        const result = uniquePlans.map((plan) => ({
+          id: plan.id,
+          title: plan.title,
+          start_date: plan.start_date,
+          end_date: plan.end_date,
+          created_at: "2024-01-01T00:00:00.000Z",
+          public_slug: plan.public_slug,
+          edit_token: plan.edit_token,
+          destination_name: plan.plan_destinations?.[0]?.destinations?.name ?? null,
+          latest_snapshot_at: new Date().toISOString(),
+        }));
+
+        return { data: result, error: null };
       }
       default:
         return { data: null, error: new Error(`Unsupported RPC: ${name}`) };
@@ -571,37 +599,37 @@ class MockSupabaseClientImpl {
 
   queryTable(table: TableName, eq: EqFilters, gt: GtFilters) {
     switch (table) {
-      case 'plan_snapshots': {
+      case "plan_snapshots": {
         const rows = applyEqFilters(this.plan.snapshots, eq);
         return rows.map((row) => ({ ...row }));
       }
-      case 'plan_events': {
+      case "plan_events": {
         let rows = applyEqFilters(this.plan.events, eq);
         if (gt.version != null) {
           rows = rows.filter((row) => row.version > gt.version);
         }
         return rows.map((row) => ({ ...row }));
       }
-      case 'plans': {
+      case "plans": {
         const rows = applyEqFilters(this.plans, eq);
         return rows.map((row) => ({ ...row }));
       }
-      case 'plan_members': {
+      case "plan_members": {
         const rows = applyEqFilters(this.planMembers, eq);
         return rows.map((row) => ({
           ...row,
           profiles: this.profiles.find((profile) => profile.id === row.user_id) ?? null,
         }));
       }
-      case 'profiles': {
+      case "profiles": {
         const rows = applyEqFilters(this.profiles, eq);
         return rows.map((row) => ({ ...row }));
       }
-      case 'plan_share_links': {
+      case "plan_share_links": {
         const rows = applyEqFilters(this.planShareLinks, eq);
         return rows.map((row) => ({ ...row }));
       }
-      case 'budget_entries': {
+      case "budget_entries": {
         const rows = applyEqFilters(this.budgetEntries, eq);
         return rows.map((row) => ({ ...row }));
       }
@@ -613,7 +641,7 @@ class MockSupabaseClientImpl {
 
 type ResettableSupabaseClient = SupabaseClient<Database> & { __reset: () => void };
 
-const GLOBAL_KEY = '__E2E_SUPABASE_CLIENT__';
+const GLOBAL_KEY = "__E2E_SUPABASE_CLIENT__";
 
 type SupabaseMockGlobal = typeof globalThis & {
   __E2E_SUPABASE_CLIENT__?: ResettableSupabaseClient;
