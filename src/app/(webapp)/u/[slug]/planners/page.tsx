@@ -19,8 +19,8 @@ interface DashboardPlannersPageProps {
 
 export default async function DashboardPlannersPage({ params }: DashboardPlannersPageProps) {
   const { slug } = await params;
-  const { user } = await requireUserSlugMatch(slug);
-  const plans = await getUserPlanners(user.id);
+  await requireUserSlugMatch(slug);
+  const plans = await getUserPlanners();
 
   return (
     <>

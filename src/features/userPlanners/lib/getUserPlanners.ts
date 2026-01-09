@@ -25,18 +25,14 @@ interface RpcRow {
   latest_snapshot_at: string | null;
 }
 
-export async function getUserPlanners(userId: string): Promise<UserPlannerSummary[]> {
+export async function getUserPlanners(): Promise<UserPlannerSummary[]> {
   const supabase = createSupabaseServerClient();
 
-  const { data, error } = await supabase.rpc("get_user_planners", {
-    p_user_id: userId,
-  });
+  const { data, error } = await supabase.rpc("get_user_planners");
 
   if (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(
-      `Failed to fetch user planners: operation=getUserPlanners userId=${userId} error=${errorMessage}`
-    );
+    throw new Error(`Failed to fetch user planners: operation=getUserPlanners error=${errorMessage}`);
   }
 
   const rows = (data ?? []) as RpcRow[];

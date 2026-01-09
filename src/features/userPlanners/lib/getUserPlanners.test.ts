@@ -41,9 +41,9 @@ describe("getUserPlanners", () => {
     const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const planners = await getUserPlanners("user-1");
+    const planners = await getUserPlanners();
 
-    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
+    expect(rpc).toHaveBeenCalledWith("get_user_planners");
     expect(planners).toEqual([]);
   });
 
@@ -79,9 +79,9 @@ describe("getUserPlanners", () => {
     const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const planners = await getUserPlanners("user-1");
+    const planners = await getUserPlanners();
 
-    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
+    expect(rpc).toHaveBeenCalledWith("get_user_planners");
     expect(planners).toEqual([
       {
         id: "plan-1",
@@ -112,8 +112,8 @@ describe("getUserPlanners", () => {
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    await expect(getUserPlanners("user-1")).rejects.toThrow(
-      "Failed to fetch user planners: operation=getUserPlanners userId=user-1 error=nope"
+    await expect(getUserPlanners()).rejects.toThrow(
+      "Failed to fetch user planners: operation=getUserPlanners error=nope"
     );
   });
 
@@ -138,9 +138,9 @@ describe("getUserPlanners", () => {
     const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const planners = await getUserPlanners("user-1");
+    const planners = await getUserPlanners();
 
-    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
+    expect(rpc).toHaveBeenCalledWith("get_user_planners");
     expect(planners[0].updatedAt).toBe("2024-03-10T00:00:00Z");
   });
 
@@ -165,9 +165,9 @@ describe("getUserPlanners", () => {
     const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const planners = await getUserPlanners("user-1");
+    const planners = await getUserPlanners();
 
-    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
+    expect(rpc).toHaveBeenCalledWith("get_user_planners");
     expect(planners[0].updatedAt).toBe("2024-03-15T00:00:00Z");
   });
 });
