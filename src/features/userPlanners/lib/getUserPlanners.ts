@@ -33,7 +33,10 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
   });
 
   if (error) {
-    throw error;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Failed to fetch user planners: operation=getUserPlanners userId=${userId} error=${errorMessage}`
+    );
   }
 
   const rows = (data ?? []) as RpcRow[];
