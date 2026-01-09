@@ -19,7 +19,10 @@ export async function getVisitedCountries(userId: string): Promise<VisitedCountr
   };
 
   if (error) {
-    throw error;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Failed to fetch visited countries: operation=getVisitedCountries userId=${userId} error=${errorMessage}`
+    );
   }
 
   if (!data) {
