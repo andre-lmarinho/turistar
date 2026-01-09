@@ -135,11 +135,12 @@ describe("getUserPlanners", () => {
       error: null,
     };
 
-    const { supabase } = buildSupabase(result);
+    const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     const planners = await getUserPlanners("user-1");
 
+    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
     expect(planners[0].updatedAt).toBe("2024-03-10T00:00:00Z");
   });
 
@@ -161,11 +162,12 @@ describe("getUserPlanners", () => {
       error: null,
     };
 
-    const { supabase } = buildSupabase(result);
+    const { supabase, rpc } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     const planners = await getUserPlanners("user-1");
 
+    expect(rpc).toHaveBeenCalledWith("get_user_planners", { p_user_id: "user-1" });
     expect(planners[0].updatedAt).toBe("2024-03-15T00:00:00Z");
   });
 });
