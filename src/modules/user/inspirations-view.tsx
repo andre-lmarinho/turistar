@@ -1,5 +1,6 @@
 import { getAllInspirationItems } from "@/features/app/inspiration/data";
-import { Card, CardGrid } from "@/shared/ui/card";
+import { Card } from "@/shared/ui/card/Card";
+import { CardGrid } from "@/shared/ui/card/CardGrid";
 
 export function InspirationsView() {
   const items = getAllInspirationItems();
