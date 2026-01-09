@@ -45,7 +45,15 @@ export async function createPlan(
     _user_id: userId ?? null,
   });
 
-  if (error || !data) throw error ?? new Error("Failed to create plan");
+  if (error || !data) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw (
+      error ??
+      new Error(
+        `Failed to create plan: operation=createPlan title="${title}" destination="${dest.name}" userId=${userId ?? "null"} error=${errorMessage}`
+      )
+    );
+  }
   const row = Array.isArray(data) ? data[0] : data;
 
   const { result_plan_id, result_public_slug, result_edit_token } = row as {
