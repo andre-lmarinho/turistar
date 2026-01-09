@@ -1,17 +1,18 @@
-import { buildDaysFromInspirationData } from './buildDaysFromInspirationData';
-import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { Activity } from "@/features/app/planner/domain/types/PlannerEntities";
+
+import { buildDaysFromInspirationData } from "./buildDaysFromInspirationData";
 
 const sample = {
-  destination: 'Test',
+  destination: "Test",
   itinerary: [
     {
       day: 1,
       activities: [
         {
-          title: 'Visit Museum',
-          startTime: '09:00',
+          title: "Visit Museum",
+          startTime: "09:00",
           duration: 2,
-          address: 'Street 1',
+          address: "Street 1",
           latitude: 1,
           longitude: 2,
         },
@@ -20,15 +21,15 @@ const sample = {
   ],
 };
 
-describe('buildDaysFromInspirationData', () => {
-  it('creates day plans from raw data', () => {
+describe("buildDaysFromInspirationData", () => {
+  it("creates day plans from raw data", () => {
     const result = buildDaysFromInspirationData(sample);
     expect(result).toHaveLength(1);
     const day = result[0];
     expect(day.activities).toHaveLength(1);
     const act = day.activities[0] as Activity;
-    expect(act.title).toBe('Visit Museum');
-    expect(act.startTime).toBe('09:00');
+    expect(act.title).toBe("Visit Museum");
+    expect(act.startTime).toBe("09:00");
     expect(act.latitude).toBe(1);
     expect(act.longitude).toBe(2);
   });

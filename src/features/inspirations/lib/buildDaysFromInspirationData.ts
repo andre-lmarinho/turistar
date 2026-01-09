@@ -1,7 +1,7 @@
-import { formatDayPlan } from '@/features/app/planner/domain/days/formatDayPlan';
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import type { CategoryKey } from '@/features/app/planner/domain/constants/budget';
+import type { CategoryKey } from "@/features/app/planner/domain/constants/budget";
+import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
+import { formatDayPlan } from "@/features/app/planner/domain/days/formatDayPlan";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Converts raw inspiration JSON data into a DayPlan array.
@@ -36,7 +36,7 @@ export interface InspirationData {
 
 export function buildDaysFromInspirationData(data: InspirationData): DayPlan[] {
   const start = new Date();
-  const prefix = data.destination?.slice(0, 2).toLowerCase() || 'x';
+  const prefix = data.destination?.slice(0, 2).toLowerCase() || "x";
 
   return data.itinerary.map((d, i) => {
     const { id, label } = formatDayPlan(new Date(start.getTime() + i * 86400000));
@@ -46,7 +46,7 @@ export function buildDaysFromInspirationData(data: InspirationData): DayPlan[] {
       startTime: a.startTime,
       duration: a.duration,
       address: a.address,
-      imageUrl: a.imageUrl ?? '',
+      imageUrl: a.imageUrl ?? "",
       latitude: a.latitude,
       longitude: a.longitude,
       color: a.color ?? getDefaultActivityColor(),

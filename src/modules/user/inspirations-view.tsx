@@ -1,4 +1,4 @@
-import { getAllInspirationItems } from "@/features/app/inspiration/data";
+import { getAllInspirationItems } from "@/features/inspirations/data";
 import { Card } from "@/shared/ui/card/Card";
 import { CardGrid } from "@/shared/ui/card/CardGrid";
 

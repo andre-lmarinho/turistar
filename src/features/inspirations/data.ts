@@ -1,7 +1,8 @@
-import type { InspirationDocument } from './server/types';
-import boipeba from './data/boipeba.json';
-import paris from './data/paris.json';
-import rome from './data/rome.json';
+import boipeba from "@/features/inspirations/destinations/boipeba.json";
+import paris from "@/features/inspirations/destinations/paris.json";
+import rome from "@/features/inspirations/destinations/rome.json";
+
+import type { InspirationDocument } from "@/features/inspirations/types";
 
 export type InspirationItem = {
   slug: string;
@@ -33,5 +34,5 @@ export function getAllInspirationItems(): InspirationItem[] {
 
 export function getMarketingInspirationItems(): InspirationItem[] {
   // Marketing only highlights a couple of templates.
-  return ALL_ITEMS.filter((item) => item.slug === 'rome' || item.slug === 'boipeba');
+  return ALL_ITEMS.filter((item) => item.slug === "rome" || item.slug === "boipeba");
 }

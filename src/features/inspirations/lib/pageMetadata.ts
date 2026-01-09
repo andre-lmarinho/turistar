@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { generateInspirationMetadata } from './generateInspirationMetadata';
+import { generateInspirationMetadata } from "@/features/inspirations/lib/generateInspirationMetadata";
 
 type CityParams = { city: string };
 

@@ -1,6 +1,7 @@
-import { notFound } from 'next/navigation';
-import type { InspirationDocument } from './types';
-import { INSPIRATION_SLUGS, getInspirationDocumentBySlug } from '../data';
+import { notFound } from "next/navigation";
+
+import { getInspirationDocumentBySlug, INSPIRATION_SLUGS } from "@/features/inspirations/data";
+import type { InspirationDocument } from "@/features/inspirations/types";
 
 const CITY_SLUG_REGEX = /^[a-z0-9-]+$/;
 
