@@ -1,14 +1,15 @@
-import 'server-only';
+import "server-only";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import type { VisitedCountry } from '@/shared/types/worldMap';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-export async function getVisitedCountries(userId: string): Promise<VisitedCountry[]> {
+export type VisitedCountryId = string;
+
+export async function getVisitedCountries(userId: string): Promise<VisitedCountryId[]> {
   const supabase = createSupabaseServerClient();
   const { data, error } = (await supabase
-    .from('plans')
-    .select('plan_destinations(destinations(country))')
-    .eq('user_id', userId)) as unknown as {
+    .from("plans")
+    .select("plan_destinations(destinations(country))")
+    .eq("user_id", userId)) as unknown as {
     data:
       | {
           plan_destinations: { destinations: { country: string | null } | null }[] | null;
@@ -37,8 +38,5 @@ export async function getVisitedCountries(userId: string): Promise<VisitedCountr
     });
   });
 
-  return Array.from(visitedCountries).map((countryCode) => ({
-    id: countryCode,
-    className: 'visited',
-  }));
+  return Array.from(visitedCountries);
 }

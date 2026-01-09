@@ -2,7 +2,7 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 
-import { getUserProfileBySlug } from "@/features/user/queries/getUserProfileBySlug";
+import { getUserProfileBySlug } from "@/features/user/lib/getUserProfileBySlug";
 import type { UserProfileRecord } from "@/features/user/repositories/ProfileRepository";
 
 import type { SupabaseUser } from "@/shared/lib/auth/session";

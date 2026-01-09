@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { InspirationGallery } from "@/features/app/user/components/dashboard/InspirationGallery";
-import { PlannerGallery } from "@/features/app/user/components/dashboard/PlannerGallery";
-import { requireUserSlugMatch } from "@/features/user/guards/requireUserSlugMatch";
-import { getUserPlanners } from "@/features/user/queries/getUserPlanners";
+import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
+import { getUserPlanners } from "@/features/userPlanners/lib/getUserPlanners";
+import { InspirationsView } from "@/modules/user/inspirations-view";
+import { PlannersView } from "@/modules/user/planners-view";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,8 +24,8 @@ export default async function DashboardPlannersPage({ params }: DashboardPlanner
 
   return (
     <>
-      <InspirationGallery />
-      <PlannerGallery plans={plans} />
+      <InspirationsView />
+      <PlannersView plans={plans} />
     </>
   );
 }

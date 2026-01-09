@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getVisitedCountries } from './getVisitedCountries';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { getVisitedCountries } from "./getVisitedCountries";
 
-vi.mock('@/shared/lib/supabaseServer', () => ({
+vi.mock("@/shared/lib/supabaseServer", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
@@ -26,41 +26,35 @@ function buildSupabase(result: SupabaseResult) {
   return { supabase, select, eq };
 }
 
-describe('getVisitedCountries', () => {
+describe("getVisitedCountries", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
-  it('returns an empty array when Supabase returns no data', async () => {
+  it("returns an empty array when Supabase returns no data", async () => {
     const result: SupabaseResult = { data: null, error: null };
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const visited = await getVisitedCountries('user-1');
+    const visited = await getVisitedCountries("user-1");
 
     expect(visited).toEqual([]);
   });
 
-  it('normalizes visited countries to uppercase without duplicates', async () => {
+  it("normalizes visited countries to uppercase without duplicates", async () => {
     const result: SupabaseResult = {
       data: [
         {
-          plan_destinations: [
-            { destinations: { country: ' br ' } },
-            { destinations: { country: 'us' } },
-          ],
+          plan_destinations: [{ destinations: { country: " br " } }, { destinations: { country: "us" } }],
         },
         {
-          plan_destinations: [
-            { destinations: { country: 'us' } },
-            { destinations: { country: null } },
-          ],
+          plan_destinations: [{ destinations: { country: "us" } }, { destinations: { country: null } }],
         },
         {
           plan_destinations: null,
         },
         {
-          plan_destinations: [{ destinations: { country: 'fr' } }],
+          plan_destinations: [{ destinations: { country: "fr" } }],
         },
       ],
       error: null,
@@ -69,21 +63,17 @@ describe('getVisitedCountries', () => {
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const visited = await getVisitedCountries('user-1');
+    const visited = await getVisitedCountries("user-1");
 
-    expect(visited).toEqual([
-      { id: 'BR', className: 'visited' },
-      { id: 'US', className: 'visited' },
-      { id: 'FR', className: 'visited' },
-    ]);
+    expect(visited).toEqual(["BR", "US", "FR"]);
   });
 
-  it('throws when Supabase returns an error', async () => {
-    const failure = new Error('boom');
+  it("throws when Supabase returns an error", async () => {
+    const failure = new Error("boom");
     const result: SupabaseResult = { data: null, error: failure };
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    await expect(getVisitedCountries('user-1')).rejects.toBe(failure);
+    await expect(getVisitedCountries("user-1")).rejects.toBe(failure);
   });
 });

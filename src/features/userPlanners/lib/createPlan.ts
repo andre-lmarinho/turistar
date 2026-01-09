@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
-import { fetchGeoapifyAutocomplete } from '@/features/app/planner/services/geoapify/autocomplete';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { fetchGeoapifyAutocomplete } from "@/features/app/planner/services/geoapify/autocomplete";
+import { supabaseServer } from "@/shared/lib/supabaseServer";
 
 interface DestinationInfo {
   name: string;
@@ -24,21 +24,17 @@ export async function createPlan(
   const startDate = start.slice(0, 10);
   const endDate = end.slice(0, 10);
   const toNullableFinite = (value: number | undefined): number | null =>
-    typeof value === 'number' && Number.isFinite(value) ? value : null;
+    typeof value === "number" && Number.isFinite(value) ? value : null;
   const latitude = toNullableFinite(dest.latitude);
   const longitude = toNullableFinite(dest.longitude);
   const normalizedCountry = dest.country?.trim();
   let countryParam = normalizedCountry ? normalizedCountry.toUpperCase() : null;
   if (!countryParam) {
-    const resolvedCountry = await resolveCountryFromGeoapify(
-      dest.name,
-      latitude,
-      longitude
-    );
+    const resolvedCountry = await resolveCountryFromGeoapify(dest.name, latitude, longitude);
     countryParam = resolvedCountry ? resolvedCountry.toUpperCase() : null;
   }
 
-  const { data, error } = await supabase.rpc('create_full_plan', {
+  const { data, error } = await supabase.rpc("create_full_plan", {
     _title: title,
     _dest_name: dest.name,
     _dest_lat: latitude,
@@ -49,7 +45,7 @@ export async function createPlan(
     _user_id: userId ?? null,
   });
 
-  if (error || !data) throw error ?? new Error('Failed to create plan');
+  if (error || !data) throw error ?? new Error("Failed to create plan");
   const row = Array.isArray(data) ? data[0] : data;
 
   const { result_plan_id, result_public_slug, result_edit_token } = row as {

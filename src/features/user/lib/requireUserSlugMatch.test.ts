@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getUserProfileBySlug } from "@/features/user/queries/getUserProfileBySlug";
+import { getUserProfileBySlug } from "@/features/user/lib/getUserProfileBySlug";
 import { requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
 
 import { requireUserSlugMatch } from "./requireUserSlugMatch";
@@ -10,7 +10,7 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
 }));
 
-vi.mock("@/features/user/queries/getUserProfileBySlug", () => ({
+vi.mock("@/features/user/lib/getUserProfileBySlug", () => ({
   getUserProfileBySlug: vi.fn(),
 }));
 

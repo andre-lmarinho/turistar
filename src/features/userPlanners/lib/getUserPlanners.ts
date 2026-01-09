@@ -120,7 +120,7 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
     }
   });
 
-  return Array.from(plans.values()).map((row) => {
+  const plannersWithSort = Array.from(plans.values()).map((row) => {
     const destination = row.plan_destinations?.[0]?.destinations?.name ?? null;
     const snapshots = Array.isArray(row.plan_snapshots)
       ? row.plan_snapshots
@@ -130,16 +130,23 @@ export async function getUserPlanners(userId: string): Promise<UserPlannerSummar
     const snapshotUpdatedAt = snapshots[0]?.updated_at ?? null;
     const updatedAt = snapshotUpdatedAt ?? row.created_at ?? null;
     const title = row.title ?? destination ?? "Untitled plan";
+    const sortUpdatedAt = snapshotUpdatedAt ? new Date(snapshotUpdatedAt).getTime() : 0;
 
     return {
-      id: row.id,
-      title,
-      destination,
-      startDate: row.start_date,
-      endDate: row.end_date,
-      updatedAt,
-      publicSlug: row.public_slug,
-      editToken: row.edit_token,
-    } satisfies UserPlannerSummary;
+      planner: {
+        id: row.id,
+        title,
+        destination,
+        startDate: row.start_date,
+        endDate: row.end_date,
+        updatedAt,
+        publicSlug: row.public_slug,
+        editToken: row.edit_token,
+      } satisfies UserPlannerSummary,
+      sortUpdatedAt,
+    };
   });
+
+  // Sort by most recently updated snapshot; fallback snapshots sort last
+  return plannersWithSort.sort((a, b) => b.sortUpdatedAt - a.sortUpdatedAt).map(({ planner }) => planner);
 }
