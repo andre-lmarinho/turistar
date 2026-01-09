@@ -74,6 +74,8 @@ describe("getVisitedCountries", () => {
     const { supabase } = buildSupabase(result);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    await expect(getVisitedCountries("user-1")).rejects.toBe(failure);
+    await expect(getVisitedCountries("user-1")).rejects.toThrow(
+      "Failed to fetch visited countries: operation=getVisitedCountries userId=user-1 error=boom"
+    );
   });
 });
