@@ -1,14 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { getVisitedCountries } from '@/features/app/planner/server/queries/plans/getVisitedCountries';
-import { requireUserSlugMatch } from '@/features/app/user/server/guards/requireUserSlugMatch';
-
-import type { VisitedCountry } from '@/shared/types/worldMap';
-
-import { WorldMapBoard } from '@/features/app/user/components/worldmap/WorldMapBoard';
+import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
+import { getVisitedCountries } from "@/features/visitedCountries/lib/getVisitedCountries";
+import { WorldMapView } from "@/modules/user/worldmap-view";
 
 export const metadata: Metadata = {
-  title: 'Worldmap | Turistar App',
+  title: "Worldmap | Turistar App",
 };
 
 interface DashboardWorldmapPageProps {
@@ -20,25 +17,7 @@ interface DashboardWorldmapPageProps {
 export default async function DashboardWorldmapPage({ params }: DashboardWorldmapPageProps) {
   const { slug } = await params;
   const { user } = await requireUserSlugMatch(slug);
-  let visitedCountries: VisitedCountry[] = [];
-  let visitedCountriesError: string | null = null;
+  const visitedCountries = await getVisitedCountries(user.id);
 
-  try {
-    visitedCountries = await getVisitedCountries(user.id);
-  } catch (getVisitedError) {
-    console.error('Failed to load visited countries', getVisitedError);
-    visitedCountriesError = 'Unable to load visited countries. Please try again.';
-  }
-
-  const mapContent = visitedCountriesError ? (
-    <div className="bg-card relative max-h-dvh w-full rounded-xl border p-4">
-      <p role="alert" className="text-destructive text-sm">
-        {visitedCountriesError}
-      </p>
-    </div>
-  ) : (
-    <WorldMapBoard visitedCountries={visitedCountries} />
-  );
-
-  return <>{mapContent}</>;
+  return <WorldMapView visitedCountries={visitedCountries} />;
 }

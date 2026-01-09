@@ -1,11 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import { requireUserSlugMatch } from '@/features/app/user/server/guards/requireUserSlugMatch';
-
-import { InspirationGallery } from '@/features/app/user/components/dashboard/InspirationGallery';
+import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
+import { InspirationsView } from "@/modules/user/inspirations-view";
 
 export const metadata: Metadata = {
-  title: 'Inspirations | Turistar App',
+  title: "Inspirations | Turistar App",
 };
 
 interface UserInspirationsPageProps {
@@ -18,5 +17,5 @@ export default async function UserInspirationsPage({ params }: UserInspirationsP
   const { slug } = await params;
   await requireUserSlugMatch(slug);
 
-  return <InspirationGallery />;
+  return <InspirationsView />;
 }

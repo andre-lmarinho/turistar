@@ -1,25 +1,26 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import type { SetAllCookies } from '@supabase/ssr';
+import type { SetAllCookies } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-import { buildCsp } from './securityHeaders';
-import { clientEnv } from './src/shared/lib/clientEnv';
+import { buildCsp } from "./securityHeaders";
+import { clientEnv } from "./src/shared/lib/clientEnv";
 
-const AUTH_ROUTES = new Set(['/login', '/signup']);
-const DASHBOARD_PREFIX = '/u/';
+const AUTH_ROUTES = new Set(["/login", "/signup"]);
+const DASHBOARD_PREFIX = "/u/";
 const PUBLIC_FILE = /\.(.*)$/;
+const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
 
 function isBypassed(pathname: string) {
-  if (pathname.startsWith('/_next') || pathname.startsWith('/api')) {
+  if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
     return true;
   }
 
-  if (pathname.startsWith('/static') || pathname === '/favicon.ico') {
+  if (pathname.startsWith("/static") || pathname === "/favicon.ico") {
     return true;
   }
 
-  if (pathname === '/robots.txt' || pathname === '/sitemap.xml') {
+  if (pathname === "/robots.txt" || pathname === "/sitemap.xml") {
     return true;
   }
 
@@ -27,17 +28,23 @@ function isBypassed(pathname: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const isDev = process.env.NODE_ENV !== 'production';
-  const nonce = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : String(Date.now());
+  const isDev = process.env.NODE_ENV !== "production";
+  const nonce = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : String(Date.now());
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set("x-nonce", nonce);
 
   const baseResponse = NextResponse.next({ request: { headers: requestHeaders } });
   const pathname = request.nextUrl.pathname;
 
   if (isBypassed(pathname)) {
-    baseResponse.headers.set('Content-Security-Policy', buildCsp({ isDev, nonce }));
+    baseResponse.headers.set("Content-Security-Policy", buildCsp({ isDev, nonce }));
+    return baseResponse;
+  }
+
+  // Skip auth checks entirely in E2E mode - let server components handle it
+  if (isE2E) {
+    baseResponse.headers.set("Content-Security-Policy", buildCsp({ isDev, nonce }));
     return baseResponse;
   }
 
@@ -75,9 +82,9 @@ export async function middleware(request: NextRequest) {
     if (user) {
       isAuthenticated = true;
       const { data: profile } = await supabase
-        .from('profiles')
-        .select('slug')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("slug")
+        .eq("id", user.id)
         .maybeSingle();
 
       userSlug = profile?.slug ?? null;
@@ -88,24 +95,23 @@ export async function middleware(request: NextRequest) {
   }
 
   let response = baseResponse;
-  const normalizedPath =
-    pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+  const normalizedPath = pathname.endsWith("/") && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
 
   if (isAuthenticated && AUTH_ROUTES.has(normalizedPath)) {
-    const destination = userSlug ? `/u/${userSlug}/planners` : '/';
+    const destination = userSlug ? `/u/${userSlug}/planners` : "/";
     response = NextResponse.redirect(new URL(destination, request.url));
   } else if (!isAuthenticated && normalizedPath.startsWith(DASHBOARD_PREFIX)) {
-    response = NextResponse.redirect(new URL('/login', request.url));
+    response = NextResponse.redirect(new URL("/login", request.url));
   }
 
   pendingCookies.forEach((cookie) => {
     response.cookies.set(cookie.name, cookie.value, cookie.options);
   });
 
-  response.headers.set('Content-Security-Policy', buildCsp({ isDev, nonce }));
+  response.headers.set("Content-Security-Policy", buildCsp({ isDev, nonce }));
   return response;
 }
 
 export const config = {
-  matcher: '/:path*',
+  matcher: "/:path*",
 };

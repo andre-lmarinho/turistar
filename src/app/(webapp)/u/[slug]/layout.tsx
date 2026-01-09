@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { UserSidebar } from '@/features/app/user/layout/UserSidebar';
+import { UserSidebar } from "@/modules/user/layout/UserSidebar";
 
 export default async function UserDashboardLayout({ children }: { children: ReactNode }) {
   return (

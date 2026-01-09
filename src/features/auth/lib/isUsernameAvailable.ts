@@ -1,7 +1,7 @@
 import "server-only";
 
-import { fetchProfileBySlug } from "@/features/app/user/server/repositories/ProfileRepository";
 import { validUsername } from "@/features/auth/utils/validUsername";
+import { fetchProfileBySlug } from "@/features/user/repositories/ProfileRepository";
 import { createSupabaseServiceRoleClient } from "@/shared/lib/supabaseServiceRole";
 
 export async function isUsernameAvailable(username: string): Promise<boolean> {

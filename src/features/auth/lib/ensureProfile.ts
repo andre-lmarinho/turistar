@@ -2,8 +2,8 @@
 
 import slugify from "@sindresorhus/slugify";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { upsertProfile } from "@/features/app/user/server/repositories/ProfileRepository";
 import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
+import { upsertProfile } from "@/features/user/repositories/ProfileRepository";
 import type { SupabaseUser } from "@/shared/lib/auth/session";
 import { requireUser } from "@/shared/lib/auth/session";
 
