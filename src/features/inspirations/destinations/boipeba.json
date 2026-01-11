@@ -1,14 +1,8 @@
 {
-  "slug": "boipeba",
-  "title": "Boipeba and Region",
-  "title_inspiration": "A weekend in Boipeba",
-  "duration_days": 3,
+  "title": "A weekend in Boipeba",
   "destination": "Boipeba and surroundings",
-  "image": "/inspiration/boipeba/preview.jpg",
-  "tag": "Template",
-  "description": "This itinerary explores the islands of Boipeba and Tinhare over 3 days, combining paradisiacal beaches, boat trips to natural pools, mangroves, historical culture in Cairu and Morro de Sao Paulo, and the flavors of Bahian cuisine.",
+  "description": "A weekend in Boipeba with beaches, nature, and slow travel. Discover what to do, where to stay, and how to enjoy the island at your own pace.",
   "budget": {
-    "currency": "USD",
     "amount": 700
   },
   "expenses": [
@@ -45,7 +39,6 @@
   ],
   "itinerary": [
     {
-      "day": 1,
       "activities": [
         {
           "title": "Arrival and check-in at O Ceu de Boipeba",
@@ -93,7 +86,6 @@
       ]
     },
     {
-      "day": 2,
       "activities": [
         {
           "title": "Island tour by speedboat",
@@ -131,7 +123,6 @@
       ]
     },
     {
-      "day": 3,
       "activities": [
         {
           "title": "Tinhare Island excursion (Garapua, Morro de Sao Paulo & Cairu)",

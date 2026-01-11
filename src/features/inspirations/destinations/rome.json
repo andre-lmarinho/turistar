@@ -1,13 +1,8 @@
 {
-  "slug": "rome",
   "title": "Rome",
-  "title_inspiration": "A 4 day trip to Rome",
-  "duration_days": 4,
   "destination": "Rome",
-  "image": "/inspiration/rome/preview.jpg",
-  "description": "",
+  "description": "Rome in 4 days. Explore historic landmarks, must see attractions, food tips, and a practical itinerary to make the most of your time in the Eternal City.",
   "budget": {
-    "currency": "USD",
     "amount": 4000
   },
   "expenses": [
@@ -20,7 +15,6 @@
   ],
   "itinerary": [
     {
-      "day": 1,
       "activities": [
         {
           "title": "Rome City Walking Tour",
@@ -58,7 +52,6 @@
       ]
     },
     {
-      "day": 2,
       "activities": [
         {
           "title": "Explore the Roman Forum",
@@ -106,7 +99,6 @@
       ]
     },
     {
-      "day": 3,
       "activities": [
         {
           "title": "Visit the Pantheon",
@@ -174,7 +166,6 @@
       ]
     },
     {
-      "day": 4,
       "activities": [
         {
           "title": "Visit Villa Borghese Gardens",

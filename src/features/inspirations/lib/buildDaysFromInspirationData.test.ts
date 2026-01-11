@@ -1,12 +1,12 @@
 import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
-import type { InspirationData } from "./buildDaysFromInspirationData";
 import { buildDaysFromInspirationData } from "./buildDaysFromInspirationData";
+
+import type { InspirationData } from "./schemas";
 
 const sample = {
   destination: "Test",
   itinerary: [
     {
-      day: 1,
       activities: [
         {
           title: "Visit Museum",
@@ -48,14 +48,12 @@ describe("buildDaysFromInspirationData", () => {
       destination: "Paris",
       itinerary: [
         {
-          day: 1,
           activities: [
             { title: "Coffee", startTime: "08:00", duration: 1, address: "Rue A" },
             { title: "Walk", startTime: "10:00", duration: 2, address: "Rue B" },
           ],
         },
         {
-          day: 2,
           activities: [{ title: "Dinner", startTime: "19:00", duration: 2, address: "Rue C" }],
         },
       ],
@@ -74,7 +72,6 @@ describe("buildDaysFromInspirationData", () => {
       destination: "Defaults",
       itinerary: [
         {
-          day: 1,
           activities: [{ title: "Stroll", startTime: "11:00", duration: 1, address: "Street 2" }],
         },
       ],
@@ -91,7 +88,7 @@ describe("buildDaysFromInspirationData", () => {
   it("throws when itinerary entries are malformed", () => {
     const malformed = {
       destination: "Broken",
-      itinerary: [{ day: 1, activities: null }],
+      itinerary: [{ activities: null }],
     } as unknown as InspirationData;
 
     expect(() => buildDaysFromInspirationData(malformed)).toThrow();

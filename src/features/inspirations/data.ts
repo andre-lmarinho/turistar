@@ -1,38 +1,37 @@
-import boipeba from "@/features/inspirations/destinations/boipeba.json";
-import paris from "@/features/inspirations/destinations/paris.json";
-import rome from "@/features/inspirations/destinations/rome.json";
-
-import type { InspirationDocument } from "@/features/inspirations/types";
-
-export type InspirationItem = {
+export interface InspirationSummary {
   slug: string;
   title: string;
-  tag?: string;
-  image?: string;
-};
-
-export const INSPIRATION_DOCUMENTS: InspirationDocument[] = [rome, boipeba, paris].map(
-  (doc) => doc as InspirationDocument
-);
-
-export const INSPIRATION_SLUGS = INSPIRATION_DOCUMENTS.map((doc) => doc.slug);
-
-export function getInspirationDocumentBySlug(slug: string): InspirationDocument | undefined {
-  return INSPIRATION_DOCUMENTS.find((doc) => doc.slug === slug);
+  image: string;
+  featured: boolean;
 }
 
-const ALL_ITEMS: InspirationItem[] = INSPIRATION_DOCUMENTS.map((item) => ({
-  slug: item.slug,
-  title: item.title_inspiration ?? item.title ?? item.slug,
-  tag: item.tag,
-  image: item.image,
-}));
+export const INSPIRATIONS: InspirationSummary[] = [
+  {
+    slug: "rome",
+    title: "A 4 day trip to Rome",
+    image: "/inspiration/rome/preview.jpg",
+    featured: true,
+  },
+  {
+    slug: "boipeba",
+    title: "A weekend in Boipeba",
+    image: "/inspiration/boipeba/preview.jpg",
+    featured: true,
+  },
+  {
+    slug: "paris",
+    title: "A weekend in Paris",
+    image: "/inspiration/paris/preview.jpg",
+    featured: false,
+  },
+];
 
-export function getAllInspirationItems(): InspirationItem[] {
-  return ALL_ITEMS;
+export const INSPIRATION_SLUGS = INSPIRATIONS.map((i) => i.slug);
+
+export function getAllInspirations(): InspirationSummary[] {
+  return INSPIRATIONS;
 }
 
-export function getMarketingInspirationItems(): InspirationItem[] {
-  // Marketing only highlights a couple of templates.
-  return ALL_ITEMS.filter((item) => item.slug === "rome" || item.slug === "boipeba");
+export function getMarketingInspirations(): InspirationSummary[] {
+  return INSPIRATIONS.filter((i) => i.featured);
 }
