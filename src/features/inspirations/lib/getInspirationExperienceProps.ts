@@ -2,8 +2,8 @@ import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntitie
 import type { Entry } from "@/features/app/planner/types/budget";
 
 import { buildDaysFromInspirationData } from "@/features/inspirations/lib/buildDaysFromInspirationData";
-import { assertValidCitySlug, safeReadInspirationData } from "@/features/inspirations/lib/inspirationData";
-import type { InspirationDocument } from "@/features/inspirations/types";
+import { loadInspirationBySlug } from "@/features/inspirations/lib/inspirationLoader";
+import type { InspirationDocument } from "@/features/inspirations/lib/schemas";
 
 export interface InspirationExperienceProps {
   initialDays: DayPlan[];
@@ -23,9 +23,7 @@ function toInitialEntries(data: InspirationDocument) {
 }
 
 export async function getInspirationExperienceProps(city: string): Promise<InspirationExperienceProps> {
-  assertValidCitySlug(city);
-
-  const data = await safeReadInspirationData(city);
+  const data = await loadInspirationBySlug(city);
   const initialDays = buildDaysFromInspirationData(data);
   const initialBudget = data.budget?.amount ?? 0;
   const initialEntries = toInitialEntries(data);

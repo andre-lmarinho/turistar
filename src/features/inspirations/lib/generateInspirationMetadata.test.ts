@@ -1,52 +1,34 @@
-import { notFound } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { assertValidCitySlug, safeReadInspirationData } from "@/features/inspirations/lib/inspirationData";
+import { loadInspirationBySlug } from "@/features/inspirations/lib/inspirationLoader";
 import { SITE_URL } from "@/shared/utils/siteUrl";
 
 import { generateInspirationMetadata } from "./generateInspirationMetadata";
 
-vi.mock("next/navigation", () => ({
-  notFound: vi.fn(),
-}));
-
-vi.mock("@/features/inspirations/lib/inspirationData", () => ({
-  safeReadInspirationData: vi.fn(),
-  assertValidCitySlug: vi.fn(),
+vi.mock("@/features/inspirations/lib/inspirationLoader", () => ({
+  loadInspirationBySlug: vi.fn(),
 }));
 
 describe("generateInspirationMetadata", () => {
   const notFoundError = new Error("NOT_FOUND");
 
   beforeEach(() => {
-    vi.mocked(notFound).mockImplementation(() => {
+    vi.mocked(loadInspirationBySlug).mockReset();
+  });
+
+  it("propagates error when loadInspirationBySlug throws", async () => {
+    vi.mocked(loadInspirationBySlug).mockImplementation(() => {
       throw notFoundError;
     });
-    vi.mocked(assertValidCitySlug).mockReset();
-    vi.mocked(safeReadInspirationData).mockReset();
-  });
 
-  it("delegates to notFound when the slug is invalid", async () => {
-    vi.mocked(assertValidCitySlug).mockImplementation(() => notFound());
-
-    await expect(generateInspirationMetadata("Invalid!")).rejects.toBe(notFoundError);
-    expect(safeReadInspirationData).not.toHaveBeenCalled();
-  });
-
-  it("delegates to notFound when the inspiration document is missing", async () => {
-    vi.mocked(assertValidCitySlug).mockImplementation(() => undefined);
-    vi.mocked(safeReadInspirationData).mockImplementation(() => notFound());
-
-    await expect(generateInspirationMetadata("lisbon")).rejects.toBe(notFoundError);
-    expect(safeReadInspirationData).toHaveBeenCalledWith("lisbon");
+    await expect(generateInspirationMetadata("invalid")).rejects.toBe(notFoundError);
+    expect(loadInspirationBySlug).toHaveBeenCalledWith("invalid");
   });
 
   it("uses defaults when description and images are absent", async () => {
     const city = "lisbon";
     const defaultDescription = `Plan a trip to Lisbon with suggested activities, map, and budget tracking.`;
-    vi.mocked(assertValidCitySlug).mockImplementation(() => undefined);
-    vi.mocked(safeReadInspirationData).mockResolvedValue({
-      slug: city,
+    vi.mocked(loadInspirationBySlug).mockResolvedValue({
       destination: "Lisbon",
       itinerary: [],
       description: undefined,
@@ -70,13 +52,11 @@ describe("generateInspirationMetadata", () => {
   it("applies custom metadata and uses an absolute image URL", async () => {
     const city = "lisbon";
     const custom = {
-      slug: city,
       destination: "Lisbon",
       description: "Custom description",
       title: "Lisbon Guide",
       itinerary: [
         {
-          day: 1,
           activities: [
             {
               title: "Wake up",
@@ -89,8 +69,7 @@ describe("generateInspirationMetadata", () => {
         },
       ],
     };
-    vi.mocked(assertValidCitySlug).mockImplementation(() => undefined);
-    vi.mocked(safeReadInspirationData).mockResolvedValue(custom);
+    vi.mocked(loadInspirationBySlug).mockResolvedValue(custom);
 
     const metadata = await generateInspirationMetadata(city);
 
@@ -107,15 +86,12 @@ describe("generateInspirationMetadata", () => {
 
   it("converts relative image paths using SITE_URL", async () => {
     const city = "lisbon";
-    vi.mocked(assertValidCitySlug).mockImplementation(() => undefined);
-    vi.mocked(safeReadInspirationData).mockResolvedValue({
-      slug: city,
+    vi.mocked(loadInspirationBySlug).mockResolvedValue({
       destination: "Lisbon",
       description: undefined,
       title: undefined,
       itinerary: [
         {
-          day: 1,
           activities: [
             {
               title: "Walk",
