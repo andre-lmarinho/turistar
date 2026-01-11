@@ -126,9 +126,7 @@ type RpcParams = {
   leave_plan: {
     _plan_id: string;
   };
-  get_user_planners: {
-    p_user_id: string;
-  };
+  get_user_planners: Record<string, never>;
 };
 
 type EqFilters = Record<string, unknown>;
@@ -556,8 +554,7 @@ class MockSupabaseClientImpl {
         return { data: true, error: null };
       }
       case "get_user_planners": {
-        const rpcParams = params as RpcParams["get_user_planners"];
-        const userId = rpcParams.p_user_id;
+        const userId = DEFAULT_OWNER_ID;
 
         // Filter plans owned by user or where user is member
         const ownedPlans = this.plans.filter((plan) => plan.user_id === userId);
