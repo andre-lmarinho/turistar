@@ -13,7 +13,7 @@ export function InspirationLink() {
       <Container id="inspiration">
         <H2>Be inspired by fellow travelers</H2>
         <P>
-          Explore a curated list of other travelers trip itineraries and get inspired for your next trip. If
+          Explore a curated list of other travelers' trip itineraries and get inspired for your next trip. If
           you like an itinerary, you can clone it and make it your own.
         </P>
       </Container>
