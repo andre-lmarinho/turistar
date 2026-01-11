@@ -1,7 +1,7 @@
 # Inspirations related code will live here
 
 ## Data Flow
-```
+```text
 List UI (InspirationLink, InspirationsView)
   └─> data.ts (summary only, client-safe)
 
