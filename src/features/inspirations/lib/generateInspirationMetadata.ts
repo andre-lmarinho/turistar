@@ -13,7 +13,7 @@ export async function generateInspirationMetadata(city: string): Promise<Metadat
 
   const data = await loadInspirationBySlug(city);
   const description = data.description?.trim();
-  const title = description ? (data.title ?? baseTitle) : baseTitle;
+  const title = data.title ?? baseTitle;
   const finalDescription = description ?? defaultDescription;
 
   const firstWithImage = data.itinerary
