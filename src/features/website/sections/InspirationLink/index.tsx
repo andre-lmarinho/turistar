@@ -1,12 +1,12 @@
 "use client";
 
-import { getMarketingInspirationItems } from "@/features/inspirations/data";
+import { getMarketingInspirations } from "@/features/inspirations/data";
 import { H2, P } from "@/features/website/ui/typography";
 import { Container, Section } from "@/features/website/ui/wrapper";
 import { Card } from "@/shared/ui/card";
 
 export function InspirationLink() {
-  const destinations = getMarketingInspirationItems();
+  const destinations = getMarketingInspirations();
 
   return (
     <Section>
@@ -14,7 +14,7 @@ export function InspirationLink() {
         <H2>Be inspired by fellow travelers</H2>
         <P>
           Explore a curated list of other travelers trip itineraries and get inspired for your next trip. If
-          you like a traveling, you can clone it and make it your own.
+          you like an itinerary, you can clone it and make it your own.
         </P>
       </Container>
 
