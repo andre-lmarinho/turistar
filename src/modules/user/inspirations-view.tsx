@@ -1,9 +1,9 @@
-import { getAllInspirationItems } from "@/features/app/inspiration/data";
+import { getAllInspirations } from "@/features/inspirations/data";
 import { Card } from "@/shared/ui/card/Card";
 import { CardGrid } from "@/shared/ui/card/CardGrid";
 
 export function InspirationsView() {
-  const items = getAllInspirationItems();
+  const items = getAllInspirations();
 
   return (
     <section className="space-y-3">

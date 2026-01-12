@@ -1,13 +1,9 @@
 {
-  "slug": "paris",
-  "title": "Paris",
-  "title_inspiration": "A weekend in Paris",
-  "duration_days": 2,
+  "title": "A weekend in Paris",
   "destination": "Paris",
-  "image": "/inspiration/paris/preview.jpg",
+  "description": "A weekend in Paris with a smart itinerary. See iconic spots, walkable routes, food highlights, and tips to enjoy the city in two days.",
   "itinerary": [
     {
-      "day": 1,
       "activities": [
         {
           "title": "Visit the Eiffel Tower",
@@ -22,7 +18,6 @@
       ]
     },
     {
-      "day": 2,
       "activities": [
         {
           "title": "Louvre Museum",

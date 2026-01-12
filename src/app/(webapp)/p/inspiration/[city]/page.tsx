@@ -1,12 +1,17 @@
-import { PlannerClient } from '@/features/app/planner/components/PlannerClient';
-import { getInspirationExperienceProps } from '@/features/app/inspiration/server/getInspirationExperienceProps';
-import { inspirationPageMetadata } from '@/features/app/inspiration/server/pageMetadata';
+import type { Metadata } from "next";
+
+import { PlannerClient } from "@/features/app/planner/components/PlannerClient";
+import { generateInspirationMetadata } from "@/features/inspirations/lib/generateInspirationMetadata";
+import { getInspirationExperienceProps } from "@/features/inspirations/lib/getInspirationExperienceProps";
 
 type PageProps = {
   params: Promise<{ city: string }>;
 };
 
-export const generateMetadata = inspirationPageMetadata;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { city } = await params;
+  return generateInspirationMetadata(city);
+}
 
 export default async function InspirationPlannerPage({ params }: PageProps) {
   const { city } = await params;

@@ -1,30 +1,22 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from "@testing-library/react";
 
-import { InspirationLink } from '@/features/website/sections/InspirationLink';
+import { getMarketingInspirations } from "@/features/inspirations/data";
+import { InspirationLink } from "@/features/website/sections/InspirationLink";
 
-import boipeba from '@/features/app/inspiration/data/boipeba.json';
-import rome from '@/features/app/inspiration/data/rome.json';
-import type { InspirationDocument } from '@/features/app/inspiration/server/types';
-
-describe('InspirationLink', () => {
-  it('renders destinations as links with correct hrefs', () => {
+describe("InspirationLink", () => {
+  it("renders featured destinations as links with correct hrefs", () => {
     render(<InspirationLink />);
 
-    const romeTitle = (rome as InspirationDocument).title_inspiration ?? '';
-    const boipebaTitle = (boipeba as InspirationDocument).title_inspiration ?? '';
+    const featured = getMarketingInspirations();
 
-    expect(
-      screen.getByRole('link', {
-        name: new RegExp(romeTitle, 'i'),
-      })
-    ).toHaveAttribute('href', '/p/inspiration/rome');
+    for (const item of featured) {
+      expect(
+        screen.getByRole("link", {
+          name: new RegExp(item.title, "i"),
+        })
+      ).toHaveAttribute("href", `/p/inspiration/${item.slug}`);
+    }
 
-    expect(
-      screen.getByRole('link', {
-        name: new RegExp(boipebaTitle, 'i'),
-      })
-    ).toHaveAttribute('href', '/p/inspiration/boipeba');
-
-    expect(screen.getAllByRole('link')).toHaveLength(2);
+    expect(screen.getAllByRole("link")).toHaveLength(featured.length);
   });
 });
