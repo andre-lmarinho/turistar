@@ -1,9 +1,9 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type PlanDestinationRecord = {
   name: string | null;
@@ -108,7 +108,7 @@ export async function fetchPlanByIdWithMembers(
 ): Promise<PlanWithMembersRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
+    .from("plans")
     .select(
       `
         id,
@@ -122,12 +122,12 @@ export async function fetchPlanByIdWithMembers(
         plan_members!left(user_id, tier)
       `
     )
-    .eq('id', planId)
+    .eq("id", planId)
     .maybeSingle()) as unknown as { data: PlanWithMembersRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanByIdWithMembers',
+      operation: "fetchPlanByIdWithMembers",
       identifiers: { planId },
       error,
     });
@@ -143,13 +143,13 @@ export async function fetchPlanByIdWithMembers(
   };
 }
 
-export async function fetchPublicPlanBySlug(
+export async function fetchPlanBySlug(
   slug: string,
   { client }: PlanRepositoryOptions = {}
-): Promise<PlanRecord | null> {
+): Promise<PlanWithMembersRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
+    .from("plans")
     .select(
       `
         id,
@@ -159,16 +159,16 @@ export async function fetchPublicPlanBySlug(
         budget,
         start_date,
         end_date,
-        plan_destinations(destinations(name))
+        plan_destinations(destinations(name)),
+        plan_members!left(user_id, tier)
       `
     )
-    .eq('public_slug', slug)
-    .eq('is_public', true)
-    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+    .eq("public_slug", slug)
+    .maybeSingle()) as unknown as { data: PlanWithMembersRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPublicPlanBySlug',
+      operation: "fetchPlanBySlug",
       identifiers: { slug },
       error,
     });
@@ -178,31 +178,10 @@ export async function fetchPublicPlanBySlug(
     return null;
   }
 
-  return mapPlanRow(data);
-}
-
-export async function fetchPlanMemberTier(
-  planId: string,
-  userId: string,
-  { client }: PlanRepositoryOptions = {}
-): Promise<string | null> {
-  const supabase = getClient(client);
-  const { data, error } = (await supabase
-    .from('plan_members')
-    .select('tier')
-    .eq('plan_id', planId)
-    .eq('user_id', userId)
-    .maybeSingle()) as unknown as { data: { tier: string } | null; error: unknown };
-
-  if (error) {
-    throw formatSupabaseError({
-      operation: 'fetchPlanMemberTier',
-      identifiers: { planId, userId },
-      error,
-    });
-  }
-
-  return data?.tier ?? null;
+  return {
+    ...mapPlanRow(data),
+    members: mapMembers(data.plan_members),
+  };
 }
 
 export async function fetchLatestPlanSnapshot(
@@ -211,17 +190,17 @@ export async function fetchLatestPlanSnapshot(
 ): Promise<PlanSnapshotRow | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plan_snapshots')
-    .select('plan_id, version, state, updated_at')
-    .eq('plan_id', planId)
-    .order('version', { ascending: false })
-    .order('updated_at', { ascending: false })
+    .from("plan_snapshots")
+    .select("plan_id, version, state, updated_at")
+    .eq("plan_id", planId)
+    .order("version", { ascending: false })
+    .order("updated_at", { ascending: false })
     .limit(1)
     .maybeSingle()) as unknown as { data: PlanSnapshotRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchLatestPlanSnapshot',
+      operation: "fetchLatestPlanSnapshot",
       identifiers: { planId },
       error,
     });
