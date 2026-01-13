@@ -1,14 +1,15 @@
 "use client";
 
 import { ShareLinkAutoJoin } from "@/features/app/planner/components/share/ShareLinkAutoJoin";
-import { acceptPlanShareLink } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
 import { Button } from "@/shared/ui/button";
 
 interface ShareTokenViewProps {
   token: string;
+  acceptShareLink: (token: string) => Promise<AcceptShareLinkResult>;
 }
 
-export function ShareTokenView({ token }: ShareTokenViewProps) {
+export function ShareTokenView({ token, acceptShareLink }: ShareTokenViewProps) {
   const nextPath = `/p/share/${token}`;
 
   return (
@@ -30,7 +31,7 @@ export function ShareTokenView({ token }: ShareTokenViewProps) {
         <p className="text-muted-foreground mt-4 text-xs">
           After signing in, return to this link to join the planner.
         </p>
-        <ShareLinkAutoJoin token={token} acceptShareLink={acceptPlanShareLink} />
+        <ShareLinkAutoJoin token={token} acceptShareLink={acceptShareLink} />
       </div>
     </div>
   );

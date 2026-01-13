@@ -13,7 +13,7 @@ export default async function PlannerShareLinkPage({ params }: { params: Promise
   if (!trimmed || !isUuid(trimmed)) notFound();
 
   const user = await getCurrentUser();
-  if (!user) return <ShareTokenView token={trimmed} />;
+  if (!user) return <ShareTokenView token={trimmed} acceptShareLink={acceptPlanShareLink} />;
 
   const result = await acceptPlanShareLink(trimmed);
   if (!result.success) return <ShareTokenErrorView message={result.error} />;
