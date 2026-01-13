@@ -1,23 +1,25 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+
+import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
 
 type UseShareLinkAutoJoinArgs = {
   token: string;
-  acceptShareLink: (token: string) => Promise<string>;
+  acceptShareLink: (token: string) => Promise<AcceptShareLinkResult>;
 };
 
-export type JoinStatus = 'idle' | 'joining' | 'error';
+export type JoinStatus = "idle" | "joining" | "error";
 
 type AuthSessionResponse = {
   userId?: string | null;
 };
 
 async function fetchAuthSession(): Promise<string | null> {
-  const response = await fetch('/api/auth/session', {
-    method: 'GET',
-    credentials: 'same-origin',
+  const response = await fetch("/api/auth/session", {
+    method: "GET",
+    credentials: "same-origin",
   });
 
   if (!response.ok) {
@@ -25,14 +27,14 @@ async function fetchAuthSession(): Promise<string | null> {
   }
 
   const data = (await response.json()) as AuthSessionResponse;
-  return typeof data.userId === 'string' && data.userId.length > 0 ? data.userId : null;
+  return typeof data.userId === "string" && data.userId.length > 0 ? data.userId : null;
 }
 
 async function exchangeAuthCode(code: string): Promise<boolean> {
-  const response = await fetch('/api/auth/exchange', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/api/auth/exchange", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
   });
 
@@ -43,7 +45,7 @@ export function useShareLinkAutoJoin({ token, acceptShareLink }: UseShareLinkAut
   const router = useRouter();
   const joinRef = useRef(false);
   const exchangeAttemptedRef = useRef(false);
-  const [status, setStatus] = useState<JoinStatus>('idle');
+  const [status, setStatus] = useState<JoinStatus>("idle");
 
   useEffect(() => {
     let active = true;
@@ -75,15 +77,15 @@ export function useShareLinkAutoJoin({ token, acceptShareLink }: UseShareLinkAut
         return;
       }
       const url = new URL(window.location.href);
-      const code = url.searchParams.get('code');
+      const code = url.searchParams.get("code");
       let sessionUserId = await fetchAuthSession();
 
       if (!sessionUserId && code && !exchangeAttemptedRef.current) {
         exchangeAttemptedRef.current = true;
         const exchanged = await exchangeAuthCode(code);
         if (exchanged) {
-          url.searchParams.delete('code');
-          window.history.replaceState(null, '', url.toString());
+          url.searchParams.delete("code");
+          window.history.replaceState(null, "", url.toString());
           sessionUserId = await fetchAuthSession();
         }
       }
@@ -95,39 +97,36 @@ export function useShareLinkAutoJoin({ token, acceptShareLink }: UseShareLinkAut
 
       clearRetry();
       joinRef.current = true;
-      setStatus('joining');
-      try {
-        const planId = await acceptShareLink(token);
-        if (!active) {
-          return;
-        }
-        router.replace(`/p/${planId}`);
+      setStatus("joining");
+
+      const result = await acceptShareLink(token);
+      if (!active) return;
+
+      if (result.success) {
+        router.replace(`/p/${result.planId}`);
         router.refresh();
-      } catch {
-        if (!active) {
-          return;
-        }
+      } else {
         joinRef.current = false;
-        setStatus('error');
+        setStatus("error");
       }
     };
 
     void attemptJoin();
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === "visible") {
         void attemptJoin();
       }
     };
 
-    window.addEventListener('focus', handleVisibilityChange);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener("focus", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       active = false;
       clearRetry();
-      window.removeEventListener('focus', handleVisibilityChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener("focus", handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [acceptShareLink, router, token]);
 

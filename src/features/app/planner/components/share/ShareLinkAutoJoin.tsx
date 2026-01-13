@@ -1,24 +1,21 @@
-'use client';
+"use client";
 
-import { useShareLinkAutoJoin } from '@/features/app/planner/hooks/ui/useShareLinkAutoJoin';
+import { useShareLinkAutoJoin } from "@/features/app/planner/hooks/ui/useShareLinkAutoJoin";
+import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
 
 type ShareLinkAutoJoinProps = {
   token: string;
-  acceptShareLink: (token: string) => Promise<string>;
+  acceptShareLink: (token: string) => Promise<AcceptShareLinkResult>;
 };
 
 export function ShareLinkAutoJoin({ token, acceptShareLink }: ShareLinkAutoJoinProps) {
   const status = useShareLinkAutoJoin({ token, acceptShareLink });
 
-  if (status === 'joining') {
-    return (
-      <p className="text-muted-foreground mt-4 text-xs">
-        Joining this planner...
-      </p>
-    );
+  if (status === "joining") {
+    return <p className="text-muted-foreground mt-4 text-xs">Joining this planner...</p>;
   }
 
-  if (status === 'error') {
+  if (status === "error") {
     return (
       <p className="text-muted-foreground mt-4 text-xs">
         We could not join automatically. Please refresh the page or try again.
