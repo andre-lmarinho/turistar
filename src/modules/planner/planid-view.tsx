@@ -2,10 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-
-import { PlannerClient } from "@/features/app/planner/components/PlannerClient";
 import { usePlanEditTokens } from "@/features/app/planner/hooks/data/usePlanEditTokens";
 import type { PlannerExperience } from "@/features/app/planner/server/queries/plans/getPlannerExperience";
+import { PlannerWorkspace } from "@/modules/planner/components/PlannerWorkspace";
 
 interface PlanIdViewProps {
   experience: PlannerExperience;
@@ -31,10 +30,9 @@ export function PlanIdView({ experience }: PlanIdViewProps) {
   }, [experience.editToken, experience.planId, saveEditToken]);
 
   return (
-    <PlannerClient
+    <PlannerWorkspace
       initialDays={experience.initialDays}
       planId={experience.planId}
-      slug={experience.slug}
       dest={experience.destination}
       title={experience.title ?? experience.destination}
       initialBudget={experience.initialBudget}

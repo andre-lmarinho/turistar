@@ -1,7 +1,7 @@
 "use client";
 
-import { PlannerClient } from "@/features/app/planner/components/PlannerClient";
 import type { InspirationExperienceProps } from "@/features/inspirations/lib/getInspirationExperienceProps";
+import { PlannerWorkspace } from "@/modules/planner/components/PlannerWorkspace";
 
 interface InspirationViewProps {
   experience: InspirationExperienceProps;
@@ -9,7 +9,7 @@ interface InspirationViewProps {
 
 export function InspirationView({ experience }: InspirationViewProps) {
   return (
-    <PlannerClient
+    <PlannerWorkspace
       initialDays={experience.initialDays}
       planId={experience.planId}
       dest={experience.dest}
