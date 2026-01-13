@@ -1,68 +1,33 @@
 "use server";
 
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { acceptPlanShareLink as acceptPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
 import { ensureProfile } from "@/features/auth/lib/ensureProfile";
 import { supabaseServer } from "@/shared/lib/supabaseServer";
 
-type ErrorFields = {
-  message?: string;
-  details?: string;
-  code?: string;
-};
+export type AcceptShareLinkResult = { success: true; planId: string } | { success: false; error: string };
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function readString(value: unknown): string | null {
-  return typeof value === "string" && value.length > 0 ? value : null;
-}
-
-function extractErrorFields(error: unknown): ErrorFields {
-  const direct = isRecord(error) ? error : null;
-  const cause =
-    error instanceof Error && "cause" in error ? (error as Error & { cause?: unknown }).cause : null;
-  const causeRecord = isRecord(cause) ? cause : null;
-  const message =
-    readString(causeRecord?.message) ??
-    readString(direct?.message) ??
-    (error instanceof Error ? error.message : null) ??
-    undefined;
-  const details = readString(causeRecord?.details) ?? readString(direct?.details) ?? undefined;
-  const code = readString(causeRecord?.code) ?? readString(direct?.code) ?? undefined;
-
-  return { message, details, code };
-}
-
-export async function acceptPlanShareLink(
-  token: string,
-  client: SupabaseClient = supabaseServer()
-): Promise<string> {
-  const supabase = client;
-  await ensureProfile({ client: supabase });
-  let planId: string | null = null;
+export async function acceptPlanShareLink(token: string): Promise<AcceptShareLinkResult> {
+  const supabase = supabaseServer();
 
   try {
-    planId = await acceptPlanShareLinkRpc(token, { client: supabase });
+    await ensureProfile({ client: supabase });
+    const planId = await acceptPlanShareLinkRpc(token, { client: supabase });
+
+    if (!planId) {
+      return { success: false, error: "We could not accept this invite right now." };
+    }
+
+    return { success: true, planId };
   } catch (error) {
-    const { message, details, code } = extractErrorFields(error);
-    const context = `operation=acceptPlanShareLink token=${token}`;
-    const err = new Error(
-      message && message.length > 0 ? `${message} (${context})` : `Unable to join planner (${context})`
-    );
-    if (code) {
-      (err as { code?: string }).code = code;
-    }
-    if (details) {
-      (err as { details?: string }).details = details;
-    }
-    throw err;
-  }
+    const message = error instanceof Error ? error.message : "";
 
-  if (!planId) {
-    throw new Error(`acceptPlanShareLink failed: token=${token}`);
-  }
+    if (message.includes("Invalid or expired")) {
+      return { success: false, error: "This share link is invalid or has expired." };
+    }
+    if (message.includes("Not authenticated")) {
+      return { success: false, error: "Please sign in to join this planner." };
+    }
 
-  return planId;
+    return { success: false, error: "We could not accept this invite right now." };
+  }
 }
