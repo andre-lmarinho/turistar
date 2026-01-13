@@ -6,6 +6,14 @@ import { supabaseServer } from "@/shared/lib/supabaseServer";
 
 export type AcceptShareLinkResult = { success: true; planId: string } | { success: false; error: string };
 
+/**
+ * Accepts a planner share link token on behalf of the current authenticated user.
+ *
+ * Ensures the caller has an active profile, invokes the server RPC to accept the share link, and maps outcomes to a structured result.
+ *
+ * @param token - The share link token extracted from the invite link
+ * @returns `{ success: true; planId: string }` when the invite is accepted and the plan ID is returned, or `{ success: false; error: string }` with a user-facing error message otherwise
+ */
 export async function acceptPlanShareLink(token: string): Promise<AcceptShareLinkResult> {
   const supabase = supabaseServer();
 

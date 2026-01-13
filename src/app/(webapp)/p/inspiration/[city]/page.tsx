@@ -13,6 +13,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return generateInspirationMetadata(city);
 }
 
+/**
+ * Renders the InspirationView for the specified city using computed experience data.
+ *
+ * @param params - A Promise that resolves to an object with a `city` route parameter (e.g., `{ city: string }`)
+ * @returns A React element representing the inspiration planner page
+ */
 export default async function InspirationPlannerPage({ params }: PageProps) {
   const { city } = await params;
   const experience = await getInspirationExperienceProps(city);

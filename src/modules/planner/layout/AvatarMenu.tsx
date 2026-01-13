@@ -12,6 +12,16 @@ type AvatarMenuProps = {
   email: string | null;
 };
 
+/**
+ * Renders an account avatar button that opens a popover with user info and a "Log out" action.
+ *
+ * The popover shows the user's display name and email (or fallbacks "Traveler" and "Signed in").
+ * Activating "Log out" signs the user out via Supabase, navigates to "/login", and refreshes the router.
+ *
+ * @param displayName - The user's display name; when `null`, "Traveler" is shown as a fallback.
+ * @param email - The user's email; when `null`, "Signed in" is shown as a fallback.
+ * @returns A Popover element containing the account menu and sign-out control.
+ */
 export function AvatarMenu({ displayName, email }: AvatarMenuProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();

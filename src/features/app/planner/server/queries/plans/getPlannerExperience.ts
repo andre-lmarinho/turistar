@@ -39,6 +39,17 @@ interface GetPlannerExperienceArgs {
   editToken?: string;
 }
 
+/**
+ * Resolve a planner view for a given plan identifier, returning metadata, permissions, and initial plan data.
+ *
+ * Retrieves a plan by UUID (private access) or slug (shared access), enforces access rules, loads the latest snapshot
+ * or falls back to the plan date range for initial days, and loads budget entries for initial entries.
+ *
+ * @param args.identifier - Plan identifier: a UUID grants private access (requires membership or ownership), otherwise treated as a shared slug.
+ * @param args.dest - Optional explicit destination name to override the plan's default destination.
+ * @param args.editToken - Optional edit token which, if matching the plan's token, grants edit rights.
+ * @returns A PlannerExperience containing plan identifiers, resolved destination/title, viewer identity and permissions, optional edit token, and optional initialDays, initialBudget, and initialEntries.
+ */
 export async function getPlannerExperience({
   identifier,
   dest,

@@ -16,6 +16,14 @@ type AuthSessionResponse = {
   userId?: string | null;
 };
 
+/**
+ * Fetches the current authenticated session and returns the session's user ID if available.
+ *
+ * Performs a same-origin request for the current auth session; if no authenticated session exists
+ * or the request fails, the function yields `null`.
+ *
+ * @returns The `userId` string when an authenticated session exists, `null` otherwise.
+ */
 async function fetchAuthSession(): Promise<string | null> {
   const response = await fetch("/api/auth/session", {
     method: "GET",
@@ -30,6 +38,12 @@ async function fetchAuthSession(): Promise<string | null> {
   return typeof data.userId === "string" && data.userId.length > 0 ? data.userId : null;
 }
 
+/**
+ * Exchanges an authorization code with the server to establish an authenticated session.
+ *
+ * @param code - The authorization code received from the identity provider
+ * @returns `true` if the server accepted the code and responded with a successful status, `false` otherwise.
+ */
 async function exchangeAuthCode(code: string): Promise<boolean> {
   const response = await fetch("/api/auth/exchange", {
     method: "POST",
@@ -41,6 +55,15 @@ async function exchangeAuthCode(code: string): Promise<boolean> {
   return response.ok;
 }
 
+/**
+ * Automatically attempts to accept a shared plan link and join the associated plan.
+ *
+ * Attempts to use the current authentication session (and an optional `code` URL parameter) to call `acceptShareLink`, retrying with increasing delays if the user is not yet authenticated. Retries are re-triggered when the tab gains focus or becomes visible. Updates and returns the current join status.
+ *
+ * @param token - The share link token to accept
+ * @param acceptShareLink - Function that accepts the share link token and resolves to an `AcceptShareLinkResult`
+ * @returns The current join status: `"idle"`, `"joining"`, or `"error"`
+ */
 export function useShareLinkAutoJoin({ token, acceptShareLink }: UseShareLinkAutoJoinArgs) {
   const router = useRouter();
   const joinRef = useRef(false);

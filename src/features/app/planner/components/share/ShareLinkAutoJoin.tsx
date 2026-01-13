@@ -8,6 +8,13 @@ type ShareLinkAutoJoinProps = {
   acceptShareLink: (token: string) => Promise<AcceptShareLinkResult>;
 };
 
+/**
+ * Renders a status message while attempting to auto-join a planner using a share link.
+ *
+ * @param token - The share link token used to attempt joining the planner.
+ * @param acceptShareLink - Function that accepts the share link token and performs the join operation.
+ * @returns A paragraph element with a joining message or an error message, or `null` when no status is shown.
+ */
 export function ShareLinkAutoJoin({ token, acceptShareLink }: ShareLinkAutoJoinProps) {
   const status = useShareLinkAutoJoin({ token, acceptShareLink });
 

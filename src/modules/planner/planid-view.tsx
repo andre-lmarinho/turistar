@@ -10,6 +10,14 @@ interface PlanIdViewProps {
   experience: PlannerExperience;
 }
 
+/**
+ * Render a PlannerWorkspace for the provided PlannerExperience and handle related side effects.
+ *
+ * Performs two side effects: cleans up the URL when a slug is present and query parameters exist, and persists an edit token when both `planId` and `editToken` are available.
+ *
+ * @param experience - The PlannerExperience used to populate PlannerWorkspace props (e.g., planId, title, destination, permissions, initial data, and edit token)
+ * @returns A JSX element rendering PlannerWorkspace configured from `experience`
+ */
 export function PlanIdView({ experience }: PlanIdViewProps) {
   const router = useRouter();
   const search = useSearchParams();

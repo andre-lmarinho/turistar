@@ -102,6 +102,13 @@ function mapMembers(rows: PlanMemberRow[] | null): PlanMemberRecord[] {
   }));
 }
 
+/**
+ * Fetches a plan by its ID and returns the plan record augmented with destinations and member data.
+ *
+ * @param planId - The plan's unique identifier
+ * @returns The plan record with a `members` array and `destinations` populated, or `null` if no plan exists with the given `planId`
+ * @throws When the database query fails, throws a formatted Supabase error describing the operation and identifiers
+ */
 export async function fetchPlanByIdWithMembers(
   planId: string,
   { client }: PlanRepositoryOptions = {}
@@ -143,6 +150,14 @@ export async function fetchPlanByIdWithMembers(
   };
 }
 
+/**
+ * Fetches a plan by its public slug, including its destinations and member list.
+ *
+ * @param slug - The plan's public slug to look up
+ * @param client - Optional Supabase client to use for the query
+ * @returns The plan with members and destinations, or `null` if no matching plan exists
+ * @throws An error with Supabase failure details when the database query fails
+ */
 export async function fetchPlanBySlug(
   slug: string,
   { client }: PlanRepositoryOptions = {}
@@ -184,6 +199,13 @@ export async function fetchPlanBySlug(
   };
 }
 
+/**
+ * Fetches the most recent snapshot for a plan by its id.
+ *
+ * @param planId - The plan's unique identifier.
+ * @returns The latest `PlanSnapshotRow` for the given plan, or `null` if no snapshot exists.
+ * @throws An error produced by `formatSupabaseError` when the database query fails.
+ */
 export async function fetchLatestPlanSnapshot(
   planId: string,
   { client }: PlanRepositoryOptions = {}

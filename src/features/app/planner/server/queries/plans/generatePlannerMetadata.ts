@@ -12,6 +12,15 @@ type PlanMetadataRow = {
   }> | null;
 };
 
+/**
+ * Builds page metadata for a planner identified by an ID or slug.
+ *
+ * Resolves the page title by preferring the plan's `title`, then the first
+ * destination's `name`, and falls back to `"Planner"` if neither is available.
+ *
+ * @param identifier - The plan identifier; either a UUID (`id`) or a public slug (`public_slug`)
+ * @returns A `Metadata` object whose `title` is `"<resolved title> | Turistar App"`
+ */
 export async function generatePlannerMetadata(identifier: string): Promise<Metadata> {
   const supabase = createSupabaseServerClient();
 

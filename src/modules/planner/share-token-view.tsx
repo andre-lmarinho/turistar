@@ -9,6 +9,13 @@ interface ShareTokenViewProps {
   acceptShareLink: (token: string) => Promise<AcceptShareLinkResult>;
 }
 
+/**
+ * Render a centered card that prompts the user to sign in or create an account to join a planner using a share token.
+ *
+ * @param token - The share token that identifies the planner invitation and is used to construct the return path.
+ * @param acceptShareLink - Function that accepts the share token and processes the invitation (called by the auto-join handler).
+ * @returns The React element containing sign-up / sign-in links (with next path) and the auto-join component for the token.
+ */
 export function ShareTokenView({ token, acceptShareLink }: ShareTokenViewProps) {
   const nextPath = `/p/share/${token}`;
 
@@ -41,6 +48,12 @@ interface ShareTokenErrorViewProps {
   message: string;
 }
 
+/**
+ * Shows an error card when joining a shared planner fails.
+ *
+ * @param message - The error message to display to the user
+ * @returns The rendered error view element containing the message and navigation actions
+ */
 export function ShareTokenErrorView({ message }: ShareTokenErrorViewProps) {
   return (
     <div className="bg-card flex min-h-screen items-center justify-center px-4">

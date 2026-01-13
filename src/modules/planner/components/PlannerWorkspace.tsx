@@ -52,6 +52,21 @@ type PlannerWorkspaceContentProps = {
   initialEntries?: Entry[];
 };
 
+/**
+ * Render the planner workspace UI with switchable "planner", "map", and "budget" modes.
+ *
+ * Updates the browser tab title to "<title> | Turistar App", allows inline editing of the plan title
+ * (and persists the change when `persist`, `canEdit`, and `editToken` are provided), and presents
+ * animated stacked panels for each mode with responsive mode toggles.
+ *
+ * @param persist - If true, title edits are persisted to the server when conditions allow
+ * @param title - Initial workspace title shown and edited in the header
+ * @param canEdit - Controls whether the title and other editable controls are enabled
+ * @param editToken - Token required to authorize persisting title changes
+ * @param initialBudget - Initial budget value passed to the BudgetBoard
+ * @param initialEntries - Initial budget entries passed to the BudgetBoard
+ * @returns The workspace UI element containing header, mode panels, dialogs, and controls
+ */
 function PlannerWorkspaceContent({
   persist,
   title: initialTitle,
@@ -166,6 +181,20 @@ function PlannerWorkspaceContent({
   );
 }
 
+/**
+ * Render the planner workspace wrapped with PlannerProvider and initialized from the given props.
+ *
+ * The provider supplies planner context (days, range, permissions, etc.) and PlannerWorkspaceContent
+ * is mounted with title, editability, and optional budget/entries.
+ *
+ * @param persist - If true, enables server-side persistence for editable changes (e.g., title updates)
+ * @param canEdit - If false, disables in-place editing of the workspace by the current viewer
+ * @param viewerUserId - ID of the current viewer; when `null` certain share UI is hidden
+ * @param editToken - Optional token required for authenticated edit operations
+ * @param initialBudget - Optional initial budget value passed to the budget view
+ * @param initialEntries - Optional initial budget entries passed to the budget view
+ * @returns The planner workspace React element wrapped in its context provider
+ */
 export function PlannerWorkspace({
   initialDays,
   planId,
