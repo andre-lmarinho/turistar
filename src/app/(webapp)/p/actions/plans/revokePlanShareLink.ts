@@ -1,5 +1,5 @@
-'use server';
+"use server";
 
-import { revokePlanShareLink } from '@/features/app/planner/server/actions/plans/revokePlanShareLink';
+import { revokePlanShareLink } from "@/features/app/planner/server/actions/plans/revokePlanShareLink";
 
 export { revokePlanShareLink };

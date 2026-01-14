@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-import { fetchProfileSlugByUserId } from '@/features/app/planner/services/supabase/profileQueries';
-import { UnauthorizedError, requireUser } from '@/shared/lib/auth/session';
+import { fetchProfileSlugByUserId } from "@/features/app/planner/services/supabase/profileQueries";
+import { requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
 
 export async function GET() {
   try {
@@ -14,6 +14,6 @@ export async function GET() {
     }
 
     console.error(error);
-    return NextResponse.json({ error: 'Unable to fetch profile slug.' }, { status: 500 });
+    return NextResponse.json({ error: "Unable to fetch profile slug." }, { status: 500 });
   }
 }

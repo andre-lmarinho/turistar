@@ -1,12 +1,12 @@
-import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
-import { EasyLink } from '@/features/website/sections/EasyLink';
-import { Features } from '@/features/website/sections/Features';
-import { HeroFriends } from '@/features/website/sections/Hero';
-import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
-import { Testimonial } from '@/features/website/sections/Testimonial';
-import { UseCases } from '@/features/website/sections/UseCases';
-import { TrustedBy } from '@/features/website/sections/TrustedBy';
+import { CtaFinal } from "@/features/website/sections/CTAFinal";
+import { CtaMidPage } from "@/features/website/sections/CTAMidPage";
+import { EasyLink } from "@/features/website/sections/EasyLink";
+import { Features } from "@/features/website/sections/Features";
+import { HeroFriends } from "@/features/website/sections/Hero";
+import { KeyBenefits } from "@/features/website/sections/KeyBenefits";
+import { Testimonial } from "@/features/website/sections/Testimonial";
+import { TrustedBy } from "@/features/website/sections/TrustedBy";
+import { UseCases } from "@/features/website/sections/UseCases";
 
 export default function FriendsPage() {
   return (
@@ -18,19 +18,19 @@ export default function FriendsPage() {
         description="Empower couples and friends to organize shared itineraries by combining planning, mapping and budgeting tools."
         benefits={[
           {
-            title: 'Coordinate schedules easily',
+            title: "Coordinate schedules easily",
             description:
               "Drag and drop each person's ideas into a shared timeline. Watch updates save automatically so everyone's view stays aligned across all devices.",
           },
           {
-            title: 'Agree on routes',
+            title: "Agree on routes",
             description:
               "Use the map to visualize everyone's favorite stops. Compare distances and adjust days until the route suits the whole group.",
           },
           {
-            title: 'Share expenses fairly',
+            title: "Share expenses fairly",
             description:
-              'Track who is paying for what by category. Update totals and ensure costs are transparent so friendships stay strong throughout the trip.',
+              "Track who is paying for what by category. Update totals and ensure costs are transparent so friendships stay strong throughout the trip.",
           },
         ]}
       />

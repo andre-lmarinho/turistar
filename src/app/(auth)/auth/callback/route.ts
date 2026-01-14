@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 interface AuthCallbackPayload {
   event: AuthChangeEvent;
@@ -16,11 +16,11 @@ export async function POST(request: Request) {
   }
   const { event, session }: AuthCallbackPayload = JSON.parse(payloadText);
 
-  if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+  if (session && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
     await supabase.auth.setSession(session);
   }
 
-  if (event === 'SIGNED_OUT') {
+  if (event === "SIGNED_OUT") {
     await supabase.auth.signOut();
   }
 

@@ -1,10 +1,10 @@
-import { HeroHome } from '@/features/website/sections/Hero/Home';
-import { Testimonial } from '@/features/website/sections/Testimonial';
-import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
-import { InspirationLink } from '@/features/website/sections/InspirationLink';
-import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
-import { TrustedBy } from '@/features/website/sections/TrustedBy';
+import { CtaFinal } from "@/features/website/sections/CTAFinal";
+import { CtaMidPage } from "@/features/website/sections/CTAMidPage";
+import { HeroHome } from "@/features/website/sections/Hero/Home";
+import { InspirationLink } from "@/features/website/sections/InspirationLink";
+import { KeyBenefits } from "@/features/website/sections/KeyBenefits";
+import { Testimonial } from "@/features/website/sections/Testimonial";
+import { TrustedBy } from "@/features/website/sections/TrustedBy";
 
 export default function MarketingHomePage() {
   return (
@@ -18,19 +18,19 @@ export default function MarketingHomePage() {
           simple."
         benefits={[
           {
-            title: 'Drag. Drop. Done.',
+            title: "Drag. Drop. Done.",
             description:
-              'View stops by day, check distances at a glance, and move between pins and cards with context intact.',
+              "View stops by day, check distances at a glance, and move between pins and cards with context intact.",
           },
           {
-            title: 'See your trip on the map',
+            title: "See your trip on the map",
             description:
-              'View stops by day, check distances at a glance, and move between pins and cards with context intact.',
+              "View stops by day, check distances at a glance, and move between pins and cards with context intact.",
           },
           {
-            title: 'Built-in budget',
+            title: "Built-in budget",
             description:
-              'Track costs as you go. See daily and trip totals, adjust with ease, and stay on budget.',
+              "Track costs as you go. See daily and trip totals, adjust with ease, and stay on budget.",
           },
         ]}
       />
