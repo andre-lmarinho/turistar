@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { UserStar } from '@/shared/ui/icon';
+import dynamic from "next/dynamic";
+import { Eyebrow, H2, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { UserStar } from "@/shared/ui/icon";
 
 const TestimonialCarousel = dynamic(
-  () => import('./components/TestimonialCarousel').then((m) => m.TestimonialCarousel),
+  () => import("./components/TestimonialCarousel").then((m) => m.TestimonialCarousel),
   { ssr: false }
 );
 

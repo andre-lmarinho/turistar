@@ -1,16 +1,14 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
-import { cn } from '@/shared/utils/cn';
-
-import { useIsDesktop } from '@/features/website/sections/KeyBenefits/hooks/useIsDesktop';
-import { usePointerDragScroll } from '../hooks/usePointerDragScroll';
-import { useSyncedPointerCarousels } from '../hooks/useSyncedPointerCarousels';
-
-import { FeatureCarouselCard } from './FeatureCarouselCard';
-import { FeatureCarouselNavDots } from './FeatureCarouselNavDots';
-import styles from '../FeatureCarousel.module.css';
+import Image from "next/image";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useIsDesktop } from "@/features/website/sections/KeyBenefits/hooks/useIsDesktop";
+import { cn } from "@/shared/utils/cn";
+import styles from "../FeatureCarousel.module.css";
+import { usePointerDragScroll } from "../hooks/usePointerDragScroll";
+import { useSyncedPointerCarousels } from "../hooks/useSyncedPointerCarousels";
+import { FeatureCarouselCard } from "./FeatureCarouselCard";
+import { FeatureCarouselNavDots } from "./FeatureCarouselNavDots";
 
 export type FeatureCarouselFeature = {
   title: string;
@@ -83,15 +81,13 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
           <ul
             ref={cardsRef}
             className={cn(
-              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 md:cursor-auto md:touch-auto md:snap-none md:flex-col md:gap-4 md:overflow-visible',
+              "scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0 md:cursor-auto md:touch-auto md:snap-none md:flex-col md:gap-4 md:overflow-visible",
               styles.dragContext
-            )}
-          >
+            )}>
             {features.map((feature, index) => (
               <li
                 key={feature.title}
-                className={cn('min-w-full shrink-0 basis-full snap-start md:min-w-0 md:basis-auto')}
-              >
+                className={cn("min-w-full shrink-0 basis-full snap-start md:min-w-0 md:basis-auto")}>
                 <FeatureCarouselCard
                   feature={feature}
                   isActive={index === activeIndex}
@@ -109,10 +105,9 @@ export function FeatureCarousel({ features }: FeatureCarouselProps) {
             tabIndex={-1}
             aria-hidden="true"
             className={cn(
-              'scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0',
+              "scrollbar-hidden m-0 flex w-full cursor-grab [touch-action:pan-y] snap-x snap-proximity gap-4 overflow-x-auto p-0",
               styles.dragContext
-            )}
-          >
+            )}>
             {features.map((feature, index) => (
               <li key={feature.title} className="min-w-full shrink-0 basis-full snap-start">
                 <div className="select-none">

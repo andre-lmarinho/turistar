@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import Image from "next/image";
+import { useState } from "react";
+import groupMock from "@/features/website/sections/Hero/media/group-mock.webp";
+import { CTAButton } from "@/features/website/ui/button";
+import { Eyebrow, H2, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { ArrowLeftRight } from "@/shared/ui/icon";
 
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButton } from '@/features/website/ui/button';
-import { ArrowLeftRight } from '@/shared/ui/icon';
-import groupMock from '@/features/website/sections/Hero/media/group-mock.webp';
-
-const YT_ID = 'xvFZjo5PgG0';
+const YT_ID = "xvFZjo5PgG0";
 
 export function EasyLink() {
   const [play, setPlay] = useState(false);
@@ -33,8 +32,7 @@ export function EasyLink() {
               type="button"
               onClick={() => setPlay(true)}
               className="group relative block h-full w-full focus:outline-none"
-              aria-label="Play video: Share by link"
-            >
+              aria-label="Play video: Share by link">
               <Image
                 src={groupMock}
                 alt="Preview of sharing trips by link"
@@ -50,15 +48,8 @@ export function EasyLink() {
               />
               <span
                 aria-hidden
-                className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 p-4 shadow-md transition group-hover:scale-105"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="28"
-                  height="28"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
+                className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 p-4 shadow-md transition group-hover:scale-105">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </span>

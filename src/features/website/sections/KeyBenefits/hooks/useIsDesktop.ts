@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const DEFAULT_MEDIA_QUERY = '(min-width: 768px)';
+const DEFAULT_MEDIA_QUERY = "(min-width: 768px)";
 
 export function useIsDesktop(query: string = DEFAULT_MEDIA_QUERY) {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
+    if (typeof window === "undefined") return undefined;
 
     const mediaQuery = window.matchMedia(query);
 
@@ -16,10 +16,10 @@ export function useIsDesktop(query: string = DEFAULT_MEDIA_QUERY) {
 
     setMatches(mediaQuery.matches);
 
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handleChange);
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
       return () => {
-        mediaQuery.removeEventListener('change', handleChange);
+        mediaQuery.removeEventListener("change", handleChange);
       };
     }
 

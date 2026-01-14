@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import type { RefObject } from 'react';
+import type { RefObject } from "react";
+import { useEffect, useRef } from "react";
 
-import { scrollToChild } from '../utils/scrollToChild';
+import { scrollToChild } from "../utils/scrollToChild";
 
 export type PointerDragHandlers = {
   onRelease?: (nearestIndex: number) => void;
@@ -92,7 +92,7 @@ export function usePointerDragScroll(
     };
 
     const down = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return;
       measureItems();
       draggingRef.current = true;
       el.setPointerCapture?.(e.pointerId);
@@ -100,8 +100,8 @@ export function usePointerDragScroll(
       startScrollRef.current = el.scrollLeft;
       startIdxRef.current = nearestIndex();
       overshootRef.current = 0;
-      el.style.transform = '';
-      el.classList.add('is-dragging');
+      el.style.transform = "";
+      el.classList.add("is-dragging");
       opts?.onDragStart?.();
     };
 
@@ -121,7 +121,7 @@ export function usePointerDragScroll(
         next = next < 0 ? 0 : max;
       } else {
         overshootRef.current = 0;
-        el.style.transform = '';
+        el.style.transform = "";
       }
       el.scrollLeft = next;
       opts?.onScrollPreview?.(nearestIndex());
@@ -133,16 +133,16 @@ export function usePointerDragScroll(
       try {
         el.releasePointerCapture?.(e.pointerId);
       } catch {}
-      el.classList.remove('is-dragging');
+      el.classList.remove("is-dragging");
 
       if (overshootRef.current !== 0) {
-        el.style.transition = 'transform 200ms ease-out';
-        el.style.transform = 'translateX(0)';
+        el.style.transition = "transform 200ms ease-out";
+        el.style.transform = "translateX(0)";
         const clear = () => {
-          el.style.transition = '';
-          el.removeEventListener('transitionend', clear);
+          el.style.transition = "";
+          el.removeEventListener("transitionend", clear);
         };
-        el.addEventListener('transitionend', clear);
+        el.addEventListener("transitionend", clear);
       }
 
       const delta = e.clientX - startXRef.current;
@@ -167,18 +167,18 @@ export function usePointerDragScroll(
       }
     };
 
-    el.addEventListener('pointerdown', down);
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
-    window.addEventListener('pointercancel', up);
-    window.addEventListener('resize', handleResize);
+    el.addEventListener("pointerdown", down);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      el.removeEventListener('pointerdown', down);
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
-      window.removeEventListener('resize', handleResize);
+      el.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      window.removeEventListener("resize", handleResize);
       itemsMetricsRef.current = null;
     };
   }, [ref, opts, enabled]);

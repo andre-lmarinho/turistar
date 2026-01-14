@@ -1,13 +1,13 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { ChevronDown } from '@/shared/ui/icon';
-import { cn } from '@/shared/utils/cn';
+import { ChevronDown } from "@/shared/ui/icon";
+import { cn } from "@/shared/utils/cn";
 
-import { NAV_LINKS } from '../data';
-import { SolutionsContent } from './SolutionsContent';
+import { NAV_LINKS } from "../data";
+import { SolutionsContent } from "./SolutionsContent";
 
 const MOBILE_MENU_LINK_CLASS =
-  'text-foreground hover:text-primary flex w-full items-center justify-between text-left p-4 text-[15px] font-semibold transition-colors';
+  "text-foreground hover:text-primary flex w-full items-center justify-between text-left p-4 text-[15px] font-semibold transition-colors";
 
 type MobileMenuProps = {
   onClose: () => void;
@@ -29,13 +29,12 @@ export function MobileMenu({
           type="button"
           className={MOBILE_MENU_LINK_CLASS}
           onClick={onToggleSolutions}
-          aria-expanded={isSolutionsOpen}
-        >
+          aria-expanded={isSolutionsOpen}>
           Solutions
           <ChevronDown
             aria-hidden="true"
-            className={cn('size-5 origin-center transition-transform duration-200 ease-out', {
-              '-scale-y-100': isSolutionsOpen,
+            className={cn("size-5 origin-center transition-transform duration-200 ease-out", {
+              "-scale-y-100": isSolutionsOpen,
             })}
           />
         </button>
@@ -48,12 +47,7 @@ export function MobileMenu({
         ) : null}
 
         {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={MOBILE_MENU_LINK_CLASS}
-            onClick={onClose}
-          >
+          <Link key={link.href} href={link.href} className={MOBILE_MENU_LINK_CLASS} onClick={onClose}>
             {link.label}
           </Link>
         ))}

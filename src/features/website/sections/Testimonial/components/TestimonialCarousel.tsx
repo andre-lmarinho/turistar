@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import type { PanInfo, Transition } from "framer-motion";
 
-import { motion } from 'framer-motion';
-import type { PanInfo, Transition } from 'framer-motion';
-
-import { TestimonialCard } from './TestimonialCard';
-import { TESTIMONIALS } from './Testimonial.copy';
+import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { TESTIMONIALS } from "./Testimonial.copy";
+import { TestimonialCard } from "./TestimonialCard";
 
 type Testimonial = (typeof TESTIMONIALS)[number];
+type CarouselItem = Testimonial & { key: string };
 
 const GAP = 24;
 const AUTO_MS = 4000;
 
-const SPRING: Transition = { type: 'spring', stiffness: 300, damping: 30 };
+const SPRING: Transition = { type: "spring", stiffness: 300, damping: 30 };
 const JUMP: Transition = { duration: 0 };
 
 function useContainerWidth<T extends HTMLElement>() {
@@ -29,14 +29,21 @@ function useContainerWidth<T extends HTMLElement>() {
 }
 
 export function TestimonialCarousel() {
-  const { ref: containerRef, width: containerW } = useContainerWidth<HTMLDivElement>();
+  const { ref: containerRef, width: containerW } = useContainerWidth<HTMLElement>();
 
   const slideW = Math.min(620, Math.max(320, Math.round(containerW * 0.6)));
   const offset = slideW + GAP;
 
   const base = TESTIMONIALS;
   const n = base.length;
-  const steps: Testimonial[] = useMemo(() => [...base, ...base, ...base], [base]);
+  const steps: CarouselItem[] = useMemo(
+    () =>
+      [...base, ...base, ...base].map((item, index) => ({
+        ...item,
+        key: `${item.name}-${index}`,
+      })),
+    [base]
+  );
 
   const [idx, setIdx] = useState(n);
   const [isJumping, setIsJumping] = useState(false);
@@ -81,44 +88,42 @@ export function TestimonialCarousel() {
   const dragRight = ready ? center : 0;
 
   return (
-    <div
+    <section
       ref={containerRef}
       className="w-full"
-      role="region"
       aria-roledescription="carousel"
-      aria-label="Customer testimonials"
-    >
+      aria-label="Customer testimonials">
       <motion.div
         className="grid"
-        style={{ gridAutoFlow: 'column', gridAutoColumns: `${slideW}px`, gap: GAP }}
+        style={{ gridAutoFlow: "column", gridAutoColumns: `${slideW}px`, gap: GAP }}
         drag="x"
         dragConstraints={{ left: dragLeft, right: dragRight }}
         dragElastic={0.2}
         onDragEnd={onDragEnd}
         initial={false}
         animate={{ x: ready ? trackX : 0 }}
-        transition={transition}
-      >
+        transition={transition}>
         {steps.map((t, i) => {
           const dRaw = Math.abs(i - idx);
           const d = Math.min(dRaw, Math.abs(i - (idx + n)), Math.abs(i - (idx - n)));
-          const cls = d === 0 ? 'opacity-100' : d === 1 ? 'opacity-60' : 'opacity-30';
+          const cls = d === 0 ? "opacity-100" : d === 1 ? "opacity-60" : "opacity-30";
           return (
-            <div
-              key={`${i}-${t.name}`}
+            <button
+              key={t.key}
+              type="button"
               onClick={() => setIdx(i)}
-              className={`h-full cursor-pointer transition-opacity duration-300 ${cls}`}
-            >
+              className={`h-full w-full cursor-pointer bg-transparent p-0 text-left transition-opacity duration-300 ${cls}`}
+              aria-label={`View testimonial from ${t.name}`}>
               <TestimonialCard
                 quote={t.quote}
                 avatarUrl={t.avatarUrl}
                 name={t.name}
                 traveledTo={t.traveledTo}
               />
-            </div>
+            </button>
           );
         })}
       </motion.div>
-    </div>
+    </section>
   );
 }

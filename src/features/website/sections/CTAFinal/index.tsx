@@ -1,22 +1,21 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2 } from '@/features/website/ui/typography';
-import { Button } from '@/shared/ui/button';
-import backgroundImage from './media/background.webp';
+import Image from "next/image";
+import { H2 } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { Button } from "@/shared/ui/button";
+import backgroundImage from "./media/background.webp";
 
 export interface CtaFinalProps {
-  variant?: 'default' | 'planning';
+  variant?: "default" | "planning";
 }
 
-const TITLES: Record<'default' | 'planning', string> = {
-  default: 'Start planning together',
-  planning: 'Plan your next adventure with Turistar now',
+const TITLES: Record<"default" | "planning", string> = {
+  default: "Start planning together",
+  planning: "Plan your next adventure with Turistar now",
 };
 
-export function CtaFinal({ variant = 'default' }: CtaFinalProps) {
+export function CtaFinal({ variant = "default" }: CtaFinalProps) {
   return (
     <Section variant="card">
       <Container className="gap-8">

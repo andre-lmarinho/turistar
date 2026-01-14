@@ -1,18 +1,17 @@
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButton } from '@/features/website/ui/button';
-import { Sparkles } from '@/shared/ui/icon';
+import { CTAButton } from "@/features/website/ui/button";
+import { Eyebrow, H2, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { Sparkles } from "@/shared/ui/icon";
+import type { FeatureCarouselFeature } from "./components/FeatureCarousel";
+import { FeatureCarousel } from "./components/FeatureCarousel";
 
-import { FeatureCarousel } from './components/FeatureCarousel';
-import type { FeatureCarouselFeature } from './components/FeatureCarousel';
-
-import feature01 from './media/feature_01.webp';
-import feature02 from './media/feature_02.webp';
-import feature03 from './media/feature_03.webp';
+import feature01 from "./media/feature_01.webp";
+import feature02 from "./media/feature_02.webp";
+import feature03 from "./media/feature_03.webp";
 
 const CAROUSEL_IMAGE_SOURCES = [feature01.src, feature02.src, feature03.src] as const;
 
-type KeyBenefit = Pick<FeatureCarouselFeature, 'title' | 'description'>;
+type KeyBenefit = Pick<FeatureCarouselFeature, "title" | "description">;
 
 export interface KeyBenefitsProps {
   title: string;
