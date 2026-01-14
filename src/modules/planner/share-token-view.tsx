@@ -1,7 +1,7 @@
 "use client";
 
-import { ShareLinkAutoJoin } from "@/features/app/planner/components/share/ShareLinkAutoJoin";
-import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import { ShareLinkAutoJoin } from "@/features/share/components/ShareLinkAutoJoin";
+import type { AcceptShareLinkResult } from "@/features/share/lib/acceptPlanShareLink";
 import { Button } from "@/shared/ui/button";
 
 interface ShareTokenViewProps {

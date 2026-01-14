@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { addPlanMemberByEmail } from "@/features/app/planner/server/actions/plans/addPlanMemberByEmail";
-import { createPlanShareLink } from "@/features/app/planner/server/actions/plans/createPlanShareLink";
-import { getPlanMembers } from "@/features/app/planner/server/actions/plans/getPlanMembers";
-import { getPlanShareLink } from "@/features/app/planner/server/actions/plans/getPlanShareLink";
-import { leavePlan } from "@/features/app/planner/server/actions/plans/leavePlan";
-import { removePlanMember } from "@/features/app/planner/server/actions/plans/removePlanMember";
-import { revokePlanShareLink } from "@/features/app/planner/server/actions/plans/revokePlanShareLink";
-import { updatePlanMemberTier } from "@/features/app/planner/server/actions/plans/updatePlanMemberTier";
+import { addPlanMemberByEmail } from "@/features/share/lib/addPlanMemberByEmail";
+import { createPlanShareLink } from "@/features/share/lib/createPlanShareLink";
+import { getPlanMembers } from "@/features/share/lib/getPlanMembers";
+import { getPlanShareLink } from "@/features/share/lib/getPlanShareLink";
+import { leavePlan } from "@/features/share/lib/leavePlan";
+import { removePlanMember } from "@/features/share/lib/removePlanMember";
+import { revokePlanShareLink } from "@/features/share/lib/revokePlanShareLink";
+import { updatePlanMemberTier } from "@/features/share/lib/updatePlanMemberTier";
 
 type PlanMemberTier = "admin" | "member";
 

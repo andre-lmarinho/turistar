@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import type { SelectMenuOption } from "@/features/app/planner/components/ui/SelectMenu";
-import { SelectMenu } from "@/features/app/planner/components/ui/SelectMenu";
+
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { SHARE_TIERS } from "@/features/share/constants";
+import { useLeavePlannerRedirect } from "@/features/share/hook/useLeavePlannerRedirect";
 import {
   type PlanMemberProfile,
   type PlanMemberTier,
   usePlanMembers,
-} from "@/features/app/planner/hooks/data/usePlanSharing";
-import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
-import { useLeavePlannerRedirect } from "@/features/app/planner/hooks/ui/useLeavePlannerRedirect";
+} from "@/features/share/hook/usePlanSharing";
 import { Avatar } from "@/shared/ui/avatar";
-import { SHARE_TIERS } from "./shareConstants";
+import type { SelectMenuOption } from "@/shared/ui/select/SelectMenu";
+import { SelectMenu } from "@/shared/ui/select/SelectMenu";
 
 type MemberMenuOption = PlanMemberTier | "leave" | "remove";
 

@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 
-import { acceptPlanShareLink } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import { acceptPlanShareLink } from "@/features/share/lib/acceptPlanShareLink";
 import { ShareTokenErrorView, ShareTokenView } from "@/modules/planner/share-token-view";
 import { getCurrentUser } from "@/shared/lib/auth/session";
 import { isUuid } from "@/shared/lib/uuid";

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SelectMenu } from "@/features/app/planner/components/ui/SelectMenu";
-import { usePlanMembers } from "@/features/app/planner/hooks/data/usePlanSharing";
+
 import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import type { ShareTier } from "@/features/share/constants";
+import { SHARE_TIERS } from "@/features/share/constants";
+import { usePlanMembers } from "@/features/share/hook/usePlanSharing";
 import { Button } from "@/shared/ui/button";
-import type { ShareTier } from "./shareConstants";
-import { SHARE_TIERS } from "./shareConstants";
+import { SelectMenu } from "@/shared/ui/select/SelectMenu";
 
 export function ShareInviteForm({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();

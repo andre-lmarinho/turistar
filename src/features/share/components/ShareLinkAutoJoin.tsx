@@ -1,7 +1,7 @@
 "use client";
 
-import { useShareLinkAutoJoin } from "@/features/app/planner/hooks/ui/useShareLinkAutoJoin";
-import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import { useShareLinkAutoJoin } from "@/features/share/hook/useShareLinkAutoJoin";
+import type { AcceptShareLinkResult } from "@/features/share/lib/acceptPlanShareLink";
 
 type ShareLinkAutoJoinProps = {
   token: string;

@@ -2,7 +2,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createPlanShareLink as createPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
+import { createPlanShareLink as createPlanShareLinkRpc } from "@/features/share/repositories/PlanShareRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export async function createPlanShareLink(

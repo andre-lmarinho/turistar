@@ -25,7 +25,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock, refresh: refreshMock }),
 }));
 
-vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
+vi.mock("@/features/share/hook/usePlanSharing", () => ({
   usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
 }));
 

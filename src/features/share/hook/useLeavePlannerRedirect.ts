@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import type { PlanMemberProfile } from "@/features/app/planner/hooks/data/usePlanSharing";
+import type { PlanMemberProfile } from "@/features/share/hook/usePlanSharing";
 
 type EnsureProfileResponse = {
   slug?: string | null;

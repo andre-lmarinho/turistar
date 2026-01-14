@@ -1,7 +1,7 @@
 "use server";
 
-import { acceptPlanShareLink as acceptPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
 import { ensureProfile } from "@/features/auth/lib/ensureProfile";
+import { acceptPlanShareLink as acceptPlanShareLinkRpc } from "@/features/share/repositories/PlanShareRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type AcceptShareLinkResult = { success: true; planId: string } | { success: false; error: string };

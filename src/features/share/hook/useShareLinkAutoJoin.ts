@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import type { AcceptShareLinkResult } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import type { AcceptShareLinkResult } from "@/features/share/lib/acceptPlanShareLink";
 
 type UseShareLinkAutoJoinArgs = {
   token: string;

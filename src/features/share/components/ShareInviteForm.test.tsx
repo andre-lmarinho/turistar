@@ -9,7 +9,7 @@ const { addMemberMutateAsync, mockUsePlanMembers, mockUsePlannerContext } = vi.h
   mockUsePlannerContext: vi.fn(),
 }));
 
-vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
+vi.mock("@/features/share/hook/usePlanSharing", () => ({
   usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
 }));
 

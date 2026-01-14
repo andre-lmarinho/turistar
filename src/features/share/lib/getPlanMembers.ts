@@ -1,11 +1,11 @@
-import "server-only";
+"use server";
 
 import {
   fetchPlanIdentityById,
   fetchPlanIdentityBySlug,
   fetchPlanMembersWithProfiles,
   fetchProfileById,
-} from "@/features/app/planner/server/repositories/PlanMembersRepository";
+} from "@/features/share/repositories/PlanMembersRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 type PlanMemberTier = "admin" | "member";

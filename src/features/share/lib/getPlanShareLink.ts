@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import type { Database } from "@/shared/types/supabase";

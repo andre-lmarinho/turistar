@@ -2,7 +2,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { revokePlanShareLink as revokePlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
+import { revokePlanShareLink as revokePlanShareLinkRpc } from "@/features/share/repositories/PlanShareRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export async function revokePlanShareLink(
