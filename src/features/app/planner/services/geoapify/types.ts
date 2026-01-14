@@ -35,9 +35,7 @@ export type GeoapifyFeature = {
   properties: GeoapifyFeatureProperties;
 };
 
-export type GeoapifyResponse =
-  | { features: GeoapifyFeature[] }
-  | { results: GeoapifyFeatureProperties[] };
+export type GeoapifyResponse = { features: GeoapifyFeature[] } | { results: GeoapifyFeatureProperties[] };
 
 export interface GeoapifyPlaceSearchResult {
   placeId: string;

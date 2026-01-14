@@ -1,10 +1,6 @@
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import type {
-  PlanEvent,
-  PlanSnapshot,
-  PlanState,
-} from '@/features/app/planner/domain/types/PlanEvent';
-import { sanitizeActivityTitle } from '@/features/app/planner/domain/utils/sanitizeActivityTitle';
+import type { PlanEvent, PlanSnapshot, PlanState } from "@/features/app/planner/domain/types/PlanEvent";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { sanitizeActivityTitle } from "@/features/app/planner/domain/utils/sanitizeActivityTitle";
 
 function cloneActivity(activity: Activity): Activity {
   return { ...activity };
@@ -20,7 +16,7 @@ function cloneDay(day: DayPlan): DayPlan {
 function sanitizeActivity(activity: Activity): Activity {
   const sanitized: Activity = cloneActivity(activity);
   sanitized.title = sanitizeActivityTitle(activity.title);
-  if (!sanitized.color) sanitized.color = 'bg-[var(--color-1)]';
+  if (!sanitized.color) sanitized.color = "bg-[var(--color-1)]";
   return sanitized;
 }
 
@@ -30,11 +26,7 @@ function toPositionNumber(position?: string): number {
   return Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER;
 }
 
-function ensureDay(
-  days: DayPlan[],
-  dayId: string,
-  label: string
-): { days: DayPlan[]; day: DayPlan } {
+function ensureDay(days: DayPlan[], dayId: string, label: string): { days: DayPlan[]; day: DayPlan } {
   const index = days.findIndex((d) => d.id === dayId);
   if (index >= 0) {
     return { days, day: days[index] };
@@ -46,7 +38,7 @@ function ensureDay(
 
 function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
   switch (event.type) {
-    case 'activity.created': {
+    case "activity.created": {
       const { dayId, activity, position } = event.payload;
       const { days: ensuredDays, day } = ensureDay(days.map(cloneDay), dayId, activity.title);
       const sanitized = sanitizeActivity(activity);
@@ -56,14 +48,12 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
         return ensuredDays;
       }
       const targetPosition = toPositionNumber(position);
-      const insertIdx = day.activities.findIndex(
-        (a) => toPositionNumber(a.position) > targetPosition
-      );
+      const insertIdx = day.activities.findIndex((a) => toPositionNumber(a.position) > targetPosition);
       if (insertIdx === -1) day.activities.push(sanitized);
       else day.activities.splice(insertIdx, 0, sanitized);
       return ensuredDays;
     }
-    case 'activity.updated': {
+    case "activity.updated": {
       const { activityId, patch } = event.payload;
       const nextDays = days.map(cloneDay);
       for (const day of nextDays) {
@@ -79,14 +69,14 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       }
       return nextDays;
     }
-    case 'activity.deleted': {
+    case "activity.deleted": {
       const { activityId } = event.payload;
       return days.map((day) => ({
         ...day,
         activities: day.activities.filter((a) => a.id !== activityId),
       }));
     }
-    case 'activity.moved': {
+    case "activity.moved": {
       const { activityId, fromDayId, toDayId, position } = event.payload;
       if (fromDayId === toDayId) {
         const next = days.map(cloneDay);
@@ -97,9 +87,7 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
         const [activity] = day.activities.splice(activityIndex, 1);
         activity.position = position;
         const targetPosition = toPositionNumber(position);
-        const insertIdx = day.activities.findIndex(
-          (a) => toPositionNumber(a.position) > targetPosition
-        );
+        const insertIdx = day.activities.findIndex((a) => toPositionNumber(a.position) > targetPosition);
         if (insertIdx === -1) day.activities.push(activity);
         else day.activities.splice(insertIdx, 0, activity);
         return next;
@@ -113,14 +101,12 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       const [activity] = fromDay.activities.splice(activityIndex, 1);
       activity.position = position;
       const targetPosition = toPositionNumber(position);
-      const insertIdx = toDay.activities.findIndex(
-        (a) => toPositionNumber(a.position) > targetPosition
-      );
+      const insertIdx = toDay.activities.findIndex((a) => toPositionNumber(a.position) > targetPosition);
       if (insertIdx === -1) toDay.activities.push(activity);
       else toDay.activities.splice(insertIdx, 0, activity);
       return next;
     }
-    case 'day.created': {
+    case "day.created": {
       const { day } = event.payload;
       if (days.some((existing) => existing.id === day.id)) return days;
       const next = days.map(cloneDay);
@@ -136,23 +122,22 @@ function applySingleEvent(days: DayPlan[], event: PlanEvent): DayPlan[] {
       else next.splice(insertIdx, 0, sanitizedDay);
       return next;
     }
-    case 'day.updated': {
+    case "day.updated": {
       const { dayId, patch } = event.payload;
       return days.map((day) =>
         day.id === dayId
           ? {
               ...day,
               ...patch,
-              label: patch.label ? patch.label : day.label,
             }
           : day
       );
     }
-    case 'day.removed': {
+    case "day.removed": {
       const { dayId } = event.payload;
       return days.filter((day) => day.id !== dayId);
     }
-    case 'day.reordered': {
+    case "day.reordered": {
       const { dayId, position } = event.payload;
       const next = days.map(cloneDay);
       const target = next.find((d) => d.id === dayId);

@@ -1,14 +1,14 @@
-import 'server-only';
+import "server-only";
 
 import {
   fetchPlanIdentityById,
   fetchPlanIdentityBySlug,
   fetchPlanMembersWithProfiles,
   fetchProfileById,
-} from '@/features/app/planner/server/repositories/PlanMembersRepository';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+} from "@/features/app/planner/server/repositories/PlanMembersRepository";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-type PlanMemberTier = 'admin' | 'member';
+type PlanMemberTier = "admin" | "member";
 
 export type PlanMemberProfile = {
   userId: string;
@@ -31,10 +31,9 @@ export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersR
   }
 
   const supabase = createSupabaseServerClient();
-  const looksLikeUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      trimmed
-    );
+  const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    trimmed
+  );
   const planRow = looksLikeUuid
     ? await fetchPlanIdentityById(trimmed, { client: supabase })
     : await fetchPlanIdentityBySlug(trimmed, { client: supabase });
@@ -59,13 +58,12 @@ export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersR
     avatarUrl: row.profile?.avatarUrl ?? null,
   }));
 
-  const resolvedOwnerId =
-    ownerId ?? members.find((member) => member.tier === 'admin')?.userId ?? null;
+  const resolvedOwnerId = ownerId ?? members.find((member) => member.tier === "admin")?.userId ?? null;
 
   if (resolvedOwnerId && !members.some((member) => member.userId === resolvedOwnerId)) {
     members.unshift({
       userId: resolvedOwnerId,
-      tier: 'admin',
+      tier: "admin",
       slug: ownerProfile?.slug ?? null,
       displayName: ownerProfile?.displayName ?? null,
       avatarUrl: ownerProfile?.avatarUrl ?? null,

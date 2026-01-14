@@ -1,14 +1,13 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useDroppable } from '@dnd-kit/core';
-
-import { SortableItem } from './SortableItem';
-import { AddCardButton } from './AddCardButton';
-import { InlineCard } from './InlineCard';
-import { ActivityCard } from './ActivityCard';
-import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { ActivityCard } from "./ActivityCard";
+import { AddCardButton } from "./AddCardButton";
+import { InlineCard } from "./InlineCard";
+import { SortableItem } from "./SortableItem";
 
 interface DayColumnProps {
   day: DayPlan;
@@ -46,8 +45,7 @@ export function DayColumn({ day, onSelectActivity, canEdit = true }: DayColumnPr
   return (
     <section
       ref={canEdit ? setNodeRef : undefined}
-      className={`flex h-full flex-1 flex-col ${isOver && canEdit ? 'ring-primary/40 ring-2' : ''}`}
-    >
+      className={`flex h-full flex-1 flex-col ${isOver && canEdit ? "ring-primary/40 ring-2" : ""}`}>
       <div className="text-muted-foreground flex px-3 pt-2">
         <h2 className="text-sm font-semibold">{day.label}</h2>
       </div>
@@ -57,8 +55,7 @@ export function DayColumn({ day, onSelectActivity, canEdit = true }: DayColumnPr
           key={day.id}
           id={day.id}
           items={day.activities.map((a) => a.id)}
-          strategy={verticalListSortingStrategy}
-        >
+          strategy={verticalListSortingStrategy}>
           <div ref={scrollRef} data-testid="day-scroll" className="overflow-y-auto pt-2">
             {day.activities.map((activity, idx) => (
               <React.Fragment key={activity.id}>

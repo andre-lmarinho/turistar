@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react';
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { useRef, useState } from "react";
+import { moveActivityPosition } from "@/features/app/planner/domain/activities/moveActivityPosition";
+import { moveActivityToDay } from "@/features/app/planner/domain/activities/moveActivityToDay";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 import {
   BLANK_ACTIVITY_PREFIX,
-  generateClientActivityId,
   createBlankActivity,
+  generateClientActivityId,
   isPlaceholderActivity,
-} from '@/features/app/planner/domain/utils/activityPlaceholders';
-import { moveActivityToDay } from '@/features/app/planner/domain/activities/moveActivityToDay';
-import { moveActivityPosition } from '@/features/app/planner/domain/activities/moveActivityPosition';
+} from "@/features/app/planner/domain/utils/activityPlaceholders";
 
 /**
  * Manages the currently selected activity for editing in the planner.
@@ -45,7 +45,7 @@ export function useSelectedActivity(
     value: SelectedActivityState | ((prev: SelectedActivityState) => SelectedActivityState)
   ) => {
     setSelectedActivityState((prev) => {
-      const next = typeof value === 'function' ? value(prev) : value;
+      const next = typeof value === "function" ? value(prev) : value;
       if (!next || !next.id.startsWith(BLANK_ACTIVITY_PREFIX)) {
         newActivityMetaRef.current = null;
       }
@@ -69,9 +69,7 @@ export function useSelectedActivity(
       return;
     }
 
-    const existsInState = days.some((day) =>
-      day.activities.some((activity) => activity.id === activityId)
-    );
+    const existsInState = days.some((day) => day.activities.some((activity) => activity.id === activityId));
 
     if (existsInState) {
       setDays((prev) => moveActivityToDay(prev, activityId, dayId));
@@ -137,23 +135,18 @@ export function useSelectedActivity(
         if (resolvedDayIndex === -1) {
           return;
         }
-        const placeholderIndex =
-          pendingMeta.insertIndex ?? days[resolvedDayIndex].activities.length;
+        const placeholderIndex = pendingMeta.insertIndex ?? days[resolvedDayIndex].activities.length;
         const { dayId: _omitDayId, ...activityBase } = {
           ...selectedActivity,
           ...sanitized,
           id: generateClientActivityId(),
         };
         void _omitDayId;
-        addActivity(
-          activityBase,
-          resolvedDayIndex,
-          placeholderIndex === -1 ? undefined : placeholderIndex
-        );
+        addActivity(activityBase, resolvedDayIndex, placeholderIndex === -1 ? undefined : placeholderIndex);
         return;
       }
 
-      if (selectedActivity.id.startsWith('temp-')) {
+      if (selectedActivity.id.startsWith("temp-")) {
         if (currentDayIndex === -1) {
           return;
         }
@@ -189,11 +182,9 @@ export function useSelectedActivity(
   };
 
   const changeColor = (activityId: string, newColor: string) => {
-    setSelectedActivity((prev) =>
-      prev && prev.id === activityId ? { ...prev, color: newColor } : prev
-    );
+    setSelectedActivity((prev) => (prev && prev.id === activityId ? { ...prev, color: newColor } : prev));
     const pendingMeta = newActivityMetaRef.current;
-    if ((!pendingMeta || activityId !== selectedActivity?.id) && !activityId.startsWith('temp-')) {
+    if ((!pendingMeta || activityId !== selectedActivity?.id) && !activityId.startsWith("temp-")) {
       updateActivity(activityId, { color: newColor });
     }
   };

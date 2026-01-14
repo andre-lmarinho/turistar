@@ -1,7 +1,7 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 
-import { useBudget } from './useBudget';
+import { useBudget } from "./useBudget";
 
 const mocks = vi.hoisted(() => ({
   getPlanBudget: vi.fn(),
@@ -11,23 +11,23 @@ const mocks = vi.hoisted(() => ({
   deleteBudgetEntry: vi.fn(),
 }));
 
-vi.mock('@/app/(webapp)/p/actions/plans/getPlanBudget', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/getPlanBudget", () => ({
   getPlanBudget: mocks.getPlanBudget,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/updatePlanBudget', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/updatePlanBudget", () => ({
   updatePlanBudget: mocks.updatePlanBudget,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/createBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/createBudgetEntry", () => ({
   createBudgetEntry: mocks.createBudgetEntry,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/updateBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/updateBudgetEntry", () => ({
   updateBudgetEntry: mocks.updateBudgetEntry,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/deleteBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/deleteBudgetEntry", () => ({
   deleteBudgetEntry: mocks.deleteBudgetEntry,
 }));
 
-describe('useBudget hook', () => {
+describe("useBudget hook", () => {
   beforeEach(() => {
     mocks.getPlanBudget.mockReset();
     mocks.updatePlanBudget.mockReset();
@@ -36,32 +36,32 @@ describe('useBudget hook', () => {
     mocks.deleteBudgetEntry.mockReset();
   });
 
-  test('does not persist budget on initial load', async () => {
+  test("does not persist budget on initial load", async () => {
     mocks.getPlanBudget.mockResolvedValue({ budget: 100, entries: [] });
 
-    const { result } = renderHook(() => useBudget('p1', 0));
+    const { result } = renderHook(() => useBudget("p1", 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
     expect(mocks.updatePlanBudget).not.toHaveBeenCalled();
     expect(result.current.persistError).toBeNull();
   });
 
-  test('persists entries via budget_entries table', async () => {
+  test("persists entries via budget_entries table", async () => {
     mocks.getPlanBudget.mockResolvedValue({
       budget: 0,
-      entries: [{ id: 'e1', description: 'Lunch', category: 'food', amount: 10 }],
+      entries: [{ id: "e1", description: "Lunch", category: "food", amount: 10 }],
     });
     mocks.updatePlanBudget.mockResolvedValue(0);
-    mocks.createBudgetEntry.mockResolvedValue('e2');
+    mocks.createBudgetEntry.mockResolvedValue("e2");
     mocks.updateBudgetEntry.mockResolvedValue(undefined);
     mocks.deleteBudgetEntry.mockResolvedValue(undefined);
 
-    const { result } = renderHook(() => useBudget('p1', 0));
+    const { result } = renderHook(() => useBudget("p1", 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
     expect(result.current.entries).toHaveLength(1);
 
     await act(async () => {
-      result.current.setDesc('Coffee');
-      result.current.setCat('food');
+      result.current.setDesc("Coffee");
+      result.current.setCat("food");
       result.current.setAmount(5);
     });
     await act(async () => {
@@ -82,22 +82,24 @@ describe('useBudget hook', () => {
     expect(mocks.deleteBudgetEntry).toHaveBeenCalled();
   });
 
-  test('sets persistError when Supabase insert fails', async () => {
+  test("sets persistError when Supabase insert fails", async () => {
     mocks.getPlanBudget.mockResolvedValue({ budget: 0, entries: [] });
     mocks.updatePlanBudget.mockResolvedValue(0);
-    mocks.createBudgetEntry.mockRejectedValue(new Error('boom'));
+    mocks.createBudgetEntry.mockRejectedValue(new Error("boom"));
 
-    const { result } = renderHook(() => useBudget('p1', 0));
+    const { result } = renderHook(() => useBudget("p1", 0));
     await waitFor(() => expect(result.current.hasLoaded).toBe(true));
 
     await act(async () => {
-      result.current.setDesc('Coffee');
+      result.current.setDesc("Coffee");
       result.current.setAmount(5);
     });
     await act(async () => {
       await result.current.handleAdd();
     });
 
-    await waitFor(() => expect(result.current.persistError).toBe('Failed to persist budget'));
+    await waitFor(() =>
+      expect(result.current.persistError).toBe("Failed to create budget entry: planId=p1 category=transport")
+    );
   });
 });

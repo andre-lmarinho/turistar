@@ -1,16 +1,15 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createPlanShareLink as createPlanShareLinkRpc } from '@/features/app/planner/server/repositories/PlanShareRepository';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { createPlanShareLink as createPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export async function createPlanShareLink(
   planId: string,
-  client: SupabaseClient = supabaseServer()
+  client: SupabaseClient = createSupabaseServerClient()
 ): Promise<string> {
-  const supabase = client;
-  const shareLink = await createPlanShareLinkRpc(planId, { client: supabase });
+  const shareLink = await createPlanShareLinkRpc(planId, { client });
 
   if (!shareLink) {
     throw new Error(`createPlanShareLink failed: planId=${planId}`);

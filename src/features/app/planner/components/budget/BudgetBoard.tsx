@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { BudgetProvider } from '@/features/app/planner/hooks/BudgetContext';
-import { BudgetPanelHeader } from '@/features/app/planner/components/budget/BudgetPanelHeader';
-import { ExpenseTable } from '@/features/app/planner/components/budget/ExpenseTable';
-import { BudgetDialog } from '@/features/app/planner/components/budget/BudgetDialog';
-import type { Entry } from '@/features/app/planner/types/budget';
+import { memo, useState } from "react";
+import { BudgetDialog } from "@/features/app/planner/components/budget/BudgetDialog";
+import { BudgetPanelHeader } from "@/features/app/planner/components/budget/BudgetPanelHeader";
+import { ExpenseTable } from "@/features/app/planner/components/budget/ExpenseTable";
+import { BudgetProvider } from "@/features/app/planner/hooks/BudgetContext";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import type { Entry } from "@/features/app/planner/types/budget";
 
 interface Props {
   initialBudget?: number;
@@ -15,7 +15,7 @@ interface Props {
   canEdit?: boolean;
 }
 
-export const BudgetBoard = React.memo(function BudgetBoard({
+export const BudgetBoard = memo(function BudgetBoard({
   initialBudget,
   initialEntries,
   persist = true,
@@ -37,37 +37,30 @@ export const BudgetBoard = React.memo(function BudgetBoard({
       initialBudget={initialBudget}
       initialEntries={initialEntries}
       persist={persist}
-      canEdit={canEdit}
-    >
-      <div
-        role="region"
+      canEdit={canEdit}>
+      <section
         aria-label="Budget panel"
-        className="bg-background flex h-full w-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl border p-4"
-        tabIndex={0}
-      >
+        className="bg-background flex h-full w-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl border p-4">
         <div className="flex justify-between pb-4">
           <h2 className="text-3xl font-semibold">Traveling Budget</h2>
           <button
             type="button"
-            onClick={() => canEdit && setEditActivities(true)}
+            onClick={() => setEditActivities(true)}
             className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={!canEdit}
-          >
+            disabled={!canEdit}>
             Budget Your Activities
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3">
           <BudgetPanelHeader canEdit={canEdit} />
 
-          <div className="col-span-2 md:ml-12">
+          <section className="col-span-2 md:ml-12" aria-labelledby="expenses-heading">
             <h3 id="expenses-heading" className="pb-2 font-semibold">
               Expenses
             </h3>
 
-            <div aria-labelledby="expenses-heading">
-              <ExpenseTable canEdit={canEdit} />
-            </div>
-          </div>
+            <ExpenseTable canEdit={canEdit} />
+          </section>
         </div>
         <BudgetDialog
           open={editActivities && !isDialogDisabled}
@@ -75,9 +68,9 @@ export const BudgetBoard = React.memo(function BudgetBoard({
           onUpdate={(id, amount) => updateActivity(id, { budget: amount })}
           onClose={() => setEditActivities(false)}
         />
-      </div>
+      </section>
     </BudgetProvider>
   );
 });
 
-BudgetBoard.displayName = 'BudgetBoard';
+BudgetBoard.displayName = "BudgetBoard";

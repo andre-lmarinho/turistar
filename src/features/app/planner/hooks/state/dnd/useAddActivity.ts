@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 
-import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
-import { generateClientActivityId } from '@/features/app/planner/domain/utils/activityPlaceholders';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import type { Activity } from "@/features/app/planner/domain/types/PlannerEntities";
+import { generateClientActivityId } from "@/features/app/planner/domain/utils/activityPlaceholders";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
 
 type AddActivityVariables = {
   dayId: string;
@@ -27,7 +27,7 @@ type PlannerActivity = Activity & {
 function createTempId(): string {
   const cryptoApi = globalThis.crypto;
   if (cryptoApi?.randomUUID) {
-    return `temp_${cryptoApi.randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    return `temp_${cryptoApi.randomUUID().replace(/-/g, "").slice(0, 12)}`;
   }
   return `temp_${Math.random().toString(36).slice(2, 10)}`;
 }
@@ -40,7 +40,7 @@ export function useAddActivity() {
       return {
         id: generateClientActivityId(),
         title: title.trim(),
-        color: '',
+        color: "",
       };
     },
     onMutate: ({ dayId, title, index }) => {
@@ -49,7 +49,7 @@ export function useAddActivity() {
       const optimisticActivity: PlannerActivity = {
         id: tempId,
         title: trimmedTitle,
-        color: '',
+        color: "",
         _optimistic: true,
         _tempId: tempId,
       };
@@ -70,10 +70,12 @@ export function useAddActivity() {
       });
     },
     onError: (error, _variables, context) => {
-      if (context) {
-        removeActivity(context.tempId);
+      if (!context) {
+        console.error("Failed to add activity inline (no context)", error);
+        return;
       }
-      console.error('Failed to add activity inline', error);
+      removeActivity(context.tempId);
+      console.error(`Failed to add activity inline: dayId=${context.dayId}, tempId=${context.tempId}`, error);
     },
   });
 }

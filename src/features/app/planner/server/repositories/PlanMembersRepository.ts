@@ -1,12 +1,11 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
-import type { Database } from '@/shared/types/supabase';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
-
-type PlanMemberTier = 'admin' | 'member';
+type PlanMemberTier = "admin" | "member";
 
 export type PlanIdentityRecord = {
   id: string;
@@ -76,14 +75,14 @@ export async function fetchPlanIdentityById(
 ): Promise<PlanIdentityRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
-    .select('id, user_id')
-    .eq('id', planId)
+    .from("plans")
+    .select("id, user_id")
+    .eq("id", planId)
     .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanIdentityById',
+      operation: "fetchPlanIdentityById",
       identifiers: { planId },
       error,
     });
@@ -102,14 +101,14 @@ export async function fetchPlanIdentityBySlug(
 ): Promise<PlanIdentityRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
-    .select('id, user_id')
-    .eq('public_slug', slug)
+    .from("plans")
+    .select("id, user_id")
+    .eq("public_slug", slug)
     .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanIdentityBySlug',
+      operation: "fetchPlanIdentityBySlug",
       identifiers: { slug },
       error,
     });
@@ -128,16 +127,14 @@ export async function fetchPlanMembersWithProfiles(
 ): Promise<PlanMemberProfileRecord[]> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plan_members')
-    .select(
-      'user_id, tier, profiles:profiles!plan_members_user_id_fkey(id, slug, display_name, avatar_url)'
-    )
-    .eq('plan_id', planId)
-    .order('created_at')) as unknown as { data: PlanMemberRow[] | null; error: unknown };
+    .from("plan_members")
+    .select("user_id, tier, profiles:profiles!plan_members_user_id_fkey(id, slug, display_name, avatar_url)")
+    .eq("plan_id", planId)
+    .order("created_at")) as unknown as { data: PlanMemberRow[] | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanMembersWithProfiles',
+      operation: "fetchPlanMembersWithProfiles",
       identifiers: { planId },
       error,
     });
@@ -160,14 +157,14 @@ export async function fetchProfileById(
 ): Promise<ProfileRecord | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('profiles')
-    .select('id, slug, display_name, avatar_url')
-    .eq('id', userId)
+    .from("profiles")
+    .select("id, slug, display_name, avatar_url")
+    .eq("id", userId)
     .maybeSingle()) as unknown as { data: ProfileRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchProfileById',
+      operation: "fetchProfileById",
       identifiers: { userId },
       error,
     });
@@ -181,17 +178,23 @@ export async function addPlanMemberByEmail(
   email: string,
   tier: PlanMemberTier,
   { client }: PlanMembersRepositoryOptions = {}
-): Promise<RpcResponse<Database['public']['Functions']['add_plan_member_by_email']['Returns']>> {
+): Promise<Database["public"]["Functions"]["add_plan_member_by_email"]["Returns"] | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase.rpc('add_plan_member_by_email', {
+  const { data, error } = (await supabase.rpc("add_plan_member_by_email", {
     _plan_id: planId,
     _email: email,
     _tier: tier,
-  })) as unknown as RpcResponse<
-    Database['public']['Functions']['add_plan_member_by_email']['Returns']
-  >;
+  })) as unknown as RpcResponse<Database["public"]["Functions"]["add_plan_member_by_email"]["Returns"]>;
 
-  return { data, error };
+  if (error) {
+    throw formatSupabaseError({
+      operation: "addPlanMemberByEmail",
+      identifiers: { planId, tier },
+      error,
+    });
+  }
+
+  return data;
 }
 
 export async function updatePlanMemberTier(
@@ -199,43 +202,63 @@ export async function updatePlanMemberTier(
   userId: string,
   tier: PlanMemberTier,
   { client }: PlanMembersRepositoryOptions = {}
-): Promise<RpcResponse<Database['public']['Functions']['update_plan_member_tier']['Returns']>> {
+): Promise<Database["public"]["Functions"]["update_plan_member_tier"]["Returns"] | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase.rpc('update_plan_member_tier', {
+  const { data, error } = (await supabase.rpc("update_plan_member_tier", {
     _plan_id: planId,
     _user_id: userId,
     _tier: tier,
-  })) as unknown as RpcResponse<
-    Database['public']['Functions']['update_plan_member_tier']['Returns']
-  >;
+  })) as unknown as RpcResponse<Database["public"]["Functions"]["update_plan_member_tier"]["Returns"]>;
 
-  return { data, error };
+  if (error) {
+    throw formatSupabaseError({
+      operation: "updatePlanMemberTier",
+      identifiers: { planId, userId, tier },
+      error,
+    });
+  }
+
+  return data;
 }
 
 export async function removePlanMember(
   planId: string,
   userId: string,
   { client }: PlanMembersRepositoryOptions = {}
-): Promise<RpcResponse<Database['public']['Functions']['remove_plan_member']['Returns']>> {
+): Promise<Database["public"]["Functions"]["remove_plan_member"]["Returns"] | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase.rpc('remove_plan_member', {
+  const { data, error } = (await supabase.rpc("remove_plan_member", {
     _plan_id: planId,
     _user_id: userId,
-  })) as unknown as RpcResponse<
-    Database['public']['Functions']['remove_plan_member']['Returns']
-  >;
+  })) as unknown as RpcResponse<Database["public"]["Functions"]["remove_plan_member"]["Returns"]>;
 
-  return { data, error };
+  if (error) {
+    throw formatSupabaseError({
+      operation: "removePlanMember",
+      identifiers: { planId, userId },
+      error,
+    });
+  }
+
+  return data;
 }
 
 export async function leavePlan(
   planId: string,
   { client }: PlanMembersRepositoryOptions = {}
-): Promise<RpcResponse<Database['public']['Functions']['leave_plan']['Returns']>> {
+): Promise<Database["public"]["Functions"]["leave_plan"]["Returns"] | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase.rpc('leave_plan', {
+  const { data, error } = (await supabase.rpc("leave_plan", {
     _plan_id: planId,
-  })) as unknown as RpcResponse<Database['public']['Functions']['leave_plan']['Returns']>;
+  })) as unknown as RpcResponse<Database["public"]["Functions"]["leave_plan"]["Returns"]>;
 
-  return { data, error };
+  if (error) {
+    throw formatSupabaseError({
+      operation: "leavePlan",
+      identifiers: { planId },
+      error,
+    });
+  }
+
+  return data;
 }

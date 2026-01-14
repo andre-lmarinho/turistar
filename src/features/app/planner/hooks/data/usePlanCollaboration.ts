@@ -1,20 +1,17 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import type { PlanEvent, PlanEventInsert } from '@/features/app/planner/domain/types/PlanEvent';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   appendPlanEvents,
   fetchPlanEvents,
   fetchPlanSnapshot,
-} from '@/features/app/planner/client/planEventsClient';
-import { subscribeToPlanEvents } from '@/features/app/planner/services/supabase/planEventsRealtime';
-import {
-  applyPlanEvent,
-  reducePlanEvents,
-} from '@/features/app/planner/domain/events/planEventReducer';
-import { diffPlanEvents } from '@/features/app/planner/domain/events/diffPlanEvents';
-import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
+} from "@/features/app/planner/client/planEventsClient";
+import { cloneDays } from "@/features/app/planner/domain/activities/cloneDays";
+import { diffPlanEvents } from "@/features/app/planner/domain/events/diffPlanEvents";
+import { applyPlanEvent, reducePlanEvents } from "@/features/app/planner/domain/events/planEventReducer";
+import type { PlanEvent, PlanEventInsert } from "@/features/app/planner/domain/types/PlanEvent";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { subscribeToPlanEvents } from "@/features/app/planner/services/supabase/planEventsRealtime";
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;

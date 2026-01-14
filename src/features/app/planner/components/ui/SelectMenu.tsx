@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-
-import { Popover, PopoverContent, PopoverTriggerButton } from '@/shared/ui/popover';
-import { Check, ChevronDown } from '@/shared/ui/icon';
-import { cn } from '@/shared/utils/cn';
+import { useState } from "react";
+import { Check, ChevronDown } from "@/shared/ui/icon";
+import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
+import { cn } from "@/shared/utils/cn";
 
 export type SelectMenuOption<T extends string> = {
   value: T;
@@ -21,8 +20,8 @@ type SelectMenuProps<T extends string> = {
   ariaLabel?: string;
   triggerClassName?: string;
   contentClassName?: string;
-  align?: 'start' | 'center' | 'end';
-  side?: 'top' | 'right' | 'bottom' | 'left';
+  align?: "start" | "center" | "end";
+  side?: "top" | "right" | "bottom" | "left";
   sideOffset?: number;
 };
 
@@ -31,12 +30,12 @@ export function SelectMenu<T extends string>({
   options,
   onChange,
   disabled = false,
-  placeholder = 'Select',
+  placeholder = "Select",
   ariaLabel,
   triggerClassName,
   contentClassName,
-  align = 'start',
-  side = 'bottom',
+  align = "start",
+  side = "bottom",
   sideOffset = 6,
 }: SelectMenuProps<T>) {
   const [open, setOpen] = useState(false);
@@ -46,18 +45,21 @@ export function SelectMenu<T extends string>({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTriggerButton
         className={cn(
-          'border-border bg-background text-foreground inline-flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60',
+          "border-border bg-background text-foreground inline-flex items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
           triggerClassName
         )}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         <span className="truncate">{selected?.label ?? placeholder}</span>
         <ChevronDown className="text-muted-foreground size-4" aria-hidden="true" />
       </PopoverTriggerButton>
-      <PopoverContent side={side} align={align} sideOffset={sideOffset} className={cn('p-1', contentClassName)}>
+      <PopoverContent
+        side={side}
+        align={align}
+        sideOffset={sideOffset}
+        className={cn("p-1", contentClassName)}>
         <div role="listbox" className="space-y-1">
           {options.map((option) => {
             const isSelected = option.value === value;
@@ -69,8 +71,8 @@ export function SelectMenu<T extends string>({
                 aria-selected={isSelected}
                 disabled={option.disabled}
                 className={cn(
-                  'hover:bg-muted/60 inline-flex w-full items-center justify-between rounded-md px-2 py-1 text-left text-sm transition-colors focus-visible:bg-muted/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60',
-                  isSelected ? 'bg-muted/60 text-foreground' : 'text-muted-foreground'
+                  "hover:bg-muted/60 inline-flex w-full items-center justify-between rounded-md px-2 py-1 text-left text-sm transition-colors focus-visible:bg-muted/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60",
+                  isSelected ? "bg-muted/60 text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => {
                   if (option.disabled) {
@@ -78,8 +80,7 @@ export function SelectMenu<T extends string>({
                   }
                   onChange(option.value);
                   setOpen(false);
-                }}
-              >
+                }}>
                 <span>{option.label}</span>
                 {isSelected ? <Check className="text-primary size-4" aria-hidden="true" /> : null}
               </button>

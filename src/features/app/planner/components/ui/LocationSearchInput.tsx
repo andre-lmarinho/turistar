@@ -1,14 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
-
-import { SuggestionCombobox } from '@/features/app/planner/components/ui/SuggestionCombobox';
-import type { SuggestionOption } from '@/features/app/planner/components/ui/SuggestionCombobox';
-
-import { useDebouncedQuery } from '@/features/app/planner/hooks/search/useDebouncedQuery';
-
-import type { AutocompletePlace, PlaceSelection } from '@/features/app/planner/types/locations';
-import type { SuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
+import React from "react";
+import type { SuggestionOption } from "@/features/app/planner/components/ui/SuggestionCombobox";
+import { SuggestionCombobox } from "@/features/app/planner/components/ui/SuggestionCombobox";
+import type { SuggestionHook } from "@/features/app/planner/hooks/search/createGeoapifySuggestionHook";
+import { useDebouncedQuery } from "@/features/app/planner/hooks/search/useDebouncedQuery";
+import type { AutocompletePlace, PlaceSelection } from "@/features/app/planner/types/locations";
 
 interface LocationSearchInputProps {
   value: string;
@@ -27,10 +24,10 @@ interface LocationSearchInputProps {
 export function LocationSearchInput({
   value,
   onChange,
-  id = 'location-input',
-  placeholder = 'Location',
+  id = "location-input",
+  placeholder = "Location",
   label,
-  className = '',
+  className = "",
   inputClassName,
   latitude,
   longitude,
@@ -66,7 +63,7 @@ export function LocationSearchInput({
       latitude: option.value.latitude,
       longitude: option.value.longitude,
       raw: option.value,
-      source: 'location',
+      source: "location",
     }),
     []
   );
@@ -84,12 +81,12 @@ export function LocationSearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? 'Failed to load suggestions.' : undefined}
+      error={error ? "Failed to load location suggestions." : undefined}
       emptyMessage="No suggestions found."
       className={className}
       inputClassName={
         inputClassName ??
-        'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none'
+        "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
       }
       onInputFocus={onFocusProp}
     />

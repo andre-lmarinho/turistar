@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useMemo, useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { eachDayOfInterval, parseISO } from 'date-fns';
-import { DateRange } from 'react-day-picker';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { eachDayOfInterval, parseISO } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import type { DateRange } from "react-day-picker";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Manages the trip date range in client state.
@@ -14,8 +14,8 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
 
 export function useTripRange(initialDays: DayPlan[] = []) {
   const params = useSearchParams();
-  const startIso = params.get('start');
-  const endIso = params.get('end');
+  const startIso = params.get("start");
+  const endIso = params.get("end");
 
   const [currentRange, setCurrentRange] = useState<DateRange | undefined>(() => {
     if (startIso && endIso) {

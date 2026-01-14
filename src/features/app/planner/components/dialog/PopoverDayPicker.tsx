@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { PopoverContent, PopoverHeader } from "@/shared/ui/popover";
 
 interface DayPickerPopoverProps {
   titleId?: string;
@@ -14,7 +14,7 @@ interface DayPickerPopoverProps {
 }
 
 export function DayPickerPopover({
-  titleId = 'day-picker-popover-title',
+  titleId = "day-picker-popover-title",
   days,
   selectedDayId,
   onSelectDay,
@@ -23,13 +23,7 @@ export function DayPickerPopover({
   onSelectIndex,
 }: DayPickerPopoverProps) {
   return (
-    <PopoverContent
-      side="bottom"
-      align="start"
-      sideOffset={8}
-      className="w-72 p-0"
-      aria-labelledby={titleId}
-    >
+    <PopoverContent side="bottom" align="start" sideOffset={8} className="w-72 p-0" aria-labelledby={titleId}>
       <PopoverHeader title="Change Day" titleId={titleId} />
       <div className="flex gap-2 p-4">
         <div className="w-[65%]">
@@ -40,8 +34,7 @@ export function DayPickerPopover({
             id="day-select"
             value={selectedDayId}
             onChange={(event) => onSelectDay(event.target.value)}
-            className="mt-1 w-full rounded border px-2 py-1 text-sm"
-          >
+            className="mt-1 w-full rounded border px-2 py-1 text-sm">
             {days.map((day) => (
               <option key={day.id} value={day.id}>
                 {day.label}
@@ -57,11 +50,10 @@ export function DayPickerPopover({
             id="position-select"
             value={selectedIndex}
             onChange={(event) => onSelectIndex?.(Number(event.target.value))}
-            className="mt-1 w-full rounded border px-2 py-1 text-sm"
-          >
-            {positions.map((_, index) => (
-              <option key={index} value={index}>
-                {index + 1}
+            className="mt-1 w-full rounded border px-2 py-1 text-sm">
+            {positions.map((position) => (
+              <option key={position} value={position}>
+                {position + 1}
               </option>
             ))}
           </select>

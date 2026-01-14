@@ -1,9 +1,8 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 type ProfileSlugRow = { slug: string | null };
 
@@ -12,15 +11,14 @@ export async function fetchProfileSlugByUserId(
   client?: SupabaseClient
 ): Promise<string | null> {
   const supabase = client ?? createSupabaseServerClient();
-  const { data, error } = (await supabase
-    .from('profiles')
-    .select('slug')
-    .eq('id', userId)
-    .maybeSingle()) as { data: ProfileSlugRow | null; error: unknown };
+  const { data, error } = (await supabase.from("profiles").select("slug").eq("id", userId).maybeSingle()) as {
+    data: ProfileSlugRow | null;
+    error: unknown;
+  };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchProfileSlugByUserId',
+      operation: "fetchProfileSlugByUserId",
       identifiers: { userId },
       error,
     });

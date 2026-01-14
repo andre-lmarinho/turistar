@@ -1,8 +1,19 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { normalizePositions } from '@/features/app/planner/domain/events/gapOrdering';
-import type { PlanEvent, PlanSnapshot } from '@/features/app/planner/domain/types/PlanEvent';
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { normalizePositions } from "@/features/app/planner/domain/events/gapOrdering";
+import type { PlanEvent, PlanSnapshot } from "@/features/app/planner/domain/types/PlanEvent";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+
+const PlanEventTypeSchema = z.enum([
+  "activity.created",
+  "activity.updated",
+  "activity.deleted",
+  "activity.moved",
+  "day.created",
+  "day.updated",
+  "day.removed",
+  "day.reordered",
+]);
 
 export const ActivitySchema = z.object({
   id: z.string(),
@@ -38,7 +49,7 @@ export const EventRowSchema = z.object({
   event_id: z.string(),
   plan_id: z.string(),
   version: z.number().positive(),
-  event_type: z.string(),
+  event_type: PlanEventTypeSchema,
   payload: z.unknown(),
   created_at: z.string(),
   actor_id: z.string().nullish(),
@@ -101,10 +112,10 @@ export function mapEvent(row: EventRow): PlanEvent {
     type: row.event_type,
     createdAt: row.created_at,
     actorId: row.actor_id ?? undefined,
-  } as Omit<PlanEvent, 'payload'>;
+  } as Omit<PlanEvent, "payload">;
 
   return {
     ...base,
-    payload: row.payload as PlanEvent['payload'],
+    payload: row.payload as PlanEvent["payload"],
   } as PlanEvent;
 }

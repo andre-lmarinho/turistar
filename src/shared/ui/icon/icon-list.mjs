@@ -11,7 +11,7 @@ export const lucideIconNames = [
   "building2",
   "calendar",
   "circle-check",
-  "CircleQuestionMark",
+  "circle-question-mark",
   "check",
   "chevron-down",
   "chevron-left",

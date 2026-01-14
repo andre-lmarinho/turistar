@@ -8,7 +8,7 @@ export interface PlaceSelection<T = unknown> extends AutocompletePlace {
   description?: string;
   category?: string;
   raw?: T;
-  source?: 'location' | 'activity';
+  source?: "location" | "activity";
 }
 
 /** Autocomplete location returned by Geoapify. */

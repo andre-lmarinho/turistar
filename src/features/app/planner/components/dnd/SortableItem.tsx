@@ -1,12 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { CSS } from '@dnd-kit/utilities';
-import { useSortable } from '@dnd-kit/sortable';
-
-import { cn } from '@/shared/utils/cn';
-import { ActivityCard } from './ActivityCard';
-import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import type { Activity } from "@/features/app/planner/domain/types/PlannerEntities";
+import { cn } from "@/shared/utils/cn";
+import { ActivityCard } from "./ActivityCard";
 
 interface SortableItemProps {
   id: string;
@@ -33,10 +31,9 @@ export function SortableItem({
     return (
       <div
         className={cn(
-          'bg-background pointer-events-none origin-bottom rotate-3 cursor-grabbing rounded-lg opacity-90 backdrop-blur-md transition-transform duration-200 ease-out',
+          "bg-background pointer-events-none origin-bottom rotate-3 cursor-grabbing rounded-lg opacity-90 backdrop-blur-md transition-transform duration-200 ease-out",
           className
-        )}
-      >
+        )}>
         <ActivityCard activity={activity} onSelect={onSelect} bgColor={bgColor} />
       </div>
     );
@@ -52,15 +49,13 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative touch-none list-none',
-        isDragging ? 'cursor-grabbing' : 'cursor-grab',
+        "relative touch-none list-none",
+        isDragging ? "cursor-grabbing" : "cursor-grab",
         className
       )}
       {...attributes}
-      {...listeners}
-      role="listitem"
-    >
-      <div className={cn(isDragging && 'opacity-0')}>
+      {...listeners}>
+      <div className={cn(isDragging && "opacity-0")}>
         <ActivityCard activity={activity} onSelect={onSelect} bgColor={bgColor} />
       </div>
       {isDragging && (

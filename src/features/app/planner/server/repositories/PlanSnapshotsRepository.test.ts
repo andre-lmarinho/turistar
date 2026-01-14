@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import { fetchPlanSnapshot } from './PlanSnapshotsRepository';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import { fetchPlanSnapshot } from "./PlanSnapshotsRepository";
 
-vi.mock('@/shared/lib/supabaseServer', () => ({
+vi.mock("@/shared/lib/supabaseServer", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
@@ -49,55 +49,55 @@ function buildSupabaseFrom<T>(table: string, chain: T) {
   return { supabase, from };
 }
 
-describe('PlanSnapshotsRepository', () => {
+describe("PlanSnapshotsRepository", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
-  it('returns the snapshot row', async () => {
+  it("returns the snapshot row", async () => {
     const row: PlanSnapshotRow = {
-      plan_id: 'plan-1',
+      plan_id: "plan-1",
       version: 2,
       state: { days: [] },
-      updated_at: '2024-01-01T00:00:00.000Z',
+      updated_at: "2024-01-01T00:00:00.000Z",
     };
     const snapshotQuery = buildMaybeSingleQuery<PlanSnapshotRow>({ data: row, error: null });
-    const { supabase, from } = buildSupabaseFrom('plan_snapshots', snapshotQuery);
+    const { supabase, from } = buildSupabaseFrom("plan_snapshots", snapshotQuery);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const result = await fetchPlanSnapshot('plan-1');
+    const result = await fetchPlanSnapshot("plan-1");
 
     expect(result).toEqual(row);
-    expect(from).toHaveBeenCalledWith('plan_snapshots');
-    expect(snapshotQuery.select).toHaveBeenCalledWith('plan_id, version, state, updated_at');
-    expect(snapshotQuery.eq).toHaveBeenCalledWith('plan_id', 'plan-1');
+    expect(from).toHaveBeenCalledWith("plan_snapshots");
+    expect(snapshotQuery.select).toHaveBeenCalledWith("plan_id, version, state, updated_at");
+    expect(snapshotQuery.eq).toHaveBeenCalledWith("plan_id", "plan-1");
   });
 
-  it('returns null when no snapshot exists', async () => {
+  it("returns null when no snapshot exists", async () => {
     const snapshotQuery = buildMaybeSingleQuery<PlanSnapshotRow>({ data: null, error: null });
-    const { supabase } = buildSupabaseFrom('plan_snapshots', snapshotQuery);
+    const { supabase } = buildSupabaseFrom("plan_snapshots", snapshotQuery);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-    const result = await fetchPlanSnapshot('plan-2');
+    const result = await fetchPlanSnapshot("plan-2");
 
     expect(result).toBeNull();
   });
 
-  it('throws a formatted error when Supabase fails', async () => {
-    const failure = new Error('snapshot failure');
+  it("throws a formatted error when Supabase fails", async () => {
+    const failure = new Error("snapshot failure");
     const snapshotQuery = buildMaybeSingleQuery<PlanSnapshotRow>({ data: null, error: failure });
-    const { supabase } = buildSupabaseFrom('plan_snapshots', snapshotQuery);
+    const { supabase } = buildSupabaseFrom("plan_snapshots", snapshotQuery);
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
     try {
-      await fetchPlanSnapshot('plan-3');
-      throw new Error('Expected fetchPlanSnapshot to throw');
+      await fetchPlanSnapshot("plan-3");
+      throw new Error("Expected fetchPlanSnapshot to throw");
     } catch (error) {
       if (!(error instanceof Error)) {
-        throw new Error('Expected an Error instance');
+        throw new Error("Expected an Error instance");
       }
-      expect(error.message).toContain('fetchPlanSnapshot');
-      expect(error.message).toContain('planId=plan-3');
+      expect(error.message).toContain("fetchPlanSnapshot");
+      expect(error.message).toContain("planId=plan-3");
     }
   });
 });

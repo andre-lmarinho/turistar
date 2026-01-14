@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { DollarSign } from '@/shared/ui/icon';
-import { CATEGORIES } from '@/features/app/planner/domain/constants/budget';
-import { CategoryProgressBar } from '@/features/app/planner/components/budget/CategoryProgressBar';
-import { useBudgetContext } from '@/features/app/planner/hooks/BudgetContext';
-import { normalizeAmount } from '@/features/app/planner/domain/utils/normalizeAmount';
+import { useEffect, useState } from "react";
+import { CategoryProgressBar } from "@/features/app/planner/components/budget/CategoryProgressBar";
+import { CATEGORIES } from "@/features/app/planner/domain/constants/budget";
+import { normalizeAmount } from "@/features/app/planner/domain/utils/normalizeAmount";
+import { useBudgetContext } from "@/features/app/planner/hooks/BudgetContext";
+import { DollarSign } from "@/shared/ui/icon";
 
 interface SummaryValueProps {
   amount: number;
@@ -14,25 +14,24 @@ interface SummaryValueProps {
 
 function SummaryValue({ amount, ariaLabel }: SummaryValueProps) {
   return (
-    <span
-      className="bg-muted/30 grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border"
-      aria-label={ariaLabel}
-    >
+    <div className="bg-muted/30 grid w-28 grid-cols-[auto_1fr] items-center overflow-hidden rounded border">
+      <span className="sr-only">{ariaLabel}</span>
       <span className="bg-muted border-r">
         <DollarSign aria-hidden="true" className="text-muted-foreground m-2 size-4" />
       </span>
-      <span className="w-full px-2 py-1 text-right">{amount.toFixed(2)}</span>
-    </span>
+      <span className="w-full px-2 py-1 text-right" aria-hidden="true">
+        {amount.toFixed(2)}
+      </span>
+    </div>
   );
 }
 
 export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
-  const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } =
-    useBudgetContext();
-  const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : '');
+  const { budget, setBudget, totalSpent, difference, categoryTotals, persistError } = useBudgetContext();
+  const [budgetInput, setBudgetInput] = useState(budget ? String(budget) : "");
 
   useEffect(() => {
-    setBudgetInput(budget ? String(budget) : '');
+    setBudgetInput(budget ? String(budget) : "");
   }, [budget]);
 
   return (
@@ -42,11 +41,7 @@ export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
           {persistError}
         </p>
       )}
-      <div
-        role="region"
-        aria-labelledby="budget-summary-heading"
-        className="mb-2 flex flex-col gap-2"
-      >
+      <section aria-labelledby="budget-summary-heading" className="mb-2 flex flex-col gap-2">
         <h3 id="budget-summary-heading" className="font-semibold">
           Summary
         </h3>
@@ -73,7 +68,7 @@ export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
               onBlur={() => {
                 const val = normalizeAmount(budgetInput);
                 setBudget(val);
-                setBudgetInput(val ? String(val) : '0');
+                setBudgetInput(val ? String(val) : "0");
               }}
               disabled={!canEdit}
             />
@@ -91,9 +86,9 @@ export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
           <span className="text-sm">Difference</span>
           <SummaryValue amount={difference} ariaLabel={`Difference: $${difference.toFixed(2)}`} />
         </div>
-      </div>
+      </section>
 
-      <div role="region" aria-labelledby="budget-categories-heading" className="flex flex-col">
+      <section aria-labelledby="budget-categories-heading" className="flex flex-col">
         <h3 id="budget-categories-heading" className="pt-4 pb-2 font-semibold">
           Categories
         </h3>
@@ -106,7 +101,7 @@ export function BudgetPanelHeader({ canEdit = true }: { canEdit?: boolean }) {
             colorIndex={idx}
           />
         ))}
-      </div>
+      </section>
     </div>
   );
 }

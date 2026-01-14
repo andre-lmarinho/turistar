@@ -1,19 +1,18 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { PlanEventInsert } from '@/features/app/planner/domain/types/PlanEvent';
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
+import type { PlanEventInsert } from "@/features/app/planner/domain/types/PlanEvent";
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
 type PlanEventsRepositoryOptions = {
   client?: SupabaseClient;
 };
 
-export type PlanEventRow = Database['public']['Tables']['plan_events']['Row'];
-export type AppendPlanEventsResponse =
-  Database['public']['Functions']['append_plan_events']['Returns'];
+export type PlanEventRow = Database["public"]["Tables"]["plan_events"]["Row"];
+export type AppendPlanEventsResponse = Database["public"]["Functions"]["append_plan_events"]["Returns"];
 
 function getClient(client?: SupabaseClient): SupabaseClient {
   return client ?? createSupabaseServerClient();
@@ -26,18 +25,18 @@ export async function fetchPlanEvents(
 ): Promise<PlanEventRow[]> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plan_events')
-    .select('event_id, plan_id, version, event_type, payload, created_at, actor_id')
-    .eq('plan_id', planId)
-    .gt('version', sinceVersion)
-    .order('version', { ascending: true })) as unknown as {
+    .from("plan_events")
+    .select("event_id, plan_id, version, event_type, payload, created_at, actor_id")
+    .eq("plan_id", planId)
+    .gt("version", sinceVersion)
+    .order("version", { ascending: true })) as unknown as {
     data: PlanEventRow[] | null;
     error: unknown;
   };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanEvents',
+      operation: "fetchPlanEvents",
       identifiers: { planId, sinceVersion },
       error,
     });
@@ -53,7 +52,7 @@ export async function appendPlanEvents(
   { client }: PlanEventsRepositoryOptions = {}
 ): Promise<AppendPlanEventsResponse | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase.rpc('append_plan_events', {
+  const { data, error } = (await supabase.rpc("append_plan_events", {
     plan_id: planId,
     base_version: baseVersion,
     events,
@@ -64,7 +63,7 @@ export async function appendPlanEvents(
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'appendPlanEvents',
+      operation: "appendPlanEvents",
       identifiers: { planId, baseVersion, eventCount: events.length },
       error,
     });

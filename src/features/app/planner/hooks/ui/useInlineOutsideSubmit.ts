@@ -1,14 +1,11 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { type RefObject, useEffect, useRef } from "react";
 
 interface UseInlineOutsideSubmitParams {
   containerRef: RefObject<HTMLElement | null>;
   handleSubmit: () => void;
 }
 
-export function useInlineOutsideSubmit({
-  containerRef,
-  handleSubmit,
-}: UseInlineOutsideSubmitParams) {
+export function useInlineOutsideSubmit({ containerRef, handleSubmit }: UseInlineOutsideSubmitParams) {
   const handlerRef = useRef(handleSubmit);
 
   useEffect(() => {
@@ -36,12 +33,12 @@ export function useInlineOutsideSubmit({
       }
     };
 
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('focusin', handleFocusIn);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("focusin", handleFocusIn);
 
     return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('focusin', handleFocusIn);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("focusin", handleFocusIn);
     };
   }, [containerRef]);
 }

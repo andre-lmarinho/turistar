@@ -1,8 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import { useLocalStorage } from '@/features/app/planner/hooks/data/useLocalStorage';
+import { useLocalStorage } from "@/features/app/planner/hooks/data/useLocalStorage";
 
-const KEY = 'plan_edit_tokens'; // map of plan_id -> token
+const KEY = "plan_edit_tokens"; // map of plan_id -> token
 
 type UsePlanEditTokensOptions = {
   enabled?: boolean;

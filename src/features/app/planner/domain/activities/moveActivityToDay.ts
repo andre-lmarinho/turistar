@@ -1,11 +1,7 @@
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
+import { cloneDays } from "@/features/app/planner/domain/activities/cloneDays";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
-export function moveActivityToDay(
-  days: DayPlan[],
-  activityId: string,
-  newDayId: string
-): DayPlan[] {
+export function moveActivityToDay(days: DayPlan[], activityId: string, newDayId: string): DayPlan[] {
   const copy = cloneDays(days);
 
   let moved: ReturnType<typeof Array.prototype.splice>[0] | undefined;

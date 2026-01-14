@@ -1,12 +1,12 @@
-'use client';
-import { useEffect, useRef } from 'react';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
+"use client";
+import { useEffect, useRef } from "react";
+import { cloneDays } from "@/features/app/planner/domain/activities/cloneDays";
 import {
   removeBlankActivities,
   snapshotDays,
-} from '@/features/app/planner/domain/activities/sanitizePlannerDays';
-import type { usePlanner } from './usePlanner';
+} from "@/features/app/planner/domain/activities/sanitizePlannerDays";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import type { usePlanner } from "./usePlanner";
 
 interface PersistDaysMutation {
   mutateAsync: (state: DayPlan[]) => Promise<unknown>;
@@ -14,7 +14,7 @@ interface PersistDaysMutation {
 }
 
 interface UsePersistedPlannerDaysParams {
-  planner: Pick<ReturnType<typeof usePlanner>, 'days' | 'setDays'>;
+  planner: Pick<ReturnType<typeof usePlanner>, "days" | "setDays">;
   persistDays: PersistDaysMutation;
   persist?: boolean;
   storedDays?: DayPlan[] | null;
@@ -41,16 +41,16 @@ export function usePersistedPlannerDays({
   const { days, setDays } = planner;
   const metaRef = useRef<PersistMeta | null>(null);
   const persistChainRef = useRef<Promise<void>>(Promise.resolve());
-  const lastRequestedRef = useRef<string>('');
+  const lastRequestedRef = useRef<string>("");
   const needsReplayRef = useRef(false);
-  const viewSerializedRef = useRef('');
+  const viewSerializedRef = useRef("");
   const didRollbackRef = useRef(false);
 
   if (metaRef.current == null) {
     const snapshot = snapshotDays(storedDays ?? days);
     const initialMeta: PersistMeta = {
       ready: storedDays !== undefined,
-      lastSaved: storedDays ? snapshot.serialized : '',
+      lastSaved: storedDays ? snapshot.serialized : "",
       fallback: snapshot.state,
     };
     metaRef.current = initialMeta;
@@ -59,7 +59,8 @@ export function usePersistedPlannerDays({
   useEffect(() => {
     if (storedDays == null) return;
     const snapshot = snapshotDays(storedDays);
-    const meta = metaRef.current!;
+    const meta = metaRef.current;
+    if (!meta) return;
     meta.ready = true;
 
     if (snapshot.state.length === 0 && days.length > 0) {
@@ -82,16 +83,17 @@ export function usePersistedPlannerDays({
   const { mutateAsync } = persistDays;
 
   useEffect(() => {
-    const meta = metaRef.current!;
+    const meta = metaRef.current;
+    if (!meta) return;
     if (!persist || !meta.ready) return;
     if (days.length === 0) {
-      viewSerializedRef.current = '[]';
+      viewSerializedRef.current = "[]";
       return;
     }
 
     const cleanedDays = removeBlankActivities(days);
     if (cleanedDays.length === 0) {
-      viewSerializedRef.current = '[]';
+      viewSerializedRef.current = "[]";
       return;
     }
 

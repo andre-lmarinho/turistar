@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import type { Entry } from '@/features/app/planner/types/budget';
-import { useBudgetContext } from '@/features/app/planner/hooks/BudgetContext';
-import { BudgetRowView } from '@/features/app/planner/components/budget/BudgetRowView';
-import { BudgetRowEdit } from '@/features/app/planner/components/budget/BudgetRowEdit';
-import { BudgetRowNew } from '@/features/app/planner/components/budget/BudgetRowNew';
+import { useEffect, useState } from "react";
+import { BudgetRowEdit } from "@/features/app/planner/components/budget/BudgetRowEdit";
+import { BudgetRowNew } from "@/features/app/planner/components/budget/BudgetRowNew";
+import { BudgetRowView } from "@/features/app/planner/components/budget/BudgetRowView";
+import { useBudgetContext } from "@/features/app/planner/hooks/BudgetContext";
+import type { Entry } from "@/features/app/planner/types/budget";
 
 export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
   const { entries, amount, handleAdd, handleDeleteEntry, handleUpdateEntry } = useBudgetContext();
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editEntry, setEditEntry] = useState<Entry | null>(null);
-  const [amountInput, setAmountInput] = useState(amount ? String(amount) : '');
-  const [editAmountInput, setEditAmountInput] = useState('');
+  const [amountInput, setAmountInput] = useState(amount ? String(amount) : "");
+  const [editAmountInput, setEditAmountInput] = useState("");
 
   useEffect(() => {
-    setAmountInput(amount ? String(amount) : '');
+    setAmountInput(amount ? String(amount) : "");
   }, [amount]);
 
   const startEdit = (index: number) => {
@@ -31,16 +31,12 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
   };
 
   return (
-    <table
-      role="table"
-      aria-labelledby="expense-table-caption"
-      className="w-full rounded border text-sm"
-    >
+    <table aria-labelledby="expense-table-caption" className="w-full rounded border text-sm">
       <caption id="expense-table-caption" className="sr-only">
         Expenses table showing description, category, amount, and actions
       </caption>
-      <thead role="rowgroup" className="bg-card">
-        <tr role="row">
+      <thead className="bg-card">
+        <tr>
           <th scope="col" className="p-2 text-left font-normal">
             Description
           </th>
@@ -55,7 +51,7 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
           </th>
         </tr>
       </thead>
-      <tbody role="rowgroup">
+      <tbody>
         {entries.map((entry, index) =>
           canEdit && editIndex === index && editEntry ? (
             <BudgetRowEdit
@@ -83,11 +79,7 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
           )
         )}
         {canEdit ? (
-          <BudgetRowNew
-            amountInput={amountInput}
-            setAmountInput={setAmountInput}
-            onAdd={handleAdd}
-          />
+          <BudgetRowNew amountInput={amountInput} setAmountInput={setAmountInput} onAdd={handleAdd} />
         ) : null}
       </tbody>
     </table>

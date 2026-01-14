@@ -1,5 +1,5 @@
-import { formatDayPlan } from '@/features/app/planner/domain/days/formatDayPlan';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { formatDayPlan } from "@/features/app/planner/domain/days/formatDayPlan";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Builds an initial empty DayPlan array.

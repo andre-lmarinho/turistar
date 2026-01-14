@@ -1,4 +1,4 @@
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Creates a deep copy of each day with cloned activity entries so that callers

@@ -36,7 +36,7 @@ export function Features() {
       <Container>
         <Eyebrow>
           <Binoculars className="size-4" aria-hidden="true" />
-          Adicional features
+          Additional features
         </Eyebrow>
         <H2>Extra planning tools</H2>
         <P>Enhance your trips with these helpful tools that streamline planning, mapping and budgeting.</P>

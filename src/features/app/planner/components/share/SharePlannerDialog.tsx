@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import * as Dialog from "@radix-ui/react-dialog";
+import { useState } from "react";
 
-import { Share2, X } from '@/shared/ui/icon';
+import { Share2, X } from "@/shared/ui/icon";
 
-import { ShareInviteForm } from './ShareInviteForm';
-import { ShareLinkSection } from './ShareLinkSection';
-import { ShareMembersSection } from './ShareMembersSection';
+import { ShareInviteForm } from "./ShareInviteForm";
+import { ShareLinkSection } from "./ShareLinkSection";
+import { ShareMembersSection } from "./ShareMembersSection";
 
 export function SharePlannerDialog({ planId }: { planId: string }) {
   const [open, setOpen] = useState(false);
@@ -18,8 +18,7 @@ export function SharePlannerDialog({ planId }: { planId: string }) {
         <button
           type="button"
           className="text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors"
-          aria-label="Share planner"
-        >
+          aria-label="Share planner">
           <Share2 className="size-4" aria-hidden="true" />
         </button>
       </Dialog.Trigger>
@@ -35,8 +34,7 @@ export function SharePlannerDialog({ planId }: { planId: string }) {
               <button
                 type="button"
                 className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
-                aria-label="Close"
-              >
+                aria-label="Close">
                 <X className="size-4" aria-hidden="true" />
               </button>
             </Dialog.Close>

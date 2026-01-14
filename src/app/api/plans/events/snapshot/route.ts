@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const planId = searchParams.get("planId")?.trim();
 
   if (!planId) {
-    return NextResponse.json({ error: "Missing planId." }, { status: 400 });
+    return NextResponse.json({ error: "Missing required parameter: planId" }, { status: 400 });
   }
 
   try {

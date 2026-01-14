@@ -1,17 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext } from "@dnd-kit/core";
+import { render, screen } from "@testing-library/react";
 
-import { SortableItem } from './SortableItem';
+import { SortableItem } from "./SortableItem";
 
-describe('SortableItem', () => {
-  const activity = { id: 'x', title: 'Hello', color: 'bg-[var(--color-1)]' } as const;
+describe("SortableItem", () => {
+  const activity = { id: "x", title: "Hello", color: "bg-[var(--color-1)]" } as const;
 
   // minimum props required by SortableItem
   const defaultProps = {
-    bgColor: '',
+    bgColor: "",
   };
 
-  it('renders the activity title', () => {
+  it("renders the activity title", () => {
     render(
       <DndContext>
         <ul>
@@ -20,6 +20,6 @@ describe('SortableItem', () => {
       </DndContext>
     );
 
-    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText("Hello")).toBeInTheDocument();
   });
 });

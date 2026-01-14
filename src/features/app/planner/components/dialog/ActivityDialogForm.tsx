@@ -1,19 +1,16 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
+import { EMPTY_ACTIVITY_TITLE } from "@/features/app/planner/domain/constants/activity";
+import type { Activity } from "@/features/app/planner/domain/types/PlannerEntities";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { useActivitySuggestions } from "@/features/app/planner/hooks/search/useActivitySuggestions";
 
-import { AlignLeft, MapPin, DollarSign, Hourglass } from '@/shared/ui/icon';
-import { LocationSearchInput } from '../ui/LocationSearchInput';
-import { ActivitySearchInput } from '../ui/ActivitySearchInput';
-
-import { EMPTY_ACTIVITY_TITLE } from '@/features/app/planner/domain/constants/activity';
-
-import { useAddressAutocomplete } from '@/features/app/planner/hooks/search/useAddressAutocomplete';
-import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-
-import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
-import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
+import { useAddressAutocomplete } from "@/features/app/planner/hooks/search/useAddressAutocomplete";
+import type { ActivitySuggestion, PlaceSelection } from "@/features/app/planner/types/locations";
+import { AlignLeft, DollarSign, Hourglass, MapPin } from "@/shared/ui/icon";
+import { ActivitySearchInput } from "../ui/ActivitySearchInput";
+import { LocationSearchInput } from "../ui/LocationSearchInput";
 
 interface ActivityDialogFormProps {
   activity: Activity;
@@ -22,28 +19,23 @@ interface ActivityDialogFormProps {
   onSelectSuggestion?: (patch: Partial<Activity>) => void;
 }
 
-export function ActivityDialogForm({
-  activity,
-  onSave,
-  color,
-  onSelectSuggestion,
-}: ActivityDialogFormProps) {
-  const [editedTitle, setEditedTitle] = useState(activity.title ?? '');
-  const [editedDescription, setEditedDescription] = useState(activity.description ?? '');
+export function ActivityDialogForm({ activity, onSave, color, onSelectSuggestion }: ActivityDialogFormProps) {
+  const [editedTitle, setEditedTitle] = useState(activity.title ?? "");
+  const [editedDescription, setEditedDescription] = useState(activity.description ?? "");
   const [duration, setDuration] = useState<number>(activity.duration || 0);
   const [budget, setBudget] = useState<number>(activity.budget || 0);
-  const [address, setAddress] = useState(activity.address ?? '');
+  const [address, setAddress] = useState(activity.address ?? "");
   const [latitude, setLatitude] = useState<number | undefined>(activity.latitude);
   const [longitude, setLongitude] = useState<number | undefined>(activity.longitude);
   const { destCoords } = usePlannerContext();
 
   // Update internal state when the activity prop changes
   useEffect(() => {
-    setEditedTitle(activity.title ?? '');
-    setEditedDescription(activity.description ?? '');
+    setEditedTitle(activity.title ?? "");
+    setEditedDescription(activity.description ?? "");
     setDuration(activity.duration || 0);
     setBudget(activity.budget || 0);
-    setAddress(activity.address ?? '');
+    setAddress(activity.address ?? "");
     setLatitude(activity.latitude);
     setLongitude(activity.longitude);
   }, [activity]);
@@ -54,7 +46,7 @@ export function ActivityDialogForm({
 
   useEffect(() => {
     if (!initialTitle.current.trim()) {
-      titleInputRef.current?.scrollIntoView({ block: 'center' });
+      titleInputRef.current?.scrollIntoView({ block: "center" });
     }
   }, []);
 
@@ -99,7 +91,7 @@ export function ActivityDialogForm({
     const suggestion: ActivitySuggestion =
       selection.raw ??
       ({
-        placeId: selection.placeId ?? '',
+        placeId: selection.placeId ?? "",
         name: selection.name,
         formatted: selection.formatted ?? selection.name,
         addressLine1: undefined,
@@ -109,13 +101,13 @@ export function ActivityDialogForm({
         resultType: undefined,
         category: selection.category,
         description: selection.description,
-      } as ActivitySuggestion);
+      } satisfies ActivitySuggestion);
 
     setEditedTitle(selection.name);
     setAddress(selection.formatted ?? suggestion.formatted);
     setLatitude(selection.latitude);
     setLongitude(selection.longitude);
-    setEditedDescription(selection.description ?? suggestion.description ?? '');
+    setEditedDescription(selection.description ?? suggestion.description ?? "");
 
     let selectedAddress = selection.formatted ?? suggestion.formatted;
     let selectedDescription = selection.description ?? suggestion.description;
@@ -142,7 +134,7 @@ export function ActivityDialogForm({
           selectedImageUrl = body.wikidataImageUrl ?? undefined;
         }
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch place details:", { placeId, error });
       }
     }
 
@@ -157,7 +149,7 @@ export function ActivityDialogForm({
   }
 
   const handleTitleChange = (value: string | PlaceSelection<ActivitySuggestion>) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       handleTitleInputChange(value);
       return;
     }
@@ -168,7 +160,7 @@ export function ActivityDialogForm({
 
   const handleTitleBlur = () => {
     if (!editedTitle.trim()) {
-      setEditedTitle(activity.title ?? '');
+      setEditedTitle(activity.title ?? "");
     }
   };
 
@@ -188,7 +180,7 @@ export function ActivityDialogForm({
           inputRef={titleInputRef}
           inputClassName="focus:ring-primary mb-4 w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
           onInputBlur={handleTitleBlur}
-          inputProps={{ name: 'title', required: true, 'aria-required': true }}
+          inputProps={{ name: "title", required: true, "aria-required": true }}
         />
       </div>
 
@@ -206,7 +198,7 @@ export function ActivityDialogForm({
           </label>
           <input
             id="duration"
-            value={duration === 0 ? '' : String(duration)}
+            value={duration === 0 ? "" : String(duration)}
             onChange={(event) => setDuration(Number(event.target.value))}
             aria-label="Duration in hours"
             type="number"
@@ -225,7 +217,7 @@ export function ActivityDialogForm({
           </label>
           <input
             id="budget"
-            value={budget === 0 ? '' : String(budget)}
+            value={budget === 0 ? "" : String(budget)}
             onChange={(event) => setBudget(Number(event.target.value))}
             aria-label="Budget amount"
             type="number"
@@ -240,10 +232,7 @@ export function ActivityDialogForm({
 
       {/* Location */}
       <div className="mb-2 px-4">
-        <label
-          htmlFor="activity-address"
-          className="mb-1 flex items-center gap-1 text-xs font-bold"
-        >
+        <label htmlFor="activity-address" className="mb-1 flex items-center gap-1 text-xs font-bold">
           <MapPin size={12} aria-hidden="true" />
           <span>Address</span>
         </label>
@@ -251,7 +240,7 @@ export function ActivityDialogForm({
           id="activity-address"
           value={address}
           onChange={(val) => {
-            if (typeof val === 'string') {
+            if (typeof val === "string") {
               setAddress(val);
               setLatitude(undefined);
               setLongitude(undefined);
@@ -293,8 +282,7 @@ export function ActivityDialogForm({
           type="button"
           disabled={!canSave}
           onClick={handleSave}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-        >
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60">
           Update
         </button>
       </div>

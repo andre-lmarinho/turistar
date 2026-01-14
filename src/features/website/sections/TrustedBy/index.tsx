@@ -8,6 +8,11 @@ import { Container, Section } from "@/features/website/ui/wrapper";
 
 const BASE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+type MarqueeStyle = CSSProperties & {
+  "--marquee-duration"?: string;
+  "--marquee-distance"?: string;
+};
+
 function UlAvatarMarquee({
   speed = 900,
   gap = 36,
@@ -48,7 +53,8 @@ function UlAvatarMarquee({
   }, [row]);
   const dist = A.length * (size + gap);
   const duration = dist / speed;
-  const listStyle: CSSProperties = {
+
+  const listStyle: MarqueeStyle = {
     gap: `${gap}px`,
     "--marquee-duration": `${duration || 1}s`,
     "--marquee-distance": `${-dist}px`,
@@ -88,7 +94,7 @@ function UlAvatarMarquee({
         @keyframes marquee {
           to {
             transform: translate3d(var(--marquee-distance, 0px), 0, 0);
-          } /* move exatamente até o início da 2ª metade */
+          } /* move exactly to the start of the 2nd half */
         }
         ul {
           animation: marquee var(--marquee-duration, 1s) linear infinite;

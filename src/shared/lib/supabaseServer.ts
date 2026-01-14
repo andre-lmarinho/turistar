@@ -39,9 +39,16 @@ export function createSupabaseServerClient(): SupabaseClient<Database> {
         },
         async setAll(cookiesToSet: CookieBatch) {
           const cookieStore: CookieStore = await cookieStorePromise;
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set({ name, value, ...options });
-          });
+          for (const { name, value, options } of cookiesToSet) {
+            try {
+              cookieStore.set({ name, value, ...options });
+            } catch (error) {
+              console.error(
+                `Failed to set cookie "${name}":`,
+                error instanceof Error ? error.message : "Unknown error"
+              );
+            }
+          }
         },
       },
       headers: {
@@ -58,8 +65,4 @@ export function createSupabaseServerClient(): SupabaseClient<Database> {
   );
 
   return client;
-}
-
-export function supabaseServer() {
-  return createSupabaseServerClient();
 }

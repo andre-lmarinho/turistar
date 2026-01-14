@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { PopoverContent, PopoverHeader } from '@/shared/ui/popover';
+import { PopoverContent, PopoverHeader } from "@/shared/ui/popover";
 
 interface CardColorsPopoverProps {
   titleId?: string;
@@ -14,7 +14,7 @@ interface CardColorsPopoverProps {
 }
 
 export function CardColorsPopover({
-  titleId = 'card-color-popover-title',
+  titleId = "card-color-popover-title",
   imageUrl,
   onRemoveImage,
   colors,
@@ -29,16 +29,14 @@ export function CardColorsPopover({
       align="end"
       sideOffset={8}
       className="w-[304px] p-0"
-      aria-labelledby={titleId}
-    >
+      aria-labelledby={titleId}>
       <PopoverHeader title="Card Background" titleId={titleId} />
       <div className="space-y-3 p-4">
         {imageUrl ? (
           <button
             type="button"
             className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
-            onClick={onRemoveImage}
-          >
+            onClick={onRemoveImage}>
             Remove photo
           </button>
         ) : null}
@@ -51,9 +49,9 @@ export function CardColorsPopover({
                 key={color.bg}
                 onClick={() => onSelectColor(color.bg)}
                 className={`h-10 w-[31%] rounded border-2 shadow-xl ${
-                  color.bg.startsWith('#') ? '' : color.bg
-                } ${selectedColor === color.bg ? 'ring-primary ring-2' : 'border-background'}`}
-                style={color.bg.startsWith('#') ? { backgroundColor: color.bg } : undefined}
+                  color.bg.startsWith("#") ? "" : color.bg
+                } ${selectedColor === color.bg ? "ring-primary ring-2" : "border-background"}`}
+                style={color.bg.startsWith("#") ? { backgroundColor: color.bg } : undefined}
                 aria-label={color.name}
                 type="button"
               />
@@ -64,8 +62,7 @@ export function CardColorsPopover({
         <div>
           <label
             htmlFor={uploadInputId}
-            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors"
-          >
+            className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors">
             Upload image
           </label>
           <input
@@ -77,7 +74,7 @@ export function CardColorsPopover({
               const file = event.target.files?.[0];
               if (file) {
                 onUploadImage?.(file);
-                event.target.value = '';
+                event.target.value = "";
               }
             }}
             className="sr-only"

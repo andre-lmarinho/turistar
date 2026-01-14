@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { useDragState } from './useDragState';
-import { useActivityState } from './useActivityState';
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { useActivityState } from "./useActivityState";
+import { useDragState } from "./useDragState";
 
 /**
  * Combines drag state and activity helpers for the planner.
@@ -22,14 +22,8 @@ export function useDnDPlanner(initialDays: DayPlan[]) {
     handleDragEnd,
   } = useDragState(initialDays);
 
-  const {
-    addActivity,
-    removeActivity,
-    updateActivity,
-    addBlankActivity,
-    insertActivityAt,
-    replaceActivity,
-  } = useActivityState(setDays);
+  const { addActivity, removeActivity, updateActivity, addBlankActivity, insertActivityAt, replaceActivity } =
+    useActivityState(setDays);
 
   return {
     days,

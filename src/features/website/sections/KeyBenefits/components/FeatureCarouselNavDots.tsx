@@ -24,7 +24,7 @@ export function FeatureCarouselNavDots({ total, current, onSelect, className }: 
               isActive ? "bg-secondary w-15" : "bg-card-foreground w-2"
             )}
             aria-label={`Go to slide ${dot + 1}`}
-            aria-current={isActive ? "true" : "false"}
+            aria-current={isActive ? "true" : undefined}
           />
         );
       })}

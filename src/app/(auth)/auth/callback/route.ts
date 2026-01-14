@@ -14,14 +14,33 @@ export async function POST(request: Request) {
   if (!payloadText) {
     return NextResponse.json({ success: true });
   }
-  const { event, session }: AuthCallbackPayload = JSON.parse(payloadText);
+  let payload: AuthCallbackPayload;
+  try {
+    payload = JSON.parse(payloadText) as AuthCallbackPayload;
+  } catch (error) {
+    console.error("Unable to parse auth callback payload.", error);
+    return NextResponse.json({ error: "Invalid JSON payload." }, { status: 400 });
+  }
+  const { event, session } = payload;
 
   if (session && (event === "SIGNED_IN" || event === "TOKEN_REFRESHED")) {
-    await supabase.auth.setSession(session);
+    const { error } = await supabase.auth.setSession(session);
+    if (error) {
+      console.error("Unable to set auth session.", {
+        event,
+        userId: session.user?.id ?? "unknown",
+        error,
+      });
+      return NextResponse.json({ error: "Unable to set auth session." }, { status: 500 });
+    }
   }
 
   if (event === "SIGNED_OUT") {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Unable to sign out.", { event, error });
+      return NextResponse.json({ error: "Unable to sign out." }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ success: true });

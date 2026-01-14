@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ShareMembersSection } from './ShareMembersSection';
+import { ShareMembersSection } from "./ShareMembersSection";
 
 const {
   mockUsePlanMembers,
@@ -22,32 +21,32 @@ const {
   refreshMock: vi.fn(),
 }));
 
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock, refresh: refreshMock }),
 }));
 
-vi.mock('@/features/app/planner/hooks/data/usePlanSharing', () => ({
+vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
   usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
 }));
 
-vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
+vi.mock("@/features/app/planner/hooks/PlannerContext", () => ({
   usePlannerContext: () => mockUsePlannerContext(),
 }));
 
-describe('ShareMembersSection', () => {
+describe("ShareMembersSection", () => {
   const members = [
     {
-      userId: 'user-2',
-      tier: 'member',
-      slug: 'member-slug',
-      displayName: 'Member User',
+      userId: "user-2",
+      tier: "member",
+      slug: "member-slug",
+      displayName: "Member User",
       avatarUrl: null,
     },
     {
-      userId: 'user-1',
-      tier: 'admin',
-      slug: 'owner-slug',
-      displayName: 'Owner User',
+      userId: "user-1",
+      tier: "admin",
+      slug: "owner-slug",
+      displayName: "Owner User",
       avatarUrl: null,
     },
   ];
@@ -62,12 +61,12 @@ describe('ShareMembersSection', () => {
     refreshMock.mockReset();
 
     mockUsePlannerContext.mockReturnValue({
-      viewerUserId: 'user-1',
+      viewerUserId: "user-1",
       canManageMembers: true,
     });
 
     mockUsePlanMembers.mockReturnValue({
-      data: { ownerId: 'user-1', members },
+      data: { ownerId: "user-1", members },
       isLoading: false,
       error: null,
       updateTier: { mutate: updateTierMutate, isPending: false },
@@ -76,35 +75,35 @@ describe('ShareMembersSection', () => {
     });
   });
 
-  it('renders members including the owner', () => {
+  it("renders members including the owner", () => {
     render(<ShareMembersSection planId="plan-1" />);
 
-    expect(screen.getByText('Owner User (owner)')).toBeVisible();
-    expect(screen.getByText('Member User')).toBeVisible();
+    expect(screen.getByText("Owner User (owner)")).toBeVisible();
+    expect(screen.getByText("Member User")).toBeVisible();
   });
 
-  it('allows admins to remove a member', async () => {
+  it("allows admins to remove a member", async () => {
     render(<ShareMembersSection planId="plan-1" />);
 
-    fireEvent.click(screen.getByLabelText('Member User role'));
-    fireEvent.click(await screen.findByRole('option', { name: 'Remove member' }));
+    fireEvent.click(screen.getByLabelText("Member User role"));
+    fireEvent.click(await screen.findByRole("option", { name: "Remove member" }));
 
-    expect(removeMemberMutate).toHaveBeenCalledWith({ userId: 'user-2' });
+    expect(removeMemberMutate).toHaveBeenCalledWith({ userId: "user-2" });
   });
 
-  it('redirects after a member leaves the planner', async () => {
+  it("redirects after a member leaves the planner", async () => {
     mockUsePlannerContext.mockReturnValue({
-      viewerUserId: 'user-2',
+      viewerUserId: "user-2",
       canManageMembers: false,
     });
 
     render(<ShareMembersSection planId="plan-1" />);
 
-    fireEvent.click(screen.getByLabelText('Member User role'));
-    fireEvent.click(await screen.findByRole('option', { name: 'Leave planner' }));
+    fireEvent.click(screen.getByLabelText("Member User role"));
+    fireEvent.click(await screen.findByRole("option", { name: "Leave planner" }));
 
     await waitFor(() => expect(leaveMutateAsync).toHaveBeenCalled());
-    expect(pushMock).toHaveBeenCalledWith('/u/member-slug/planners');
+    expect(pushMock).toHaveBeenCalledWith("/u/member-slug/planners");
     expect(refreshMock).toHaveBeenCalled();
   });
 });

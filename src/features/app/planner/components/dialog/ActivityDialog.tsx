@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-
-import { ActivityDialogHeader } from '@/features/app/planner/components/dialog/ActivityDialogHeader';
-import { ActivityDialogForm } from '@/features/app/planner/components/dialog/ActivityDialogForm';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import type { Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import * as Dialog from "@radix-ui/react-dialog";
+import { useEffect, useState } from "react";
+import { ActivityDialogForm } from "@/features/app/planner/components/dialog/ActivityDialogForm";
+import { ActivityDialogHeader } from "@/features/app/planner/components/dialog/ActivityDialogHeader";
+import type { Activity } from "@/features/app/planner/domain/types/PlannerEntities";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
 
 export function ActivityDialog() {
   const {
@@ -41,8 +40,7 @@ export function ActivityDialog() {
           aria-labelledby="activity-dialog-title"
           aria-describedby="activity-dialog-description"
           aria-modal="true"
-          className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-113 -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-        >
+          className="bg-background focus-visible:ring-primary fixed top-1/2 left-1/2 z-50 flex w-[95%] max-w-113 -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl p-0 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
           <Dialog.Title className="sr-only">Edit Activity</Dialog.Title>
 
           <ActivityDialogHeader

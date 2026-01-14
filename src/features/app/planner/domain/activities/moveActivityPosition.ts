@@ -1,15 +1,11 @@
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { cloneDays } from '@/features/app/planner/domain/activities/cloneDays';
+import { cloneDays } from "@/features/app/planner/domain/activities/cloneDays";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Moves an activity to a new index within its current day.
  * Returns a new days array without mutating the input.
  */
-export function moveActivityPosition(
-  days: DayPlan[],
-  activityId: string,
-  newIndex: number
-): DayPlan[] {
+export function moveActivityPosition(days: DayPlan[], activityId: string, newIndex: number): DayPlan[] {
   const copy = cloneDays(days);
 
   for (const day of copy) {

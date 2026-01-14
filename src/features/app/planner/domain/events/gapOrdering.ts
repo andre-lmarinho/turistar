@@ -19,7 +19,7 @@ export function midpoint(left?: string, right?: string): string {
 export function normalizePositions<T extends { position?: string }>(items: T[]): T[] {
   let mutated = false;
   const result = items.map((item, index) => {
-    if (item.position != null && item.position !== '') return item;
+    if (item.position != null && item.position !== "") return item;
     mutated = true;
     return {
       ...item,

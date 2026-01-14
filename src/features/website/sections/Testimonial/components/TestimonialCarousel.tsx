@@ -112,7 +112,7 @@ export function TestimonialCarousel() {
               key={t.key}
               type="button"
               onClick={() => setIdx(i)}
-              className={`h-full w-full cursor-pointer bg-transparent p-0 text-left transition-opacity duration-300 ${cls}`}
+              className={`h-full w-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none cursor-pointer bg-transparent p-0 text-left transition-opacity duration-300 ${cls}`}
               aria-label={`View testimonial from ${t.name}`}>
               <TestimonialCard
                 quote={t.quote}

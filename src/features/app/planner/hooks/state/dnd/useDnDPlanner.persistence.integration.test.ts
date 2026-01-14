@@ -1,18 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
-import type { DragStartEvent, DragOverEvent } from '@dnd-kit/core';
-import { describe, expect, it, vi } from 'vitest';
+import type { DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+import { act, renderHook } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { usePersistedPlannerDays } from "@/features/app/planner/hooks/state/planner/usePersistedPlannerDays";
+import { useDnDPlanner } from "./useDnDPlanner";
 
-import { useDnDPlanner } from './useDnDPlanner';
-import { usePersistedPlannerDays } from '@/features/app/planner/hooks/state/planner/usePersistedPlannerDays';
-
-import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
-
-describe('useDnDPlanner with persistence', () => {
-  const a1: Activity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
-  const b1: Activity = { id: 'b1', title: 'B1', color: 'bg-[var(--color-1)]' };
+describe("useDnDPlanner with persistence", () => {
+  const a1: Activity = { id: "a1", title: "A1", color: "bg-[var(--color-1)]" };
+  const b1: Activity = { id: "b1", title: "B1", color: "bg-[var(--color-1)]" };
   const initial: DayPlan[] = [
-    { id: 'day1', label: 'Day 1', activities: [a1] },
-    { id: 'day2', label: 'Day 2', activities: [b1] },
+    { id: "day1", label: "Day 1", activities: [a1] },
+    { id: "day2", label: "Day 2", activities: [b1] },
   ];
 
   function setup() {
@@ -29,13 +27,13 @@ describe('useDnDPlanner with persistence', () => {
     return { persistSpy, ...wrapper };
   }
 
-  it('keeps days length after dragging across columns', () => {
+  it("keeps days length after dragging across columns", () => {
     const { result } = setup();
 
-    const startEvent = { active: { id: 'a1' } } as unknown as DragStartEvent;
+    const startEvent = { active: { id: "a1" } } as unknown as DragStartEvent;
     const overEvent = {
-      active: { id: 'a1' },
-      over: { id: 'day2' },
+      active: { id: "a1" },
+      over: { id: "day2" },
     } as Partial<DragOverEvent> as DragOverEvent;
 
     act(() => {
@@ -45,10 +43,10 @@ describe('useDnDPlanner with persistence', () => {
 
     expect(result.current.days).toHaveLength(2);
     expect(result.current.days[0].activities.map((a) => a.id)).toEqual([]);
-    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(['b1', 'a1']);
+    expect(result.current.days[1].activities.map((a) => a.id)).toEqual(["b1", "a1"]);
   });
 
-  it('does not clear existing days when stored snapshot is empty', () => {
+  it("does not clear existing days when stored snapshot is empty", () => {
     const persistSpy = vi.fn().mockResolvedValue(undefined);
     const { result, rerender } = renderHook(
       ({ stored }: { stored: DayPlan[] | undefined }) => {
@@ -69,7 +67,7 @@ describe('useDnDPlanner with persistence', () => {
     rerender({ stored: [] });
 
     expect(result.current).toHaveLength(2);
-    expect(result.current[0].activities.map((a) => a.id)).toEqual(['a1']);
-    expect(result.current[1].activities.map((a) => a.id)).toEqual(['b1']);
+    expect(result.current[0].activities.map((a) => a.id)).toEqual(["a1"]);
+    expect(result.current[1].activities.map((a) => a.id)).toEqual(["b1"]);
   });
 });

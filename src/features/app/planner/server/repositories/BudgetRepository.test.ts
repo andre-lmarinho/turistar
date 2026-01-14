@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import {
   createBudgetEntry,
   deleteBudgetEntry,
@@ -8,9 +8,9 @@ import {
   fetchPlanBudgetRow,
   updateBudgetEntry,
   updatePlanBudget,
-} from './BudgetRepository';
+} from "./BudgetRepository";
 
-vi.mock('@/shared/lib/supabaseServer', () => ({
+vi.mock("@/shared/lib/supabaseServer", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
@@ -136,279 +136,274 @@ function buildSupabaseFrom<T>(table: string, chain: T) {
   return { supabase, from };
 }
 
-describe('BudgetRepository', () => {
+describe("BudgetRepository", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
-  describe('fetchPlanBudgetRow', () => {
-    it('returns the plan budget row', async () => {
+  describe("fetchPlanBudgetRow", () => {
+    it("returns the plan budget row", async () => {
       const planQuery = buildSingleQuery<BudgetPlanRow>({
         data: { budget: 500 },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('plans', planQuery);
+      const { supabase, from } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanBudgetRow('plan-1');
+      const result = await fetchPlanBudgetRow("plan-1");
 
       expect(result).toEqual({ budget: 500 });
-      expect(from).toHaveBeenCalledWith('plans');
-      expect(planQuery.select).toHaveBeenCalledWith('budget');
-      expect(planQuery.eq).toHaveBeenCalledWith('id', 'plan-1');
+      expect(from).toHaveBeenCalledWith("plans");
+      expect(planQuery.select).toHaveBeenCalledWith("budget");
+      expect(planQuery.eq).toHaveBeenCalledWith("id", "plan-1");
     });
 
-    it('returns null when no budget row exists', async () => {
+    it("returns null when no budget row exists", async () => {
       const planQuery = buildSingleQuery<BudgetPlanRow>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('plans', planQuery);
+      const { supabase } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanBudgetRow('plan-2');
+      const result = await fetchPlanBudgetRow("plan-2");
 
       expect(result).toBeNull();
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('budget failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("budget failure");
       const planQuery = buildSingleQuery<BudgetPlanRow>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('plans', planQuery);
+      const { supabase } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchPlanBudgetRow('plan-3');
-        throw new Error('Expected fetchPlanBudgetRow to throw');
+        await fetchPlanBudgetRow("plan-3");
+        throw new Error("Expected fetchPlanBudgetRow to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchPlanBudgetRow');
-        expect(error.message).toContain('planId=plan-3');
+        expect(error.message).toContain("fetchPlanBudgetRow");
+        expect(error.message).toContain("planId=plan-3");
       }
     });
   });
 
-  describe('fetchPlanBudgetEntries', () => {
-    it('returns budget entries', async () => {
+  describe("fetchPlanBudgetEntries", () => {
+    it("returns budget entries", async () => {
       const entries: BudgetEntryRow[] = [
-        { id: 'entry-1', description: 'Taxi', category: 'transport', amount: 30 },
+        { id: "entry-1", description: "Taxi", category: "transport", amount: 30 },
       ];
       const entryQuery = buildEntryQuery<BudgetEntryRow[]>({ data: entries, error: null });
-      const { supabase, from } = buildSupabaseFrom('budget_entries', entryQuery);
+      const { supabase, from } = buildSupabaseFrom("budget_entries", entryQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanBudgetEntries('plan-4');
+      const result = await fetchPlanBudgetEntries("plan-4");
 
       expect(result).toEqual(entries);
-      expect(from).toHaveBeenCalledWith('budget_entries');
-      expect(entryQuery.select).toHaveBeenCalledWith('id, description, category, amount');
-      expect(entryQuery.eq).toHaveBeenCalledWith('plan_id', 'plan-4');
+      expect(from).toHaveBeenCalledWith("budget_entries");
+      expect(entryQuery.select).toHaveBeenCalledWith("id, description, category, amount");
+      expect(entryQuery.eq).toHaveBeenCalledWith("plan_id", "plan-4");
     });
 
-    it('returns an empty list when no entries exist', async () => {
+    it("returns an empty list when no entries exist", async () => {
       const entryQuery = buildEntryQuery<BudgetEntryRow[]>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('budget_entries', entryQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", entryQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanBudgetEntries('plan-5');
+      const result = await fetchPlanBudgetEntries("plan-5");
 
       expect(result).toEqual([]);
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('entry failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("entry failure");
       const entryQuery = buildEntryQuery<BudgetEntryRow[]>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('budget_entries', entryQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", entryQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchPlanBudgetEntries('plan-6');
-        throw new Error('Expected fetchPlanBudgetEntries to throw');
+        await fetchPlanBudgetEntries("plan-6");
+        throw new Error("Expected fetchPlanBudgetEntries to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchPlanBudgetEntries');
-        expect(error.message).toContain('planId=plan-6');
+        expect(error.message).toContain("fetchPlanBudgetEntries");
+        expect(error.message).toContain("planId=plan-6");
       }
     });
   });
 
-  describe('updatePlanBudget', () => {
-    it('returns the updated budget row', async () => {
+  describe("updatePlanBudget", () => {
+    it("returns the updated budget row", async () => {
       const updateQuery = buildUpdateQuery<BudgetPlanRow>({
         data: { budget: 900 },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('plans', updateQuery);
+      const { supabase, from } = buildSupabaseFrom("plans", updateQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await updatePlanBudget('plan-7', 900);
+      const result = await updatePlanBudget("plan-7", 900);
 
       expect(result).toEqual({ budget: 900 });
-      expect(from).toHaveBeenCalledWith('plans');
+      expect(from).toHaveBeenCalledWith("plans");
       expect(updateQuery.update).toHaveBeenCalledWith({ budget: 900 });
-      expect(updateQuery.eq).toHaveBeenCalledWith('id', 'plan-7');
-      expect(updateQuery.select).toHaveBeenCalledWith('budget');
+      expect(updateQuery.eq).toHaveBeenCalledWith("id", "plan-7");
+      expect(updateQuery.select).toHaveBeenCalledWith("budget");
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('update failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("update failure");
       const updateQuery = buildUpdateQuery<BudgetPlanRow>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('plans', updateQuery);
+      const { supabase } = buildSupabaseFrom("plans", updateQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await updatePlanBudget('plan-8', 1000);
-        throw new Error('Expected updatePlanBudget to throw');
+        await updatePlanBudget("plan-8", 1000);
+        throw new Error("Expected updatePlanBudget to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('updatePlanBudget');
-        expect(error.message).toContain('planId=plan-8');
+        expect(error.message).toContain("updatePlanBudget");
+        expect(error.message).toContain("planId=plan-8");
       }
     });
   });
 
-  describe('createBudgetEntry', () => {
-    it('returns the new entry id', async () => {
+  describe("createBudgetEntry", () => {
+    it("returns the new entry id", async () => {
       const insertQuery = buildInsertQuery<{ id: string }>({
-        data: { id: 'entry-2' },
+        data: { id: "entry-2" },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('budget_entries', insertQuery);
+      const { supabase, from } = buildSupabaseFrom("budget_entries", insertQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await createBudgetEntry(
-        'plan-9',
-        { description: 'Lunch', category: 'food', amount: 20 }
-      );
-
-      expect(result).toEqual({ id: 'entry-2' });
-      expect(from).toHaveBeenCalledWith('budget_entries');
-      expect(insertQuery.insert).toHaveBeenCalledWith({
-        plan_id: 'plan-9',
-        description: 'Lunch',
-        category: 'food',
+      const result = await createBudgetEntry("plan-9", {
+        description: "Lunch",
+        category: "food",
         amount: 20,
       });
-      expect(insertQuery.select).toHaveBeenCalledWith('id');
+
+      expect(result).toEqual({ id: "entry-2" });
+      expect(from).toHaveBeenCalledWith("budget_entries");
+      expect(insertQuery.insert).toHaveBeenCalledWith({
+        plan_id: "plan-9",
+        description: "Lunch",
+        category: "food",
+        amount: 20,
+      });
+      expect(insertQuery.select).toHaveBeenCalledWith("id");
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('insert failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("insert failure");
       const insertQuery = buildInsertQuery<{ id: string }>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('budget_entries', insertQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", insertQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await createBudgetEntry(
-          'plan-10',
-          { description: 'Taxi', category: 'transport', amount: 50 }
-        );
-        throw new Error('Expected createBudgetEntry to throw');
+        await createBudgetEntry("plan-10", { description: "Taxi", category: "transport", amount: 50 });
+        throw new Error("Expected createBudgetEntry to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('createBudgetEntry');
-        expect(error.message).toContain('planId=plan-10');
+        expect(error.message).toContain("createBudgetEntry");
+        expect(error.message).toContain("planId=plan-10");
       }
     });
 
-    it('throws a formatted error when no row is returned', async () => {
+    it("throws a formatted error when no row is returned", async () => {
       const insertQuery = buildInsertQuery<{ id: string }>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('budget_entries', insertQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", insertQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await createBudgetEntry(
-          'plan-11',
-          { description: 'Hotel', category: 'lodging', amount: 200 }
-        );
-        throw new Error('Expected createBudgetEntry to throw');
+        await createBudgetEntry("plan-11", { description: "Hotel", category: "lodging", amount: 200 });
+        throw new Error("Expected createBudgetEntry to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('createBudgetEntry:missing-row');
-        expect(error.message).toContain('planId=plan-11');
+        expect(error.message).toContain("createBudgetEntry:missing-row");
+        expect(error.message).toContain("planId=plan-11");
       }
     });
   });
 
-  describe('updateBudgetEntry', () => {
-    it('updates the budget entry', async () => {
+  describe("updateBudgetEntry", () => {
+    it("updates the budget entry", async () => {
       const updateQuery = buildUpdateOnlyQuery({ error: null });
-      const { supabase, from } = buildSupabaseFrom('budget_entries', updateQuery);
+      const { supabase, from } = buildSupabaseFrom("budget_entries", updateQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      await updateBudgetEntry('entry-3', {
-        description: 'Dinner',
-        category: 'food',
+      await updateBudgetEntry("entry-3", {
+        description: "Dinner",
+        category: "food",
         amount: 45,
       });
 
-      expect(from).toHaveBeenCalledWith('budget_entries');
+      expect(from).toHaveBeenCalledWith("budget_entries");
       expect(updateQuery.update).toHaveBeenCalledWith({
-        description: 'Dinner',
-        category: 'food',
+        description: "Dinner",
+        category: "food",
         amount: 45,
       });
-      expect(updateQuery.eq).toHaveBeenCalledWith('id', 'entry-3');
+      expect(updateQuery.eq).toHaveBeenCalledWith("id", "entry-3");
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('update entry failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("update entry failure");
       const updateQuery = buildUpdateOnlyQuery({ error: failure });
-      const { supabase } = buildSupabaseFrom('budget_entries', updateQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", updateQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await updateBudgetEntry('entry-4', {
-          description: 'Train',
-          category: 'transport',
+        await updateBudgetEntry("entry-4", {
+          description: "Train",
+          category: "transport",
           amount: 60,
         });
-        throw new Error('Expected updateBudgetEntry to throw');
+        throw new Error("Expected updateBudgetEntry to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('updateBudgetEntry');
-        expect(error.message).toContain('entryId=entry-4');
+        expect(error.message).toContain("updateBudgetEntry");
+        expect(error.message).toContain("entryId=entry-4");
       }
     });
   });
 
-  describe('deleteBudgetEntry', () => {
-    it('deletes the budget entry', async () => {
+  describe("deleteBudgetEntry", () => {
+    it("deletes the budget entry", async () => {
       const deleteQuery = buildDeleteQuery({ error: null });
-      const { supabase, from } = buildSupabaseFrom('budget_entries', deleteQuery);
+      const { supabase, from } = buildSupabaseFrom("budget_entries", deleteQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      await deleteBudgetEntry('entry-5');
+      await deleteBudgetEntry("entry-5");
 
-      expect(from).toHaveBeenCalledWith('budget_entries');
+      expect(from).toHaveBeenCalledWith("budget_entries");
       expect(deleteQuery.delete).toHaveBeenCalledWith();
-      expect(deleteQuery.eq).toHaveBeenCalledWith('id', 'entry-5');
+      expect(deleteQuery.eq).toHaveBeenCalledWith("id", "entry-5");
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('delete failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("delete failure");
       const deleteQuery = buildDeleteQuery({ error: failure });
-      const { supabase } = buildSupabaseFrom('budget_entries', deleteQuery);
+      const { supabase } = buildSupabaseFrom("budget_entries", deleteQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await deleteBudgetEntry('entry-6');
-        throw new Error('Expected deleteBudgetEntry to throw');
+        await deleteBudgetEntry("entry-6");
+        throw new Error("Expected deleteBudgetEntry to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('deleteBudgetEntry');
-        expect(error.message).toContain('entryId=entry-6');
+        expect(error.message).toContain("deleteBudgetEntry");
+        expect(error.message).toContain("entryId=entry-6");
       }
     });
   });

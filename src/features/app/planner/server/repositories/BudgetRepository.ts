@@ -1,27 +1,27 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
-import type { Database } from '@/shared/types/supabase';
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
 type BudgetRepositoryOptions = {
   client?: SupabaseClient;
 };
 
 export type BudgetPlanRow = {
-  budget: Database['public']['Tables']['plans']['Row']['budget'];
+  budget: Database["public"]["Tables"]["plans"]["Row"]["budget"];
 };
 
 export type BudgetEntryRow = Pick<
-  Database['public']['Tables']['budget_entries']['Row'],
-  'id' | 'description' | 'category' | 'amount'
+  Database["public"]["Tables"]["budget_entries"]["Row"],
+  "id" | "description" | "category" | "amount"
 >;
 
 export type BudgetEntryInsertPayload = Pick<
-  Database['public']['Tables']['budget_entries']['Insert'],
-  'description' | 'category' | 'amount'
+  Database["public"]["Tables"]["budget_entries"]["Insert"],
+  "description" | "category" | "amount"
 >;
 
 function getClient(client?: SupabaseClient): SupabaseClient {
@@ -34,14 +34,14 @@ export async function fetchPlanBudgetRow(
 ): Promise<BudgetPlanRow | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
-    .select('budget')
-    .eq('id', planId)
+    .from("plans")
+    .select("budget")
+    .eq("id", planId)
     .single()) as unknown as { data: BudgetPlanRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanBudgetRow',
+      operation: "fetchPlanBudgetRow",
       identifiers: { planId },
       error,
     });
@@ -56,13 +56,13 @@ export async function fetchPlanBudgetEntries(
 ): Promise<BudgetEntryRow[]> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('budget_entries')
-    .select('id, description, category, amount')
-    .eq('plan_id', planId)) as unknown as { data: BudgetEntryRow[] | null; error: unknown };
+    .from("budget_entries")
+    .select("id, description, category, amount")
+    .eq("plan_id", planId)) as unknown as { data: BudgetEntryRow[] | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'fetchPlanBudgetEntries',
+      operation: "fetchPlanBudgetEntries",
       identifiers: { planId },
       error,
     });
@@ -78,15 +78,15 @@ export async function updatePlanBudget(
 ): Promise<BudgetPlanRow | null> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('plans')
+    .from("plans")
     .update({ budget: newBudget })
-    .eq('id', planId)
-    .select('budget')
+    .eq("id", planId)
+    .select("budget")
     .single()) as unknown as { data: BudgetPlanRow | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'updatePlanBudget',
+      operation: "updatePlanBudget",
       identifiers: { planId },
       error,
     });
@@ -102,19 +102,19 @@ export async function createBudgetEntry(
 ): Promise<{ id: string }> {
   const supabase = getClient(client);
   const { data, error } = (await supabase
-    .from('budget_entries')
+    .from("budget_entries")
     .insert({
       plan_id: planId,
       description: payload.description,
       category: payload.category,
       amount: payload.amount,
     })
-    .select('id')
+    .select("id")
     .single()) as unknown as { data: { id: string } | null; error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'createBudgetEntry',
+      operation: "createBudgetEntry",
       identifiers: { planId },
       error,
     });
@@ -122,7 +122,7 @@ export async function createBudgetEntry(
 
   if (!data) {
     throw formatSupabaseError({
-      operation: 'createBudgetEntry:missing-row',
+      operation: "createBudgetEntry:missing-row",
       identifiers: { planId },
     });
   }
@@ -137,17 +137,17 @@ export async function updateBudgetEntry(
 ): Promise<void> {
   const supabase = getClient(client);
   const { error } = (await supabase
-    .from('budget_entries')
+    .from("budget_entries")
     .update({
       description: payload.description,
       category: payload.category,
       amount: payload.amount,
     })
-    .eq('id', entryId)) as unknown as { error: unknown };
+    .eq("id", entryId)) as unknown as { error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'updateBudgetEntry',
+      operation: "updateBudgetEntry",
       identifiers: { entryId },
       error,
     });
@@ -160,14 +160,14 @@ export async function deleteBudgetEntry(
 ): Promise<void> {
   const supabase = getClient(client);
   const { error } = (await supabase
-    .from('budget_entries')
+    .from("budget_entries")
     // @ts-expect-error Supabase typings omit delete, but runtime supports it
     .delete()
-    .eq('id', entryId)) as unknown as { error: unknown };
+    .eq("id", entryId)) as unknown as { error: unknown };
 
   if (error) {
     throw formatSupabaseError({
-      operation: 'deleteBudgetEntry',
+      operation: "deleteBudgetEntry",
       identifiers: { entryId },
       error,
     });

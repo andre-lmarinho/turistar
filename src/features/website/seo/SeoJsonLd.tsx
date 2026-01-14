@@ -31,12 +31,20 @@ export default function SeoJsonLd() {
 
   return (
     <>
-      <Script id="ld-org" type="application/ld+json" nonce={nonce}>
-        {JSON.stringify(org)}
-      </Script>
-      <Script id="ld-website" type="application/ld+json" nonce={nonce}>
-        {JSON.stringify(website)}
-      </Script>
+      <Script
+        id="ld-org"
+        type="application/ld+json"
+        nonce={nonce}
+        /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload */
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
+      />
+      <Script
+        id="ld-website"
+        type="application/ld+json"
+        nonce={nonce}
+        /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload */
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
+      />
     </>
   );
 }

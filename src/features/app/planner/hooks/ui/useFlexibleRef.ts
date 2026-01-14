@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
 /**
  * Provides a ref that is compatible both with <button> elements (HTMLButtonElement)
@@ -7,6 +7,5 @@ import { useRef } from 'react';
  */
 
 export function useFlexibleRef() {
-  return useRef<HTMLButtonElement>(null) as React.RefObject<HTMLButtonElement> &
-    React.RefObject<HTMLElement>;
+  return useRef<HTMLButtonElement>(null) as React.RefObject<HTMLButtonElement> & React.RefObject<HTMLElement>;
 }

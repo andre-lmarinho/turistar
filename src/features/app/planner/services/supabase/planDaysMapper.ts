@@ -1,7 +1,7 @@
-import { format, parseISO } from 'date-fns';
+import { format, parseISO } from "date-fns";
 
-import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 export interface SupabaseActivityRow {
   id: string;
@@ -28,7 +28,7 @@ export interface SupabasePlanDayRow {
 function mapActivityRow(activity: SupabaseActivityRow) {
   return {
     id: activity.id,
-    title: activity.title ?? '',
+    title: activity.title ?? "",
     color: activity.color ?? getDefaultActivityColor(),
     address: activity.address ?? undefined,
     category: activity.category ?? undefined,
@@ -40,7 +40,7 @@ function mapActivityRow(activity: SupabaseActivityRow) {
     budget: activity.budget ?? undefined,
     imageUrl: activity.image_url ?? undefined,
     position: activity.position != null ? String(activity.position) : undefined,
-  } satisfies DayPlan['activities'][number];
+  } satisfies DayPlan["activities"][number];
 }
 
 export function mapPlanDaysFromSupabase(rows: SupabasePlanDayRow[] | null | undefined): DayPlan[] {
@@ -50,7 +50,7 @@ export function mapPlanDaysFromSupabase(rows: SupabasePlanDayRow[] | null | unde
 
   return rows.map((day) => ({
     id: day.date,
-    label: format(parseISO(day.date), 'EEE, dd MMM'),
+    label: format(parseISO(day.date), "EEE, dd MMM"),
     activities: (day.activities ?? [])
       .slice()
       .sort((a, b) => {

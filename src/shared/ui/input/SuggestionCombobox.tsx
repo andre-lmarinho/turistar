@@ -160,7 +160,7 @@ export function SuggestionCombobox<T, TSelection = T>({
         className={defaultInputClassName}
         autoComplete="off"
       />
-      {loading ? <Spinner className="absolute top-2 right-2 size-4" /> : null}
+      {loading ? <Spinner className="absolute top-2 right-2 size-4" label="Loading suggestions" /> : null}
       {error ? (
         <p className="text-destructive mt-1 text-sm" role="alert" aria-live="assertive">
           {typeof error === "string" ? error : "Failed to load suggestions."}
