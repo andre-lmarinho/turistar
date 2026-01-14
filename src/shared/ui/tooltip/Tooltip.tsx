@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import * as React from 'react';
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import type * as React from "react";
 
-import { cn } from '@/shared/utils/cn';
+import { cn } from "@/shared/utils/cn";
 
 type TooltipProps = {
   children: React.ReactElement;
   content: React.ReactNode;
   delayDuration?: number;
-  position?: 'top' | 'bottom';
-} & Omit<TooltipPrimitive.TooltipContentProps, 'children' | 'side'>;
+  position?: "top" | "bottom";
+} & Omit<TooltipPrimitive.TooltipContentProps, "children" | "side">;
 
 export function Tooltip({
   children,
   content,
   delayDuration = 100,
-  position = 'top',
-  align = 'center',
+  position = "top",
+  align = "center",
   sideOffset = 6,
   className,
   ...props
@@ -29,10 +29,9 @@ export function Tooltip({
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        'text-background bg-foreground pointer-events-none z-50 rounded px-2 py-1 text-xs',
+        "text-background bg-foreground pointer-events-none z-50 rounded px-2 py-1 text-xs",
         className
-      )}
-    >
+      )}>
       {content}
     </TooltipPrimitive.Content>
   );

@@ -1,22 +1,25 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { cn } from '@/shared/utils/cn';
+import type { ComponentPropsWithoutRef } from "react";
+import { cn } from "@/shared/utils/cn";
 
-interface SpinnerProps {
-  className?: string;
-}
+type SpinnerProps = ComponentPropsWithoutRef<"output">;
 
-export function Spinner({ className }: SpinnerProps) {
+export function Spinner({
+  className,
+  "aria-label": ariaLabel = "Loading",
+  "aria-live": ariaLive = "polite",
+  ...props
+}: SpinnerProps) {
   return (
-    <span
+    <output
+      {...props}
       className={cn(
-        'border-primary inline-block size-5 animate-spin rounded-full border-2 border-t-transparent',
+        "border-primary inline-block size-5 animate-spin rounded-full border-2 border-t-transparent",
         className
       )}
-      role="status"
-      aria-label="Loading"
-      aria-live="polite"
+      aria-label={ariaLabel}
+      aria-live={ariaLive}
     />
   );
 }

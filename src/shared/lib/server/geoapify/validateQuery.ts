@@ -1,18 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/shared/lib/geoapify/config";
 
 /**
  * Validates that a Geoapify request contains the required query parameter.
  * Returns the original string when valid or an error response otherwise.
  */
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
 
-export function validateGeoapifyQuery(
-  searchParams: URLSearchParams,
-  param: string
-): string | NextResponse {
+export function validateGeoapifyQuery(searchParams: URLSearchParams, param: string): string | NextResponse {
   const value = searchParams.get(param);
   if (!value) {
-    return NextResponse.json({ error: 'Query is required.' }, { status: 400 });
+    return NextResponse.json({ error: "Query is required." }, { status: 400 });
   }
 
   if (value.length < GEOAPIFY_MIN_QUERY_LENGTH) {

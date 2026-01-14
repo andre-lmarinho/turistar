@@ -53,10 +53,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'activities_day_id_fkey';
-            columns: ['day_id'];
-            referencedRelation: 'plan_days';
-            referencedColumns: ['id'];
+            foreignKeyName: "activities_day_id_fkey";
+            columns: ["day_id"];
+            referencedRelation: "plan_days";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -84,10 +84,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'budget_entries_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "budget_entries_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -133,16 +133,16 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'plan_destinations_destination_id_fkey';
-            columns: ['destination_id'];
-            referencedRelation: 'destinations';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_destinations_destination_id_fkey";
+            columns: ["destination_id"];
+            referencedRelation: "destinations";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'plan_destinations_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_destinations_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -150,42 +150,42 @@ export interface Database {
         Row: {
           plan_id: string;
           user_id: string;
-          tier: Database['public']['Enums']['plan_member_tier'];
+          tier: Database["public"]["Enums"]["plan_member_tier"];
           created_at: string;
           created_by: string | null;
         };
         Insert: {
           plan_id: string;
           user_id: string;
-          tier?: Database['public']['Enums']['plan_member_tier'];
+          tier?: Database["public"]["Enums"]["plan_member_tier"];
           created_at?: string;
           created_by?: string | null;
         };
         Update: {
           plan_id?: string;
           user_id?: string;
-          tier?: Database['public']['Enums']['plan_member_tier'];
+          tier?: Database["public"]["Enums"]["plan_member_tier"];
           created_at?: string;
           created_by?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'plan_members_created_by_fkey';
-            columns: ['created_by'];
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_members_created_by_fkey";
+            columns: ["created_by"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'plan_members_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_members_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'plan_members_user_id_fkey';
-            columns: ['user_id'];
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_members_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -213,16 +213,16 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'plan_share_links_created_by_fkey';
-            columns: ['created_by'];
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_share_links_created_by_fkey";
+            columns: ["created_by"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'plan_share_links_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_share_links_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -256,10 +256,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'plans_user_id_fkey';
-            columns: ['user_id'];
-            referencedRelation: 'profiles';
-            referencedColumns: ['id'];
+            foreignKeyName: "plans_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -287,10 +287,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'profiles_id_fkey';
-            columns: ['id'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "profiles_id_fkey";
+            columns: ["id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -324,10 +324,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'plan_events_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_events_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -352,10 +352,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'plan_snapshots_plan_id_fkey';
-            columns: ['plan_id'];
-            referencedRelation: 'plans';
-            referencedColumns: ['id'];
+            foreignKeyName: "plan_snapshots_plan_id_fkey";
+            columns: ["plan_id"];
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -377,18 +377,18 @@ export interface Database {
         Args: {
           _plan_id: string;
           _email: string;
-          _tier?: Database['public']['Enums']['plan_member_tier'] | null;
+          _tier?: Database["public"]["Enums"]["plan_member_tier"] | null;
         };
         Returns: {
           user_id: string;
-          tier: Database['public']['Enums']['plan_member_tier'];
+          tier: Database["public"]["Enums"]["plan_member_tier"];
         }[];
       };
       update_plan_member_tier: {
         Args: {
           _plan_id: string;
           _user_id: string;
-          _tier: Database['public']['Enums']['plan_member_tier'];
+          _tier: Database["public"]["Enums"]["plan_member_tier"];
         };
         Returns: undefined;
       };
@@ -443,10 +443,8 @@ export interface Database {
       };
     };
     Enums: {
-      plan_member_tier: 'admin' | 'member';
+      plan_member_tier: "admin" | "member";
     };
     CompositeTypes: Record<string, unknown>;
   };
 }
-
-export {};

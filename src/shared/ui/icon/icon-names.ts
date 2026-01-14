@@ -1,4 +1,4 @@
-import { lucideIconNames as rawLucideIconNames } from './icon-list.mjs';
+import { lucideIconNames as rawLucideIconNames } from "./icon-list.mjs";
 
 export const lucideIconNames = rawLucideIconNames;
 

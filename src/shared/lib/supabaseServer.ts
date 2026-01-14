@@ -1,22 +1,22 @@
-import 'server-only';
+import "server-only";
 
-import { createServerClient } from '@supabase/ssr';
-import type { SetAllCookies } from '@supabase/ssr';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
-import type { Database } from '@/shared/types/supabase';
-import { clientEnv } from './clientEnv';
+import type { SetAllCookies } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { cookies, headers } from "next/headers";
+import type { Database } from "@/shared/types/supabase";
+import { clientEnv } from "./clientEnv";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 type HeaderStore = Awaited<ReturnType<typeof headers>>;
 type CookieBatch = Parameters<SetAllCookies>[0];
 
-const isE2E = process.env.NEXT_PUBLIC_E2E === '1';
+const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
 
-type SupabaseMockModule = typeof import('../../../tests/e2e/mocks/supabase');
+type SupabaseMockModule = typeof import("../../../tests/e2e/mocks/supabase");
 
 function getE2ESupabaseClient(): SupabaseClient<Database> {
-  const { getSupabaseMock } = require('../../../tests/e2e/mocks/supabase') as SupabaseMockModule;
+  const { getSupabaseMock } = require("../../../tests/e2e/mocks/supabase") as SupabaseMockModule;
   return getSupabaseMock();
 }
 

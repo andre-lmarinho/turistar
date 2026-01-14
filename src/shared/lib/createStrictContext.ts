@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 export function createStrictContext<T>(errorMessage: string) {
   const context = createContext<T | undefined>(undefined);
