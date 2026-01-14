@@ -7,10 +7,22 @@ function isBlankActivityTitle(title: string | undefined | null): boolean {
   return !title || title.trim().length === 0;
 }
 
+let fallbackCounter = 0;
+
+function toHex(bytes: Uint8Array): string {
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function generateUuidOrFallback(fallbackPrefix: string): string {
   const crypto = globalThis.crypto;
   if (crypto?.randomUUID) return crypto.randomUUID();
-  return `${fallbackPrefix}${Math.random().toString(36).slice(2, 10)}`;
+  if (crypto?.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    return `${fallbackPrefix}${toHex(bytes)}`;
+  }
+  fallbackCounter = (fallbackCounter + 1) % 1_000_000;
+  return `${fallbackPrefix}${Date.now().toString(36)}${fallbackCounter.toString(36)}`;
 }
 
 export function isPlaceholderActivity(activity: Pick<Activity, "id" | "title">): boolean {
