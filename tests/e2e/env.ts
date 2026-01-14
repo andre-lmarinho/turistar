@@ -1,17 +1,17 @@
-import { resetSupabaseMock } from './mocks/supabase';
+import { resetSupabaseMock } from "./mocks/supabase";
 
 const DEFAULT_E2E_ENV = {
-  NEXT_PUBLIC_E2E: '1',
-  NEXT_PUBLIC_SITE_URL: 'http://127.0.0.1:3100',
-  NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon',
-  NEXT_PUBLIC_GEOAPIFY_KEY: 'test-key',
-  NEXT_PUBLIC_PLANNER_INLINE_ADD: '1',
+  NEXT_PUBLIC_E2E: "1",
+  NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3100",
+  NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321",
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon",
+  NEXT_PUBLIC_GEOAPIFY_KEY: "test-key",
+  NEXT_PUBLIC_PLANNER_INLINE_ADD: "1",
 } as const;
 
 export const applyE2EEnv = () => {
   for (const [key, value] of Object.entries(DEFAULT_E2E_ENV)) {
-    if (typeof process.env[key] === 'undefined') {
+    if (typeof process.env[key] === "undefined") {
       process.env[key] = value;
     }
   }
@@ -19,7 +19,7 @@ export const applyE2EEnv = () => {
 
 applyE2EEnv();
 
-if (process.env.NEXT_PUBLIC_E2E === '1') {
+if (process.env.NEXT_PUBLIC_E2E === "1") {
   resetSupabaseMock();
 }
 
