@@ -7,37 +7,83 @@ type SupabaseErrorContext = {
   error?: unknown;
 };
 
+export type SupabaseErrorDetails = {
+  message: string;
+  details: string;
+  code: string;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function readString(record: Record<string, unknown>, key: string): string | null {
   const value = record[key];
-  return typeof value === 'string' && value.length > 0 ? value : null;
+  return typeof value === "string" && value.length > 0 ? value : null;
 }
 
 function formatIdentifiers(identifiers?: ErrorIdentifiers): string {
-  if (!identifiers) return '';
+  if (!identifiers) return "";
   const parts = Object.entries(identifiers)
     .filter(([, value]) => value !== undefined)
-    .map(([key, value]) => `${key}=${value ?? 'null'}`);
-  return parts.length ? ` (${parts.join(' ')})` : '';
+    .map(([key, value]) => `${key}=${value ?? "null"}`);
+  return parts.length ? ` (${parts.join(" ")})` : "";
 }
 
 function extractErrorDetails(error: unknown): string | null {
   if (error == null) return null;
   if (error instanceof Error && error.message) return error.message;
-  if (typeof error === 'string') return error;
+  if (typeof error === "string") return error;
   if (!isRecord(error)) return null;
 
-  const message = readString(error, 'message');
-  const details = readString(error, 'details');
-  const hint = readString(error, 'hint');
-  const code = readString(error, 'code');
-  const parts = [message, details, hint, code ? `code=${code}` : null].filter(
-    (part): part is string => Boolean(part)
+  const message = readString(error, "message");
+  const details = readString(error, "details");
+  const hint = readString(error, "hint");
+  const code = readString(error, "code");
+  const parts = [message, details, hint, code ? `code=${code}` : null].filter((part): part is string =>
+    Boolean(part)
   );
-  return parts.length ? parts.join(' | ') : null;
+  return parts.length ? parts.join(" | ") : null;
+}
+
+function unwrapSupabaseErrorCause(error: unknown): unknown {
+  if (error instanceof Error && "cause" in error) {
+    return (error as Error & { cause?: unknown }).cause ?? error;
+  }
+  return error;
+}
+
+function readSupabaseErrorDetail(error: unknown, key: keyof SupabaseErrorDetails): string {
+  if (!isRecord(error)) return "";
+  const value = error[key];
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return String(value);
+  return "";
+}
+
+export function extractSupabaseErrorDetails(error: unknown): SupabaseErrorDetails {
+  const root = unwrapSupabaseErrorCause(error);
+  return {
+    message: readSupabaseErrorDetail(root, "message"),
+    details: readSupabaseErrorDetail(root, "details"),
+    code: readSupabaseErrorDetail(root, "code"),
+  };
+}
+
+export function isSupabaseUserNotRegisteredError(error: unknown): boolean {
+  const { message, details, code } = extractSupabaseErrorDetails(error);
+  const messageLower = message.toLowerCase();
+  const detailsLower = details.toLowerCase();
+
+  return (
+    messageLower.includes("not registered") ||
+    messageLower.includes("user not found") ||
+    messageLower.includes("no user") ||
+    detailsLower.includes("not registered") ||
+    detailsLower.includes("user not found") ||
+    (code === "23503" && (messageLower.includes("user") || detailsLower.includes("user"))) ||
+    (code === "P0001" && (messageLower.includes("user") || detailsLower.includes("user")))
+  );
 }
 
 export function formatSupabaseError({ operation, identifiers, error }: SupabaseErrorContext): Error {

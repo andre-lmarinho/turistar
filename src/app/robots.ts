@@ -1,5 +1,6 @@
-import type { MetadataRoute } from 'next';
-import { SITE_URL } from '@/shared/utils/siteUrl';
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/shared/utils/siteUrl";
+
 const isProd = !/localhost|127\.0\.0\.1/.test(SITE_URL);
 
 export default function robots(): MetadataRoute.Robots {
@@ -7,9 +8,9 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: isProd ? '/' : '',
-        disallow: isProd ? undefined : '/',
+        userAgent: "*",
+        allow: isProd ? "/" : "",
+        disallow: isProd ? undefined : "/",
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

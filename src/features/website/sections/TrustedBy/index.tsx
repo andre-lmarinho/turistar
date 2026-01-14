@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Section, Container } from '@/features/website/ui/wrapper';
+import { Container, Section } from "@/features/website/ui/wrapper";
 
 const BASE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+type MarqueeStyle = CSSProperties & {
+  "--marquee-duration"?: string;
+  "--marquee-distance"?: string;
+};
 
 function UlAvatarMarquee({
   speed = 900,
@@ -37,8 +43,22 @@ function UlAvatarMarquee({
 
   const A = useMemo(() => Array.from({ length: times }, () => BASE).flat(), [times]);
   const row = useMemo(() => [...A, ...A], [A]);
+  const rowWithKeys = useMemo(() => {
+    const counts = new Map<number, number>();
+    return row.map((id) => {
+      const count = counts.get(id) ?? 0;
+      counts.set(id, count + 1);
+      return { id, key: `${id}-${count}` };
+    });
+  }, [row]);
   const dist = A.length * (size + gap);
   const duration = dist / speed;
+
+  const listStyle: MarqueeStyle = {
+    gap: `${gap}px`,
+    "--marquee-duration": `${duration || 1}s`,
+    "--marquee-distance": `${-dist}px`,
+  };
 
   return (
     <div
@@ -47,22 +67,15 @@ function UlAvatarMarquee({
       style={{
         WebkitMaskImage: `linear-gradient(to right, transparent, #000 ${fade}px, #000 calc(100% - ${fade}px), transparent)`,
         maskImage: `linear-gradient(to right, transparent, #000 ${fade}px, #000 calc(100% - ${fade}px), transparent)`,
-      }}
-    >
+      }}>
       <ul
-        role="list"
         aria-label="People who (allegedly) trust Turistar"
         className="m-0 flex w-max list-none items-center p-0 will-change-transform"
-        style={{
-          gap: `${gap}px`,
-          animation: `marquee ${duration || 1}s linear infinite`,
-          transform: 'translate3d(0,0,0)',
-        }}
-      >
-        {row.map((id, i) => (
-          <li key={`${id}-${i}`} className="flex-none">
+        style={listStyle}>
+        {rowWithKeys.map((item) => (
+          <li key={item.key} className="flex-none">
             <Image
-              src={`https://i.pravatar.cc/${size}?img=${id}`}
+              src={`https://i.pravatar.cc/${size}?img=${item.id}`}
               alt=""
               aria-hidden="true"
               width={size}
@@ -80,13 +93,17 @@ function UlAvatarMarquee({
       <style jsx>{`
         @keyframes marquee {
           to {
-            transform: translate3d(${-dist}px, 0, 0);
-          } /* move exatamente até o início da 2ª metade */
+            transform: translate3d(var(--marquee-distance, 0px), 0, 0);
+          } /* move exactly to the start of the 2nd half */
+        }
+        ul {
+          animation: marquee var(--marquee-duration, 1s) linear infinite;
+          transform: translate3d(0, 0, 0);
         }
         @media (prefers-reduced-motion: reduce) {
           ul {
-            animation: none !important;
-            transform: none !important;
+            animation: none;
+            transform: none;
           }
         }
       `}</style>

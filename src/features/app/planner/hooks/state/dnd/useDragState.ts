@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import type { SetStateAction } from 'react';
-import { PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import type { DragStartEvent, DragOverEvent, DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
+import type { DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
+import { PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import type { SetStateAction } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Handles drag-and-drop interactions for day plans.
@@ -18,7 +18,7 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
  */
 function getDragTarget(
   days: DayPlan[],
-  over: DragOverEvent['over'],
+  over: DragOverEvent["over"],
   dayIndexMap: Map<string, number>,
   activityIndexMap: Map<string, { dayIdx: number; actIdx: number }>
 ): { dstDayIdx: number; newIndex: number } | null {
@@ -73,7 +73,7 @@ export function useDragState(initialDays: DayPlan[]) {
     (value: SetStateAction<DayPlan[]>) => {
       setDaysState((prevDays) => {
         const nextDays =
-          typeof value === 'function' ? (value as (prev: DayPlan[]) => DayPlan[])(prevDays) : value;
+          typeof value === "function" ? (value as (prev: DayPlan[]) => DayPlan[])(prevDays) : value;
 
         if (nextDays === prevDays) {
           daysRef.current = prevDays;
@@ -104,7 +104,7 @@ export function useDragState(initialDays: DayPlan[]) {
   });
   const sensors = useSensors(pointerSensor, touchSensor);
 
-  const lastOverRef = useRef<DragOverEvent['over'] | null>(null);
+  const lastOverRef = useRef<DragOverEvent["over"] | null>(null);
 
   function handleDragStart(e: DragStartEvent): void {
     setActiveId(e.active.id);
@@ -113,7 +113,7 @@ export function useDragState(initialDays: DayPlan[]) {
   }
 
   const applyDragUpdate = useCallback(
-    (activeId: UniqueIdentifier, over: DragOverEvent['over'] | null) => {
+    (activeId: UniqueIdentifier, over: DragOverEvent["over"] | null) => {
       if (!over) return;
 
       setDays((prevDays) => {

@@ -1,26 +1,25 @@
-import { vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
-import { closestCenter } from '@dnd-kit/core';
+import { closestCenter } from "@dnd-kit/core";
+import { render, screen, within } from "@testing-library/react";
+import { vi } from "vitest";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
-import { PlannerBoard } from './PlannerBoard';
-
-import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
-import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import { PlannerProvider } from "@/features/app/planner/hooks/PlannerContext";
+import { PlannerBoard } from "./PlannerBoard";
 
 function buildActivities(prefix: string, count: number): Activity[] {
   return Array.from({ length: count }).map((_, i) => ({
     id: `${prefix}${i}`,
     title: `${prefix.toUpperCase()} ${i}`,
-    color: 'bg-[var(--color-1)]',
+    color: "bg-[var(--color-1)]",
   }));
 }
 
 let mockDays: DayPlan[] = [];
 
-vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
+vi.mock("@/features/app/planner/hooks/usePlanner", () => ({
   usePlanner: () => ({
-    planId: 'p1',
-    dest: 'rome',
+    planId: "p1",
+    dest: "rome",
     days: mockDays,
     destCoords: null,
     setDays: vi.fn(),
@@ -41,7 +40,7 @@ vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
   }),
 }));
 
-vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
+vi.mock("@/features/app/planner/hooks/useSelectedActivity", () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),
@@ -57,11 +56,11 @@ vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
 
 function renderBoard() {
   mockDays = [
-    { id: 'd1', label: 'Day 1', activities: buildActivities('a', 15) },
-    { id: 'd2', label: 'Day 2', activities: buildActivities('b', 15) },
+    { id: "d1", label: "Day 1", activities: buildActivities("a", 15) },
+    { id: "d2", label: "Day 2", activities: buildActivities("b", 15) },
   ];
   render(
-    <div style={{ height: '200px' }}>
+    <div style={{ height: "200px" }}>
       <PlannerProvider planId="p1">
         <PlannerBoard />
       </PlannerProvider>
@@ -69,12 +68,12 @@ function renderBoard() {
   );
 }
 
-describe.skip('PlannerBoard scroll behavior', () => {
-  it('keeps scrolling isolated per day column', () => {
+describe.skip("PlannerBoard scroll behavior", () => {
+  it("keeps scrolling isolated per day column", () => {
     renderBoard();
 
-    const board = screen.getByRole('list', { name: 'Days' });
-    const dayScrolls = within(board).getAllByTestId('day-scroll');
+    const board = screen.getByRole("list", { name: "Days" });
+    const dayScrolls = within(board).getAllByTestId("day-scroll");
 
     dayScrolls[0].scrollTop = 50;
 

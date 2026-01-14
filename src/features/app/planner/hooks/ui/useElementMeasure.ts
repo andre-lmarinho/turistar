@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useRef, useState, useLayoutEffect, RefObject, useCallback } from 'react';
+import { type RefObject, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 interface MeasureOptions<T extends HTMLElement> {
   /** Optional external ref. If not provided, an internal ref is used. */
@@ -25,17 +25,17 @@ interface MeasureResult<T extends HTMLElement> {
 function calculateTextWidth(el: HTMLElement, text: string) {
   const style = window.getComputedStyle(el);
   const font = style.font;
-  const paddingLeft = parseFloat(style.paddingLeft || '0');
-  const paddingRight = parseFloat(style.paddingRight || '0');
-  const borderLeft = parseFloat(style.borderLeftWidth || '0');
-  const borderRight = parseFloat(style.borderRightWidth || '0');
+  const paddingLeft = parseFloat(style.paddingLeft || "0");
+  const paddingRight = parseFloat(style.paddingRight || "0");
+  const borderLeft = parseFloat(style.borderLeftWidth || "0");
+  const borderRight = parseFloat(style.borderRightWidth || "0");
 
   // Inline canvas-based text measurement to avoid external util.
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
   if (!ctx) return Math.ceil(paddingLeft + paddingRight + borderLeft + borderRight);
   ctx.font = font;
-  const metrics = ctx.measureText(text || ' ');
+  const metrics = ctx.measureText(text || " ");
   const textWidth = metrics.width;
 
   return Math.ceil(textWidth + paddingLeft + paddingRight + borderLeft + borderRight);
@@ -61,11 +61,7 @@ export function useElementMeasure<T extends HTMLElement = HTMLElement>(
     const bounding = rect || height || (width && !text) ? el.getBoundingClientRect() : undefined;
 
     setMeasures((prev) => ({
-      width: width
-        ? text !== undefined
-          ? calculateTextWidth(el, text)
-          : bounding?.width
-        : prev.width,
+      width: width ? (text !== undefined ? calculateTextWidth(el, text) : bounding?.width) : prev.width,
       height: height ? bounding?.height : prev.height,
       rect: rect ? (bounding ?? el.getBoundingClientRect()) : prev.rect,
     }));
@@ -80,13 +76,13 @@ export function useElementMeasure<T extends HTMLElement = HTMLElement>(
     observer.observe(el);
 
     if (rect) {
-      window.addEventListener('scroll', updateMeasures, true);
+      window.addEventListener("scroll", updateMeasures, true);
     }
 
     return () => {
       observer.disconnect();
       if (rect) {
-        window.removeEventListener('scroll', updateMeasures, true);
+        window.removeEventListener("scroll", updateMeasures, true);
       }
     };
   }, [ref, updateMeasures, rect]);

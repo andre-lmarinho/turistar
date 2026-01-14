@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import {
   addPlanMemberByEmail,
   fetchPlanIdentityById,
@@ -10,9 +10,9 @@ import {
   leavePlan,
   removePlanMember,
   updatePlanMemberTier,
-} from './PlanMembersRepository';
+} from "./PlanMembersRepository";
 
-vi.mock('@/shared/lib/supabaseServer', () => ({
+vi.mock("@/shared/lib/supabaseServer", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
@@ -35,7 +35,7 @@ type ProfileRow = {
 
 type PlanMemberRow = {
   user_id: string;
-  tier: 'admin' | 'member';
+  tier: "admin" | "member";
   profiles: ProfileRow | null;
 };
 
@@ -95,281 +95,281 @@ function buildSupabaseRpc<T>(result: SupabaseResult<T>) {
   return { supabase, rpc };
 }
 
-describe('PlanMembersRepository', () => {
+describe("PlanMembersRepository", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
-  describe('fetchPlanIdentityById', () => {
-    it('returns the plan identity', async () => {
+  describe("fetchPlanIdentityById", () => {
+    it("returns the plan identity", async () => {
       const planQuery = buildMaybeSingleQuery<PlanRow>({
-        data: { id: 'plan-1', user_id: 'owner-1' },
+        data: { id: "plan-1", user_id: "owner-1" },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('plans', planQuery);
+      const { supabase, from } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanIdentityById('plan-1');
+      const result = await fetchPlanIdentityById("plan-1");
 
-      expect(result).toEqual({ id: 'plan-1', ownerId: 'owner-1' });
-      expect(from).toHaveBeenCalledWith('plans');
-      expect(planQuery.select).toHaveBeenCalledWith('id, user_id');
-      expect(planQuery.eq).toHaveBeenCalledWith('id', 'plan-1');
+      expect(result).toEqual({ id: "plan-1", ownerId: "owner-1" });
+      expect(from).toHaveBeenCalledWith("plans");
+      expect(planQuery.select).toHaveBeenCalledWith("id, user_id");
+      expect(planQuery.eq).toHaveBeenCalledWith("id", "plan-1");
     });
 
-    it('returns null when no plan exists', async () => {
+    it("returns null when no plan exists", async () => {
       const planQuery = buildMaybeSingleQuery<PlanRow>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('plans', planQuery);
+      const { supabase } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanIdentityById('plan-2');
+      const result = await fetchPlanIdentityById("plan-2");
 
       expect(result).toBeNull();
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('plan failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("plan failure");
       const planQuery = buildMaybeSingleQuery<PlanRow>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('plans', planQuery);
+      const { supabase } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchPlanIdentityById('plan-3');
-        throw new Error('Expected fetchPlanIdentityById to throw');
+        await fetchPlanIdentityById("plan-3");
+        throw new Error("Expected fetchPlanIdentityById to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchPlanIdentityById');
-        expect(error.message).toContain('planId=plan-3');
+        expect(error.message).toContain("fetchPlanIdentityById");
+        expect(error.message).toContain("planId=plan-3");
       }
     });
   });
 
-  describe('fetchPlanIdentityBySlug', () => {
-    it('returns the plan identity', async () => {
+  describe("fetchPlanIdentityBySlug", () => {
+    it("returns the plan identity", async () => {
       const planQuery = buildMaybeSingleQuery<PlanRow>({
-        data: { id: 'plan-10', user_id: null },
+        data: { id: "plan-10", user_id: null },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('plans', planQuery);
+      const { supabase, from } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanIdentityBySlug('public-slug');
+      const result = await fetchPlanIdentityBySlug("public-slug");
 
-      expect(result).toEqual({ id: 'plan-10', ownerId: null });
-      expect(from).toHaveBeenCalledWith('plans');
-      expect(planQuery.select).toHaveBeenCalledWith('id, user_id');
-      expect(planQuery.eq).toHaveBeenCalledWith('public_slug', 'public-slug');
+      expect(result).toEqual({ id: "plan-10", ownerId: null });
+      expect(from).toHaveBeenCalledWith("plans");
+      expect(planQuery.select).toHaveBeenCalledWith("id, user_id");
+      expect(planQuery.eq).toHaveBeenCalledWith("public_slug", "public-slug");
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('slug failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("slug failure");
       const planQuery = buildMaybeSingleQuery<PlanRow>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('plans', planQuery);
+      const { supabase } = buildSupabaseFrom("plans", planQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchPlanIdentityBySlug('bad-slug');
-        throw new Error('Expected fetchPlanIdentityBySlug to throw');
+        await fetchPlanIdentityBySlug("bad-slug");
+        throw new Error("Expected fetchPlanIdentityBySlug to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchPlanIdentityBySlug');
-        expect(error.message).toContain('slug=bad-slug');
+        expect(error.message).toContain("fetchPlanIdentityBySlug");
+        expect(error.message).toContain("slug=bad-slug");
       }
     });
   });
 
-  describe('fetchPlanMembersWithProfiles', () => {
-    it('maps members with profiles', async () => {
+  describe("fetchPlanMembersWithProfiles", () => {
+    it("maps members with profiles", async () => {
       const data: PlanMemberRow[] = [
         {
-          user_id: 'user-1',
-          tier: 'admin',
+          user_id: "user-1",
+          tier: "admin",
           profiles: {
-            id: 'user-1',
-            slug: 'owner',
-            display_name: 'Owner',
-            avatar_url: 'avatar.png',
+            id: "user-1",
+            slug: "owner",
+            display_name: "Owner",
+            avatar_url: "avatar.png",
           },
         },
-        { user_id: 'user-2', tier: 'member', profiles: null },
+        { user_id: "user-2", tier: "member", profiles: null },
       ];
       const planMemberQuery = buildOrderQuery<PlanMemberRow[]>({ data, error: null });
-      const { supabase, from } = buildSupabaseFrom('plan_members', planMemberQuery);
+      const { supabase, from } = buildSupabaseFrom("plan_members", planMemberQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanMembersWithProfiles('plan-20');
+      const result = await fetchPlanMembersWithProfiles("plan-20");
 
       expect(result).toEqual([
         {
-          userId: 'user-1',
-          tier: 'admin',
+          userId: "user-1",
+          tier: "admin",
           profile: {
-            userId: 'user-1',
-            slug: 'owner',
-            displayName: 'Owner',
-            avatarUrl: 'avatar.png',
+            userId: "user-1",
+            slug: "owner",
+            displayName: "Owner",
+            avatarUrl: "avatar.png",
           },
         },
         {
-          userId: 'user-2',
-          tier: 'member',
+          userId: "user-2",
+          tier: "member",
           profile: null,
         },
       ]);
-      expect(from).toHaveBeenCalledWith('plan_members');
+      expect(from).toHaveBeenCalledWith("plan_members");
       expect(planMemberQuery.select).toHaveBeenCalledWith(
-        expect.stringContaining('profiles:profiles!plan_members_user_id_fkey')
+        expect.stringContaining("profiles:profiles!plan_members_user_id_fkey")
       );
-      expect(planMemberQuery.eq).toHaveBeenCalledWith('plan_id', 'plan-20');
-      expect(planMemberQuery.order).toHaveBeenCalledWith('created_at');
+      expect(planMemberQuery.eq).toHaveBeenCalledWith("plan_id", "plan-20");
+      expect(planMemberQuery.order).toHaveBeenCalledWith("created_at");
     });
 
-    it('returns an empty list when no members exist', async () => {
+    it("returns an empty list when no members exist", async () => {
       const planMemberQuery = buildOrderQuery<PlanMemberRow[]>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('plan_members', planMemberQuery);
+      const { supabase } = buildSupabaseFrom("plan_members", planMemberQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchPlanMembersWithProfiles('plan-21');
+      const result = await fetchPlanMembersWithProfiles("plan-21");
 
       expect(result).toEqual([]);
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('members failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("members failure");
       const planMemberQuery = buildOrderQuery<PlanMemberRow[]>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('plan_members', planMemberQuery);
+      const { supabase } = buildSupabaseFrom("plan_members", planMemberQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchPlanMembersWithProfiles('plan-22');
-        throw new Error('Expected fetchPlanMembersWithProfiles to throw');
+        await fetchPlanMembersWithProfiles("plan-22");
+        throw new Error("Expected fetchPlanMembersWithProfiles to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchPlanMembersWithProfiles');
-        expect(error.message).toContain('planId=plan-22');
+        expect(error.message).toContain("fetchPlanMembersWithProfiles");
+        expect(error.message).toContain("planId=plan-22");
       }
     });
   });
 
-  describe('fetchProfileById', () => {
-    it('maps a profile row', async () => {
+  describe("fetchProfileById", () => {
+    it("maps a profile row", async () => {
       const profileQuery = buildMaybeSingleQuery<ProfileRow>({
         data: {
-          id: 'user-30',
-          slug: 'user-30',
-          display_name: 'User 30',
+          id: "user-30",
+          slug: "user-30",
+          display_name: "User 30",
           avatar_url: null,
         },
         error: null,
       });
-      const { supabase, from } = buildSupabaseFrom('profiles', profileQuery);
+      const { supabase, from } = buildSupabaseFrom("profiles", profileQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchProfileById('user-30');
+      const result = await fetchProfileById("user-30");
 
       expect(result).toEqual({
-        userId: 'user-30',
-        slug: 'user-30',
-        displayName: 'User 30',
+        userId: "user-30",
+        slug: "user-30",
+        displayName: "User 30",
         avatarUrl: null,
       });
-      expect(from).toHaveBeenCalledWith('profiles');
-      expect(profileQuery.select).toHaveBeenCalledWith('id, slug, display_name, avatar_url');
-      expect(profileQuery.eq).toHaveBeenCalledWith('id', 'user-30');
+      expect(from).toHaveBeenCalledWith("profiles");
+      expect(profileQuery.select).toHaveBeenCalledWith("id, slug, display_name, avatar_url");
+      expect(profileQuery.eq).toHaveBeenCalledWith("id", "user-30");
     });
 
-    it('returns null when no profile exists', async () => {
+    it("returns null when no profile exists", async () => {
       const profileQuery = buildMaybeSingleQuery<ProfileRow>({ data: null, error: null });
-      const { supabase } = buildSupabaseFrom('profiles', profileQuery);
+      const { supabase } = buildSupabaseFrom("profiles", profileQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await fetchProfileById('user-31');
+      const result = await fetchProfileById("user-31");
 
       expect(result).toBeNull();
     });
 
-    it('throws a formatted error when Supabase fails', async () => {
-      const failure = new Error('profile failure');
+    it("throws a formatted error when Supabase fails", async () => {
+      const failure = new Error("profile failure");
       const profileQuery = buildMaybeSingleQuery<ProfileRow>({ data: null, error: failure });
-      const { supabase } = buildSupabaseFrom('profiles', profileQuery);
+      const { supabase } = buildSupabaseFrom("profiles", profileQuery);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
-        await fetchProfileById('user-32');
-        throw new Error('Expected fetchProfileById to throw');
+        await fetchProfileById("user-32");
+        throw new Error("Expected fetchProfileById to throw");
       } catch (error) {
         if (!(error instanceof Error)) {
-          throw new Error('Expected an Error instance');
+          throw new Error("Expected an Error instance");
         }
-        expect(error.message).toContain('fetchProfileById');
-        expect(error.message).toContain('userId=user-32');
+        expect(error.message).toContain("fetchProfileById");
+        expect(error.message).toContain("userId=user-32");
       }
     });
   });
 
-  describe('rpc wrappers', () => {
-    it('adds a plan member by email', async () => {
+  describe("rpc wrappers", () => {
+    it("adds a plan member by email", async () => {
       const response = {
-        data: [{ user_id: 'user-40', tier: 'member' }],
+        data: [{ user_id: "user-40", tier: "member" }],
         error: null,
       };
       const { supabase, rpc } = buildSupabaseRpc(response);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await addPlanMemberByEmail('plan-40', 'user-40@email.com', 'member');
+      const result = await addPlanMemberByEmail("plan-40", "user-40@email.com", "member");
 
-      expect(result).toEqual(response);
-      expect(rpc).toHaveBeenCalledWith('add_plan_member_by_email', {
-        _plan_id: 'plan-40',
-        _email: 'user-40@email.com',
-        _tier: 'member',
+      expect(result).toEqual(response.data);
+      expect(rpc).toHaveBeenCalledWith("add_plan_member_by_email", {
+        _plan_id: "plan-40",
+        _email: "user-40@email.com",
+        _tier: "member",
       });
     });
 
-    it('updates a plan member tier', async () => {
+    it("updates a plan member tier", async () => {
       const response = { data: null, error: null };
       const { supabase, rpc } = buildSupabaseRpc(response);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await updatePlanMemberTier('plan-41', 'user-41', 'admin');
+      const result = await updatePlanMemberTier("plan-41", "user-41", "admin");
 
-      expect(result).toEqual(response);
-      expect(rpc).toHaveBeenCalledWith('update_plan_member_tier', {
-        _plan_id: 'plan-41',
-        _user_id: 'user-41',
-        _tier: 'admin',
+      expect(result).toBeNull();
+      expect(rpc).toHaveBeenCalledWith("update_plan_member_tier", {
+        _plan_id: "plan-41",
+        _user_id: "user-41",
+        _tier: "admin",
       });
     });
 
-    it('removes a plan member', async () => {
+    it("removes a plan member", async () => {
       const response = { data: null, error: null };
       const { supabase, rpc } = buildSupabaseRpc(response);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await removePlanMember('plan-42', 'user-42');
+      const result = await removePlanMember("plan-42", "user-42");
 
-      expect(result).toEqual(response);
-      expect(rpc).toHaveBeenCalledWith('remove_plan_member', {
-        _plan_id: 'plan-42',
-        _user_id: 'user-42',
+      expect(result).toBeNull();
+      expect(rpc).toHaveBeenCalledWith("remove_plan_member", {
+        _plan_id: "plan-42",
+        _user_id: "user-42",
       });
     });
 
-    it('leaves a plan', async () => {
+    it("leaves a plan", async () => {
       const response = { data: null, error: null };
       const { supabase, rpc } = buildSupabaseRpc(response);
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
-      const result = await leavePlan('plan-43');
+      const result = await leavePlan("plan-43");
 
-      expect(result).toEqual(response);
-      expect(rpc).toHaveBeenCalledWith('leave_plan', { _plan_id: 'plan-43' });
+      expect(result).toBeNull();
+      expect(rpc).toHaveBeenCalledWith("leave_plan", { _plan_id: "plan-43" });
     });
   });
 });

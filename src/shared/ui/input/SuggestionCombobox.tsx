@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Spinner } from '@/shared/ui/loading';
-import { cn } from '@/shared/utils/cn';
+import React from "react";
+import { Spinner } from "@/shared/ui/loading";
+import { cn } from "@/shared/utils/cn";
 
 export interface SuggestionOption<T> {
   id: string;
@@ -35,7 +35,7 @@ interface SuggestionComboboxProps<T, TSelection> {
   inputRef?: React.RefObject<HTMLInputElement | null>;
   inputProps?: Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    'id' | 'value' | 'onChange' | 'role' | 'aria-expanded' | 'aria-controls' | 'aria-activedescendant'
+    "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
   > & {
     [key: string]: unknown;
   };
@@ -78,8 +78,7 @@ export function SuggestionCombobox<T, TSelection = T>({
   }, [options.length]);
 
   const selectionMapper =
-    mapOptionToSelection ??
-    ((option: SuggestionOption<T>) => option.value as unknown as TSelection);
+    mapOptionToSelection ?? ((option: SuggestionOption<T>) => option.value as unknown as TSelection);
 
   const handleSelect = (option: SuggestionOption<T>) => {
     const selection = selectionMapper(option);
@@ -110,15 +109,15 @@ export function SuggestionCombobox<T, TSelection = T>({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'ArrowDown' && options.length > 0) {
+    if (event.key === "ArrowDown" && options.length > 0) {
       event.preventDefault();
       onOpenChange(true);
       setActiveIndex((idx) => (idx + 1) % options.length);
-    } else if (event.key === 'ArrowUp' && options.length > 0) {
+    } else if (event.key === "ArrowUp" && options.length > 0) {
       event.preventDefault();
       onOpenChange(true);
       setActiveIndex((idx) => (idx - 1 + options.length) % options.length);
-    } else if ((event.key === 'Enter' || event.key === 'Tab') && open && options.length > 0) {
+    } else if ((event.key === "Enter" || event.key === "Tab") && open && options.length > 0) {
       const idx = activeIndex >= 0 ? activeIndex : 0;
       const option = options[idx];
       if (option) {
@@ -132,10 +131,10 @@ export function SuggestionCombobox<T, TSelection = T>({
 
   const defaultInputClassName =
     inputClassName ??
-    'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none';
+    "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none";
 
   return (
-    <div ref={containerRef} className={cn('relative', className)}>
+    <div ref={containerRef} className={cn("relative", className)}>
       {label ? (
         <label htmlFor={inputId} className="sr-only">
           {label}
@@ -161,60 +160,55 @@ export function SuggestionCombobox<T, TSelection = T>({
         className={defaultInputClassName}
         autoComplete="off"
       />
-      {loading ? <Spinner className="absolute top-2 right-2 size-4" /> : null}
+      {loading ? <Spinner className="absolute top-2 right-2 size-4" label="Loading suggestions" /> : null}
       {error ? (
         <p className="text-destructive mt-1 text-sm" role="alert" aria-live="assertive">
-          {typeof error === 'string' ? error : 'Failed to load suggestions.'}
+          {typeof error === "string" ? error : "Failed to load suggestions."}
         </p>
       ) : null}
       {open && !error ? (
         options.length > 0 ? (
-          <ul
+          <div
             id={listId}
             role="listbox"
-            className="bg-background absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded border text-sm shadow"
-          >
+            className="bg-background absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded border text-sm shadow">
             {options.map((option, idx) => (
-              <li key={option.id}>
-                <button
-                  id={`${listId}-option-${option.id}`}
-                  role="option"
-                  aria-selected={activeIndex === idx}
-                  tabIndex={-1}
-                  type="button"
-                  className={cn(
-                    'w-full px-3 py-2 text-left transition',
-                    activeIndex === idx ? 'bg-accent' : 'hover:bg-accent'
-                  )}
-                  onMouseDown={() => handleSelect(option)}
-                >
-                  {renderOption ? (
-                    renderOption(option, { active: activeIndex === idx })
-                  ) : (
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium text-foreground">{option.label}</span>
-                      {option.description ? (
-                        <span className="text-muted-foreground text-xs">{option.description}</span>
-                      ) : null}
-                      {option.meta ? (
-                        <span className="text-muted-foreground text-[11px] uppercase tracking-[0.08em]">
-                          {option.meta}
-                        </span>
-                      ) : null}
-                    </div>
-                  )}
-                </button>
-              </li>
+              <button
+                key={option.id}
+                id={`${listId}-option-${option.id}`}
+                role="option"
+                aria-selected={activeIndex === idx}
+                tabIndex={-1}
+                type="button"
+                className={cn(
+                  "w-full px-3 py-2 text-left transition",
+                  activeIndex === idx ? "bg-accent" : "hover:bg-accent"
+                )}
+                onMouseDown={() => handleSelect(option)}>
+                {renderOption ? (
+                  renderOption(option, { active: activeIndex === idx })
+                ) : (
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground">{option.label}</span>
+                    {option.description ? (
+                      <span className="text-muted-foreground text-xs">{option.description}</span>
+                    ) : null}
+                    {option.meta ? (
+                      <span className="text-muted-foreground text-[11px] uppercase tracking-[0.08em]">
+                        {option.meta}
+                      </span>
+                    ) : null}
+                  </div>
+                )}
+              </button>
             ))}
-          </ul>
-        ) : !loading && emptyMessage ? (
-          <div
-            className="bg-background text-muted-foreground absolute z-10 mt-1 w-full rounded border px-3 py-2 text-sm shadow"
-            role="status"
-            aria-live="polite"
-          >
-            {emptyMessage}
           </div>
+        ) : !loading && emptyMessage ? (
+          <output
+            className="bg-background text-muted-foreground absolute z-10 mt-1 block w-full rounded border px-3 py-2 text-sm shadow"
+            aria-live="polite">
+            {emptyMessage}
+          </output>
         ) : null
       ) : null}
     </div>

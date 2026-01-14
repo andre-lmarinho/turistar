@@ -1,9 +1,8 @@
-import Image from 'next/image';
-
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H1, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButtons } from '@/features/website/ui/button';
-import groupMock from './media/group-mock.webp';
+import Image from "next/image";
+import { CTAButtons } from "@/features/website/ui/button";
+import { Eyebrow, H1, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import groupMock from "./media/group-mock.webp";
 
 export function HeroFriends() {
   return (
@@ -28,7 +27,7 @@ export function HeroFriends() {
             className="pointer-events-none absolute -inset-x-[63px] top-0 -bottom-[clamp(48px,5vw,96px)] z-10"
             style={{
               background:
-                'radial-gradient(75% 50% at 51.1% 50%, rgba(229, 231, 235, 0) 48.984726914414416%, var(--card) 100%)',
+                "radial-gradient(75% 50% at 51.1% 50%, rgba(229, 231, 235, 0) 48.984726914414416%, var(--card) 100%)",
             }}
           />
         </div>

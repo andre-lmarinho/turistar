@@ -1,6 +1,6 @@
-import type { NextConfig } from 'next';
-import createMDX from '@next/mdx';
-import { getSecurityHeaders } from './securityHeaders';
+import createMDX from "@next/mdx";
+import type { NextConfig } from "next";
+import { getSecurityHeaders } from "./securityHeaders";
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,
@@ -11,26 +11,26 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
-  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'i.pravatar.cc', pathname: '/**' },
-      { protocol: 'https', hostname: 'commons.wikimedia.org', pathname: '/wiki/Special:FilePath/**' },
+      { protocol: "https", hostname: "i.pravatar.cc", pathname: "/**" },
+      { protocol: "https", hostname: "commons.wikimedia.org", pathname: "/wiki/Special:FilePath/**" },
     ],
   },
   async headers() {
-    const isDev = process.env.NODE_ENV !== 'production';
+    const isDev = process.env.NODE_ENV !== "production";
     // Middleware now sets Content-Security-Policy with a per-request nonce.
     // Filter CSP out from static headers to avoid duplicates.
     return [
       {
-        source: '/:path*',
-        headers: getSecurityHeaders(isDev).filter((h) => h.key !== 'Content-Security-Policy'),
+        source: "/:path*",
+        headers: getSecurityHeaders(isDev).filter((h) => h.key !== "Content-Security-Policy"),
       },
       // Aggressive caching for static assets
       {
-        source: '/:all*(js|css|png|jpg|jpeg|gif|webp|ico|svg|woff2)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        source: "/:all*(js|css|png|jpg|jpeg|gif|webp|ico|svg|woff2)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];
   },

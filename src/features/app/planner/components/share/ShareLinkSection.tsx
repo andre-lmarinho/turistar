@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from '@/shared/ui/popover';
-import { Check, Link2 } from '@/shared/ui/icon';
-import { Button } from '@/shared/ui/button';
-import { usePlanShareLink } from '@/features/app/planner/hooks/data/usePlanSharing';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import { usePlanShareLink } from "@/features/app/planner/hooks/data/usePlanSharing";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { Button } from "@/shared/ui/button";
+import { Check, Link2 } from "@/shared/ui/icon";
+import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
 
 export function ShareLinkSection({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();
@@ -18,10 +18,6 @@ export function ShareLinkSection({ planId }: { planId: string }) {
   });
   const hasLink = Boolean(data?.token);
   const isCreating = !hasLink && (createLink.isPending || isLoading);
-
-  useEffect(() => {
-    setCopied(false);
-  }, [data?.token]);
 
   useEffect(() => {
     return () => {
@@ -40,9 +36,7 @@ export function ShareLinkSection({ planId }: { planId: string }) {
           </span>
           <div className="flex-1">
             <p className="text-foreground">Share this planner with a link</p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              Only admins can generate access links.
-            </p>
+            <p className="text-muted-foreground mt-1 text-xs">Only admins can generate access links.</p>
           </div>
         </div>
       </div>
@@ -61,7 +55,7 @@ export function ShareLinkSection({ planId }: { planId: string }) {
             <button
               type="button"
               className={`inline-flex cursor-pointer items-center gap-2 hover:underline disabled:cursor-not-allowed disabled:opacity-60 ${
-                copied ? 'text-foreground' : 'text-primary'
+                copied ? "text-foreground" : "text-primary"
               }`}
               disabled={isCreating}
               onClick={async () => {
@@ -82,9 +76,8 @@ export function ShareLinkSection({ planId }: { planId: string }) {
                 } catch {
                   setCopied(false);
                 }
-              }}
-            >
-              {hasLink ? (copied ? 'Copied' : 'Copy link') : 'Create link'}
+              }}>
+              {hasLink ? (copied ? "Copied" : "Copy link") : "Create link"}
               {hasLink && copied ? <Check className="size-4" aria-hidden="true" /> : null}
             </button>
             {hasLink ? (
@@ -95,10 +88,7 @@ export function ShareLinkSection({ planId }: { planId: string }) {
                     Delete link
                   </PopoverTriggerButton>
                   <PopoverContent side="bottom" align="end" sideOffset={8} className="w-72">
-                    <PopoverHeader
-                      title="Delete shared link"
-                      onClose={() => setConfirmOpen(false)}
-                    />
+                    <PopoverHeader title="Delete shared link" onClose={() => setConfirmOpen(false)} />
                     <div className="space-y-3 p-3 text-sm">
                       <p className="text-foreground">
                         Deleting this link will prevent anyone from using it to join the planner.
@@ -109,8 +99,7 @@ export function ShareLinkSection({ planId }: { planId: string }) {
                           revokeLink.mutate();
                           setConfirmOpen(false);
                         }}
-                        disabled={revokeLink.isPending}
-                      >
+                        disabled={revokeLink.isPending}>
                         Delete
                       </Button>
                     </div>

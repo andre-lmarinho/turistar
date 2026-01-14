@@ -1,5 +1,5 @@
-'use server';
+"use server";
 
-import { getPlanBudget } from '@/features/app/planner/server/queries/plans/getPlanBudget';
+import { getPlanBudget } from "@/features/app/planner/server/queries/plans/getPlanBudget";
 
 export { getPlanBudget };

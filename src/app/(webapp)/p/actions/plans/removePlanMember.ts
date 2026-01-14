@@ -1,5 +1,5 @@
-'use server';
+"use server";
 
-import { removePlanMember } from '@/features/app/planner/server/actions/plans/removePlanMember';
+import { removePlanMember } from "@/features/app/planner/server/actions/plans/removePlanMember";
 
 export { removePlanMember };

@@ -1,12 +1,12 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CategoryKey } from '@/features/app/planner/domain/constants/budget';
-import type { Entry } from '@/features/app/planner/types/budget';
-import { createBudgetEntry } from '@/app/(webapp)/p/actions/plans/createBudgetEntry';
-import { deleteBudgetEntry } from '@/app/(webapp)/p/actions/plans/deleteBudgetEntry';
-import { getPlanBudget } from '@/app/(webapp)/p/actions/plans/getPlanBudget';
-import { updateBudgetEntry } from '@/app/(webapp)/p/actions/plans/updateBudgetEntry';
-import { updatePlanBudget } from '@/app/(webapp)/p/actions/plans/updatePlanBudget';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { CategoryKey } from "@/features/app/planner/domain/constants/budget";
+import { createBudgetEntry } from "@/features/app/planner/server/actions/plans/createBudgetEntry";
+import { deleteBudgetEntry } from "@/features/app/planner/server/actions/plans/deleteBudgetEntry";
+import { getPlanBudget } from "@/features/app/planner/server/actions/plans/getPlanBudget";
+import { updateBudgetEntry } from "@/features/app/planner/server/actions/plans/updateBudgetEntry";
+import { updatePlanBudget } from "@/features/app/planner/server/actions/plans/updatePlanBudget";
+import type { Entry } from "@/features/app/planner/types/budget";
 
 type BudgetQueryResult = { budget: number; entries: Entry[] };
 
@@ -25,8 +25,8 @@ export function useBudget(
   const [budget, setBudgetState] = useState(initialBudget);
   const [entries, setEntries] = useState<Entry[]>(initialEntries ?? []);
 
-  const [desc, setDesc] = useState('');
-  const [cat, setCat] = useState<CategoryKey>('transport');
+  const [desc, setDesc] = useState("");
+  const [cat, setCat] = useState<CategoryKey>("transport");
   const [amount, setAmount] = useState(0);
 
   const initialBudgetRef = useRef(0);
@@ -35,8 +35,7 @@ export function useBudget(
 
   const persistEnabled = persist && Boolean(planId);
   const canPersist = persistEnabled && editingEnabled;
-  const persistErrorMessage = 'Failed to persist budget';
-  const queryKey = ['budget', planId] as const;
+  const queryKey = ["budget", planId] as const;
 
   const budgetQuery = useQuery<BudgetQueryResult, Error, BudgetQueryResult, typeof queryKey>({
     queryKey,
@@ -54,7 +53,8 @@ export function useBudget(
         prev ? { ...prev, budget: b } : { budget: b, entries: [] }
       );
     },
-    onError: () => setPersistError(persistErrorMessage),
+    onError: (_error, newBudget) =>
+      setPersistError(`Failed to update budget: planId=${planId} value=${newBudget}`),
   });
   const saveBudget = saveBudgetMutation.mutate;
   const setBudget = (value: number) => {
@@ -106,7 +106,8 @@ export function useBudget(
       qc.invalidateQueries({ queryKey });
       return id;
     },
-    onError: () => setPersistError(persistErrorMessage),
+    onError: (_error, payload) =>
+      setPersistError(`Failed to create budget entry: planId=${planId} category=${payload.category}`),
   });
   const addEntryMut = addEntryMutation.mutateAsync;
 
@@ -116,11 +117,11 @@ export function useBudget(
     setPersistError(null);
     if (persistEnabled) {
       try {
-        const newId = (await addEntryMut({
+        const newId = await addEntryMut({
           description: desc,
           category: cat,
           amount,
-        })) as string;
+        });
         setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
       } catch {
         return;
@@ -129,7 +130,7 @@ export function useBudget(
       const newId = crypto.randomUUID();
       setEntries((prev) => [...prev, { id: newId, description: desc, category: cat, amount }]);
     }
-    setDesc('');
+    setDesc("");
     setAmount(0);
   };
 
@@ -138,12 +139,14 @@ export function useBudget(
       await updateBudgetEntry(updated);
       qc.invalidateQueries({ queryKey });
     },
-    onError: () => setPersistError(persistErrorMessage),
+    onError: (_error, updated) =>
+      setPersistError(`Failed to update budget entry: planId=${planId} entryId=${updated.id}`),
   });
   const updateEntryMut = updateEntryMutation.mutateAsync;
 
   const handleUpdateEntry = async (index: number, updated: Entry) => {
     if (!editingEnabled) return;
+    if (index < 0 || index >= entries.length) return;
     setEntries((prev) => {
       const copy = [...prev];
       copy[index] = updated;
@@ -158,7 +161,7 @@ export function useBudget(
       await deleteBudgetEntry(id);
       qc.invalidateQueries({ queryKey });
     },
-    onError: () => setPersistError(persistErrorMessage),
+    onError: (_error, id) => setPersistError(`Failed to delete budget entry: planId=${planId} entryId=${id}`),
   });
   const deleteEntryMut = deleteEntryMutation.mutateAsync;
 

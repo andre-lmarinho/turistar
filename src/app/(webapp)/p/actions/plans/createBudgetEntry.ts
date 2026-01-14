@@ -1,5 +1,5 @@
-'use server';
+"use server";
 
-import { createBudgetEntry } from '@/features/app/planner/server/actions/plans/createBudgetEntry';
+import { createBudgetEntry } from "@/features/app/planner/server/actions/plans/createBudgetEntry";
 
 export { createBudgetEntry };

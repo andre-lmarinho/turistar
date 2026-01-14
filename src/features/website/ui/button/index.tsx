@@ -1,4 +1,4 @@
-import { Button } from '@/shared/ui/button';
+import { Button } from "@/shared/ui/button";
 
 export function CTAButton() {
   return <Button href="/signup">Get started</Button>;

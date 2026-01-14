@@ -1,21 +1,19 @@
-'use client';
+"use client";
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import type React from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { ActivitySearchInput } from "@/features/app/planner/components/ui/ActivitySearchInput";
+import { ACTIVITY_COPY } from "@/features/app/planner/domain/constants/activity";
+import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { useActivitySuggestions } from "@/features/app/planner/hooks/search/useActivitySuggestions";
+import { useAddActivity } from "@/features/app/planner/hooks/state/dnd/useAddActivity";
+import type { ActivitySuggestion, PlaceSelection } from "@/features/app/planner/types/locations";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/utils/cn";
 
-import { Button } from '@/shared/ui/button';
-import { cn } from '@/shared/utils/cn';
-import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
-import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import { useAddActivity } from '@/features/app/planner/hooks/state/dnd/useAddActivity';
-import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
-
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-
-import { ActivitySearchInput } from '@/features/app/planner/components/ui/ActivitySearchInput';
-import { useActivitySuggestions } from '@/features/app/planner/hooks/search/useActivitySuggestions';
-
-import { useInlineAutoFocus } from '../../hooks/ui/useInlineAutoFocus';
-import { useInlineOutsideSubmit } from '../../hooks/ui/useInlineOutsideSubmit';
+import { useInlineAutoFocus } from "../../hooks/ui/useInlineAutoFocus";
+import { useInlineOutsideSubmit } from "../../hooks/ui/useInlineOutsideSubmit";
 
 interface InlineCardProps {
   dayId: string;
@@ -25,15 +23,9 @@ interface InlineCardProps {
   onAdvanceInline?: (nextIndex: number) => void;
 }
 
-export function InlineCard({
-  dayId,
-  insertIndex,
-  className,
-  onClose,
-  onAdvanceInline,
-}: InlineCardProps) {
+export function InlineCard({ dayId, insertIndex, className, onClose, onAdvanceInline }: InlineCardProps) {
   const { mutateAsync, isPending } = useAddActivity();
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
@@ -49,7 +41,7 @@ export function InlineCard({
   const { updateActivity } = usePlannerContext();
 
   const finalizeInlineActivity = useCallback(() => {
-    setTitle('');
+    setTitle("");
     setTouched(false);
     onAdvanceInline?.(insertIndex + 1);
     requestAnimationFrame(focusInput);
@@ -68,20 +60,18 @@ export function InlineCard({
   };
 
   const handleSuggestionSelect = async (selection: PlaceSelection<ActivitySuggestion>) => {
-    const suggestion: ActivitySuggestion =
-      selection.raw ??
-      ({
-        placeId: selection.placeId ?? '',
-        name: selection.name,
-        formatted: selection.formatted ?? selection.name,
-        addressLine1: undefined,
-        addressLine2: undefined,
-        latitude: selection.latitude,
-        longitude: selection.longitude,
-        resultType: undefined,
-        category: selection.category,
-        description: selection.description,
-      } as ActivitySuggestion);
+    const suggestion: ActivitySuggestion = selection.raw ?? {
+      placeId: selection.placeId ?? "",
+      name: selection.name,
+      formatted: selection.formatted ?? selection.name,
+      addressLine1: undefined,
+      addressLine2: undefined,
+      latitude: selection.latitude,
+      longitude: selection.longitude,
+      resultType: undefined,
+      category: selection.category,
+      description: selection.description,
+    };
 
     const selectedTitle = selection.name;
     setTitle(selectedTitle);
@@ -108,7 +98,7 @@ export function InlineCard({
   };
 
   const handleTitleChange = (value: string | PlaceSelection<ActivitySuggestion>) => {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       setTitle(value);
       if (value.trim().length > 0) {
         setTouched(false);
@@ -155,7 +145,7 @@ export function InlineCard({
 
       const nativeEvent = event.nativeEvent as Event & { submitter?: EventTarget | null };
       const submitter = nativeEvent.submitter ?? null;
-      const shouldClose = submitter instanceof HTMLElement && submitter.dataset.close === 'true';
+      const shouldClose = submitter instanceof HTMLElement && submitter.dataset.close === "true";
 
       const activity = await trySubmit();
       if (!activity) {
@@ -200,7 +190,7 @@ export function InlineCard({
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) return;
 
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         event.preventDefault();
         onClose();
       }
@@ -209,15 +199,15 @@ export function InlineCard({
   );
 
   return (
-    <form ref={containerRef} className={cn('space-y-2', className)} onSubmit={handleFormSubmit}>
+    <form ref={containerRef} className={cn("space-y-2", className)} onSubmit={handleFormSubmit}>
       <div
         className={cn(
-          getDefaultActivityColor('bg'),
-          getDefaultActivityColor('border'),
-          'rounded-lg border border-b-3'
-        )}
-      >
-        <div role="group" aria-label={copy.a11yGroupLabel} className="relative" data-no-dnd>
+          getDefaultActivityColor("bg"),
+          getDefaultActivityColor("border"),
+          "rounded-lg border border-b-3"
+        )}>
+        <fieldset className="relative m-0 border-0 p-0" data-no-dnd>
+          <legend className="sr-only">{copy.a11yGroupLabel}</legend>
           <ActivitySearchInput
             id={`inline-add-${dayId}-${insertIndex}`}
             label={copy.placeholderTitle}
@@ -226,25 +216,25 @@ export function InlineCard({
             placeholder={copy.placeholderTitle}
             inputRef={inputRef}
             inputClassName={cn(
-              'focus:ring-primary w-full rounded-lg border px-3 pt-2 pb-1 text-base shadow-sm outline-none focus:ring-2',
-              isInvalid ? 'border-red-500 focus:ring-red-500' : 'border-border'
+              "focus:ring-primary w-full rounded-lg border px-3 pt-2 pb-1 text-base shadow-sm outline-none focus:ring-2",
+              isInvalid ? "border-red-500 focus:ring-red-500" : "border-border"
             )}
             suggestionHook={useActivitySuggestions}
             onInputKeyDown={handleKeyDown}
             inputProps={{
-              'data-testid': 'planner-inline-add-input',
-              autoCapitalize: 'sentences',
-              autoCorrect: 'on',
-              autoComplete: 'off',
-              inputMode: 'text',
-              enterKeyHint: 'done',
-              'aria-invalid': isInvalid || undefined,
-              'aria-describedby': error ? `inline-add-error-${dayId}-${insertIndex}` : undefined,
+              "data-testid": "planner-inline-add-input",
+              autoCapitalize: "sentences",
+              autoCorrect: "on",
+              autoComplete: "off",
+              inputMode: "text",
+              enterKeyHint: "done",
+              "aria-invalid": isInvalid || undefined,
+              "aria-describedby": error ? `inline-add-error-${dayId}-${insertIndex}` : undefined,
               onCompositionStart: () => setIsComposing(true),
               onCompositionEnd: () => setIsComposing(false),
             }}
           />
-        </div>
+        </fieldset>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <button type="submit" className="sr-only" tabIndex={-1} aria-hidden="true"></button>
@@ -255,13 +245,12 @@ export function InlineCard({
           {copy.ctaCancel}
         </Button>
         {error && (
-          <span
-            role="status"
+          <output
             id={`inline-add-error-${dayId}-${insertIndex}`}
             className="text-sm text-red-500"
-          >
+            aria-live="polite">
             {error}
-          </span>
+          </output>
         )}
       </div>
     </form>

@@ -1,14 +1,14 @@
-import type { Activity, DayPlan } from './PlannerEntities';
+import type { Activity, DayPlan } from "./PlannerEntities";
 
 export type PlanEventType =
-  | 'activity.created'
-  | 'activity.updated'
-  | 'activity.deleted'
-  | 'activity.moved'
-  | 'day.created'
-  | 'day.updated'
-  | 'day.removed'
-  | 'day.reordered';
+  | "activity.created"
+  | "activity.updated"
+  | "activity.deleted"
+  | "activity.moved"
+  | "day.created"
+  | "day.updated"
+  | "day.removed"
+  | "day.reordered";
 
 export interface PlanEventBase<TType extends PlanEventType, TPayload> {
   id: string;
@@ -61,16 +61,16 @@ export interface DayReorderedPayload {
 }
 
 export type PlanEvent =
-  | PlanEventBase<'activity.created', ActivityCreatedPayload>
-  | PlanEventBase<'activity.updated', ActivityUpdatedPayload>
-  | PlanEventBase<'activity.deleted', ActivityDeletedPayload>
-  | PlanEventBase<'activity.moved', ActivityMovedPayload>
-  | PlanEventBase<'day.created', DayCreatedPayload>
-  | PlanEventBase<'day.updated', DayUpdatedPayload>
-  | PlanEventBase<'day.removed', DayRemovedPayload>
-  | PlanEventBase<'day.reordered', DayReorderedPayload>;
+  | PlanEventBase<"activity.created", ActivityCreatedPayload>
+  | PlanEventBase<"activity.updated", ActivityUpdatedPayload>
+  | PlanEventBase<"activity.deleted", ActivityDeletedPayload>
+  | PlanEventBase<"activity.moved", ActivityMovedPayload>
+  | PlanEventBase<"day.created", DayCreatedPayload>
+  | PlanEventBase<"day.updated", DayUpdatedPayload>
+  | PlanEventBase<"day.removed", DayRemovedPayload>
+  | PlanEventBase<"day.reordered", DayReorderedPayload>;
 
-export type PlanEventInsert = Omit<PlanEvent, 'version' | 'createdAt'>;
+export type PlanEventInsert = Omit<PlanEvent, "version" | "createdAt">;
 
 export interface PlanSnapshot {
   version: number;

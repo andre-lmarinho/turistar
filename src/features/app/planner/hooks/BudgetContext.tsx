@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { createContextProvider } from '@/shared/lib/createContextProvider';
-import { useBudget } from './state/budget/useBudget';
-import type { Entry } from '@/features/app/planner/types/budget';
+import type { Entry } from "@/features/app/planner/types/budget";
+import { createContextProvider } from "@/shared/lib/createContextProvider";
+import { useBudget } from "./state/budget/useBudget";
 
 export const [BudgetProvider, useBudgetContext] = createContextProvider(
   ({
@@ -20,5 +20,5 @@ export const [BudgetProvider, useBudgetContext] = createContextProvider(
     persist?: boolean;
     canEdit?: boolean;
   }) => useBudget(planId, activitiesTotal, { initialBudget, initialEntries, persist, canEdit }),
-  'useBudgetContext must be inside BudgetProvider'
+  "useBudgetContext must be inside BudgetProvider"
 );

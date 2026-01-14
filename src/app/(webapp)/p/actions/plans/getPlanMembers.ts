@@ -1,5 +1,5 @@
-'use server';
+"use server";
 
-import { getPlanMembers } from '@/features/app/planner/server/queries/plans/getPlanMembers';
+import { getPlanMembers } from "@/features/app/planner/server/queries/plans/getPlanMembers";
 
 export { getPlanMembers };

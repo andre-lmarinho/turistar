@@ -1,16 +1,8 @@
-import type { ElementType } from 'react';
-
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButtons } from '@/features/website/ui/button';
-import {
-  Users,
-  Briefcase,
-  Map as MapIcon,
-  Building2,
-  Megaphone,
-  BadgeCheck,
-} from '@/shared/ui/icon';
+import type { ElementType } from "react";
+import { CTAButtons } from "@/features/website/ui/button";
+import { Eyebrow, H2, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { BadgeCheck, Briefcase, Building2, Map as MapIcon, Megaphone, Users } from "@/shared/ui/icon";
 
 type UseCase = {
   title: string;
@@ -20,36 +12,33 @@ type UseCase = {
 
 const USE_CASES: UseCase[] = [
   {
-    title: 'Independent Agents',
-    description:
-      'Create proposals and itineraries in minutes with templates and drag-and-drop planning.',
+    title: "Independent Agents",
+    description: "Create proposals and itineraries in minutes with templates and drag-and-drop planning.",
     Icon: Briefcase,
   },
   {
-    title: 'Tour Operators',
-    description:
-      'Standardize packages, documents, and deadlines with checklists and shared timelines.',
+    title: "Tour Operators",
+    description: "Standardize packages, documents, and deadlines with checklists and shared timelines.",
     Icon: MapIcon,
   },
   {
-    title: 'Corporate',
-    description: 'Apply policies and approvals, track budgets, and deliver on-demand trip reports.',
+    title: "Corporate",
+    description: "Apply policies and approvals, track budgets, and deliver on-demand trip reports.",
     Icon: Building2,
   },
   {
-    title: 'Marketing',
-    description: 'Share beautiful, branded proposals by link and capture leads that convert.',
+    title: "Marketing",
+    description: "Share beautiful, branded proposals by link and capture leads that convert.",
     Icon: Megaphone,
   },
   {
-    title: 'Customer Success',
-    description: 'Delight clients with real-time updates, reminders, and centralized travel docs.',
+    title: "Customer Success",
+    description: "Delight clients with real-time updates, reminders, and centralized travel docs.",
     Icon: BadgeCheck,
   },
   {
-    title: 'Groups & MICE',
-    description:
-      'Coordinate rooming lists, transfers, and tasks without spreadsheets or email chaos.',
+    title: "Groups & MICE",
+    description: "Coordinate rooming lists, transfers, and tasks without spreadsheets or email chaos.",
     Icon: Users,
   },
 ];

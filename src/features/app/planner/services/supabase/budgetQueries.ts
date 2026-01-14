@@ -1,9 +1,7 @@
-import 'server-only';
+import "server-only";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-
-import type { Entry } from '@/features/app/planner/types/budget';
-import type { BudgetEntryInsertPayload } from '@/features/app/planner/server/repositories/BudgetRepository';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { BudgetEntryInsertPayload } from "@/features/app/planner/server/repositories/BudgetRepository";
 import {
   createBudgetEntry as createBudgetEntryRepository,
   deleteBudgetEntry as deleteBudgetEntryRepository,
@@ -11,7 +9,8 @@ import {
   fetchPlanBudgetRow,
   updateBudgetEntry as updateBudgetEntryRepository,
   updatePlanBudget as updatePlanBudgetRepository,
-} from '@/features/app/planner/server/repositories/BudgetRepository';
+} from "@/features/app/planner/server/repositories/BudgetRepository";
+import type { Entry } from "@/features/app/planner/types/budget";
 
 type PlannerSupabaseClient = SupabaseClient;
 
@@ -22,13 +21,13 @@ type BudgetEntryRow = {
   amount: number | null;
 };
 
-type BudgetEntryInput = Pick<Entry, 'description' | 'category' | 'amount'>;
+type BudgetEntryInput = Pick<Entry, "description" | "category" | "amount">;
 
 function mapBudgetEntry(row: BudgetEntryRow): Entry {
   return {
     id: row.id,
-    description: row.description ?? '',
-    category: (row.category as Entry['category']) ?? 'transport',
+    description: row.description ?? "",
+    category: (row.category as Entry["category"]) ?? "transport",
     amount: row.amount ?? 0,
   };
 }
@@ -66,10 +65,7 @@ export async function createBudgetEntry(
   return id;
 }
 
-export async function updateBudgetEntry(
-  entry: Entry,
-  client?: PlannerSupabaseClient
-): Promise<void> {
+export async function updateBudgetEntry(entry: Entry, client?: PlannerSupabaseClient): Promise<void> {
   const payload: BudgetEntryInsertPayload = {
     description: entry.description,
     category: entry.category,
@@ -78,9 +74,6 @@ export async function updateBudgetEntry(
   await updateBudgetEntryRepository(entry.id, payload, { client });
 }
 
-export async function deleteBudgetEntry(
-  entryId: string,
-  client?: PlannerSupabaseClient
-): Promise<void> {
+export async function deleteBudgetEntry(entryId: string, client?: PlannerSupabaseClient): Promise<void> {
   await deleteBudgetEntryRepository(entryId, { client });
 }

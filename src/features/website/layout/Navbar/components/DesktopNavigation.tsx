@@ -1,11 +1,10 @@
-import Link from 'next/link';
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import Link from "next/link";
 
-import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { ChevronDown } from "@/shared/ui/icon";
 
-import { ChevronDown } from '@/shared/ui/icon';
-
-import { NAV_LINKS } from '../data';
-import { SolutionsContent } from './SolutionsContent';
+import { NAV_LINKS } from "../data";
+import { SolutionsContent } from "./SolutionsContent";
 
 export function DesktopNavigation() {
   return (
@@ -15,8 +14,7 @@ export function DesktopNavigation() {
         <Link
           key={link.href}
           href={link.href}
-          className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
-        >
+          className="text-muted-foreground hover:text-foreground focus-visible:ring-primary/60 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none">
           {link.label}
         </Link>
       ))}

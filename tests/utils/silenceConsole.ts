@@ -1,10 +1,10 @@
 // Utility to silence known noisy console warnings/errors in tests.
 // Use sparingly and with specific patterns to avoid hiding real issues.
 
-import { vi } from 'vitest';
-import type { MockInstance } from 'vitest';
+import type { MockInstance } from "vitest";
+import { vi } from "vitest";
 
-export type ConsoleMethod = 'error' | 'warn';
+export type ConsoleMethod = "error" | "warn";
 
 /**
  * Temporarily silences console methods for messages that match given patterns.
@@ -12,17 +12,15 @@ export type ConsoleMethod = 'error' | 'warn';
  */
 export function silenceConsole(
   patterns: Array<string | RegExp>,
-  methods: ConsoleMethod[] = ['error']
+  methods: ConsoleMethod[] = ["error"]
 ): () => void {
   const spies: MockInstance[] = [];
 
   methods.forEach((method) => {
     const original = console[method];
     const spy = vi.spyOn(console, method).mockImplementation((...args: unknown[]) => {
-      const first = typeof args[0] === 'string' ? args[0] : String(args[0] ?? '');
-      const matched = patterns.some((p) =>
-        typeof p === 'string' ? first.includes(p) : p.test(first)
-      );
+      const first = typeof args[0] === "string" ? args[0] : String(args[0] ?? "");
+      const matched = patterns.some((p) => (typeof p === "string" ? first.includes(p) : p.test(first)));
       if (matched) return;
       (original as (...a: unknown[]) => void)(...args);
     });
@@ -30,6 +28,8 @@ export function silenceConsole(
   });
 
   return () => {
-    spies.forEach((s) => s.mockRestore());
+    spies.forEach((s) => {
+      s.mockRestore();
+    });
   };
 }

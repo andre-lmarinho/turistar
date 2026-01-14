@@ -1,8 +1,8 @@
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H1, P, Eyebrow } from '@/features/website/ui/typography';
-import { HandCoins } from '@/shared/ui/icon';
+import { Eyebrow, H1, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { HandCoins } from "@/shared/ui/icon";
 
-import { PricingComparison } from './components/PricingComparison';
+import { PricingComparison } from "./components/PricingComparison";
 
 export function HeroPricing() {
   return (

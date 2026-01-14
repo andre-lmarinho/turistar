@@ -1,5 +1,5 @@
-export { lucideIconList } from './icon-list.mjs';
-export { lucideIconNames } from './icon-names';
-export type { LucideIconName } from './icon-names';
-export type { LucideIcon } from 'lucide-react';
-export * from './lucide-icons';
+export type { LucideIcon } from "lucide-react";
+export { lucideIconList } from "./icon-list.mjs";
+export type { LucideIconName } from "./icon-names";
+export { lucideIconNames } from "./icon-names";
+export * from "./lucide-icons";

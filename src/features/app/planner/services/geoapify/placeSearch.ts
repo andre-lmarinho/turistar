@@ -1,9 +1,8 @@
-import 'server-only';
+import "server-only";
 
-import { clientEnv } from '@/shared/lib/clientEnv';
-
-import type { GeoapifyPlaceSearchResult, GeoapifyResponse } from './types';
-import { resolveGeoapifyFeatures } from './response';
+import { clientEnv } from "@/shared/lib/clientEnv";
+import { resolveGeoapifyFeatures } from "./response";
+import type { GeoapifyPlaceSearchResult, GeoapifyResponse } from "./types";
 
 const PLACE_SEARCH_LIMIT = 6;
 
@@ -19,22 +18,22 @@ export async function fetchGeoapifyPlaceSearch(
   const key = getGeoapifyKey();
   const params = new URLSearchParams({
     text,
-    format: 'json',
+    format: "json",
     limit: String(PLACE_SEARCH_LIMIT),
     apiKey: key,
   });
   if (lat != null && lon != null) {
-    params.set('bias', `proximity:${lon},${lat}`);
+    params.set("bias", `proximity:${lon},${lat}`);
   }
 
   const requestUrl = `https://api.geoapify.com/v1/geocode/search?${params.toString()}`;
   const res = await fetch(requestUrl, {
-    cache: 'force-cache',
+    cache: "force-cache",
     next: { revalidate: 86400 },
   });
   if (!res.ok) {
     throw new Error(
-      `fetchGeoapifyPlaceSearch failed: text=${text} status=${res.status} lat=${lat ?? 'null'} lon=${lon ?? 'null'}`
+      `fetchGeoapifyPlaceSearch failed: text=${text} status=${res.status} lat=${lat ?? "null"} lon=${lon ?? "null"}`
     );
   }
 

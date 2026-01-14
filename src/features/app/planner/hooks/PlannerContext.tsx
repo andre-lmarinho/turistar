@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { usePlanner } from '@/features/app/planner/hooks/state/planner/usePlanner';
-import { useSelectedActivity } from '@/features/app/planner/hooks/state/planner/useSelectedActivity';
-import { usePlanCollaboration } from '@/features/app/planner/hooks/data/usePlanCollaboration';
-import { createContextProvider } from '@/shared/lib/createContextProvider';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { usePersistedPlannerDays } from './state/planner/usePersistedPlannerDays';
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { usePlanCollaboration } from "@/features/app/planner/hooks/data/usePlanCollaboration";
+import { usePlanner } from "@/features/app/planner/hooks/state/planner/usePlanner";
+import { useSelectedActivity } from "@/features/app/planner/hooks/state/planner/useSelectedActivity";
+import { createContextProvider } from "@/shared/lib/createContextProvider";
+import { usePersistedPlannerDays } from "./state/planner/usePersistedPlannerDays";
 
 type PlannerCtx = ReturnType<typeof usePlanner> &
   ReturnType<typeof useSelectedActivity> & {
@@ -74,5 +74,5 @@ export function usePlannerContextValue({
 
 export const [PlannerProvider, usePlannerContext] = createContextProvider(
   usePlannerContextValue,
-  'usePlannerContext must be inside PlannerProvider'
+  "usePlannerContext must be inside PlannerProvider"
 );

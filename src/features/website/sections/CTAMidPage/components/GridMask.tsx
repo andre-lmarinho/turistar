@@ -1,4 +1,4 @@
-import { Plus } from '@/shared/ui/icon';
+import { Plus } from "@/shared/ui/icon";
 
 export function GridMask() {
   return (

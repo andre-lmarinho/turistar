@@ -1,8 +1,8 @@
-import { midpoint } from '@/features/app/planner/domain/events/gapOrdering';
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { isPlaceholderActivity } from '@/features/app/planner/domain/utils/activityPlaceholders';
-import { sanitizeActivityTitle } from '@/features/app/planner/domain/utils/sanitizeActivityTitle';
-import type { PlanEventInsert } from '@/features/app/planner/domain/types/PlanEvent';
+import { midpoint } from "@/features/app/planner/domain/events/gapOrdering";
+import type { PlanEventInsert } from "@/features/app/planner/domain/types/PlanEvent";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { isPlaceholderActivity } from "@/features/app/planner/domain/utils/activityPlaceholders";
+import { sanitizeActivityTitle } from "@/features/app/planner/domain/utils/sanitizeActivityTitle";
 
 function generateId(): string {
   const crypto = globalThis.crypto;
@@ -15,7 +15,7 @@ function cloneActivity(activity: Activity): Activity {
 }
 
 function isFiniteNumber(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value);
+  return typeof value === "number" && Number.isFinite(value);
 }
 
 function sanitizeActivity(activity: Activity): Activity {
@@ -34,7 +34,7 @@ function sanitizeActivity(activity: Activity): Activity {
 function ensurePositions<T extends { position?: string }>(items: T[]): T[] {
   let needsClone = false;
   const result: T[] = items.map((item, index) => {
-    if (item.position != null && item.position !== '') return item;
+    if (item.position != null && item.position !== "") return item;
     needsClone = true;
     return { ...item, position: String((index + 1) * 1024) };
   });
@@ -53,8 +53,7 @@ function isBetween(position: string | undefined, left?: string, right?: string):
 
   const leftNum = toNumber(left);
   const rightNum = toNumber(right);
-  const effectiveRight =
-    rightNum == null || (leftNum != null && leftNum >= rightNum) ? null : rightNum;
+  const effectiveRight = rightNum == null || (leftNum != null && leftNum >= rightNum) ? null : rightNum;
 
   if (leftNum != null && value <= leftNum) return false;
   if (effectiveRight != null && value >= effectiveRight) return false;
@@ -63,17 +62,17 @@ function isBetween(position: string | undefined, left?: string, right?: string):
 
 function activityEquals(a: Activity, b: Activity): boolean {
   return (
-    sanitizeActivityTitle(a.title, '') === sanitizeActivityTitle(b.title, '') &&
-    (a.description ?? '') === (b.description ?? '') &&
-    (a.address ?? '') === (b.address ?? '') &&
+    sanitizeActivityTitle(a.title, "") === sanitizeActivityTitle(b.title, "") &&
+    (a.description ?? "") === (b.description ?? "") &&
+    (a.address ?? "") === (b.address ?? "") &&
     (a.duration ?? 0) === (b.duration ?? 0) &&
-    (a.startTime ?? '') === (b.startTime ?? '') &&
-    (a.imageUrl ?? '') === (b.imageUrl ?? '') &&
+    (a.startTime ?? "") === (b.startTime ?? "") &&
+    (a.imageUrl ?? "") === (b.imageUrl ?? "") &&
     (a.budget ?? 0) === (b.budget ?? 0) &&
-    (a.category ?? '') === (b.category ?? '') &&
+    (a.category ?? "") === (b.category ?? "") &&
     (a.latitude ?? 0) === (b.latitude ?? 0) &&
     (a.longitude ?? 0) === (b.longitude ?? 0) &&
-    (a.color ?? '') === (b.color ?? '')
+    (a.color ?? "") === (b.color ?? "")
   );
 }
 
@@ -113,7 +112,7 @@ export function diffPlanEvents(
       events.push({
         id: generateId(),
         planId,
-        type: 'day.removed',
+        type: "day.removed",
         payload: { dayId: day.id },
         actorId: actorId ?? undefined,
       });
@@ -156,18 +155,19 @@ export function diffPlanEvents(
     if (!isBetween(position, leftPos, rightPos)) {
       position = midpoint(leftPos, rightPos);
     }
-    resolvedDayPositions.set(day.id, position ?? midpoint(leftPos, rightPos));
+    const finalPosition = position ?? midpoint(leftPos, rightPos);
+    resolvedDayPositions.set(day.id, finalPosition);
 
     if (!prev) {
       events.push({
         id: generateId(),
         planId,
-        type: 'day.created',
+        type: "day.created",
         payload: {
           day: {
             id: day.id,
             label: day.label,
-            position: resolvedDayPositions.get(day.id)!,
+            position: finalPosition,
             activities: day.activities.map((activity) => ({
               ...sanitizeActivity(activity),
               position: activity.position ?? midpoint(undefined, undefined),
@@ -183,18 +183,18 @@ export function diffPlanEvents(
       events.push({
         id: generateId(),
         planId,
-        type: 'day.updated',
+        type: "day.updated",
         payload: { dayId: day.id, patch: { label: day.label } },
         actorId: actorId ?? undefined,
       });
     }
 
-    if (prev.position !== resolvedDayPositions.get(day.id)) {
+    if (prev.position !== finalPosition) {
       events.push({
         id: generateId(),
         planId,
-        type: 'day.reordered',
-        payload: { dayId: day.id, position: resolvedDayPositions.get(day.id)! },
+        type: "day.reordered",
+        payload: { dayId: day.id, position: finalPosition },
         actorId: actorId ?? undefined,
       });
     }
@@ -212,7 +212,7 @@ export function diffPlanEvents(
           events.push({
             id: generateId(),
             planId,
-            type: 'activity.deleted',
+            type: "activity.deleted",
             payload: { activityId: activity.id },
             actorId: actorId ?? undefined,
           });
@@ -233,7 +233,7 @@ export function diffPlanEvents(
         events.push({
           id: generateId(),
           planId,
-          type: 'activity.created',
+          type: "activity.created",
           payload: {
             dayId: day.id,
             activity: {
@@ -258,7 +258,7 @@ export function diffPlanEvents(
         events.push({
           id: generateId(),
           planId,
-          type: 'activity.moved',
+          type: "activity.moved",
           payload: {
             activityId: activity.id,
             fromDayId: prevDayId,
@@ -275,7 +275,7 @@ export function diffPlanEvents(
         events.push({
           id: generateId(),
           planId,
-          type: 'activity.updated',
+          type: "activity.updated",
           payload: {
             activityId: activity.id,
             patch,

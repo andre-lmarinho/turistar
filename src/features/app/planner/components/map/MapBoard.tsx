@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import L, { LatLngExpression, LeafletMouseEvent } from 'leaflet';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
+import L, { type LatLngExpression, type LeafletMouseEvent } from "leaflet";
+import React, { useEffect, useMemo, useRef } from "react";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
 
 // Extract the CSS color from a Tailwind class like "bg-[var(--color-X)]"
 const getCssColor = (cls?: string): string | undefined => {
   if (!cls) return undefined;
-  const m = cls.match(/^bg-\[([^]+)\]$/);
+  const m = cls.match(/^bg-\[(.+)\]$/);
   return m ? m[1] : cls;
 };
 
@@ -25,9 +25,9 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
       prev.current &&
       prev.current.length === coords.length &&
       prev.current.every((c, i) => {
-        const a = c as [number, number];
-        const b = coords[i] as [number, number];
-        return a[0] === b[0] && a[1] === b[1];
+        const a = L.latLng(c);
+        const b = L.latLng(coords[i]);
+        return a.equals(b);
       });
 
     if (!same) {
@@ -42,14 +42,13 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
 export const MapBoard = React.memo(function MapBoard() {
   const { days, setSelectedActivity, destCoords } = usePlannerContext();
   const centerCoords = destCoords ?? undefined;
+  const defaultBg = useMemo(() => getCssColor(getDefaultActivityColor()) ?? "var(--color-0)", []);
   const dayPaths = useMemo(
     () =>
       days
         .map((day, dayIdx) => {
           const acts = day.activities.filter((a) => a.latitude != null && a.longitude != null);
-          const coords = acts.map(
-            (a) => [Number(a.latitude), Number(a.longitude)] as LatLngExpression
-          );
+          const coords = acts.map((a) => [Number(a.latitude), Number(a.longitude)] as LatLngExpression);
           return { day, dayIdx, coords, acts };
         })
         .filter((d) => d.coords.length > 0),
@@ -67,19 +66,18 @@ export const MapBoard = React.memo(function MapBoard() {
       <MapContainer
         center={center}
         zoom={13}
-        style={{ width: '100%', height: '100%' }}
-        aria-label="Itinerary map"
-      >
+        style={{ width: "100%", height: "100%" }}
+        aria-label="Itinerary map">
         <FitAllMarkers coords={allCoords} />
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
-          subdomains={['a', 'b', 'c', 'd']}
+          subdomains={["a", "b", "c", "d"]}
           attribution="&copy; OpenStreetMap contributors &copy; CARTO"
           opacity={1}
         />
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png"
-          subdomains={['a', 'b', 'c', 'd']}
+          subdomains={["a", "b", "c", "d"]}
           attribution="&copy; OpenStreetMap contributors &copy; CARTO"
           opacity={0.9}
         />
@@ -87,7 +85,7 @@ export const MapBoard = React.memo(function MapBoard() {
           <React.Fragment key={day.id}>
             {coords.map((pos, i) => {
               const act = acts[i];
-              const bg = getCssColor(act.color) ?? getCssColor(getDefaultActivityColor())!;
+              const bg = getCssColor(act.color) ?? defaultBg;
               const number = dayIdx + 1;
               const icon = L.divIcon({
                 html: `
@@ -103,7 +101,7 @@ export const MapBoard = React.memo(function MapBoard() {
                     box-shadow: 0 0 4px rgba(0,0,0,0.5);
                   ">${number}</div>
                 `,
-                className: '',
+                className: "",
                 iconSize: [32, 32],
                 iconAnchor: [16, 16],
               });
@@ -138,6 +136,6 @@ export const MapBoard = React.memo(function MapBoard() {
   );
 });
 
-MapBoard.displayName = 'MapBoard';
+MapBoard.displayName = "MapBoard";
 
 export default MapBoard;

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseLocalStorageOptions = {
   enabled?: boolean;
@@ -23,7 +23,7 @@ export function useLocalStorage<T>(key: string, initial: T, options?: UseLocalSt
   }, [initial]);
 
   useEffect(() => {
-    if (!enabled || typeof window === 'undefined') return;
+    if (!enabled || typeof window === "undefined") return;
 
     let nextValue = initialRef.current as T;
 
@@ -51,14 +51,12 @@ export function useLocalStorage<T>(key: string, initial: T, options?: UseLocalSt
   const setStoredValue = useCallback<Dispatch<SetStateAction<T>>>(
     (nextValue) => {
       const resolvedValue =
-        typeof nextValue === 'function'
-          ? (nextValue as (current: T) => T)(latestValue.current)
-          : nextValue;
+        typeof nextValue === "function" ? (nextValue as (current: T) => T)(latestValue.current) : nextValue;
 
       latestValue.current = resolvedValue;
       setValue(resolvedValue);
 
-      if (!enabled || typeof window === 'undefined') {
+      if (!enabled || typeof window === "undefined") {
         return;
       }
 

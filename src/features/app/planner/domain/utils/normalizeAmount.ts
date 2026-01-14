@@ -5,9 +5,9 @@
  */
 export function normalizeAmount(val: string): number {
   const cleaned = val
-    .replace(/[^0-9.]/g, '')
-    .replace(/,/g, '')
-    .replace(/^0+(?!\.)/, '');
+    .replace(/[^0-9.]/g, "")
+    .replace(/,/g, "")
+    .replace(/^0+(?!\.)/, "");
   const num = parseFloat(cleaned);
-  return isFinite(num) ? num : 0;
+  return Number.isFinite(num) ? num : 0;
 }

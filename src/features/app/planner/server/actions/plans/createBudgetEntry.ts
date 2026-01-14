@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
-import type { CategoryKey } from '@/features/app/planner/types/budget';
-import { createBudgetEntry as createBudgetEntryRepo } from '@/features/app/planner/services/supabase/budgetQueries';
+import { createBudgetEntry as createBudgetEntryRepo } from "@/features/app/planner/services/supabase/budgetQueries";
+import type { CategoryKey } from "@/features/app/planner/types/budget";
 
 type BudgetEntryInput = {
   description: string;

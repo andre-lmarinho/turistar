@@ -1,10 +1,8 @@
-import { useRef, useState } from 'react';
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-
-import { usePersistedPlannerDays } from './usePersistedPlannerDays';
-
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { useRef, useState } from "react";
+import { describe, expect, it, vi } from "vitest";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { usePersistedPlannerDays } from "./usePersistedPlannerDays";
 
 interface HarnessProps {
   initialDays: DayPlan[];
@@ -45,10 +43,10 @@ function usePersistHarness({
   return { days, setDays, persistSpy: mutateRef.current };
 }
 
-describe('usePersistedPlannerDays persistence flow', () => {
-  it('persists sanitized days when local state changes', async () => {
-    const breakfast: Activity = { id: 'a', title: 'Breakfast', color: '#f00' };
-    const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [breakfast] }];
+describe("usePersistedPlannerDays persistence flow", () => {
+  it("persists sanitized days when local state changes", async () => {
+    const breakfast: Activity = { id: "a", title: "Breakfast", color: "#f00" };
+    const initialDays: DayPlan[] = [{ id: "day-1", label: "Day 1", activities: [breakfast] }];
     const persistImpl = vi.fn().mockResolvedValue(undefined);
 
     const { result } = renderHook((props) => usePersistHarness(props), {
@@ -60,19 +58,19 @@ describe('usePersistedPlannerDays persistence flow', () => {
     });
 
     const optimistic = {
-      id: 'temp-1',
-      title: 'Pending activity',
-      color: '#ccc',
+      id: "temp-1",
+      title: "Pending activity",
+      color: "#ccc",
       _optimistic: true,
     } as Activity & { _optimistic: boolean };
-    const placeholder: Activity = { id: 'blank-1', title: '', color: '#eee' };
-    const museum: Activity = { id: 'm1', title: 'Museum', color: '#0f0' };
+    const placeholder: Activity = { id: "blank-1", title: "", color: "#eee" };
+    const museum: Activity = { id: "m1", title: "Museum", color: "#0f0" };
 
     await act(async () => {
       result.current.setDays([
         {
-          id: 'day-1',
-          label: 'Day 1',
+          id: "day-1",
+          label: "Day 1",
           activities: [{ ...breakfast }, placeholder, museum, optimistic],
         },
       ]);
@@ -83,13 +81,13 @@ describe('usePersistedPlannerDays persistence flow', () => {
     });
 
     const persistedState = persistImpl.mock.calls[0][0] as DayPlan[];
-    expect(persistedState[0].activities.map((activity) => activity.id)).toEqual(['a', 'm1']);
+    expect(persistedState[0].activities.map((activity) => activity.id)).toEqual(["a", "m1"]);
   });
 
-  it('rolls back to the last saved snapshot when persistence fails', async () => {
-    const breakfast: Activity = { id: 'a', title: 'Breakfast', color: '#f00' };
-    const initialDays: DayPlan[] = [{ id: 'day-1', label: 'Day 1', activities: [breakfast] }];
-    const persistImpl = vi.fn().mockRejectedValue(new Error('network'));
+  it("rolls back to the last saved snapshot when persistence fails", async () => {
+    const breakfast: Activity = { id: "a", title: "Breakfast", color: "#f00" };
+    const initialDays: DayPlan[] = [{ id: "day-1", label: "Day 1", activities: [breakfast] }];
+    const persistImpl = vi.fn().mockRejectedValue(new Error("network"));
 
     const { result } = renderHook((props) => usePersistHarness(props), {
       initialProps: {
@@ -102,9 +100,9 @@ describe('usePersistedPlannerDays persistence flow', () => {
     await act(async () => {
       result.current.setDays([
         {
-          id: 'day-1',
-          label: 'Day 1',
-          activities: [{ ...breakfast }, { id: 'l1', title: 'Lunch', color: '#00f' }],
+          id: "day-1",
+          label: "Day 1",
+          activities: [{ ...breakfast }, { id: "l1", title: "Lunch", color: "#00f" }],
         },
       ]);
     });
@@ -114,7 +112,7 @@ describe('usePersistedPlannerDays persistence flow', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.days[0].activities.map((activity) => activity.id)).toEqual(['a']);
+      expect(result.current.days[0].activities.map((activity) => activity.id)).toEqual(["a"]);
     });
   });
 });

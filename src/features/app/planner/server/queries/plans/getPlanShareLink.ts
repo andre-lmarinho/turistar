@@ -1,6 +1,7 @@
-import 'server-only';
+import "server-only";
 
-import { createSupabaseServerClient } from '@/shared/lib/supabaseServer';
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
 export type PlanShareLink = {
   token: string;
@@ -9,6 +10,13 @@ export type PlanShareLink = {
   revokedAt: string | null;
 };
 
+type PlanShareLinkRow = Pick<
+  Database["public"]["Tables"]["plan_share_links"]["Row"],
+  "token" | "created_at" | "created_by" | "revoked_at"
+>;
+
+type PlanIdRow = Pick<Database["public"]["Tables"]["plans"]["Row"], "id">;
+
 export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareLink | null> {
   const supabase = createSupabaseServerClient();
   const trimmed = planIdOrSlug.trim();
@@ -16,20 +24,21 @@ export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareL
     return null;
   }
 
-  const looksLikeUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      trimmed
-    );
+  const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    trimmed
+  );
 
   let planId = trimmed;
   if (!looksLikeUuid) {
-    const { data: planRow, error: planError } = (await supabase
-      .from('plans')
-      .select('id')
-      .eq('public_slug', trimmed)
-      .maybeSingle()) as { data: { id: string } | null; error: unknown };
+    const { data: planRow, error: planError } = await supabase
+      .from("plans")
+      .select<PlanIdRow>("id")
+      .eq("public_slug", trimmed)
+      .maybeSingle();
     if (planError) {
-      throw planError;
+      throw new Error(
+        `Failed to fetch plan by slug "${trimmed}": ${planError instanceof Error ? planError.message : String(planError)}`
+      );
     }
     if (!planRow) {
       return null;
@@ -37,24 +46,16 @@ export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareL
     planId = planRow.id;
   }
 
-  const { data, error } = (await supabase
-    .from('plan_share_links')
-    .select('token, created_at, created_by, revoked_at')
-    .eq('plan_id', planId)
-    .maybeSingle()) as unknown as {
-    data:
-      | {
-          token: string;
-          created_at: string;
-          created_by: string;
-          revoked_at: string | null;
-        }
-      | null;
-    error: unknown;
-  };
+  const { data, error } = await supabase
+    .from("plan_share_links")
+    .select<PlanShareLinkRow>("token, created_at, created_by, revoked_at")
+    .eq("plan_id", planId)
+    .maybeSingle();
 
   if (error) {
-    throw error;
+    throw new Error(
+      `Failed to fetch share link for plan "${planId}": ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 
   if (!data) {

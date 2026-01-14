@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
+import type { SuggestionOption } from "@/features/app/planner/components/ui/SuggestionCombobox";
+import { SuggestionCombobox } from "@/features/app/planner/components/ui/SuggestionCombobox";
+import type { SuggestionHook } from "@/features/app/planner/hooks/search/createGeoapifySuggestionHook";
 
-import { SuggestionCombobox } from '@/features/app/planner/components/ui/SuggestionCombobox';
-import type { SuggestionOption } from '@/features/app/planner/components/ui/SuggestionCombobox';
-import { cn } from '@/shared/utils/cn';
+import { useDebouncedQuery } from "@/features/app/planner/hooks/search/useDebouncedQuery";
 
-import { useDebouncedQuery } from '@/features/app/planner/hooks/search/useDebouncedQuery';
-
-import type { PlaceSelection, ActivitySuggestion } from '@/features/app/planner/types/locations';
-import type { SuggestionHook } from '@/features/app/planner/hooks/search/createGeoapifySuggestionHook';
+import type { ActivitySuggestion, PlaceSelection } from "@/features/app/planner/types/locations";
+import { cn } from "@/shared/utils/cn";
 
 interface ActivitySearchInputProps {
   value: string;
@@ -25,13 +24,7 @@ interface ActivitySearchInputProps {
   inputRef?: React.RefObject<HTMLInputElement | null>;
   inputProps?: Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
-    | 'id'
-    | 'value'
-    | 'onChange'
-    | 'role'
-    | 'aria-expanded'
-    | 'aria-controls'
-    | 'aria-activedescendant'
+    "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
   > & {
     [key: string]: unknown;
   };
@@ -43,8 +36,8 @@ interface ActivitySearchInputProps {
 export function ActivitySearchInput({
   value,
   onChange,
-  id = 'activity-suggestion-input',
-  placeholder = 'Search activity',
+  id = "activity-suggestion-input",
+  placeholder = "Search activity",
   label,
   className,
   inputClassName,
@@ -91,7 +84,7 @@ export function ActivitySearchInput({
       latitude: option.value.latitude,
       longitude: option.value.longitude,
       raw: option.value,
-      source: 'activity',
+      source: "activity",
     }),
     []
   );
@@ -109,12 +102,12 @@ export function ActivitySearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? 'Failed to load suggestions.' : undefined}
+      error={error ? "Failed to load suggestions." : undefined}
       emptyMessage="No suggestions found."
       className={className}
       inputClassName={
         inputClassName ??
-        'bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none'
+        "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
       }
       renderOption={(option, { active }) => (
         <div className="flex flex-col gap-0.5">
@@ -125,10 +118,9 @@ export function ActivitySearchInput({
           {option.meta ? (
             <span
               className={cn(
-                'text-muted-foreground text-[11px] tracking-[0.08em] uppercase',
-                active ? 'font-semibold' : undefined
-              )}
-            >
+                "text-muted-foreground text-[11px] tracking-[0.08em] uppercase",
+                active ? "font-semibold" : undefined
+              )}>
               {option.meta}
             </span>
           ) : null}

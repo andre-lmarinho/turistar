@@ -1,9 +1,4 @@
-import React from 'react';
-import {
-  CategoryKey,
-  CATEGORIES,
-  CHART_COLORS,
-} from '@/features/app/planner/domain/constants/budget';
+import { CATEGORIES, type CategoryKey, CHART_COLORS } from "@/features/app/planner/domain/constants/budget";
 
 interface Props {
   category: CategoryKey;
@@ -13,9 +8,14 @@ interface Props {
 }
 
 export function CategoryProgressBar({ category, value, total, colorIndex }: Props) {
-  const { label, icon } = CATEGORIES.find((c) => c.key === category)!;
+  const match = CATEGORIES.find((c) => c.key === category);
+  if (!match) {
+    throw new Error(`CategoryProgressBar: missing category definition for key=${category}`);
+  }
+  const { label, icon } = match;
   const percent = total ? Math.min(100, (value / total) * 100) : 0;
   const Icon = icon;
+  const formattedValue = value.toFixed(2);
 
   return (
     <>
@@ -24,8 +24,9 @@ export function CategoryProgressBar({ category, value, total, colorIndex }: Prop
           <Icon size={12} aria-hidden="true" />
           <span className="text-sm">{label}</span>
         </div>
-        <span className="mr-1 w-20 text-right text-sm" aria-label={`$${value.toFixed(2)} spent`}>
-          {'$' + value.toFixed(2)}
+        <span className="sr-only">{`$${formattedValue} spent`}</span>
+        <span className="mr-1 w-20 text-right text-sm" aria-hidden="true">
+          {`$${formattedValue}`}
         </span>
       </div>
 
@@ -36,8 +37,7 @@ export function CategoryProgressBar({ category, value, total, colorIndex }: Prop
         aria-valuemax={100}
         aria-valuenow={Math.round(percent)}
         aria-label={`${label} usage ${Math.round(percent)}%`}
-        className="bg-muted mb-3 flex-1 rounded"
-      >
+        className="bg-muted mb-3 flex-1 rounded">
         <div
           className="h-2 rounded"
           style={{ width: `${percent}%`, backgroundColor: CHART_COLORS[colorIndex] }}

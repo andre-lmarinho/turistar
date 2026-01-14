@@ -1,25 +1,21 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-
-import { Avatar } from '@/shared/ui/avatar';
-import { SelectMenu } from '@/features/app/planner/components/ui/SelectMenu';
-import type { SelectMenuOption } from '@/features/app/planner/components/ui/SelectMenu';
+import { useState } from "react";
+import type { SelectMenuOption } from "@/features/app/planner/components/ui/SelectMenu";
+import { SelectMenu } from "@/features/app/planner/components/ui/SelectMenu";
 import {
-  usePlanMembers,
   type PlanMemberProfile,
   type PlanMemberTier,
-} from '@/features/app/planner/hooks/data/usePlanSharing';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { useLeavePlannerRedirect } from '@/features/app/planner/hooks/ui/useLeavePlannerRedirect';
-import { SHARE_TIERS } from './shareConstants';
+  usePlanMembers,
+} from "@/features/app/planner/hooks/data/usePlanSharing";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { useLeavePlannerRedirect } from "@/features/app/planner/hooks/ui/useLeavePlannerRedirect";
+import { Avatar } from "@/shared/ui/avatar";
+import { SHARE_TIERS } from "./shareConstants";
 
-type MemberMenuOption = PlanMemberTier | 'leave' | 'remove';
+type MemberMenuOption = PlanMemberTier | "leave" | "remove";
 
-type MemberMutations = Pick<
-  ReturnType<typeof usePlanMembers>,
-  'updateTier' | 'removeMember' | 'leave'
->;
+type MemberMutations = Pick<ReturnType<typeof usePlanMembers>, "updateTier" | "removeMember" | "leave">;
 
 type ShareMemberRowProps = {
   member: PlanMemberProfile;
@@ -42,29 +38,27 @@ function ShareMemberRow({
 }: ShareMemberRowProps) {
   const isPlanOwner = ownerId === member.userId;
   const isSelf = viewerUserId === member.userId;
-  const isSelfAdmin = isSelf && member.tier === 'admin';
-  const isLastAdmin = member.tier === 'admin' && adminCount <= 1;
+  const isSelfAdmin = isSelf && member.tier === "admin";
+  const isLastAdmin = member.tier === "admin" && adminCount <= 1;
   const canRemove = canManageMembers && !isPlanOwner && !isSelf;
-  const canSelfLeave =
-    isSelf && (!isSelfAdmin || adminCount > 1) && (!isPlanOwner || adminCount > 1);
-  const canSelect =
-    (!isPlanOwner && (canManageMembers || isSelf)) || (isPlanOwner && canSelfLeave);
+  const canSelfLeave = isSelf && (!isSelfAdmin || adminCount > 1) && (!isPlanOwner || adminCount > 1);
+  const canSelect = (!isPlanOwner && (canManageMembers || isSelf)) || (isPlanOwner && canSelfLeave);
   const tierOptions: ReadonlyArray<SelectMenuOption<MemberMenuOption>> =
     isPlanOwner || isLastAdmin
-      ? SHARE_TIERS.filter((tierOption) => tierOption.value === 'admin')
+      ? SHARE_TIERS.filter((tierOption) => tierOption.value === "admin")
       : SHARE_TIERS;
   const leaveOption: SelectMenuOption<MemberMenuOption> | null = canSelfLeave
-    ? { value: 'leave', label: 'Leave planner' }
+    ? { value: "leave", label: "Leave planner" }
     : null;
   const removeOption: SelectMenuOption<MemberMenuOption> | null = canRemove
-    ? { value: 'remove', label: 'Remove member' }
+    ? { value: "remove", label: "Remove member" }
     : null;
   const menuOptions: SelectMenuOption<MemberMenuOption>[] = [
     ...tierOptions,
     ...(leaveOption ? [leaveOption] : []),
     ...(removeOption ? [removeOption] : []),
   ];
-  const displayName = member.displayName ?? (isPlanOwner ? 'Owner' : 'User');
+  const displayName = member.displayName ?? (isPlanOwner ? "Owner" : "User");
 
   return (
     <div className="bg-background flex items-center justify-between gap-3 rounded-md py-2">
@@ -73,7 +67,7 @@ function ShareMemberRow({
         <div className="min-w-0">
           <p className="text-foreground truncate text-sm font-medium">
             {displayName}
-            {isPlanOwner ? ' (owner)' : ''}
+            {isPlanOwner ? " (owner)" : ""}
           </p>
           {member.slug ? <p className="text-muted-foreground truncate text-xs">@{member.slug}</p> : null}
         </div>
@@ -83,11 +77,11 @@ function ShareMemberRow({
           value={member.tier}
           options={menuOptions}
           onChange={(nextValue) => {
-            if (nextValue === 'leave' && canSelfLeave) {
+            if (nextValue === "leave" && canSelfLeave) {
               onLeave(member);
               return;
             }
-            if (nextValue === 'remove' && canRemove) {
+            if (nextValue === "remove" && canRemove) {
               mutations.removeMember.mutate({ userId: member.userId });
               return;
             }
@@ -119,7 +113,7 @@ function ShareMemberRow({
 }
 
 export function ShareMembersSection({ planId }: { planId: string }) {
-  const [tab, setTab] = useState<'members' | 'requests'>('members');
+  const [tab, setTab] = useState<"members" | "requests">("members");
   const { data, isLoading, error, updateTier, removeMember, leave } = usePlanMembers(planId, {
     enabled: Boolean(planId),
   });
@@ -128,7 +122,7 @@ export function ShareMembersSection({ planId }: { planId: string }) {
 
   const ownerId = data?.ownerId ?? null;
   const members = data?.members ?? [];
-  const adminCount = members.filter((member) => member.tier === 'admin').length;
+  const adminCount = members.filter((member) => member.tier === "admin").length;
   const shouldShowEmpty = !isLoading && !error && !members.length;
   const shouldShowList = !isLoading && !error && members.length > 0;
 
@@ -137,20 +131,18 @@ export function ShareMembersSection({ planId }: { planId: string }) {
       <div className="border-border flex items-center gap-3 border-b pb-2 text-sm font-medium">
         <button
           type="button"
-          onClick={() => setTab('members')}
-          className={`transition-colors ${tab === 'members' ? 'text-primary' : 'text-muted-foreground'}`}
-        >
+          onClick={() => setTab("members")}
+          className={`transition-colors ${tab === "members" ? "text-primary" : "text-muted-foreground"}`}>
           Members
         </button>
         <button
           type="button"
-          onClick={() => setTab('requests')}
-          className={`transition-colors ${tab === 'requests' ? 'text-primary' : 'text-muted-foreground'}`}
-        >
+          onClick={() => setTab("requests")}
+          className={`transition-colors ${tab === "requests" ? "text-primary" : "text-muted-foreground"}`}>
           Requests
         </button>
       </div>
-      {tab === 'members' ? (
+      {tab === "members" ? (
         <>
           {isLoading ? <p className="text-muted-foreground text-xs">Loading members...</p> : null}
           {error ? <p className="text-destructive text-xs">Unable to load members.</p> : null}

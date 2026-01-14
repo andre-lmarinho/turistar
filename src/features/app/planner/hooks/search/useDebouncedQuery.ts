@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
-import { useDebounce } from './useDebounce';
+import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/shared/lib/geoapify/config";
+import { useDebounce } from "./useDebounce";
 
 /**
  * Debounces a search query and returns trimmed text plus a flag for minimum length readiness.

@@ -6,7 +6,7 @@ export function scrollToChild(
   const { smooth = true, disableSnap = true, duration = 600 } = opts;
   const target = el.children[idx] as HTMLElement | undefined;
   if (!target) return;
-  if (disableSnap) el.classList.add('no-snap');
+  if (disableSnap) el.classList.add("no-snap");
 
   // Use bounding boxes to derive the scroll offset. This avoids relying on
   // `offsetLeft`, which can misreport values when flex gaps or transforms are
@@ -28,12 +28,12 @@ export function scrollToChild(
       if (t < 1) {
         requestAnimationFrame(step);
       } else if (disableSnap) {
-        el.classList.remove('no-snap');
+        el.classList.remove("no-snap");
       }
     };
     requestAnimationFrame(step);
   } else {
     el.scrollLeft = left;
-    if (disableSnap) el.classList.remove('no-snap');
+    if (disableSnap) el.classList.remove("no-snap");
   }
 }

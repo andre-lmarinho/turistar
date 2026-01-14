@@ -1,7 +1,7 @@
-import { render } from '@testing-library/react';
-import React, { useEffect } from 'react';
-import { vi } from 'vitest';
-import { useElementMeasure } from './useElementMeasure';
+import { render } from "@testing-library/react";
+import { useEffect } from "react";
+import { vi } from "vitest";
+import { useElementMeasure } from "./useElementMeasure";
 
 function TestHarness({ text, onMeasure }: { text: string; onMeasure: (width?: number) => void }) {
   const { ref, width } = useElementMeasure<HTMLInputElement>({ width: true, text });
@@ -15,17 +15,17 @@ function TestHarness({ text, onMeasure }: { text: string; onMeasure: (width?: nu
       data-testid="measured-input"
       ref={ref}
       // Provide deterministic styles for the measurement calculation
-      style={{ font: '16px Arial', paddingLeft: '2px', paddingRight: '2px', border: '1px solid' }}
+      style={{ font: "16px Arial", paddingLeft: "2px", paddingRight: "2px", border: "1px solid" }}
     />
   );
 }
 
-describe('useElementMeasure', () => {
-  test('recalculates width when `text` changes', async () => {
+describe("useElementMeasure", () => {
+  test("recalculates width when `text` changes", async () => {
     // Mock canvas measurement to return width proportional to text length
     const originalGetContext = HTMLCanvasElement.prototype.getContext;
     const contextMock = {
-      font: '',
+      font: "",
       measureText: (t: string) => ({ width: t.length * 10 }),
     } as unknown as CanvasRenderingContext2D;
     // @ts-expect-error - mock return type narrowed for tests

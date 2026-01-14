@@ -1,7 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
+import Image from "next/image";
 
-import { Plus } from '@/shared/ui/icon';
+import { Plus } from "@/shared/ui/icon";
 
 export type TestimonialCardProps = {
   quote: string;
@@ -20,9 +19,7 @@ export function TestimonialCard({ quote, avatarUrl, name, traveledTo }: Testimon
         <Plus aria-hidden className="bg-card text-border absolute -right-3 -bottom-3 size-6" />
       </span>
       <div className="border-border bg-background flex h-full w-full flex-col rounded-xl border p-8 text-left shadow-sm">
-        <p className="text-foreground text-base leading-relaxed font-bold md:text-lg lg:text-xl">
-          {quote}
-        </p>
+        <p className="text-foreground text-base leading-relaxed font-bold md:text-lg lg:text-xl">{quote}</p>
 
         <div className="mt-auto flex items-end gap-3 pt-12">
           <Image

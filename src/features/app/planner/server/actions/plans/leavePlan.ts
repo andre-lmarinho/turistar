@@ -1,23 +1,13 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { leavePlan as leavePlanRpc } from '@/features/app/planner/server/repositories/PlanMembersRepository';
-import { formatSupabaseError } from '@/shared/lib/supabaseErrors';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { leavePlan as leavePlanRpc } from "@/features/app/planner/server/repositories/PlanMembersRepository";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export async function leavePlan(
   planId: string,
-  client: SupabaseClient = supabaseServer()
+  client: SupabaseClient = createSupabaseServerClient()
 ): Promise<void> {
-  const supabase = client;
-  const { error } = await leavePlanRpc(planId, { client: supabase });
-
-  if (error) {
-    throw formatSupabaseError({
-      operation: 'leavePlan',
-      identifiers: { planId },
-      error,
-    });
-  }
+  await leavePlanRpc(planId, { client });
 }

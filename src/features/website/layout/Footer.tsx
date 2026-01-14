@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -6,17 +6,16 @@ export function Footer() {
       <div className="mx-auto grid h-full w-full max-w-[1200px] grid-cols-1 gap-4 md:grid-cols-[2fr_4fr]">
         <div>
           <p>
-            {'Made with '}
+            {"Made with "}
             <span aria-label="heart" role="img">
               ❤️
             </span>
-            {' by '}
+            {" by "}
             <a
               href="https://andremarinho.me/"
               className="underline underline-offset-2 hover:opacity-90"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               André Marinho
             </a>
           </p>
@@ -24,8 +23,7 @@ export function Footer() {
             href="https://github.com/andre-lmarinho/travel-planner"
             className="underline underline-offset-2 hover:opacity-90"
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             GitHub
           </a>
         </div>

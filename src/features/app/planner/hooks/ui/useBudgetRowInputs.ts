@@ -1,4 +1,4 @@
-import type { CategoryKey } from '@/features/app/planner/domain/constants/budget';
+import type { CategoryKey } from "@/features/app/planner/domain/constants/budget";
 
 export type DescriptionConfig = {
   id: string;
@@ -43,7 +43,7 @@ export function useBudgetRowInputs({
   description,
   category,
   amount,
-  amountCellClassName = 'p-2 text-right',
+  amountCellClassName = "p-2 text-right",
 }: UseBudgetRowInputsArgs): UseBudgetRowInputsResult {
   return {
     description,

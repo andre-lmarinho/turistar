@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import type { Activity, DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { getDefaultActivityColor } from '@/features/app/planner/domain/constants/colors';
-import { createBlankActivity } from '@/features/app/planner/domain/utils/activityPlaceholders';
-import { sanitizeActivityTitle } from '@/features/app/planner/domain/utils/sanitizeActivityTitle';
-import { midpoint, normalizePositions } from '@/features/app/planner/domain/events/gapOrdering';
+import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
+import { midpoint, normalizePositions } from "@/features/app/planner/domain/events/gapOrdering";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { createBlankActivity } from "@/features/app/planner/domain/utils/activityPlaceholders";
+import { sanitizeActivityTitle } from "@/features/app/planner/domain/utils/sanitizeActivityTitle";
 
 type ActivityWithMeta = Activity & {
-  _optimistic?: boolean;
   _tempId?: string;
 };
 
@@ -87,9 +86,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
   }
 
   function removeActivity(id: string): void {
-    setDays((prev) =>
-      prev.map((day) => ({ ...day, activities: day.activities.filter((a) => a.id !== id) }))
-    );
+    setDays((prev) => prev.map((day) => ({ ...day, activities: day.activities.filter((a) => a.id !== id) })));
   }
 
   function updateActivity(id: string, patch: Partial<Activity>): void {
@@ -104,9 +101,7 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
                       ...a,
                       ...patch,
                       title:
-                        patch.title !== undefined
-                          ? sanitizeActivityTitle(patch.title, a.title)
-                          : a.title,
+                        patch.title !== undefined ? sanitizeActivityTitle(patch.title, a.title) : a.title,
                     }
                   : a
               ),
@@ -168,19 +163,13 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       let targetActivityIndex = -1;
 
       if (targetDayIdx !== -1) {
-        targetActivityIndex = prev[targetDayIdx].activities.findIndex(
-          (activity) => activity.id === targetId
-        );
+        targetActivityIndex = prev[targetDayIdx].activities.findIndex((activity) => activity.id === targetId);
       }
 
       if (targetActivityIndex === -1) {
-        targetDayIdx = prev.findIndex((day) =>
-          day.activities.some((activity) => activity.id === targetId)
-        );
+        targetDayIdx = prev.findIndex((day) => day.activities.some((activity) => activity.id === targetId));
         if (targetDayIdx === -1) return prev;
-        targetActivityIndex = prev[targetDayIdx].activities.findIndex(
-          (activity) => activity.id === targetId
-        );
+        targetActivityIndex = prev[targetDayIdx].activities.findIndex((activity) => activity.id === targetId);
         if (targetActivityIndex === -1) return prev;
       }
 
@@ -192,9 +181,8 @@ export function useActivityState(setDays: React.Dispatch<React.SetStateAction<Da
       delete merged._optimistic;
 
       const next = [...prev];
-      const updatedActivities = [...activities];
-      updatedActivities[targetActivityIndex] = merged;
-      next[targetDayIdx] = { ...day, activities: updatedActivities };
+      activities[targetActivityIndex] = merged;
+      next[targetDayIdx] = { ...day, activities };
       return next;
     });
   }

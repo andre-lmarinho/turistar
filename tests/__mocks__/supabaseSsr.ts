@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/shared/types/supabase';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/types/supabase";
 
 type QueryBuilder = {
   select: (...args: unknown[]) => QueryBuilder;
@@ -21,7 +21,7 @@ function createBuilder(): QueryBuilder {
     returns: () => Promise.resolve({ data: null, error: null }),
   } as QueryBuilder;
 
-  (['select', 'insert', 'upsert', 'update', 'delete', 'eq', 'order'] as const).forEach((m) => {
+  (["select", "insert", "upsert", "update", "delete", "eq", "order"] as const).forEach((m) => {
     (builder as unknown as Record<string, (...args: unknown[]) => QueryBuilder>)[m] = () => builder;
   });
 

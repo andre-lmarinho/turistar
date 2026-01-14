@@ -1,6 +1,6 @@
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
-import { formatDayPlan } from '@/features/app/planner/domain/days/formatDayPlan';
-import { parseISO, isBefore, isAfter } from 'date-fns';
+import { isAfter, isBefore, parseISO } from "date-fns";
+import { formatDayPlan } from "@/features/app/planner/domain/days/formatDayPlan";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Syncs the existing planner with the new trip range.
@@ -32,8 +32,8 @@ export function syncDaysWithTripRange(currentDays: DayPlan[], tripDays: Date[]):
 
   const first = tripDays[0];
   const last = tripDays[tripDays.length - 1];
-  const beforeActs: DayPlan['activities'] = [];
-  const afterActs: DayPlan['activities'] = [];
+  const beforeActs: DayPlan["activities"] = [];
+  const afterActs: DayPlan["activities"] = [];
 
   currentDays.forEach((day) => {
     if (tripIdSet.has(day.id)) return;

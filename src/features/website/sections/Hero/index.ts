@@ -1,6 +1,5 @@
-export { HeroAgencies } from './Agencies';
-export { HeroFriends } from './Friends';
-export { HeroHome } from './Home';
-
-export { HeroPlanning } from './Planning';
-export type { HeroPlanningProps } from './Planning';
+export { HeroAgencies } from "./Agencies";
+export { HeroFriends } from "./Friends";
+export { HeroHome } from "./Home";
+export type { HeroPlanningProps } from "./Planning";
+export { HeroPlanning } from "./Planning";

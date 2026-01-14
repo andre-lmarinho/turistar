@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { DndContext, DragOverlay } from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
+import React from "react";
 
-import { DayColumn } from '@/features/app/planner/components/dnd/DayColumn';
-import { SortableItem } from '@/features/app/planner/components/dnd/SortableItem';
-import { useActivitiesById } from '@/features/app/planner/hooks/state/planner/useActivitiesById';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
+import { DayColumn } from "@/features/app/planner/components/dnd/DayColumn";
+import { SortableItem } from "@/features/app/planner/components/dnd/SortableItem";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { useActivitiesById } from "@/features/app/planner/hooks/state/planner/useActivitiesById";
 
 /**
  * Presentation component to render the DnD board.
@@ -40,20 +40,16 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToWindowEdges]}
-    >
-      <div
-        role="list"
+      modifiers={[restrictToWindowEdges]}>
+      <ul
         aria-label="Days"
-        tabIndex={0}
-        className="bg-background flex h-full flex-1 gap-4 overflow-x-auto overflow-y-hidden rounded-xl border p-4"
-      >
+        className="bg-background m-0 flex h-full flex-1 list-none gap-4 overflow-x-auto overflow-y-hidden rounded-xl border p-4">
         {days.map((d) => (
-          <div key={d.id} role="listitem" className="w-[234px] shrink-0">
+          <li key={d.id} className="w-[234px] shrink-0">
             <DayColumn day={d} onSelectActivity={handleSelect} canEdit={canEdit} />
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
       {canEdit ? (
         <DragOverlay aria-label={active ? `Dragging ${active.title}` : undefined}>
           {active && (
@@ -72,4 +68,4 @@ export const PlannerBoard = React.memo(function PlannerBoard() {
   );
 });
 
-PlannerBoard.displayName = 'PlannerBoard';
+PlannerBoard.displayName = "PlannerBoard";

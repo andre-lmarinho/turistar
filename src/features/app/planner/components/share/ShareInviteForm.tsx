@@ -1,23 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-
-import { Button } from '@/shared/ui/button';
-import { SelectMenu } from '@/features/app/planner/components/ui/SelectMenu';
-import { usePlanMembers } from '@/features/app/planner/hooks/data/usePlanSharing';
-import { usePlannerContext } from '@/features/app/planner/hooks/PlannerContext';
-import { SHARE_TIERS } from './shareConstants';
-import type { ShareTier } from './shareConstants';
+import { useEffect, useRef, useState } from "react";
+import { SelectMenu } from "@/features/app/planner/components/ui/SelectMenu";
+import { usePlanMembers } from "@/features/app/planner/hooks/data/usePlanSharing";
+import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { Button } from "@/shared/ui/button";
+import type { ShareTier } from "./shareConstants";
+import { SHARE_TIERS } from "./shareConstants";
 
 export function ShareInviteForm({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();
   const { addMember, isLoading } = usePlanMembers(planId, {
     enabled: Boolean(planId),
   });
-  const [email, setEmail] = useState('');
-  const [tier, setTier] = useState<ShareTier>('member');
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
+  const [email, setEmail] = useState("");
+  const [tier, setTier] = useState<ShareTier>("member");
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
   const successTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -39,48 +38,45 @@ export function ShareInviteForm({ planId }: { planId: string }) {
           }
           const trimmedEmail = email.trim();
           if (!trimmedEmail) {
-            setFormError('Enter a valid email.');
+            setFormError("Enter a valid email.");
             return;
           }
           try {
             await addMember.mutateAsync({ email: trimmedEmail, tier });
-            setEmail('');
-            setFormError('');
-            setFormSuccess('Member added.');
+            setEmail("");
+            setFormError("");
+            setFormSuccess("Member added.");
             if (successTimeoutRef.current) {
               window.clearTimeout(successTimeoutRef.current);
             }
             successTimeoutRef.current = window.setTimeout(() => {
-              setFormSuccess('');
+              setFormSuccess("");
             }, 3000);
           } catch (error) {
             const message =
-              typeof error === 'object' && error && 'message' in error
-                ? String((error as { message?: unknown }).message ?? '')
+              typeof error === "object" && error && "message" in error
+                ? String((error as { message?: unknown }).message ?? "")
                 : String(error);
             const errorCode =
-              typeof error === 'object' && error && 'code' in error
-                ? String((error as { code?: unknown }).code ?? '')
-                : '';
+              typeof error === "object" && error && "code" in error
+                ? String((error as { code?: unknown }).code ?? "")
+                : "";
             const normalizedMessage = message.toLowerCase();
             if (
-              normalizedMessage.includes('not registered') ||
-              normalizedMessage.includes('user not found') ||
-              normalizedMessage.includes('no user') ||
-              normalizedMessage.includes('user_not_registered') ||
-              errorCode === '23503' ||
-              errorCode === 'USER_NOT_REGISTERED'
+              normalizedMessage.includes("not registered") ||
+              normalizedMessage.includes("user not found") ||
+              normalizedMessage.includes("no user") ||
+              normalizedMessage.includes("user_not_registered") ||
+              errorCode === "23503" ||
+              errorCode === "USER_NOT_REGISTERED"
             ) {
-              setFormError(
-                'This email has no account yet. Ask them to sign up first, then invite again.'
-              );
+              setFormError("This email has no account yet. Ask them to sign up first, then invite again.");
             } else {
-              setFormError('We could not add this member. Please try again.');
+              setFormError("We could not add this member. Please try again.");
             }
-            setFormSuccess('');
+            setFormSuccess("");
           }
-        }}
-      >
+        }}>
         <input
           type="email"
           placeholder="Email address"
@@ -88,10 +84,10 @@ export function ShareInviteForm({ planId }: { planId: string }) {
           onChange={(event) => {
             setEmail(event.target.value);
             if (formError) {
-              setFormError('');
+              setFormError("");
             }
             if (formSuccess) {
-              setFormSuccess('');
+              setFormSuccess("");
             }
           }}
           className="border-border bg-background text-foreground min-w-0 flex-1 rounded-md border px-3 py-2 text-sm"
@@ -109,8 +105,7 @@ export function ShareInviteForm({ planId }: { planId: string }) {
         <Button
           type="submit"
           className="shrink-0"
-          disabled={!canManageMembers || addMember.isPending || isLoading}
-        >
+          disabled={!canManageMembers || addMember.isPending || isLoading}>
           Share
         </Button>
       </form>
@@ -118,9 +113,9 @@ export function ShareInviteForm({ planId }: { planId: string }) {
         <p className="text-muted-foreground text-xs">Only admins can invite people.</p>
       ) : null}
       {formSuccess ? (
-        <p className="text-foreground text-xs" role="status">
+        <output className="text-foreground block text-xs" aria-live="polite">
           {formSuccess}
-        </p>
+        </output>
       ) : null}
       {formError ? (
         <p className="text-destructive text-xs" role="alert">

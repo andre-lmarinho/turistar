@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fetchGeoapifyAutocomplete } from "@/features/app/planner/services/geoapify/autocomplete";
 
-import { supabaseServer } from "@/shared/lib/supabaseServer";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import { createPlan } from "./createPlan";
 
 vi.mock("@/shared/lib/supabaseServer", () => ({
-  supabaseServer: vi.fn(),
+  createSupabaseServerClient: vi.fn(),
 }));
 vi.mock("@/features/app/planner/services/geoapify/autocomplete", () => ({
   fetchGeoapifyAutocomplete: vi.fn(),
@@ -13,7 +13,7 @@ vi.mock("@/features/app/planner/services/geoapify/autocomplete", () => ({
 
 describe("createPlan action", () => {
   beforeEach(() => {
-    vi.mocked(supabaseServer).mockReset();
+    vi.mocked(createSupabaseServerClient).mockReset();
     vi.mocked(fetchGeoapifyAutocomplete).mockReset();
     vi.mocked(fetchGeoapifyAutocomplete).mockResolvedValue([
       { name: "Brazil", latitude: -15.78, longitude: -47.93, countryCode: "BR" },
@@ -31,7 +31,9 @@ describe("createPlan action", () => {
       ],
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     const result = await createPlan(
       "Trip to Paris",
@@ -62,7 +64,9 @@ describe("createPlan action", () => {
       },
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     const result = await createPlan("Title", { name: "Lisbon" }, "2024-02-01", "2024-02-10");
 
@@ -82,7 +86,9 @@ describe("createPlan action", () => {
   it("throws when the RPC returns an error", async () => {
     const error = new Error("failed");
     const rpc = vi.fn().mockResolvedValue({ data: null, error });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     await expect(createPlan("x", { name: "Y" }, "2024-01-01", "2024-01-02")).rejects.toBe(error);
   });
@@ -98,7 +104,9 @@ describe("createPlan action", () => {
       ],
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     await createPlan("Trip", { name: "Rome" }, "2024-01-01", "2024-01-02", "user-123");
 
@@ -107,7 +115,9 @@ describe("createPlan action", () => {
 
   it("throws when the RPC does not return data", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     await expect(createPlan("x", { name: "Y" }, "2024-01-01", "2024-01-02")).rejects.toThrow(
       "Failed to create plan"
@@ -123,7 +133,9 @@ describe("createPlan action", () => {
       },
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
     vi.mocked(fetchGeoapifyAutocomplete).mockClear();
 
     await createPlan("Rome Trip", { name: "Rome", country: " it " }, "2024-03-01", "2024-03-07");
@@ -141,7 +153,9 @@ describe("createPlan action", () => {
       },
       error: null,
     });
-    vi.mocked(supabaseServer).mockReturnValueOnce({ rpc } as unknown as ReturnType<typeof supabaseServer>);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
     const failure = new Error("network");
     vi.mocked(fetchGeoapifyAutocomplete).mockRejectedValueOnce(failure);
 

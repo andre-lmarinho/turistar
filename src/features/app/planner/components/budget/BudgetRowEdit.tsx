@@ -1,16 +1,17 @@
-'use client';
+"use client";
 
-import React, { useId } from 'react';
-import type { Entry } from '@/features/app/planner/types/budget';
-import { Check, X } from '@/shared/ui/icon';
-import { normalizeAmount } from '@/features/app/planner/domain/utils/normalizeAmount';
-import { useBudgetRowInputs } from '@/features/app/planner/hooks/ui/useBudgetRowInputs';
-import { BudgetRowInputs } from '@/features/app/planner/components/budget/BudgetRowInputs';
+import type { Dispatch, SetStateAction } from "react";
+import { useId } from "react";
+import { BudgetRowInputs } from "@/features/app/planner/components/budget/BudgetRowInputs";
+import { normalizeAmount } from "@/features/app/planner/domain/utils/normalizeAmount";
+import { useBudgetRowInputs } from "@/features/app/planner/hooks/ui/useBudgetRowInputs";
+import type { Entry } from "@/features/app/planner/types/budget";
+import { Check, X } from "@/shared/ui/icon";
 
 type BudgetRowEditProps = {
   index: number;
   editEntry: Entry;
-  setEditEntry: React.Dispatch<React.SetStateAction<Entry | null>>;
+  setEditEntry: Dispatch<SetStateAction<Entry | null>>;
   editAmountInput: string;
   setEditAmountInput: (value: string) => void;
   onSave: (index: number, entry: Entry) => void;
@@ -57,23 +58,21 @@ export function BudgetRowEdit({
   });
 
   return (
-    <tr role="row" className="border-t">
+    <tr className="border-t">
       <BudgetRowInputs {...budgetRowInputs} />
-      <td role="gridcell" className="flex justify-end gap-2 p-2 text-right">
+      <td className="flex justify-end gap-2 p-2 text-right">
         <button
           type="button"
           onClick={() => onSave(index, editEntry)}
           aria-label="Save entry"
-          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors"
-        >
+          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors">
           <Check className="size-4" aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={onCancel}
           aria-label="Cancel edit"
-          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors"
-        >
+          className="border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full border transition-colors">
           <X className="size-4" aria-hidden="true" />
         </button>
       </td>

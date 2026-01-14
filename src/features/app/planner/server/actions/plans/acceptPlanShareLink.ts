@@ -2,12 +2,12 @@
 
 import { acceptPlanShareLink as acceptPlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
 import { ensureProfile } from "@/features/auth/lib/ensureProfile";
-import { supabaseServer } from "@/shared/lib/supabaseServer";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export type AcceptShareLinkResult = { success: true; planId: string } | { success: false; error: string };
 
 export async function acceptPlanShareLink(token: string): Promise<AcceptShareLinkResult> {
-  const supabase = supabaseServer();
+  const supabase = createSupabaseServerClient();
 
   try {
     await ensureProfile({ client: supabase });

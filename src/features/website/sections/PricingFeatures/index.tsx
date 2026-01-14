@@ -1,9 +1,9 @@
-import { Section, Container } from '@/features/website/ui/wrapper';
-import { H2, P, Eyebrow } from '@/features/website/ui/typography';
-import { CTAButton } from '@/features/website/ui/button';
-import { Flame } from '@/shared/ui/icon';
+import { CTAButton } from "@/features/website/ui/button";
+import { Eyebrow, H2, P } from "@/features/website/ui/typography";
+import { Container, Section } from "@/features/website/ui/wrapper";
+import { Flame } from "@/shared/ui/icon";
 
-import { FeatureTable } from './components/FeatureTable';
+import { FeatureTable } from "./components/FeatureTable";
 
 export function PricingFeature() {
   return (

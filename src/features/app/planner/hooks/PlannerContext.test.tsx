@@ -1,21 +1,19 @@
-import React from 'react';
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
-import type { Mock } from 'vitest';
-
-import { PlannerProvider, usePlannerContext } from './PlannerContext';
-
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { act, renderHook, waitFor } from "@testing-library/react";
+import type React from "react";
+import type { Mock } from "vitest";
+import { vi } from "vitest";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
+import { PlannerProvider, usePlannerContext } from "./PlannerContext";
 
 // Mock hooks used inside PlannerContext
-vi.mock('@/features/app/planner/hooks/state/planner/usePlanner', () => {
-  const React = require('react');
+vi.mock("@/features/app/planner/hooks/state/planner/usePlanner", () => {
+  const React = require("react");
   return {
     usePlanner: ({ initialDays }: { initialDays?: DayPlan[] }) => {
       const [days, setDays] = React.useState(initialDays ?? []);
       return {
-        planId: 'p1',
-        dest: 'rome',
+        planId: "p1",
+        dest: "rome",
         days,
         setDays,
         currentRange: undefined,
@@ -40,9 +38,9 @@ vi.mock('@/features/app/planner/hooks/state/planner/usePlanner', () => {
                 ...day.activities,
                 {
                   id: Math.random().toString(),
-                  title: 'New',
-                  category: 'general',
-                  color: 'bg-[var(--color-1)]',
+                  title: "New",
+                  category: "general",
+                  color: "bg-[var(--color-1)]",
                 },
               ],
             };
@@ -53,7 +51,7 @@ vi.mock('@/features/app/planner/hooks/state/planner/usePlanner', () => {
   };
 });
 
-vi.mock('@/features/app/planner/hooks/state/planner/useSelectedActivity', () => ({
+vi.mock("@/features/app/planner/hooks/state/planner/useSelectedActivity", () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: vi.fn(),
@@ -65,7 +63,7 @@ vi.mock('@/features/app/planner/hooks/state/planner/useSelectedActivity', () => 
     changeColor: vi.fn(),
   }),
 }));
-vi.mock('@/features/app/planner/hooks/data/usePlanCollaboration', () => ({
+vi.mock("@/features/app/planner/hooks/data/usePlanCollaboration", () => ({
   usePlanCollaboration: () => ({
     data: storedDays,
     persistDays,
@@ -74,7 +72,7 @@ vi.mock('@/features/app/planner/hooks/data/usePlanCollaboration', () => ({
     version: 1,
   }),
 }));
-vi.mock('@/features/app/planner/hooks/search/useDebounce', () => ({
+vi.mock("@/features/app/planner/hooks/search/useDebounce", () => ({
   useDebounce: <T,>(value: T) => value,
 }));
 // Mock usePlanCollaboration hook state
@@ -87,12 +85,12 @@ let persistDays: {
   mutate: vi.fn(),
   isPending: false,
 };
-let storedDays: DayPlan[] | undefined = undefined;
+let storedDays: DayPlan[] | undefined;
 
-describe('PlannerProvider synchronization', () => {
-  const initialDays: DayPlan[] = [{ id: '2023-01-01', label: 'Day 1', activities: [] }];
+describe("PlannerProvider synchronization", () => {
+  const initialDays: DayPlan[] = [{ id: "2023-01-01", label: "Day 1", activities: [] }];
 
-  it('syncs after storedDays load and activity addition', async () => {
+  it("syncs after storedDays load and activity addition", async () => {
     persistDays = {
       mutateAsync: vi.fn(() => {
         persistDays.isPending = true;
@@ -124,11 +122,11 @@ describe('PlannerProvider synchronization', () => {
     await waitFor(() => expect(persistDays.mutateAsync).toHaveBeenCalledTimes(1));
   });
 
-  it('reverts local state when persistence fails', async () => {
+  it("reverts local state when persistence fails", async () => {
     persistDays = {
       mutateAsync: vi.fn(() => {
         persistDays.isPending = true;
-        return Promise.reject(new Error('fail')).finally(() => {
+        return Promise.reject(new Error("fail")).finally(() => {
           persistDays.isPending = false;
         });
       }),

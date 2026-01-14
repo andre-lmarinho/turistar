@@ -1,21 +1,19 @@
-'use client';
+"use client";
 
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { motion, useMotionValue, animate } from 'framer-motion';
-import type { ValueAnimationTransition } from 'framer-motion';
+import type { ValueAnimationTransition } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useElementMeasure } from "@/features/app/planner/hooks/ui/useElementMeasure";
+import type { LucideIcon } from "@/shared/ui/icon";
+import { DollarSign, List, Map as MapIcon } from "@/shared/ui/icon";
 
-import type { LucideIcon } from '@/shared/ui/icon';
-import { List, Map, DollarSign } from '@/shared/ui/icon';
-
-import { useElementMeasure } from '@/features/app/planner/hooks/ui/useElementMeasure';
-
-type Mode = 'planner' | 'map' | 'budget';
-const modes: Mode[] = ['planner', 'map', 'budget'];
+type Mode = "planner" | "map" | "budget";
+const modes: Mode[] = ["planner", "map", "budget"];
 
 const MODE_CONFIG: Record<Mode, { label: string; icon: LucideIcon }> = {
-  planner: { label: 'Planner', icon: List },
-  map: { label: 'Map', icon: Map },
-  budget: { label: 'Budget', icon: DollarSign },
+  planner: { label: "Planner", icon: List },
+  map: { label: "Map", icon: MapIcon },
+  budget: { label: "Budget", icon: DollarSign },
 };
 
 interface ModeToggleButtonProps {
@@ -24,7 +22,7 @@ interface ModeToggleButtonProps {
 }
 
 export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
-  const { ref: containerRef, rect: containerRect } = useElementMeasure<HTMLDivElement>({
+  const { ref: containerRef, rect: containerRect } = useElementMeasure<HTMLFieldSetElement>({
     rect: true,
   });
   const highlightX = useMotionValue(0);
@@ -40,7 +38,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
     const el = containerRef.current;
     if (!el || !containerRect) return;
 
-    const btns = Array.from(el.querySelectorAll<HTMLButtonElement>('button'));
+    const btns = Array.from(el.querySelectorAll<HTMLButtonElement>("button"));
     const idx = modes.indexOf(value);
     const btn = btns[idx];
     if (!btn) return;
@@ -50,7 +48,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
     const newW = bWidth - 8;
 
     const spring: ValueAnimationTransition<number> = {
-      type: 'spring',
+      type: "spring",
       stiffness: 300,
       damping: 30,
     };
@@ -67,12 +65,10 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
 
   return (
     <div className="inline-flex">
-      <div
+      <fieldset
         ref={containerRef}
-        role="group"
-        aria-label="View mode selector"
-        className="bg-background border-border relative flex min-w-[200px] overflow-hidden rounded-md border"
-      >
+        className="bg-background border-border relative m-0 flex min-w-[200px] overflow-hidden rounded-md border p-0">
+        <legend className="sr-only">View mode selector</legend>
         {ready && (
           <motion.div
             initial={false}
@@ -92,9 +88,8 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
               onClick={() => onChange(mode)}
               aria-pressed={selected}
               className={`relative z-10 h-10 flex-1 cursor-pointer px-2 text-sm font-medium transition-colors ${
-                selected ? 'text-primary-foreground' : 'text-foreground hover:text-foreground'
-              } `}
-            >
+                selected ? "text-primary-foreground" : "text-foreground hover:text-foreground"
+              } `}>
               <div className="flex h-full w-full items-center justify-center gap-2 p-2">
                 <Icon aria-hidden="true" className="h-4 w-4" />
                 {label}
@@ -102,7 +97,7 @@ export function ModeToggleButton({ value, onChange }: ModeToggleButtonProps) {
             </button>
           );
         })}
-      </div>
+      </fieldset>
     </div>
   );
 }

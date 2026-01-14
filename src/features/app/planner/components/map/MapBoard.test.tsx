@@ -1,11 +1,10 @@
-import React from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
+import type React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
-import { MapBoard } from './MapBoard';
-
-import { PlannerProvider } from '@/features/app/planner/hooks/PlannerContext';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { PlannerProvider } from "@/features/app/planner/hooks/PlannerContext";
+import { MapBoard } from "./MapBoard";
 
 const shared = vi.hoisted(() => ({
   map: { fitBounds: vi.fn() },
@@ -20,18 +19,15 @@ const shared = vi.hoisted(() => ({
   mockDestCoords: null as { lat: number; lng: number } | null,
 }));
 
-vi.mock('react-leaflet', () => {
-  const React = require('react');
+vi.mock("react-leaflet", () => {
+  const React = require("react");
   return {
     MapContainer: (props: { children: React.ReactNode; center?: unknown }) => {
       shared.containerProps = props;
       return <div>{props.children}</div>;
     },
     TileLayer: () => null,
-    Marker: (props: {
-      title?: string;
-      eventHandlers?: Record<string, (...args: unknown[]) => void>;
-    }) => {
+    Marker: (props: { title?: string; eventHandlers?: Record<string, (...args: unknown[]) => void> }) => {
       shared.markers.push(props);
       return null;
     },
@@ -43,7 +39,7 @@ vi.mock('react-leaflet', () => {
   };
 });
 
-vi.mock('leaflet', () => ({
+vi.mock("leaflet", () => ({
   __esModule: true,
   default: {
     divIcon: () => ({}),
@@ -51,15 +47,13 @@ vi.mock('leaflet', () => ({
   },
 }));
 
-vi.mock('@/features/app/planner/hooks/PlannerContext', () => {
+vi.mock("@/features/app/planner/hooks/PlannerContext", () => {
   return {
     __esModule: true,
-    PlannerProvider: ({ children }: { children: React.ReactNode; planId?: string }) => (
-      <>{children}</>
-    ),
+    PlannerProvider: ({ children }: { children: React.ReactNode; planId?: string }) => <>{children}</>,
     usePlannerContext: () => ({
-      planId: 'p1',
-      dest: 'rome',
+      planId: "p1",
+      dest: "rome",
       days: shared.mockDays,
       destCoords: shared.mockDestCoords,
       setSelectedActivity: shared.setSelectedActivity,
@@ -85,10 +79,10 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', () => {
   };
 });
 
-vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
+vi.mock("@/features/app/planner/hooks/usePlanner", () => ({
   usePlanner: () => ({
-    planId: 'p1',
-    dest: 'rome',
+    planId: "p1",
+    dest: "rome",
     days: shared.mockDays,
     destCoords: shared.mockDestCoords,
     setDays: vi.fn(),
@@ -109,7 +103,7 @@ vi.mock('@/features/app/planner/hooks/usePlanner', () => ({
   }),
 }));
 
-vi.mock('@/features/app/planner/hooks/useSelectedActivity', () => ({
+vi.mock("@/features/app/planner/hooks/useSelectedActivity", () => ({
   useSelectedActivity: () => ({
     selectedActivity: null,
     setSelectedActivity: shared.setSelectedActivity,
@@ -143,18 +137,18 @@ beforeEach(() => {
   shared.setSelectedActivity.mockClear();
 });
 
-describe.skip('FitAllMarkers effect', () => {
-  const baseActivity = { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]' };
+describe.skip("FitAllMarkers effect", () => {
+  const baseActivity = { id: "a1", title: "A1", color: "bg-[var(--color-1)]" };
 
   const buildDays = ([lat, lng]: [number, number]): DayPlan[] => [
     {
-      id: 'd1',
-      label: 'Day 1',
+      id: "d1",
+      label: "Day 1",
       activities: [{ ...baseActivity, latitude: lat, longitude: lng }],
     },
   ];
 
-  it('runs when coordinates change', () => {
+  it("runs when coordinates change", () => {
     shared.mockDays = buildDays([1, 1]);
 
     const { rerender } = render(
@@ -185,30 +179,28 @@ describe.skip('FitAllMarkers effect', () => {
   });
 });
 
-describe.skip('Marker accessibility', () => {
-  it('sets each marker title', () => {
+describe.skip("Marker accessibility", () => {
+  it("sets each marker title", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "Walk", color: "bg-[var(--color-1)]", latitude: 1, longitude: 1 }],
       },
     ];
 
     renderMapBoard(days);
-    expect(shared.markers[0].title).toBe('Walk');
+    expect(shared.markers[0].title).toBe("Walk");
   });
 
-  it('does not render a path for multiple activities', () => {
+  it("does not render a path for multiple activities", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
+        id: "d1",
+        label: "Day 1",
         activities: [
-          { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
-          { id: 'a2', title: 'A2', color: 'bg-[var(--color-1)]', latitude: 2, longitude: 2 },
+          { id: "a1", title: "A1", color: "bg-[var(--color-1)]", latitude: 1, longitude: 1 },
+          { id: "a2", title: "A2", color: "bg-[var(--color-1)]", latitude: 2, longitude: 2 },
         ],
       },
     ];
@@ -217,45 +209,41 @@ describe.skip('Marker accessibility', () => {
     expect(shared.polylines.length).toBe(0);
   });
 
-  it('uses provided center coordinates when no activities', () => {
-    const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
+  it("uses provided center coordinates when no activities", () => {
+    const days: DayPlan[] = [{ id: "d1", label: "Day 1", activities: [] }];
 
     renderMapBoard(days, { lat: 5, lng: 6 });
-    expect(shared.containerProps!.center).toEqual([5, 6]);
+    expect(shared.containerProps?.center).toEqual([5, 6]);
   });
 });
 
-describe('map render integration', () => {
-  it('renders markers for activities', () => {
+describe("map render integration", () => {
+  it("renders markers for activities", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "Walk", color: "bg-[var(--color-1)]", latitude: 1, longitude: 1 }],
       },
     ];
 
     renderMapBoard(days);
-    expect(shared.markers[0].title).toBe('Walk');
+    expect(shared.markers[0].title).toBe("Walk");
   });
 
-  it('centers map using provided coordinates', () => {
-    const days: DayPlan[] = [{ id: 'd1', label: 'Day 1', activities: [] }];
+  it("centers map using provided coordinates", () => {
+    const days: DayPlan[] = [{ id: "d1", label: "Day 1", activities: [] }];
 
     renderMapBoard(days, { lat: 3, lng: 4 });
-    expect(shared.containerProps!.center).toEqual([3, 4]);
+    expect(shared.containerProps?.center).toEqual([3, 4]);
   });
 
-  it('selects activity when marker clicked', () => {
+  it("selects activity when marker clicked", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "Walk", color: "bg-[var(--color-1)]", latitude: 1, longitude: 1 }],
       },
     ];
 
@@ -263,16 +251,16 @@ describe('map render integration', () => {
     shared.markers[0].eventHandlers?.click?.();
 
     expect(shared.setSelectedActivity).toHaveBeenCalledWith(
-      expect.objectContaining({ id: 'a1', dayId: 'd1' })
+      expect.objectContaining({ id: "a1", dayId: "d1" })
     );
   });
 
-  it('handles activities missing coordinates', () => {
+  it("handles activities missing coordinates", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [{ id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]' }],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "Walk", color: "bg-[var(--color-1)]" }],
       },
     ];
 
@@ -281,14 +269,12 @@ describe('map render integration', () => {
     expect(shared.map.fitBounds).not.toHaveBeenCalled();
   });
 
-  it('updates map bounds when days change', () => {
+  it("updates map bounds when days change", () => {
     const buildDays = (lat: number, lng: number): DayPlan[] => [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title: 'A1', color: 'bg-[var(--color-1)]', latitude: lat, longitude: lng },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "A1", color: "bg-[var(--color-1)]", latitude: lat, longitude: lng }],
       },
     ];
 
@@ -301,14 +287,12 @@ describe('map render integration', () => {
     expect(shared.map.fitBounds).toHaveBeenCalledTimes(1);
   });
 
-  it('selects activity on marker context menu', () => {
+  it("selects activity on marker context menu", () => {
     const days: DayPlan[] = [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title: 'Walk', color: 'bg-[var(--color-1)]', latitude: 1, longitude: 1 },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title: "Walk", color: "bg-[var(--color-1)]", latitude: 1, longitude: 1 }],
       },
     ];
 
@@ -321,32 +305,30 @@ describe('map render integration', () => {
 
     expect(preventDefault).toHaveBeenCalled();
     expect(shared.setSelectedActivity).toHaveBeenCalledWith(
-      expect.objectContaining({ id: 'a1', dayId: 'd1' })
+      expect.objectContaining({ id: "a1", dayId: "d1" })
     );
   });
 
-  it('falls back to default center when no coordinates provided', () => {
+  it("falls back to default center when no coordinates provided", () => {
     renderMapBoard([]);
-    expect(shared.containerProps!.center).toEqual([0, 0]);
+    expect(shared.containerProps?.center).toEqual([0, 0]);
     expect(shared.map.fitBounds).not.toHaveBeenCalled();
   });
 
-  it('adds markers when days update dynamically', () => {
+  it("adds markers when days update dynamically", () => {
     const buildDays = (title: string, lat: number, lng: number): DayPlan[] => [
       {
-        id: 'd1',
-        label: 'Day 1',
-        activities: [
-          { id: 'a1', title, color: 'bg-[var(--color-1)]', latitude: lat, longitude: lng },
-        ],
+        id: "d1",
+        label: "Day 1",
+        activities: [{ id: "a1", title, color: "bg-[var(--color-1)]", latitude: lat, longitude: lng }],
       },
     ];
 
-    renderMapBoard(buildDays('A1', 1, 1));
+    renderMapBoard(buildDays("A1", 1, 1));
     expect(shared.markers).toHaveLength(1);
 
-    renderMapBoard(buildDays('A2', 2, 2));
+    renderMapBoard(buildDays("A2", 2, 2));
     expect(shared.markers).toHaveLength(2);
-    expect(shared.markers[1].title).toBe('A2');
+    expect(shared.markers[1].title).toBe("A2");
   });
 });

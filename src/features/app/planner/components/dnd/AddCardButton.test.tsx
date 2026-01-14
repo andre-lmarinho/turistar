@@ -1,13 +1,13 @@
-import { vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { vi } from "vitest";
 
-import { ACTIVITY_COPY } from '@/features/app/planner/domain/constants/activity';
+import { ACTIVITY_COPY } from "@/features/app/planner/domain/constants/activity";
 
 type ButtonProps = {
   dayId: string;
   insertIndex: number;
   className?: string;
-  placement?: 'between' | 'end';
+  placement?: "between" | "end";
   onInlineOpen?: (index: number) => void;
   isInlineOpen?: boolean;
   isHidden?: boolean;
@@ -15,7 +15,7 @@ type ButtonProps = {
 
 const addBlankAndSelect = vi.fn();
 
-vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
+vi.mock("@/features/app/planner/hooks/PlannerContext", () => ({
   usePlannerContext: () => ({
     addBlankAndSelect,
     canEdit: true,
@@ -24,7 +24,7 @@ vi.mock('@/features/app/planner/hooks/PlannerContext', () => ({
 
 const copy = ACTIVITY_COPY.inlineAdd;
 
-describe('AddCardButton', () => {
+describe("AddCardButton", () => {
   beforeEach(() => {
     vi.resetModules();
     addBlankAndSelect.mockReset();
@@ -32,49 +32,49 @@ describe('AddCardButton', () => {
   });
 
   const renderButton = async (props: Partial<ButtonProps> = {}) => {
-    const addCardModule = await import('./AddCardButton');
+    const addCardModule = await import("./AddCardButton");
     const { AddCardButton } = addCardModule;
     return render(<AddCardButton dayId="d1" insertIndex={props.insertIndex ?? 0} {...props} />);
   };
 
-  it('renders a collapsed trigger with accessible label', async () => {
+  it("renders a collapsed trigger with accessible label", async () => {
     await renderButton();
 
-    const trigger = screen.getByRole('button', { name: copy.collapsedLabel });
+    const trigger = screen.getByRole("button", { name: copy.collapsedLabel });
     expect(trigger).toBeInTheDocument();
-    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
-  it('invokes onInlineOpen when inline add is enabled', async () => {
+  it("invokes onInlineOpen when inline add is enabled", async () => {
     const onInlineOpen = vi.fn();
     await renderButton({ onInlineOpen, insertIndex: 2 });
 
-    fireEvent.click(screen.getByRole('button', { name: copy.collapsedLabel }));
+    fireEvent.click(screen.getByRole("button", { name: copy.collapsedLabel }));
 
     expect(onInlineOpen).toHaveBeenCalledWith(2);
     expect(addBlankAndSelect).not.toHaveBeenCalled();
   });
 
-  it('falls back to dialog creation when no inline handler is provided', async () => {
+  it("falls back to dialog creation when no inline handler is provided", async () => {
     await renderButton();
 
-    fireEvent.click(screen.getByRole('button', { name: copy.collapsedLabel }));
+    fireEvent.click(screen.getByRole("button", { name: copy.collapsedLabel }));
 
-    expect(addBlankAndSelect).toHaveBeenCalledWith('d1', 0);
+    expect(addBlankAndSelect).toHaveBeenCalledWith("d1", 0);
   });
 
-  it('uses aria-expanded to reflect open state', async () => {
+  it("uses aria-expanded to reflect open state", async () => {
     await renderButton({ isInlineOpen: true });
 
-    expect(screen.getByRole('button', { name: copy.collapsedLabel })).toHaveAttribute(
-      'aria-expanded',
-      'true'
+    expect(screen.getByRole("button", { name: copy.collapsedLabel })).toHaveAttribute(
+      "aria-expanded",
+      "true"
     );
   });
 
-  it('applies the hidden class when requested', async () => {
+  it("applies the hidden class when requested", async () => {
     await renderButton({ isHidden: true });
 
-    expect(screen.getByRole('button', { name: copy.collapsedLabel })).toHaveClass('hidden');
+    expect(screen.getByRole("button", { name: copy.collapsedLabel })).toHaveClass("hidden");
   });
 });

@@ -13,7 +13,7 @@
  */
 export function getPublicSiteUrl(): string {
   // 1) Browser runtime
-  if (typeof window !== 'undefined' && typeof window.location?.origin === 'string') {
+  if (typeof window !== "undefined" && typeof window.location?.origin === "string") {
     return stripTrailingSlash(window.location.origin);
   }
 
@@ -26,17 +26,17 @@ export function getPublicSiteUrl(): string {
   // 3) Vercel-provided deployment URL (domain without scheme)
   const vercel = process.env.NEXT_PUBLIC_VERCEL_URL ?? process.env.VERCEL_URL;
   if (vercel && vercel.length > 0) {
-    const withScheme = vercel.startsWith('http') ? vercel : `https://${vercel}`;
+    const withScheme = vercel.startsWith("http") ? vercel : `https://${vercel}`;
     return stripTrailingSlash(withScheme);
   }
 
   // 4) Fallback: local dev
-  const port = process.env.PORT ?? '3000';
+  const port = process.env.PORT ?? "3000";
   return `http://localhost:${port}`;
 }
 
 function stripTrailingSlash(url: string): string {
-  return url.endsWith('/') ? url.slice(0, -1) : url;
+  return url.endsWith("/") ? url.slice(0, -1) : url;
 }
 
 // Default export removed to prefer named imports.

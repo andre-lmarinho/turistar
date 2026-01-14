@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @theme inline {
   --color-background: var(--background);
@@ -137,21 +137,15 @@
 }
 
 /* Hide vertical scrollbar in DayColumn */
-[data-testid='day-scroll'] {
+[data-testid="day-scroll"] {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-[data-testid='day-scroll']::-webkit-scrollbar {
+[data-testid="day-scroll"]::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 
 /* Leaflet z-index resets */
 .leaflet-container {
   position: relative;
-}
-
-.leaflet-container,
-.leaflet-container .leaflet-pane,
-.leaflet-container .leaflet-control-container {
-  z-index: 0 !important;
 }

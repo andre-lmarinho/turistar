@@ -1,35 +1,24 @@
-'use client';
+"use client";
 
-import type { PlanEvent, PlanEventInsert, PlanSnapshot } from '@/features/app/planner/domain/types/PlanEvent';
+import type { PlanEvent, PlanEventInsert, PlanSnapshot } from "@/features/app/planner/domain/types/PlanEvent";
 
 type SnapshotResponse = { snapshot?: PlanSnapshot | null };
 type EventsResponse = { events?: PlanEvent[] | null };
 type AppendResponse = { version?: number | null; events?: PlanEvent[] | null };
 
 function getRequestMetadata(input: RequestInfo, init?: RequestInit): { method: string; url: string } {
-  const method = init?.method ?? (input instanceof Request ? input.method : 'GET');
-  const url =
-    typeof input === 'string'
-      ? input
-      : input instanceof Request
-        ? input.url
-        : String(input);
+  const method = init?.method ?? (input instanceof Request ? input.method : "GET");
+  const url = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
 
   return { method, url };
 }
 
-async function fetchJson<T>(
-  input: RequestInfo,
-  init?: RequestInit,
-  context?: string
-): Promise<T> {
+async function fetchJson<T>(input: RequestInfo, init?: RequestInit, context?: string): Promise<T> {
   const response = await fetch(input, init);
   if (!response.ok) {
     const { method, url } = getRequestMetadata(input, init);
-    const contextText = context ? `${context} ` : '';
-    throw new Error(
-      `fetchJson failed: ${contextText}method=${method} url=${url} status=${response.status}`
-    );
+    const contextText = context ? `${context} ` : "";
+    throw new Error(`fetchJson failed: ${contextText}method=${method} url=${url} status=${response.status}`);
   }
   return (await response.json()) as T;
 }
@@ -37,7 +26,7 @@ async function fetchJson<T>(
 export async function fetchPlanSnapshot(planId: string): Promise<PlanSnapshot> {
   const data = await fetchJson<SnapshotResponse>(
     `/api/plans/events/snapshot?planId=${encodeURIComponent(planId)}`,
-    { method: 'GET', credentials: 'same-origin' },
+    { method: "GET", credentials: "same-origin" },
     `operation=fetchPlanSnapshot planId=${planId}`
   );
 
@@ -56,8 +45,8 @@ export async function fetchPlanEvents(planId: string, sinceVersion: number): Pro
   const data = await fetchJson<EventsResponse>(
     `/api/plans/events?${params.toString()}`,
     {
-      method: 'GET',
-      credentials: 'same-origin',
+      method: "GET",
+      credentials: "same-origin",
     },
     `operation=fetchPlanEvents planId=${planId} sinceVersion=${sinceVersion}`
   );
@@ -71,17 +60,17 @@ export async function appendPlanEvents(
   events: PlanEventInsert[]
 ): Promise<{ version: number; events: PlanEvent[] }> {
   const data = await fetchJson<AppendResponse>(
-    '/api/plans/events/append',
+    "/api/plans/events/append",
     {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ planId, baseVersion, events }),
     },
     `operation=appendPlanEvents planId=${planId} baseVersion=${baseVersion}`
   );
 
-  if (typeof data.version !== 'number') {
+  if (typeof data.version !== "number") {
     throw new Error(`Invalid append response: planId=${planId} baseVersion=${baseVersion}`);
   }
 

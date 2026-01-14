@@ -1,13 +1,13 @@
-'use server';
+"use server";
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { revokePlanShareLink as revokePlanShareLinkRpc } from '@/features/app/planner/server/repositories/PlanShareRepository';
-import { supabaseServer } from '@/shared/lib/supabaseServer';
+import { revokePlanShareLink as revokePlanShareLinkRpc } from "@/features/app/planner/server/repositories/PlanShareRepository";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 export async function revokePlanShareLink(
   planId: string,
-  client: SupabaseClient = supabaseServer()
+  client: SupabaseClient = createSupabaseServerClient()
 ): Promise<boolean> {
   const supabase = client;
   const revoked = await revokePlanShareLinkRpc(planId, { client: supabase });

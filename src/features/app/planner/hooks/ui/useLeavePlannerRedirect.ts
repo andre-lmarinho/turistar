@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import type { PlanMemberProfile } from '@/features/app/planner/hooks/data/usePlanSharing';
+import { useRouter } from "next/navigation";
+import type { PlanMemberProfile } from "@/features/app/planner/hooks/data/usePlanSharing";
 
 type EnsureProfileResponse = {
   slug?: string | null;
@@ -13,9 +13,9 @@ type ProfileSlugResponse = {
 
 async function fetchProfileSlug(): Promise<string | null> {
   try {
-    const response = await fetch('/api/profile/slug', {
-      method: 'GET',
-      credentials: 'same-origin',
+    const response = await fetch("/api/profile/slug", {
+      method: "GET",
+      credentials: "same-origin",
     });
 
     if (!response.ok) {
@@ -23,7 +23,7 @@ async function fetchProfileSlug(): Promise<string | null> {
     }
 
     const data = (await response.json()) as ProfileSlugResponse;
-    if (typeof data.slug !== 'string' || data.slug.trim().length === 0) {
+    if (typeof data.slug !== "string" || data.slug.trim().length === 0) {
       return null;
     }
 
@@ -35,9 +35,9 @@ async function fetchProfileSlug(): Promise<string | null> {
 
 async function ensureProfileSlug(): Promise<string | null> {
   try {
-    const response = await fetch('/api/profile/ensure', {
-      method: 'POST',
-      credentials: 'same-origin',
+    const response = await fetch("/api/profile/ensure", {
+      method: "POST",
+      credentials: "same-origin",
     });
 
     if (!response.ok) {
@@ -45,7 +45,7 @@ async function ensureProfileSlug(): Promise<string | null> {
     }
 
     const data = (await response.json()) as EnsureProfileResponse;
-    if (typeof data.slug !== 'string' || data.slug.trim().length === 0) {
+    if (typeof data.slug !== "string" || data.slug.trim().length === 0) {
       return null;
     }
 
@@ -68,15 +68,14 @@ export function useLeavePlannerRedirect({ viewerUserId, leave }: UseLeavePlanner
       return `/u/${member.slug}/planners`;
     }
     if (!viewerUserId) {
-      return '/';
+      return "/";
     }
-    let profileSlug: string | null = null;
-    profileSlug = await fetchProfileSlug();
+    const profileSlug = await fetchProfileSlug();
     if (profileSlug) {
       return `/u/${profileSlug}/planners`;
     }
     const slug = await ensureProfileSlug();
-    return slug ? `/u/${slug}/planners` : '/';
+    return slug ? `/u/${slug}/planners` : "/";
   };
 
   const handleLeave = async (member: PlanMemberProfile) => {

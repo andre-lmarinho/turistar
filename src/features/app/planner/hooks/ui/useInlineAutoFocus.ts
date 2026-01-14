@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect } from 'react';
+import { type RefObject, useCallback, useEffect } from "react";
 
 export function useInlineAutoFocus(inputRef: RefObject<HTMLInputElement | null>) {
   const focusInput = useCallback(() => {
@@ -8,22 +8,22 @@ export function useInlineAutoFocus(inputRef: RefObject<HTMLInputElement | null>)
     input.focus();
     const length = input.value.length;
     input.setSelectionRange(length, length);
-    if (typeof input.scrollIntoView === 'function') {
-      input.scrollIntoView({ block: 'center' });
+    if (typeof input.scrollIntoView === "function") {
+      input.scrollIntoView({ block: "center" });
     }
   }, [inputRef]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(focusInput);
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const viewport = window.visualViewport ?? null;
       if (viewport) {
         const handler = () => focusInput();
-        viewport.addEventListener('resize', handler);
+        viewport.addEventListener("resize", handler);
         return () => {
           cancelAnimationFrame(frame);
-          viewport.removeEventListener('resize', handler);
+          viewport.removeEventListener("resize", handler);
         };
       }
     }

@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import type { DayPlan, Activity } from '@/features/app/planner/domain/types/PlannerEntities';
+import { useMemo } from "react";
+import type { Activity, DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Creates a lookup table for all activities by their ID.

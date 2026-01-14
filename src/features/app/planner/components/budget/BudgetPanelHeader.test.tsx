@@ -1,9 +1,7 @@
-import { vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-
-import { BudgetPanelHeader } from './BudgetPanelHeader';
-
-import { BudgetProvider } from '@/features/app/planner/hooks/BudgetContext';
+import { render, screen, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+import { BudgetProvider } from "@/features/app/planner/hooks/BudgetContext";
+import { BudgetPanelHeader } from "./BudgetPanelHeader";
 
 const mocks = vi.hoisted(() => ({
   getPlanBudget: vi.fn(),
@@ -13,23 +11,23 @@ const mocks = vi.hoisted(() => ({
   deleteBudgetEntry: vi.fn(),
 }));
 
-vi.mock('@/app/(webapp)/p/actions/plans/getPlanBudget', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/getPlanBudget", () => ({
   getPlanBudget: mocks.getPlanBudget,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/updatePlanBudget', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/updatePlanBudget", () => ({
   updatePlanBudget: mocks.updatePlanBudget,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/createBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/createBudgetEntry", () => ({
   createBudgetEntry: mocks.createBudgetEntry,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/updateBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/updateBudgetEntry", () => ({
   updateBudgetEntry: mocks.updateBudgetEntry,
 }));
-vi.mock('@/app/(webapp)/p/actions/plans/deleteBudgetEntry', () => ({
+vi.mock("@/features/app/planner/server/actions/plans/deleteBudgetEntry", () => ({
   deleteBudgetEntry: mocks.deleteBudgetEntry,
 }));
 
-describe('BudgetPanelHeader', () => {
+describe("BudgetPanelHeader", () => {
   beforeEach(() => {
     mocks.getPlanBudget.mockReset();
     mocks.updatePlanBudget.mockReset();
@@ -38,7 +36,7 @@ describe('BudgetPanelHeader', () => {
     mocks.deleteBudgetEntry.mockReset();
   });
 
-  it('displays stored plan budget on load', async () => {
+  it("displays stored plan budget on load", async () => {
     mocks.getPlanBudget.mockResolvedValue({ budget: 123, entries: [] });
 
     render(
@@ -47,6 +45,6 @@ describe('BudgetPanelHeader', () => {
       </BudgetProvider>
     );
 
-    await waitFor(() => expect(screen.getByPlaceholderText('Budget')).toHaveValue('123'));
+    await waitFor(() => expect(screen.getByPlaceholderText("Budget")).toHaveValue("123"));
   });
 });

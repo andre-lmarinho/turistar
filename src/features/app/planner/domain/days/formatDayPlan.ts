@@ -1,5 +1,5 @@
-import { formatISO, format } from 'date-fns';
-import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntities';
+import { format, formatISO } from "date-fns";
+import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 
 /**
  * Formats a single date into a DayPlan structure.
@@ -8,9 +8,9 @@ import type { DayPlan } from '@/features/app/planner/domain/types/PlannerEntitie
  *
  * This helper ensures consistent ID and label formatting across the planner.
  */
-export function formatDayPlan(date: Date): Pick<DayPlan, 'id' | 'label'> {
+export function formatDayPlan(date: Date): Pick<DayPlan, "id" | "label"> {
   return {
-    id: formatISO(date, { representation: 'date' }),
-    label: format(date, 'EEE, dd MMM'),
+    id: formatISO(date, { representation: "date" }),
+    label: format(date, "EEE, dd MMM"),
   };
 }

@@ -1,14 +1,14 @@
-import { CtaFinal } from '@/features/website/sections/CTAFinal';
-import { CtaMidPage } from '@/features/website/sections/CTAMidPage';
-import { Features } from '@/features/website/sections/Features';
-import { Faq } from '@/features/website/sections/PlanningFAQ';
-import type { FaqProps } from '@/features/website/sections/PlanningFAQ';
-import { HeroPlanning } from '@/features/website/sections/Hero';
-import type { HeroPlanningProps } from '@/features/website/sections/Hero';
-import { KeyBenefits } from '@/features/website/sections/KeyBenefits';
-import type { KeyBenefitsProps } from '@/features/website/sections/KeyBenefits';
-import { Testimonial } from '@/features/website/sections/Testimonial';
-import { TrustedBy } from '@/features/website/sections/TrustedBy';
+import { CtaFinal } from "@/features/website/sections/CTAFinal";
+import { CtaMidPage } from "@/features/website/sections/CTAMidPage";
+import { Features } from "@/features/website/sections/Features";
+import type { HeroPlanningProps } from "@/features/website/sections/Hero";
+import { HeroPlanning } from "@/features/website/sections/Hero";
+import type { KeyBenefitsProps } from "@/features/website/sections/KeyBenefits";
+import { KeyBenefits } from "@/features/website/sections/KeyBenefits";
+import type { FaqProps } from "@/features/website/sections/PlanningFAQ";
+import { Faq } from "@/features/website/sections/PlanningFAQ";
+import { Testimonial } from "@/features/website/sections/Testimonial";
+import { TrustedBy } from "@/features/website/sections/TrustedBy";
 
 export interface PlanningPageContent {
   hero: HeroPlanningProps;

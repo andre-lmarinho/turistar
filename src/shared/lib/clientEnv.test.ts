@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const ORIGINAL_ENV = { ...process.env };
 
-describe('clientEnv', () => {
+describe("clientEnv", () => {
   beforeEach(() => {
     vi.resetModules();
     process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
@@ -13,19 +13,16 @@ describe('clientEnv', () => {
     process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
   });
 
-  it.each(['1', 'true', 'yes'])(
-    'uses fallback values when CI=%s via truthy string',
-    async (ciValue) => {
-      process.env.CI = ciValue;
-      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
-      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      delete process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
+  it.each(["1", "true", "yes"])("uses fallback values when CI=%s via truthy string", async (ciValue) => {
+    process.env.CI = ciValue;
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    delete process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 
-      const { clientEnv } = await import('./clientEnv');
+    const { clientEnv } = await import("./clientEnv");
 
-      expect(clientEnv.NEXT_PUBLIC_SUPABASE_URL).toBe('http://localhost:54321');
-      expect(clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY).toBe('anon');
-      expect(clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY).toBe('test-key');
-    }
-  );
+    expect(clientEnv.NEXT_PUBLIC_SUPABASE_URL).toBe("http://localhost:54321");
+    expect(clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY).toBe("anon");
+    expect(clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY).toBe("test-key");
+  });
 });
