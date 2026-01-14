@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { PlanEventInsert } from "@/features/app/planner/domain/types/PlanEvent";
-import { appendPlanEvents } from "@/features/app/planner/server/actions/plans/appendPlanEvents";
+import { appendPlanEvents } from "@/features/app/planner/services/supabase/planEventsQueries";
 
 type AppendBody = {
   planId?: string;
