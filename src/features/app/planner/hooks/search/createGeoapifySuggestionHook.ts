@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { GEOAPIFY_MIN_QUERY_LENGTH } from '@/features/app/planner/services/geoapify/config';
+import { useQuery } from "@tanstack/react-query";
+import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/shared/lib/geoapify/config";
 
 interface SuggestionHookOptions {
   enabled?: boolean;
@@ -32,7 +32,7 @@ export function createGeoapifySuggestionHook<TResult>({
   endpoint,
   queryKeyPrefix,
   minimumQueryLength = GEOAPIFY_MIN_QUERY_LENGTH,
-  paramName = 'text',
+  paramName = "text",
   mapResults,
 }: SuggestionHookConfig<TResult>): SuggestionHook<TResult> {
   return function useGeoapifySuggestions(
@@ -47,19 +47,19 @@ export function createGeoapifySuggestionHook<TResult>({
       queryFn: async ({ signal }) => {
         const params = new URLSearchParams({ [paramName]: trimmedQuery });
         if (options.latitude != null && options.longitude != null) {
-          params.set('lat', String(options.latitude));
-          params.set('lon', String(options.longitude));
+          params.set("lat", String(options.latitude));
+          params.set("lon", String(options.longitude));
         }
         const requestUrl = `${endpoint}?${params.toString()}`;
         const res = await fetch(requestUrl, signal ? { signal } : undefined);
         if (!res.ok) {
           const context = [
-            'operation=geoapifySuggestions',
+            "operation=geoapifySuggestions",
             `endpoint=${endpoint}`,
             `query=${trimmedQuery}`,
-            `lat=${options.latitude ?? 'null'}`,
-            `lon=${options.longitude ?? 'null'}`,
-          ].join(' ');
+            `lat=${options.latitude ?? "null"}`,
+            `lon=${options.longitude ?? "null"}`,
+          ].join(" ");
           throw new Error(`Failed to load suggestions: ${context}`);
         }
         const body = await res.json();
