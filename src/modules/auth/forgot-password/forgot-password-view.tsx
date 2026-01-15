@@ -8,9 +8,9 @@ import { sendResetPasswordEmail } from "@/features/auth/handlers/sendResetPasswo
 import { buildLoginHref, buildResetPasswordRedirectUrl, resolveNextPath } from "@/features/auth/lib/redirect";
 import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { validEmail } from "@/features/auth/utils/validEmail";
-import { AuthPageShell } from "@/modules/auth/layout/AuthPageShell";
 import { Button } from "@/shared/ui/button/Button";
 import { EmailField, Form } from "@/shared/ui/form";
+import { AccessShell } from "@/shared/ui/layout";
 
 const RESET_PASSWORD_FALLBACK = "Unable to reset password.";
 
@@ -39,7 +39,7 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
   };
 
   return (
-    <AuthPageShell
+    <AccessShell
       title="Forgot your password?"
       footer={
         <Link href={loginHref} className="text-foreground hover:underline">
@@ -71,6 +71,6 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
           {formState.isSubmitting ? "Sending link..." : "Send reset link"}
         </Button>
       </Form>
-    </AuthPageShell>
+    </AccessShell>
   );
 }

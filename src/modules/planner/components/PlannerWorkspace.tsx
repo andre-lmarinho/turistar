@@ -8,12 +8,12 @@ import { useEffect, useState } from "react";
 import { BudgetBoard } from "@/features/app/planner/components/budget/BudgetBoard";
 import { ActivityDialog } from "@/features/app/planner/components/dialog/ActivityDialog";
 import { PlannerBoard } from "@/features/app/planner/components/dnd/PlannerBoard";
-import { SharePlannerDialog } from "@/features/app/planner/components/share/SharePlannerDialog";
 import { ModeToggleButton } from "@/features/app/planner/components/ui/ModeToggleButton";
 import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
 import { PlannerProvider, usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
 import { updatePlanTitle } from "@/features/app/planner/server/actions/plans/updatePlanTitle";
 import type { Entry } from "@/features/app/planner/types/budget";
+import { SharePlannerDialog } from "@/features/share/components/SharePlannerDialog";
 import { DateRangePickerIcon } from "@/shared/ui/calendar";
 
 const MapBoard = dynamic(() => import("@/features/app/planner/components/map/MapBoard"), {

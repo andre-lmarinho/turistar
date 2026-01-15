@@ -9,7 +9,7 @@ const { addMemberMutateAsync, mockUsePlanMembers, mockUsePlannerContext } = vi.h
   mockUsePlannerContext: vi.fn(),
 }));
 
-vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
+vi.mock("@/features/share/hook/usePlanSharing", () => ({
   usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
 }));
 
@@ -47,7 +47,7 @@ describe("ShareInviteForm", () => {
 
     render(<ShareInviteForm planId="plan-1" />);
 
-    fireEvent.change(screen.getByPlaceholderText("Email address"), {
+    fireEvent.change(screen.getByPlaceholderText("Email address…"), {
       target: { value: "new-user@example.com" },
     });
     fireEvent.click(screen.getByRole("button", { name: /share/i }));
@@ -63,7 +63,7 @@ describe("ShareInviteForm", () => {
 
     render(<ShareInviteForm planId="plan-1" />);
 
-    const input = screen.getByPlaceholderText("Email address");
+    const input = screen.getByPlaceholderText("Email address…");
     fireEvent.change(input, { target: { value: " member@example.com " } });
     fireEvent.click(screen.getByRole("button", { name: /share/i }));
 
@@ -77,7 +77,7 @@ describe("ShareInviteForm", () => {
 
     render(<ShareInviteForm planId="plan-1" />);
 
-    expect(screen.getByPlaceholderText("Email address")).toBeDisabled();
+    expect(screen.getByPlaceholderText("Email address…")).toBeDisabled();
     expect(screen.getByRole("button", { name: /share/i })).toBeDisabled();
     expect(screen.getByText("Only admins can invite people.")).toBeVisible();
   });

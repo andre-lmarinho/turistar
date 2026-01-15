@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { usePlanShareLink } from "@/features/app/planner/hooks/data/usePlanSharing";
 import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import { usePlanShareLink } from "@/features/share/hook/usePlanSharing";
 import { Button } from "@/shared/ui/button";
 import { Check, Link2 } from "@/shared/ui/icon";
 import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";

@@ -4,7 +4,6 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 
 import { Share2, X } from "@/shared/ui/icon";
-
 import { ShareInviteForm } from "./ShareInviteForm";
 import { ShareLinkSection } from "./ShareLinkSection";
 import { ShareMembersSection } from "./ShareMembersSection";

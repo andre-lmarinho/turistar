@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { SelectMenu } from "@/features/app/planner/components/ui/SelectMenu";
-import { usePlanMembers } from "@/features/app/planner/hooks/data/usePlanSharing";
+
 import { usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
+import type { ShareTier } from "@/features/share/constants";
+import { SHARE_TIERS } from "@/features/share/constants";
+import { usePlanMembers } from "@/features/share/hook/usePlanSharing";
 import { Button } from "@/shared/ui/button";
-import type { ShareTier } from "./shareConstants";
-import { SHARE_TIERS } from "./shareConstants";
+import { SelectMenu } from "@/shared/ui/select/SelectMenu";
 
 export function ShareInviteForm({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();
@@ -53,23 +54,11 @@ export function ShareInviteForm({ planId }: { planId: string }) {
               setFormSuccess("");
             }, 3000);
           } catch (error) {
-            const message =
-              typeof error === "object" && error && "message" in error
-                ? String((error as { message?: unknown }).message ?? "")
-                : String(error);
             const errorCode =
               typeof error === "object" && error && "code" in error
                 ? String((error as { code?: unknown }).code ?? "")
                 : "";
-            const normalizedMessage = message.toLowerCase();
-            if (
-              normalizedMessage.includes("not registered") ||
-              normalizedMessage.includes("user not found") ||
-              normalizedMessage.includes("no user") ||
-              normalizedMessage.includes("user_not_registered") ||
-              errorCode === "23503" ||
-              errorCode === "USER_NOT_REGISTERED"
-            ) {
+            if (errorCode === "USER_NOT_REGISTERED") {
               setFormError("This email has no account yet. Ask them to sign up first, then invite again.");
             } else {
               setFormError("We could not add this member. Please try again.");
@@ -79,7 +68,10 @@ export function ShareInviteForm({ planId }: { planId: string }) {
         }}>
         <input
           type="email"
-          placeholder="Email address"
+          name="email"
+          autoComplete="email"
+          spellCheck={false}
+          placeholder="Email address…"
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);

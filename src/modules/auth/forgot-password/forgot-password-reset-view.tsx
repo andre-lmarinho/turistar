@@ -11,9 +11,9 @@ import { buildLoginHref, resolveNextPath } from "@/features/auth/lib/redirect";
 import { mapResetPasswordError } from "@/features/auth/utils/mapResetPasswordError";
 import { readResetPasswordParams } from "@/features/auth/utils/readResetPasswordParams";
 import { MIN_PASSWORD_LENGTH, validPassword } from "@/features/auth/utils/validPassword";
-import { AuthPageShell } from "@/modules/auth/layout/AuthPageShell";
 import { Button } from "@/shared/ui/button/Button";
 import { Form, PasswordField } from "@/shared/ui/form";
+import { AccessShell } from "@/shared/ui/layout";
 
 const INVALID_LINK_MESSAGE = "Reset link is invalid or has expired.";
 
@@ -98,7 +98,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
   };
 
   return (
-    <AuthPageShell
+    <AccessShell
       title="Reset your password"
       footer={
         <Link href={loginHref} className="text-foreground hover:underline">
@@ -140,6 +140,6 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
           {formState.isSubmitting ? "Updating password..." : "Update password"}
         </Button>
       </Form>
-    </AuthPageShell>
+    </AccessShell>
   );
 }

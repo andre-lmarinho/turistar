@@ -34,7 +34,7 @@ vi.mock("@/features/app/planner/components/dialog/ActivityDialog", () => ({
   ActivityDialog: () => null,
 }));
 
-vi.mock("@/features/app/planner/components/share/SharePlannerDialog", () => ({
+vi.mock("@/features/share/components/SharePlannerDialog", () => ({
   SharePlannerDialog: () => null,
 }));
 

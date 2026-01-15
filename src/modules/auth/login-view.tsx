@@ -12,9 +12,9 @@ import { signInWithPassword } from "@/features/auth/handlers/signInWithPassword"
 import { buildSignupHref, resolveNextPath } from "@/features/auth/lib/redirect";
 import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { validEmail } from "@/features/auth/utils/validEmail";
-import { AuthPageShell } from "@/modules/auth/layout/AuthPageShell";
 import { Button } from "@/shared/ui/button/Button";
 import { EmailField, Form, PasswordField } from "@/shared/ui/form";
+import { AccessShell } from "@/shared/ui/layout";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required.").refine(validEmail, "Enter a valid email."),
@@ -68,7 +68,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
   };
 
   return (
-    <AuthPageShell
+    <AccessShell
       title="Welcome back"
       footer={
         <Link href={signupHref} className="text-foreground hover:underline">
@@ -106,6 +106,6 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           {formState.isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
       </Form>
-    </AuthPageShell>
+    </AccessShell>
   );
 }

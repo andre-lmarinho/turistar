@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { addPlanMemberByEmail } from "@/features/app/planner/server/actions/plans/addPlanMemberByEmail";
-import { createPlanShareLink } from "@/features/app/planner/server/actions/plans/createPlanShareLink";
-import { getPlanMembers } from "@/features/app/planner/server/actions/plans/getPlanMembers";
-import { getPlanShareLink } from "@/features/app/planner/server/actions/plans/getPlanShareLink";
-import { leavePlan } from "@/features/app/planner/server/actions/plans/leavePlan";
-import { removePlanMember } from "@/features/app/planner/server/actions/plans/removePlanMember";
-import { revokePlanShareLink } from "@/features/app/planner/server/actions/plans/revokePlanShareLink";
-import { updatePlanMemberTier } from "@/features/app/planner/server/actions/plans/updatePlanMemberTier";
+import { addPlanMemberByEmail } from "@/features/share/lib/addPlanMemberByEmail";
+import { createPlanShareLink } from "@/features/share/lib/createPlanShareLink";
+import { getPlanMembers } from "@/features/share/lib/getPlanMembers";
+import { getPlanShareLink } from "@/features/share/lib/getPlanShareLink";
+import { leavePlan } from "@/features/share/lib/leavePlan";
+import { removePlanMember } from "@/features/share/lib/removePlanMember";
+import { revokePlanShareLink } from "@/features/share/lib/revokePlanShareLink";
+import { updatePlanMemberTier } from "@/features/share/lib/updatePlanMemberTier";
 
 type PlanMemberTier = "admin" | "member";
 
@@ -92,8 +92,28 @@ export function usePlanMembers(planId: string, options: PlanSharingOptions = {})
         throw missingPlanIdError();
       }
       await updatePlanMemberTier(planId, userId, tier);
+      return { userId, tier };
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey }),
+    onMutate: async ({ userId, tier }) => {
+      await qc.cancelQueries({ queryKey });
+      const previousData = qc.getQueryData<PlanMembersResponse>(queryKey);
+      qc.setQueryData<PlanMembersResponse | undefined>(queryKey, (current) => {
+        if (!current) {
+          return current;
+        }
+        return {
+          ...current,
+          members: current.members.map((member) => (member.userId === userId ? { ...member, tier } : member)),
+        };
+      });
+      return { previousData };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousData) {
+        qc.setQueryData(queryKey, context.previousData);
+      }
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey }),
   });
 
   const removeMember = useMutation({
@@ -102,8 +122,28 @@ export function usePlanMembers(planId: string, options: PlanSharingOptions = {})
         throw missingPlanIdError();
       }
       await removePlanMember(planId, userId);
+      return { userId };
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey }),
+    onMutate: async ({ userId }) => {
+      await qc.cancelQueries({ queryKey });
+      const previousData = qc.getQueryData<PlanMembersResponse>(queryKey);
+      qc.setQueryData<PlanMembersResponse | undefined>(queryKey, (current) => {
+        if (!current) {
+          return current;
+        }
+        return {
+          ...current,
+          members: current.members.filter((member) => member.userId !== userId),
+        };
+      });
+      return { previousData };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousData) {
+        qc.setQueryData(queryKey, context.previousData);
+      }
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey }),
   });
 
   const leave = useMutation({
@@ -164,7 +204,18 @@ export function usePlanShareLink(planId: string, options: PlanSharingOptions = {
       }
       return revokePlanShareLink(planId);
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey }),
+    onMutate: async () => {
+      await qc.cancelQueries({ queryKey });
+      const previousData = qc.getQueryData<PlanShareLink | null>(queryKey);
+      qc.setQueryData<PlanShareLink | null>(queryKey, null);
+      return { previousData };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousData !== undefined) {
+        qc.setQueryData(queryKey, context.previousData);
+      }
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey }),
   });
 
   return {

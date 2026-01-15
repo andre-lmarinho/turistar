@@ -12,7 +12,7 @@ const { mockUsePlanShareLink, mockUsePlannerContext, createLinkMutate, revokeLin
     writeTextMock: vi.fn(),
   }));
 
-vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
+vi.mock("@/features/share/hook/usePlanSharing", () => ({
   usePlanShareLink: (...args: unknown[]) => mockUsePlanShareLink(...args),
 }));
 

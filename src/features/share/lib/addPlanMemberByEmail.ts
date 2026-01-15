@@ -2,7 +2,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { addPlanMemberByEmail as addPlanMemberByEmailRpc } from "@/features/app/planner/server/repositories/PlanMembersRepository";
+import { addPlanMemberByEmail as addPlanMemberByEmailRpc } from "@/features/share/repositories/PlanMembersRepository";
 import { isSupabaseUserNotRegisteredError } from "@/shared/lib/supabaseErrors";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 

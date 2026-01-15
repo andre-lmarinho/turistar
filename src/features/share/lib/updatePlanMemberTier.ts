@@ -2,7 +2,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { updatePlanMemberTier as updatePlanMemberTierRpc } from "@/features/app/planner/server/repositories/PlanMembersRepository";
+import { updatePlanMemberTier as updatePlanMemberTierRpc } from "@/features/share/repositories/PlanMembersRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 type PlanMemberTier = "admin" | "member";

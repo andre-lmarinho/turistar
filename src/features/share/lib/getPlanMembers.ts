@@ -1,11 +1,10 @@
-import "server-only";
+"use server";
 
+import { resolvePlanId } from "@/features/share/lib/resolvePlanId";
 import {
-  fetchPlanIdentityById,
-  fetchPlanIdentityBySlug,
   fetchPlanMembersWithProfiles,
   fetchProfileById,
-} from "@/features/app/planner/server/repositories/PlanMembersRepository";
+} from "@/features/share/repositories/PlanMembersRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 type PlanMemberTier = "admin" | "member";
@@ -24,22 +23,11 @@ export type PlanMembersResponse = {
 };
 
 export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersResponse> {
-  const trimmed = planIdOrSlug.trim();
-
-  if (!trimmed) {
-    return { ownerId: null, members: [] };
-  }
-
   const supabase = createSupabaseServerClient();
-  const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    trimmed
-  );
-  const planRow = looksLikeUuid
-    ? await fetchPlanIdentityById(trimmed, { client: supabase })
-    : await fetchPlanIdentityBySlug(trimmed, { client: supabase });
+  const planRow = await resolvePlanId(planIdOrSlug, supabase);
 
   if (!planRow) {
-    throw new Error(`getPlanMembers: plan not found or access denied (planIdOrSlug=${trimmed})`);
+    throw new Error(`getPlanMembers: plan not found or access denied (planIdOrSlug=${planIdOrSlug})`);
   }
 
   const ownerId = planRow.ownerId ?? null;

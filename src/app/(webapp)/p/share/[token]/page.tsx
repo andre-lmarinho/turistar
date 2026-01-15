@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 
-import { acceptPlanShareLink } from "@/features/app/planner/server/actions/plans/acceptPlanShareLink";
+import { acceptPlanShareLink } from "@/features/share/lib/acceptPlanShareLink";
 import { ShareTokenErrorView, ShareTokenView } from "@/modules/planner/share-token-view";
 import { getCurrentUser } from "@/shared/lib/auth/session";
 import { isUuid } from "@/shared/lib/uuid";
@@ -13,7 +13,7 @@ export default async function PlannerShareLinkPage({ params }: { params: Promise
   if (!trimmed || !isUuid(trimmed)) notFound();
 
   const user = await getCurrentUser();
-  if (!user) return <ShareTokenView token={trimmed} acceptShareLink={acceptPlanShareLink} />;
+  if (!user) return <ShareTokenView token={trimmed} />;
 
   const result = await acceptPlanShareLink(trimmed);
   if (!result.success) return <ShareTokenErrorView message={result.error} />;

@@ -22,10 +22,12 @@ const {
 }));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: pushMock, refresh: refreshMock }),
+  useRouter: () => ({ push: pushMock, refresh: refreshMock, replace: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => "/planner/test",
 }));
 
-vi.mock("@/features/app/planner/hooks/data/usePlanSharing", () => ({
+vi.mock("@/features/share/hook/usePlanSharing", () => ({
   usePlanMembers: (...args: unknown[]) => mockUsePlanMembers(...args),
 }));
 
