@@ -54,23 +54,11 @@ export function ShareInviteForm({ planId }: { planId: string }) {
               setFormSuccess("");
             }, 3000);
           } catch (error) {
-            const message =
-              typeof error === "object" && error && "message" in error
-                ? String((error as { message?: unknown }).message ?? "")
-                : String(error);
             const errorCode =
               typeof error === "object" && error && "code" in error
                 ? String((error as { code?: unknown }).code ?? "")
                 : "";
-            const normalizedMessage = message.toLowerCase();
-            if (
-              normalizedMessage.includes("not registered") ||
-              normalizedMessage.includes("user not found") ||
-              normalizedMessage.includes("no user") ||
-              normalizedMessage.includes("user_not_registered") ||
-              errorCode === "23503" ||
-              errorCode === "USER_NOT_REGISTERED"
-            ) {
+            if (errorCode === "USER_NOT_REGISTERED") {
               setFormError("This email has no account yet. Ask them to sign up first, then invite again.");
             } else {
               setFormError("We could not add this member. Please try again.");
