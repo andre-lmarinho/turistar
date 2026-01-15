@@ -45,9 +45,11 @@ function ShareMemberRow({
   const canSelfLeave = isSelf && (!isSelfAdmin || adminCount > 1) && (!isPlanOwner || adminCount > 1);
   const canSelect = (!isPlanOwner && (canManageMembers || isSelf)) || (isPlanOwner && canSelfLeave);
   const tierOptions: ReadonlyArray<SelectMenuOption<MemberMenuOption>> =
-    isPlanOwner || isLastAdmin
-      ? SHARE_TIERS.filter((tierOption) => tierOption.value === "admin")
-      : SHARE_TIERS;
+    !canManageMembers && isSelf
+      ? SHARE_TIERS.filter((tierOption) => tierOption.value === member.tier)
+      : isPlanOwner || isLastAdmin
+        ? SHARE_TIERS.filter((tierOption) => tierOption.value === "admin")
+        : SHARE_TIERS;
   const leaveOption: SelectMenuOption<MemberMenuOption> | null = canSelfLeave
     ? { value: "leave", label: "Leave planner" }
     : null;
