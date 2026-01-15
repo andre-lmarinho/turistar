@@ -176,11 +176,21 @@ export function ShareMembersSection({ planId }: { planId: string }) {
             onKeyDown={(event) => {
               const currentIndex = SHARE_TABS.findIndex((t) => t.value === tab);
               if (event.key === "ArrowRight") {
+                event.preventDefault();
                 const nextIndex = (currentIndex + 1) % SHARE_TABS.length;
-                setTab(SHARE_TABS[nextIndex].value);
+                const nextTabValue = SHARE_TABS[nextIndex].value;
+                setTab(nextTabValue);
+                setTimeout(() => {
+                  document.getElementById(`share-tab-${nextTabValue}`)?.focus();
+                }, 0);
               } else if (event.key === "ArrowLeft") {
+                event.preventDefault();
                 const prevIndex = (currentIndex - 1 + SHARE_TABS.length) % SHARE_TABS.length;
-                setTab(SHARE_TABS[prevIndex].value);
+                const prevTabValue = SHARE_TABS[prevIndex].value;
+                setTab(prevTabValue);
+                setTimeout(() => {
+                  document.getElementById(`share-tab-${prevTabValue}`)?.focus();
+                }, 0);
               }
             }}
             className={`transition-colors ${tab === tabItem.value ? "text-primary" : "text-muted-foreground"}`}>
