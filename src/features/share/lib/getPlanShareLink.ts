@@ -1,6 +1,7 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import { isUuid } from "@/shared/lib/uuid";
 import type { Database } from "@/shared/types/supabase";
 
 export type PlanShareLink = {
@@ -24,9 +25,7 @@ export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareL
     return null;
   }
 
-  const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    trimmed
-  );
+  const looksLikeUuid = isUuid(trimmed);
 
   let planId = trimmed;
   if (!looksLikeUuid) {

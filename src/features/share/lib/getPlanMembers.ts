@@ -7,6 +7,7 @@ import {
   fetchProfileById,
 } from "@/features/share/repositories/PlanMembersRepository";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import { isUuid } from "@/shared/lib/uuid";
 
 type PlanMemberTier = "admin" | "member";
 
@@ -31,9 +32,7 @@ export async function getPlanMembers(planIdOrSlug: string): Promise<PlanMembersR
   }
 
   const supabase = createSupabaseServerClient();
-  const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    trimmed
-  );
+  const looksLikeUuid = isUuid(trimmed);
   const planRow = looksLikeUuid
     ? await fetchPlanIdentityById(trimmed, { client: supabase })
     : await fetchPlanIdentityBySlug(trimmed, { client: supabase });
