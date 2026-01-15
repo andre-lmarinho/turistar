@@ -1,8 +1,7 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import { fetchPlanIdBySlug, fetchShareLinkByPlanId } from "@/features/share/repositories/PlanShareRepository";
 import { isUuid } from "@/shared/lib/uuid";
-import type { Database } from "@/shared/types/supabase";
 
 export type PlanShareLink = {
   token: string;
@@ -11,52 +10,18 @@ export type PlanShareLink = {
   revokedAt: string | null;
 };
 
-type PlanShareLinkRow = Pick<
-  Database["public"]["Tables"]["plan_share_links"]["Row"],
-  "token" | "created_at" | "created_by" | "revoked_at"
->;
-
-type PlanIdRow = Pick<Database["public"]["Tables"]["plans"]["Row"], "id">;
-
 export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareLink | null> {
-  const supabase = createSupabaseServerClient();
   const trimmed = planIdOrSlug.trim();
   if (!trimmed) {
     return null;
   }
 
-  const looksLikeUuid = isUuid(trimmed);
-
-  let planId = trimmed;
-  if (!looksLikeUuid) {
-    const { data: planRow, error: planError } = await supabase
-      .from("plans")
-      .select<PlanIdRow>("id")
-      .eq("public_slug", trimmed)
-      .maybeSingle();
-    if (planError) {
-      throw new Error(
-        `Failed to fetch plan by slug "${trimmed}": ${planError instanceof Error ? planError.message : String(planError)}`
-      );
-    }
-    if (!planRow) {
-      return null;
-    }
-    planId = planRow.id;
+  const planId = isUuid(trimmed) ? trimmed : await fetchPlanIdBySlug(trimmed);
+  if (!planId) {
+    return null;
   }
 
-  const { data, error } = await supabase
-    .from("plan_share_links")
-    .select<PlanShareLinkRow>("token, created_at, created_by, revoked_at")
-    .eq("plan_id", planId)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(
-      `Failed to fetch share link for plan "${planId}": ${error instanceof Error ? error.message : String(error)}`
-    );
-  }
-
+  const data = await fetchShareLinkByPlanId(planId);
   if (!data) {
     return null;
   }
