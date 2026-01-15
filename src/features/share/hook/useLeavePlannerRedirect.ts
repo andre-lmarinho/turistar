@@ -3,55 +3,33 @@
 import { useRouter } from "next/navigation";
 import type { PlanMemberProfile } from "@/features/share/hook/usePlanSharing";
 
-type EnsureProfileResponse = {
-  slug?: string | null;
-};
-
 type ProfileSlugResponse = {
   slug?: string | null;
 };
 
-async function fetchProfileSlug(): Promise<string | null> {
+const toPlannerHref = (slug: string | null): string | null => (slug ? `/u/${slug}/planners` : null);
+
+const parseProfileSlug = (data: ProfileSlugResponse | null): string | null => {
+  const slug = data?.slug;
+  return typeof slug === "string" && slug.trim().length > 0 ? slug : null;
+};
+
+async function requestProfileSlug(url: string, method: "GET" | "POST"): Promise<string | null> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
   try {
-    const response = await fetch("/api/profile/slug", {
-      method: "GET",
+    const response = await fetch(url, {
+      method,
       credentials: "same-origin",
+      signal: controller.signal,
     });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as ProfileSlugResponse;
-    if (typeof data.slug !== "string" || data.slug.trim().length === 0) {
-      return null;
-    }
-
-    return data.slug;
+    const data = response.ok ? ((await response.json()) as ProfileSlugResponse) : null;
+    return parseProfileSlug(data);
   } catch {
     return null;
-  }
-}
-
-async function ensureProfileSlug(): Promise<string | null> {
-  try {
-    const response = await fetch("/api/profile/ensure", {
-      method: "POST",
-      credentials: "same-origin",
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as EnsureProfileResponse;
-    if (typeof data.slug !== "string" || data.slug.trim().length === 0) {
-      return null;
-    }
-
-    return data.slug;
-  } catch {
-    return null;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -63,31 +41,32 @@ type UseLeavePlannerRedirectArgs = {
 export function useLeavePlannerRedirect({ viewerUserId, leave }: UseLeavePlannerRedirectArgs) {
   const router = useRouter();
 
-  const resolveRedirectHref = async (member: PlanMemberProfile) => {
-    if (member.slug) {
-      return `/u/${member.slug}/planners`;
+  const resolveRedirectHref = async (member: PlanMemberProfile): Promise<string | null> => {
+    const memberSlug = parseProfileSlug({ slug: member.slug });
+    if (!viewerUserId && !memberSlug) {
+      return null;
     }
-    if (!viewerUserId) {
-      return "/";
-    }
-    const profileSlug = await fetchProfileSlug();
-    if (profileSlug) {
-      return `/u/${profileSlug}/planners`;
-    }
-    const slug = await ensureProfileSlug();
-    return slug ? `/u/${slug}/planners` : "/";
+    const slug =
+      memberSlug ??
+      (viewerUserId ? await requestProfileSlug("/api/profile/slug", "GET") : null) ??
+      (viewerUserId ? await requestProfileSlug("/api/profile/ensure", "POST") : null);
+    return toPlannerHref(slug);
   };
 
   const handleLeave = async (member: PlanMemberProfile) => {
-    const redirectHref = await resolveRedirectHref(member);
     try {
       await leave.mutateAsync();
-      router.push(redirectHref);
-      router.refresh();
     } catch {
       // keep user in place if leaving fails
+      return;
     }
+    const redirectHref = await resolveRedirectHref(member);
+    if (!redirectHref) {
+      return;
+    }
+    router.push(redirectHref);
+    router.refresh();
   };
 
-  return { resolveRedirectHref, handleLeave };
+  return { handleLeave };
 }
