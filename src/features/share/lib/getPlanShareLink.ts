@@ -1,7 +1,7 @@
 "use server";
 
-import { fetchPlanIdBySlug, fetchShareLinkByPlanId } from "@/features/share/repositories/PlanShareRepository";
-import { isUuid } from "@/shared/lib/uuid";
+import { resolvePlanId } from "@/features/share/lib/resolvePlanId";
+import { fetchShareLinkByPlanId } from "@/features/share/repositories/PlanShareRepository";
 
 export type PlanShareLink = {
   token: string;
@@ -16,12 +16,12 @@ export async function getPlanShareLink(planIdOrSlug: string): Promise<PlanShareL
     return null;
   }
 
-  const planId = isUuid(trimmed) ? trimmed : await fetchPlanIdBySlug(trimmed);
-  if (!planId) {
+  const planRow = await resolvePlanId(trimmed);
+  if (!planRow) {
     return null;
   }
 
-  const data = await fetchShareLinkByPlanId(planId);
+  const data = await fetchShareLinkByPlanId(planRow.id);
   if (!data) {
     return null;
   }
