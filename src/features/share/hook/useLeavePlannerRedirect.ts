@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+
 import type { PlanMemberProfile } from "@/features/share/hook/usePlanSharing";
 
 type ProfileSlugResponse = {
@@ -40,33 +42,42 @@ type UseLeavePlannerRedirectArgs = {
 
 export function useLeavePlannerRedirect({ viewerUserId, leave }: UseLeavePlannerRedirectArgs) {
   const router = useRouter();
+  const [isLeaving, setIsLeaving] = useState(false);
 
-  const resolveRedirectHref = async (member: PlanMemberProfile): Promise<string | null> => {
-    const memberSlug = parseProfileSlug({ slug: member.slug });
-    if (!viewerUserId && !memberSlug) {
-      return null;
-    }
-    const slug =
-      memberSlug ??
-      (viewerUserId ? await requestProfileSlug("/api/profile/slug", "GET") : null) ??
-      (viewerUserId ? await requestProfileSlug("/api/profile/ensure", "POST") : null);
-    return toPlannerHref(slug);
-  };
+  const resolveRedirectHref = useCallback(
+    async (member: PlanMemberProfile): Promise<string | null> => {
+      const memberSlug = parseProfileSlug({ slug: member.slug });
+      if (!viewerUserId && !memberSlug) {
+        return null;
+      }
+      const slug =
+        memberSlug ??
+        (viewerUserId ? await requestProfileSlug("/api/profile/slug", "GET") : null) ??
+        (viewerUserId ? await requestProfileSlug("/api/profile/ensure", "POST") : null);
+      return toPlannerHref(slug);
+    },
+    [viewerUserId]
+  );
 
-  const handleLeave = async (member: PlanMemberProfile) => {
-    try {
-      await leave.mutateAsync();
-    } catch {
-      // keep user in place if leaving fails
-      return;
-    }
-    const redirectHref = await resolveRedirectHref(member);
-    if (!redirectHref) {
-      return;
-    }
-    router.push(redirectHref);
-    router.refresh();
-  };
+  const handleLeave = useCallback(
+    async (member: PlanMemberProfile) => {
+      setIsLeaving(true);
+      try {
+        await leave.mutateAsync();
+      } catch {
+        setIsLeaving(false);
+        return;
+      }
+      const redirectHref = await resolveRedirectHref(member);
+      if (!redirectHref) {
+        setIsLeaving(false);
+        return;
+      }
+      router.push(redirectHref);
+      router.refresh();
+    },
+    [leave, resolveRedirectHref, router]
+  );
 
-  return { handleLeave };
+  return { handleLeave, isLeaving };
 }

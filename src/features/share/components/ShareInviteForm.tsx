@@ -68,7 +68,10 @@ export function ShareInviteForm({ planId }: { planId: string }) {
         }}>
         <input
           type="email"
-          placeholder="Email address"
+          name="email"
+          autoComplete="email"
+          spellCheck={false}
+          placeholder="Email address…"
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);
