@@ -1,18 +1,14 @@
 # Core dependencies & build
 node_modules/
 .next/
-out/                # `next export`
-build/              # qualquer pasta de build custom
 
 # Package managers (npm only)
-.pnpm*              # artefatos se tiver rodado pnpm por engano
-.yarn/              # idem para Yarn (berry)
+.pnpm*
+.yarn/
 
 # Tooling & cache
-.turbo/             # Turbopack/Turborepo cache
-.eslintcache
 /.cache/
-*.tsbuildinfo       # TypeScript incremental
+*.tsbuildinfo
 tsconfig.tsbuildinfo
 
 # Testing / E2E
@@ -20,16 +16,21 @@ coverage/
 lhci-reports/
 playwright-report/
 test-results/
-cypress/videos/
-cypress/screenshots/
 
 # Environment & secrets
-
-/.env.local         # .env, .env.local, etc.
+/.env.local
 **/.env.local    
 !.env.example
-.vercel/            # Vercel build output & metadata
-.vercel-build-tmp/  # temporary worktree used by pre-commit build
+
+# Vercel
+.vercel/
+
+# IA
+.claude/
+.opencode/
+
+# REMOVE BEFORE COMMIT
+agents/knowledge
 
 # Editors / OS
 .vscode/
@@ -44,4 +45,3 @@ yarn-error.log*
 
 # npm oddities occasionally created on Windows
 .ignored_node_modules/
-.vercel
