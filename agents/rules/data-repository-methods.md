@@ -17,19 +17,19 @@ Method names should be concise and avoid redundancy since the repository class n
 
 ```typescript
 // Good - Concise method names
-class BookingRepository {
+class ActivityRepository {
   findById(id: string) { ... }
   findByUserId(userId: string) { ... }
-  create(data: BookingCreateInput) { ... }
+  create(data: ActivityCreateInput) { ... }
   delete(id: string) { ... }
 }
 
 // Bad - Redundant entity name in methods
-class BookingRepository {
-  findBookingById(id: string) { ... }
-  findBookingByUserId(userId: string) { ... }
-  createBooking(data: BookingCreateInput) { ... }
-  deleteBooking(id: string) { ... }
+class ActivityRepository {
+  findActivityById(id: string) { ... }
+  findActivityByUserId(userId: string) { ... }
+  createActivity(data: ActivityCreateInput) { ... }
+  deleteActivity(id: string) { ... }
 }
 ```
 
@@ -302,7 +302,7 @@ class PlanRepository {
 
 ### Summary
 
-- Method names should be concise: `findById` not `findBookingById`
+- Method names should be concise: `findById` not `findActivityById`
 - Use `include`/`with` keywords when fetching relations: `findByIdIncludeHosts`
-- Keep methods generic and reusable: `findByUserIdIncludeAttendees` not `findBookingsForReporting`
+- Keep methods generic and reusable: `findByUserIdIncludeAttendees` not `findActivitysForReporting`
 - No business logic in repositories - that belongs in Services

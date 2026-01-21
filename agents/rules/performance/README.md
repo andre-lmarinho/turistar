@@ -46,6 +46,8 @@ Reference these guidelines when:
 - `bundle-defer-third-party` - Load analytics/logging after hydration
 - `bundle-conditional` - Load modules only when feature is activated
 - `bundle-preload` - Preload on hover/focus for perceived speed
+- `bundle-type-imports-only` - Use `import type` for zero runtime cost
+- `bundle-type-imports-only` - Use `import type` for zero runtime cost
 
 ### 3. Server-Side Performance (HIGH)
 
