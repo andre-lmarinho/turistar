@@ -71,9 +71,9 @@ function UserProfile({ user }: { user: UserDTO }) {
 **Location**: All DTOs go in `packages/lib/dto/`
 
 **Naming conventions**:
-- Base entity: `{Entity}Dto` (e.g., `BookingDto`)
-- With relations: `{Entity}With{Relations}Dto` (e.g., `BookingWithAttendeesDto`)
-- For specific projections: `{Entity}For{Purpose}Dto` (e.g., `BookingForConfirmationDto`)
+- Base entity: `{Entity}Dto` (e.g., `ActivityDto`)
+- With relations: `{Entity}With{Relations}Dto` (e.g., `ActivityWithAttendeesDto`)
+- For specific projections: `{Entity}For{Purpose}Dto` (e.g., `ActivityForConfirmationDto`)
 - Avoid: `{Entity}Dto2`, `{Entity}DtoForHandler`, or other use-case-specific names
 
 **Enum/union pattern** - use string literal unions to stay ORM-agnostic:

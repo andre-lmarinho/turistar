@@ -1,6 +1,6 @@
-# React Best Practices
+# React Performance Best Practices
 
-**Version 0.1.0**  
+**Version 1.0.0**  
 Vercel Engineering  
 January 2026
 
@@ -32,15 +32,20 @@ Comprehensive performance optimization guide for React and Next.js applications,
    - 2.3 [Defer Non-Critical Third-Party Libraries](#23-defer-non-critical-third-party-libraries)
    - 2.4 [Dynamic Imports for Heavy Components](#24-dynamic-imports-for-heavy-components)
    - 2.5 [Preload Based on User Intent](#25-preload-based-on-user-intent)
+   - 2.6 [Type Imports Only](#26-type-imports-only)
 3. [Server-Side Performance](#3-server-side-performance) — **HIGH**
-   - 3.1 [Cross-Request LRU Caching](#31-cross-request-lru-caching)
-   - 3.2 [Minimize Serialization at RSC Boundaries](#32-minimize-serialization-at-rsc-boundaries)
-   - 3.3 [Parallel Data Fetching with Component Composition](#33-parallel-data-fetching-with-component-composition)
-   - 3.4 [Per-Request Deduplication with React.cache()](#34-per-request-deduplication-with-reactcache)
-   - 3.5 [Use after() for Non-Blocking Operations](#35-use-after-for-non-blocking-operations)
+   - 3.1 [Authenticate Server Actions Like API Routes](#31-authenticate-server-actions-like-api-routes)
+   - 3.2 [Avoid Duplicate Serialization in RSC Props](#32-avoid-duplicate-serialization-in-rsc-props)
+   - 3.3 [Cross-Request LRU Caching](#33-cross-request-lru-caching)
+   - 3.4 [Minimize Serialization at RSC Boundaries](#34-minimize-serialization-at-rsc-boundaries)
+   - 3.5 [Parallel Data Fetching with Component Composition](#35-parallel-data-fetching-with-component-composition)
+   - 3.6 [Per-Request Deduplication with React.cache()](#36-per-request-deduplication-with-reactcache)
+   - 3.7 [Use after() for Non-Blocking Operations](#37-use-after-for-non-blocking-operations)
 4. [Client-Side Data Fetching](#4-client-side-data-fetching) — **MEDIUM-HIGH**
    - 4.1 [Deduplicate Global Event Listeners](#41-deduplicate-global-event-listeners)
-   - 4.2 [Use SWR for Automatic Deduplication](#42-use-swr-for-automatic-deduplication)
+   - 4.2 [Use Passive Event Listeners for Scrolling Performance](#42-use-passive-event-listeners-for-scrolling-performance)
+   - 4.3 [Use SWR for Automatic Deduplication](#43-use-swr-for-automatic-deduplication)
+   - 4.4 [Version and Minimize localStorage Data](#44-version-and-minimize-localstorage-data)
 5. [Re-render Optimization](#5-re-render-optimization) — **MEDIUM**
    - 5.1 [Defer State Reads to Usage Point](#51-defer-state-reads-to-usage-point)
    - 5.2 [Extract to Memoized Components](#52-extract-to-memoized-components)
@@ -418,7 +423,7 @@ Load large data or modules only when a feature is activated.
 **Example: lazy-load animation frames**
 
 ```tsx
-function AnimationPlayer({ enabled }: { enabled: boolean }) {
+function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [frames, setFrames] = useState<Frame[] | null>(null)
 
   useEffect(() => {
@@ -427,7 +432,7 @@ function AnimationPlayer({ enabled }: { enabled: boolean }) {
         .then(mod => setFrames(mod.frames))
         .catch(() => setEnabled(false))
     }
-  }, [enabled, frames])
+  }, [enabled, frames, setEnabled])
 
   if (!frames) return <Skeleton />
   return <Canvas frames={frames} />
@@ -558,6 +563,60 @@ function FlagsProvider({ children, flags }: Props) {
 
 The `typeof window !== 'undefined'` check prevents bundling preloaded modules for SSR, optimizing server bundle size and build speed.
 
+### 2.6 Type Imports Only
+
+**Impact: HIGH (eliminates runtime overhead)**
+
+Use `import type` for TypeScript type imports to eliminate runtime overhead and enable better tree-shaking. Regular imports for types add unnecessary code to the bundle.
+
+**Incorrect (regular imports for types):**
+
+```typescript
+// Bad: Regular imports for types
+import { NextRequest } from 'next/server';
+import { User } from '@/types/user';
+
+export async function handler(req: NextRequest) {
+  // NextRequest is only used for typing, but imported at runtime
+  const user: User = await getUser();
+  return Response.json({ user });
+}
+```
+
+**Correct (type imports):**
+
+```typescript
+// Good: Type imports for TypeScript types
+import type { NextRequest } from 'next/server';
+import type { User } from '@/types/user';
+
+export async function handler(req: NextRequest) {
+  const user: User = await getUser();
+  return Response.json({ user });
+}
+```
+
+**Mixed Imports (Type + Runtime):**
+
+When importing both types and runtime values from the same module, use separate import statements.
+
+**Incorrect (mixed imports):**
+
+```typescript
+// Bad: Mixing type and runtime imports
+import { type User, getUserService } from '@/types/user';
+```
+
+**Correct (separate type and runtime imports):**
+
+```typescript
+// Good: Separate type and runtime imports
+import type { User } from '@/types/user';
+import { getUserService } from '@/services/user';
+```
+
+Zero runtime cost with optimal bundle size and clearer code.
+
 ---
 
 ## 3. Server-Side Performance
@@ -566,7 +625,158 @@ The `typeof window !== 'undefined'` check prevents bundling preloaded modules fo
 
 Optimizing server-side rendering and data fetching eliminates server-side waterfalls and reduces response times.
 
-### 3.1 Cross-Request LRU Caching
+### 3.1 Authenticate Server Actions Like API Routes
+
+**Impact: CRITICAL (prevents unauthorized access to server mutations)**
+
+Server Actions (functions with `"use server"`) are exposed as public endpoints, just like API routes. Always verify authentication and authorization **inside** each Server Action—do not rely solely on middleware, layout guards, or page-level checks, as Server Actions can be invoked directly.
+
+Next.js documentation explicitly states: "Treat Server Actions with the same security considerations as public-facing API endpoints, and verify if the user is allowed to perform a mutation."
+
+**Incorrect: no authentication check**
+
+```typescript
+'use server'
+
+export async function deleteUser(userId: string) {
+  // Anyone can call this! No auth check
+  await db.user.delete({ where: { id: userId } })
+  return { success: true }
+}
+```
+
+**Correct: authentication inside the action**
+
+```typescript
+'use server'
+
+import { verifySession } from '@/lib/auth'
+import { unauthorized } from '@/lib/errors'
+
+export async function deleteUser(userId: string) {
+  // Always check auth inside the action
+  const session = await verifySession()
+  
+  if (!session) {
+    throw unauthorized('Must be logged in')
+  }
+  
+  // Check authorization too
+  if (session.user.role !== 'admin' && session.user.id !== userId) {
+    throw unauthorized('Cannot delete other users')
+  }
+  
+  await db.user.delete({ where: { id: userId } })
+  return { success: true }
+}
+```
+
+**With input validation:**
+
+```typescript
+'use server'
+
+import { verifySession } from '@/lib/auth'
+import { z } from 'zod'
+
+const updateProfileSchema = z.object({
+  userId: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  email: z.string().email()
+})
+
+export async function updateProfile(data: unknown) {
+  // Validate input first
+  const validated = updateProfileSchema.parse(data)
+  
+  // Then authenticate
+  const session = await verifySession()
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+  
+  // Then authorize
+  if (session.user.id !== validated.userId) {
+    throw new Error('Can only update own profile')
+  }
+  
+  // Finally perform the mutation
+  await db.user.update({
+    where: { id: validated.userId },
+    data: {
+      name: validated.name,
+      email: validated.email
+    }
+  })
+  
+  return { success: true }
+}
+```
+
+Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)
+
+### 3.2 Avoid Duplicate Serialization in RSC Props
+
+**Impact: LOW (reduces network payload by avoiding duplicate serialization)**
+
+RSC→client serialization deduplicates by object reference, not value. Same reference = serialized once; new reference = serialized again. Do transformations (`.toSorted()`, `.filter()`, `.map()`) in client, not server.
+
+**Incorrect: duplicates array**
+
+```tsx
+// RSC: sends 6 strings (2 arrays × 3 items)
+<ClientList usernames={usernames} usernamesOrdered={usernames.toSorted()} />
+```
+
+**Correct: sends 3 strings**
+
+```tsx
+// RSC: send once
+<ClientList usernames={usernames} />
+
+// Client: transform there
+'use client'
+const sorted = useMemo(() => [...usernames].sort(), [usernames])
+```
+
+**Nested deduplication behavior:**
+
+```tsx
+// string[] - duplicates everything
+usernames={['a','b']} sorted={usernames.toSorted()} // sends 4 strings
+
+// object[] - duplicates array structure only
+users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique objects (not 4)
+```
+
+Deduplication works recursively. Impact varies by data type:
+
+- `string[]`, `number[]`, `boolean[]`: **HIGH impact** - array + all primitives fully duplicated
+
+- `object[]`: **LOW impact** - array duplicated, but nested objects deduplicated by reference
+
+**Operations breaking deduplication: create new references**
+
+- Arrays: `.toSorted()`, `.filter()`, `.map()`, `.slice()`, `[...arr]`
+
+- Objects: `{...obj}`, `Object.assign()`, `structuredClone()`, `JSON.parse(JSON.stringify())`
+
+**More examples:**
+
+```tsx
+// ❌ Bad
+<C users={users} active={users.filter(u => u.active)} />
+<C product={product} productName={product.name} />
+
+// ✅ Good
+<C users={users} />
+<C product={product} />
+// Do filtering/destructuring in client
+```
+
+**Exception:** Pass derived data when transformation is expensive or client doesn't need original.
+
+### 3.3 Cross-Request LRU Caching
 
 **Impact: HIGH (caches across requests)**
 
@@ -603,7 +813,7 @@ Use when sequential user actions hit multiple endpoints needing the same data wi
 
 Reference: [https://github.com/isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache)
 
-### 3.2 Minimize Serialization at RSC Boundaries
+### 3.4 Minimize Serialization at RSC Boundaries
 
 **Impact: HIGH (reduces data transfer size)**
 
@@ -637,7 +847,7 @@ function Profile({ name }: { name: string }) {
 }
 ```
 
-### 3.3 Parallel Data Fetching with Component Composition
+### 3.5 Parallel Data Fetching with Component Composition
 
 **Impact: CRITICAL (eliminates server-side waterfalls)**
 
@@ -688,19 +898,23 @@ export default function Page() {
 **Alternative with children prop:**
 
 ```tsx
-async function Layout({ children }: { children: ReactNode }) {
-  const header = await fetchHeader()
-  return (
-    <div>
-      <div>{header}</div>
-      {children}
-    </div>
-  )
+async function Header() {
+  const data = await fetchHeader()
+  return <div>{data}</div>
 }
 
 async function Sidebar() {
   const items = await fetchSidebarItems()
   return <nav>{items.map(renderItem)}</nav>
+}
+
+function Layout({ children }: { children: ReactNode }) {
+  return (
+    <div>
+      <Header />
+      {children}
+    </div>
+  )
 }
 
 export default function Page() {
@@ -712,7 +926,7 @@ export default function Page() {
 }
 ```
 
-### 3.4 Per-Request Deduplication with React.cache()
+### 3.6 Per-Request Deduplication with React.cache()
 
 **Impact: MEDIUM (deduplicates within request)**
 
@@ -734,7 +948,51 @@ export const getCurrentUser = cache(async () => {
 
 Within a single request, multiple calls to `getCurrentUser()` execute the query only once.
 
-### 3.5 Use after() for Non-Blocking Operations
+**Avoid inline objects as arguments:**
+
+`React.cache()` uses shallow equality (`Object.is`) to determine cache hits. Inline objects create new references each call, preventing cache hits.
+
+**Incorrect: always cache miss**
+
+```typescript
+const getUser = cache(async (params: { uid: number }) => {
+  return await db.user.findUnique({ where: { id: params.uid } })
+})
+
+// Each call creates new object, never hits cache
+getUser({ uid: 1 })
+getUser({ uid: 1 })  // Cache miss, runs query again
+```
+
+**Correct: cache hit**
+
+```typescript
+const params = { uid: 1 }
+getUser(params)  // Query runs
+getUser(params)  // Cache hit (same reference)
+```
+
+If you must pass objects, pass the same reference:
+
+**Next.js-Specific Note:**
+
+In Next.js, the `fetch` API is automatically extended with request memoization. Requests with the same URL and options are automatically deduplicated within a single request, so you don't need `React.cache()` for `fetch` calls. However, `React.cache()` is still essential for other async tasks:
+
+- Database queries (Prisma, Drizzle, etc.)
+
+- Heavy computations
+
+- Authentication checks
+
+- File system operations
+
+- Any non-fetch async work
+
+Use `React.cache()` to deduplicate these operations across your component tree.
+
+Reference: [https://react.dev/reference/react/cache](https://react.dev/reference/react/cache)
+
+### 3.7 Use after() for Non-Blocking Operations
 
 **Impact: MEDIUM (faster response times)**
 
@@ -886,7 +1144,51 @@ function Profile() {
 }
 ```
 
-### 4.2 Use SWR for Automatic Deduplication
+### 4.2 Use Passive Event Listeners for Scrolling Performance
+
+**Impact: MEDIUM (eliminates scroll delay caused by event listeners)**
+
+Add `{ passive: true }` to touch and wheel event listeners to enable immediate scrolling. Browsers normally wait for listeners to finish to check if `preventDefault()` is called, causing scroll delay.
+
+**Incorrect:**
+
+```typescript
+useEffect(() => {
+  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
+  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
+  
+  document.addEventListener('touchstart', handleTouch)
+  document.addEventListener('wheel', handleWheel)
+  
+  return () => {
+    document.removeEventListener('touchstart', handleTouch)
+    document.removeEventListener('wheel', handleWheel)
+  }
+}, [])
+```
+
+**Correct:**
+
+```typescript
+useEffect(() => {
+  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
+  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
+  
+  document.addEventListener('touchstart', handleTouch, { passive: true })
+  document.addEventListener('wheel', handleWheel, { passive: true })
+  
+  return () => {
+    document.removeEventListener('touchstart', handleTouch)
+    document.removeEventListener('wheel', handleWheel)
+  }
+}, [])
+```
+
+**Use passive when:** tracking/analytics, logging, any listener that doesn't call `preventDefault()`.
+
+**Don't use passive when:** implementing custom swipe gestures, custom zoom controls, or any listener that needs `preventDefault()`.
+
+### 4.3 Use SWR for Automatic Deduplication
 
 **Impact: MEDIUM-HIGH (automatic deduplication)**
 
@@ -937,6 +1239,73 @@ function UpdateButton() {
 ```
 
 Reference: [https://swr.vercel.app](https://swr.vercel.app)
+
+### 4.4 Version and Minimize localStorage Data
+
+**Impact: MEDIUM (prevents schema conflicts, reduces storage size)**
+
+Add version prefix to keys and store only needed fields. Prevents schema conflicts and accidental storage of sensitive data.
+
+**Incorrect:**
+
+```typescript
+// No version, stores everything, no error handling
+localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
+const data = localStorage.getItem('userConfig')
+```
+
+**Correct:**
+
+```typescript
+const VERSION = 'v2'
+
+function saveConfig(config: { theme: string; language: string }) {
+  try {
+    localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config))
+  } catch {
+    // Throws in incognito/private browsing, quota exceeded, or disabled
+  }
+}
+
+function loadConfig() {
+  try {
+    const data = localStorage.getItem(`userConfig:${VERSION}`)
+    return data ? JSON.parse(data) : null
+  } catch {
+    return null
+  }
+}
+
+// Migration from v1 to v2
+function migrate() {
+  try {
+    const v1 = localStorage.getItem('userConfig:v1')
+    if (v1) {
+      const old = JSON.parse(v1)
+      saveConfig({ theme: old.darkMode ? 'dark' : 'light', language: old.lang })
+      localStorage.removeItem('userConfig:v1')
+    }
+  } catch {}
+}
+```
+
+**Store minimal fields from server responses:**
+
+```typescript
+// User object has 20+ fields, only store what UI needs
+function cachePrefs(user: FullUser) {
+  try {
+    localStorage.setItem('prefs:v1', JSON.stringify({
+      theme: user.preferences.theme,
+      notifications: user.preferences.notifications
+    }))
+  } catch {}
+}
+```
+
+**Always wrap in try-catch:** `getItem()` and `setItem()` throw in incognito/private browsing (Safari, Firefox), when quota exceeded, or when disabled.
+
+**Benefits:** Schema evolution via versioning, reduced storage size, prevents storing tokens/PII/internal flags.
 
 ---
 
@@ -1074,7 +1443,7 @@ Subscribe to derived boolean state instead of continuous values to reduce re-ren
 function Sidebar() {
   const width = useWindowWidth()  // updates continuously
   const isMobile = width < 768
-  return <nav className={isMobile ? 'mobile' : 'desktop'}>
+  return <nav className={isMobile ? 'mobile' : 'desktop'} />
 }
 ```
 
@@ -1083,7 +1452,7 @@ function Sidebar() {
 ```tsx
 function Sidebar() {
   const isMobile = useMediaQuery('(max-width: 767px)')
-  return <nav className={isMobile ? 'mobile' : 'desktop'}>
+  return <nav className={isMobile ? 'mobile' : 'desktop'} />
 }
 ```
 
@@ -1554,79 +1923,32 @@ Micro-optimizations for hot paths can add up to meaningful improvements.
 
 **Impact: MEDIUM (reduces reflows/repaints)**
 
-Avoid changing styles one property at a time. Group multiple CSS changes together via classes or `cssText` to minimize browser reflows.
+Avoid interleaving style writes with layout reads. When you read a layout property (like `offsetWidth`, `getBoundingClientRect()`, or `getComputedStyle()`) between style changes, the browser is forced to trigger a synchronous reflow.
 
-**Incorrect: multiple reflows**
+**Incorrect: interleaved reads and writes force reflows**
 
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Each line triggers a reflow
   element.style.width = '100px'
+  const width = element.offsetWidth  // Forces reflow
   element.style.height = '200px'
-  element.style.backgroundColor = 'blue'
-  element.style.border = '1px solid black'
+  const height = element.offsetHeight  // Forces another reflow
 }
 ```
 
-**Correct: add class - single reflow**
+**Correct: batch writes, then read once**
 
 ```typescript
-// CSS file
-.highlighted-box {
-  width: 100px;
-  height: 200px;
-  background-color: blue;
-  border: 1px solid black;
-}
-
-// JavaScript
 function updateElementStyles(element: HTMLElement) {
   element.classList.add('highlighted-box')
+
+  const { width, height } = element.getBoundingClientRect()
 }
 ```
 
-**Correct: change cssText - single reflow**
+**Better: use CSS classes**
 
-```typescript
-function updateElementStyles(element: HTMLElement) {
-  element.style.cssText = `
-    width: 100px;
-    height: 200px;
-    background-color: blue;
-    border: 1px solid black;
-  `
-}
-```
-
-**React example:**
-
-```tsx
-// Incorrect: changing styles one by one
-function Box({ isHighlighted }: { isHighlighted: boolean }) {
-  const ref = useRef<HTMLDivElement>(null)
-  
-  useEffect(() => {
-    if (ref.current && isHighlighted) {
-      ref.current.style.width = '100px'
-      ref.current.style.height = '200px'
-      ref.current.style.backgroundColor = 'blue'
-    }
-  }, [isHighlighted])
-  
-  return <div ref={ref}>Content</div>
-}
-
-// Correct: toggle class
-function Box({ isHighlighted }: { isHighlighted: boolean }) {
-  return (
-    <div className={isHighlighted ? 'highlighted-box' : ''}>
-      Content
-    </div>
-  )
-}
-```
-
-Prefer CSS classes over inline styles when possible. Classes are cached by the browser and provide better separation of concerns.
+Prefer CSS classes over inline styles when possible. CSS files are cached by the browser, and classes provide better separation of concerns and are easier to maintain.
 
 ### 7.2 Build Index Maps for Repeated Lookups
 
@@ -1883,7 +2205,7 @@ function hasChanges(current: string[], original: string[]) {
   if (current.length !== original.length) {
     return true
   }
-  // Only sort/join when lengths match
+  // Only sort when lengths match
   const currentSorted = current.toSorted()
   const originalSorted = original.toSorted()
   for (let i = 0; i < currentSorted.length; i++) {
@@ -2068,7 +2390,7 @@ const min = Math.min(...numbers)
 const max = Math.max(...numbers)
 ```
 
-This works for small arrays but can be slower for very large arrays due to spread operator limitations. Use the loop approach for reliability.
+This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.
 
 ### 7.11 Use Set/Map for O(1) Lookups
 
@@ -2164,7 +2486,7 @@ Store callbacks in refs when used in effects that shouldn't re-subscribe on call
 **Incorrect: re-subscribes on every render**
 
 ```tsx
-function useWindowEvent(event: string, handler: () => void) {
+function useWindowEvent(event: string, handler: (e) => void) {
   useEffect(() => {
     window.addEventListener(event, handler)
     return () => window.removeEventListener(event, handler)
@@ -2177,7 +2499,7 @@ function useWindowEvent(event: string, handler: () => void) {
 ```tsx
 import { useEffectEvent } from 'react'
 
-function useWindowEvent(event: string, handler: () => void) {
+function useWindowEvent(event: string, handler: (e) => void) {
   const onEvent = useEffectEvent(handler)
 
   useEffect(() => {
@@ -2202,7 +2524,7 @@ Access latest values in callbacks without adding them to dependency arrays. Prev
 ```typescript
 function useLatest<T>(value: T) {
   const ref = useRef(value)
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref.current = value
   }, [value])
   return ref

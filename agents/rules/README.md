@@ -2,30 +2,95 @@
 
 This directory contains modular, machine-readable engineering rules.
 
+## When to Apply
+
+Reference these guidelines when:
+- Writing new React components or Next.js pages
+- Implementing data fetching (client or server-side)
+- Reviewing code for performance issues
+- Refactoring existing React/Next.js code
+- Optimizing bundle size or load times
+
 ## Structure
 
 Rules are organized by section prefix, as defined in `_sections.md`:
 
-| Prefix | Section | Impact |
+| Prefix | Category | Impact |
 |--------|---------|--------|
 | `architecture-` | Architecture | CRITICAL |
 | `quality-` | Code Quality | CRITICAL |
+| `security-` | Security | CRITICAL |
 | `data-` | Data Layer | HIGH |
 | `api-` | API Design | HIGH |
 | `performance-` | Performance | HIGH |
+| `uiux-` | UI/UX | HIGH |
 | `testing-` | Testing | MEDIUM-HIGH |
 | `patterns-` | Design Patterns | MEDIUM |
-| `culture-` | Team Culture | MEDIUM |
 
-## Files
+## Quick Reference
+
+### Configuration Files
 
 - `_sections.md` - Defines all sections, their ordering, and impact levels
 - `_template.md` - Template for creating new rules
-- `{section}-{rule-name}.md` - Individual rule files
+
+### 1. Architecture (CRITICAL)
+
+- `architecture-page-level-auth` - Authorization checks in pages, not layouts
+- `architecture-vertical-slices` - Organize code by domain, not technical layer
+
+### 2. Code Quality (CRITICAL)
+
+- `quality-file-naming-conventions` - Repository/Service suffixes, PascalCase/camelCase patterns
+- `quality-simplicity` - Prioritize clarity over cleverness
+
+### 3. Security (CRITICAL)
+
+- `security-supabase-key-protection` - Never expose service role keys in responses/logs
+
+### 4. Data Layer (HIGH)
+
+- `data-prefer-select-over-include` - Explicit column selection in Supabase queries
+- `data-repository-pattern` - Isolate database technology behind repositories
+- `data-repository-methods` - Consistent naming conventions for repository methods
+- `data-dto-boundaries` - Use DTOs at architectural boundaries
+
+### 5. API Layer (HIGH)
+
+### 6. Performance (HIGH)
+
+*See `performance/rules/` directory for performance rules*
+
+### 7. UI/UX (HIGH)
+
+- `uiux-interface-guidelines` - Comprehensive UI/UX best practices
+
+### 8. Testing (MEDIUM-HIGH)
+
+- `testing-coverage-requirements` - Maintain 80%+ test coverage for new code
+
+### 9. Design Patterns (MEDIUM)
+
+- `patterns-early-returns` - Reduce nesting with early returns
+- `patterns-composition-over-prop-drilling` - Use React children/context over prop drilling
+
+## How to Use
+
+Read individual rule files for detailed explanations and code examples:
+
+```
+rules/async-parallel.md
+rules/bundle-barrel-imports.md
+rules/_sections.md
+```
+
+Each rule file contains:
+- Brief explanation of why it matters
+- Incorrect code example with explanation
+- Correct code example with explanation
+- Additional context and references
 
 ## Rule Format
-
-Each rule file follows a consistent format with YAML frontmatter:
 
 ```markdown
 ---
