@@ -8,7 +8,7 @@ This repo is a single Next.js app. Run commands from the repo root.
 
 - Run lint: `npm run lint`
 - Run type checking: `npm run typecheck:ci`
-- Run auto-fix: `npm run lint`
+- Run auto-fix: `npm run lint:fix`
 
 ### Development
 

@@ -133,11 +133,9 @@ Prerequisites: Node.js v18+ and npm
 
 1. Install dependencies with `npm install`.
 2. Start the dev server using `npm run dev`.
-3. Format code before committing with `npm run format` (this covers application code, tests, and documentation files).
-4. Run the linter via `npm run lint`.
-5. Run the type checker with `npm run typecheck`.
-6. Ensure all tests pass with `npm run test`.
-7. Write clear commit messages that summarize your changes (see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)).
+3. Run the linter and formatter via `npm run lint:fix`.
+4. Run the type checker with `npm run typecheck`.
+5. Ensure all tests pass with `npm run test`.
 
 ---
 
@@ -146,7 +144,8 @@ Prerequisites: Node.js v18+ and npm
 - `npm run dev` – start development server
 - `npm run build` – compile for production
 - `npm run start` – run production build locally
-- `npm run lint` – run lint
+- `npm run lint` – run Biome lint
+- `npm run lint:fix` – run Biome lint and format
 - `npm run format` – format repository files
 - `npm run test` – run unit tests
 
@@ -168,8 +167,6 @@ See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testi
 - The Vitest configuration enables coverage automatically in CI, so `npm run test` on GitHub Actions produces the `coverage/` directory with `lcov.info`.
 - To generate coverage locally, run `CI=true npm run test` (or export `CI=true` in your shell) to mirror the CI environment.
 - Private forks need to create a Codecov token from [Codecov repository settings](https://app.codecov.io/) and add it as `CODECOV_TOKEN` in their fork's GitHub repository secrets so the CI job can upload coverage results.
-
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#codecov-and-private-forks) for step-by-step instructions.
 
 ### Node.js version management
 

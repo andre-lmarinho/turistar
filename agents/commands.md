@@ -16,10 +16,10 @@
 ## Lint & Type Check
 
 - `npm run lint` - Run Biome Lint on codebase
+- `npm run lint:fix` - Run Biome and apply safe fixes
 - `npm run typecheck` - Run TypeScript type checking
 - `npm run typecheck:ci` - Run TypeScript type checking in CI
 - `npm run format` - Format code with Biome
-- `npm run lint-staged` - Run lint-staged
 
 ## Testing Commands
 
@@ -27,14 +27,14 @@
 
 - `npm run test` - Run unit tests (vitest)
 - `npm run test -- <filename>` - Run tests for specific file
-- `npm run test -- <filename> --testNamePattern="<testName>"` - Run specific test by name
+- `npm run test -- <filename> -t "<testName>"` - Run specific test by name
 - `npm run test:watch` - Run tests in watch mode
 
 ### Integration Tests
 
 - `npm run test -- "**/*.integration.test.ts"` - Run integration tests (vitest)
 - `npm run test -- <filename>` - Run integration tests for specific file
-- `npm run test -- <filename> --testNamePattern="<testName>"` - Run specific integration test by name
+- `npm run test -- <filename> -t "<testName>"` - Run specific integration test by name
 
 ### End-to-End Tests
 
