@@ -34,23 +34,20 @@ You are a senior engineer working in a Npm/Turbo monorepo. You prioritize type s
 # Type check - always run on changed files
 npm run typecheck:ci
 
-# Lint single file
-npx biome lint -- path/to/file.tsx
-
-# Format single file
-npx biome format --write -- path/to/file.tsx
+# Lint and format single file
+npx biome check --write path/to/file.tsx
 
 # Unit test specific file
 npm run test -- path/to/file.test.ts
 
 # Unit test specific file + specific test
-npm run test -- path/to/file.test.ts --testNamePattern="specific test name"
+npm run test -- path/to/file.test.ts -t "specific test name"
 
 # Integration test specific file
 npm run test -- path/to/file.integration.test.ts
 
 # Integration test specific file + specific test
-npm run test -- path/to/file.integration.test.ts --testNamePattern="specific test name"
+npm run test -- path/to/file.integration.test.ts -t "specific test name"
 
 # E2E test specific file
 npm run e2e -- path/to/file.e2e.ts
@@ -63,35 +60,36 @@ npm run e2e -- path/to/file.e2e.ts --grep "specific test name"
 
 ```bash
 # Development
-npm run dev              # Start dev server
+npm run dev                 # Start dev server
 
 # Build & check
-npm run build            # Build all packages
-npm run lint:fix         # Lint and fix all
-npm run typecheck        # Type check all
+npm run build               # Build all packages
+npm run lint:fix            # Lint and format all
+npm run typecheck           # Type check all
 
 # Tests
-npm run test             # All unit tests
-npm run e2e              # All E2E tests
+npm run test                # All unit tests
+npm run e2e                 # All E2E tests
 
 # Database
-npm run gen:types        # Regenerate types after schema changes
+npm run gen:types           # Regenerate types after schema changes
 ```
 
 ## Boundaries
 
 ### Always do
 
-- Run type check on changed files before committing
-- Run relevant tests before pushing
+- Run type check on changed files
+- Run relevant tests and biome check
 - Use explicit column selection in Supabase queries
 - Follow conventional commits for PR titles
+- Follow **[repository rules](agents/rules/)**
 
 ### Ask first
 
 - Adding new dependencies
 - Schema changes to `supabase/schema.supabase`
-- Changes affecting multiple packages
+- Changes affecting multiple features
 - Deleting files
 - Running full build or E2E suites
 
@@ -105,9 +103,9 @@ npm run gen:types        # Regenerate types after schema changes
 
 ## Project Structure
 
-```
+```text
 app/                         # Main Next.js application
-supabase/                   # Database schema (schema.supabase) and migrations
+supabase/                    # Database schema (schema.supabase) and migrations
 shared/ui/                   # Shared UI components
 features/                    # Feature-specific code
 shared/lib/                  # Shared utilities
@@ -189,6 +187,7 @@ import { Button } from '@/shared/ui';
 For detailed information, see the `agents/` directory:
 
 - **[agents/README.md](agents/README.md)** - Architecture overview and patterns
+- **[agents/rules/](agents/rules/)** - Modular engineering rules (performance, architecture, data layer, etc.)
 - **[agents/commands.md](agents/commands.md)** - Complete command reference
 - **[agents/knowledge-base.md](agents/knowledge-base.md)** - Domain knowledge and best practices
 - **[agents/coding-standards.md](agents/coding-standards.md)** - Coding standards with examples
