@@ -122,30 +122,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.backdrop-overlay {
-  @apply bg-backdrop fixed inset-0 z-40 backdrop-blur-sm;
-}
-
-.scrollbar-hidden {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
-
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
-
-/* Hide vertical scrollbar in DayColumn */
-[data-testid="day-scroll"] {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-[data-testid="day-scroll"]::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
-/* Leaflet z-index resets */
-.leaflet-container {
-  position: relative;
-}
