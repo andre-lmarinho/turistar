@@ -2,8 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { usePlanEditTokens } from "@/features/app/planner/hooks/data/usePlanEditTokens";
-import type { PlannerExperience } from "@/features/app/planner/server/queries/plans/getPlannerExperience";
+
+import { usePlanEditTokens } from "@/features/events/hooks/usePlanEditTokens";
+import type { PlannerExperience } from "@/features/plan/lib/getPlannerExperience";
 import { PlannerWorkspace } from "@/modules/planner/components/PlannerWorkspace";
 
 interface PlanIdViewProps {

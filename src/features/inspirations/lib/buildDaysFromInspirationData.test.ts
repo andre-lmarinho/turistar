@@ -1,6 +1,6 @@
-import { getDefaultActivityColor } from "@/features/app/planner/domain/constants/colors";
-import { buildDaysFromInspirationData } from "./buildDaysFromInspirationData";
+import { getDefaultColor } from "@/features/activity/constants";
 
+import { buildDaysFromInspirationData } from "./buildDaysFromInspirationData";
 import type { InspirationData } from "./schemas";
 
 const sample = {
@@ -79,7 +79,7 @@ describe("buildDaysFromInspirationData", () => {
 
     const act = result[0].activities[0];
     expect(act.imageUrl).toBe("");
-    expect(act.color).toBe(getDefaultActivityColor());
+    expect(act.color).toBe(getDefaultColor());
     expect(act.budget).toBeUndefined();
     expect(act.latitude).toBeUndefined();
     expect(act.longitude).toBeUndefined();

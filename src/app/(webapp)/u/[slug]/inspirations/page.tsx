@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
+import { requireProfileSlugMatch } from "@/features/profile/lib/requireProfileSlugMatch";
 import { InspirationsView } from "@/modules/user/inspirations-view";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ interface UserInspirationsPageProps {
 
 export default async function UserInspirationsPage({ params }: UserInspirationsPageProps) {
   const { slug } = await params;
-  await requireUserSlugMatch(slug);
+  await requireProfileSlugMatch(slug);
 
   return <InspirationsView />;
 }

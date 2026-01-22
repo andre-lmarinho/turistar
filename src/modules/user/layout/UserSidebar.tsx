@@ -28,24 +28,22 @@ export function UserSidebar() {
     : [];
 
   return (
-    <aside aria-label="User sidebar" className="w-64">
-      <div className="flex flex-col gap-2 pb-2">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Button
-              key={item.key}
-              href={item.href}
-              variant={item.isActive ? undefined : "ghost"}
-              className="w-full justify-start">
-              <span className="flex items-center gap-2">
-                <Icon className="h-4 w-4" aria-hidden="true" />
-                {item.label}
-              </span>
-            </Button>
-          );
-        })}
-      </div>
+    <aside aria-label="User sidebar" className="w-64 hidden md:flex flex-col gap-2 pb-2">
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        return (
+          <Button
+            key={item.key}
+            href={item.href}
+            variant={item.isActive ? undefined : "ghost"}
+            className="w-full justify-start">
+            <span className="flex items-center gap-2">
+              <Icon className="h-4 w-4" aria-hidden="true" />
+              {item.label}
+            </span>
+          </Button>
+        );
+      })}
     </aside>
   );
 }

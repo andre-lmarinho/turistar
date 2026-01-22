@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { isUsernameAvailable } from "@/features/auth/lib/isUsernameAvailable";
 import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
 

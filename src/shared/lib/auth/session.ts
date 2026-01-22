@@ -66,12 +66,12 @@ export async function getCurrentUser(): Promise<SupabaseUser | null> {
     const { data } = await supabase.auth.getUser();
     return data.user as SupabaseUser | null;
   } catch (error) {
-    if (isAuthSessionMissingError(error)) {
-      return null;
+    if (!isAuthSessionMissingError(error)) {
+      throw error;
     }
-
-    throw error;
   }
+
+  return null;
 }
 
 export async function requireUser(): Promise<SupabaseUser> {

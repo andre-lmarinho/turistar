@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { getPlanTitle } from "@/features/app/planner/server/queries/plans/getPlanTitle";
+import { fetchPlanTitle } from "@/features/plan/services/planTitleQueries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -12,10 +12,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const title = await getPlanTitle(planId);
+    const title = await fetchPlanTitle(planId);
     return NextResponse.json({ title });
   } catch (error) {
-    console.error(error);
+    console.error("Failed to fetch plan title:", { planId }, error);
     return NextResponse.json({ error: "Unable to fetch plan title." }, { status: 500 });
   }
 }

@@ -8,10 +8,10 @@ const { mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() 
   mockFetchWikidataImage: vi.fn(),
 }));
 
-vi.mock("@/features/app/planner/services/geoapify/placeDetails", () => ({
+vi.mock("@/features/search/services/GeoapifyService", () => ({
   fetchGeoapifyPlaceDetails: mockFetchGeoapifyPlaceDetails,
 }));
-vi.mock("@/features/app/planner/services/wikidata/fetchWikidataImage", () => ({
+vi.mock("@/features/search/services/WikidataService", () => ({
   fetchWikidataImage: mockFetchWikidataImage,
 }));
 
@@ -55,7 +55,7 @@ describe("GET /api/places/details", () => {
 
     const res = await GET(createRequest("?placeId=pid"));
 
-    expect(consoleSpy).toHaveBeenCalledWith(error);
+    expect(consoleSpy).toHaveBeenCalledWith("place details failed:", { placeId: "pid" }, error);
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to load place details." });
 
@@ -90,7 +90,7 @@ describe("GET /api/places/details", () => {
 
     expect(mockFetchGeoapifyPlaceDetails).toHaveBeenCalledWith("pid");
     expect(mockFetchWikidataImage).toHaveBeenCalledWith("Q1");
-    expect(consoleSpy).toHaveBeenCalledWith(error);
+    expect(consoleSpy).toHaveBeenCalledWith("place details failed:", { placeId: "pid" }, error);
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to load place details." });
 

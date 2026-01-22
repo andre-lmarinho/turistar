@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-import type { PlanEventInsert } from "@/features/app/planner/domain/types/PlanEvent";
-import { appendPlanEvents } from "@/features/app/planner/services/supabase/planEventsQueries";
+import { appendEvents } from "@/features/events/services/eventsQueries";
+import type { EventInsert } from "@/features/events/types";
 
 type AppendBody = {
   planId?: string;
   baseVersion?: number;
-  events?: PlanEventInsert[];
+  events?: EventInsert[];
 };
 
 export async function POST(request: Request) {
@@ -32,10 +32,10 @@ export async function POST(request: Request) {
 
   try {
     const baseVersion = Number(payload.baseVersion);
-    const result = await appendPlanEvents(planId, baseVersion, payload.events);
+    const result = await appendEvents(planId, baseVersion, payload.events);
     return NextResponse.json({ version: result.version, events: result.events });
   } catch (error) {
-    console.error(error);
+    console.error("[appendEvents] Failed:", error);
     return NextResponse.json({ error: "Unable to append plan events." }, { status: 500 });
   }
 }

@@ -3,25 +3,24 @@
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import type { FocusEvent } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { BudgetBoard } from "@/features/app/planner/components/budget/BudgetBoard";
-import { ActivityDialog } from "@/features/app/planner/components/dialog/ActivityDialog";
-import { PlannerBoard } from "@/features/app/planner/components/dnd/PlannerBoard";
-import { ModeToggleButton } from "@/features/app/planner/components/ui/ModeToggleButton";
-import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
-import { PlannerProvider, usePlannerContext } from "@/features/app/planner/hooks/PlannerContext";
-import { updatePlanTitle } from "@/features/app/planner/server/actions/plans/updatePlanTitle";
-import type { Entry } from "@/features/app/planner/types/budget";
-import { SharePlannerDialog } from "@/features/share/components/SharePlannerDialog";
+import type { DayPlan } from "@/features/activity/types";
+import { ActivityBoard } from "@/features/activityBoard/components/ActivityBoard";
+import { ActivityDialog } from "@/features/activityDialog/components/ActivityDialog";
+import { BudgetBoard } from "@/features/budget/components/BudgetBoard";
+import type { Entry } from "@/features/budget/types";
+import { SharePlannerDialog } from "@/features/members/SharePlannerDialog";
+import { PlannerProvider, usePlannerContext } from "@/features/plan/hooks/PlannerContext";
+import { updatePlanTitle } from "@/features/plan/lib/updatePlanTitle";
 import { DateRangePickerIcon } from "@/shared/ui/calendar";
 
-const MapBoard = dynamic(() => import("@/features/app/planner/components/map/MapBoard"), {
+import type { PlannerMode } from "./ModeToggleButton";
+import { ModeToggleButton, modeOrder } from "./ModeToggleButton";
+
+const MapBoard = dynamic(() => import("@/features/mapBoard/MapBoard"), {
   ssr: false,
 });
-
-const modeOrder = ["planner", "map", "budget"] as const;
-type PlannerMode = (typeof modeOrder)[number];
 
 const offsetMap = [0, 6, 10];
 const scaleMap = [1, 0.92, 0.87];
@@ -61,9 +60,37 @@ function PlannerWorkspaceContent({
   initialEntries,
 }: PlannerWorkspaceContentProps) {
   const [mode, setMode] = useState<PlannerMode>("planner");
-  const { planId, currentRange, handleRangeChange, viewerUserId } = usePlannerContext();
+  const {
+    planId,
+    days,
+    setDays,
+    currentRange,
+    handleRangeChange,
+    viewerUserId,
+    selectedActivity,
+    setSelectedActivity,
+    addActivityWithTitle,
+    save,
+    deleteActivity,
+    changeColor,
+    changeDay,
+    changePosition,
+    closeDialog,
+    destCoords,
+  } = usePlannerContext();
 
   const [title, setTitle] = useState(initialTitle);
+
+  // Fallback for adding activity when inline add is disabled
+  const handleFallbackAdd = useCallback(
+    async (dayId: string, index: number) => {
+      const activity = await addActivityWithTitle(dayId, "", index);
+      if (activity) {
+        setSelectedActivity({ ...activity, dayId });
+      }
+    },
+    [addActivityWithTitle, setSelectedActivity]
+  );
 
   useEffect(() => {
     document.title = `${title} | Turistar App`;
@@ -127,7 +154,14 @@ function PlannerWorkspaceContent({
 
           const content =
             currentMode === "planner" ? (
-              <PlannerBoard />
+              <ActivityBoard
+                days={days}
+                canEdit={canEdit}
+                onActivitySelect={(activity, dayId) => setSelectedActivity({ ...activity, dayId })}
+                onDaysChange={setDays}
+                onAddActivity={addActivityWithTitle}
+                onFallbackAdd={handleFallbackAdd}
+              />
             ) : currentMode === "budget" ? (
               <BudgetBoard
                 initialBudget={initialBudget}
@@ -157,7 +191,18 @@ function PlannerWorkspaceContent({
         })}
       </div>
 
-      <ActivityDialog />
+      <ActivityDialog
+        key={selectedActivity?.id}
+        activity={selectedActivity}
+        days={days}
+        onSave={save}
+        onDelete={deleteActivity}
+        onClose={closeDialog}
+        onColorChange={changeColor}
+        onDayChange={changeDay}
+        onPositionChange={changePosition}
+        destCoords={destCoords}
+      />
 
       <div className="flex flex-none items-center gap-2 self-center p-6 md:hidden">
         <ModeToggleButton value={mode} onChange={setMode} />

@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { fetchGeoapifyAddressAutocomplete } from "@/features/app/planner/services/geoapify/autocomplete";
+
+import { fetchGeoapifyAddressAutocomplete } from "@/features/search/services/GeoapifyService";
 import { validateGeoapifyQuery } from "@/shared/lib/server/geoapify/validateQuery";
 
 export const runtime = "edge";
@@ -19,12 +20,12 @@ async function handleAddressAutocomplete(req: NextRequest) {
   try {
     const results = await fetchGeoapifyAddressAutocomplete(
       text,
-      lat ? Number(lat) : undefined,
-      lon ? Number(lon) : undefined
+      lat && !Number.isNaN(Number(lat)) ? Number(lat) : undefined,
+      lon && !Number.isNaN(Number(lon)) ? Number(lon) : undefined
     );
     return NextResponse.json({ results });
   } catch (err) {
-    console.error(err);
+    console.error("address autocomplete failed:", { text, lat, lon }, err);
     return NextResponse.json({ error: "Failed to load suggestions." }, { status: 500 });
   }
 }

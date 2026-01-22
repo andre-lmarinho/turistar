@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { fetchProfileSlugByUserId } from "@/features/app/planner/services/supabase/profileQueries";
+import { fetchProfileSlugByUserId } from "@/features/profile/repositories/ProfileRepository";
 import { requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
 
 export async function GET() {

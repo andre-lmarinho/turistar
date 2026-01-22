@@ -8,7 +8,9 @@ export function createStrictContext<T>(errorMessage: string) {
   const useStrictContext = () => {
     const value = useContext(context);
     if (value === undefined) {
-      throw new Error(`createStrictContext failed: ${errorMessage}`);
+      throw new Error(
+        `createStrictContext failed for "${errorMessage}": missing provider in component tree.`
+      );
     }
     return value;
   };

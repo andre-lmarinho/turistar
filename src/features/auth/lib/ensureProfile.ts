@@ -2,8 +2,10 @@
 
 import slugify from "@sindresorhus/slugify";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { cache } from "react";
+
 import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
-import { upsertProfile } from "@/features/user/repositories/ProfileRepository";
+import { upsertProfile } from "@/features/profile/repositories/ProfileRepository";
 import type { SupabaseUser } from "@/shared/lib/auth/session";
 import { requireUser } from "@/shared/lib/auth/session";
 
@@ -20,7 +22,7 @@ type ProfileUpsertPayload = {
   baseSlug: string;
 };
 
-export async function ensureProfile({ client }: EnsureProfileOptions = {}): Promise<string> {
+export const ensureProfile = cache(async ({ client }: EnsureProfileOptions = {}): Promise<string> => {
   const user = await requireUser();
 
   const payload: ProfileUpsertPayload = {
@@ -31,7 +33,7 @@ export async function ensureProfile({ client }: EnsureProfileOptions = {}): Prom
   };
 
   return upsertProfileWithUniqueSlug(payload, client);
-}
+});
 
 function extractDisplayName(user: SupabaseUser): string | null {
   const metadata = user.user_metadata as Record<string, unknown> | null;

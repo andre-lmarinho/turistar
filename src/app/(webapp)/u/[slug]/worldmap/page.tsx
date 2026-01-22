@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
+import { requireProfileSlugMatch } from "@/features/profile/lib/requireProfileSlugMatch";
 import { getVisitedCountries } from "@/features/visitedCountries/lib/getVisitedCountries";
 import { WorldMapView } from "@/modules/user/worldmap-view";
 
@@ -16,7 +16,7 @@ interface DashboardWorldmapPageProps {
 
 export default async function DashboardWorldmapPage({ params }: DashboardWorldmapPageProps) {
   const { slug } = await params;
-  const { user } = await requireUserSlugMatch(slug);
+  const { user } = await requireProfileSlugMatch(slug);
   const visitedCountries = await getVisitedCountries(user.id);
 
   return <WorldMapView visitedCountries={visitedCountries} />;

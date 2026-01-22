@@ -1,45 +1,51 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import { updatePlanTitle } from "@/features/app/planner/server/actions/plans/updatePlanTitle";
-import { PlannerWorkspace } from "@/modules/planner/components/PlannerWorkspace";
 
-vi.mock("@/features/app/planner/server/actions/plans/updatePlanTitle", () => ({
+import { updatePlanTitle } from "@/features/plan/lib/updatePlanTitle";
+
+import type { PlannerMode } from "./ModeToggleButton";
+import { PlannerWorkspace } from "./PlannerWorkspace";
+
+vi.mock("@/features/plan/lib/updatePlanTitle", () => ({
   updatePlanTitle: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("@/features/app/planner/hooks/PlannerContext", () => ({
+vi.mock("@/features/plan/hooks/PlannerContext", () => ({
   PlannerProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   usePlannerContext: () => ({
     planId: "p1",
     currentRange: undefined,
     handleRangeChange: vi.fn(),
     viewerUserId: null,
+    days: [],
+    updateActivity: vi.fn(),
   }),
 }));
 
-vi.mock("@/features/app/planner/components/dnd/PlannerBoard", () => ({
+vi.mock("@/features/activity/components/dnd/PlannerBoard", () => ({
   PlannerBoard: () => <div data-testid="planner-board" />,
 }));
 
-vi.mock("@/features/app/planner/components/budget/BudgetBoard", () => ({
+vi.mock("@/features/budget/BudgetBoard", () => ({
   BudgetBoard: () => <div data-testid="budget-board" />,
 }));
 
-vi.mock("@/features/app/planner/components/map/MapBoard", () => ({
+vi.mock("@/features/mapBoard/MapBoard", () => ({
   __esModule: true,
   default: () => <div data-testid="map-board" />,
 }));
 
-vi.mock("@/features/app/planner/components/dialog/ActivityDialog", () => ({
+vi.mock("@/features/activity/components/dialog/ActivityDialog", () => ({
   ActivityDialog: () => null,
 }));
 
-vi.mock("@/features/share/components/SharePlannerDialog", () => ({
+vi.mock("@/features/members/SharePlannerDialog", () => ({
   SharePlannerDialog: () => null,
 }));
 
-vi.mock("@/features/app/planner/components/ui/ModeToggleButton", () => ({
-  ModeToggleButton: ({ onChange }: { onChange: (mode: "planner" | "map" | "budget") => void }) => (
+vi.mock("@/modules/planner/components/ModeToggleButton", () => ({
+  modeOrder: ["planner", "map", "budget"] as const,
+  ModeToggleButton: ({ onChange }: { onChange: (mode: PlannerMode) => void }) => (
     <button type="button" onClick={() => onChange("map")}>
       Toggle
     </button>
