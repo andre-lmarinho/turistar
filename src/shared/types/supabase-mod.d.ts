@@ -29,6 +29,7 @@ declare module "@supabase/supabase-js" {
     insert: <TInsert = TData>(...args: unknown[]) => SupabaseQueryBuilder<TInsert>;
     upsert: <TUpsert = TData>(...args: unknown[]) => SupabaseQueryBuilder<TUpsert>;
     update: <TUpdate = TData>(...args: unknown[]) => SupabaseQueryBuilder<TUpdate>;
+    delete: () => SupabaseQueryBuilder<TData>;
     eq: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     gt: (...args: unknown[]) => SupabaseQueryBuilder<TData>;
     order: (...args: unknown[]) => SupabaseQueryBuilder<TData>;

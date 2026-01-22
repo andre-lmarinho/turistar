@@ -167,11 +167,9 @@ export async function deleteBudgetEntry(
   { client }: BudgetRepositoryOptions = {}
 ): Promise<void> {
   const supabase = getClient(client);
-  const { error } = (await supabase
-    .from("budget_entries")
-    // @ts-expect-error Supabase typings omit delete, but runtime supports it
-    .delete()
-    .eq("id", entryId)) as unknown as { error: unknown };
+  const { error } = (await supabase.from("budget_entries").delete().eq("id", entryId)) as unknown as {
+    error: unknown;
+  };
 
   if (error) {
     throw formatSupabaseError({
