@@ -13,8 +13,8 @@ describe("updatePlanDates", () => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
-  function mockUpdateResponse(error: { message?: string } | null) {
-    const single = vi.fn().mockResolvedValue({ error });
+  it("formats dates and updates the plan record", async () => {
+    const single = vi.fn().mockResolvedValue({ error: null });
     const select = vi.fn(() => ({ single }));
     const eq = vi.fn(() => ({ select }));
     const update = vi.fn(() => ({ eq }));
@@ -23,12 +23,6 @@ describe("updatePlanDates", () => {
     vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
       from,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
-
-    return { from, update, eq, select, single };
-  }
-
-  it("formats dates and updates the plan record", async () => {
-    const { from, update, eq } = mockUpdateResponse(null);
 
     await updatePlanDates("plan-1", new Date("2024-03-10T12:00:00"), new Date("2024-03-15T12:00:00"));
 
@@ -39,7 +33,15 @@ describe("updatePlanDates", () => {
 
   it("throws with the Supabase error message when available", async () => {
     const error = { message: "update failed" };
-    mockUpdateResponse(error);
+    const single = vi.fn().mockResolvedValue({ error });
+    const select = vi.fn(() => ({ single }));
+    const eq = vi.fn(() => ({ select }));
+    const update = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ update }));
+
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      from,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     await expect(updatePlanDates("plan-1", new Date("2024-01-01"), new Date("2024-01-02"))).rejects.toThrow(
       "Supabase error during updatePlanDates (planId=plan-1). update failed"
@@ -47,7 +49,15 @@ describe("updatePlanDates", () => {
   });
 
   it("falls back to a generic error message", async () => {
-    mockUpdateResponse({});
+    const single = vi.fn().mockResolvedValue({ error: {} });
+    const select = vi.fn(() => ({ single }));
+    const eq = vi.fn(() => ({ select }));
+    const update = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ update }));
+
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      from,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
     await expect(updatePlanDates("plan-1", new Date("2024-01-01"), new Date("2024-01-02"))).rejects.toThrow(
       "Supabase error during updatePlanDates (planId=plan-1)."

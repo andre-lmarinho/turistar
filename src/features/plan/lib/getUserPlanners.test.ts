@@ -25,21 +25,16 @@ type RpcResult = {
   error: unknown;
 };
 
-function buildSupabase(result: RpcResult) {
-  const rpc = vi.fn().mockResolvedValue(result);
-  const supabase = { rpc } as unknown as ReturnType<typeof createSupabaseServerClient>;
-  return { supabase, rpc };
-}
-
 describe("getUserPlanners", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
   });
 
   it("returns an empty array when RPC returns no rows", async () => {
-    const result: RpcResult = { data: null, error: null };
-    const { supabase, rpc } = buildSupabase(result);
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof createSupabaseServerClient
+    >);
 
     const planners = await getUserPlanners();
 
@@ -75,9 +70,10 @@ describe("getUserPlanners", () => {
       ],
       error: null,
     };
-
-    const { supabase, rpc } = buildSupabase(result);
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    const rpc = vi.fn().mockResolvedValue(result);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof createSupabaseServerClient
+    >);
 
     const planners = await getUserPlanners();
 
@@ -108,9 +104,10 @@ describe("getUserPlanners", () => {
 
   it("throws when RPC returns an error", async () => {
     const failure = new Error("nope");
-    const result: RpcResult = { data: null, error: failure };
-    const { supabase } = buildSupabase(result);
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    const rpc = vi.fn().mockResolvedValue({ data: null, error: failure });
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof createSupabaseServerClient
+    >);
 
     await expect(getUserPlanners()).rejects.toThrow("Supabase error during getUserPlanners. nope");
   });
@@ -132,9 +129,10 @@ describe("getUserPlanners", () => {
       ],
       error: null,
     };
-
-    const { supabase, rpc } = buildSupabase(result);
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    const rpc = vi.fn().mockResolvedValue(result);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof createSupabaseServerClient
+    >);
 
     const planners = await getUserPlanners();
 
@@ -159,9 +157,10 @@ describe("getUserPlanners", () => {
       ],
       error: null,
     };
-
-    const { supabase, rpc } = buildSupabase(result);
-    vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+    const rpc = vi.fn().mockResolvedValue(result);
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({ rpc } as unknown as ReturnType<
+      typeof createSupabaseServerClient
+    >);
 
     const planners = await getUserPlanners();
 

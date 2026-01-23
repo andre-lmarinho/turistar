@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),
+      "@tests": resolve(__dirname, "./tests"),
       "@supabase/ssr": resolve(__dirname, "./tests/__mocks__/supabaseSsr.ts"),
       "@/shared/utils/theme.css": resolve(__dirname, "./tests/__mocks__/empty.css"),
       "leaflet/dist/leaflet.css": resolve(__dirname, "./tests/__mocks__/empty.css"),
@@ -26,10 +27,10 @@ export default defineConfig({
       reportsDirectory: "coverage",
       reporter: ["text", "lcov"],
       thresholds: {
-        statements: 50,
-        branches: 40,
-        functions: 40,
-        lines: 50,
+        statements: 60,
+        branches: 50,
+        functions: 50,
+        lines: 60,
       },
     },
   },

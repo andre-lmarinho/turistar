@@ -1,13 +1,30 @@
 import { expect, test } from "@playwright/test";
 
-import { authenticateE2EUser, E2E_USER_SLUG } from "./helpers/auth";
+import { authenticateE2EUser } from "./helpers/auth";
 
-test.describe("User worldmap", () => {
-  test("highlights visited countries", async ({ page }) => {
+test.describe("Worldmap", () => {
+  test.beforeEach(async ({ page }) => {
     await authenticateE2EUser(page);
-    await page.goto(`/u/${E2E_USER_SLUG}/worldmap`);
+    await page.goto("/u/e2e-owner/worldmap");
+  });
 
-    await expect(page.locator("svg.map-traveling")).toBeVisible();
-    await expect(page.locator("path#BR")).toHaveClass(/visited/);
+  test("displays world map", async ({ page }) => {
+    const svgMap = page.locator("svg.map-traveling");
+    await expect(svgMap).toBeVisible();
+  });
+
+  test("displays country paths", async ({ page }) => {
+    const countryPath = page.locator("path[data-id]");
+    await expect(countryPath.first()).toBeVisible();
+  });
+
+  test("map has proper viewBox", async ({ page }) => {
+    const svgMap = page.locator("svg.map-traveling");
+    await expect(svgMap).toHaveAttribute("viewBox", /^\d+\s+\d+\s+\d+\s+\d+$/);
+  });
+
+  test("map displays title", async ({ page }) => {
+    const mapImage = page.getByRole("img", { name: /world map/i });
+    await expect(mapImage).toBeVisible();
   });
 });

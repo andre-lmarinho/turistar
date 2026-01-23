@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { createDayPlan } from "@tests/utils/factories";
 import type React from "react";
 import type { Mock } from "vitest";
 import { vi } from "vitest";
@@ -93,7 +94,7 @@ beforeEach(() => {
 });
 
 describe("PlannerProvider synchronization", () => {
-  const initialDays: DayPlan[] = [{ id: "2023-01-01", label: "Day 1", activities: [] }];
+  const initialDays: DayPlan[] = [createDayPlan({ id: "2023-01-01", label: "Day 1" })];
 
   it("syncs after storedDays load and activity addition", async () => {
     persistDays = {

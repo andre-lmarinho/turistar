@@ -199,6 +199,7 @@ class MockQueryBuilder<TTable extends TableName> {
   private gtFilters: GtFilters = {};
   private orderFilters: OrderFilter[] = [];
   private limitCount: number | null = null;
+  private updateData: Record<string, unknown> | null = null;
 
   constructor(
     private table: TTable,
@@ -206,6 +207,19 @@ class MockQueryBuilder<TTable extends TableName> {
   ) {}
 
   select() {
+    return this;
+  }
+
+  insert() {
+    return this;
+  }
+
+  update(data: Record<string, unknown>) {
+    this.updateData = data;
+    return this;
+  }
+
+  delete() {
     return this;
   }
 
@@ -256,6 +270,9 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async execute() {
+    if (this.updateData !== null && this.table === "plans") {
+      return this.client.updatePlanRow(this.eqFilters, this.updateData);
+    }
     const rows = await this.fetchRows();
     return { data: rows, error: null };
   }
@@ -370,6 +387,16 @@ class MockSupabaseClientImpl {
     planRow.edit_token = this.plan.edit_token;
     planRow.public_slug = this.plan.public_slug;
     Object.assign(planRow, overrides);
+  }
+
+  async updatePlanRow(eq: EqFilters, data: Record<string, unknown>) {
+    const matchingPlans = this.plans.filter((row) =>
+      Object.entries(eq).every(([key, value]) => row[key as keyof PlanRow] === value)
+    );
+    matchingPlans.forEach((row) => {
+      Object.assign(row, data);
+    });
+    return { data: matchingPlans, error: null };
   }
 
   async rpc<TName extends keyof RpcParams>(

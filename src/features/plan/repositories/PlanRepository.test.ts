@@ -1,5 +1,5 @@
+import { buildSupabaseMock } from "@tests/utils/testHelpers";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 import {
@@ -15,9 +15,9 @@ vi.mock("@/shared/lib/supabaseServer", () => ({
   createSupabaseServerClient: vi.fn(),
 }));
 
-type SupabaseResult<T> = {
-  data: T | null;
-  error: unknown;
+type PlanIdentityRow = {
+  id: string;
+  user_id: string | null;
 };
 
 type PlanDestinationRow = {
@@ -27,11 +27,6 @@ type PlanDestinationRow = {
 type PlanMemberRow = {
   user_id: string;
   tier: string;
-};
-
-type PlanIdentityRow = {
-  id: string;
-  user_id: string | null;
 };
 
 type PlanRow = {
@@ -56,62 +51,6 @@ type SnapshotRow = {
   updated_at: string;
 };
 
-interface MaybeSingleQueryChain<T> {
-  select: ReturnType<typeof vi.fn<(columns: string) => MaybeSingleQueryChain<T>>>;
-  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => MaybeSingleQueryChain<T>>>;
-  maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<T>>>>;
-}
-
-interface SnapshotQueryChain<T> {
-  select: ReturnType<typeof vi.fn<(columns: string) => SnapshotQueryChain<T>>>;
-  eq: ReturnType<typeof vi.fn<(column: string, value: unknown) => SnapshotQueryChain<T>>>;
-  order: ReturnType<typeof vi.fn<(column: string, options: { ascending: boolean }) => SnapshotQueryChain<T>>>;
-  limit: ReturnType<typeof vi.fn<(rowCount: number) => SnapshotQueryChain<T>>>;
-  maybeSingle: ReturnType<typeof vi.fn<() => Promise<SupabaseResult<T>>>>;
-}
-
-function buildMaybeSingleQuery<T>(result: SupabaseResult<T>) {
-  const chain = {
-    select: vi.fn<(columns: string) => MaybeSingleQueryChain<T>>(),
-    eq: vi.fn<(column: string, value: unknown) => MaybeSingleQueryChain<T>>(),
-    maybeSingle: vi.fn<() => Promise<SupabaseResult<T>>>(),
-  } as unknown as MaybeSingleQueryChain<T>;
-
-  chain.select.mockReturnValue(chain);
-  chain.eq.mockReturnValue(chain);
-  chain.maybeSingle.mockResolvedValue(result);
-
-  return chain;
-}
-
-function buildSnapshotQuery<T>(result: SupabaseResult<T>) {
-  const chain = {
-    select: vi.fn<(columns: string) => SnapshotQueryChain<T>>(),
-    eq: vi.fn<(column: string, value: unknown) => SnapshotQueryChain<T>>(),
-    order: vi.fn<(column: string, options: { ascending: boolean }) => SnapshotQueryChain<T>>(),
-    limit: vi.fn<(rowCount: number) => SnapshotQueryChain<T>>(),
-    maybeSingle: vi.fn<() => Promise<SupabaseResult<T>>>(),
-  } as unknown as SnapshotQueryChain<T>;
-
-  chain.select.mockReturnValue(chain);
-  chain.eq.mockReturnValue(chain);
-  chain.order.mockReturnValue(chain);
-  chain.limit.mockReturnValue(chain);
-  chain.maybeSingle.mockResolvedValue(result);
-
-  return chain;
-}
-
-function buildSupabase<T>(table: string, chain: T) {
-  const from = vi.fn((tableName: string) => {
-    if (tableName === table) return chain;
-    throw new Error(`Unexpected table ${tableName}`);
-  });
-
-  const supabase = { from } as unknown as ReturnType<typeof createSupabaseServerClient>;
-  return { supabase, from };
-}
-
 describe("PlanRepository", () => {
   beforeEach(() => {
     vi.mocked(createSupabaseServerClient).mockReset();
@@ -120,8 +59,7 @@ describe("PlanRepository", () => {
   describe("fetchPlanIdentityById", () => {
     it("maps the plan identity", async () => {
       const data: PlanIdentityRow = { id: "plan-1", user_id: "owner-1" };
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data, error: null });
-      const { supabase, from } = buildSupabase("plans", planQuery);
+      const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanIdentityById("plan-1");
@@ -133,8 +71,7 @@ describe("PlanRepository", () => {
     });
 
     it("returns null when no plan exists", async () => {
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data: null, error: null });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock<PlanIdentityRow>("plans", { data: null, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanIdentityById("plan-2");
@@ -144,8 +81,7 @@ describe("PlanRepository", () => {
 
     it("throws a formatted error when Supabase fails", async () => {
       const failure = new Error("plan failure");
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data: null, error: failure });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock<PlanIdentityRow>("plans", { data: null, error: failure });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
@@ -164,8 +100,7 @@ describe("PlanRepository", () => {
   describe("fetchPlanIdentityBySlug", () => {
     it("maps the plan identity by slug", async () => {
       const data: PlanIdentityRow = { id: "plan-10", user_id: "owner-10" };
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data, error: null });
-      const { supabase, from } = buildSupabase("plans", planQuery);
+      const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanIdentityBySlug("public-slug");
@@ -180,8 +115,7 @@ describe("PlanRepository", () => {
   describe("resolvePlanIdentity", () => {
     it("resolves by id when the input is a UUID", async () => {
       const data: PlanIdentityRow = { id: "00000000-0000-0000-0000-000000000000", user_id: "owner-1" };
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data, error: null });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await resolvePlanIdentity("00000000-0000-0000-0000-000000000000");
@@ -191,8 +125,7 @@ describe("PlanRepository", () => {
 
     it("resolves by slug when the input is not a UUID", async () => {
       const data: PlanIdentityRow = { id: "plan-42", user_id: "owner-42" };
-      const planQuery = buildMaybeSingleQuery<PlanIdentityRow>({ data, error: null });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await resolvePlanIdentity("public-slug");
@@ -214,8 +147,7 @@ describe("PlanRepository", () => {
         plan_destinations: [{ destinations: { name: "Berlin" } }],
         plan_members: [{ user_id: "member-1", tier: "admin" }],
       };
-      const planQuery = buildMaybeSingleQuery<PlanWithMembersRow>({ data, error: null });
-      const { supabase, from } = buildSupabase("plans", planQuery);
+      const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanByIdWithMembers("plan-1");
@@ -237,8 +169,7 @@ describe("PlanRepository", () => {
     });
 
     it("returns null when no plan exists", async () => {
-      const planQuery = buildMaybeSingleQuery<PlanWithMembersRow>({ data: null, error: null });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock<PlanWithMembersRow>("plans", { data: null, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanByIdWithMembers("plan-2");
@@ -248,8 +179,7 @@ describe("PlanRepository", () => {
 
     it("throws a formatted error when Supabase fails", async () => {
       const failure = new Error("plan failure");
-      const planQuery = buildMaybeSingleQuery<PlanWithMembersRow>({ data: null, error: failure });
-      const { supabase } = buildSupabase("plans", planQuery);
+      const { supabase } = buildSupabaseMock<PlanWithMembersRow>("plans", { data: null, error: failure });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       try {
@@ -278,8 +208,7 @@ describe("PlanRepository", () => {
         plan_destinations: [{ destinations: { name: "Oslo" } }],
         plan_members: [{ user_id: "member-1", tier: "viewer" }],
       };
-      const planQuery = buildMaybeSingleQuery<PlanWithMembersRow>({ data, error: null });
-      const { supabase, from } = buildSupabase("plans", planQuery);
+      const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchPlanBySlug("public-slug");
@@ -310,8 +239,11 @@ describe("PlanRepository", () => {
         state: { days: [] },
         updated_at: "2024-03-01T00:00:00.000Z",
       };
-      const snapshotQuery = buildSnapshotQuery<SnapshotRow>({ data: snapshot, error: null });
-      const { supabase, from } = buildSupabase("plan_snapshots", snapshotQuery);
+      const {
+        supabase,
+        from,
+        chain: snapshotQuery,
+      } = buildSupabaseMock("plan_snapshots", { data: snapshot, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
 
       const result = await fetchLatestSnapshot("plan-30");
