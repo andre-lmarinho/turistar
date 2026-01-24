@@ -16,7 +16,7 @@ export function createSupabaseServiceRoleClient(): SupabaseClient<Database> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!serviceRoleKey) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY is required for service role access.");
+    throw new Error("createSupabaseServiceRoleClient failed: missing SUPABASE_SERVICE_ROLE_KEY.");
   }
 
   const client = createClient<Database>(clientEnv.NEXT_PUBLIC_SUPABASE_URL, serviceRoleKey, {

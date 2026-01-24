@@ -1,9 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+
 import type { Database } from "@/shared/types/supabase";
+
 import planFixture from "../../fixtures/plan.json";
 
-type PlanSnapshotRow = (typeof planFixture)["plan"]["snapshots"][number];
-type PlanEventRow = {
+type SnapshotRow = (typeof planFixture)["plan"]["snapshots"][number];
+type EventRow = {
   event_id: string;
   plan_id: string;
   version: number;
@@ -18,8 +20,8 @@ type PlanState = {
   public_slug: string;
   edit_token: string;
   title: string;
-  snapshots: PlanSnapshotRow[];
-  events: PlanEventRow[];
+  snapshots: SnapshotRow[];
+  events: EventRow[];
 };
 
 type PlanMemberTier = Database["public"]["Enums"]["plan_member_tier"];
@@ -72,7 +74,7 @@ const DEFAULT_MEMBER_ID = "e2e-member";
 const DEFAULT_DESTINATION = "E2E Destination";
 const DEFAULT_DESTINATION_COUNTRY = "BR";
 
-type PlanEventInput = {
+type EventInput = {
   id: string;
   type: string;
   payload: unknown;
@@ -93,7 +95,8 @@ type RpcParams = {
   append_plan_events: {
     plan_id: string;
     base_version?: number | string | null;
-    events?: PlanEventInput[];
+    events?: EventInput[];
+    snapshot_state?: SnapshotRow["state"] | null;
   };
   update_plan_title: {
     _plan_id: string;
@@ -196,6 +199,7 @@ class MockQueryBuilder<TTable extends TableName> {
   private gtFilters: GtFilters = {};
   private orderFilters: OrderFilter[] = [];
   private limitCount: number | null = null;
+  private updateData: Record<string, unknown> | null = null;
 
   constructor(
     private table: TTable,
@@ -203,6 +207,19 @@ class MockQueryBuilder<TTable extends TableName> {
   ) {}
 
   select() {
+    return this;
+  }
+
+  insert() {
+    return this;
+  }
+
+  update(data: Record<string, unknown>) {
+    this.updateData = data;
+    return this;
+  }
+
+  delete() {
     return this;
   }
 
@@ -253,6 +270,9 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async execute() {
+    if (this.updateData !== null && this.table === "plans") {
+      return this.client.updatePlanRow(this.eqFilters, this.updateData);
+    }
     const rows = await this.fetchRows();
     return { data: rows, error: null };
   }
@@ -369,6 +389,16 @@ class MockSupabaseClientImpl {
     Object.assign(planRow, overrides);
   }
 
+  async updatePlanRow(eq: EqFilters, data: Record<string, unknown>) {
+    const matchingPlans = this.plans.filter((row) =>
+      Object.entries(eq).every(([key, value]) => row[key as keyof PlanRow] === value)
+    );
+    matchingPlans.forEach((row) => {
+      Object.assign(row, data);
+    });
+    return { data: matchingPlans, error: null };
+  }
+
   async rpc<TName extends keyof RpcParams>(
     name: TName,
     params: RpcParams[TName]
@@ -409,7 +439,7 @@ class MockSupabaseClientImpl {
         const rpcParams = params as RpcParams["append_plan_events"];
         const planId = rpcParams.plan_id;
         const baseVersion = Number(rpcParams.base_version ?? 0);
-        const events: PlanEventInput[] = rpcParams.events ?? [];
+        const events: EventInput[] = rpcParams.events ?? [];
 
         if (planId !== this.plan.plan_id) {
           return { data: null, error: new Error("Unknown plan") };
@@ -418,15 +448,15 @@ class MockSupabaseClientImpl {
           return {
             data: {
               version: this.currentVersion,
-              inserted_events: [] as PlanEventRow[],
+              inserted_events: [] as EventRow[],
             },
             error: null,
           };
         }
 
-        const inserted: PlanEventRow[] = events.map((event: PlanEventInput) => {
+        const inserted: EventRow[] = events.map((event: EventInput) => {
           this.currentVersion += 1;
-          const stored: PlanEventRow = {
+          const stored: EventRow = {
             event_id: event.id,
             plan_id: planId,
             version: this.currentVersion,
@@ -441,6 +471,9 @@ class MockSupabaseClientImpl {
 
         const snapshot = this.plan.snapshots[0];
         snapshot.version = this.currentVersion;
+        if (rpcParams.snapshot_state) {
+          snapshot.state = rpcParams.snapshot_state;
+        }
         snapshot.updated_at = new Date().toISOString();
 
         return {

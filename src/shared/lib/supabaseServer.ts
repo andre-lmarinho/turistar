@@ -4,7 +4,8 @@ import type { SetAllCookies } from "@supabase/ssr";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies, headers } from "next/headers";
-import type { Database } from "@/shared/types/supabase";
+
+import type { Database } from "../types/supabase";
 import { clientEnv } from "./clientEnv";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
@@ -42,11 +43,8 @@ export function createSupabaseServerClient(): SupabaseClient<Database> {
           for (const { name, value, options } of cookiesToSet) {
             try {
               cookieStore.set({ name, value, ...options });
-            } catch (error) {
-              console.error(
-                `Failed to set cookie "${name}":`,
-                error instanceof Error ? error.message : "Unknown error"
-              );
+            } catch {
+              // Ignore cookie set failures (e.g. read-only responses during SSR).
             }
           }
         },

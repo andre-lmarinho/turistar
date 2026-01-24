@@ -13,7 +13,7 @@ vi.mock("@/shared/lib/server/geoapify/validateQuery", () => ({
   validateGeoapifyQuery: mockValidateGeoapifyQuery,
 }));
 
-vi.mock("@/features/app/planner/services/geoapify/autocomplete", () => ({
+vi.mock("@/features/search/services/GeoapifyService", () => ({
   fetchGeoapifyAddressAutocomplete: mockFetchGeoapifyAddressAutocomplete,
 }));
 
@@ -58,7 +58,11 @@ describe("GET /api/places/address", () => {
 
     const res = await GET(createRequest("?text=home"));
 
-    expect(consoleSpy).toHaveBeenCalledWith(failure);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "address autocomplete failed:",
+      { text: "home", lat: null, lon: null },
+      failure
+    );
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to load suggestions." });
 

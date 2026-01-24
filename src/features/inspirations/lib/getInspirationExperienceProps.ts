@@ -1,9 +1,9 @@
-import type { DayPlan } from "@/features/app/planner/domain/types/PlannerEntities";
-import type { Entry } from "@/features/app/planner/types/budget";
+import type { DayPlan } from "@/features/activity/types";
+import type { Entry } from "@/features/budget/types";
 
-import { buildDaysFromInspirationData } from "@/features/inspirations/lib/buildDaysFromInspirationData";
-import { loadInspirationBySlug } from "@/features/inspirations/lib/inspirationLoader";
-import type { InspirationDocument } from "@/features/inspirations/lib/schemas";
+import { buildDaysFromInspirationData } from "../lib/buildDaysFromInspirationData";
+import { loadInspirationBySlug } from "../lib/inspirationLoader";
+import type { InspirationDocument } from "../lib/schemas";
 
 export interface InspirationExperienceProps {
   initialDays: DayPlan[];

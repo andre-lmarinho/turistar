@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
 import { vi } from "vitest";
+
 import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/shared/lib/geoapify/config";
+
 import { GET } from "./route";
 
 const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
-vi.mock("@/features/app/planner/services/geoapify/placeSearch", () => ({
+vi.mock("@/features/search/services/GeoapifyService", () => ({
   fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch,
 }));
 
@@ -55,7 +57,11 @@ describe("GET /api/places/search", () => {
 
     const res = await GET(createRequest("?name=forte"));
 
-    expect(consoleSpy).toHaveBeenCalledWith(error);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "place search failed:",
+      { name: "forte", lat: null, lon: null },
+      error
+    );
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to search places." });
 

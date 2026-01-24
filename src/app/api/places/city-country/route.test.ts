@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
 import { vi } from "vitest";
+
 import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/shared/lib/geoapify/config";
+
 import { GET } from "./route";
 
 const { mockFetchGeoapifyAutocomplete } = vi.hoisted(() => ({
   mockFetchGeoapifyAutocomplete: vi.fn(),
 }));
 
-vi.mock("@/features/app/planner/services/geoapify/autocomplete", () => ({
+vi.mock("@/features/search/services/GeoapifyService", () => ({
   fetchGeoapifyAutocomplete: mockFetchGeoapifyAutocomplete,
 }));
 
@@ -55,7 +57,11 @@ describe("GET /api/places/city-country", () => {
 
     const res = await GET(createRequest("?text=paris"));
 
-    expect(consoleSpy).toHaveBeenCalledWith(error);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "city-country autocomplete failed:",
+      { text: "paris", lat: null, lon: null },
+      error
+    );
     expect(res.status).toBe(500);
     await expect(res.json()).resolves.toEqual({ error: "Failed to load suggestions." });
 

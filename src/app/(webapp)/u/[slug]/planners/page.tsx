@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { requireUserSlugMatch } from "@/features/user/lib/requireUserSlugMatch";
-import { getUserPlanners } from "@/features/userPlanners/lib/getUserPlanners";
+import { getUserPlanners } from "@/features/plan/lib/getUserPlanners";
+import { requireProfileSlugMatch } from "@/features/profile/lib/requireProfileSlugMatch";
 import { InspirationsView } from "@/modules/user/inspirations-view";
 import { PlannersView } from "@/modules/user/planners-view";
 
@@ -19,7 +19,7 @@ interface DashboardPlannersPageProps {
 
 export default async function DashboardPlannersPage({ params }: DashboardPlannersPageProps) {
   const { slug } = await params;
-  await requireUserSlugMatch(slug);
+  await requireProfileSlugMatch(slug);
   const plans = await getUserPlanners();
 
   return (

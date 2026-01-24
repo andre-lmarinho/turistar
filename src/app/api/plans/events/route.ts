@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { getPlanEvents } from "@/features/app/planner/server/queries/plans/getPlanEvents";
+import { fetchEvents } from "@/features/events/services/eventsQueries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const events = await getPlanEvents(planId, sinceVersion);
+    const events = await fetchEvents(planId, sinceVersion);
     return NextResponse.json({ events });
   } catch (error) {
     console.error(error);

@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { upsertProfile } from "@/features/user/repositories/ProfileRepository";
+
+import { upsertProfile } from "@/features/profile/repositories/ProfileRepository";
 import type { SupabaseUser } from "@/shared/lib/auth/session";
 import { requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
+
 import { ensureProfile } from "./ensureProfile";
 
 vi.mock("@/shared/lib/auth/session", () => {
@@ -18,7 +20,7 @@ vi.mock("@/shared/lib/auth/session", () => {
   };
 });
 
-vi.mock("@/features/user/repositories/ProfileRepository", () => ({
+vi.mock("@/features/profile/repositories/ProfileRepository", () => ({
   upsertProfile: vi.fn(),
 }));
 

@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { fetchGeoapifyPlaceDetails } from "@/features/app/planner/services/geoapify/placeDetails";
-import { fetchWikidataImage } from "@/features/app/planner/services/wikidata/fetchWikidataImage";
+import { fetchGeoapifyPlaceDetails } from "@/features/search/services/GeoapifyService";
+import { fetchWikidataImage } from "@/features/search/services/WikidataService";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ async function handleLocalDetails(req: NextRequest) {
     const wikidataImageUrl = details.wikidataId ? await fetchWikidataImage(details.wikidataId) : undefined;
     return NextResponse.json({ details, wikidataImageUrl });
   } catch (error) {
-    console.error(error);
+    console.error("place details failed:", { placeId }, error);
     return NextResponse.json({ error: "Failed to load place details." }, { status: 500 });
   }
 }

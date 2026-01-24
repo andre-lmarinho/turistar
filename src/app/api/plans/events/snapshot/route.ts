@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { getPlanSnapshot } from "@/features/app/planner/server/queries/plans/getPlanSnapshot";
+import { fetchSnapshot } from "@/features/snapshots/services/snapshotsQueries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const snapshot = await getPlanSnapshot(planId);
+    const snapshot = await fetchSnapshot(planId);
     return NextResponse.json({ snapshot });
   } catch (error) {
     console.error(error);

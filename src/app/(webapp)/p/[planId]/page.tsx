@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { generatePlannerMetadata } from "@/features/app/planner/server/queries/plans/generatePlannerMetadata";
-import { getPlannerExperience } from "@/features/app/planner/server/queries/plans/getPlannerExperience";
+import { generatePlannerMetadata } from "@/features/plan/lib/generatePlannerMetadata";
+import { getPlannerExperience } from "@/features/plan/lib/getPlannerExperience";
 import { PlanIdView } from "@/modules/planner/planid-view";
 
 export const dynamic = "force-dynamic";

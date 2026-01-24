@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { fetchGeoapifyPlaceSearch } from "@/features/app/planner/services/geoapify/placeSearch";
+
+import { fetchGeoapifyPlaceSearch } from "@/features/search/services/GeoapifyService";
 import { validateGeoapifyQuery } from "@/shared/lib/server/geoapify/validateQuery";
 
 export const runtime = "edge";
@@ -19,12 +20,12 @@ async function handleLocalSearch(req: NextRequest) {
   try {
     const results = await fetchGeoapifyPlaceSearch(
       name,
-      lat ? Number(lat) : undefined,
-      lon ? Number(lon) : undefined
+      lat && !Number.isNaN(Number(lat)) ? Number(lat) : undefined,
+      lon && !Number.isNaN(Number(lon)) ? Number(lon) : undefined
     );
     return NextResponse.json({ results });
   } catch (error) {
-    console.error(error);
+    console.error("place search failed:", { name, lat, lon }, error);
     return NextResponse.json({ error: "Failed to search places." }, { status: 500 });
   }
 }

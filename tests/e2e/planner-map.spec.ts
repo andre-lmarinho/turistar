@@ -1,0 +1,41 @@
+import { expect, test } from "@playwright/test";
+
+import { authenticateE2EUser } from "./helpers/auth";
+
+test.describe("Map View", () => {
+  test.beforeEach(async ({ page }) => {
+    await authenticateE2EUser(page);
+    await page.goto("/p/plan-e2e-001");
+
+    const mapTab = page.getByRole("button", { name: /map/i });
+    await mapTab.click();
+  });
+
+  test("displays zoom controls", async ({ page }) => {
+    const zoomIn = page.getByRole("button", { name: /zoom in/i });
+    await expect(zoomIn).toBeVisible();
+
+    const zoomOut = page.getByRole("button", { name: /zoom out/i });
+    await expect(zoomOut).toBeVisible();
+  });
+
+  test("displays Leaflet map when map tab is active", async ({ page }) => {
+    const leafletLink = page.getByRole("link", { name: /leaflet/i });
+    await expect(leafletLink).toBeVisible();
+  });
+
+  test("map tab has correct aria state when active", async ({ page }) => {
+    const mapTab = page.getByRole("button", { name: /map/i });
+    await expect(mapTab).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("map displays OpenStreetMap attribution", async ({ page }) => {
+    const attribution = page.getByText(/openstreetmap/i);
+    await expect(attribution.first()).toBeVisible();
+  });
+
+  test("map has zoom in button visible", async ({ page }) => {
+    const zoomIn = page.getByRole("button", { name: /zoom in/i });
+    await expect(zoomIn).toBeVisible();
+  });
+});

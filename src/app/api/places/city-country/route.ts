@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { fetchGeoapifyAutocomplete } from "@/features/app/planner/services/geoapify/autocomplete";
+
+import { fetchGeoapifyAutocomplete } from "@/features/search/services/GeoapifyService";
 import { validateGeoapifyQuery } from "@/shared/lib/server/geoapify/validateQuery";
 
 export const runtime = "edge";
@@ -24,7 +25,7 @@ async function handleCityCountryAutocomplete(req: NextRequest) {
     );
     return NextResponse.json({ results });
   } catch (err) {
-    console.error(err);
+    console.error("city-country autocomplete failed:", { text, lat, lon }, err);
     return NextResponse.json({ error: "Failed to load suggestions." }, { status: 500 });
   }
 }
