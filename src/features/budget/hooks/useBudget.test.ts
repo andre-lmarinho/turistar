@@ -1,8 +1,16 @@
-import { renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import type { CategoryKey, Entry } from "../types";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { Entry } from "../types";
 import { BudgetProvider, useBudgetContext } from "./BudgetContext";
 import { useBudget } from "./useBudget";
+
+// Mock React Query to simplify testing
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: () => ({ data: null, isSuccess: true }),
+  useMutation: () => ({ mutate: vi.fn(), mutateAsync: vi.fn() }),
+  useQueryClient: () => ({ setQueryData: vi.fn(), invalidateQueries: vi.fn() }),
+}));
 
 describe("BudgetContext", () => {
   it("is exported as a function (useBudgetContext)", () => {
@@ -15,6 +23,10 @@ describe("BudgetContext", () => {
 });
 
 describe("useBudget hook", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("is exported as a function", () => {
     expect(typeof useBudget).toBe("function");
   });
@@ -46,9 +58,7 @@ describe("useBudget hook", () => {
   });
 
   it("handles initial values", () => {
-    const initialEntries: Entry[] = [
-      { id: "e1", description: "Hotel", category: "lodging" as CategoryKey, amount: 200 },
-    ];
+    const initialEntries: Entry[] = [{ id: "e1", description: "Hotel", category: "lodging", amount: 200 }];
 
     const { result } = renderHook(() => useBudget("plan-1", 1000, { initialBudget: 500, initialEntries }));
 
@@ -56,9 +66,98 @@ describe("useBudget hook", () => {
     expect(result.current.entries).toHaveLength(1);
   });
 
-  it("includes activitiesTotal in category totals", () => {
-    const { result } = renderHook(() => useBudget("plan-1", 1000, {}));
+  it("calculates category totals correctly", () => {
+    const initialEntries: Entry[] = [
+      { id: "e1", description: "Hotel", category: "lodging", amount: 200 },
+      { id: "e2", description: "Food", category: "food", amount: 150 },
+      { id: "e3", description: "Transport", category: "transport", amount: 100 },
+    ];
 
-    expect(result.current.categoryTotals.activities).toBe(1000);
+    const { result } = renderHook(() => useBudget("plan-1", 500, { initialEntries, initialBudget: 500 }));
+
+    expect(result.current.categoryTotals.lodging).toBe(200);
+    expect(result.current.categoryTotals.food).toBe(150);
+    expect(result.current.categoryTotals.transport).toBe(100);
+    expect(result.current.categoryTotals.activities).toBe(500); // activitiesTotal parameter
+    expect(result.current.categoryTotals.activities).toBe(500); // activitiesTotal parameter
+
+    expect(result.current.totalSpent).toBe(950); // 200 + 150 + 100 + 500(activities)
+
+    expect(result.current.totalSpent).toBe(950); // 200 + 150 + 100 + 500(activities)
+    expect(result.current.difference).toBe(-450); // 500 - 950
+  });
+
+  it("updates budget state locally", () => {
+    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+
+    act(() => {
+      result.current.setBudget(1500);
+    });
+
+    expect(result.current.budget).toBe(1500);
+  });
+
+  it("adds entry locally when persist is disabled", async () => {
+    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+
+    act(() => {
+      result.current.setDesc("New Entry");
+      result.current.setAmount(100);
+      result.current.setCat("food");
+    });
+
+    await act(async () => {
+      await result.current.handleAdd();
+    });
+
+    expect(result.current.entries).toHaveLength(1);
+    expect(result.current.entries[0].description).toBe("New Entry");
+    expect(result.current.entries[0].amount).toBe(100);
+    expect(result.current.entries[0].category).toBe("food");
+  });
+
+  it("does not add entry when editing is disabled", async () => {
+    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false, canEdit: false }));
+
+    act(() => {
+      result.current.setDesc("New Entry");
+      result.current.setAmount(100);
+    });
+
+    await act(async () => {
+      await result.current.handleAdd();
+    });
+
+    expect(result.current.entries).toHaveLength(0);
+  });
+
+  it("deletes entry locally when persist is disabled", async () => {
+    const initialEntries: Entry[] = [
+      { id: "e1", description: "Test", category: "food", amount: 100 },
+      { id: "e2", description: "Test 2", category: "transport", amount: 200 },
+    ];
+
+    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false, initialEntries }));
+
+    await act(async () => {
+      await result.current.handleDeleteEntry(0);
+    });
+
+    expect(result.current.entries).toHaveLength(1);
+    expect(result.current.entries[0].id).toBe("e2");
+  });
+
+  it("updates form state correctly", () => {
+    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+
+    act(() => {
+      result.current.setDesc("Test Description");
+      result.current.setAmount(250);
+      result.current.setCat("lodging");
+    });
+
+    expect(result.current.desc).toBe("Test Description");
+    expect(result.current.amount).toBe(250);
+    expect(result.current.cat).toBe("lodging");
   });
 });
