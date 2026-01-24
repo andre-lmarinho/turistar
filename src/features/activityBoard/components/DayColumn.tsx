@@ -1,8 +1,8 @@
 "use client";
 
-import { useDroppable } from "@dnd-kit/core";
+import { useDndContext, useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { Activity } from "@/features/activity/types";
 import { AddActivity } from "@/features/activityDialog/components/AddActivity";
@@ -26,6 +26,23 @@ export const DayColumn = memo(function DayColumn({
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [hadOverflowBeforeDrag, setHadOverflowBeforeDrag] = useState(false);
+
+  const { active } = useDndContext();
+  const isDragging = active !== null;
+
+  // Capture overflow state when drag starts to prevent scrollbar flash during transitions
+  useLayoutEffect(() => {
+    if (isDragging && scrollRef.current) {
+      setHadOverflowBeforeDrag(scrollRef.current.scrollHeight > scrollRef.current.clientHeight);
+    } else if (!isDragging) {
+      setHadOverflowBeforeDrag(false);
+    }
+  }, [isDragging]);
+
+  const overflowY = isDragging && !hadOverflowBeforeDrag ? "overflow-y-hidden" : "overflow-y-auto";
+  const scrollContainerClassName = `overflow-x-hidden pt-2 ${overflowY}`;
+
   const [activeInlineIndex, setActiveInlineIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -70,7 +87,7 @@ export const DayColumn = memo(function DayColumn({
       {/* Activities */}
       {canEdit ? (
         <SortableContext id={day.id} items={activityIds} strategy={verticalListSortingStrategy}>
-          <div ref={scrollRef} data-testid="day-scroll" className="overflow-x-hidden overflow-y-auto pt-2">
+          <div ref={scrollRef} data-testid="day-scroll" className={scrollContainerClassName}>
             {day.activities.map((activity, idx) => (
               <React.Fragment key={activity.id}>
                 {activeInlineIndex === idx ? (
@@ -102,7 +119,7 @@ export const DayColumn = memo(function DayColumn({
           </div>
         </SortableContext>
       ) : (
-        <div ref={scrollRef} data-testid="day-scroll" className="overflow-x-hidden overflow-y-auto pt-2">
+        <div ref={scrollRef} data-testid="day-scroll" className={scrollContainerClassName}>
           {day.activities.map((activity) => (
             <div key={activity.id} className="mb-3 last:mb-0">
               <ActivityCard activity={{ ...activity, dayId: day.id }} bgColor={activity.color} />
