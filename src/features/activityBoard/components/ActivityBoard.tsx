@@ -39,7 +39,6 @@ export const ActivityBoard = memo(function Board({
   onFallbackAdd,
 }: BoardProps) {
   const [draftDays, setDraftDays] = useState(days);
-  const syncedDaysRef = useRef(days);
   const handleDaysCommit = useCallback(
     (nextDays: BoardProps["days"]) => {
       onDaysChange?.(nextDays);
@@ -60,10 +59,7 @@ export const ActivityBoard = memo(function Board({
 
   // Sync draftDays with props when not dragging
   useEffect(() => {
-    if (activeId) return;
-    if (syncedDaysRef.current === days) return;
-    syncedDaysRef.current = days;
-    setDraftDays(days);
+    if (!activeId) setDraftDays(days);
   }, [activeId, days]);
 
   // Get active activity for drag overlay
