@@ -72,23 +72,11 @@ export const ActivityBoard = memo(function Board({
     return getActivity(draftDays, String(activeId));
   }, [activeId, draftDays]);
 
-  // Check if element or its ancestors are interactive
-  const isInteractiveElement = (element: EventTarget | null): boolean => {
-    if (!(element instanceof HTMLElement)) return false;
-    const interactiveTags = ["BUTTON", "INPUT", "TEXTAREA", "SELECT", "A"];
-    const interactiveRoles = ["button", "link", "checkbox", "radio", "textbox"];
-
-    let current: HTMLElement | null = element;
-    while (current && current !== boardRef.current) {
-      if (interactiveTags.includes(current.tagName)) return true;
-      if (current.getAttribute("role") && interactiveRoles.includes(current.getAttribute("role") || ""))
-        return true;
-      if (current.draggable) return true;
-      if (current.dataset.noDragScroll !== undefined) return true;
-      current = current.parentElement;
-    }
-    return false;
-  };
+  const isInteractiveElement = (el: EventTarget | null): boolean =>
+    el instanceof Element &&
+    el.closest(
+      'button, a, input, textarea, select, [role="button"], [draggable="true"], [data-no-drag-scroll]'
+    ) !== null;
 
   // Drag scroll on non-interactive areas
   const handleMouseDown = (e: React.MouseEvent<HTMLUListElement>) => {
