@@ -119,7 +119,7 @@ export const ActivityBoard = memo(function Board({
             <DayColumn
               day={day}
               canEdit={canEdit}
-              onActivitySelect={(activity, dayId) => onActivitySelect?.(activity, dayId)}
+              onActivitySelect={onActivitySelect}
               onAddActivity={onAddActivity}
               onFallbackAdd={onFallbackAdd}
             />
