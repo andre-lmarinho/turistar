@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Activity } from "@/features/activity/types";
 
@@ -38,6 +38,10 @@ const baseActivity: Activity = {
 };
 
 describe("DraggableCard", () => {
+  beforeEach(() => {
+    shared.setNodeRef.mockClear();
+  });
+
   it("calls onSelect when ActivityCard is clicked", () => {
     const handleSelect = vi.fn();
 
@@ -46,6 +50,13 @@ describe("DraggableCard", () => {
     fireEvent.click(screen.getByTestId("activity-card"));
 
     expect(handleSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it("attaches the sortable ref to the container", () => {
+    render(<DraggableCard id={baseActivity.id} activity={baseActivity} />);
+
+    expect(shared.setNodeRef).toHaveBeenCalled();
+    expect(shared.setNodeRef.mock.calls[0]?.[0]).toBeInstanceOf(HTMLElement);
   });
 
   it("renders overlay without drag scroll attributes", () => {

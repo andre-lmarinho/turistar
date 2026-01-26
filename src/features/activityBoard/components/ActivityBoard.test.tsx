@@ -57,8 +57,7 @@ const baseDays: DayPlan[] = [
 
 describe("ActivityBoard", () => {
   beforeEach(() => {
-    shared.dayColumnSpy.mockClear();
-    shared.draggableCardSpy.mockClear();
+    vi.clearAllMocks();
     shared.useDragHandlersMock.mockReset();
     shared.getActivityMock.mockReset();
   });

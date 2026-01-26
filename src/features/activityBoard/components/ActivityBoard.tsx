@@ -30,6 +30,12 @@ const customCollisionDetection: CollisionDetection = (args) => {
   return closestCenter(args);
 };
 
+const isInteractiveElement = (el: EventTarget | null): boolean =>
+  el instanceof Element &&
+  el.closest(
+    'button, a, input, textarea, select, [role="button"], [draggable="true"], [data-no-drag-scroll]'
+  ) !== null;
+
 export const ActivityBoard = memo(function Board({
   days,
   canEdit = true,
@@ -67,12 +73,6 @@ export const ActivityBoard = memo(function Board({
     if (!activeId) return null;
     return getActivity(draftDays, String(activeId));
   }, [activeId, draftDays]);
-
-  const isInteractiveElement = (el: EventTarget | null): boolean =>
-    el instanceof Element &&
-    el.closest(
-      'button, a, input, textarea, select, [role="button"], [draggable="true"], [data-no-drag-scroll]'
-    ) !== null;
 
   // Drag scroll on non-interactive areas
   const handleMouseDown = (e: React.MouseEvent<HTMLUListElement>) => {

@@ -78,12 +78,13 @@ describe("DayColumn", () => {
     shared.activityCardSpy.mockClear();
     shared.addActivitySpy.mockClear();
     shared.inlineActivitySpy.mockClear();
+    shared.setNodeRef.mockClear();
   });
 
   it("passes activity and triggers onActivitySelect when draggable card is clicked", () => {
     const handleSelect = vi.fn();
 
-    render(<DayColumn day={baseDay} onActivitySelect={handleSelect} />);
+    render(<DayColumn day={baseDay} canEdit={true} onActivitySelect={handleSelect} />);
 
     fireEvent.click(screen.getByTestId("draggable-a1"));
 
