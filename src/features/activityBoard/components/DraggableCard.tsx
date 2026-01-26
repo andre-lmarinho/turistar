@@ -27,6 +27,7 @@ export const DraggableCard = memo(function DraggableCard({
 }: DraggableCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
+    animateLayoutChanges: () => false,
   });
 
   if (dragOverlay) {
