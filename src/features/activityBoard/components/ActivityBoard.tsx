@@ -30,6 +30,12 @@ const customCollisionDetection: CollisionDetection = (args) => {
   return closestCenter(args);
 };
 
+const isInteractiveElement = (el: EventTarget | null): boolean =>
+  el instanceof Element &&
+  el.closest(
+    'button, a, input, textarea, select, [role="button"], [draggable="true"], [data-no-drag-scroll]'
+  ) !== null;
+
 export const ActivityBoard = memo(function Board({
   days,
   canEdit = true,
@@ -39,7 +45,6 @@ export const ActivityBoard = memo(function Board({
   onFallbackAdd,
 }: BoardProps) {
   const [draftDays, setDraftDays] = useState(days);
-  const syncedDaysRef = useRef(days);
   const handleDaysCommit = useCallback(
     (nextDays: BoardProps["days"]) => {
       onDaysChange?.(nextDays);
@@ -60,10 +65,7 @@ export const ActivityBoard = memo(function Board({
 
   // Sync draftDays with props when not dragging
   useEffect(() => {
-    if (activeId) return;
-    if (syncedDaysRef.current === days) return;
-    syncedDaysRef.current = days;
-    setDraftDays(days);
+    if (!activeId) setDraftDays(days);
   }, [activeId, days]);
 
   // Get active activity for drag overlay
@@ -71,24 +73,6 @@ export const ActivityBoard = memo(function Board({
     if (!activeId) return null;
     return getActivity(draftDays, String(activeId));
   }, [activeId, draftDays]);
-
-  // Check if element or its ancestors are interactive
-  const isInteractiveElement = (element: EventTarget | null): boolean => {
-    if (!(element instanceof HTMLElement)) return false;
-    const interactiveTags = ["BUTTON", "INPUT", "TEXTAREA", "SELECT", "A"];
-    const interactiveRoles = ["button", "link", "checkbox", "radio", "textbox"];
-
-    let current: HTMLElement | null = element;
-    while (current && current !== boardRef.current) {
-      if (interactiveTags.includes(current.tagName)) return true;
-      if (current.getAttribute("role") && interactiveRoles.includes(current.getAttribute("role") || ""))
-        return true;
-      if (current.draggable) return true;
-      if (current.dataset.noDragScroll !== undefined) return true;
-      current = current.parentElement;
-    }
-    return false;
-  };
 
   // Drag scroll on non-interactive areas
   const handleMouseDown = (e: React.MouseEvent<HTMLUListElement>) => {
@@ -135,7 +119,7 @@ export const ActivityBoard = memo(function Board({
             <DayColumn
               day={day}
               canEdit={canEdit}
-              onActivitySelect={(activity, dayId) => onActivitySelect?.(activity, dayId)}
+              onActivitySelect={onActivitySelect}
               onAddActivity={onAddActivity}
               onFallbackAdd={onFallbackAdd}
             />

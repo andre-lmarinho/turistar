@@ -10,7 +10,7 @@ import { DollarSign, Hourglass } from "@/shared/ui/icon";
 import { cn } from "@/shared/utils/cn";
 
 export interface ActivityCardProps {
-  activity: Activity & { dayId?: string };
+  activity: Activity;
   onSelect?: () => void;
   onClick?: () => void;
   bgColor?: string;
@@ -39,16 +39,7 @@ export const ActivityCard = memo(function ActivityCard({
 
   return (
     <div className="group relative">
-      <button
-        type="button"
-        className="w-full text-left"
-        onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            handleClick();
-          }
-        }}>
+      <button type="button" className="w-full text-left" onClick={handleClick}>
         <div
           className={cn(
             "group relative flex w-full cursor-grab flex-col items-stretch overflow-hidden rounded-lg border border-b-3 text-left transition",
