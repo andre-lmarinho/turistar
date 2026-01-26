@@ -10,7 +10,7 @@ import { DollarSign, Hourglass } from "@/shared/ui/icon";
 import { cn } from "@/shared/utils/cn";
 
 export interface ActivityCardProps {
-  activity: Activity & { dayId?: string };
+  activity: Activity;
   onSelect?: () => void;
   onClick?: () => void;
   bgColor?: string;

@@ -110,7 +110,7 @@ export const DayColumn = memo(function DayColumn({
                 )}
                 <DraggableCard
                   id={activity.id}
-                  activity={{ ...activity, dayId: day.id }}
+                  activity={activity}
                   onSelect={() => onActivitySelect?.(activity, day.id)}
                   bgColor={activity.color}
                 />
@@ -122,7 +122,7 @@ export const DayColumn = memo(function DayColumn({
         <div ref={scrollRef} data-testid="day-scroll" className={scrollContainerClassName}>
           {day.activities.map((activity) => (
             <div key={activity.id} className="mb-3 last:mb-0">
-              <ActivityCard activity={{ ...activity, dayId: day.id }} bgColor={activity.color} />
+              <ActivityCard activity={activity} bgColor={activity.color} />
             </div>
           ))}
         </div>

@@ -10,7 +10,7 @@ import { ActivityCard } from "./ActivityCard";
 
 export interface DraggableCardProps {
   id: string;
-  activity: Activity & { dayId?: string };
+  activity: Activity;
   onSelect?: () => void;
   dragOverlay?: boolean;
   className?: string;
