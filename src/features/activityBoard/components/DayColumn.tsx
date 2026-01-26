@@ -1,8 +1,8 @@
 "use client";
 
-import { useDndContext, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Activity } from "@/features/activity/types";
 import { AddActivity } from "@/features/activityDialog/components/AddActivity";
@@ -26,22 +26,7 @@ export const DayColumn = memo(function DayColumn({
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [hadOverflowBeforeDrag, setHadOverflowBeforeDrag] = useState(false);
-
-  const { active } = useDndContext();
-  const isDragging = active !== null;
-
-  // Capture overflow state when drag starts to prevent scrollbar flash during transitions
-  useLayoutEffect(() => {
-    if (isDragging && scrollRef.current) {
-      setHadOverflowBeforeDrag(scrollRef.current.scrollHeight > scrollRef.current.clientHeight);
-    } else if (!isDragging) {
-      setHadOverflowBeforeDrag(false);
-    }
-  }, [isDragging]);
-
-  const overflowY = isDragging && !hadOverflowBeforeDrag ? "overflow-y-hidden" : "overflow-y-auto";
-  const scrollContainerClassName = `overflow-x-hidden pt-2 ${overflowY}`;
+  const scrollContainerClassName = "overflow-x-hidden overflow-y-auto pt-2";
 
   const [activeInlineIndex, setActiveInlineIndex] = useState<number | null>(null);
 
