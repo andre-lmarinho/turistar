@@ -183,9 +183,7 @@ function PlannerWorkspaceContent({
               animate={{ x: `${offset}%`, scale, opacity, rotateZ }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
               onClick={() => !isActive && setMode(currentMode)}>
-              <div style={{ pointerEvents: isActive ? "auto" : "none" }} className="h-full">
-                {content}
-              </div>
+              {content}
             </motion.div>
           );
         })}

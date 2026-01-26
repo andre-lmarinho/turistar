@@ -26,8 +26,6 @@ export const DayColumn = memo(function DayColumn({
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollContainerClassName = "overflow-x-hidden overflow-y-auto pt-2";
-
   const [activeInlineIndex, setActiveInlineIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -70,9 +68,9 @@ export const DayColumn = memo(function DayColumn({
       </div>
 
       {/* Activities */}
-      {canEdit ? (
-        <SortableContext id={day.id} items={activityIds} strategy={verticalListSortingStrategy}>
-          <div ref={scrollRef} data-testid="day-scroll" className={scrollContainerClassName}>
+      <div ref={scrollRef} data-testid="day-scroll" className="overflow-x-hidden overflow-y-auto pt-2">
+        {canEdit ? (
+          <SortableContext id={day.id} items={activityIds} strategy={verticalListSortingStrategy}>
             {day.activities.map((activity, idx) => (
               <React.Fragment key={activity.id}>
                 {activeInlineIndex === idx ? (
@@ -101,17 +99,15 @@ export const DayColumn = memo(function DayColumn({
                 />
               </React.Fragment>
             ))}
-          </div>
-        </SortableContext>
-      ) : (
-        <div ref={scrollRef} data-testid="day-scroll" className={scrollContainerClassName}>
-          {day.activities.map((activity) => (
+          </SortableContext>
+        ) : (
+          day.activities.map((activity) => (
             <div key={activity.id} className="mb-3 last:mb-0">
               <ActivityCard activity={activity} bgColor={activity.color} />
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
 
       {/* Add button at bottom */}
       {canEdit && (
