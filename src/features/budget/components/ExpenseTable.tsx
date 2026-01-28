@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Check, Pencil, Plus, Trash2, X } from "@/shared/ui/icon";
 import { useBudgetContext } from "../hooks/BudgetContext";
-import type { BudgetRowInputsResult } from "../lib/getBudgetRowInputs";
 import { normalizeAmount } from "../lib/normalizeAmount";
-import type { CategoryKey, Entry } from "../types";
+import type { BudgetRowInputsResult, CategoryKey, Entry } from "../types";
 import { CATEGORIES } from "../types";
 import { AmountDisplay } from "../ui/AmountDisplay";
 
@@ -68,7 +67,7 @@ function BudgetRowInputs({ description, category, amount }: BudgetRowInputsResul
           inputId={amount.id}
           value={amount.value}
           variant="input"
-          onValueChange={(value) => amount.onValueChange(value)}
+          onValueChange={amount.onValueChange}
           onBlur={amount.onBlur}
           ariaLabel={amount.ariaLabel ?? "Amount"}
           placeholder={amount.placeholder}
