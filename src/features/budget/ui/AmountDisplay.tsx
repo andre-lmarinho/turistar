@@ -1,5 +1,5 @@
 import type { ChangeEvent, FocusEvent } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { DollarSign } from "@/shared/ui/icon";
 
@@ -32,11 +32,13 @@ export function AmountDisplay({
   inputId,
 }: AmountDisplayProps) {
   const [inputValue, setInputValue] = useState(String(value));
+  const lastReportedValue = useRef<number>(normalizeAmount(String(value)));
 
   const handleBlur = (_: FocusEvent<HTMLInputElement>) => {
     const val = normalizeAmount(inputValue);
-    if (onValueChange) {
+    if (onValueChange && val !== lastReportedValue.current) {
       onValueChange(val);
+      lastReportedValue.current = val;
     }
     setInputValue(val ? String(val) : "0");
     if (onBlur) onBlur();
@@ -51,7 +53,15 @@ export function AmountDisplay({
         <input
           id={inputId}
           value={inputValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const newValue = e.target.value;
+            setInputValue(newValue);
+            if (onValueChange) {
+              const normalized = normalizeAmount(newValue);
+              onValueChange(normalized);
+              lastReportedValue.current = normalized;
+            }
+          }}
           onBlur={handleBlur}
           disabled={!canEdit}
           autoComplete="off"

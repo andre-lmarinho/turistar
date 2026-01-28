@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Check, Pencil, Plus, Trash2, X } from "@/shared/ui/icon";
 import { useBudgetContext } from "../hooks/BudgetContext";
-import type { BudgetRowInputsResult } from "../lib/getBudgetRowInputs";
-import { getBudgetRowInputs } from "../lib/getBudgetRowInputs";
 import { normalizeAmount } from "../lib/normalizeAmount";
-import type { CategoryKey, Entry } from "../types";
+import type { BudgetRowInputsResult, CategoryKey, Entry } from "../types";
 import { CATEGORIES } from "../types";
 import { AmountDisplay } from "../ui/AmountDisplay";
 
@@ -69,7 +67,7 @@ function BudgetRowInputs({ description, category, amount }: BudgetRowInputsResul
           inputId={amount.id}
           value={amount.value}
           variant="input"
-          onValueChange={(value) => amount.onValueChange(String(value))}
+          onValueChange={amount.onValueChange}
           onBlur={amount.onBlur}
           ariaLabel={amount.ariaLabel ?? "Amount"}
           placeholder={amount.placeholder}
@@ -119,30 +117,32 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
 
     if (isEditing) {
       const editId = `edit-${index}`;
-      const budgetRowInputs = getBudgetRowInputs({
-        description: {
-          id: `description-${editId}`,
-          value: editEntry.description,
-          onChange: (value) => setEditEntry((prev) => (prev ? { ...prev, description: value } : prev)),
-          autoFocus: true,
-        },
-        category: {
-          id: `category-${editId}`,
-          value: editEntry.category,
-          onChange: (value) => setEditEntry((prev) => (prev ? { ...prev, category: value } : prev)),
-        },
-        amount: {
-          id: `amount-${editId}`,
-          value: editAmountInput,
-          onValueChange: setEditAmountInput,
-          onBlur: () =>
-            setEditEntry((prev) => (prev ? { ...prev, amount: normalizeAmount(editAmountInput) } : prev)),
-        },
-      });
 
       return (
         <tr key={entry.id} className="border-t">
-          <BudgetRowInputs {...budgetRowInputs} />
+          <BudgetRowInputs
+            description={{
+              id: `description-${editId}`,
+              value: editEntry.description,
+              onChange: (value) => setEditEntry((prev) => (prev ? { ...prev, description: value } : prev)),
+              autoFocus: true,
+            }}
+            category={{
+              id: `category-${editId}`,
+              value: editEntry.category,
+              onChange: (value) => setEditEntry((prev) => (prev ? { ...prev, category: value } : prev)),
+            }}
+            amount={{
+              id: `amount-${editId}`,
+              value: editAmountInput,
+              onValueChange: (value) => setEditAmountInput(String(value)),
+              onBlur: () => {
+                const normalized = normalizeAmount(editAmountInput);
+                setEditEntry((prev) => (prev ? { ...prev, amount: normalized } : prev));
+                setEditAmountInput(normalized ? String(normalized) : "0");
+              },
+            }}
+          />
           <td className="flex justify-end gap-2 p-2 text-right">
             <button
               type="button"
@@ -203,37 +203,36 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
     if (!canEdit) return null;
 
     const newId = "new-row";
-    const budgetRowInputs = getBudgetRowInputs({
-      description: {
-        id: `description-${newId}`,
-        value: desc,
-        onChange: setDesc,
-        placeholder: "Description",
-      },
-      category: {
-        id: `category-${newId}`,
-        value: cat,
-        onChange: setCat,
-      },
-      amount: {
-        id: `amount-${newId}`,
-        value: amountInput,
-        onValueChange: (value) => {
-          setAmountInput(value);
-          setAmount(normalizeAmount(value));
-        },
-        onBlur: () => {
-          const normalized = normalizeAmount(amountInput);
-          setAmount(normalized);
-          setAmountInput(normalized ? String(normalized) : "0");
-        },
-        placeholder: "Amount",
-      },
-    });
 
     return (
       <tr className="border-t">
-        <BudgetRowInputs {...budgetRowInputs} />
+        <BudgetRowInputs
+          description={{
+            id: `description-${newId}`,
+            value: desc,
+            onChange: setDesc,
+            placeholder: "Description",
+          }}
+          category={{
+            id: `category-${newId}`,
+            value: cat,
+            onChange: setCat,
+          }}
+          amount={{
+            id: `amount-${newId}`,
+            value: amountInput,
+            onValueChange: (value) => {
+              setAmountInput(String(value));
+              setAmount(value);
+            },
+            onBlur: () => {
+              const normalized = normalizeAmount(amountInput);
+              setAmount(normalized);
+              setAmountInput(normalized ? String(normalized) : "0");
+            },
+            placeholder: "Amount",
+          }}
+        />
         <td className="p-2 text-right">
           <button
             type="button"
