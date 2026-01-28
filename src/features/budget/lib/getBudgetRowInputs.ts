@@ -19,7 +19,7 @@ export type CategoryConfig = {
 export type AmountConfig = {
   id: string;
   value: string;
-  onValueChange: (value: string) => void;
+  onValueChange: (value: number) => void;
   onBlur?: () => void;
   placeholder?: string;
   ariaLabel?: string;

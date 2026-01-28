@@ -51,7 +51,13 @@ export function AmountDisplay({
         <input
           id={inputId}
           value={inputValue}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const newValue = e.target.value;
+            setInputValue(newValue);
+            if (onValueChange) {
+              onValueChange(normalizeAmount(newValue));
+            }
+          }}
           onBlur={handleBlur}
           disabled={!canEdit}
           autoComplete="off"
