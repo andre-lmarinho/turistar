@@ -1,27 +1,9 @@
+import { generateId } from "@/shared/lib/generateId";
+
 import { getDefaultColor } from "../constants";
 import type { Activity } from "../types";
 
 const PLACEHOLDER_PREFIX = "blank-";
-
-let fallbackCounter = 0;
-
-function generateId(prefix: string): string {
-  const crypto = globalThis.crypto;
-
-  if (crypto?.randomUUID) {
-    return `${prefix}${crypto.randomUUID()}`;
-  }
-
-  if (crypto?.getRandomValues) {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
-    const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-    return `${prefix}${hex}`;
-  }
-
-  fallbackCounter = (fallbackCounter + 1) % 1_000_000;
-  return `${prefix}${Date.now().toString(36)}${fallbackCounter.toString(36)}`;
-}
 
 /**
  * Generate a unique activity ID.

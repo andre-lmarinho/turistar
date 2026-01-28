@@ -8,6 +8,7 @@ import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { upsertProfile } from "@/features/profile/repositories/ProfileRepository";
 import type { SupabaseUser } from "@/shared/lib/auth/session";
 import { requireUser } from "@/shared/lib/auth/session";
+import { isRecord, readString } from "@/shared/lib/typeGuards";
 
 const MAX_SLUG_ATTEMPTS = 10;
 
@@ -141,12 +142,4 @@ function extractSupabaseErrorCode(error: unknown): string | null {
   const code = readString(causeRecord?.code) ?? readString(direct?.code);
 
   return code ?? null;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function readString(value: unknown): string | null {
-  return typeof value === "string" && value.length > 0 ? value : null;
 }

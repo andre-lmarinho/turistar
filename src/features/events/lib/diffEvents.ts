@@ -1,21 +1,13 @@
 import { isPlaceholder, sanitizeTitle } from "@/features/activity/lib/placeholders";
 import type { Activity, DayPlan } from "@/features/activity/types";
+import { generateId } from "@/shared/lib/generateId";
+import { isFiniteNumber } from "@/shared/lib/typeGuards";
 
 import { midpoint } from "../lib/gapOrdering";
 import type { EventInsert } from "../types";
 
-function generateId(): string {
-  const crypto = globalThis.crypto;
-  if (crypto?.randomUUID) return crypto.randomUUID();
-  return `evt-${Math.random().toString(36).slice(2, 10)}`;
-}
-
 function cloneActivity(activity: Activity): Activity {
   return { ...activity };
-}
-
-function isFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value);
 }
 
 function sanitizeActivity(activity: Activity): Activity {
@@ -44,7 +36,7 @@ function ensurePositions<T extends { position?: string }>(items: T[]): T[] {
 function toNumber(position?: string): number | null {
   if (position == null) return null;
   const num = Number(position);
-  return Number.isFinite(num) ? num : null;
+  return isFiniteNumber(num) ? num : null;
 }
 
 function isBetween(position: string | undefined, left?: string, right?: string): boolean {
