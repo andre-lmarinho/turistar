@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Footer, Navbar } from "@/features/website/layout";
+
+import { Footer } from "@/features/website/layout/Footer";
+import { Navbar } from "@/features/website/layout/Navbar";
 import SeoJsonLd from "@/features/website/seo/SeoJsonLd";
 import { SITE_URL } from "@/shared/utils/siteUrl";
 
