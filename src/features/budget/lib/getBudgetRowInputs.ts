@@ -30,15 +30,3 @@ export type BudgetRowInputsResult = {
   category: CategoryConfig;
   amount: AmountConfig;
 };
-
-export function getBudgetRowInputs({
-  description,
-  category,
-  amount,
-}: BudgetRowInputsResult): BudgetRowInputsResult {
-  return {
-    description,
-    category,
-    amount,
-  };
-}
