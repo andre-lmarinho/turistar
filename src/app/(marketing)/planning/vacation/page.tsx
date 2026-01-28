@@ -1,5 +1,5 @@
-import type { PlanningPageContent } from "../common";
-import { PlanningPageTemplate } from "../common";
+import type { PlanningPageContent } from "@/features/website/layout/PlanningShell";
+import { PlanningShell } from "@/features/website/layout/PlanningShell";
 
 const content: PlanningPageContent = {
   hero: {
@@ -72,5 +72,5 @@ const content: PlanningPageContent = {
 };
 
 export default function VacationsAndGetawaysPage() {
-  return <PlanningPageTemplate content={content} />;
+  return <PlanningShell content={content} />;
 }
