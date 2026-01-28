@@ -1,3 +1,5 @@
+import { isRecord, readStringKey } from "./typeGuards";
+
 type ErrorIdentifierValue = string | number | boolean | null | undefined;
 type ErrorIdentifiers = Record<string, ErrorIdentifierValue>;
 
@@ -13,15 +15,6 @@ export type SupabaseErrorDetails = {
   code: string;
 };
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function readString(record: Record<string, unknown>, key: string): string | null {
-  const value = record[key];
-  return typeof value === "string" && value.length > 0 ? value : null;
-}
-
 function formatIdentifiers(identifiers?: ErrorIdentifiers): string {
   if (!identifiers) return "";
   const parts = Object.entries(identifiers)
@@ -36,10 +29,10 @@ function extractErrorDetails(error: unknown): string | null {
   if (typeof error === "string") return error;
   if (!isRecord(error)) return null;
 
-  const message = readString(error, "message");
-  const details = readString(error, "details");
-  const hint = readString(error, "hint");
-  const code = readString(error, "code");
+  const message = readStringKey(error, "message");
+  const details = readStringKey(error, "details");
+  const hint = readStringKey(error, "hint");
+  const code = readStringKey(error, "code");
   const parts = [message, details, hint, code ? `code=${code}` : null].filter((part): part is string =>
     Boolean(part)
   );
