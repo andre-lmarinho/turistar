@@ -32,7 +32,7 @@ export function AmountDisplay({
   inputId,
 }: AmountDisplayProps) {
   const [inputValue, setInputValue] = useState(String(value));
-  const lastReportedValue = useRef<number | null>(null);
+  const lastReportedValue = useRef<number>(normalizeAmount(String(value)));
 
   const handleBlur = (_: FocusEvent<HTMLInputElement>) => {
     const val = normalizeAmount(inputValue);
