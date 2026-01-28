@@ -137,8 +137,11 @@ export function ExpenseTable({ canEdit = true }: { canEdit?: boolean }) {
               id: `amount-${editId}`,
               value: editAmountInput,
               onValueChange: (value) => setEditAmountInput(String(value)),
-              onBlur: () =>
-                setEditEntry((prev) => (prev ? { ...prev, amount: normalizeAmount(editAmountInput) } : prev)),
+              onBlur: () => {
+                const normalized = normalizeAmount(editAmountInput);
+                setEditEntry((prev) => (prev ? { ...prev, amount: normalized } : prev));
+                setEditAmountInput(normalized ? String(normalized) : "0");
+              },
             }}
           />
           <td className="flex justify-end gap-2 p-2 text-right">
