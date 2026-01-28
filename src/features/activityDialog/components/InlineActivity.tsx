@@ -72,7 +72,7 @@ export const InlineActivity = memo(function InlineActivity({
         setIsPending(false);
       }
     },
-    [copy.errorGeneric, focusInput, onSubmit, title]
+    [focusInput, onSubmit, title]
   );
 
   const { handleSuggestionSelect } = useSuggestionSelect({

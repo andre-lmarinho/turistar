@@ -34,15 +34,14 @@ export function TestimonialCarousel() {
   const slideW = Math.min(620, Math.max(320, Math.round(containerW * 0.6)));
   const offset = slideW + GAP;
 
-  const base = TESTIMONIALS;
-  const n = base.length;
+  const n = TESTIMONIALS.length;
   const steps: CarouselItem[] = useMemo(
     () =>
-      [...base, ...base, ...base].map((item, index) => ({
+      [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((item, index) => ({
         ...item,
         key: `${item.name}-${index}`,
       })),
-    [base]
+    []
   );
 
   const [idx, setIdx] = useState(n);
@@ -63,7 +62,7 @@ export function TestimonialCarousel() {
       setIsJumping(true);
       setIdx((p) => p + n);
     }
-  }, [idx, n]);
+  }, [idx]);
 
   useEffect(() => {
     if (!isJumping) return;
