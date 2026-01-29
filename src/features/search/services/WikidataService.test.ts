@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchWikidataImage } from "./WikidataService";
 
-vi.mock("@/shared/lib/clientEnv", () => ({
-  clientEnv: {
-    NEXT_PUBLIC_GEOAPIFY_KEY: "test-api-key",
-  },
-}));
+import { fetchWikidataImage } from "./WikidataService";
 
 describe("fetchWikidataImage", () => {
   beforeEach(() => {
@@ -54,10 +49,10 @@ describe("fetchWikidataImage", () => {
 
     const result = await fetchWikidataImage("Q123");
 
-    expect(result).toBe("https://commons.wikimedia.org/wiki/Special:FilePath/Eiffel%20Tower.jpg");
+    expect(result).toBe("https://commons.wikimedia.org/wiki/Special:FilePath/Eiffel%20Tower.jpg?width=400");
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "https://www.wikidata.org/wiki/Special:EntityData/Q123.json",
-      undefined
+      { signal: undefined }
     );
   });
 
@@ -126,7 +121,7 @@ describe("fetchWikidataImage", () => {
 
     const result = await fetchWikidataImage("Q123");
 
-    expect(result).toBe("https://commons.wikimedia.org/wiki/Special:FilePath/First%20Image.jpg");
+    expect(result).toBe("https://commons.wikimedia.org/wiki/Special:FilePath/First%20Image.jpg?width=400");
   });
 
   it("URL encodes the filename", async () => {
@@ -154,7 +149,9 @@ describe("fetchWikidataImage", () => {
 
     const result = await fetchWikidataImage("Q123");
 
-    expect(result).toBe("https://commons.wikimedia.org/wiki/Special:FilePath/Image%20With%20Spaces.jpg");
+    expect(result).toBe(
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Image%20With%20Spaces.jpg?width=400"
+    );
   });
 
   it("handles entities without claims property", async () => {

@@ -12,14 +12,20 @@ interface DestinationInfo {
   country?: string | null;
 }
 
+interface CreatePlanOptions {
+  userId?: string | null;
+  coverImage?: string;
+  client?: SupabaseClient;
+}
+
 export async function createPlan(
   title: string,
   dest: DestinationInfo,
   start: string,
   end: string,
-  userId?: string | null,
-  client: SupabaseClient = createSupabaseServerClient()
+  options: CreatePlanOptions = {}
 ) {
+  const { userId, coverImage, client = createSupabaseServerClient() } = options;
   const supabase = client;
 
   const startDate = start.slice(0, 10);
@@ -44,6 +50,7 @@ export async function createPlan(
     _start_date: startDate,
     _end_date: endDate,
     _user_id: userId ?? null,
+    _cover_image: coverImage ?? null,
   });
 
   if (error || !data) {

@@ -50,6 +50,7 @@ describe("createPlan action", () => {
       _start_date: "2024-01-01",
       _end_date: "2024-01-05",
       _user_id: null,
+      _cover_image: null,
     });
     expect(result).toEqual({ id: "plan-1", publicSlug: "slug-1", editToken: "token-1" });
   });
@@ -78,6 +79,7 @@ describe("createPlan action", () => {
       _start_date: "2024-02-01",
       _end_date: "2024-02-10",
       _user_id: null,
+      _cover_image: null,
     });
     expect(result).toEqual({ id: "plan-2", publicSlug: "slug-2", editToken: "token-2" });
   });
@@ -109,7 +111,7 @@ describe("createPlan action", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await createPlan("Trip", { name: "Rome" }, "2024-01-01", "2024-01-02", "user-123");
+    await createPlan("Trip", { name: "Rome" }, "2024-01-01", "2024-01-02", { userId: "user-123" });
 
     expect(rpc).toHaveBeenCalledWith("create_full_plan", expect.objectContaining({ _user_id: "user-123" }));
   });
@@ -163,5 +165,32 @@ describe("createPlan action", () => {
     await createPlan("Failure Trip", { name: "Unknown" }, "2024-04-01", "2024-04-05");
 
     expect(rpc).toHaveBeenCalledWith("create_full_plan", expect.objectContaining({ _dest_country: null }));
+  });
+
+  it("includes cover_image in the RPC payload when provided", async () => {
+    const rpc = vi.fn().mockResolvedValue({
+      data: {
+        result_plan_id: "plan-5",
+        result_public_slug: "slug-5",
+        result_edit_token: "token-5",
+      },
+      error: null,
+    });
+    vi.mocked(createSupabaseServerClient).mockReturnValueOnce({
+      rpc,
+    } as unknown as ReturnType<typeof createSupabaseServerClient>);
+
+    await createPlan("Rome Trip", { name: "Rome" }, "2024-05-01", "2024-05-07", {
+      userId: "user-456",
+      coverImage: "https://example.com/rome.jpg",
+    });
+
+    expect(rpc).toHaveBeenCalledWith(
+      "create_full_plan",
+      expect.objectContaining({
+        _user_id: "user-456",
+        _cover_image: "https://example.com/rome.jpg",
+      })
+    );
   });
 });
