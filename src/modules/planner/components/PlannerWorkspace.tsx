@@ -11,6 +11,7 @@ import { ActivityDialog } from "@/features/activityDialog/components/ActivityDia
 import { BudgetBoard } from "@/features/budget/components/BudgetBoard";
 import type { Entry } from "@/features/budget/types";
 import { SharePlannerDialog } from "@/features/members/SharePlannerDialog";
+import { DeletePlanDialog } from "@/features/plan/components/DeletePlanDialog";
 import { PlannerProvider, usePlannerContext } from "@/features/plan/hooks/PlannerContext";
 import { updatePlanTitle } from "@/features/plan/lib/updatePlanTitle";
 import { DateRangePickerIcon } from "@/shared/ui/calendar";
@@ -112,7 +113,7 @@ function PlannerWorkspaceContent({
   return (
     <main className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
       <div className="mx-auto flex w-full max-w-7xl flex-row justify-between gap-4 pb-4 md:items-center">
-        <h1 className="bg-card py-2 relative inline-block min-w-[1ch] flex-none cursor-pointer rounded-md text-3xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
+        <h1 className="bg-card py-2 relative inline-block min-w-[1ch] flex-none cursor-pointer rounded-md text-xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <span
             aria-hidden="true"
             className="invisible whitespace-pre rounded-md border-2 border-transparent px-2 py-1">
@@ -135,6 +136,7 @@ function PlannerWorkspaceContent({
         <div className="flex flex-none items-center gap-1 self-end md:self-end">
           <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} disabled={!canEdit} />
           {viewerUserId ? <SharePlannerDialog planId={planId} /> : null}
+          <DeletePlanDialog />
           <div className="hidden pl-2 md:inline">
             <ModeToggleButton value={mode} onChange={setMode} />
           </div>

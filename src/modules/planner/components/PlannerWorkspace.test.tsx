@@ -43,6 +43,10 @@ vi.mock("@/features/members/SharePlannerDialog", () => ({
   SharePlannerDialog: () => null,
 }));
 
+vi.mock("@/features/plan/components/DeletePlanDialog", () => ({
+  DeletePlanDialog: () => null,
+}));
+
 vi.mock("@/modules/planner/components/ModeToggleButton", () => ({
   modeOrder: ["planner", "map", "budget"] as const,
   ModeToggleButton: ({ onChange }: { onChange: (mode: PlannerMode) => void }) => (
