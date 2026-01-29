@@ -235,6 +235,10 @@ export interface Database {
           end_date: string | null;
           budget: number | null;
           created_at: string | null;
+          public_slug: string;
+          edit_token: string;
+          is_public: boolean | null;
+          cover_image: string | null;
         };
         Insert: {
           id?: string;
@@ -244,6 +248,10 @@ export interface Database {
           end_date?: string | null;
           budget?: number | null;
           created_at?: string | null;
+          public_slug?: string;
+          edit_token?: string;
+          is_public?: boolean | null;
+          cover_image?: string | null;
         };
         Update: {
           id?: string;
@@ -253,6 +261,10 @@ export interface Database {
           end_date?: string | null;
           budget?: number | null;
           created_at?: string | null;
+          public_slug?: string;
+          edit_token?: string;
+          is_public?: boolean | null;
+          cover_image?: string | null;
         };
         Relationships: [
           {

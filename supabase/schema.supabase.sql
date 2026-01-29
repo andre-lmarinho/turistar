@@ -27,15 +27,15 @@ CREATE TABLE public.plan_destinations (
   CONSTRAINT plan_destinations_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
 );
 CREATE TABLE public.plan_events (
-  event_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
   plan_id uuid NOT NULL,
-  version bigint NOT NULL CHECK (version > 0),
-  event_type USER-DEFINED NOT NULL,
-  payload jsonb NOT NULL DEFAULT '{}'::jsonb,
-  actor_id text,
+  version integer NOT NULL,
+  payload jsonb NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
-  CONSTRAINT plan_events_pkey PRIMARY KEY (event_id),
-  CONSTRAINT plan_events_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
+  event_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  event_type text NOT NULL,
+  actor_id uuid NOT NULL,
+  CONSTRAINT plan_events_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.plan_members (
   plan_id uuid NOT NULL,
@@ -77,6 +77,7 @@ CREATE TABLE public.plans (
   is_public boolean NOT NULL DEFAULT true,
   public_slug text NOT NULL DEFAULT translate(encode(gen_random_bytes(9), 'base64'::text), '/+'::text, '_-'::text),
   edit_token uuid NOT NULL DEFAULT gen_random_uuid(),
+  cover_image text,
   CONSTRAINT plans_pkey PRIMARY KEY (id),
   CONSTRAINT plans_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
 );
