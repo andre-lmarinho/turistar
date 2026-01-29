@@ -57,10 +57,10 @@ describe("updatePlanCoverImage", () => {
 
     await updatePlanCoverImage("plan-456", "https://example.com/image2.jpg");
 
-    expect(console.error).toHaveBeenCalledWith(
-      "Failed to update plan cover image: planId=plan-456",
-      mockError
-    );
+    expect(console.error).toHaveBeenCalledWith("Failed to update plan cover image", {
+      planId: "plan-456",
+      error: mockError,
+    });
   });
 
   it("logs error when update throws an exception", async () => {
@@ -80,10 +80,10 @@ describe("updatePlanCoverImage", () => {
 
     await updatePlanCoverImage("plan-789", "https://example.com/image3.jpg");
 
-    expect(console.error).toHaveBeenCalledWith(
-      "Unexpected error updating plan cover image: planId=plan-789",
-      mockError
-    );
+    expect(console.error).toHaveBeenCalledWith("Unexpected error updating plan cover image", {
+      planId: "plan-789",
+      error: mockError,
+    });
   });
 
   it("uses custom Supabase client when provided", async () => {

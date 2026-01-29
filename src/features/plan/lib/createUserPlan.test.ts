@@ -116,9 +116,12 @@ describe("createUserPlan", () => {
     });
 
     // Wait for the background promise chain to complete
-    await vi.waitFor(() => {
-      expect(updatePlanCoverImage).toHaveBeenCalledWith("plan-123", "https://wikimedia.org/image.jpg");
-    });
+    await vi.waitFor(
+      () => {
+        expect(updatePlanCoverImage).toHaveBeenCalledWith("plan-123", "https://wikimedia.org/image.jpg");
+      },
+      { timeout: 1000 }
+    );
 
     expect(fetchGeoapifyPlaceDetails).toHaveBeenCalledWith("place-123");
     expect(fetchWikidataImage).toHaveBeenCalledWith("Q90");
@@ -145,9 +148,12 @@ describe("createUserPlan", () => {
     });
 
     // Wait to ensure background promises don't execute
-    await vi.waitFor(() => {
-      expect(fetchGeoapifyPlaceDetails).not.toHaveBeenCalled();
-    });
+    await vi.waitFor(
+      () => {
+        expect(fetchGeoapifyPlaceDetails).not.toHaveBeenCalled();
+      },
+      { timeout: 1000 }
+    );
 
     expect(fetchWikidataImage).not.toHaveBeenCalled();
     expect(updatePlanCoverImage).not.toHaveBeenCalled();
@@ -260,10 +266,10 @@ describe("createUserPlan", () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to fetch cover image metadata: placeId=place-123",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to fetch cover image metadata", {
+      placeId: "place-123",
+      error: expect.any(Error),
+    });
     expect(updatePlanCoverImage).not.toHaveBeenCalled();
 
     consoleErrorSpy.mockRestore();
