@@ -115,6 +115,7 @@ const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, l
     longitude: feature.properties.lon,
     country: feature.properties.country,
     countryCode: feature.properties.country_code,
+    placeId: String(feature.properties.place_id),
   }));
 };
 
@@ -123,7 +124,7 @@ let autocompleteProvider: GeoapifyAutocompleteProvider = defaultAutocompleteProv
 type GeoapifyFixture = { autocomplete: AutocompletePlace[] };
 
 if (isE2E) {
-  const fixture = require("../../../../tests/e2e/fixtures/geoapify.json") as GeoapifyFixture;
+  const fixture = require("@tests/e2e/fixtures/geoapify.json") as GeoapifyFixture;
   const fixedResults = fixture.autocomplete.map((place) => ({ ...place }));
   autocompleteProvider = async (text) => {
     const normalized = text.trim().toLowerCase();
@@ -211,6 +212,12 @@ export async function fetchGeoapifyPlaceSearch(
   }));
 }
 
+/**
+ * Fetches detailed information for a place by its Geoapify ID
+ * @param placeId - The Geoapify place ID (e.g., from autocomplete results)
+ * @returns Place details including Wikidata ID, timezone, address, and location data
+ * @throws {Error} If API request fails or no features are returned
+ */
 export async function fetchGeoapifyPlaceDetails(placeId: string): Promise<GeoapifyPlaceDetails> {
   const key = getGeoapifyKey();
   const params = new URLSearchParams({

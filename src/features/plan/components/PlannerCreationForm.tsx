@@ -32,6 +32,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
   const [dest, setDest] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [destCountry, setDestCountry] = useState<string | null>(null);
+  const [placeId, setPlaceId] = useState<string | null>(null);
   const { saveEditToken } = usePlanEditTokens({ enabled: false });
 
   const [error, setError] = useState<string>("");
@@ -49,10 +50,12 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
       setDest(val);
       setCoords(null);
       setDestCountry(null);
+      setPlaceId(null);
     } else {
       setDest(val.name);
       setCoords({ lat: val.latitude, lng: val.longitude });
       setDestCountry(val.countryCode ?? val.country ?? null);
+      setPlaceId(val.placeId ?? null);
     }
   }
 
@@ -79,19 +82,21 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
           latitude: coords?.lat,
           longitude: coords?.lng,
           country: destCountry ?? undefined,
+          placeId: placeId ?? undefined,
         },
         startDate: range.from.toISOString(),
         endDate: range.to.toISOString(),
       });
 
-      const { planId, editToken } = planResult;
-      saveEditToken(planId, editToken);
+      const { planId: resultPlanId, editToken } = planResult;
+      saveEditToken(resultPlanId, editToken);
 
       onPlanCreated(planResult);
       setRange(getDefaultRange());
       setDest("");
       setCoords(null);
       setDestCountry(null);
+      setPlaceId(null);
     } catch (err) {
       console.error("Failed to create plan", {
         destination: destParam,

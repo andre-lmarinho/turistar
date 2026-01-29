@@ -28,7 +28,7 @@
     "e2e": "playwright test -c playwright.config.ts",
     "e2e:update": "playwright test -c playwright.config.ts --update-snapshots",
     "lhci": "npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json",
-    "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/types/supabase.ts",
+    "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/shared/types/supabase.ts",
     "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
     "vercel:build": "npx vercel@latest build --debug",
     "check:vercel": "npm run vercel:pull && npm run vercel:build",

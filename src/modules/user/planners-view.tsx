@@ -6,6 +6,7 @@ import { useState } from "react";
 import { PlannerCreationForm } from "@/features/plan/components/PlannerCreationForm";
 import type { CreatePlannerPlanResult } from "@/features/plan/lib/createUserPlan";
 import type { UserPlannerSummary } from "@/features/plan/lib/getUserPlanners";
+import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
 import { Card, CardGrid } from "@/shared/ui/card";
 import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
 
@@ -59,7 +60,7 @@ export function PlannersView({ plans }: PlannersViewProps) {
             key={plan.id}
             href={`/p/${plan.publicSlug}`}
             title={plan.title}
-            image="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=60"
+            image={plan.coverImage ?? DEFAULT_PLAN_COVER_IMAGE}
           />
         ))}
         <NewPlannerTile />
