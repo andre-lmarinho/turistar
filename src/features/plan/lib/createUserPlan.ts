@@ -41,7 +41,10 @@ export async function createUserPlan(input: CreatePlannerPlanInput): Promise<Cre
     ? fetchGeoapifyPlaceDetails(destination.placeId)
         .then((details) => (details.wikidataId ? fetchWikidataImage(details.wikidataId) : undefined))
         .catch((error) => {
-          console.error(`Failed to fetch cover image metadata: placeId=${destination.placeId}`, error);
+          console.error("Failed to fetch cover image metadata", {
+            placeId: destination.placeId,
+            error,
+          });
           return undefined;
         })
     : Promise.resolve(undefined);
@@ -70,7 +73,10 @@ export async function createUserPlan(input: CreatePlannerPlanInput): Promise<Cre
     })
     .catch((error) => {
       // Silently ignore - errors already logged in updatePlanCoverImage
-      console.error(`Failed to update cover image: planId=${id}`, error);
+      console.error("Failed to update cover image", {
+        planId: id,
+        error,
+      });
     });
 
   return {

@@ -25,9 +25,15 @@ export async function updatePlanCoverImage(
     const { error } = await supabase.from("plans").update({ cover_image: coverImageUrl }).eq("id", planId);
 
     if (error) {
-      console.error(`Failed to update plan cover image: planId=${planId}`, error);
+      console.error("Failed to update plan cover image", {
+        planId,
+        error,
+      });
     }
   } catch (error) {
-    console.error(`Unexpected error updating plan cover image: planId=${planId}`, error);
+    console.error("Unexpected error updating plan cover image", {
+      planId,
+      error,
+    });
   }
 }
