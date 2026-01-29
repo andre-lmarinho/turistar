@@ -35,8 +35,11 @@ export function ConfirmationDialog({
     try {
       await onConfirm();
       setOpen(false);
-    } catch {
-      // Parent handles error display
+    } catch (error) {
+      // Parent handles error display via onConfirm's internal error handling
+      console.error("Confirmation action failed:", {
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 
