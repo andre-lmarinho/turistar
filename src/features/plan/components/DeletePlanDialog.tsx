@@ -17,7 +17,6 @@ type DeletePlanDialogProps = {
 export function DeletePlanDialog({ className }: DeletePlanDialogProps) {
   const { planId, isOwner } = usePlannerContext();
   const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   if (!isOwner) {
@@ -30,13 +29,12 @@ export function DeletePlanDialog({ className }: DeletePlanDialogProps) {
     }
 
     setIsPending(true);
-    setError(null);
     try {
       const { redirectTo } = await deletePlan(planId);
       router.push(redirectTo);
     } catch (err) {
       console.error(`Unable to delete plan: planId=${planId}`, err);
-      setError("Failed to delete planner. Please try again.");
+      throw err;
     } finally {
       setIsPending(false);
     }
@@ -61,7 +59,6 @@ export function DeletePlanDialog({ className }: DeletePlanDialogProps) {
       confirmLabel={isPending ? "Deleting..." : "Delete"}
       onConfirm={handleConfirm}
       isPending={isPending}
-      error={error}
     />
   );
 }

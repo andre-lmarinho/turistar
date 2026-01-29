@@ -13,11 +13,10 @@ type ConfirmationDialogProps = {
   title: string;
   description: ReactNode;
   confirmLabel: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void> | void;
   isPending?: boolean;
   className?: string;
   confirmButtonClassName?: string;
-  error?: string | null;
 };
 
 export function ConfirmationDialog({
@@ -29,14 +28,15 @@ export function ConfirmationDialog({
   isPending = false,
   className,
   confirmButtonClassName,
-  error,
 }: ConfirmationDialogProps) {
   const [open, setOpen] = useState(false);
 
-  const handleConfirm = () => {
-    onConfirm();
-    if (!error) {
+  const handleConfirm = async () => {
+    try {
+      await onConfirm();
       setOpen(false);
+    } catch {
+      // Parent handles error display
     }
   };
 
@@ -64,11 +64,6 @@ export function ConfirmationDialog({
             <DialogPrimitive.Description asChild>
               <p className="text-foreground">{description}</p>
             </DialogPrimitive.Description>
-            {error ? (
-              <p role="alert" className="text-destructive text-sm">
-                {error}
-              </p>
-            ) : null}
             <Button
               className={cn(
                 "bg-destructive hover:bg-destructive/70 w-full text-background",

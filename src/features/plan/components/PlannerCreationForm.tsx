@@ -125,7 +125,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
           <DateRangePicker
             value={range}
             onChange={handleRangeChange}
-            aria-describedby={error ? "date-error" : undefined}
+            aria-describedby={error ? "form-error" : undefined}
             aria-invalid={Boolean(error)}
           />
         </fieldset>
@@ -135,7 +135,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
         </Button>
 
         {error ? (
-          <p id="date-error" role="alert" className="text-destructive text-sm">
+          <p id="form-error" role="alert" className="text-destructive text-sm">
             {error}
           </p>
         ) : null}
