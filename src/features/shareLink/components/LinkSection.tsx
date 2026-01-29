@@ -4,13 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { usePlannerContext } from "@/features/plan/hooks/PlannerContext";
 import { useShareLink } from "@/features/shareLink/hooks/useShareLink";
-import { Button } from "@/shared/ui/button";
+import { ConfirmationDialog } from "@/shared/ui/dialog/ConfirmationDialog";
 import { Check, Link2 } from "@/shared/ui/icon";
-import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
 
 export function LinkSection({ planId }: { planId: string }) {
   const { canManageMembers } = usePlannerContext();
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
   const { data, isLoading, createLink, revokeLink } = useShareLink(planId, {
@@ -63,7 +61,6 @@ export function LinkSection({ planId }: { planId: string }) {
 
   const handleDelete = () => {
     revokeLink.mutate();
-    setConfirmOpen(false);
   };
 
   if (!canManageMembers) {
@@ -102,25 +99,18 @@ export function LinkSection({ planId }: { planId: string }) {
             {hasLink ? (
               <>
                 <span className="text-muted-foreground">·</span>
-                <Popover open={confirmOpen} onOpenChange={setConfirmOpen}>
-                  <PopoverTriggerButton className="text-destructive cursor-pointer hover:underline">
-                    Delete link
-                  </PopoverTriggerButton>
-                  <PopoverContent side="bottom" align="end" sideOffset={8} className="w-72">
-                    <PopoverHeader title="Delete shared link" onClose={() => setConfirmOpen(false)} />
-                    <div className="space-y-3 p-3 text-sm">
-                      <p className="text-foreground">
-                        Deleting this link will prevent anyone from using it to join the planner.
-                      </p>
-                      <Button
-                        className="bg-destructive hover:bg-destructive/70 w-full text-background"
-                        onClick={handleDelete}
-                        disabled={revokeLink.isPending}>
-                        Delete
-                      </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <ConfirmationDialog
+                  trigger={
+                    <button type="button" className="text-destructive cursor-pointer hover:underline">
+                      Delete link
+                    </button>
+                  }
+                  title="Delete shared link"
+                  description="Deleting this link will prevent anyone from using it to join the planner."
+                  confirmLabel="Delete"
+                  onConfirm={handleDelete}
+                  isPending={revokeLink.isPending}
+                />
               </>
             ) : null}
           </div>
