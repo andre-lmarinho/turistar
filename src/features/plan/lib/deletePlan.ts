@@ -95,7 +95,10 @@ async function resolvePlannerRedirect(userId: string, client?: SupabaseClient<Da
     const slug = await fetchProfileSlugByUserId(userId, { client: supabase });
     return slug ? `/u/${slug}/planners` : "/";
   } catch (error) {
-    console.error("resolvePlannerRedirect failed", { userId, error });
+    console.error("resolvePlannerRedirect failed", {
+      userId,
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
     return "/";
   }
 }

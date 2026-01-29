@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { ConfirmationDialog } from "@/shared/ui/dialog/ConfirmationDialog";
-import { Trash2 } from "@/shared/ui/icon/lucide-icons";
+import { Trash2 } from "@/shared/ui/icon";
 import { cn } from "@/shared/utils/cn";
 
 import { usePlannerContext } from "../hooks/PlannerContext";
@@ -33,7 +33,10 @@ export function DeletePlanDialog({ className }: DeletePlanDialogProps) {
       const { redirectTo } = await deletePlan(planId);
       router.push(redirectTo);
     } catch (err) {
-      console.error(`Unable to delete plan: planId=${planId}`, err);
+      console.error("Unable to delete plan", {
+        planId,
+        message: err instanceof Error ? err.message : "Unknown error",
+      });
       throw err;
     } finally {
       setIsPending(false);

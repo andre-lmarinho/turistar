@@ -93,7 +93,10 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
       setCoords(null);
       setDestCountry(null);
     } catch (err) {
-      console.error(`Failed to create plan: destination=${destParam}`, err);
+      console.error("Failed to create plan", {
+        destination: destParam,
+        message: err instanceof Error ? err.message : "Unknown error",
+      });
       setError("Failed to create plan. Please try again.");
     } finally {
       setLoading(false);
