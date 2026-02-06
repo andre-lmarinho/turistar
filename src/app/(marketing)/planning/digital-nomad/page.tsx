@@ -1,5 +1,5 @@
-import type { PlanningPageContent } from "@/features/website/layout/PlanningShell";
-import { PlanningShell } from "@/features/website/layout/PlanningShell";
+import type { PlanningPageContent } from "@/modules/marketing/planning-view";
+import { PlanningView } from "@/modules/marketing/planning-view";
 
 const content: PlanningPageContent = {
   hero: {
@@ -71,5 +71,5 @@ const content: PlanningPageContent = {
 };
 
 export default function DigitalNomadTripsPage() {
-  return <PlanningShell content={content} />;
+  return <PlanningView content={content} />;
 }
