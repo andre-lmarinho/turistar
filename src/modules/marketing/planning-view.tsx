@@ -16,7 +16,7 @@ export interface PlanningPageContent {
   faq: FaqProps;
 }
 
-export function PlanningShell({ content }: { content: PlanningPageContent }) {
+export function PlanningView({ content }: { content: PlanningPageContent }) {
   return (
     <>
       <HeroPlanning {...content.hero} />
