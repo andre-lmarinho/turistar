@@ -1,14 +1,8 @@
-"use client";
-
-import { HeadManagerContext } from "next/dist/shared/lib/head-manager-context.shared-runtime";
-import Script from "next/script";
-import { useContext } from "react";
 import { SITE_URL } from "@/shared/utils/siteUrl";
 
 const logoUrl = `${SITE_URL}/favicon.ico`;
 
 export default function SeoJsonLd() {
-  const { nonce } = useContext(HeadManagerContext);
   const org = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -31,17 +25,13 @@ export default function SeoJsonLd() {
 
   return (
     <>
-      <Script
-        id="ld-org"
+      <script
         type="application/ld+json"
-        nonce={nonce}
         /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload */
         dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
       />
-      <Script
-        id="ld-website"
+      <script
         type="application/ld+json"
-        nonce={nonce}
         /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD script payload */
         dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
       />

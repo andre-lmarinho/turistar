@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import { Footer } from "@/features/website/layout/Footer";
-import { Navbar } from "@/features/website/layout/Navbar";
-import SeoJsonLd from "@/features/website/seo/SeoJsonLd";
+import { Footer } from "@/modules/marketing/layout/Footer";
+import { Navbar } from "@/modules/marketing/layout/Navbar";
+import SeoJsonLd from "@/modules/marketing/seo/SeoJsonLd";
+
 import { SITE_URL } from "@/shared/utils/siteUrl";
 
 export const dynamic = "force-dynamic";

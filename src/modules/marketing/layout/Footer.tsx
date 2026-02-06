@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer className="mx-3 py-16">
-      <div className="mx-auto grid h-full w-full max-w-[1200px] grid-cols-1 gap-4 md:grid-cols-[2fr_4fr]">
+      <div className="mx-auto grid h-full w-full max-w-300 grid-cols-1 gap-4 md:grid-cols-[2fr_4fr]">
         <div>
           <p>
             {"Made with "}
@@ -36,12 +36,12 @@ export function Footer() {
 
           <div className="flex flex-col gap-4">
             <p className="font-semibold">Use Cases</p>
-            <Link href="planning/adventure">Adventure</Link>
-            <Link href="planning/digital-nomad">Digital Nomad</Link>
-            <Link href="planning/event-based">Event</Link>
-            <Link href="planning/group">Group</Link>
-            <Link href="planning/road-trip">Road Trip</Link>
-            <Link href="planning/vacation">Vacation</Link>
+            <Link href="/planning/adventure">Adventure</Link>
+            <Link href="/planning/digital-nomad">Digital Nomad</Link>
+            <Link href="/planning/event-based">Event</Link>
+            <Link href="/planning/group">Group</Link>
+            <Link href="/planning/road-trip">Road Trip</Link>
+            <Link href="/planning/vacation">Vacation</Link>
           </div>
 
           <div className="flex flex-col gap-4">

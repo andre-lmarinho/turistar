@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { supabase } from "@/shared/lib/supabaseClient";
-import type { Database } from "@/shared/types/supabase";
+import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { Button } from "@/shared/ui/button";
 
 type Profile = { slug: string | null };
-type ProfileSlugRow = Pick<Database["public"]["Tables"]["profiles"]["Row"], "slug">;
 
 export function DesktopActions() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -17,23 +15,53 @@ export function DesktopActions() {
 
     async function loadProfile() {
       try {
-        const { data: authData } = await supabase.auth.getUser();
-        const userId = authData.user?.id;
-        if (!userId) {
-          setProfile(null);
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+        if (authError) {
+          console.error(
+            formatSupabaseError({
+              operation: "DesktopActions.loadProfile:getUser",
+              error: authError,
+            })
+          );
+          if (active) setProfile(null);
           return;
         }
 
-        const { data } = await supabase
-          .from<ProfileSlugRow>("profiles")
-          .select("slug")
-          .eq("id", userId)
-          .maybeSingle();
+        const userId = authData.user?.id;
+        if (!userId) {
+          if (active) setProfile(null);
+          return;
+        }
+
+        const { data, error } = await supabase.from("profiles").select("slug").eq("id", userId).maybeSingle();
+
+        if (error) {
+          console.error(
+            formatSupabaseError({
+              operation: "DesktopActions.loadProfile:selectProfile",
+              identifiers: { userId },
+              error,
+            })
+          );
+          if (active) setProfile(null);
+          return;
+        }
+
+        const slug =
+          data && typeof data === "object" && "slug" in data && typeof data.slug === "string"
+            ? data.slug
+            : null;
 
         if (active) {
-          setProfile({ slug: data?.slug ?? null });
+          setProfile({ slug });
         }
-      } catch {
+      } catch (error) {
+        console.error(
+          formatSupabaseError({
+            operation: "DesktopActions.loadProfile:unexpected",
+            error,
+          })
+        );
         if (active) setProfile(null);
       }
     }

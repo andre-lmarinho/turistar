@@ -54,9 +54,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className="bg-background fixed top-0 z-50 my-0 w-full px-6 py-2 lg:my-2 lg:mb-0 lg:bg-transparent lg:py-0"
-      data-elevated="false">
+    <header className="bg-background fixed top-0 z-50 my-0 w-full px-6 py-2 lg:my-2 lg:mb-0 lg:bg-transparent lg:py-0">
       <div
         ref={shellRef}
         data-elevated="false"
