@@ -1,11 +1,31 @@
 import Link from "next/link";
 
+import { Logo } from "@/shared/ui/logo";
+
+const FOOTER_LINK_CLASS = "hover:opacity-70";
+const EXTERNAL_LINK_CLASS = "underline underline-offset-2 hover:opacity-70";
+
+const USE_CASE_LINKS = [
+  { href: "/planning/adventure", label: "Adventure" },
+  { href: "/planning/digital-nomad", label: "Digital Nomad" },
+  { href: "/planning/event-based", label: "Event" },
+  { href: "/planning/group", label: "Group" },
+  { href: "/planning/road-trip", label: "Road Trip" },
+  { href: "/planning/vacation", label: "Vacation" },
+] as const;
+
+const RESOURCE_LINKS = [
+  { href: "/#inspiration", label: "Inspirations" },
+  { href: "/friends", label: "Friends" },
+] as const;
+
 export function Footer() {
   return (
     <footer className="mx-3 py-16">
-      <div className="mx-auto grid h-full w-full max-w-300 grid-cols-1 gap-4 md:grid-cols-[2fr_4fr]">
+      <div className="mx-auto grid h-full w-full max-w-300 grid-cols-1 gap-8 md:grid-cols-[2fr_2fr]">
         <div>
-          <p>
+          <Logo href="/" />
+          <p className="mt-5 px-2">
             {"Made with "}
             <span aria-label="heart" role="img">
               ❤️
@@ -13,7 +33,7 @@ export function Footer() {
             {" by "}
             <a
               href="https://andremarinho.me/"
-              className="underline underline-offset-2 hover:opacity-90"
+              className={EXTERNAL_LINK_CLASS}
               target="_blank"
               rel="noopener noreferrer">
               André Marinho
@@ -21,39 +41,29 @@ export function Footer() {
           </p>
           <a
             href="https://github.com/andre-lmarinho/travel-planner"
-            className="underline underline-offset-2 hover:opacity-90"
+            className={`px-2 ${EXTERNAL_LINK_CLASS}`}
             target="_blank"
             rel="noopener noreferrer">
             GitHub
           </a>
         </div>
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-          <div className="flex flex-col gap-4">
-            <p className="font-semibold">Solutions</p>
-            <Link href="/pricing">Pricing</Link>
-            <Link href="/agency">Agency</Link>
-          </div>
-
-          <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-6 px-2">
+          <div className="flex flex-col gap-2">
             <p className="font-semibold">Use Cases</p>
-            <Link href="/planning/adventure">Adventure</Link>
-            <Link href="/planning/digital-nomad">Digital Nomad</Link>
-            <Link href="/planning/event-based">Event</Link>
-            <Link href="/planning/group">Group</Link>
-            <Link href="/planning/road-trip">Road Trip</Link>
-            <Link href="/planning/vacation">Vacation</Link>
+            {USE_CASE_LINKS.map((link) => (
+              <Link key={link.href} className={FOOTER_LINK_CLASS} href={link.href}>
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <p className="font-semibold">Resources</p>
-            <Link href="/#inspiration">Inspirations</Link>
-            <Link href="/friends">Friends</Link>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <p className="font-semibold">Company</p>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
+            {RESOURCE_LINKS.map((link) => (
+              <Link key={link.href} className={FOOTER_LINK_CLASS} href={link.href}>
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
