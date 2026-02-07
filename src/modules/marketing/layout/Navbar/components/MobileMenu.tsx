@@ -23,14 +23,14 @@ export function MobileMenu({
   onSelectSolution,
 }: MobileMenuProps) {
   return (
-    <div className="bg-background fixed inset-x-0 top-12 z-40 h-[calc(100dvh-4rem)] overflow-y-auto pt-6 pb-10">
+    <div className="bg-background fixed inset-x-0 top-12 z-40 h-dvh overflow-y-auto pt-6 pb-10">
       <div className="mx-auto flex w-full max-w-6xl flex-col">
         <button
           type="button"
           className={MOBILE_MENU_LINK_CLASS}
           onClick={onToggleSolutions}
           aria-expanded={isSolutionsOpen}>
-          Solutions
+          Explore
           <ChevronDown
             aria-hidden="true"
             className={cn("size-5 origin-center transition-transform duration-200 ease-out", {
@@ -39,12 +39,7 @@ export function MobileMenu({
           />
         </button>
 
-        {isSolutionsOpen ? (
-          <SolutionsContent
-            onSelect={onSelectSolution}
-            gridClassName="gap-4 md:gap-3 md:[grid-template-columns:1fr_1.4fr_1fr]"
-          />
-        ) : null}
+        {isSolutionsOpen ? <SolutionsContent onSelect={onSelectSolution} /> : null}
 
         {NAV_LINKS.map((link) => (
           <Link key={link.href} href={link.href} className={MOBILE_MENU_LINK_CLASS} onClick={onClose}>
