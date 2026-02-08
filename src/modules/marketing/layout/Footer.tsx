@@ -9,12 +9,13 @@ const USE_CASE_LINKS = [
   { href: "/planning/adventure", label: "Adventure" },
   { href: "/planning/digital-nomad", label: "Digital Nomad" },
   { href: "/planning/event-based", label: "Event" },
-  { href: "/planning/group", label: "Group" },
+  { href: "/planning/family", label: "Family" },
   { href: "/planning/road-trip", label: "Road Trip" },
   { href: "/planning/vacation", label: "Vacation" },
 ] as const;
 
 const RESOURCE_LINKS = [
+  { href: "/planning", label: "Planning Hub" },
   { href: "/#inspiration", label: "Inspirations" },
   { href: "/friends", label: "Friends" },
 ] as const;

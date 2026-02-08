@@ -16,7 +16,7 @@ export const EXPLORE_ITEMS: SolutionItem[] = [
   { href: "/planning/event-based", label: "Event", icon: Calendar },
   { href: "/planning/road-trip", label: "Road trip", icon: MapIcon },
   { href: "/planning/vacation", label: "Vacation", icon: Hotel },
-  { href: "/planning/group", label: "Group", icon: Users },
+  { href: "/planning/family", label: "Family", icon: Users },
 ];
 
 export const NAV_LINKS: NavLink[] = [{ href: "/friends", label: "Friends" }];
