@@ -18,6 +18,20 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "commons.wikimedia.org", pathname: "/wiki/Special:FilePath/**" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/planning/group",
+        destination: "/friends",
+        permanent: true,
+      },
+      {
+        source: "/inspiration/:city",
+        destination: "/p/inspiration/:city",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     const isDev = process.env.NODE_ENV !== "production";
     // Middleware now sets Content-Security-Policy with a per-request nonce.
