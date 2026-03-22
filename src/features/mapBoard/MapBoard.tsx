@@ -110,7 +110,7 @@ export const MapBoard = React.memo(function MapBoard() {
 
               return (
                 <Marker
-                  key={`${day.id}-${i}`}
+                  key={act.id}
                   position={pos}
                   icon={icon}
                   title={act.title}

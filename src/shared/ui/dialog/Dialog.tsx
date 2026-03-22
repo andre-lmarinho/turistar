@@ -68,5 +68,5 @@ function DialogHeader({ title, titleId, onClose, className }: DialogHeaderProps)
   );
 }
 
+export type { DialogContentProps, DialogHeaderProps, DialogTriggerButtonProps };
 export { Dialog, DialogContent, DialogHeader, DialogTriggerButton };
-export type { DialogContentProps, DialogTriggerButtonProps, DialogHeaderProps };

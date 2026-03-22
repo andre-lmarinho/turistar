@@ -69,4 +69,4 @@ function PopoverHeader({ title, titleId, onClose, className }: PopoverHeaderProp
   );
 }
 
-export { Popover, PopoverTriggerButton, PopoverContent, PopoverHeader };
+export { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton };
