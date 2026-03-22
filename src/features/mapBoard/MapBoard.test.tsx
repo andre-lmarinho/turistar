@@ -21,7 +21,6 @@ const shared = vi.hoisted(() => ({
 }));
 
 vi.mock("react-leaflet", () => {
-  const React = require("react");
   return {
     MapContainer: (props: { children: React.ReactNode; center?: unknown }) => {
       shared.containerProps = props;
