@@ -3,7 +3,7 @@ import path from "node:path";
 import { defineConfig } from "@playwright/test";
 import "./tests/e2e/env";
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3100";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3100";
 
 const resolveFromRepoRoot = (relativePath: string) => path.resolve(__dirname, relativePath);
 

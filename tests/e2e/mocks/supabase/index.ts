@@ -199,7 +199,9 @@ class MockQueryBuilder<TTable extends TableName> {
   private gtFilters: GtFilters = {};
   private orderFilters: OrderFilter[] = [];
   private limitCount: number | null = null;
+  private insertData: Record<string, unknown> | Record<string, unknown>[] | null = null;
   private updateData: Record<string, unknown> | null = null;
+  private deleteRequested = false;
 
   constructor(
     private table: TTable,
@@ -210,7 +212,8 @@ class MockQueryBuilder<TTable extends TableName> {
     return this;
   }
 
-  insert() {
+  insert(data?: Record<string, unknown> | Record<string, unknown>[]) {
+    this.insertData = data ?? null;
     return this;
   }
 
@@ -220,6 +223,7 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   delete() {
+    this.deleteRequested = true;
     return this;
   }
 
@@ -247,12 +251,37 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   async maybeSingle() {
+    const mutationResult = await this.runMutation();
+    if (mutationResult) {
+      const rows = Array.isArray(mutationResult.data)
+        ? mutationResult.data
+        : mutationResult.data
+          ? [mutationResult.data]
+          : [];
+      const [first] = rows;
+      return { data: first ?? null, error: mutationResult.error ?? null };
+    }
+
     const rows = await this.fetchRows();
     const [first] = rows;
     return { data: first ?? null, error: null };
   }
 
   async single() {
+    const mutationResult = await this.runMutation();
+    if (mutationResult) {
+      const rows = Array.isArray(mutationResult.data)
+        ? mutationResult.data
+        : mutationResult.data
+          ? [mutationResult.data]
+          : [];
+      const [first] = rows;
+      if (!first) {
+        return { data: null, error: mutationResult.error ?? new Error("No rows found") };
+      }
+      return { data: first, error: mutationResult.error ?? null };
+    }
+
     const rows = await this.fetchRows();
     const [first] = rows;
     if (!first) {
@@ -270,9 +299,11 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async execute() {
-    if (this.updateData !== null && this.table === "plans") {
-      return this.client.updatePlanRow(this.eqFilters, this.updateData);
+    const mutationResult = await this.runMutation();
+    if (mutationResult) {
+      return mutationResult;
     }
+
     const rows = await this.fetchRows();
     return { data: rows, error: null };
   }
@@ -286,6 +317,26 @@ class MockQueryBuilder<TTable extends TableName> {
       return orderedRows.slice(0, this.limitCount);
     }
     return orderedRows;
+  }
+
+  private async runMutation() {
+    if (this.insertData !== null && this.table === "budget_entries") {
+      return this.client.insertBudgetEntryRows(this.insertData);
+    }
+
+    if (this.updateData !== null && this.table === "plans") {
+      return this.client.updatePlanRow(this.eqFilters, this.updateData);
+    }
+
+    if (this.updateData !== null && this.table === "budget_entries") {
+      return this.client.updateBudgetEntryRows(this.eqFilters, this.updateData);
+    }
+
+    if (this.deleteRequested && this.table === "budget_entries") {
+      return this.client.deleteBudgetEntryRows(this.eqFilters);
+    }
+
+    return null;
   }
 
   private applyOrderFilters(rows: Array<Record<string, unknown>>): Array<Record<string, unknown>> {
@@ -397,6 +448,44 @@ class MockSupabaseClientImpl {
       Object.assign(row, data);
     });
     return { data: matchingPlans, error: null };
+  }
+
+  async insertBudgetEntryRows(data: Record<string, unknown> | Record<string, unknown>[]) {
+    const payloads = Array.isArray(data) ? data : [data];
+    const insertedRows = payloads.map((payload) => {
+      const row: BudgetEntryRow = {
+        id: crypto.randomUUID(),
+        plan_id: typeof payload.plan_id === "string" ? payload.plan_id : this.plan.plan_id,
+        description: typeof payload.description === "string" ? payload.description : null,
+        category: typeof payload.category === "string" ? payload.category : null,
+        amount: typeof payload.amount === "number" ? payload.amount : null,
+      };
+
+      this.budgetEntries.push(row);
+      return { ...row };
+    });
+
+    return { data: insertedRows, error: null };
+  }
+
+  async updateBudgetEntryRows(eq: EqFilters, data: Record<string, unknown>) {
+    const matchingEntries = this.budgetEntries.filter((row) =>
+      Object.entries(eq).every(([key, value]) => row[key as keyof BudgetEntryRow] === value)
+    );
+
+    matchingEntries.forEach((row) => {
+      Object.assign(row, data);
+    });
+
+    return { data: matchingEntries.map((row) => ({ ...row })), error: null };
+  }
+
+  async deleteBudgetEntryRows(eq: EqFilters) {
+    this.budgetEntries = this.budgetEntries.filter(
+      (row) => !Object.entries(eq).every(([key, value]) => row[key as keyof BudgetEntryRow] === value)
+    );
+
+    return { data: null, error: null };
   }
 
   async rpc<TName extends keyof RpcParams>(

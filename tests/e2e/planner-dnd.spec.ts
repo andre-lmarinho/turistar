@@ -1,11 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-import { authenticateE2EUser } from "./helpers/auth";
+import { getPlannerDatePicker, goToPlannerPage, openPlannerMode } from "./helpers/plannerUi";
 
 test.describe("Planner Smoke Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await authenticateE2EUser(page);
-    await page.goto("/p/plan-e2e-001");
+    await goToPlannerPage(page);
   });
 
   test("displays days list", async ({ page }) => {
@@ -28,19 +27,15 @@ test.describe("Planner Smoke Tests", () => {
     await expect(status.first()).toBeVisible();
   });
 
-  test("displays map tab and Leaflet attribution", async ({ page }) => {
-    const mapTab = page.getByRole("button", { name: /map/i });
-    await expect(mapTab).toBeVisible();
+  test("displays map tab and OpenStreetMap attribution", async ({ page }) => {
+    await openPlannerMode(page, "map");
 
-    await mapTab.click();
-
-    const leafletLink = page.getByRole("link", { name: /leaflet/i });
-    await expect(leafletLink).toBeVisible();
+    const attribution = page.getByText(/openstreetmap/i);
+    await expect(attribution.first()).toBeVisible();
   });
 
   test("displays zoom controls for map", async ({ page }) => {
-    const mapTab = page.getByRole("button", { name: /map/i });
-    await mapTab.click();
+    await openPlannerMode(page, "map");
 
     const zoomIn = page.getByRole("button", { name: /zoom in/i });
     await expect(zoomIn.first()).toBeVisible();
@@ -55,9 +50,7 @@ test.describe("Planner Smoke Tests", () => {
   });
 
   test("displays budget section when tab is clicked", async ({ page }) => {
-    const budgetButton = page.getByRole("button", { name: /budget/i });
-    await budgetButton.click();
-
+    await openPlannerMode(page, "budget");
     const budgetSection = page.getByRole("region", { name: /summary/i });
     await expect(budgetSection).toBeVisible();
   });
@@ -78,7 +71,7 @@ test.describe("Planner Smoke Tests", () => {
   });
 
   test("displays date button", async ({ page }) => {
-    const dateButton = page.getByRole("button", { name: /jan 01/i });
+    const dateButton = getPlannerDatePicker(page);
     await expect(dateButton).toBeVisible();
   });
 });

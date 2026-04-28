@@ -1,58 +1,43 @@
 import { expect, test } from "@playwright/test";
 
-import { authenticateE2EUser } from "./helpers/auth";
+import { getPlannerDatePicker, goToPlannerPage } from "./helpers/plannerUi";
 
 test.describe("Planner Core", () => {
   test.beforeEach(async ({ page }) => {
-    await authenticateE2EUser(page);
+    await goToPlannerPage(page);
   });
 
   test("loads planner page and displays days", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
     await expect(page.getByRole("heading", { name: "Playwright E2E Plan" })).toBeVisible();
     await expect(page.getByText("Day 1")).toBeVisible();
   });
 
   test("displays planner tab as active", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
     const plannerTab = page.getByRole("button", { name: "Planner", exact: true });
     await expect(plannerTab).toBeVisible();
   });
 
   test("displays map tab", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
     const mapTab = page.getByRole("button", { name: /map/i });
     await expect(mapTab).toBeVisible();
   });
 
   test("displays budget tab", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
     const budgetTab = page.getByRole("button", { name: /budget/i });
     await expect(budgetTab).toBeVisible();
   });
 
   test("displays share button", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
-    const shareButton = page.getByRole("button", { name: /share/i });
+    const shareButton = page.getByRole("button", { name: /share planner/i });
     await expect(shareButton).toBeVisible();
   });
 
   test("displays date button", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
-    // plan-e2e-001 fixture starts on Jan 01
-    const dateButton = page.getByRole("button", { name: /jan 01/i });
+    const dateButton = getPlannerDatePicker(page);
     await expect(dateButton).toBeVisible();
   });
 
   test("displays day list", async ({ page }) => {
-    await page.goto("/p/plan-e2e-001");
-
     const daysSection = page.getByRole("list", { name: /days/i });
     await expect(daysSection).toBeVisible();
   });

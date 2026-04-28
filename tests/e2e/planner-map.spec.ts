@@ -1,14 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-import { authenticateE2EUser } from "./helpers/auth";
+import { goToPlannerPage, openPlannerMode } from "./helpers/plannerUi";
 
 test.describe("Map View", () => {
   test.beforeEach(async ({ page }) => {
-    await authenticateE2EUser(page);
-    await page.goto("/p/plan-e2e-001");
-
-    const mapTab = page.getByRole("button", { name: /map/i });
-    await mapTab.click();
+    await goToPlannerPage(page);
+    await openPlannerMode(page, "map");
   });
 
   test("displays zoom controls", async ({ page }) => {

@@ -2,8 +2,8 @@ import { resetSupabaseMock } from "./mocks/supabase";
 
 const DEFAULT_E2E_ENV = {
   NEXT_PUBLIC_E2E: "1",
-  NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3100",
-  NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321",
+  NEXT_PUBLIC_SITE_URL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3100",
+  NEXT_PUBLIC_SUPABASE_URL: "http://localhost:54321",
   NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon",
   NEXT_PUBLIC_GEOAPIFY_KEY: "test-key",
   NEXT_PUBLIC_PLANNER_INLINE_ADD: "1",

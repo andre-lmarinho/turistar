@@ -1,13 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-import { authenticateE2EUser } from "./helpers/auth";
+import { goToPlannerPage, openPlannerMode } from "./helpers/plannerUi";
 
 test.describe("Budget Management", () => {
   test.beforeEach(async ({ page }) => {
-    await authenticateE2EUser(page);
-    await page.goto("/p/plan-e2e-001");
-
-    await page.getByRole("button", { name: /budget/i }).click();
+    await goToPlannerPage(page);
+    await openPlannerMode(page, "budget");
   });
 
   test("displays budget summary section", async ({ page }) => {
@@ -56,11 +54,15 @@ test.describe("Budget Management", () => {
     const amountInput = expensesSection.getByRole("textbox", { name: /amount/i }).first();
     await expect(amountInput).toBeVisible();
     await amountInput.fill("200");
+    await amountInput.press("Tab");
 
     const addButton = expensesSection.getByRole("button", { name: /add expense/i });
+    await addButton.scrollIntoViewIfNeeded();
+    await expect(addButton).toBeEnabled();
     await addButton.click();
 
-    await expect(expensesSection.getByRole("row", { name: /hotel/i })).toBeVisible();
+    await expect(expensesSection.getByRole("rowheader", { name: "Hotel" })).toBeVisible();
+    await expect(expensesSection.getByRole("cell", { name: "Lodging", exact: true })).toBeVisible();
   });
 
   test("has add expense button enabled when amount is filled", async ({ page }) => {
