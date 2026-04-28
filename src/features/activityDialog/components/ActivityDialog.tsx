@@ -137,6 +137,9 @@ export const ActivityDialog = memo(function ActivityDialog({
       }}>
       <DialogContent className="flex w-[95%] max-w-113 flex-col p-0">
         <DialogPrimitive.Title className="sr-only">Edit Activity</DialogPrimitive.Title>
+        <DialogPrimitive.Description className="sr-only">
+          Edit the selected activity title, schedule position, location, notes, budget, and visual details.
+        </DialogPrimitive.Description>
 
         {/* Header */}
         <div
