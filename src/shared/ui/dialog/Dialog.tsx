@@ -47,17 +47,14 @@ const DialogTriggerButton = React.forwardRef<HTMLButtonElement, DialogTriggerBut
 
 type DialogHeaderProps = {
   title: string;
-  titleId?: string;
   onClose?: () => void;
   className?: string;
 };
 
-function DialogHeader({ title, titleId, onClose, className }: DialogHeaderProps) {
+function DialogHeader({ title, onClose, className }: DialogHeaderProps) {
   return (
     <div className={cn("relative flex items-center justify-between border-b px-4 py-3", className)}>
-      <DialogPrimitive.Title id={titleId} className="text-lg font-semibold">
-        {title}
-      </DialogPrimitive.Title>
+      <DialogPrimitive.Title className="text-lg font-semibold">{title}</DialogPrimitive.Title>
       <DialogPrimitive.Close
         className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
         aria-label="Close"

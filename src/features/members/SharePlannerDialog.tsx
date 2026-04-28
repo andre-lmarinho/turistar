@@ -22,8 +22,10 @@ export function SharePlannerDialog({ planId }: { planId: string }) {
         <Share2 className="size-4" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent>
-        <DialogPrimitive.Title className="sr-only">Share planner</DialogPrimitive.Title>
         <DialogHeader title="Share planner" />
+        <DialogPrimitive.Description className="sr-only">
+          Invite people, manage planner members, and create or revoke a share link.
+        </DialogPrimitive.Description>
         <div className="max-h-[75vh] space-y-4 overflow-y-auto p-4">
           <InviteForm planId={planId} />
           <LinkSection planId={planId} />
