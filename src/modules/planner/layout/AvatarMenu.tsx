@@ -35,8 +35,7 @@ export function AvatarMenu({ displayName, email }: AvatarMenuProps) {
         className="border-border bg-card text-foreground w-64 space-y-3 rounded-xl border p-4 shadow-lg"
         side="bottom"
         align="end"
-        sideOffset={4}
-        alignOffset={0}>
+        sideOffset={4}>
         <h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">Account</h2>
         <div className="flex items-center gap-3">
           <Avatar displayName={displayName} size="lg" />

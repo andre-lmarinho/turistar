@@ -21,7 +21,7 @@ describe("ConfirmationDialog", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Delete trip" }));
 
-    expect(screen.getByRole("dialog", { name: "Delete planner" })).toHaveAccessibleDescription(
+    expect(screen.getByRole("alertdialog", { name: "Delete planner" })).toHaveAccessibleDescription(
       "This action cannot be undone."
     );
   });
@@ -43,7 +43,7 @@ describe("ConfirmationDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
     await waitFor(() => expect(onConfirm).toHaveBeenCalledOnce());
-    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Delete planner" })).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("alertdialog", { name: "Delete planner" })).toBeNull());
   });
 
   it("keeps the dialog open when confirmation fails", async () => {
@@ -65,7 +65,7 @@ describe("ConfirmationDialog", () => {
 
     await waitFor(() => expect(onConfirm).toHaveBeenCalledOnce());
 
-    expect(screen.getByRole("dialog", { name: "Delete planner" })).toBeInTheDocument();
+    expect(screen.getByRole("alertdialog", { name: "Delete planner" })).toBeInTheDocument();
     expect(errorSpy).toHaveBeenCalledWith("Confirmation action failed:", {
       message: "Deletion failed",
     });

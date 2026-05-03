@@ -8,7 +8,7 @@ import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity } from "@/features/activity/types";
 import { Dialog, DialogContent, DialogHeader } from "@/shared/ui/dialog";
 import { ChevronDown, Palette, Trash2, X } from "@/shared/ui/icon";
-import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
+import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
 
 import type { EditorDialogProps } from "../types";
 import { ActivityForm } from "./ActivityForm";
@@ -183,8 +183,12 @@ export const ActivityDialog = memo(function ActivityDialog({
                   {currentDay?.label ?? "Change Day"}
                   <ChevronDown className="size-4" aria-hidden="true" />
                 </PopoverTriggerButton>
-                <PopoverContent side="bottom" align="start" sideOffset={8} className="w-72 p-0">
-                  <PopoverHeader title="Change Day" />
+                <PopoverContent
+                  title="Change Day"
+                  side="bottom"
+                  align="start"
+                  sideOffset={8}
+                  className="w-72 p-0">
                   <div className="flex gap-2 p-4">
                     <div className="w-[65%]">
                       <label htmlFor="day-select" className="text-xs font-bold">
@@ -249,8 +253,12 @@ export const ActivityDialog = memo(function ActivityDialog({
                   <Palette className="size-4" aria-hidden="true" />
                   <span className="sr-only">Card color</span>
                 </PopoverTriggerButton>
-                <PopoverContent side="bottom" align="end" sideOffset={8} className="w-76 p-0">
-                  <PopoverHeader title="Card Background" />
+                <PopoverContent
+                  title="Card Background"
+                  side="bottom"
+                  align="end"
+                  sideOffset={8}
+                  className="w-76 p-0">
                   <div className="space-y-3 p-4">
                     {editedImageUrl && (
                       <button
