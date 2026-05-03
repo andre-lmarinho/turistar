@@ -1,6 +1,5 @@
 "use client";
 
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { useState } from "react";
 
 import { LinkSection } from "@/features/shareLink/components/LinkSection";
@@ -22,10 +21,10 @@ export function SharePlannerDialog({ planId }: { planId: string }) {
         <Share2 className="size-4" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent>
-        <DialogHeader title="Share planner" />
-        <DialogPrimitive.Description className="sr-only">
-          Invite people, manage planner members, and create or revoke a share link.
-        </DialogPrimitive.Description>
+        <DialogHeader
+          title="Share planner"
+          description="Invite people, manage planner members, and create or revoke a share link."
+        />
         <div className="max-h-[75vh] space-y-4 overflow-y-auto p-4">
           <InviteForm planId={planId} />
           <LinkSection planId={planId} />
