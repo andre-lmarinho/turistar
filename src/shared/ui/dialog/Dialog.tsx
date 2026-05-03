@@ -47,21 +47,35 @@ const DialogTriggerButton = React.forwardRef<HTMLButtonElement, DialogTriggerBut
 
 type DialogHeaderProps = {
   title: string;
+  description: string;
+  visuallyHidden?: boolean;
   onClose?: () => void;
   className?: string;
 };
 
-function DialogHeader({ title, onClose, className }: DialogHeaderProps) {
+function DialogHeader({ title, description, visuallyHidden = false, onClose, className }: DialogHeaderProps) {
+  if (visuallyHidden) {
+    return (
+      <>
+        <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
+        <DialogPrimitive.Description className="sr-only">{description}</DialogPrimitive.Description>
+      </>
+    );
+  }
+
   return (
-    <div className={cn("relative flex items-center justify-between border-b px-4 py-3", className)}>
-      <DialogPrimitive.Title className="text-lg font-semibold">{title}</DialogPrimitive.Title>
-      <DialogPrimitive.Close
-        className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
-        aria-label="Close"
-        onClick={onClose}>
-        <X className="size-4" aria-hidden="true" />
-      </DialogPrimitive.Close>
-    </div>
+    <>
+      <div className={cn("relative flex items-center justify-between border-b px-4 py-3", className)}>
+        <DialogPrimitive.Title className="text-lg font-semibold">{title}</DialogPrimitive.Title>
+        <DialogPrimitive.Close
+          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors"
+          aria-label="Close"
+          onClick={onClose}>
+          <X className="size-4" aria-hidden="true" />
+        </DialogPrimitive.Close>
+      </div>
+      <DialogPrimitive.Description className="sr-only">{description}</DialogPrimitive.Description>
+    </>
   );
 }
 

@@ -1,13 +1,12 @@
 "use client";
 
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useId, useState } from "react";
 
 import { ACTIVITY_COLORS } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity } from "@/features/activity/types";
-import { Dialog, DialogContent } from "@/shared/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/shared/ui/dialog";
 import { ChevronDown, Palette, Trash2, X } from "@/shared/ui/icon";
 import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
 
@@ -136,10 +135,11 @@ export const ActivityDialog = memo(function ActivityDialog({
         }
       }}>
       <DialogContent className="flex w-[95%] max-w-113 flex-col p-0">
-        <DialogPrimitive.Title className="sr-only">Edit Activity</DialogPrimitive.Title>
-        <DialogPrimitive.Description className="sr-only">
-          Edit the selected activity title, schedule position, location, notes, budget, and visual details.
-        </DialogPrimitive.Description>
+        <DialogHeader
+          visuallyHidden
+          title="Edit Activity"
+          description="Edit the selected activity title, schedule position, location, notes, budget, and visual details."
+        />
 
         {/* Header */}
         <div

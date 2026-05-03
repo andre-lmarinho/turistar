@@ -8,5 +8,3 @@ declare module "@next/mdx" {
 
   export default function createMDX(options?: CreateMDXOptions): (nextConfig: NextConfig) => NextConfig;
 }
-
-declare module "@radix-ui/react-navigation-menu";
