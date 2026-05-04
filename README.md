@@ -21,7 +21,7 @@ A simple travel planner built with Next.js, React, and drag-and-drop. Select any
 
 ## About the Project
 
-Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Radix UI, and the App Router in Next.js 15.
+Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Base UI, and the App Router in Next.js 15.
 
 A Map View lets you preview your itinerary locations on an interactive map.
 
@@ -51,7 +51,7 @@ A Map View lets you preview your itinerary locations on an interactive map.
 - React & TypeScript
 - Tailwind CSS for styling
 - @dnd-kit/core & @dnd-kit/sortable for drag-and-drop
-- Radix UI components
+- Base UI primitives wrapped by shared UI components
 - TanStack Query for data fetching
 - date-fns and react-day-picker for date handling
 - leaflet & react-leaflet for the map view
