@@ -27,6 +27,7 @@ export function CtaFinal({ variant = "default" }: CtaFinalProps) {
           aria-hidden="true"
           role="presentation"
           fill
+          sizes="(min-width: 1200px) 1048px, calc(100vw - 48px)"
           className="pointer-events-none object-cover select-none"
           draggable={false}
         />

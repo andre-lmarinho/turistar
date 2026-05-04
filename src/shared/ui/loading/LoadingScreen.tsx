@@ -34,6 +34,7 @@ export function LoadingScreen({ text = "Loading..." }: LoadingScreenProps) {
           role="presentation"
           aria-hidden="true"
           fill
+          sizes="128px"
           className="object-contain"
           priority
         />
