@@ -8,7 +8,7 @@ import type { CreatePlannerPlanResult } from "@/features/plan/lib/createUserPlan
 import type { UserPlannerSummary } from "@/features/plan/lib/getUserPlanners";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
 import { Card, CardGrid } from "@/shared/ui/card";
-import { Popover, PopoverContent, PopoverHeader, PopoverTriggerButton } from "@/shared/ui/popover";
+import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
 
 interface PlannersViewProps {
   plans: UserPlannerSummary[];
@@ -30,14 +30,7 @@ function NewPlannerTile() {
           <p className="truncate text-sm font-semibold">Create new planner</p>
         </div>
       </PopoverTriggerButton>
-      <PopoverContent
-        side="right"
-        align="start"
-        sideOffset={8}
-        avoidCollisions
-        collisionPadding={8}
-        className="w-90 p-0">
-        <PopoverHeader title="Create Planner" onClose={() => setOpen(false)} />
+      <PopoverContent title="Create Planner" side="right" align="start" sideOffset={8} className="w-90 p-0">
         <div className="p-4">
           <PlannerCreationForm onPlanCreated={handlePlanCreated} />
         </div>

@@ -21,8 +21,6 @@ type SelectMenuProps<T extends string> = {
   triggerClassName?: string;
   contentClassName?: string;
   align?: "start" | "center" | "end";
-  side?: "top" | "right" | "bottom" | "left";
-  sideOffset?: number;
 };
 
 export function SelectMenu<T extends string>({
@@ -35,8 +33,6 @@ export function SelectMenu<T extends string>({
   triggerClassName,
   contentClassName,
   align = "start",
-  side = "bottom",
-  sideOffset = 6,
 }: SelectMenuProps<T>) {
   const [open, setOpen] = useState(false);
   const selected = options.find((option) => option.value === value);
@@ -55,11 +51,7 @@ export function SelectMenu<T extends string>({
         <span className="truncate">{selected?.label ?? placeholder}</span>
         <ChevronDown className="text-muted-foreground size-4" aria-hidden="true" />
       </PopoverTriggerButton>
-      <PopoverContent
-        side={side}
-        align={align}
-        sideOffset={sideOffset}
-        className={cn("p-1", contentClassName)}>
+      <PopoverContent side="bottom" align={align} sideOffset={6} className={cn("p-1", contentClassName)}>
         <div role="listbox" className="space-y-1">
           {options.map((option) => {
             const isSelected = option.value === value;
