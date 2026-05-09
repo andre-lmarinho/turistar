@@ -83,6 +83,7 @@ interface PlannerProviderProps {
   isOwner?: boolean;
   isAdmin?: boolean;
   canManageMembers?: boolean;
+  editToken?: string;
 }
 
 /**
@@ -118,6 +119,7 @@ export function usePlannerContextValue({
   isOwner = false,
   isAdmin = false,
   canManageMembers = false,
+  editToken,
 }: PlannerProviderProps): PlannerContextValue {
   // Collaboration hook for persistence
   const { data: storedDays, persistDays } = usePlanCollaboration(planId, {
@@ -211,15 +213,15 @@ export function usePlannerContextValue({
         setDays(synced);
 
         // Persist date range to server
-        if (persist && canEdit) {
+        if (persist && canEdit && editToken) {
           const to = range.to ?? range.from;
-          updatePlanDates(planId, range.from, to).catch((err) => {
+          updatePlanDates(planId, editToken, range.from, to).catch((err) => {
             console.error("Failed to persist plan dates:", err);
           });
         }
       }
     },
-    [days, setDays, persist, canEdit, planId]
+    [days, setDays, persist, canEdit, editToken, planId]
   );
 
   // Activity CRUD operations

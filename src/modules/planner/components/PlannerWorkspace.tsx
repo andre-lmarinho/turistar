@@ -236,7 +236,8 @@ export function PlannerWorkspace({
       viewerUserId={viewerUserId}
       isOwner={isOwner}
       isAdmin={isAdmin}
-      canManageMembers={canManageMembers}>
+      canManageMembers={canManageMembers}
+      editToken={editToken}>
       <PlannerWorkspaceContent
         persist={persist}
         title={title}
