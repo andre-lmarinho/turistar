@@ -103,6 +103,12 @@ type RpcParams = {
     _edit_token: string;
     _new_title?: string | null;
   };
+  update_plan_dates: {
+    _plan_id: string;
+    _edit_token: string;
+    _start_date?: string | null;
+    _end_date?: string | null;
+  };
   create_plan_share_link: {
     _plan_id: string;
   };
@@ -578,6 +584,16 @@ class MockSupabaseClientImpl {
         if (rpcParams._plan_id === this.plan.plan_id) {
           this.plan.title = rpcParams._new_title ?? this.plan.title;
           this.syncPlanRow();
+        }
+        return { data: null, error: null };
+      }
+      case "update_plan_dates": {
+        const rpcParams = params as RpcParams["update_plan_dates"];
+        if (rpcParams._plan_id === this.plan.plan_id) {
+          this.syncPlanRow({
+            start_date: rpcParams._start_date ?? this.plans[0]?.start_date ?? null,
+            end_date: rpcParams._end_date ?? this.plans[0]?.end_date ?? null,
+          });
         }
         return { data: null, error: null };
       }

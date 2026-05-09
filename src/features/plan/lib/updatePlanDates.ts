@@ -5,17 +5,14 @@ import { format } from "date-fns";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-export async function updatePlanDates(planId: string, from: Date, to: Date) {
+export async function updatePlanDates(planId: string, editToken: string, from: Date, to: Date) {
   const supabase = createSupabaseServerClient();
-  const { error } = await supabase
-    .from("plans")
-    .update({
-      start_date: format(from, "yyyy-MM-dd"),
-      end_date: format(to, "yyyy-MM-dd"),
-    })
-    .eq("id", planId)
-    .select("id")
-    .single();
+  const { error } = await supabase.rpc("update_plan_dates", {
+    _plan_id: planId,
+    _edit_token: editToken,
+    _start_date: format(from, "yyyy-MM-dd"),
+    _end_date: format(to, "yyyy-MM-dd"),
+  });
   if (error) {
     throw formatSupabaseError({
       operation: "updatePlanDates",
