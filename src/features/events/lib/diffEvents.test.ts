@@ -3,7 +3,13 @@ import { describe, expect, it } from "vitest";
 import type { DayPlan } from "@/features/activity/types";
 
 import { diffEvents } from "../lib/diffEvents";
-import type { ActivityCreatedPayload, ActivityUpdatedPayload, DayCreatedPayload } from "../types";
+import { reduceEvents } from "../lib/eventReducer";
+import type {
+  ActivityCreatedPayload,
+  ActivityUpdatedPayload,
+  DayCreatedPayload,
+  EventRecord,
+} from "../types";
 
 const baseDay = {
   label: "Day",
@@ -94,6 +100,50 @@ describe("diffEvents", () => {
         toDayId: "day-2",
       },
     });
+  });
+
+  it("moves activities before removing shortened range days", () => {
+    const previousDays: DayPlan[] = [
+      { id: "2024-01-01", label: "Day 1", position: "1000", activities: [] },
+      { id: "2024-01-02", label: "Day 2", position: "2000", activities: [] },
+      { id: "2024-01-03", label: "Day 3", position: "3000", activities: [] },
+      { id: "2024-01-04", label: "Day 4", position: "4000", activities: [] },
+      {
+        id: "2024-01-05",
+        label: "Day 5",
+        position: "5000",
+        activities: [{ id: "activity-a", title: "A", color: "red", position: "1000" }],
+      },
+    ];
+    const nextDays: DayPlan[] = [
+      { id: "2024-01-01", label: "Day 1", position: "1000", activities: [] },
+      { id: "2024-01-02", label: "Day 2", position: "2000", activities: [] },
+      { id: "2024-01-03", label: "Day 3", position: "3000", activities: [] },
+      {
+        id: "2024-01-04",
+        label: "Day 4",
+        position: "4000",
+        activities: [{ id: "activity-a", title: "A", color: "red", position: "1000" }],
+      },
+    ];
+
+    const events = diffEvents("plan-1", previousDays, nextDays);
+    const eventTypes = events.map((event) => event.type);
+
+    expect(eventTypes).toEqual(["activity.moved", "day.removed"]);
+
+    const records: EventRecord[] = events.map((event, index) => ({
+      ...event,
+      version: index + 1,
+      createdAt: new Date(0).toISOString(),
+    }));
+    const result = reduceEvents(
+      { version: 0, days: previousDays, updatedAt: new Date(0).toISOString() },
+      records
+    );
+
+    expect(result.days).toHaveLength(4);
+    expect(result.days.at(-1)?.activities.map((activity) => activity.id)).toEqual(["activity-a"]);
   });
 
   it("ignores placeholder activities that leak into the next state", () => {

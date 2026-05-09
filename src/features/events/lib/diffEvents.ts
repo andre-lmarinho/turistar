@@ -87,6 +87,7 @@ export function diffEvents(
   actorId?: string | null
 ): EventInsert[] {
   const events: EventInsert[] = [];
+  const removedDayEvents: EventInsert[] = [];
   const prevDaysWithPositions = ensurePositions(previousDays);
   const prevDayMap = new Map(prevDaysWithPositions.map((day) => [day.id, day]));
   const prevActivityMap = new Map<string, { dayId: string; activity: Activity }>();
@@ -101,7 +102,7 @@ export function diffEvents(
   const nextDayIds = new Set(nextDays.map((day) => day.id));
   for (const day of prevDaysWithPositions) {
     if (!nextDayIds.has(day.id)) {
-      events.push({
+      removedDayEvents.push({
         id: generateId(),
         planId,
         type: "day.removed",
@@ -277,5 +278,5 @@ export function diffEvents(
     });
   }
 
-  return events;
+  return [...events, ...removedDayEvents];
 }
