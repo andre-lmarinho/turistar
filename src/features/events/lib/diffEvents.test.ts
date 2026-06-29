@@ -185,7 +185,7 @@ describe("diffEvents", () => {
 
     const createdDay = events.find((event) => event.type === "day.created");
     expect(createdDay).toBeDefined();
-    if (!createdDay || createdDay.type !== "day.created") {
+    if (createdDay?.type !== "day.created") {
       throw new Error("Expected to find a day.created event");
     }
 
@@ -197,7 +197,7 @@ describe("diffEvents", () => {
 
     const activityCreated = events.find((event) => event.type === "activity.created");
     expect(activityCreated).toBeDefined();
-    if (!activityCreated || activityCreated.type !== "activity.created") {
+    if (activityCreated?.type !== "activity.created") {
       throw new Error("Expected to find an activity.created event");
     }
 
@@ -247,7 +247,7 @@ describe("diffEvents", () => {
 
     const updateEvent = events.find((event) => event.type === "activity.updated");
     expect(updateEvent).toBeDefined();
-    if (!updateEvent || updateEvent.type !== "activity.updated") {
+    if (updateEvent?.type !== "activity.updated") {
       throw new Error("Expected to find an activity.updated event");
     }
 
