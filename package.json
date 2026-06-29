@@ -5,10 +5,10 @@
   "license": "AGPL-3.0",
   "repository": "https://github.com/andre-lmarinho/travel-planner",
   "engines": {
-    "node": "20.x",
-    "npm": ">=10 <11"
+    "node": "24.x",
+    "npm": ">=11 <12"
   },
-  "packageManager": "npm@10.9.3",
+  "packageManager": "npm@11.6.2",
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:e2e": "NEXT_PUBLIC_E2E=1 next dev --turbopack --port 3100",
