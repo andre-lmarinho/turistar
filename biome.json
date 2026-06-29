@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "root": true,
   "css": {
     "parser": {
@@ -51,7 +51,7 @@
       "react": "recommended"
     },
     "rules": {
-      "recommended": true
+      "preset": "recommended"
     }
   },
   "overrides": [
