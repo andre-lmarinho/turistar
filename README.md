@@ -168,10 +168,6 @@ See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testi
 - To generate coverage locally, run `CI=true npm run test` (or export `CI=true` in your shell) to mirror the CI environment.
 - Private forks need to create a Codecov token from [Codecov repository settings](https://app.codecov.io/) and add it as `CODECOV_TOKEN` in their fork's GitHub repository secrets so the CI job can upload coverage results.
 
-### Node.js version management
-
-The project tracks its active Node.js release in both `.nvmrc` and the `engines.node` field inside `package.json`. When upgrading Node.js, update **both** locations in the same pull request so local development, CI, and deployments remain consistent.
-
 ---
 
 ## Health Endpoint

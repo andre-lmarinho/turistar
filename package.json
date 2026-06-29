@@ -5,8 +5,8 @@
   "license": "AGPL-3.0",
   "repository": "https://github.com/andre-lmarinho/travel-planner",
   "engines": {
-    "node": "24.x",
-    "npm": ">=11 <12"
+    "node": ">=24.11.1 <25",
+    "npm": ">=11.6.2 <12"
   },
   "packageManager": "npm@11.6.2",
   "scripts": {
