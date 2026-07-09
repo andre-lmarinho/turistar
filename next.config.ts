@@ -41,11 +41,6 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: getSecurityHeaders(isDev).filter((h) => h.key !== "Content-Security-Policy"),
       },
-      // Aggressive caching for static assets
-      {
-        source: "/:all*(js|css|png|jpg|jpeg|gif|webp|ico|svg|woff2)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
-      },
     ];
   },
 };
