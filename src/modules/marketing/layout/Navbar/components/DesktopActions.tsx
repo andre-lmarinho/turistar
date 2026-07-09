@@ -13,65 +13,39 @@ export function DesktopActions() {
   useEffect(() => {
     let active = true;
 
-    async function loadProfile() {
-      try {
-        const { data: authData, error: authError } = await supabase.auth.getUser();
-        if (authError) {
-          console.error(
-            formatSupabaseError({
-              operation: "DesktopActions.loadProfile:getUser",
-              error: authError,
-            })
-          );
-          if (active) setProfile(null);
-          return;
-        }
+    async function loadProfile(userId: string | null | undefined) {
+      if (!userId) {
+        if (active) setProfile(null);
+        return;
+      }
 
-        const userId = authData.user?.id;
-        if (!userId) {
-          if (active) setProfile(null);
-          return;
-        }
-
-        const { data, error } = await supabase.from("profiles").select("slug").eq("id", userId).maybeSingle();
-
-        if (error) {
-          console.error(
-            formatSupabaseError({
-              operation: "DesktopActions.loadProfile:selectProfile",
-              identifiers: { userId },
-              error,
-            })
-          );
-          if (active) setProfile(null);
-          return;
-        }
-
-        const slug =
-          data && typeof data === "object" && "slug" in data && typeof data.slug === "string"
-            ? data.slug
-            : null;
-
-        if (active) {
-          setProfile({ slug });
-        }
-      } catch (error) {
+      const { data, error } = await supabase.from("profiles").select("slug").eq("id", userId).maybeSingle();
+      if (error) {
         console.error(
           formatSupabaseError({
-            operation: "DesktopActions.loadProfile:unexpected",
+            operation: "DesktopActions.loadProfile:selectProfile",
+            identifiers: { userId },
             error,
           })
         );
         if (active) setProfile(null);
+        return;
       }
+
+      const slug =
+        data && typeof data === "object" && "slug" in data && typeof data.slug === "string"
+          ? data.slug
+          : null;
+
+      if (active) setProfile({ slug });
     }
 
-    void loadProfile();
+    void supabase.auth.getSession().then(({ data }) => loadProfile(data.session?.user?.id));
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      void loadProfile();
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      void loadProfile(session?.user?.id);
     });
 
     return () => {
