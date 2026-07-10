@@ -48,7 +48,6 @@ Each feature folder is a self-contained vertical slice that includes:
 - Domain logic: Core business rules and entities specific to that feature
 - Application services: Use case orchestration for that domain
 - Repositories: Data access specific to that feature's needs
-- DTOs: Data transfer objects for crossing boundaries
 - UI components: Frontend components related to this feature
 - Tests: Unit, integration, and e2e tests for this feature
 

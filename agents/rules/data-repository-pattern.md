@@ -34,10 +34,10 @@ async function getPlan(id: string) {
 // In repository file
 import { supabase } from '@/shared/lib/supabaseServer';
 import type { Database } from '@/shared/types/supabase';
-import type { PlanDTO } from './types';
+import type { Plan } from './types';
 
 export class PlanRepository {
-  async findById(id: string): Promise<PlanDTO | null> {
+  async findById(id: string): Promise<Plan | null> {
     const { data, error } = await supabase
       .from('plans')
       .select('id, title, destination_name, user_id')
@@ -49,7 +49,7 @@ export class PlanRepository {
     return this.mapToDTO(data);
   }
 
-  private mapToDTO(row: Database['public']['Tables']['plans']['Row']): PlanDTO {
+  private mapToDTO(row: Database['public']['Tables']['plans']['Row']): Plan {
     return {
       id: row.id,
       title: row.title,

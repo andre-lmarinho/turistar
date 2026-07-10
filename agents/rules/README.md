@@ -53,7 +53,6 @@ Rules are organized by section prefix, as defined in `_sections.md`:
 - `data-prefer-select-over-include` - Explicit column selection in Supabase queries
 - `data-repository-pattern` - Isolate database technology behind repositories
 - `data-repository-methods` - Consistent naming conventions for repository methods
-- `data-dto-boundaries` - Use DTOs at architectural boundaries
 
 ### 5. API Layer (HIGH)
 
