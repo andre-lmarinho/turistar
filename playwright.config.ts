@@ -7,7 +7,7 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3100";
 
 const resolveFromRepoRoot = (relativePath: string) => path.resolve(__dirname, relativePath);
 
-const webCommand = process.env.PLAYWRIGHT_WEB_COMMAND ?? "npm run dev:e2e";
+const webCommand = process.env.PLAYWRIGHT_WEB_COMMAND ?? "pnpm dev:e2e";
 const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
 
 export default defineConfig({
