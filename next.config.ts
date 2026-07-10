@@ -7,14 +7,6 @@ const withMDX = createMDX({
 });
 
 const nextConfig: NextConfig = {
-  // TypeScript 7 is the native (Go) compiler and does not expose the classic JS
-  // compiler API that `next build` loads for its inline type check, so that phase
-  // fails with "do not have the required package(s) installed". Types are still
-  // enforced by the dedicated `npm run typecheck` step (native `tsc --noEmit`),
-  // which runs before `build` in CI, so we skip Next's redundant inline check here.
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   // Strengthen defaults for production readiness
   reactStrictMode: true,
   poweredByHeader: false,
