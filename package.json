@@ -6,9 +6,9 @@
   "repository": "https://github.com/andre-lmarinho/travel-planner",
   "engines": {
     "node": ">=24.11.1 <25",
-    "npm": ">=11.6.2 <12"
+    "pnpm": ">=10"
   },
-  "packageManager": "npm@11.6.2",
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:e2e": "NEXT_PUBLIC_E2E=1 next dev --turbopack --port 3100",
@@ -17,7 +17,7 @@
     "start": "next start",
     "serve:prod": "next start --hostname 0.0.0.0 --port 3000",
     "clean": "rimraf .next node_modules",
-    "setup": "npm install && npm run format && npm run lint && npm run test",
+    "setup": "pnpm install && pnpm format && pnpm lint && pnpm test",
     "format": "biome format --write .",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -31,7 +31,7 @@
     "gen:types": ": \"${SUPABASE_PROJECT_ID:?Set SUPABASE_PROJECT_ID}\" && supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > src/shared/types/supabase.ts",
     "vercel:pull": "npx vercel@latest pull --yes --environment=preview",
     "vercel:build": "npx vercel@latest build --debug",
-    "check:vercel": "npm run vercel:pull && npm run vercel:build",
+    "check:vercel": "pnpm vercel:pull && pnpm vercel:build",
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
@@ -47,6 +47,7 @@
     "@next/mdx": "^16.2.10",
     "@sindresorhus/slugify": "^3.0.0",
     "@supabase/auth-helpers-react": "^0.15.0",
+    "@supabase/auth-js": "^2.110.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.105.1",
     "@tanstack/react-query": "^5.101.2",

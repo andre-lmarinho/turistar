@@ -76,7 +76,7 @@ See [docs/DEVELOPER_GUIDE.md#routing](docs/DEVELOPER_GUIDE.md#routing) for a bre
 
 ## Getting Started
 
-Prerequisites: Node.js v18+ and npm
+Prerequisites: Node.js v24+ and pnpm (`corepack enable`)
 
 1. Clone the repo
 
@@ -88,10 +88,6 @@ Prerequisites: Node.js v18+ and npm
 2. Install dependencies
 
    ```bash
-   npm install
-   # or
-   yarn
-   # or
    pnpm install
    ```
 
@@ -118,7 +114,7 @@ Prerequisites: Node.js v18+ and npm
 4. Start the dev server
 
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
    Visit http://localhost:3000
@@ -131,29 +127,29 @@ Prerequisites: Node.js v18+ and npm
 
 ### Development Workflow
 
-1. Install dependencies with `npm install`.
-2. Start the dev server using `npm run dev`.
-3. Run the linter and formatter via `npm run lint:fix`.
-4. Run the type checker with `npm run typecheck`.
-5. Ensure all tests pass with `npm run test`.
+1. Install dependencies with `pnpm install`.
+2. Start the dev server using `pnpm dev`.
+3. Run the linter and formatter via `pnpm lint:fix`.
+4. Run the type checker with `pnpm typecheck`.
+5. Ensure all tests pass with `pnpm test`.
 
 ---
 
 ## Scripts
 
-- `npm run dev` – start development server
-- `npm run build` – compile for production
-- `npm run start` – run production build locally
-- `npm run lint` – run Biome lint
-- `npm run lint:fix` – run Biome lint and format
-- `npm run format` – format repository files
-- `npm run test` – run unit tests
+- `pnpm dev` – start development server
+- `pnpm build` – compile for production
+- `pnpm start` – run production build locally
+- `pnpm lint` – run Biome lint
+- `pnpm lint:fix` – run Biome lint and format
+- `pnpm format` – format repository files
+- `pnpm test` – run unit tests
 
 ### Local Vercel build
 
 ```bash
-npm run vercel:pull
-npm run vercel:build
+pnpm vercel:pull
+pnpm vercel:build
 ```
 
 ---
@@ -164,8 +160,8 @@ See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testi
 
 ### Coverage reporting
 
-- The Vitest configuration enables coverage automatically in CI, so `npm run test` on GitHub Actions produces the `coverage/` directory with `lcov.info`.
-- To generate coverage locally, run `CI=true npm run test` (or export `CI=true` in your shell) to mirror the CI environment.
+- The Vitest configuration enables coverage automatically in CI, so `pnpm test` on GitHub Actions produces the `coverage/` directory with `lcov.info`.
+- To generate coverage locally, run `CI=true pnpm test` (or export `CI=true` in your shell) to mirror the CI environment.
 - Private forks need to create a Codecov token from [Codecov repository settings](https://app.codecov.io/) and add it as `CODECOV_TOKEN` in their fork's GitHub repository secrets so the CI job can upload coverage results.
 
 ---

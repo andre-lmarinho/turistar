@@ -1,6 +1,6 @@
 # Travel Planner Development Guide for AI Agents
 
-You are a senior engineer working in a Npm/Turbo monorepo. You prioritize type safety, security, and small, reviewable diffs.
+You are a senior engineer working in a pnpm-managed Next.js project. You prioritize type safety, security, and small, reviewable diffs.
 
 ## Do
 
@@ -10,7 +10,7 @@ You are a senior engineer working in a Npm/Turbo monorepo. You prioritize type s
 - Use descriptive errors with context (include the operation and identifiers involved)
 - Use conventional commits: `feat:`, `fix:`, `refactor:`
 - Create PRs in draft mode by default
-- Run `npm run typecheck:ci` before concluding CI failures are unrelated to your changes
+- Run `pnpm typecheck:ci` before concluding CI failures are unrelated to your changes
 - Import directly from source files, not barrel files (e.g., `shared/ui/components/button` not `shared/ui`)
 - Use `date-fns` or native `Date` instead of Day.js
 - Put permission checks in `page.tsx`, never in `layout.tsx`
@@ -32,47 +32,47 @@ You are a senior engineer working in a Npm/Turbo monorepo. You prioritize type s
 
 ```bash
 # Type check - always run on changed files
-npm run typecheck:ci
+pnpm typecheck:ci
 
 # Lint and format single file
 npx biome check --write path/to/file.tsx
 
 # Unit test specific file
-npm run test -- path/to/file.test.ts
+pnpm test -- path/to/file.test.ts
 
 # Unit test specific file + specific test
-npm run test -- path/to/file.test.ts -t "specific test name"
+pnpm test -- path/to/file.test.ts -t "specific test name"
 
 # Integration test specific file
-npm run test -- path/to/file.integration.test.ts
+pnpm test -- path/to/file.integration.test.ts
 
 # Integration test specific file + specific test
-npm run test -- path/to/file.integration.test.ts -t "specific test name"
+pnpm test -- path/to/file.integration.test.ts -t "specific test name"
 
 # E2E test specific file
-npm run e2e -- path/to/file.e2e.ts
+pnpm e2e -- path/to/file.e2e.ts
 
 # E2E test specific file + specific test
-npm run e2e -- path/to/file.e2e.ts --grep "specific test name"
+pnpm e2e -- path/to/file.e2e.ts --grep "specific test name"
 ```
 
 ### Project-wide (use sparingly)
 
 ```bash
 # Development
-npm run dev                 # Start dev server
+pnpm dev                 # Start dev server
 
 # Build & check
-npm run build               # Build all packages
-npm run lint:fix            # Lint and format all
-npm run typecheck           # Type check all
+pnpm build               # Build all packages
+pnpm lint:fix            # Lint and format all
+pnpm typecheck           # Type check all
 
 # Tests
-npm run test                # All unit tests
-npm run e2e                 # All E2E tests
+pnpm test                # All unit tests
+pnpm e2e                 # All E2E tests
 
 # Database
-npm run gen:types           # Regenerate types after schema changes
+pnpm gen:types           # Regenerate types after schema changes
 ```
 
 ## Boundaries
@@ -167,8 +167,8 @@ import { Button } from '@/shared/ui';
 ## PR Checklist
 
 - [ ] Title follows conventional commits: `feat(scope): description`
-- [ ] Type check passes: `npm run typecheck:ci`
-- [ ] Lint passes: `npm run lint`
+- [ ] Type check passes: `pnpm typecheck:ci`
+- [ ] Lint passes: `pnpm lint`
 - [ ] Relevant tests pass
 - [ ] Diff is small and focused (<500 lines, <10 files)
 - [ ] No secrets or API keys committed
@@ -180,7 +180,7 @@ import { Button } from '@/shared/ui';
 - Propose a short plan for complex tasks
 - Open a draft PR with notes if unsure about approach
 - Fix type errors before test failures - they're often the root cause
-- If you see missing enum/type errors run `npm run gen:types` and restart the TypeScript server
+- If you see missing enum/type errors run `pnpm gen:types` and restart the TypeScript server
 
 ## Extended Documentation
 
