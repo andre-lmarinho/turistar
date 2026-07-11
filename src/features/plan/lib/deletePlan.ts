@@ -1,35 +1,15 @@
 "use server";
 
-import type { SupabaseClient } from "@supabase/supabase-js";
-
 import { fetchProfileSlugByUserId } from "@/features/profile/repositories/ProfileRepository";
 import { requireUser } from "@/shared/lib/auth/session";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
-import { createSupabaseServiceRoleClient } from "@/shared/lib/supabaseServiceRole";
-import type { Database } from "@/shared/types/supabase";
+import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
 import { fetchPlanByIdWithMembers } from "../repositories/PlanRepository";
 
 type DeletePlanResult = {
   redirectTo: string;
 };
-
-type PlanRelatedTable =
-  | "plan_events"
-  | "plan_snapshots"
-  | "budget_entries"
-  | "plan_destinations"
-  | "plan_share_links"
-  | "plan_members";
-
-const PLAN_RELATED_TABLES: PlanRelatedTable[] = [
-  "plan_events",
-  "plan_snapshots",
-  "budget_entries",
-  "plan_destinations",
-  "plan_share_links",
-  "plan_members",
-];
 
 export async function deletePlan(planId: string): Promise<DeletePlanResult> {
   const normalizedPlanId = planId.trim();
@@ -53,15 +33,11 @@ export async function deletePlan(planId: string): Promise<DeletePlanResult> {
     );
   }
 
-  const supabase = createSupabaseServiceRoleClient();
-  const redirectTo = await resolvePlannerRedirect(user.id, supabase);
+  const supabase = createSupabaseServerClient();
+  const redirectTo = await resolvePlannerRedirect(user.id);
 
-  // TODO: Wrap cascading deletes in a database transaction (RPC) for atomicity.
-  // Currently, if a delete fails mid-way, the database may be left in an inconsistent state.
-  for (const table of PLAN_RELATED_TABLES) {
-    await deletePlanRows(supabase, table, normalizedPlanId);
-  }
-
+  // Child rows cascade via ON DELETE CASCADE and the owner-only DELETE policy
+  // authorizes this row, so a single delete is atomic — no service role, no loop.
   const { error } = await supabase.from("plans").delete().eq("id", normalizedPlanId);
   if (error) {
     throw formatSupabaseError({
@@ -74,25 +50,9 @@ export async function deletePlan(planId: string): Promise<DeletePlanResult> {
   return { redirectTo };
 }
 
-async function deletePlanRows(
-  client: SupabaseClient<Database>,
-  table: PlanRelatedTable,
-  planId: string
-): Promise<void> {
-  const { error } = await client.from(table).delete().eq("plan_id", planId);
-  if (error) {
-    throw formatSupabaseError({
-      operation: `deletePlan:${table}`,
-      identifiers: { planId },
-      error,
-    });
-  }
-}
-
-async function resolvePlannerRedirect(userId: string, client?: SupabaseClient<Database>): Promise<string> {
+async function resolvePlannerRedirect(userId: string): Promise<string> {
   try {
-    const supabase = client ?? createSupabaseServiceRoleClient();
-    const slug = await fetchProfileSlugByUserId(userId, { client: supabase });
+    const slug = await fetchProfileSlugByUserId(userId);
     return slug ? `/u/${slug}/planners` : "/";
   } catch (error) {
     console.error("resolvePlannerRedirect failed", {

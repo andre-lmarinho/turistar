@@ -1,5 +1,4 @@
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
-import type { Database } from "@/shared/types/supabase";
 import { Button } from "@/shared/ui/button";
 import { Logo } from "@/shared/ui/logo";
 
@@ -10,8 +9,6 @@ type UserProfile = {
   displayName: string | null;
   email: string | null;
 };
-
-type ProfileRow = Pick<Database["public"]["Tables"]["profiles"]["Row"], "slug" | "display_name">;
 
 async function getUserProfile(): Promise<UserProfile> {
   try {
@@ -26,7 +23,7 @@ async function getUserProfile(): Promise<UserProfile> {
     }
 
     const { data } = await supabase
-      .from<ProfileRow>("profiles")
+      .from("profiles")
       .select("slug, display_name")
       .eq("id", userId)
       .maybeSingle();

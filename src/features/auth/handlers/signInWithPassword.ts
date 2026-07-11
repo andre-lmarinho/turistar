@@ -15,10 +15,6 @@ type SignInWithPasswordResult = {
   slug: string;
 };
 
-type ProfileSlugRecord = {
-  slug: string | null;
-};
-
 export async function signInWithPassword({
   email,
   password,
@@ -51,7 +47,7 @@ export async function signInWithPassword({
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select<ProfileSlugRecord>("slug")
+    .select("slug")
     .eq("id", userId)
     .maybeSingle();
 
