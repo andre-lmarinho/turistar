@@ -1,4 +1,3 @@
-import { syncServerSession } from "@/features/auth/lib/syncServerSession";
 import { supabase } from "@/shared/lib/supabaseClient";
 
 export type ResetPasswordExchangeResult = { status: "ready" } | { status: "error"; error: unknown };
@@ -20,10 +19,7 @@ export async function exchangeResetPasswordSession(code: string): Promise<ResetP
     return { status: "error", error: error ?? new Error("Missing session.") };
   }
 
-  try {
-    await syncServerSession("SIGNED_IN", data.session);
-    return { status: "ready" };
-  } catch (syncError) {
-    return { status: "error", error: syncError };
-  }
+  // The @supabase/ssr browser client persists the exchanged session to cookies
+  // that the server reads directly; no manual server sync is needed.
+  return { status: "ready" };
 }

@@ -34,12 +34,11 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     const isDev = process.env.NODE_ENV !== "production";
-    // Middleware now sets Content-Security-Policy with a per-request nonce.
-    // Filter CSP out from static headers to avoid duplicates.
+    // CSP is not here: the proxy sets it with a per-request nonce.
     return [
       {
         source: "/:path*",
-        headers: getSecurityHeaders(isDev).filter((h) => h.key !== "Content-Security-Policy"),
+        headers: getSecurityHeaders(isDev),
       },
     ];
   },

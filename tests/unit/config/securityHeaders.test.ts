@@ -10,28 +10,16 @@ describe("security headers", () => {
     expect(keys.has("X-Frame-Options")).toBe(true);
     expect(keys.has("Referrer-Policy")).toBe(true);
     expect(keys.has("Permissions-Policy")).toBe(true);
-    expect(keys.has("Content-Security-Policy")).toBe(true);
   });
 
-  it("sets CSP with safe defaults", () => {
-    const csp = getSecurityHeaders(false).find((h) => h.key === "Content-Security-Policy")?.value ?? "";
-    expect(csp).toContain("default-src 'self'");
-    expect(csp).toContain("img-src 'self'");
-    expect(csp).toContain("object-src 'none'");
-    expect(csp).toContain("upgrade-insecure-requests");
+  it("omits CSP (the proxy sets it with a per-request nonce)", () => {
+    const keys = new Set(getSecurityHeaders(false).map((h) => h.key));
+    expect(keys.has("Content-Security-Policy")).toBe(false);
   });
 
-  it("relaxes CSP for development to support HMR", () => {
-    const cspDev = getSecurityHeaders(true).find((h) => h.key === "Content-Security-Policy")?.value ?? "";
-    expect(cspDev).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval'");
-    // In dev we intentionally omit script-src-elem to avoid quirks
-    expect(cspDev).not.toContain("script-src-elem");
-    expect(cspDev).toContain("connect-src");
-    expect(cspDev).toMatch(/ws:/);
-    // Ensure we don't accidentally emit double-quoted tokens (invalid)
-    expect(cspDev).not.toContain('"self"');
-    expect(cspDev).not.toContain('"unsafe-inline"');
-    expect(cspDev).not.toContain('"unsafe-eval"');
+  it("omits HSTS in development", () => {
+    const keys = new Set(getSecurityHeaders(true).map((h) => h.key));
+    expect(keys.has("Strict-Transport-Security")).toBe(false);
   });
 
   it("uses a conservative, widely supported Permissions-Policy set", () => {

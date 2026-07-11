@@ -1,7 +1,6 @@
 import type { AuthResponse } from "@supabase/auth-js";
 import type { Session } from "@supabase/supabase-js";
 
-import { syncServerSession } from "@/features/auth/lib/syncServerSession";
 import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
 import { supabase } from "@/shared/lib/supabaseClient";
 
@@ -54,8 +53,6 @@ export async function registerWithPassword({
   if (!session) {
     return { status: "needs-confirmation" };
   }
-
-  await syncServerSession("SIGNED_IN", session);
 
   const slug = await finalizeProfile();
 

@@ -3,7 +3,10 @@
 
 export type Header = { key: string; value: string };
 
-export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): string {
+// The proxy always supplies a per-request nonce, so production emits a strict
+// nonce-based CSP. Only local dev relaxes it for HMR (inline scripts + eval +
+// websockets). Preview intentionally uses the production posture.
+export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce: string }): string {
   const common = [
     "default-src 'self'",
     "style-src 'self' 'unsafe-inline' https:",
@@ -17,26 +20,20 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce?: string }): 
     "upgrade-insecure-requests",
   ];
 
-  const isPreview = process.env.VERCEL_ENV === "preview";
-
-  if (isDev || isPreview) {
-    // Allow Next.js Dev/HMR inline scripts, eval, and websockets locally/preview
+  if (isDev) {
     common.push(
-      // Broadly allow during dev; rely on strict prod CSP for security
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: http: https:",
       // Do not emit script-src-elem in dev to avoid browser quirks with inline scripts
       "connect-src http: https: ws: wss:",
       "worker-src blob: data: http: https:"
     );
   } else {
-    // Production: disallow inline/eval
-    const scriptDirectives: string[] = ["script-src 'self' https:", "script-src-elem 'self' https:"];
-    if (nonce) {
-      // Allow only scripts with our nonce and trust dynamically added scripts from those
-      scriptDirectives[0] = `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https:`;
-      scriptDirectives[1] = `script-src-elem 'self' 'nonce-${nonce}' https:`;
-    }
-    common.push(...scriptDirectives, "connect-src 'self' https:", "worker-src 'self'");
+    common.push(
+      `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https:`,
+      `script-src-elem 'self' 'nonce-${nonce}' https:`,
+      "connect-src 'self' https:",
+      "worker-src 'self'"
+    );
   }
 
   return common.join("; ");
@@ -48,6 +45,8 @@ function buildPermissionsPolicy(): string {
   return ["camera=()", "microphone=()", "geolocation=()", "payment=()", "fullscreen=(self)"].join(", ");
 }
 
+// Static headers applied to every response via next.config.ts. The CSP is not
+// here: it carries a per-request nonce and is set by the proxy instead.
 export function getSecurityHeaders(isDev: boolean): Header[] {
   const headers: Header[] = [
     // Disable MIME type sniffing
@@ -58,8 +57,6 @@ export function getSecurityHeaders(isDev: boolean): Header[] {
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     // Basic permission policy (tighten as features are added)
     { key: "Permissions-Policy", value: buildPermissionsPolicy() },
-    // Content Security Policy, environment-aware
-    { key: "Content-Security-Policy", value: buildCsp({ isDev }) },
   ];
   if (!isDev) {
     headers.unshift({

@@ -1,7 +1,6 @@
 import type { AuthResponse } from "@supabase/auth-js";
 import type { Session } from "@supabase/supabase-js";
 
-import { syncServerSession } from "@/features/auth/lib/syncServerSession";
 import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { supabase } from "@/shared/lib/supabaseClient";
 
@@ -36,8 +35,6 @@ export async function signInWithPassword({
   if (!session) {
     throw new Error(`signIn failed: reason=no_session`);
   }
-
-  await syncServerSession("SIGNED_IN", session);
 
   const userId = session.user?.id;
 
