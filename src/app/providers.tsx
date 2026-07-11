@@ -1,40 +1,10 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-
-import { createSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
-
-function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
-  const [supabaseClient] = useState(() => createSupabaseBrowserClient());
-
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange((event, session) => {
-      // Keep server-side Supabase session cookies in sync with the client session.
-      void fetch("/auth/callback", {
-        method: "POST",
-        headers: new Headers({ "Content-Type": "application/json" }),
-        credentials: "same-origin",
-        body: JSON.stringify({ event, session }),
-      });
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabaseClient]);
-
-  return <>{children}</>;
-}
+import { useState } from "react";
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
-  return (
-    <SupabaseAuthProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </SupabaseAuthProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

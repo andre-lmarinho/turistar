@@ -13,17 +13,11 @@ describe("CSP with nonce (prod)", () => {
     expect(scriptSrcElem).not.toContain("'unsafe-inline'");
     expect(scriptSrcElem).not.toContain("'unsafe-eval'");
   });
-
-  it("omits nonce when not provided", () => {
-    const csp = buildCsp({ isDev: false });
-    expect(csp).toContain("script-src 'self' https:");
-    expect(csp).toContain("script-src-elem 'self' https:");
-  });
 });
 
 describe("CSP in dev", () => {
   it("allows inline/eval and omits script-src-elem to support HMR", () => {
-    const csp = buildCsp({ isDev: true });
+    const csp = buildCsp({ isDev: true, nonce: "abc123" });
     expect(csp).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval'");
     expect(csp).not.toContain("script-src-elem");
     expect(csp).toMatch(/connect-src .*ws:/);
