@@ -5,15 +5,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 
-export async function updatePlanTitle(
-  planId: string,
-  editToken: string,
-  newTitle: string,
-  client: SupabaseClient = createSupabaseServerClient()
-) {
-  const { error } = await client.rpc("update_plan_title", {
+export async function updatePlanTitle(planId: string, newTitle: string) {
+  const supabase: SupabaseClient = createSupabaseServerClient();
+  const { error } = await supabase.rpc("update_plan_title", {
     _plan_id: planId,
-    _edit_token: editToken,
     _new_title: newTitle,
   });
   if (error) {

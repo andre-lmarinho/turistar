@@ -33,7 +33,6 @@ type PlanRow = {
   id: string;
   title: string | null;
   user_id: string | null;
-  edit_token: string;
   budget: number | null;
   start_date: string | null;
   end_date: string | null;
@@ -140,7 +139,6 @@ describe("PlanRepository", () => {
         id: "plan-1",
         title: "Trip",
         user_id: "owner-1",
-        edit_token: "token-1",
         budget: 100,
         start_date: "2024-01-01",
         end_date: "2024-01-05",
@@ -156,7 +154,6 @@ describe("PlanRepository", () => {
         id: "plan-1",
         title: "Trip",
         ownerId: "owner-1",
-        editToken: "token-1",
         budget: 100,
         startDate: "2024-01-01",
         endDate: "2024-01-05",
@@ -165,6 +162,7 @@ describe("PlanRepository", () => {
       });
       expect(from).toHaveBeenCalledWith("plans");
       expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_members!left"));
+      expect(planQuery.select).toHaveBeenCalledWith(expect.not.stringContaining("edit_token"));
       expect(planQuery.eq).toHaveBeenCalledWith("id", "plan-1");
     });
 
@@ -201,7 +199,6 @@ describe("PlanRepository", () => {
         id: "plan-10",
         title: "Public trip",
         user_id: "owner-10",
-        edit_token: "token-10",
         budget: 250,
         start_date: "2024-02-01",
         end_date: "2024-02-03",
@@ -217,7 +214,6 @@ describe("PlanRepository", () => {
         id: "plan-10",
         title: "Public trip",
         ownerId: "owner-10",
-        editToken: "token-10",
         budget: 250,
         startDate: "2024-02-01",
         endDate: "2024-02-03",
@@ -227,6 +223,7 @@ describe("PlanRepository", () => {
       expect(from).toHaveBeenCalledWith("plans");
       expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_destinations"));
       expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_members"));
+      expect(planQuery.select).toHaveBeenCalledWith(expect.not.stringContaining("edit_token"));
       expect(planQuery.eq).toHaveBeenCalledWith("public_slug", "public-slug");
     });
   });

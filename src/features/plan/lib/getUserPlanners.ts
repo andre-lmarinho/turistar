@@ -11,7 +11,6 @@ export type UserPlannerSummary = {
   endDate: string | null;
   updatedAt: string | null;
   publicSlug: string;
-  editToken: string;
   coverImage: string | null;
 };
 
@@ -22,7 +21,6 @@ interface RpcRow {
   end_date: string | null;
   created_at: string | null;
   public_slug: string;
-  edit_token: string;
   destination_name: string | null;
   latest_snapshot_at: string | null;
   cover_image: string | null;
@@ -54,7 +52,6 @@ export async function getUserPlanners(): Promise<UserPlannerSummary[]> {
       endDate: row.end_date,
       updatedAt,
       publicSlug: row.public_slug,
-      editToken: row.edit_token,
       coverImage: row.cover_image,
     };
   });

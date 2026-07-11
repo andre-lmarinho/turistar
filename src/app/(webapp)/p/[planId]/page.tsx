@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ planId: string }>;
-  searchParams: Promise<{ dest?: string; token?: string }>;
+  searchParams: Promise<{ dest?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -18,12 +18,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PlannerPlanPage({ params, searchParams }: PageProps) {
   const { planId } = await params;
-  const { dest, token } = await searchParams;
+  const { dest } = await searchParams;
 
   const experience = await getPlannerExperience({
     identifier: planId,
     dest,
-    editToken: token,
   });
 
   return <PlanIdView experience={experience} />;

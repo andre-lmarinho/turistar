@@ -15,7 +15,6 @@ type RpcRow = {
   end_date: string | null;
   created_at: string | null;
   public_slug: string;
-  edit_token: string;
   destination_name: string | null;
   latest_snapshot_at: string | null;
 };
@@ -52,7 +51,6 @@ describe("getUserPlanners", () => {
           end_date: "2024-01-05",
           created_at: "2023-12-31T00:00:00Z",
           public_slug: "slug-1",
-          edit_token: "token-1",
           destination_name: "Lisbon",
           latest_snapshot_at: "2024-01-03T12:00:00Z",
         },
@@ -63,7 +61,6 @@ describe("getUserPlanners", () => {
           end_date: null,
           created_at: "2024-02-01T00:00:00Z",
           public_slug: "slug-2",
-          edit_token: "token-2",
           destination_name: null,
           latest_snapshot_at: null,
         },
@@ -87,7 +84,6 @@ describe("getUserPlanners", () => {
         endDate: "2024-01-05",
         updatedAt: "2024-01-03T12:00:00Z",
         publicSlug: "slug-1",
-        editToken: "token-1",
       },
       {
         id: "plan-2",
@@ -97,7 +93,6 @@ describe("getUserPlanners", () => {
         endDate: null,
         updatedAt: "2024-02-01T00:00:00Z",
         publicSlug: "slug-2",
-        editToken: "token-2",
       },
     ]);
   });
@@ -122,7 +117,6 @@ describe("getUserPlanners", () => {
           end_date: "2024-03-05",
           created_at: "2024-02-25T00:00:00Z",
           public_slug: "slug-3",
-          edit_token: "token-3",
           destination_name: "Oslo",
           latest_snapshot_at: "2024-03-10T00:00:00Z",
         },
@@ -150,7 +144,6 @@ describe("getUserPlanners", () => {
           end_date: "2024-04-05",
           created_at: "2024-03-15T00:00:00Z",
           public_slug: "slug-4",
-          edit_token: "token-4",
           destination_name: "Paris",
           latest_snapshot_at: null,
         },

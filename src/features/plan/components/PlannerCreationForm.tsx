@@ -5,7 +5,6 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 
-import { usePlanEditTokens } from "@/features/events/hooks/usePlanEditTokens";
 import { LocationSearchInput } from "@/features/search/components/LocationSearchInput";
 import { useDestinationAutocomplete } from "@/features/search/hooks/useDestinationAutocomplete";
 import type { AutocompletePlace } from "@/features/search/types";
@@ -33,8 +32,6 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [destCountry, setDestCountry] = useState<string | null>(null);
   const [placeId, setPlaceId] = useState<string | null>(null);
-  const { saveEditToken } = usePlanEditTokens({ enabled: false });
-
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
@@ -87,9 +84,6 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
         startDate: range.from.toISOString(),
         endDate: range.to.toISOString(),
       });
-
-      const { planId: resultPlanId, editToken } = planResult;
-      saveEditToken(resultPlanId, editToken);
 
       onPlanCreated(planResult);
       setRange(getDefaultRange());

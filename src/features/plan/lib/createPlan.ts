@@ -63,13 +63,12 @@ export async function createPlan(
   }
   const row = Array.isArray(data) ? data[0] : data;
 
-  const { result_plan_id, result_public_slug, result_edit_token } = row as {
+  const { result_plan_id, result_public_slug } = row as {
     result_plan_id: string;
     result_public_slug: string;
-    result_edit_token: string;
   };
 
-  return { id: result_plan_id, publicSlug: result_public_slug, editToken: result_edit_token };
+  return { id: result_plan_id, publicSlug: result_public_slug };
 }
 
 async function resolveCountryFromGeoapify(

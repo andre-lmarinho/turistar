@@ -19,11 +19,10 @@ describe("updatePlanTitle", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await updatePlanTitle("plan-1", "token-123", "New Title");
+    await updatePlanTitle("plan-1", "New Title");
 
     expect(rpc).toHaveBeenCalledWith("update_plan_title", {
       _plan_id: "plan-1",
-      _edit_token: "token-123",
       _new_title: "New Title",
     });
   });
@@ -35,7 +34,7 @@ describe("updatePlanTitle", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await expect(updatePlanTitle("plan-1", "token", "Title")).rejects.toThrow(
+    await expect(updatePlanTitle("plan-1", "Title")).rejects.toThrow(
       "Supabase error during updatePlanTitle (planId=plan-1). rpc failed"
     );
   });

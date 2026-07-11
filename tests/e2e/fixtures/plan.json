@@ -2,7 +2,6 @@
   "plan": {
     "plan_id": "plan-e2e-001",
     "public_slug": "plan-e2e-001",
-    "edit_token": "edit-token-e2e",
     "title": "Playwright E2E Plan",
     "snapshots": [
       {
