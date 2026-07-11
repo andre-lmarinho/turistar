@@ -122,7 +122,7 @@ describe("PlannerProvider date ranges", () => {
       day("2024-01-04"),
       day("2024-01-05", [lastDayActivity]),
     ];
-    const { result } = renderPlannerContext({ initialDays, editToken: "token-1" });
+    const { result } = renderPlannerContext({ initialDays });
 
     act(() => {
       result.current.handleRangeChange({
@@ -136,21 +136,15 @@ describe("PlannerProvider date ranges", () => {
     expect(result.current.days[3].activities).toEqual([lastDayActivity]);
     expect(mockUpdatePlanDates).toHaveBeenCalledWith(
       "plan-1",
-      "token-1",
       new Date("2024-01-01T00:00:00"),
       new Date("2024-01-04T00:00:00")
     );
   });
 
-  it("does not persist date changes without edit permission or edit token", () => {
-    const { result: readOnlyResult } = renderPlannerContext({ canEdit: false, editToken: "token-1" });
+  it("does not persist date changes without edit permission", () => {
+    const { result: readOnlyResult } = renderPlannerContext({ canEdit: false });
     act(() => {
       readOnlyResult.current.handleRangeChange({ from: new Date("2024-01-01T00:00:00") });
-    });
-
-    const { result: missingTokenResult } = renderPlannerContext();
-    act(() => {
-      missingTokenResult.current.handleRangeChange({ from: new Date("2024-01-02T00:00:00") });
     });
 
     expect(mockUpdatePlanDates).not.toHaveBeenCalled();

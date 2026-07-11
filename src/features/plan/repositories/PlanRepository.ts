@@ -25,7 +25,6 @@ export type PlanRecord = {
   id: string;
   title: string | null;
   ownerId: string | null;
-  editToken: string;
   budget: number | null;
   startDate: string | null;
   endDate: string | null;
@@ -60,7 +59,6 @@ type PlanRow = {
   id: string;
   title: string | null;
   user_id: string | null;
-  edit_token: string;
   budget: number | null;
   start_date: string | null;
   end_date: string | null;
@@ -90,7 +88,6 @@ function mapPlanRow(row: PlanRow): PlanRecord {
     id: row.id,
     title: row.title,
     ownerId: row.user_id,
-    editToken: row.edit_token,
     budget: row.budget,
     startDate: row.start_date,
     endDate: row.end_date,
@@ -178,7 +175,6 @@ export async function fetchPlanByIdWithMembers(
         id,
         title,
         user_id,
-        edit_token,
         budget,
         start_date,
         end_date,
@@ -219,7 +215,6 @@ export async function fetchPlanBySlug(
         id,
         title,
         user_id,
-        edit_token,
         budget,
         start_date,
         end_date,

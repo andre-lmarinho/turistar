@@ -38,7 +38,6 @@ export interface PlannerWorkspaceProps {
   isOwner?: boolean;
   isAdmin?: boolean;
   canManageMembers?: boolean;
-  editToken?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
 }
@@ -47,7 +46,6 @@ type PlannerWorkspaceContentProps = {
   persist: boolean;
   title: string;
   canEdit: boolean;
-  editToken?: string;
   initialBudget?: number;
   initialEntries?: Entry[];
 };
@@ -56,7 +54,6 @@ function PlannerWorkspaceContent({
   persist,
   title: initialTitle,
   canEdit,
-  editToken,
   initialBudget,
   initialEntries,
 }: PlannerWorkspaceContentProps) {
@@ -103,8 +100,8 @@ function PlannerWorkspaceContent({
       return;
     }
 
-    if (persist && canEdit && editToken) {
-      await updatePlanTitle(planId, editToken, title.trim());
+    if (persist && canEdit) {
+      await updatePlanTitle(planId, title.trim());
     }
   };
 
@@ -222,7 +219,6 @@ export function PlannerWorkspace({
   isOwner = false,
   isAdmin = false,
   canManageMembers = false,
-  editToken,
   initialBudget,
   initialEntries,
 }: PlannerWorkspaceProps) {
@@ -236,13 +232,11 @@ export function PlannerWorkspace({
       viewerUserId={viewerUserId}
       isOwner={isOwner}
       isAdmin={isAdmin}
-      canManageMembers={canManageMembers}
-      editToken={editToken}>
+      canManageMembers={canManageMembers}>
       <PlannerWorkspaceContent
         persist={persist}
         title={title}
         canEdit={canEdit}
-        editToken={editToken}
         initialBudget={initialBudget}
         initialEntries={initialEntries}
       />

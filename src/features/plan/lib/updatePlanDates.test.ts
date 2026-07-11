@@ -20,16 +20,10 @@ describe("updatePlanDates", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await updatePlanDates(
-      "plan-1",
-      "token-123",
-      new Date("2024-03-10T12:00:00"),
-      new Date("2024-03-15T12:00:00")
-    );
+    await updatePlanDates("plan-1", new Date("2024-03-10T12:00:00"), new Date("2024-03-15T12:00:00"));
 
     expect(rpc).toHaveBeenCalledWith("update_plan_dates", {
       _plan_id: "plan-1",
-      _edit_token: "token-123",
       _start_date: "2024-03-10",
       _end_date: "2024-03-15",
     });
@@ -43,9 +37,9 @@ describe("updatePlanDates", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await expect(
-      updatePlanDates("plan-1", "token", new Date("2024-01-01"), new Date("2024-01-02"))
-    ).rejects.toThrow("Supabase error during updatePlanDates (planId=plan-1). update failed");
+    await expect(updatePlanDates("plan-1", new Date("2024-01-01"), new Date("2024-01-02"))).rejects.toThrow(
+      "Supabase error during updatePlanDates (planId=plan-1). update failed"
+    );
   });
 
   it("falls back to a generic error message", async () => {
@@ -55,8 +49,8 @@ describe("updatePlanDates", () => {
       rpc,
     } as unknown as ReturnType<typeof createSupabaseServerClient>);
 
-    await expect(
-      updatePlanDates("plan-1", "token", new Date("2024-01-01"), new Date("2024-01-02"))
-    ).rejects.toThrow("Supabase error during updatePlanDates (planId=plan-1).");
+    await expect(updatePlanDates("plan-1", new Date("2024-01-01"), new Date("2024-01-02"))).rejects.toThrow(
+      "Supabase error during updatePlanDates (planId=plan-1)."
+    );
   });
 });

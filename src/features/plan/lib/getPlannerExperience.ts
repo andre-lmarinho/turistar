@@ -30,7 +30,6 @@ export interface PlannerExperience {
   isOwner: boolean;
   isAdmin: boolean;
   canManageMembers: boolean;
-  editToken?: string;
   initialDays?: DayPlan[];
   initialBudget?: number;
   initialEntries?: Entry[];
@@ -39,13 +38,11 @@ export interface PlannerExperience {
 interface GetPlannerExperienceArgs {
   identifier: string;
   dest?: string;
-  editToken?: string;
 }
 
 export async function getPlannerExperience({
   identifier,
   dest,
-  editToken,
 }: GetPlannerExperienceArgs): Promise<PlannerExperience> {
   const trimmed = identifier?.trim();
   if (!trimmed) return notFound();
@@ -77,9 +74,8 @@ export async function getPlannerExperience({
   const isOwner = Boolean(viewerUserId && plan.ownerId && viewerUserId === plan.ownerId);
   const memberRow = viewerUserId ? plan.members.find((m) => m.userId === viewerUserId) : null;
   const isMember = Boolean(memberRow);
-  const tokenMatches = Boolean(editToken && editToken === plan.editToken);
   const isAdmin = isOwner || memberRow?.tier === "admin";
-  const canEdit = Boolean(isOwner || isMember || tokenMatches);
+  const canEdit = Boolean(isOwner || isMember);
 
   // For private access (UUID), require owner/member
   if (isPrivateAccess && !isOwner && !isMember) return notFound();
@@ -131,7 +127,6 @@ export async function getPlannerExperience({
     isOwner,
     isAdmin,
     canManageMembers: isAdmin,
-    editToken: canEdit ? plan.editToken : undefined,
     initialDays,
     initialBudget: plan.budget ?? undefined,
     initialEntries,

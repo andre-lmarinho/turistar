@@ -25,7 +25,6 @@ export interface CreatePlannerPlanInput {
 export interface CreatePlannerPlanResult {
   planId: string;
   publicSlug: string;
-  editToken: string;
 }
 
 export async function createUserPlan(input: CreatePlannerPlanInput): Promise<CreatePlannerPlanResult> {
@@ -50,7 +49,7 @@ export async function createUserPlan(input: CreatePlannerPlanInput): Promise<Cre
     : Promise.resolve(undefined);
 
   // Create the plan immediately without waiting for the cover image
-  const { id, publicSlug, editToken } = await createPlan(
+  const { id, publicSlug } = await createPlan(
     title,
     {
       name: destination.name,
@@ -82,6 +81,5 @@ export async function createUserPlan(input: CreatePlannerPlanInput): Promise<Cre
   return {
     planId: id,
     publicSlug,
-    editToken,
   };
 }

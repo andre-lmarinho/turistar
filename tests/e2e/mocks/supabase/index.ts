@@ -18,7 +18,6 @@ type EventRow = {
 type PlanState = {
   plan_id: string;
   public_slug: string;
-  edit_token: string;
   title: string;
   snapshots: SnapshotRow[];
   events: EventRow[];
@@ -29,7 +28,6 @@ type PlanMemberTier = Database["public"]["Enums"]["plan_member_tier"];
 type PlanRow = {
   id: string;
   public_slug: string;
-  edit_token: string;
   title: string;
   user_id: string | null;
   budget: number | null;
@@ -100,12 +98,10 @@ type RpcParams = {
   };
   update_plan_title: {
     _plan_id: string;
-    _edit_token: string;
     _new_title?: string | null;
   };
   update_plan_dates: {
     _plan_id: string;
-    _edit_token: string;
     _start_date?: string | null;
     _end_date?: string | null;
   };
@@ -397,7 +393,6 @@ class MockSupabaseClientImpl {
       {
         id: planId,
         public_slug: this.plan.public_slug,
-        edit_token: this.plan.edit_token,
         title: this.plan.title,
         user_id: DEFAULT_OWNER_ID,
         budget: null,
@@ -441,7 +436,6 @@ class MockSupabaseClientImpl {
       return;
     }
     planRow.title = this.plan.title;
-    planRow.edit_token = this.plan.edit_token;
     planRow.public_slug = this.plan.public_slug;
     Object.assign(planRow, overrides);
   }
@@ -525,7 +519,6 @@ class MockSupabaseClientImpl {
           data: {
             result_plan_id: this.plan.plan_id,
             result_public_slug: this.plan.public_slug,
-            result_edit_token: this.plan.edit_token,
           },
           error: null,
         };
@@ -712,7 +705,6 @@ class MockSupabaseClientImpl {
           end_date: plan.end_date,
           created_at: "2024-01-01T00:00:00.000Z",
           public_slug: plan.public_slug,
-          edit_token: plan.edit_token,
           destination_name: plan.plan_destinations?.[0]?.destinations?.name ?? null,
           latest_snapshot_at: new Date().toISOString(),
         }));

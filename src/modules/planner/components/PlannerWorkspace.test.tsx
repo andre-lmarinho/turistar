@@ -64,7 +64,7 @@ const updatePlanTitleMock = vi.mocked(updatePlanTitle);
 
 describe("PlannerWorkspace", () => {
   it("restores the initial title when blurred empty", async () => {
-    render(<PlannerWorkspace planId="p1" title="Trip" editToken="token" />);
+    render(<PlannerWorkspace planId="p1" title="Trip" />);
 
     const input = screen.getByLabelText("Planner title");
     fireEvent.change(input, { target: { value: "" } });
@@ -75,12 +75,12 @@ describe("PlannerWorkspace", () => {
   });
 
   it("persists the title on blur when editable", async () => {
-    render(<PlannerWorkspace planId="p1" title="Trip" editToken="token" />);
+    render(<PlannerWorkspace planId="p1" title="Trip" />);
 
     const input = screen.getByLabelText("Planner title");
     fireEvent.change(input, { target: { value: "New Title" } });
     fireEvent.blur(input);
 
-    await waitFor(() => expect(updatePlanTitleMock).toHaveBeenCalledWith("p1", "token", "New Title"));
+    await waitFor(() => expect(updatePlanTitleMock).toHaveBeenCalledWith("p1", "New Title"));
   });
 });

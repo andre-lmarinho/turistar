@@ -25,7 +25,6 @@ describe("createPlan action", () => {
         {
           result_plan_id: "plan-1",
           result_public_slug: "slug-1",
-          result_edit_token: "token-1",
         },
       ],
       error: null,
@@ -52,7 +51,7 @@ describe("createPlan action", () => {
       _user_id: undefined,
       _cover_image: undefined,
     });
-    expect(result).toEqual({ id: "plan-1", publicSlug: "slug-1", editToken: "token-1" });
+    expect(result).toEqual({ id: "plan-1", publicSlug: "slug-1" });
   });
 
   it("supports object responses from RPC", async () => {
@@ -60,7 +59,6 @@ describe("createPlan action", () => {
       data: {
         result_plan_id: "plan-2",
         result_public_slug: "slug-2",
-        result_edit_token: "token-2",
       },
       error: null,
     });
@@ -81,7 +79,7 @@ describe("createPlan action", () => {
       _user_id: undefined,
       _cover_image: undefined,
     });
-    expect(result).toEqual({ id: "plan-2", publicSlug: "slug-2", editToken: "token-2" });
+    expect(result).toEqual({ id: "plan-2", publicSlug: "slug-2" });
   });
 
   it("throws when the RPC returns an error", async () => {
@@ -102,7 +100,6 @@ describe("createPlan action", () => {
         {
           result_plan_id: "plan-1",
           result_public_slug: "slug",
-          result_edit_token: "token",
         },
       ],
       error: null,
@@ -132,7 +129,6 @@ describe("createPlan action", () => {
       data: {
         result_plan_id: "plan-3",
         result_public_slug: "slug-3",
-        result_edit_token: "token-3",
       },
       error: null,
     });
@@ -152,7 +148,6 @@ describe("createPlan action", () => {
       data: {
         result_plan_id: "plan-4",
         result_public_slug: "slug-4",
-        result_edit_token: "token-4",
       },
       error: null,
     });
@@ -175,7 +170,6 @@ describe("createPlan action", () => {
       data: {
         result_plan_id: "plan-5",
         result_public_slug: "slug-5",
-        result_edit_token: "token-5",
       },
       error: null,
     });

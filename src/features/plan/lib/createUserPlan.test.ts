@@ -42,7 +42,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
 
     const result = await createUserPlan({
@@ -73,7 +72,6 @@ describe("createUserPlan", () => {
     expect(result).toEqual({
       planId: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
   });
 
@@ -82,7 +80,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
     vi.mocked(fetchGeoapifyPlaceDetails).mockResolvedValue({
       placeId: "place-123",
@@ -112,7 +109,6 @@ describe("createUserPlan", () => {
     expect(result).toEqual({
       planId: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
 
     // Wait for the background promise chain to complete
@@ -132,7 +128,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
 
     await createUserPlan({
@@ -164,7 +159,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
     vi.mocked(fetchGeoapifyPlaceDetails).mockResolvedValue({
       placeId: "place-123",
@@ -201,7 +195,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
     vi.mocked(fetchGeoapifyPlaceDetails).mockResolvedValue({
       placeId: "place-123",
@@ -240,7 +233,6 @@ describe("createUserPlan", () => {
     vi.mocked(createPlan).mockResolvedValue({
       id: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
     vi.mocked(fetchGeoapifyPlaceDetails).mockRejectedValue(new Error("API error"));
 
@@ -261,7 +253,6 @@ describe("createUserPlan", () => {
     expect(result).toEqual({
       planId: "plan-123",
       publicSlug: "slug-123",
-      editToken: "token-123",
     });
 
     await new Promise((resolve) => setTimeout(resolve, 0));
