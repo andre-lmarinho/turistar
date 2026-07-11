@@ -49,8 +49,8 @@ describe("createPlan action", () => {
       _dest_country: "BR",
       _start_date: "2024-01-01",
       _end_date: "2024-01-05",
-      _user_id: null,
-      _cover_image: null,
+      _user_id: undefined,
+      _cover_image: undefined,
     });
     expect(result).toEqual({ id: "plan-1", publicSlug: "slug-1", editToken: "token-1" });
   });
@@ -73,13 +73,13 @@ describe("createPlan action", () => {
     expect(rpc).toHaveBeenCalledWith("create_full_plan", {
       _title: "Title",
       _dest_name: "Lisbon",
-      _dest_lat: null,
-      _dest_long: null,
+      _dest_lat: undefined,
+      _dest_long: undefined,
       _dest_country: "BR",
       _start_date: "2024-02-01",
       _end_date: "2024-02-10",
-      _user_id: null,
-      _cover_image: null,
+      _user_id: undefined,
+      _cover_image: undefined,
     });
     expect(result).toEqual({ id: "plan-2", publicSlug: "slug-2", editToken: "token-2" });
   });
@@ -164,7 +164,10 @@ describe("createPlan action", () => {
 
     await createPlan("Failure Trip", { name: "Unknown" }, "2024-04-01", "2024-04-05");
 
-    expect(rpc).toHaveBeenCalledWith("create_full_plan", expect.objectContaining({ _dest_country: null }));
+    expect(rpc).toHaveBeenCalledWith(
+      "create_full_plan",
+      expect.objectContaining({ _dest_country: undefined })
+    );
   });
 
   it("includes cover_image in the RPC payload when provided", async () => {

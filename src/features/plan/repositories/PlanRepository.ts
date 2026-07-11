@@ -5,6 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import { isUuid } from "@/shared/lib/uuid";
+import type { Database } from "@/shared/types/supabase";
 
 export type PlanDestinationRecord = {
   name: string | null;
@@ -43,16 +44,11 @@ export type SnapshotRowRecord = {
 };
 
 type PlanRepositoryOptions = {
-  client?: SupabaseClient;
+  client?: SupabaseClient<Database>;
 };
 
 type PlanDestinationRow = {
   destinations: { name: string | null } | null;
-};
-
-type PlanIdentityRow = {
-  id: string;
-  user_id: string | null;
 };
 
 type PlanMemberRow = {
@@ -75,7 +71,7 @@ type PlanWithMembersRow = PlanRow & {
   plan_members: PlanMemberRow[] | null;
 };
 
-function getClient(client?: SupabaseClient): SupabaseClient {
+function getClient(client?: SupabaseClient<Database>): SupabaseClient<Database> {
   return client ?? createSupabaseServerClient();
 }
 
@@ -118,11 +114,7 @@ export async function fetchPlanIdentityById(
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanIdentity | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
-    .from("plans")
-    .select("id, user_id")
-    .eq("id", planId)
-    .maybeSingle()) as unknown as { data: PlanIdentityRow | null; error: unknown };
+  const { data, error } = await supabase.from("plans").select("id, user_id").eq("id", planId).maybeSingle();
 
   if (error) {
     throw formatSupabaseError({
@@ -144,11 +136,11 @@ export async function fetchPlanIdentityBySlug(
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanIdentity | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plans")
     .select("id, user_id")
     .eq("public_slug", slug)
-    .maybeSingle()) as unknown as { data: PlanIdentityRow | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({
@@ -261,14 +253,14 @@ export async function fetchLatestSnapshot(
   { client }: PlanRepositoryOptions = {}
 ): Promise<SnapshotRowRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plan_snapshots")
     .select("plan_id, version, state, updated_at")
     .eq("plan_id", planId)
     .order("version", { ascending: false })
     .order("updated_at", { ascending: false })
     .limit(1)
-    .maybeSingle()) as unknown as { data: SnapshotRowRecord | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({

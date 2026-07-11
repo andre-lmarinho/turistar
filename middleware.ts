@@ -64,11 +64,6 @@ export async function middleware(request: NextRequest) {
           });
         },
       },
-      headers: {
-        get(key: string) {
-          return requestHeaders.get(key) ?? undefined;
-        },
-      },
     }
   );
 

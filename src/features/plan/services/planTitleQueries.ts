@@ -4,16 +4,14 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
-type PlanTitleRow = { title: string | null };
-
-export async function fetchPlanTitle(planId: string, client?: SupabaseClient): Promise<string | null> {
+export async function fetchPlanTitle(
+  planId: string,
+  client?: SupabaseClient<Database>
+): Promise<string | null> {
   const supabase = client ?? createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("plans")
-    .select<PlanTitleRow>("title")
-    .eq("id", planId)
-    .single();
+  const { data, error } = await supabase.from("plans").select("title").eq("id", planId).single();
 
   if (error) {
     throw formatSupabaseError({

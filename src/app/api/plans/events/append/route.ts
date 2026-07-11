@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { appendEvents } from "@/features/events/services/eventsQueries";
 import type { EventInsert } from "@/features/events/types";
+import { getCurrentUser } from "@/shared/lib/auth/session";
 
 type AppendBody = {
   planId?: string;
@@ -10,6 +11,11 @@ type AppendBody = {
 };
 
 export async function POST(request: Request) {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Authentication required." }, { status: 401 });
+  }
+
   let payload: AppendBody;
   try {
     payload = (await request.json()) as AppendBody;

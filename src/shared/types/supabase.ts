@@ -1,91 +1,35 @@
-// Generated via `supabase gen types`
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
-
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      activities: {
-        Row: {
-          id: string;
-          day_id: string;
-          title: string | null;
-          color: string | null;
-          address: string | null;
-          category: string | null;
-          description: string | null;
-          start_time: string | null;
-          duration: number | null;
-          latitude: number | null;
-          longitude: number | null;
-          budget: number | null;
-          image_url: string | null;
-        };
-        Insert: {
-          id?: string;
-          day_id: string;
-          title?: string | null;
-          color?: string | null;
-          address?: string | null;
-          category?: string | null;
-          description?: string | null;
-          start_time?: string | null;
-          duration?: number | null;
-          latitude?: number | null;
-          longitude?: number | null;
-          budget?: number | null;
-          image_url?: string | null;
-        };
-        Update: {
-          id?: string;
-          day_id?: string;
-          title?: string | null;
-          color?: string | null;
-          address?: string | null;
-          category?: string | null;
-          description?: string | null;
-          start_time?: string | null;
-          duration?: number | null;
-          latitude?: number | null;
-          longitude?: number | null;
-          budget?: number | null;
-          image_url?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "activities_day_id_fkey";
-            columns: ["day_id"];
-            referencedRelation: "plan_days";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       budget_entries: {
         Row: {
+          amount: number | null;
+          category: string | null;
+          description: string | null;
           id: string;
           plan_id: string;
-          description: string | null;
-          category: string | null;
-          amount: number | null;
         };
         Insert: {
+          amount?: number | null;
+          category?: string | null;
+          description?: string | null;
           id?: string;
           plan_id: string;
-          description?: string | null;
-          category?: string | null;
-          amount?: number | null;
         };
         Update: {
+          amount?: number | null;
+          category?: string | null;
+          description?: string | null;
           id?: string;
           plan_id?: string;
-          description?: string | null;
-          category?: string | null;
-          amount?: number | null;
         };
         Relationships: [
           {
             foreignKeyName: "budget_entries_plan_id_fkey";
             columns: ["plan_id"];
+            isOneToOne: false;
             referencedRelation: "plans";
             referencedColumns: ["id"];
           },
@@ -93,54 +37,97 @@ export interface Database {
       };
       destinations: {
         Row: {
-          id: string;
-          name: string;
           country: string | null;
+          id: string;
           latitude: number | null;
           longitude: number | null;
+          name: string;
         };
         Insert: {
-          id?: string;
-          name: string;
           country?: string | null;
+          id?: string;
           latitude?: number | null;
           longitude?: number | null;
+          name: string;
         };
         Update: {
-          id?: string;
-          name?: string;
           country?: string | null;
+          id?: string;
           latitude?: number | null;
           longitude?: number | null;
+          name?: string;
         };
         Relationships: [];
       };
       plan_destinations: {
         Row: {
-          plan_id: string;
           destination_id: string;
+          plan_id: string;
           position: number;
         };
         Insert: {
-          plan_id: string;
           destination_id: string;
+          plan_id: string;
           position?: number;
         };
         Update: {
-          plan_id?: string;
           destination_id?: string;
+          plan_id?: string;
           position?: number;
         };
         Relationships: [
           {
             foreignKeyName: "plan_destinations_destination_id_fkey";
             columns: ["destination_id"];
+            isOneToOne: false;
             referencedRelation: "destinations";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "plan_destinations_plan_id_fkey";
             columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plan_events: {
+        Row: {
+          actor_id: string;
+          created_at: string;
+          event_id: string;
+          event_type: string;
+          id: string;
+          payload: Json;
+          plan_id: string;
+          version: number;
+        };
+        Insert: {
+          actor_id: string;
+          created_at?: string;
+          event_id?: string;
+          event_type: string;
+          id?: string;
+          payload: Json;
+          plan_id: string;
+          version: number;
+        };
+        Update: {
+          actor_id?: string;
+          created_at?: string;
+          event_id?: string;
+          event_type?: string;
+          id?: string;
+          payload?: Json;
+          plan_id?: string;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plan_events_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
             referencedRelation: "plans";
             referencedColumns: ["id"];
           },
@@ -148,42 +135,45 @@ export interface Database {
       };
       plan_members: {
         Row: {
-          plan_id: string;
-          user_id: string;
-          tier: Database["public"]["Enums"]["plan_member_tier"];
           created_at: string;
           created_by: string | null;
+          plan_id: string;
+          tier: Database["public"]["Enums"]["plan_member_tier"];
+          user_id: string;
         };
         Insert: {
-          plan_id: string;
-          user_id: string;
-          tier?: Database["public"]["Enums"]["plan_member_tier"];
           created_at?: string;
           created_by?: string | null;
+          plan_id: string;
+          tier?: Database["public"]["Enums"]["plan_member_tier"];
+          user_id: string;
         };
         Update: {
-          plan_id?: string;
-          user_id?: string;
-          tier?: Database["public"]["Enums"]["plan_member_tier"];
           created_at?: string;
           created_by?: string | null;
+          plan_id?: string;
+          tier?: Database["public"]["Enums"]["plan_member_tier"];
+          user_id?: string;
         };
         Relationships: [
           {
             foreignKeyName: "plan_members_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "plan_members_plan_id_fkey";
             columns: ["plan_id"];
+            isOneToOne: false;
             referencedRelation: "plans";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "plan_members_user_id_fkey";
             columns: ["user_id"];
+            isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
@@ -191,153 +181,38 @@ export interface Database {
       };
       plan_share_links: {
         Row: {
-          plan_id: string;
-          token: string;
           created_at: string;
           created_by: string;
+          plan_id: string;
           revoked_at: string | null;
+          token: string;
         };
         Insert: {
-          plan_id: string;
-          token?: string;
           created_at?: string;
           created_by: string;
+          plan_id: string;
           revoked_at?: string | null;
+          token?: string;
         };
         Update: {
-          plan_id?: string;
-          token?: string;
           created_at?: string;
           created_by?: string;
+          plan_id?: string;
           revoked_at?: string | null;
+          token?: string;
         };
         Relationships: [
           {
             foreignKeyName: "plan_share_links_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
             referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
           {
             foreignKeyName: "plan_share_links_plan_id_fkey";
             columns: ["plan_id"];
-            referencedRelation: "plans";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      plans: {
-        Row: {
-          id: string;
-          user_id: string | null;
-          title: string | null;
-          start_date: string | null;
-          end_date: string | null;
-          budget: number | null;
-          created_at: string | null;
-          public_slug: string;
-          edit_token: string;
-          is_public: boolean | null;
-          cover_image: string | null;
-        };
-        Insert: {
-          id?: string;
-          user_id?: string | null;
-          title?: string | null;
-          start_date?: string | null;
-          end_date?: string | null;
-          budget?: number | null;
-          created_at?: string | null;
-          public_slug?: string;
-          edit_token?: string;
-          is_public?: boolean | null;
-          cover_image?: string | null;
-        };
-        Update: {
-          id?: string;
-          user_id?: string | null;
-          title?: string | null;
-          start_date?: string | null;
-          end_date?: string | null;
-          budget?: number | null;
-          created_at?: string | null;
-          public_slug?: string;
-          edit_token?: string;
-          is_public?: boolean | null;
-          cover_image?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "plans_user_id_fkey";
-            columns: ["user_id"];
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      profiles: {
-        Row: {
-          id: string;
-          created_at: string;
-          slug: string;
-          display_name: string | null;
-          avatar_url: string | null;
-        };
-        Insert: {
-          id: string;
-          created_at?: string;
-          slug: string;
-          display_name?: string | null;
-          avatar_url?: string | null;
-        };
-        Update: {
-          id?: string;
-          created_at?: string;
-          slug?: string;
-          display_name?: string | null;
-          avatar_url?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey";
-            columns: ["id"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      plan_events: {
-        Row: {
-          event_id: string;
-          plan_id: string;
-          version: number;
-          event_type: string;
-          payload: Json;
-          actor_id: string | null;
-          created_at: string;
-        };
-        Insert: {
-          event_id?: string;
-          plan_id: string;
-          version: number;
-          event_type: string;
-          payload?: Json;
-          actor_id?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          event_id?: string;
-          plan_id?: string;
-          version?: number;
-          event_type?: string;
-          payload?: Json;
-          actor_id?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "plan_events_plan_id_fkey";
-            columns: ["plan_id"];
+            isOneToOne: true;
             referencedRelation: "plans";
             referencedColumns: ["id"];
           },
@@ -346,117 +221,325 @@ export interface Database {
       plan_snapshots: {
         Row: {
           plan_id: string;
-          version: number;
           state: Json;
           updated_at: string;
+          version: number;
         };
         Insert: {
           plan_id: string;
-          version?: number;
           state?: Json;
           updated_at?: string;
+          version?: number;
         };
         Update: {
           plan_id?: string;
-          version?: number;
           state?: Json;
           updated_at?: string;
+          version?: number;
         };
         Relationships: [
           {
             foreignKeyName: "plan_snapshots_plan_id_fkey";
             columns: ["plan_id"];
+            isOneToOne: true;
             referencedRelation: "plans";
             referencedColumns: ["id"];
           },
         ];
       };
-    };
-    Views: Record<string, unknown>;
-    Functions: Record<string, unknown> & {
-      append_plan_events: {
-        Args: {
-          plan_id: string;
-          base_version: number;
-          events: unknown;
+      plans: {
+        Row: {
+          budget: number | null;
+          cover_image: string | null;
+          created_at: string;
+          edit_token: string;
+          end_date: string | null;
+          id: string;
+          is_public: boolean;
+          public_slug: string;
+          start_date: string | null;
+          title: string | null;
+          user_id: string | null;
         };
-        Returns: {
-          version: number;
-          inserted_events: unknown;
+        Insert: {
+          budget?: number | null;
+          cover_image?: string | null;
+          created_at?: string;
+          edit_token?: string;
+          end_date?: string | null;
+          id?: string;
+          is_public?: boolean;
+          public_slug?: string;
+          start_date?: string | null;
+          title?: string | null;
+          user_id?: string | null;
         };
+        Update: {
+          budget?: number | null;
+          cover_image?: string | null;
+          created_at?: string;
+          edit_token?: string;
+          end_date?: string | null;
+          id?: string;
+          is_public?: boolean;
+          public_slug?: string;
+          start_date?: string | null;
+          title?: string | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plans_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
+      profiles: {
+        Row: {
+          avatar_url: string | null;
+          created_at: string;
+          display_name: string | null;
+          id: string;
+          slug: string;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          id: string;
+          slug: string;
+        };
+        Update: {
+          avatar_url?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          slug?: string;
+        };
+        Relationships: [];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      accept_plan_share_link: { Args: { _token: string }; Returns: string };
       add_plan_member_by_email: {
         Args: {
-          _plan_id: string;
           _email: string;
-          _tier?: Database["public"]["Enums"]["plan_member_tier"] | null;
+          _plan_id: string;
+          _tier?: Database["public"]["Enums"]["plan_member_tier"];
         };
         Returns: {
-          user_id: string;
           tier: Database["public"]["Enums"]["plan_member_tier"];
+          user_id: string;
         }[];
+      };
+      append_plan_events: {
+        Args: {
+          base_version: number;
+          events: Json;
+          plan_id: string;
+          snapshot_state?: Json;
+        };
+        Returns: Json;
+      };
+      create_full_plan: {
+        Args: {
+          _cover_image?: string;
+          _dest_country?: string;
+          _dest_lat?: number;
+          _dest_long?: number;
+          _dest_name: string;
+          _end_date?: string;
+          _start_date?: string;
+          _title: string;
+          _user_id?: string;
+        };
+        Returns: {
+          result_edit_token: string;
+          result_plan_id: string;
+          result_public_slug: string;
+        }[];
+      };
+      create_plan_share_link: { Args: { _plan_id: string }; Returns: string };
+      get_user_planners: {
+        Args: never;
+        Returns: {
+          cover_image: string;
+          created_at: string;
+          destination_name: string;
+          edit_token: string;
+          end_date: string;
+          id: string;
+          latest_snapshot_at: string;
+          public_slug: string;
+          start_date: string;
+          title: string;
+        }[];
+      };
+      is_plan_admin: { Args: { _plan_id: string }; Returns: boolean };
+      is_plan_member: { Args: { _plan_id: string }; Returns: boolean };
+      leave_plan: { Args: { _plan_id: string }; Returns: undefined };
+      plan_admin_count: { Args: { _plan_id: string }; Returns: number };
+      remove_plan_member: {
+        Args: { _plan_id: string; _user_id: string };
+        Returns: undefined;
+      };
+      revoke_plan_share_link: { Args: { _plan_id: string }; Returns: boolean };
+      update_plan_dates: {
+        Args: {
+          _edit_token: string;
+          _end_date: string;
+          _plan_id: string;
+          _start_date: string;
+        };
+        Returns: undefined;
       };
       update_plan_member_tier: {
         Args: {
           _plan_id: string;
-          _user_id: string;
           _tier: Database["public"]["Enums"]["plan_member_tier"];
-        };
-        Returns: undefined;
-      };
-      remove_plan_member: {
-        Args: {
-          _plan_id: string;
           _user_id: string;
         };
         Returns: undefined;
       };
-      leave_plan: {
-        Args: {
-          _plan_id: string;
-        };
+      update_plan_title: {
+        Args: { _edit_token: string; _new_title: string; _plan_id: string };
         Returns: undefined;
-      };
-      create_plan_share_link: {
-        Args: {
-          _plan_id: string;
-        };
-        Returns: string;
-      };
-      revoke_plan_share_link: {
-        Args: {
-          _plan_id: string;
-        };
-        Returns: boolean;
-      };
-      accept_plan_share_link: {
-        Args: {
-          _token: string;
-        };
-        Returns: string;
-      };
-      is_plan_member: {
-        Args: {
-          _plan_id: string;
-        };
-        Returns: boolean;
-      };
-      is_plan_admin: {
-        Args: {
-          _plan_id: string;
-        };
-        Returns: boolean;
-      };
-      plan_admin_count: {
-        Args: {
-          _plan_id: string;
-        };
-        Returns: number;
       };
     };
     Enums: {
       plan_member_tier: "admin" | "member";
     };
-    CompositeTypes: Record<string, unknown>;
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
+};
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
 }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {
+      plan_member_tier: ["admin", "member"],
+    },
+  },
+} as const;

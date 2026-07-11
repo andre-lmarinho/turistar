@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { fetchGeoapifyAutocomplete } from "@/features/search/services/GeoapifyService";
 import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
+import type { Database } from "@/shared/types/supabase";
 
 interface DestinationInfo {
   name: string;
@@ -15,7 +16,7 @@ interface DestinationInfo {
 interface CreatePlanOptions {
   userId?: string | null;
   coverImage?: string;
-  client?: SupabaseClient;
+  client?: SupabaseClient<Database>;
 }
 
 export async function createPlan(
@@ -30,15 +31,15 @@ export async function createPlan(
 
   const startDate = start.slice(0, 10);
   const endDate = end.slice(0, 10);
-  const toNullableFinite = (value: number | undefined): number | null =>
-    typeof value === "number" && Number.isFinite(value) ? value : null;
-  const latitude = toNullableFinite(dest.latitude);
-  const longitude = toNullableFinite(dest.longitude);
+  const toFinite = (value: number | undefined): number | undefined =>
+    typeof value === "number" && Number.isFinite(value) ? value : undefined;
+  const latitude = toFinite(dest.latitude);
+  const longitude = toFinite(dest.longitude);
   const normalizedCountry = dest.country?.trim();
-  let countryParam = normalizedCountry ? normalizedCountry.toUpperCase() : null;
+  let countryParam = normalizedCountry ? normalizedCountry.toUpperCase() : undefined;
   if (!countryParam) {
     const resolvedCountry = await resolveCountryFromGeoapify(dest.name, latitude, longitude);
-    countryParam = resolvedCountry ? resolvedCountry.toUpperCase() : null;
+    countryParam = resolvedCountry ? resolvedCountry.toUpperCase() : undefined;
   }
 
   const { data, error } = await supabase.rpc("create_full_plan", {
@@ -49,8 +50,8 @@ export async function createPlan(
     _dest_country: countryParam,
     _start_date: startDate,
     _end_date: endDate,
-    _user_id: userId ?? null,
-    _cover_image: coverImage ?? null,
+    _user_id: userId ?? undefined,
+    _cover_image: coverImage ?? undefined,
   });
 
   if (error || !data) {

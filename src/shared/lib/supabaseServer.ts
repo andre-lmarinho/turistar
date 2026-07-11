@@ -3,13 +3,12 @@ import "server-only";
 import type { SetAllCookies } from "@supabase/ssr";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 import type { Database } from "../types/supabase";
 import { clientEnv } from "./clientEnv";
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
-type HeaderStore = Awaited<ReturnType<typeof headers>>;
 type CookieBatch = Parameters<SetAllCookies>[0];
 
 const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
@@ -27,7 +26,6 @@ export function createSupabaseServerClient(): SupabaseClient<Database> {
   }
 
   const cookieStorePromise = cookies();
-  const headersListPromise = headers();
 
   const client = createServerClient<Database>(
     clientEnv.NEXT_PUBLIC_SUPABASE_URL,
@@ -49,16 +47,6 @@ export function createSupabaseServerClient(): SupabaseClient<Database> {
           }
         },
       },
-      headers: {
-        async get(key: string) {
-          const headersList: HeaderStore = await headersListPromise;
-          return headersList.get(key) ?? undefined;
-        },
-      },
-    } as Parameters<typeof createServerClient<Database>>[2] & {
-      headers: {
-        get(key: string): string | null | undefined | Promise<string | null | undefined>;
-      };
     }
   );
 
