@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSecurityHeaders } from "../../../securityHeaders";
+import { buildCsp, getSecurityHeaders } from "../../../securityHeaders";
 
 describe("security headers", () => {
   it("includes core hardening headers", () => {
@@ -33,5 +33,15 @@ describe("security headers", () => {
     expect(pp).not.toContain("ambient-light-sensor");
     expect(pp).not.toContain("battery");
     expect(pp).not.toContain("document-domain");
+  });
+
+  it("allows only the external origins used by the browser", () => {
+    const csp = buildCsp({ isDev: false, nonce: "test" });
+    expect(csp).toContain("img-src 'self' data: blob: https://i.pravatar.cc");
+    expect(csp).toContain("https://*.basemaps.cartocdn.com");
+    expect(csp).toContain("frame-src https://vercel.live https://www.youtube-nocookie.com");
+    expect(csp).toContain("connect-src 'self' https://*.supabase.co wss://*.supabase.co");
+    const imageSrc = csp.split("; ").find((directive) => directive.startsWith("img-src")) ?? "";
+    expect(imageSrc.split(" ")).not.toContain("https:");
   });
 });

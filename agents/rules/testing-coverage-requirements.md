@@ -1,20 +1,20 @@
 ---
-title: Maintain 80%+ Test Coverage for New Code
+title: Maintain and Improve Test Coverage
 impact: HIGH
 impactDescription: Prevents bugs and enables confident refactoring
 tags: testing, coverage, quality, ci
 ---
 
-## Maintain 80%+ Test Coverage for New Code
+## Maintain and Improve Test Coverage
 
 **Impact: HIGH**
 
-Every PR must have near-80%+ test coverage for the code it introduces or modifies. This is enforced automatically in our CI pipeline. If you add 50 lines of new code, those 50 lines must be covered by tests. If you modify an existing function, your changes must be tested.
+Every PR must test the behavior it introduces or modifies. CI enforces a repository-wide floor and reports every production source file, including files not imported by tests. The floor should rise deliberately as coverage improves; it is not proof of correctness by itself.
 
 **Coverage requirements:**
-- Overall test coverage: 80%+ for new code
-- Unit test coverage: Near 100%, especially with AI assistance for generating tests
-- Global coverage tracking as a key metric that improves over time
+- Test changed behavior directly, especially authorization and data boundaries
+- Keep the global floor green and raise it with focused test work
+- Treat global coverage as a trend, not a substitute for meaningful assertions
 
 **Incorrect (untested code):**
 

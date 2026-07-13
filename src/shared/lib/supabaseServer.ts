@@ -11,7 +11,7 @@ import { clientEnv } from "./clientEnv";
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 type CookieBatch = Parameters<SetAllCookies>[0];
 
-const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
+const isE2E = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_E2E === "1";
 
 type SupabaseMockModule = typeof import("../../../tests/e2e/mocks/supabase");
 

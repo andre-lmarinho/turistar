@@ -17,12 +17,10 @@ describe("clientEnv", () => {
     process.env.CI = ciValue;
     delete process.env.NEXT_PUBLIC_SUPABASE_URL;
     delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    delete process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
 
     const { clientEnv } = await import("./clientEnv");
 
     expect(clientEnv.NEXT_PUBLIC_SUPABASE_URL).toBe("http://localhost:54321");
     expect(clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY).toBe("anon");
-    expect(clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY).toBe("test-key");
   });
 });

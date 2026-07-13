@@ -1,7 +1,5 @@
 import "server-only";
 
-import { clientEnv } from "@/shared/lib/clientEnv";
-
 import type {
   AutocompletePlace,
   GeoapifyFeature,
@@ -10,14 +8,7 @@ import type {
   GeoapifyResponse,
 } from "../types";
 
-const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
 const PLACE_SEARCH_LIMIT = 6;
-
-type GeoapifyAutocompleteProvider = (
-  text: string,
-  lat?: number,
-  lon?: number
-) => Promise<AutocompletePlace[]>;
 
 type AutocompleteOptions = {
   text: string;
@@ -53,7 +44,11 @@ const ADDRESS_RESULT_PRIORITY: Record<string, number> = {
 };
 
 function getGeoapifyKey(): string {
-  return clientEnv.NEXT_PUBLIC_GEOAPIFY_KEY;
+  const key = process.env.GEOAPIFY_KEY;
+  if (!key) {
+    throw new Error("Geoapify configuration failed: GEOAPIFY_KEY is not set.");
+  }
+  return key;
 }
 
 function resolveGeoapifyFeatures(data: GeoapifyResponse): GeoapifyFeature[] {
@@ -96,7 +91,11 @@ async function fetchGeoapifyAutocompleteInternal({
   return features.filter((feature) => allowedResultTypes.has(feature.properties.result_type ?? ""));
 }
 
-const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, lat, lon) => {
+export async function fetchGeoapifyAutocomplete(
+  text: string,
+  lat?: number,
+  lon?: number
+): Promise<AutocompletePlace[]> {
   const allowed = new Set(["city", "state", "country"]);
   const features = await fetchGeoapifyAutocompleteInternal({
     text,
@@ -117,29 +116,6 @@ const defaultAutocompleteProvider: GeoapifyAutocompleteProvider = async (text, l
     countryCode: feature.properties.country_code,
     placeId: String(feature.properties.place_id),
   }));
-};
-
-let autocompleteProvider: GeoapifyAutocompleteProvider = defaultAutocompleteProvider;
-
-type GeoapifyFixture = { autocomplete: AutocompletePlace[] };
-
-if (isE2E) {
-  const fixture = require("@tests/e2e/fixtures/geoapify.json") as GeoapifyFixture;
-  const fixedResults = fixture.autocomplete.map((place) => ({ ...place }));
-  autocompleteProvider = async (text) => {
-    const normalized = text.trim().toLowerCase();
-    return fixedResults
-      .filter((place) => (normalized.length === 0 ? true : place.name.toLowerCase().includes(normalized)))
-      .map((place) => ({ ...place }));
-  };
-}
-
-export async function fetchGeoapifyAutocomplete(
-  text: string,
-  lat?: number,
-  lon?: number
-): Promise<AutocompletePlace[]> {
-  return autocompleteProvider(text, lat, lon);
 }
 
 export async function fetchGeoapifyAddressAutocomplete(

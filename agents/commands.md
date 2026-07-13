@@ -8,10 +8,8 @@
 ## Build Commands
 
 - `pnpm build` - Build all packages and apps
-- `pnpm build:prod` - Alias for the production build pipeline
 - `pnpm start` - Serve the compiled build locally
 - `pnpm serve:prod` - Serve build on 0.0.0.0:3000
-- `pnpm clean` - Remove build artifacts and dependencies
 
 ## Lint & Type Check
 
@@ -41,7 +39,6 @@
 - `pnpm e2e` - Run end-to-end tests (Playwright)
 - `pnpm e2e -- <filename>` - Run E2E tests for specific file
 - `pnpm e2e -- <filename> --grep "<testName>"` - Run specific E2E test by name
-- `pnpm e2e:update` - Update Playwright snapshots
 
 ## Database Commands
 
@@ -67,6 +64,5 @@ pnpm e2e -- tests/planning-flow.e2e.ts --grep "should create plan"
 
 ### Environment Setup
 
-- Copy `.env.example` to `.env` and configure
+- Copy `.env.example` to `.env.local` and configure
 - Run `pnpm dev` for initial development setup with database
-

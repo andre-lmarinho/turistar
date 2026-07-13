@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { buildCsp } from "./securityHeaders";
 import { clientEnv } from "./src/shared/lib/clientEnv";
 
-const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
+const isE2E = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_E2E === "1";
 
 // It exists for the two jobs that cannot live anywhere else: refreshing the
 // Supabase session cookie on navigation (a Server Component cannot write

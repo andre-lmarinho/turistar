@@ -8,7 +8,6 @@
     }
   },
   "formatter": {
-    "includes": ["**/*"],
     "lineWidth": 110,
     "indentStyle": "space",
     "indentWidth": 2,
@@ -20,10 +19,8 @@
       "!!**/node_modules",
       "!!**/.next",
       "!!**/public",
-      "!!public",
       "!!*.log",
       "!!.gitignore",
-      "!!.npmignore",
       "!!test-results"
     ],
     "ignoreUnknown": true

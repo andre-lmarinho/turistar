@@ -9,7 +9,7 @@ export type SupabaseUser = {
   user_metadata?: Record<string, unknown> | null;
 };
 
-const isE2E = process.env.NEXT_PUBLIC_E2E === "1";
+const isE2E = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_E2E === "1";
 const E2E_USER_ID_COOKIE = "e2e-user-id";
 
 async function getE2EUserFromCookies(): Promise<SupabaseUser | null> {
