@@ -3,7 +3,7 @@
     "collect": {
       "url": ["http://127.0.0.1:3000/", "http://127.0.0.1:3000/p/inspiration/rome"],
       "numberOfRuns": 3,
-      "startServerCommand": "pnpm serve:lhci",
+      "startServerCommand": "./node_modules/.bin/next start --hostname 127.0.0.1 --port 3000",
       "startServerReadyPattern": "Ready",
       "startServerReadyTimeout": 30000,
       "settings": {
