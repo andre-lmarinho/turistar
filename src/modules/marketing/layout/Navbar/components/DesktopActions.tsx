@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/shared/lib/supabaseClient";
+import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { Button } from "@/shared/ui/button";
 
@@ -19,6 +19,7 @@ export function DesktopActions() {
         return;
       }
 
+      const supabase = getSupabaseBrowserClient();
       const { data, error } = await supabase.from("profiles").select("slug").eq("id", userId).maybeSingle();
       if (error) {
         console.error(
@@ -40,11 +41,12 @@ export function DesktopActions() {
       if (active) setProfile({ slug });
     }
 
-    void supabase.auth.getSession().then(({ data }) => loadProfile(data.session?.user?.id));
+    const client = getSupabaseBrowserClient();
+    void client.auth.getSession().then(({ data }) => loadProfile(data.session?.user?.id));
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = client.auth.onAuthStateChange((_event, session) => {
       void loadProfile(session?.user?.id);
     });
 

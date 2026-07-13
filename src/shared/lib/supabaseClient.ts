@@ -21,5 +21,13 @@ export function createSupabaseBrowserClient(): SupabaseClient<Database> {
       );
 }
 
-// Maintain a shared instance for modules that do not need per-request isolation
-export const supabase: SupabaseClient<Database> = createSupabaseBrowserClient();
+// Lazy singleton — avoids module-scope side effects that crash SSR.
+// ponytail: global singleton, fine for browser auth client
+let _supabase: SupabaseClient<Database> | null = null;
+
+export function getSupabaseBrowserClient(): SupabaseClient<Database> {
+  if (!_supabase) {
+    _supabase = createSupabaseBrowserClient();
+  }
+  return _supabase;
+}

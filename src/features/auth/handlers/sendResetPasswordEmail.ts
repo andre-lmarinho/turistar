@@ -1,4 +1,4 @@
-import { supabase } from "@/shared/lib/supabaseClient";
+import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
 
 type SendResetPasswordEmailInput = {
   email: string;
@@ -11,7 +11,7 @@ export async function sendResetPasswordEmail({
 }: SendResetPasswordEmailInput): Promise<void> {
   const trimmedEmail = email.trim();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(
+  const { error } = await getSupabaseBrowserClient().auth.resetPasswordForEmail(
     trimmedEmail,
     redirectTo ? { redirectTo } : undefined
   );

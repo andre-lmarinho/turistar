@@ -1,8 +1,9 @@
-import { supabase } from "@/shared/lib/supabaseClient";
+import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
 
 export type ResetPasswordExchangeResult = { status: "ready" } | { status: "error"; error: unknown };
 
 export async function exchangeResetPasswordSession(code: string): Promise<ResetPasswordExchangeResult> {
+  const supabase = getSupabaseBrowserClient();
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError) {
