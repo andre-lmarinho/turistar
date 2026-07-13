@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
+import { supabase } from "@/shared/lib/supabaseClient";
 import { Avatar } from "@/shared/ui/avatar";
 import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
 
@@ -17,7 +17,7 @@ export function AvatarMenu({ displayName, email }: AvatarMenuProps) {
   const router = useRouter();
 
   async function handleSignOut() {
-    await getSupabaseBrowserClient().auth.signOut();
+    await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
   }

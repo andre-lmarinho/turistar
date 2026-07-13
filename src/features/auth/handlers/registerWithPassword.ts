@@ -2,7 +2,7 @@ import type { AuthResponse } from "@supabase/auth-js";
 import type { Session } from "@supabase/supabase-js";
 
 import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
-import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
+import { supabase } from "@/shared/lib/supabaseClient";
 
 type RegisterWithPasswordInput = {
   username: string;
@@ -38,7 +38,6 @@ export async function registerWithPassword({
     ? { emailRedirectTo, data: { username: normalizedUsername } }
     : { data: { username: normalizedUsername } };
 
-  const supabase = getSupabaseBrowserClient();
   const { data, error } = (await supabase.auth.signUp({
     email: normalizedEmail,
     password,

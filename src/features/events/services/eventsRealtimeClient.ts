@@ -2,7 +2,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
+import { supabase } from "@/shared/lib/supabaseClient";
 
 import type { EventRecord } from "../types";
 import { EventRowSchema, mapEvent } from "./eventsSchemas";
@@ -12,7 +12,7 @@ type PlannerRealtimeChannel = ReturnType<SupabaseClient["channel"]>;
 export function subscribeToEvents(
   planId: string,
   handler: (event: EventRecord) => void,
-  client: SupabaseClient = getSupabaseBrowserClient()
+  client: SupabaseClient = supabase
 ): PlannerRealtimeChannel {
   const channel = client
     .channel(`plan-events-${planId}`)

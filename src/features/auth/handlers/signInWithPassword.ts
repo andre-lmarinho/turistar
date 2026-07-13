@@ -2,7 +2,7 @@ import type { AuthResponse } from "@supabase/auth-js";
 import type { Session } from "@supabase/supabase-js";
 
 import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
-import { getSupabaseBrowserClient } from "@/shared/lib/supabaseClient";
+import { supabase } from "@/shared/lib/supabaseClient";
 
 type SignInWithPasswordInput = {
   email: string;
@@ -21,7 +21,6 @@ export async function signInWithPassword({
 }: SignInWithPasswordInput): Promise<SignInWithPasswordResult> {
   const trimmedEmail = email.trim();
 
-  const supabase = getSupabaseBrowserClient();
   const { data, error } = (await supabase.auth.signInWithPassword({
     email: trimmedEmail,
     password,
