@@ -25,9 +25,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Turistar Team" }],
   creator: "Turistar",
   publisher: "Turistar",
-  alternates: {
-    canonical: "/",
-  },
+  alternates: {},
   openGraph: {
     type: "website",
     url: SITE_URL,
@@ -65,7 +63,9 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
     <>
       <SeoJsonLd />
       <Navbar />
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <Footer />
     </>
   );

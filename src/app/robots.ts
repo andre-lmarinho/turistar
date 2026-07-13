@@ -1,16 +1,15 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/shared/utils/siteUrl";
 
-const isProd = !/localhost|127\.0\.0\.1/.test(SITE_URL);
+const isProduction = process.env.VERCEL_ENV === "production";
 
 export default function robots(): MetadataRoute.Robots {
-  // Disallow indexing on non-production deployments by default
   return {
     rules: [
       {
         userAgent: "*",
-        allow: isProd ? "/" : "",
-        disallow: isProd ? undefined : "/",
+        allow: isProduction ? undefined : "/",
+        disallow: isProduction ? "/" : undefined,
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

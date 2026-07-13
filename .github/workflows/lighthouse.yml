@@ -35,5 +35,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lhci-reports
-          path: .lighthouseci
+          path: ./lhci-reports
           if-no-files-found: ignore
