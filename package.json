@@ -15,7 +15,6 @@
     "build": "next build",
     "start": "next start",
     "serve:prod": "next start --hostname 0.0.0.0 --port 3000",
-    "serve:lhci": "next start --hostname 127.0.0.1 --port 3000",
     "format": "biome format --write .",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
