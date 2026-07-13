@@ -66,7 +66,7 @@ Rules are organized by section prefix, as defined in `_sections.md`:
 
 ### 8. Testing (MEDIUM-HIGH)
 
-- `testing-coverage-requirements` - Maintain 80%+ test coverage for new code
+- `testing-coverage-requirements` - Maintain and improve test coverage
 
 ### 9. Design Patterns (MEDIUM)
 

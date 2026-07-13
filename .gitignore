@@ -2,7 +2,7 @@
 node_modules/
 .next/
 
-# Package managers (npm only)
+# Package managers
 .pnpm*
 .yarn/
 
@@ -14,13 +14,15 @@ tsconfig.tsbuildinfo
 # Testing / E2E
 coverage/
 lhci-reports/
+.lighthouseci/
 playwright-report/
 test-results/
+tests/e2e/.auth/
 
 # Environment & secrets
-/.env.local
-**/.env.local    
+.env*
 !.env.example
+next-env.d.ts
 
 # Vercel
 .vercel/

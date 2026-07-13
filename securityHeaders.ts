@@ -9,10 +9,10 @@ export type Header = { key: string; value: string };
 export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce: string }): string {
   const common = [
     "default-src 'self'",
-    "style-src 'self' 'unsafe-inline' https:",
-    "img-src 'self' data: blob: https:",
-    "font-src 'self' data: https:",
-    "frame-src https://vercel.live",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://i.pravatar.cc https://commons.wikimedia.org https://*.basemaps.cartocdn.com",
+    "font-src 'self' data:",
+    "frame-src https://vercel.live https://www.youtube-nocookie.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -29,9 +29,9 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce: string }): s
     );
   } else {
     common.push(
-      `script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https:`,
-      `script-src-elem 'self' 'nonce-${nonce}' https:`,
-      "connect-src 'self' https:",
+      `script-src 'self' 'strict-dynamic' 'nonce-${nonce}'`,
+      `script-src-elem 'self' 'nonce-${nonce}'`,
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
       "worker-src 'self'"
     );
   }

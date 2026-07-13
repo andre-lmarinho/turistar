@@ -11,6 +11,7 @@ Turistar follows a **vertical slice** approach. Each feature (or slice) owns its
 | `src/app`      | Next.js App Router routes and route handlers. Routes should stay thin, re-export feature entry points, or compose a small set of feature sections.         | Keep this layer thin; it wires pages to feature modules.            |
 | `src/features` | Feature modules. Each slice contains its own `components/`, `hooks/`, `services/`, `domain/` and `server/` folders. Domain logic and state live here.       | Organize by capability, not by technical layer.                     |
 | `src/shared`   | Framework adapters, UI atoms and pure utilities reused by multiple slices. Avoid putting domain-specific helpers here.                                      | Keep this small; if only one slice uses it, leave it in that slice. |
+| `src/modules`  | Route-level UI compositions that coordinate feature components.                                                                                                  | Keep this layer thin and free of domain logic.                       |
 | `public`       | Static assets served by Next.js.                                                                                                                            | —                                                                   |
 
 ## Core decisions
@@ -34,9 +35,3 @@ Turistar follows a **vertical slice** approach. Each feature (or slice) owns its
 - **Shared stays minimal** – If only one feature consumes a helper, keep it inside that feature. Promote utilities to `src/shared` only when they are reused across slices.
 
 - **UI structure inside a slice** – Organize `components/` by capability (for example `dnd`, `budget`, `map`). Place small widgets in a `ui/` subfolder. Shared atoms reused across slices live in `src/shared/ui`.
-
-## References
-
-- **Realtime collaboration** – See [docs/realtime-collaboration](docs/realtime-collaboration.md) for event types, snapshots, optimistic workflow and conflict resolution.
-- **Sharing and permissions** – See [docs/sharing-and-permissions](docs/sharing-and-permissions.md) for membership tiers, share links and permission checks.
-- **Architectural decisions (ADRs)** – Non-obvious decisions are recorded in [docs/decisions](docs/decisions/) as short Markdown files. Each ADR explains the context, options considered, the decision and its consequences.

@@ -21,7 +21,7 @@ A simple travel planner built with Next.js, React, and drag-and-drop. Select any
 
 ## About the Project
 
-Turistar is a UX-focused travel planner designed to showcase front-end architecture, state management, and interaction design using modern tools like DnD Kit, Base UI, and the App Router in Next.js 15.
+Turistar is a UX-focused travel planner built with DnD Kit, Base UI and the Next.js 16 App Router.
 
 A Map View lets you preview your itinerary locations on an interactive map.
 
@@ -47,7 +47,7 @@ A Map View lets you preview your itinerary locations on an interactive map.
 
 ## Tech Stack
 
-- Next.js 15 (App Router)
+- Next.js 16 (App Router)
 - React & TypeScript
 - Tailwind CSS for styling
 - @dnd-kit/core & @dnd-kit/sortable for drag-and-drop
@@ -66,11 +66,10 @@ A Map View lets you preview your itinerary locations on an interactive map.
   - `/app`: Next.js app directory with pages and API routes
   - `/features`: Feature modules such as home, planner, and onboarding (budget is part of planner)
   - `/shared`: Shared UI components, hooks, utilities, and types
-  - `/server`: Server actions and API handlers
-  - `/data`: Local JSON used for demo itineraries
+  - `/modules`: Route-level UI composition
 - `/public`: Static assets served directly
 
-See [docs/DEVELOPER_GUIDE.md#routing](docs/DEVELOPER_GUIDE.md#routing) for a breakdown of the `src/app` directory.
+Routes live in `src/app`; shareable plans use `/p/{identifier}` and inspiration plans use `/p/inspiration/{city}`.
 
 ---
 
@@ -97,9 +96,7 @@ Prerequisites: Node.js v24+ and pnpm (`corepack enable`)
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY` (server-side secret used by actions that require privileged Supabase access)
-   - `NEXT_PUBLIC_GEOAPIFY_KEY`
-
-   See [docs/DEVELOPER_GUIDE.md#environment](docs/DEVELOPER_GUIDE.md#environment) for details.
+   - `GEOAPIFY_KEY` (server-only)
 
    ### Supabase Auth configuration
 
@@ -120,10 +117,10 @@ Prerequisites: Node.js v24+ and pnpm (`corepack enable`)
    Visit http://localhost:3000
 
    Authenticated users land on the dashboard at `/u/{yourSlug}/planners`, which lists every owned itinerary and exposes quick
-   actions for opening the secure editor at `/planner/{planId}`. Attempts to visit `/login` or `/signup` while already signed
+   actions for opening the secure editor at `/p/{planId}`. Attempts to visit `/login` or `/signup` while already signed
    in automatically redirect back to that dashboard entry point, while unauthenticated visitors who follow `/u/...` links are
    sent to `/login`. Public viewers (or collaborators with edit tokens) continue to use the shareable `/planner/{publicSlug}`
-   URLs.
+   URLs under `/p/{identifier}`.
 
 ### Development Workflow
 
@@ -156,7 +153,7 @@ pnpm vercel:build
 
 ## Testing
 
-See [docs/TESTING.md](docs/TESTING.md) for details on the Vitest setup and testing approach.
+Vitest runs unit tests with `pnpm test`; Playwright runs E2E tests with `pnpm e2e`.
 
 ### Coverage reporting
 
@@ -187,7 +184,7 @@ Deploy to Vercel or Netlify:
 1. Push your code to GitHub.
 2. Import the repository in your hosting service (https://vercel.com/new or https://app.netlify.com/start).
 3. Add the required environment variables:
-   - `NEXT_PUBLIC_GEOAPIFY_KEY`
+   - `GEOAPIFY_KEY`
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Click "Deploy" – the platform will build and preview automatically.
@@ -202,14 +199,7 @@ References:
 
 ## Developer Guide
 
-For more details on project conventions, see:
-
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Testing](docs/TESTING.md)
-- [Deployment](docs/DEPLOYMENT.md)
-- [Developer Guide](docs/DEVELOPER_GUIDE.md)
-- [SEO Setup](docs/SEO.md)
-- [Contributing](docs/CONTRIBUTING.md)
+For project conventions, see [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md) and [agents/commands.md](agents/commands.md).
 
 ---
 
