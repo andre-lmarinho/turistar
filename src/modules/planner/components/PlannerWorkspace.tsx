@@ -108,7 +108,9 @@ function PlannerWorkspaceContent({
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
-    <main className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
+    <main
+      id="main-content"
+      className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
       <div className="mx-auto flex w-full max-w-7xl flex-row justify-between gap-4 pb-4 md:items-center">
         <h1 className="bg-card py-2 relative inline-block min-w-[1ch] flex-none cursor-pointer rounded-md text-xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <span
@@ -168,8 +170,10 @@ function PlannerWorkspaceContent({
                 persist={persist}
                 canEdit={canEdit}
               />
-            ) : (
+            ) : isActive ? (
               <MapBoard />
+            ) : (
+              <div className="bg-muted/40 h-full w-full rounded-xl border" aria-hidden="true" />
             );
 
           return (
