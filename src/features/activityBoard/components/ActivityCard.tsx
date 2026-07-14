@@ -50,7 +50,7 @@ export const ActivityCard = memo(function ActivityCard({
           {imageUrl && (
             <Image
               src={imageUrl}
-              alt={title}
+              alt=""
               width={400}
               height={200}
               className="h-30 w-full rounded-t-lg object-cover"
@@ -59,7 +59,7 @@ export const ActivityCard = memo(function ActivityCard({
 
           <div className="px-3 pt-2 pb-1">
             {/* Title */}
-            <h4 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h4>
+            <h3 className="mb-1 text-sm">{title.trim() ? title : EMPTY_ACTIVITY_TITLE}</h3>
 
             {/* Meta */}
             {(durationValue > 0 || budgetValue > 0) && (

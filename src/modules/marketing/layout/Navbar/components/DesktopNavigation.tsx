@@ -46,6 +46,7 @@ export function DesktopNavigation() {
   return (
     <nav
       ref={navRef}
+      aria-label="Main navigation"
       className="relative hidden lg:flex"
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {

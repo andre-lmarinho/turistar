@@ -17,7 +17,7 @@ describe("ActivityCard", () => {
     render(<ActivityCard activity={{ ...baseActivity, imageUrl: "/image.jpg" }} />);
 
     expect(screen.getByText("Visit museum")).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: /visit museum/i })).toHaveAttribute("src", "/image.jpg");
+    expect(screen.getByAltText("")).toHaveAttribute("src", "/image.jpg");
   });
 
   it("falls back to the empty title when blank", () => {

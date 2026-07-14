@@ -49,23 +49,23 @@ export function Footer() {
           </a>
         </div>
         <div className="grid grid-cols-2 gap-6 px-2">
-          <div className="flex flex-col gap-2">
+          <nav aria-label="Use cases" className="flex flex-col gap-2">
             <p className="font-semibold">Use Cases</p>
             {USE_CASE_LINKS.map((link) => (
               <Link key={link.href} className={FOOTER_LINK_CLASS} href={link.href}>
                 {link.label}
               </Link>
             ))}
-          </div>
+          </nav>
 
-          <div className="flex flex-col gap-2">
+          <nav aria-label="Resources" className="flex flex-col gap-2">
             <p className="font-semibold">Resources</p>
             {RESOURCE_LINKS.map((link) => (
               <Link key={link.href} className={FOOTER_LINK_CLASS} href={link.href}>
                 {link.label}
               </Link>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
     </footer>

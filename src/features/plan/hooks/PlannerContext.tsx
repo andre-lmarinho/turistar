@@ -163,7 +163,7 @@ export function usePlannerContextValue({
   const [destCoords, setDestCoords] = useState<DestCoords | null>(null);
 
   useEffect(() => {
-    if (!dest) {
+    if (!dest || !persist) {
       setDestCoords(null);
       return;
     }
@@ -189,7 +189,7 @@ export function usePlannerContextValue({
 
     fetchCoords();
     return () => controller.abort();
-  }, [dest]);
+  }, [dest, persist]);
 
   // Set days with persistence
   const setDays = useCallback(

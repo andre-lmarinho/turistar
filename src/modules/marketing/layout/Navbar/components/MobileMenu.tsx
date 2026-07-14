@@ -23,7 +23,9 @@ export function MobileMenu({
   onSelectSolution,
 }: MobileMenuProps) {
   return (
-    <div className="bg-background fixed inset-x-0 top-12 z-40 h-dvh overflow-y-auto pt-6 pb-10">
+    <nav
+      aria-label="Mobile navigation"
+      className="bg-background fixed inset-x-0 top-12 z-40 h-dvh overflow-y-auto pt-6 pb-10">
       <div className="mx-auto flex w-full max-w-6xl flex-col">
         <button
           type="button"
@@ -47,6 +49,6 @@ export function MobileMenu({
           </Link>
         ))}
       </div>
-    </div>
+    </nav>
   );
 }

@@ -25,7 +25,6 @@ const MapBoard = dynamic(() => import("@/features/mapBoard/MapBoard"), {
 
 const offsetMap = [0, 6, 10];
 const scaleMap = [1, 0.92, 0.87];
-const opacityMap = [1, 0.92, 0.8];
 
 export interface PlannerWorkspaceProps {
   initialDays?: DayPlan[];
@@ -108,7 +107,9 @@ function PlannerWorkspaceContent({
   const activeIdx = modeOrder.indexOf(mode);
 
   return (
-    <main className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
+    <main
+      id="main-content"
+      className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:pb-12 lg:px-12">
       <div className="mx-auto flex w-full max-w-7xl flex-row justify-between gap-4 pb-4 md:items-center">
         <h1 className="bg-card py-2 relative inline-block min-w-[1ch] flex-none cursor-pointer rounded-md text-xl font-semibold whitespace-nowrap capitalize hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <span
@@ -147,7 +148,6 @@ function PlannerWorkspaceContent({
           const zIndex = modeOrder.length - distance;
           const offset = (offsetMap[distance] ?? 0) * Math.sign(relativeIndex);
           const scale = scaleMap[distance] ?? 0.7;
-          const opacity = opacityMap[distance] ?? 0.6;
           const rotateZ = relativeIndex * 2;
           const isActive = relativeIndex === 0;
 
@@ -179,7 +179,7 @@ function PlannerWorkspaceContent({
               className={`absolute inset-0 ${!isActive ? "cursor-pointer" : ""}`}
               style={{ zIndex }}
               initial={false}
-              animate={{ x: `${offset}%`, scale, opacity, rotateZ }}
+              animate={{ x: `${offset}%`, scale, rotateZ }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
               onClick={() => !isActive && setMode(currentMode)}>
               {content}
