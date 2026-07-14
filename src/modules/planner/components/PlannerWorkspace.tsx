@@ -25,7 +25,6 @@ const MapBoard = dynamic(() => import("@/features/mapBoard/MapBoard"), {
 
 const offsetMap = [0, 6, 10];
 const scaleMap = [1, 0.92, 0.87];
-const opacityMap = [1, 0.92, 0.8];
 
 export interface PlannerWorkspaceProps {
   initialDays?: DayPlan[];
@@ -149,7 +148,6 @@ function PlannerWorkspaceContent({
           const zIndex = modeOrder.length - distance;
           const offset = (offsetMap[distance] ?? 0) * Math.sign(relativeIndex);
           const scale = scaleMap[distance] ?? 0.7;
-          const opacity = opacityMap[distance] ?? 0.6;
           const rotateZ = relativeIndex * 2;
           const isActive = relativeIndex === 0;
 
@@ -170,10 +168,8 @@ function PlannerWorkspaceContent({
                 persist={persist}
                 canEdit={canEdit}
               />
-            ) : isActive ? (
-              <MapBoard />
             ) : (
-              <div className="bg-muted/40 h-full w-full rounded-xl border" aria-hidden="true" />
+              <MapBoard />
             );
 
           return (
@@ -183,7 +179,7 @@ function PlannerWorkspaceContent({
               className={`absolute inset-0 ${!isActive ? "cursor-pointer" : ""}`}
               style={{ zIndex }}
               initial={false}
-              animate={{ x: `${offset}%`, scale, opacity, rotateZ }}
+              animate={{ x: `${offset}%`, scale, rotateZ }}
               transition={{ type: "spring", stiffness: 200, damping: 25 }}
               onClick={() => !isActive && setMode(currentMode)}>
               {content}

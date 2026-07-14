@@ -58,7 +58,7 @@
   --popover-foreground: oklch(0.28 0 0);
 
   /* Action colors - primary buttons, secondary buttons, and accents */
-  --primary: oklch(0.48 0.12 190);
+  --primary: oklch(0.7 0.15 190);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.92 0.02 80);
   --secondary-foreground: oklch(0.28 0 0);
