@@ -252,10 +252,8 @@ export type Database = {
           budget: number | null;
           cover_image: string | null;
           created_at: string;
-          edit_token: string;
           end_date: string | null;
           id: string;
-          is_public: boolean;
           public_slug: string;
           start_date: string | null;
           title: string | null;
@@ -265,10 +263,8 @@ export type Database = {
           budget?: number | null;
           cover_image?: string | null;
           created_at?: string;
-          edit_token?: string;
           end_date?: string | null;
           id?: string;
-          is_public?: boolean;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;
@@ -278,10 +274,8 @@ export type Database = {
           budget?: number | null;
           cover_image?: string | null;
           created_at?: string;
-          edit_token?: string;
           end_date?: string | null;
           id?: string;
-          is_public?: boolean;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;
@@ -360,7 +354,6 @@ export type Database = {
           _user_id?: string;
         };
         Returns: {
-          result_edit_token: string;
           result_plan_id: string;
           result_public_slug: string;
         }[];
@@ -372,7 +365,6 @@ export type Database = {
           cover_image: string;
           created_at: string;
           destination_name: string;
-          edit_token: string;
           end_date: string;
           id: string;
           latest_snapshot_at: string;
@@ -391,12 +383,7 @@ export type Database = {
       };
       revoke_plan_share_link: { Args: { _plan_id: string }; Returns: boolean };
       update_plan_dates: {
-        Args: {
-          _edit_token: string;
-          _end_date: string;
-          _plan_id: string;
-          _start_date: string;
-        };
+        Args: { _end_date: string; _plan_id: string; _start_date: string };
         Returns: undefined;
       };
       update_plan_member_tier: {
@@ -408,7 +395,7 @@ export type Database = {
         Returns: undefined;
       };
       update_plan_title: {
-        Args: { _edit_token: string; _new_title: string; _plan_id: string };
+        Args: { _new_title: string; _plan_id: string };
         Returns: undefined;
       };
     };
