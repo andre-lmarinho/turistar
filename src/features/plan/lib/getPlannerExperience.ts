@@ -8,10 +8,9 @@ import type { DayPlan } from "@/features/activity/types";
 import { fetchPlanBudgetEntries } from "@/features/budget/repositories/BudgetRepository";
 import { CATEGORIES, type CategoryKey, type Entry } from "@/features/budget/types";
 import { mapSnapshot, SnapshotRowSchema } from "@/features/snapshots/services/snapshotsSchemas";
-import { getCurrentUser, requireUser, UnauthorizedError } from "@/shared/lib/auth/session";
+import { requireUser, type SupabaseUser, UnauthorizedError } from "@/shared/lib/auth/session";
 import { isUuid } from "@/shared/lib/uuid";
 
-import type { PlanWithMembersRecord } from "../repositories/PlanRepository";
 import {
   fetchLatestSnapshot,
   fetchPlanByIdWithMembers,
@@ -47,88 +46,71 @@ export async function getPlannerExperience({
   const trimmed = identifier?.trim();
   if (!trimmed) return notFound();
 
-  // Determine if UUID (private access) or slug (shared access)
-  const isPrivateAccess = isUuid(trimmed);
+  // UUID = private access; slug = shared link. Both require login and membership —
+  // there is no anonymous access to any plan.
+  const bySlug = !isUuid(trimmed);
 
-  let plan: PlanWithMembersRecord | null;
-  let viewerUserId: string | null = null;
-
-  if (isPrivateAccess) {
-    try {
-      const user = await requireUser();
-      viewerUserId = user.id;
-      plan = await fetchPlanByIdWithMembers(trimmed);
-    } catch (error) {
-      if (error instanceof UnauthorizedError) redirect("/login");
-      throw error;
-    }
-  } else {
-    const user = await getCurrentUser();
-    viewerUserId = user?.id ?? null;
-    plan = await fetchPlanBySlug(trimmed);
+  let user: SupabaseUser;
+  try {
+    user = await requireUser();
+  } catch (error) {
+    if (error instanceof UnauthorizedError) redirect("/login");
+    throw error;
   }
 
+  const plan = bySlug ? await fetchPlanBySlug(trimmed) : await fetchPlanByIdWithMembers(trimmed);
   if (!plan) return notFound();
 
-  // Permission check
-  const isOwner = Boolean(viewerUserId && plan.ownerId && viewerUserId === plan.ownerId);
-  const memberRow = viewerUserId ? plan.members.find((m) => m.userId === viewerUserId) : null;
-  const isMember = Boolean(memberRow);
+  const isOwner = Boolean(plan.ownerId && user.id === plan.ownerId);
+  const memberRow = plan.members.find((m) => m.userId === user.id);
+  if (!isOwner && !memberRow) return notFound();
   const isAdmin = isOwner || memberRow?.tier === "admin";
-  const canEdit = Boolean(isOwner || isMember);
 
-  // For private access (UUID), require owner/member
-  if (isPrivateAccess && !isOwner && !isMember) return notFound();
+  const [snapshotRow, entryRows] = await Promise.all([
+    fetchLatestSnapshot(plan.id),
+    fetchPlanBudgetEntries(plan.id),
+  ]);
 
-  const destination = dest ?? plan.destinations[0]?.name ?? "Destination TBD";
-
-  // Load snapshot
-  const snapshotRow = await fetchLatestSnapshot(plan.id);
-  let initialDays: DayPlan[] | undefined;
-  if (snapshotRow) {
-    const snapshot = mapSnapshot(SnapshotRowSchema.parse(snapshotRow));
-    if (snapshot.days.length > 0) initialDays = snapshot.days;
-  }
-
-  // Fallback to date range if no snapshot
-  if (!initialDays || initialDays.length === 0) {
-    const startDate = plan.startDate ? new Date(plan.startDate) : null;
-    const endDate = plan.endDate ? new Date(plan.endDate) : null;
-    if (startDate && endDate && !Number.isNaN(startDate.valueOf()) && !Number.isNaN(endDate.valueOf())) {
-      initialDays = buildInitialDays(eachDayOfInterval({ start: startDate, end: endDate }));
-    }
-  }
-
-  // Load budget entries
-  const entryRows = await fetchPlanBudgetEntries(plan.id);
-  const initialEntries =
-    entryRows.length > 0
-      ? entryRows.map((entry) => {
-          const rawCategory = entry.category;
-          const category: CategoryKey = VALID_CATEGORY_KEYS.includes(rawCategory as CategoryKey)
-            ? (rawCategory as CategoryKey)
-            : "transport";
-          return {
-            id: entry.id,
-            description: entry.description ?? "",
-            category,
-            amount: entry.amount ?? 0,
-          };
-        })
-      : undefined;
+  const snapshotDays = snapshotRow ? mapSnapshot(SnapshotRowSchema.parse(snapshotRow)).days : [];
 
   return {
     planId: plan.id,
-    slug: isPrivateAccess ? undefined : trimmed,
-    destination,
+    slug: bySlug ? trimmed : undefined,
+    destination: dest ?? plan.destinations[0]?.name ?? "Destination TBD",
     title: plan.title ?? undefined,
-    viewerUserId,
-    canEdit,
+    viewerUserId: user.id,
+    // Reaching this point requires ownership or membership, which is exactly edit access.
+    canEdit: true,
     isOwner,
     isAdmin,
     canManageMembers: isAdmin,
-    initialDays,
+    initialDays: snapshotDays.length > 0 ? snapshotDays : buildDaysFromRange(plan.startDate, plan.endDate),
     initialBudget: plan.budget ?? undefined,
-    initialEntries,
+    initialEntries: entryRows.length > 0 ? entryRows.map(mapBudgetEntry) : undefined,
+  };
+}
+
+function buildDaysFromRange(start: string | null, end: string | null): DayPlan[] | undefined {
+  if (!start || !end) return undefined;
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  if (Number.isNaN(startDate.valueOf()) || Number.isNaN(endDate.valueOf())) return undefined;
+  // eachDayOfInterval throws RangeError on a reversed interval.
+  if (startDate > endDate) return undefined;
+  return buildInitialDays(eachDayOfInterval({ start: startDate, end: endDate }));
+}
+
+type BudgetEntryRow = Awaited<ReturnType<typeof fetchPlanBudgetEntries>>[number];
+
+function mapBudgetEntry(entry: BudgetEntryRow): Entry {
+  return {
+    id: entry.id,
+    description: entry.description ?? "",
+    // unknown categories still coerce to "transport"; reject at the DB
+    // with a CHECK constraint when the schema hardens (item 10 of the audit list).
+    category: VALID_CATEGORY_KEYS.includes(entry.category as CategoryKey)
+      ? (entry.category as CategoryKey)
+      : "transport",
+    amount: entry.amount ?? 0,
   };
 }
