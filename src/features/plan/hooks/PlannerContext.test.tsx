@@ -271,7 +271,6 @@ describe("PlannerProvider access flags", () => {
       dest: "Paris",
       viewerUserId: "user-1",
       isOwner: true,
-      isAdmin: true,
       canManageMembers: true,
     });
 
@@ -280,7 +279,6 @@ describe("PlannerProvider access flags", () => {
     expect(result.current.viewerUserId).toBe("user-1");
     expect(result.current.canEdit).toBe(true);
     expect(result.current.isOwner).toBe(true);
-    expect(result.current.isAdmin).toBe(true);
     expect(result.current.canManageMembers).toBe(true);
   });
 });

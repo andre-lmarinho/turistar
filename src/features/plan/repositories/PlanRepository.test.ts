@@ -8,6 +8,8 @@ import {
   fetchPlanBySlug,
   fetchPlanIdentityById,
   fetchPlanIdentityBySlug,
+  fetchPublicPlanById,
+  fetchPublicPlanBySlug,
   resolvePlanIdentity,
 } from "./PlanRepository";
 
@@ -225,6 +227,77 @@ describe("PlanRepository", () => {
       expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_members"));
       expect(planQuery.select).toHaveBeenCalledWith(expect.not.stringContaining("edit_token"));
       expect(planQuery.eq).toHaveBeenCalledWith("public_slug", "public-slug");
+    });
+  });
+
+  describe("fetchPublicPlanBySlug", () => {
+    it("maps a members-free public plan and never selects members or edit_token", async () => {
+      const data = {
+        id: "plan-20",
+        title: "Public trip",
+        user_id: "owner-20",
+        budget: 100,
+        start_date: "2024-05-01",
+        end_date: "2024-05-04",
+        is_public: true,
+        plan_destinations: [{ destinations: { name: "Lisbon" } }],
+      };
+      const { supabase, from, chain } = buildSupabaseMock("plans", { data, error: null });
+      vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+
+      const result = await fetchPublicPlanBySlug("public-slug");
+
+      expect(result).toEqual({
+        id: "plan-20",
+        title: "Public trip",
+        ownerId: "owner-20",
+        budget: 100,
+        startDate: "2024-05-01",
+        endDate: "2024-05-04",
+        isPublic: true,
+        destinations: [{ name: "Lisbon" }],
+      });
+      expect(from).toHaveBeenCalledWith("plans");
+      expect(chain.select).toHaveBeenCalledWith(expect.stringContaining("is_public"));
+      expect(chain.select).toHaveBeenCalledWith(expect.not.stringContaining("plan_members"));
+      expect(chain.select).toHaveBeenCalledWith(expect.not.stringContaining("edit_token"));
+      expect(chain.eq).toHaveBeenCalledWith("public_slug", "public-slug");
+    });
+
+    it("returns null when no public plan matches", async () => {
+      const { supabase } = buildSupabaseMock("plans", { data: null, error: null });
+      vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+
+      expect(await fetchPublicPlanBySlug("missing")).toBeNull();
+    });
+  });
+
+  describe("fetchPublicPlanById", () => {
+    it("queries by id", async () => {
+      const data = {
+        id: "plan-21",
+        title: null,
+        user_id: null,
+        budget: null,
+        start_date: null,
+        end_date: null,
+        is_public: false,
+        plan_destinations: null,
+      };
+      const { supabase, chain } = buildSupabaseMock("plans", { data, error: null });
+      vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+
+      const result = await fetchPublicPlanById("plan-21");
+
+      expect(result?.isPublic).toBe(false);
+      expect(chain.eq).toHaveBeenCalledWith("id", "plan-21");
+    });
+
+    it("throws a contextual error when the query fails", async () => {
+      const { supabase } = buildSupabaseMock("plans", { data: null, error: new Error("boom") });
+      vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
+
+      await expect(fetchPublicPlanById("plan-x")).rejects.toThrow(/fetchPublicPlanById/);
     });
   });
 

@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 
-import { LinkSection } from "@/features/shareLink/components/LinkSection";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/shared/ui/dialog";
 import { Share2 } from "@/shared/ui/icon";
 
 import { InviteForm } from "./components/InviteForm";
 import { MembersSection } from "./components/MembersSection";
+import { VisibilitySection } from "./components/VisibilitySection";
 
 export function SharePlannerDialog({ planId }: { planId: string }) {
   const [open, setOpen] = useState(false);
@@ -23,11 +23,11 @@ export function SharePlannerDialog({ planId }: { planId: string }) {
       <DialogContent>
         <DialogHeader
           title="Share planner"
-          description="Invite people, manage planner members, and create or revoke a share link."
+          description="Publish your plan publicly, invite people, and manage planner members."
         />
         <div className="max-h-[75vh] space-y-4 overflow-y-auto p-4">
+          <VisibilitySection />
           <InviteForm planId={planId} />
-          <LinkSection planId={planId} />
           <MembersSection planId={planId} />
         </div>
       </DialogContent>

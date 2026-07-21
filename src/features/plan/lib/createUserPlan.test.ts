@@ -6,6 +6,7 @@ import { requireUser } from "@/shared/lib/auth/session";
 
 import { createPlan } from "./createPlan";
 import { createUserPlan } from "./createUserPlan";
+import { setPlanVisibility } from "./setPlanVisibility";
 import { updatePlanCoverImage } from "./updatePlanCoverImage";
 
 vi.mock("@/shared/lib/auth/session", () => ({
@@ -18,6 +19,10 @@ vi.mock("@/features/plan/lib/createPlan", () => ({
 
 vi.mock("@/features/plan/lib/updatePlanCoverImage", () => ({
   updatePlanCoverImage: vi.fn(),
+}));
+
+vi.mock("@/features/plan/lib/setPlanVisibility", () => ({
+  setPlanVisibility: vi.fn(),
 }));
 
 vi.mock("@/features/search/services/GeoapifyService", () => ({
@@ -35,6 +40,7 @@ describe("createUserPlan", () => {
     vi.mocked(updatePlanCoverImage).mockReset();
     vi.mocked(fetchGeoapifyPlaceDetails).mockReset();
     vi.mocked(fetchWikidataImage).mockReset();
+    vi.mocked(setPlanVisibility).mockReset();
   });
 
   it("requires a user, forwards params to createPlan, and returns formatted output", async () => {
@@ -262,6 +268,60 @@ describe("createUserPlan", () => {
       error: expect.any(Error),
     });
     expect(updatePlanCoverImage).not.toHaveBeenCalled();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("publishes the plan when isPublic is true", async () => {
+    vi.mocked(requireUser).mockResolvedValue({ id: "user-123" });
+    vi.mocked(createPlan).mockResolvedValue({ id: "plan-123", publicSlug: "slug-123" });
+    vi.mocked(setPlanVisibility).mockResolvedValue();
+
+    const result = await createUserPlan({
+      title: "Paris trip",
+      destination: { name: "Paris" },
+      startDate: "2024-01-10T00:00:00Z",
+      endDate: "2024-01-15T00:00:00Z",
+      isPublic: true,
+    });
+
+    expect(setPlanVisibility).toHaveBeenCalledWith("plan-123", true);
+    expect(result).toEqual({ planId: "plan-123", publicSlug: "slug-123" });
+  });
+
+  it("does not publish when isPublic is not set", async () => {
+    vi.mocked(requireUser).mockResolvedValue({ id: "user-123" });
+    vi.mocked(createPlan).mockResolvedValue({ id: "plan-123", publicSlug: "slug-123" });
+
+    await createUserPlan({
+      title: "Paris trip",
+      destination: { name: "Paris" },
+      startDate: "2024-01-10T00:00:00Z",
+      endDate: "2024-01-15T00:00:00Z",
+    });
+
+    expect(setPlanVisibility).not.toHaveBeenCalled();
+  });
+
+  it("keeps the created plan when publishing fails (best-effort)", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(requireUser).mockResolvedValue({ id: "user-123" });
+    vi.mocked(createPlan).mockResolvedValue({ id: "plan-123", publicSlug: "slug-123" });
+    vi.mocked(setPlanVisibility).mockRejectedValue(new Error("rls denied"));
+
+    const result = await createUserPlan({
+      title: "Paris trip",
+      destination: { name: "Paris" },
+      startDate: "2024-01-10T00:00:00Z",
+      endDate: "2024-01-15T00:00:00Z",
+      isPublic: true,
+    });
+
+    expect(result).toEqual({ planId: "plan-123", publicSlug: "slug-123" });
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to publish plan on creation; left private", {
+      planId: "plan-123",
+      error: expect.any(Error),
+    });
 
     consoleErrorSpy.mockRestore();
   });

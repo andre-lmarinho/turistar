@@ -25,7 +25,7 @@ The `src/modules` directory implements a **presentation layer architecture** tha
 |--------|---------------------|--------------|
 | `auth` | `features/auth` | Authentication UI |
 | `planner` | `features/activityBoard`, `features/budget`, `features/plan`, `features/mapBoard`, `features/members` | Main Workspace |
-| `user` | `features/plan`, `features/search`, `features/visitedCountries`, `features/inspirations` | User Dashboard |
+| `user` | `features/plan`, `features/search`, `features/visitedCountries` | User Dashboard |
 
 
 ## Integration Patterns

@@ -88,7 +88,7 @@ describe("useBudget hook", () => {
   });
 
   it("updates budget state locally", () => {
-    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+    const { result } = renderHook(() => useBudget("plan-1", 0, {}));
 
     act(() => {
       result.current.setBudget(1500);
@@ -98,7 +98,7 @@ describe("useBudget hook", () => {
   });
 
   it("adds entry locally when persist is disabled", async () => {
-    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+    const { result } = renderHook(() => useBudget("plan-1", 0, {}));
 
     act(() => {
       result.current.setDesc("New Entry");
@@ -117,7 +117,7 @@ describe("useBudget hook", () => {
   });
 
   it("does not add entry when editing is disabled", async () => {
-    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false, canEdit: false }));
+    const { result } = renderHook(() => useBudget("plan-1", 0, { canEdit: false }));
 
     act(() => {
       result.current.setDesc("New Entry");
@@ -137,7 +137,7 @@ describe("useBudget hook", () => {
       { id: "e2", description: "Test 2", category: "transport", amount: 200 },
     ];
 
-    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false, initialEntries }));
+    const { result } = renderHook(() => useBudget("plan-1", 0, { initialEntries }));
 
     await act(async () => {
       await result.current.handleDeleteEntry(0);
@@ -148,7 +148,7 @@ describe("useBudget hook", () => {
   });
 
   it("updates form state correctly", () => {
-    const { result } = renderHook(() => useBudget("plan-1", 0, { persist: false }));
+    const { result } = renderHook(() => useBudget("plan-1", 0, {}));
 
     act(() => {
       result.current.setDesc("Test Description");

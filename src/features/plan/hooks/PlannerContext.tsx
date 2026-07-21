@@ -69,20 +69,19 @@ interface PlannerContextValue {
   canEdit: boolean;
   viewerUserId: string | null;
   isOwner: boolean;
-  isAdmin: boolean;
   canManageMembers: boolean;
+  isPublic: boolean;
 }
 
 interface PlannerProviderProps {
   initialDays?: DayPlan[];
   planId: string;
   dest?: string;
-  persist?: boolean;
   canEdit?: boolean;
   viewerUserId?: string | null;
   isOwner?: boolean;
-  isAdmin?: boolean;
   canManageMembers?: boolean;
+  isPublic?: boolean;
 }
 
 /**
@@ -112,16 +111,16 @@ export function usePlannerContextValue({
   initialDays,
   planId,
   dest,
-  persist = true,
   canEdit = true,
   viewerUserId = null,
   isOwner = false,
-  isAdmin = false,
   canManageMembers = false,
+  isPublic = false,
 }: PlannerProviderProps): PlannerContextValue {
-  // Collaboration hook for persistence
+  // Persistence follows edit access: read-only viewers (public plans) neither subscribe to
+  // realtime nor write. Members/owners (canEdit) collaborate normally.
   const { data: storedDays, persistDays } = usePlanCollaboration(planId, {
-    enabled: persist,
+    enabled: canEdit,
     actorId: viewerUserId,
   });
 
@@ -163,7 +162,10 @@ export function usePlannerContextValue({
   const [destCoords, setDestCoords] = useState<DestCoords | null>(null);
 
   useEffect(() => {
-    if (!dest || !persist) {
+    // dest geocoding only powers editor conveniences (centering an empty plan, defaulting a new
+    // activity's location), so it's gated on canEdit. Public read-only viewers don't need it —
+    // the map fits to the snapshot's activity markers.
+    if (!dest || !canEdit) {
       setDestCoords(null);
       return;
     }
@@ -189,17 +191,17 @@ export function usePlannerContextValue({
 
     fetchCoords();
     return () => controller.abort();
-  }, [dest, persist]);
+  }, [dest, canEdit]);
 
   // Set days with persistence
   const setDays = useCallback(
     (nextDays: DayPlan[]) => {
       setLocalDays(nextDays);
-      if (persist && hasLoadedRef.current) {
+      if (canEdit && hasLoadedRef.current) {
         persistDays.mutate(nextDays);
       }
     },
-    [persist, persistDays]
+    [canEdit, persistDays]
   );
 
   // Handle range change with day sync and server persistence
@@ -211,7 +213,7 @@ export function usePlannerContextValue({
         setDays(synced);
 
         // Persist date range to server
-        if (persist && canEdit) {
+        if (canEdit) {
           const to = range.to ?? range.from;
           updatePlanDates(planId, range.from, to).catch((err) => {
             console.error("Failed to persist plan dates:", err);
@@ -219,7 +221,7 @@ export function usePlannerContextValue({
         }
       }
     },
-    [days, setDays, persist, canEdit, planId]
+    [days, setDays, canEdit, planId]
   );
 
   // Activity CRUD operations
@@ -406,8 +408,8 @@ export function usePlannerContextValue({
     canEdit,
     viewerUserId,
     isOwner,
-    isAdmin,
     canManageMembers,
+    isPublic,
   };
 }
 

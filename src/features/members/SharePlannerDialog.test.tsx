@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { SharePlannerDialog } from "./SharePlannerDialog";
 
-vi.mock("@/features/shareLink/components/LinkSection", () => ({
-  LinkSection: () => <div>Share link controls</div>,
+vi.mock("./components/VisibilitySection", () => ({
+  VisibilitySection: () => <div>Visibility controls</div>,
 }));
 
 vi.mock("./components/InviteForm", () => ({
@@ -22,7 +22,7 @@ describe("SharePlannerDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Share planner" }));
 
     expect(screen.getByRole("dialog", { name: "Share planner" })).toHaveAccessibleDescription(
-      "Invite people, manage planner members, and create or revoke a share link."
+      "Publish your plan publicly, invite people, and manage planner members."
     );
   });
 });

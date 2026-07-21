@@ -1,9 +1,14 @@
-import { getAllInspirations } from "@/features/inspirations/data";
+import { getPublicPlans } from "@/features/plan/lib/getPublicPlans";
 import { Card } from "@/shared/ui/card/Card";
 import { CardGrid } from "@/shared/ui/card/CardGrid";
 
-export function InspirationsView() {
-  const items = getAllInspirations();
+export async function InspirationsView({ excludePlanIds = [] }: { excludePlanIds?: string[] }) {
+  const exclude = new Set(excludePlanIds);
+  const plans = (await getPublicPlans()).filter((plan) => !exclude.has(plan.id));
+
+  // "Fellow travelers" excludes the viewer's own plans (already listed under "Your planners");
+  // hide the whole section when nothing else is public.
+  if (plans.length === 0) return null;
 
   return (
     <section className="space-y-3">
@@ -12,8 +17,13 @@ export function InspirationsView() {
         <h2 className="text-foreground text-base font-semibold">Be inspired by fellow travelers</h2>
       </div>
       <CardGrid>
-        {items.map((item) => (
-          <Card key={item.slug} href={`/p/inspiration/${item.slug}`} title={item.title} image={item.image} />
+        {plans.map((plan) => (
+          <Card
+            key={plan.id}
+            href={`/p/${plan.publicSlug}`}
+            title={plan.title}
+            image={plan.coverImage ?? undefined}
+          />
         ))}
       </CardGrid>
     </section>

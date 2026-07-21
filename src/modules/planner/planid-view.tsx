@@ -32,8 +32,9 @@ export function PlanIdView({ experience }: PlanIdViewProps) {
       canEdit={experience.canEdit}
       viewerUserId={experience.viewerUserId}
       isOwner={experience.isOwner}
-      isAdmin={experience.isAdmin}
       canManageMembers={experience.canManageMembers}
+      isPublic={experience.isPublic}
+      authorName={experience.authorName}
     />
   );
 }
