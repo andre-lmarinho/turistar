@@ -53,7 +53,7 @@ export async function deletePlan(planId: string): Promise<DeletePlanResult> {
 async function resolvePlannerRedirect(userId: string): Promise<string> {
   try {
     const slug = await fetchProfileSlugByUserId(userId);
-    return slug ? `/u/${slug}/planners` : "/";
+    return slug ? `/u/${slug}` : "/";
   } catch (error) {
     console.error("resolvePlannerRedirect failed", {
       userId,

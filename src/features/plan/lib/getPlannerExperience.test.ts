@@ -51,7 +51,7 @@ const PLAN = {
   id: "plan-1",
   ownerId: "owner-1",
   members: [{ userId: "owner-1", tier: "admin" }],
-  destinations: [{ name: "Rome" }],
+  destinationName: "Rome",
   title: "Trip",
   budget: null,
   startDate: null,
@@ -66,7 +66,7 @@ const PUBLIC_PLAN = { ...(PLAN as object), members: [], isPublic: true } as unkn
 const PUBLIC_RECORD = {
   id: "plan-1",
   ownerId: "owner-1",
-  destinations: [{ name: "Rome" }],
+  destinationName: "Rome",
   title: "Trip",
   budget: null,
   startDate: null,

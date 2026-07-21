@@ -40,7 +40,7 @@ async function getUserProfile(): Promise<UserProfile> {
 
 export async function AppBar() {
   const { slug, displayName, email } = await getUserProfile();
-  const targetHref = slug ? `/u/${slug}/planners` : "/login";
+  const targetHref = slug ? `/u/${slug}` : "/login";
   const isLoggedIn = Boolean(email);
 
   return (

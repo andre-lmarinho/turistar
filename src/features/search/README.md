@@ -23,6 +23,5 @@ Location and activity search using Geoapify and Wikidata APIs with autocomplete.
      │
      ├──> Plan Feature (destination search)
      │
-     └──> VisitedCountries Feature (country codes)
-            └──> Profile Feature (user location data)
+     └──> Profile Feature (user location data)
 ```

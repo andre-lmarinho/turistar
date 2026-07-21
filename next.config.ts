@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "i.pravatar.cc", pathname: "/**" },
       { protocol: "https", hostname: "commons.wikimedia.org", pathname: "/wiki/Special:FilePath/**" },
+      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/**" },
     ],
   },
   async redirects() {

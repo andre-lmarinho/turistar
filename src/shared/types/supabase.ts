@@ -40,63 +40,6 @@ export type Database = {
           },
         ];
       };
-      destinations: {
-        Row: {
-          country: string | null;
-          id: string;
-          latitude: number | null;
-          longitude: number | null;
-          name: string;
-        };
-        Insert: {
-          country?: string | null;
-          id?: string;
-          latitude?: number | null;
-          longitude?: number | null;
-          name: string;
-        };
-        Update: {
-          country?: string | null;
-          id?: string;
-          latitude?: number | null;
-          longitude?: number | null;
-          name?: string;
-        };
-        Relationships: [];
-      };
-      plan_destinations: {
-        Row: {
-          destination_id: string;
-          plan_id: string;
-          position: number;
-        };
-        Insert: {
-          destination_id: string;
-          plan_id: string;
-          position?: number;
-        };
-        Update: {
-          destination_id?: string;
-          plan_id?: string;
-          position?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "plan_destinations_destination_id_fkey";
-            columns: ["destination_id"];
-            isOneToOne: false;
-            referencedRelation: "destinations";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "plan_destinations_plan_id_fkey";
-            columns: ["plan_id"];
-            isOneToOne: false;
-            referencedRelation: "plans";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       plan_events: {
         Row: {
           actor_id: string;
@@ -218,9 +161,13 @@ export type Database = {
           budget: number | null;
           cover_image: string | null;
           created_at: string;
+          destination_country: string | null;
+          destination_name: string | null;
           end_date: string | null;
           id: string;
           is_public: boolean;
+          latitude: number | null;
+          longitude: number | null;
           public_slug: string;
           start_date: string | null;
           title: string | null;
@@ -230,9 +177,13 @@ export type Database = {
           budget?: number | null;
           cover_image?: string | null;
           created_at?: string;
+          destination_country?: string | null;
+          destination_name?: string | null;
           end_date?: string | null;
           id?: string;
           is_public?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;
@@ -242,9 +193,13 @@ export type Database = {
           budget?: number | null;
           cover_image?: string | null;
           created_at?: string;
+          destination_country?: string | null;
+          destination_name?: string | null;
           end_date?: string | null;
           id?: string;
           is_public?: boolean;
+          latitude?: number | null;
+          longitude?: number | null;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;

@@ -16,4 +16,11 @@ test.describe("User dashboard", () => {
 
     await expect(page).toHaveURL(/\/p\/plan-e2e-001/);
   });
+
+  test("renders the travel map section", async ({ page }) => {
+    await goToUserPlanners(page);
+
+    await expect(page.getByRole("heading", { name: "Your travel map" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Zoom in" })).toBeVisible();
+  });
 });

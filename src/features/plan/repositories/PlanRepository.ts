@@ -7,10 +7,6 @@ import { createSupabaseServerClient } from "@/shared/lib/supabaseServer";
 import { isUuid } from "@/shared/lib/uuid";
 import type { Database } from "@/shared/types/supabase";
 
-export type PlanDestinationRecord = {
-  name: string | null;
-};
-
 export type PlanIdentity = {
   id: string;
   ownerId: string | null;
@@ -29,7 +25,7 @@ export type PlanRecord = {
   startDate: string | null;
   endDate: string | null;
   isPublic: boolean;
-  destinations: PlanDestinationRecord[];
+  destinationName: string | null;
 };
 
 export type PlanWithMembersRecord = PlanRecord & {
@@ -47,10 +43,6 @@ type PlanRepositoryOptions = {
   client?: SupabaseClient<Database>;
 };
 
-type PlanDestinationRow = {
-  destinations: { name: string | null } | null;
-};
-
 type PlanMemberRow = {
   user_id: string;
   tier: string;
@@ -64,25 +56,11 @@ type PlanRow = {
   start_date: string | null;
   end_date: string | null;
   is_public: boolean;
-  plan_destinations: PlanDestinationRow[] | null;
-};
-
-type PlanWithMembersRow = PlanRow & {
-  plan_members: PlanMemberRow[] | null;
+  destination_name: string | null;
 };
 
 function getClient(client?: SupabaseClient<Database>): SupabaseClient<Database> {
   return client ?? createSupabaseServerClient();
-}
-
-function mapDestinations(rows: PlanDestinationRow[] | null): PlanDestinationRecord[] {
-  if (!rows) {
-    return [];
-  }
-
-  return rows.map((row) => ({
-    name: row.destinations?.name ?? null,
-  }));
 }
 
 function mapPlanRow(row: PlanRow): PlanRecord {
@@ -94,7 +72,7 @@ function mapPlanRow(row: PlanRow): PlanRecord {
     startDate: row.start_date,
     endDate: row.end_date,
     isPublic: row.is_public,
-    destinations: mapDestinations(row.plan_destinations),
+    destinationName: row.destination_name,
   };
 }
 
@@ -166,28 +144,28 @@ export async function resolvePlanIdentity(
     : fetchPlanIdentityBySlug(planIdOrSlug, options);
 }
 
+const PLAN_WITH_MEMBERS_SELECT = `
+  id,
+  title,
+  user_id,
+  budget,
+  start_date,
+  end_date,
+  is_public,
+  destination_name,
+  plan_members!left(user_id, tier)
+`;
+
 export async function fetchPlanByIdWithMembers(
   planId: string,
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanWithMembersRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plans")
-    .select(
-      `
-        id,
-        title,
-        user_id,
-        budget,
-        start_date,
-        end_date,
-        is_public,
-        plan_destinations(destinations(name)),
-        plan_members!left(user_id, tier)
-      `
-    )
+    .select(PLAN_WITH_MEMBERS_SELECT)
     .eq("id", planId)
-    .maybeSingle()) as unknown as { data: PlanWithMembersRow | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({
@@ -212,23 +190,11 @@ export async function fetchPlanBySlug(
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanWithMembersRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plans")
-    .select(
-      `
-        id,
-        title,
-        user_id,
-        budget,
-        start_date,
-        end_date,
-        is_public,
-        plan_destinations(destinations(name)),
-        plan_members!left(user_id, tier)
-      `
-    )
+    .select(PLAN_WITH_MEMBERS_SELECT)
     .eq("public_slug", slug)
-    .maybeSingle()) as unknown as { data: PlanWithMembersRow | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({
@@ -259,7 +225,7 @@ const PUBLIC_PLAN_SELECT = `
   start_date,
   end_date,
   is_public,
-  plan_destinations(destinations(name))
+  destination_name
 `;
 
 export async function fetchPublicPlanById(
@@ -267,11 +233,11 @@ export async function fetchPublicPlanById(
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plans")
     .select(PUBLIC_PLAN_SELECT)
     .eq("id", planId)
-    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({ operation: "fetchPublicPlanById", identifiers: { planId }, error });
@@ -285,11 +251,11 @@ export async function fetchPublicPlanBySlug(
   { client }: PlanRepositoryOptions = {}
 ): Promise<PlanRecord | null> {
   const supabase = getClient(client);
-  const { data, error } = (await supabase
+  const { data, error } = await supabase
     .from("plans")
     .select(PUBLIC_PLAN_SELECT)
     .eq("public_slug", slug)
-    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+    .maybeSingle();
 
   if (error) {
     throw formatSupabaseError({ operation: "fetchPublicPlanBySlug", identifiers: { slug }, error });

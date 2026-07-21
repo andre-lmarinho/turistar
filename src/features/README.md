@@ -47,7 +47,6 @@ The travel planner application follows a **feature-based architecture** with cle
 - **`inspirations`** - Pre-built travel templates
 - **`shareLink`** - Public sharing via tokens
 - **`website`** - Marketing and landing pages
-- **`visitedCountries`** - Analytics and tracking
 
 ## Key Integration Points
 
@@ -114,7 +113,6 @@ Plan Access → Member Check → Permission Context → Feature Authorization
 | `search` | None | External Service |
 | `shareLink` | `auth`, `plan` | UI - Public Sharing |
 | `snapshots` | `activity`, `events` | Infrastructure - State Persistence |
-| `visitedCountries` | None | Analytics |
 | `website` | `inspirations` | Marketing - Landing Pages |
 
 This architecture enables scalable development with clear ownership, type safety, and sophisticated real-time collaboration capabilities.

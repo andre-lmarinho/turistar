@@ -1,8 +1,9 @@
 import { getPublicPlans } from "@/features/plan/lib/getPublicPlans";
 import { Card } from "@/shared/ui/card/Card";
 import { CardGrid } from "@/shared/ui/card/CardGrid";
+import { Sparkles } from "@/shared/ui/icon";
 
-export async function InspirationsView({ excludePlanIds = [] }: { excludePlanIds?: string[] }) {
+export async function InspirationsSection({ excludePlanIds = [] }: { excludePlanIds?: string[] }) {
   const exclude = new Set(excludePlanIds);
   const plans = (await getPublicPlans()).filter((plan) => !exclude.has(plan.id));
 
@@ -13,7 +14,7 @@ export async function InspirationsView({ excludePlanIds = [] }: { excludePlanIds
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xl leading-none">🌍</span>
+        <Sparkles className="text-primary h-5 w-5" aria-hidden="true" />
         <h2 className="text-foreground text-base font-semibold">Be inspired by fellow travelers</h2>
       </div>
       <CardGrid>

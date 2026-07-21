@@ -10,22 +10,6 @@ CREATE TABLE public.budget_entries (
   CONSTRAINT budget_entries_pkey PRIMARY KEY (id),
   CONSTRAINT budget_entries_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id)
 );
-CREATE TABLE public.destinations (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  name text NOT NULL UNIQUE,
-  country text,
-  latitude double precision,
-  longitude double precision,
-  CONSTRAINT destinations_pkey PRIMARY KEY (id)
-);
-CREATE TABLE public.plan_destinations (
-  plan_id uuid NOT NULL,
-  destination_id uuid NOT NULL,
-  position integer NOT NULL DEFAULT 0,
-  CONSTRAINT plan_destinations_pkey PRIMARY KEY (plan_id, destination_id),
-  CONSTRAINT plan_destinations_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.plans(id),
-  CONSTRAINT plan_destinations_destination_id_fkey FOREIGN KEY (destination_id) REFERENCES public.destinations(id)
-);
 CREATE TABLE public.plan_events (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   plan_id uuid NOT NULL,
@@ -68,6 +52,10 @@ CREATE TABLE public.plans (
   public_slug text NOT NULL DEFAULT translate(encode(gen_random_bytes(9), 'base64'::text), '/+'::text, '_-'::text) UNIQUE,
   cover_image text,
   is_public boolean NOT NULL DEFAULT false,
+  destination_name text,
+  destination_country text,
+  latitude double precision,
+  longitude double precision,
   CONSTRAINT plans_pkey PRIMARY KEY (id),
   CONSTRAINT plans_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id)
 );

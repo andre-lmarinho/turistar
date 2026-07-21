@@ -17,5 +17,5 @@ Auth Feature
 
 Middleware
   └─> All protected routes (/u/*)
-        └─> Plan, Budget, VisitedCountries (user-specific data)
+        └─> Plan, Budget (user-specific data)
 ```

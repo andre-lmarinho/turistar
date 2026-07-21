@@ -54,6 +54,11 @@ export const ActivityCard = memo(function ActivityCard({
               width={400}
               height={200}
               className="h-30 w-full rounded-t-lg object-cover"
+              // Dead URLs (deleted assets, renamed Wikimedia files) degrade to
+              // the imageless card instead of a broken-image block.
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
             />
           )}
 
