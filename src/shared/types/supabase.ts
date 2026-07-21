@@ -1,6 +1,11 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.5";
+  };
   public: {
     Tables: {
       budget_entries: {
@@ -179,45 +184,6 @@ export type Database = {
           },
         ];
       };
-      plan_share_links: {
-        Row: {
-          created_at: string;
-          created_by: string;
-          plan_id: string;
-          revoked_at: string | null;
-          token: string;
-        };
-        Insert: {
-          created_at?: string;
-          created_by: string;
-          plan_id: string;
-          revoked_at?: string | null;
-          token?: string;
-        };
-        Update: {
-          created_at?: string;
-          created_by?: string;
-          plan_id?: string;
-          revoked_at?: string | null;
-          token?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "plan_share_links_created_by_fkey";
-            columns: ["created_by"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "plan_share_links_plan_id_fkey";
-            columns: ["plan_id"];
-            isOneToOne: true;
-            referencedRelation: "plans";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       plan_snapshots: {
         Row: {
           plan_id: string;
@@ -254,6 +220,7 @@ export type Database = {
           created_at: string;
           end_date: string | null;
           id: string;
+          is_public: boolean;
           public_slug: string;
           start_date: string | null;
           title: string | null;
@@ -265,6 +232,7 @@ export type Database = {
           created_at?: string;
           end_date?: string | null;
           id?: string;
+          is_public?: boolean;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;
@@ -276,6 +244,7 @@ export type Database = {
           created_at?: string;
           end_date?: string | null;
           id?: string;
+          is_public?: boolean;
           public_slug?: string;
           start_date?: string | null;
           title?: string | null;
@@ -320,7 +289,6 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      accept_plan_share_link: { Args: { _token: string }; Returns: string };
       add_plan_member_by_email: {
         Args: {
           _email: string;
@@ -358,7 +326,6 @@ export type Database = {
           result_public_slug: string;
         }[];
       };
-      create_plan_share_link: { Args: { _plan_id: string }; Returns: string };
       get_user_planners: {
         Args: never;
         Returns: {
@@ -381,7 +348,6 @@ export type Database = {
         Args: { _plan_id: string; _user_id: string };
         Returns: undefined;
       };
-      revoke_plan_share_link: { Args: { _plan_id: string }; Returns: boolean };
       update_plan_dates: {
         Args: { _end_date: string; _plan_id: string; _start_date: string };
         Returns: undefined;

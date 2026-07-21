@@ -1,31 +1,26 @@
-"use client";
-
-import { getMarketingInspirations } from "@/features/inspirations/data";
+import { getPublicPlans } from "@/features/plan/lib/getPublicPlans";
 import { H2, P } from "@/features/website/ui/typography";
 import { Container, Section } from "@/features/website/ui/wrapper";
 import { Card } from "@/shared/ui/card";
 
-export function InspirationLink() {
-  const destinations = getMarketingInspirations();
+export async function InspirationLink() {
+  const plans = await getPublicPlans();
 
   return (
     <Section>
       <Container id="inspiration">
         <H2>Be inspired by fellow travelers</H2>
-        <P>
-          Explore a curated list of other travelers' trip itineraries and get inspired for your next trip. If
-          you like an itinerary, you can clone it and make it your own.
-        </P>
+        <P>Explore public trip itineraries from other travelers and get inspired for your next trip.</P>
       </Container>
 
       <ul className="mx-auto flex flex-wrap justify-center gap-6">
-        {destinations.map((item) => (
-          <li key={item.slug}>
+        {plans.map((plan) => (
+          <li key={plan.id}>
             <Card
               className="w-56 sm:w-60 md:w-64"
-              title={item.title}
-              href={`/p/inspiration/${item.slug}`}
-              image={item.image}
+              title={plan.title}
+              href={`/p/${plan.publicSlug}`}
+              image={plan.coverImage ?? undefined}
             />
           </li>
         ))}

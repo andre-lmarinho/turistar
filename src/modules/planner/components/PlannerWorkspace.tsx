@@ -14,6 +14,7 @@ import { SharePlannerDialog } from "@/features/members/SharePlannerDialog";
 import { DeletePlanDialog } from "@/features/plan/components/DeletePlanDialog";
 import { PlannerProvider, usePlannerContext } from "@/features/plan/hooks/PlannerContext";
 import { updatePlanTitle } from "@/features/plan/lib/updatePlanTitle";
+import { Avatar } from "@/shared/ui/avatar/Avatar";
 import { DateRangePickerIcon } from "@/shared/ui/calendar";
 
 import type { PlannerMode } from "./ModeToggleButton";
@@ -31,30 +32,31 @@ export interface PlannerWorkspaceProps {
   planId: string;
   title: string;
   dest?: string;
-  persist?: boolean;
   canEdit?: boolean;
   viewerUserId?: string | null;
   isOwner?: boolean;
   isAdmin?: boolean;
   canManageMembers?: boolean;
+  isPublic?: boolean;
   initialBudget?: number;
   initialEntries?: Entry[];
+  authorName?: string;
 }
 
 type PlannerWorkspaceContentProps = {
-  persist: boolean;
   title: string;
   canEdit: boolean;
   initialBudget?: number;
   initialEntries?: Entry[];
+  authorName?: string;
 };
 
 function PlannerWorkspaceContent({
-  persist,
   title: initialTitle,
   canEdit,
   initialBudget,
   initialEntries,
+  authorName,
 }: PlannerWorkspaceContentProps) {
   const [mode, setMode] = useState<PlannerMode>("planner");
   const {
@@ -63,7 +65,6 @@ function PlannerWorkspaceContent({
     setDays,
     currentRange,
     handleRangeChange,
-    viewerUserId,
     selectedActivity,
     setSelectedActivity,
     addActivityWithTitle,
@@ -99,7 +100,7 @@ function PlannerWorkspaceContent({
       return;
     }
 
-    if (persist && canEdit) {
+    if (canEdit) {
       await updatePlanTitle(planId, title.trim());
     }
   };
@@ -133,13 +134,20 @@ function PlannerWorkspaceContent({
         </h1>
         <div className="flex flex-none items-center gap-1 self-end md:self-end">
           <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} disabled={!canEdit} />
-          {viewerUserId ? <SharePlannerDialog planId={planId} /> : null}
+          {canEdit ? <SharePlannerDialog planId={planId} /> : null}
           <DeletePlanDialog />
           <div className="hidden pl-2 md:inline">
             <ModeToggleButton value={mode} onChange={setMode} />
           </div>
         </div>
       </div>
+
+      {!canEdit && authorName ? (
+        <div className="text-muted-foreground mx-auto mb-2 flex w-full max-w-7xl items-center gap-2 text-sm">
+          <Avatar displayName={authorName} />
+          <span>Shared by {authorName}</span>
+        </div>
+      ) : null}
 
       <div className="relative mx-auto w-full max-w-7xl flex-1 overflow-visible">
         {modeOrder.map((currentMode, idx) => {
@@ -162,12 +170,7 @@ function PlannerWorkspaceContent({
                 onFallbackAdd={handleFallbackAdd}
               />
             ) : currentMode === "budget" ? (
-              <BudgetBoard
-                initialBudget={initialBudget}
-                initialEntries={initialEntries}
-                persist={persist}
-                canEdit={canEdit}
-              />
+              <BudgetBoard initialBudget={initialBudget} initialEntries={initialEntries} canEdit={canEdit} />
             ) : (
               <MapBoard />
             );
@@ -213,32 +216,33 @@ export function PlannerWorkspace({
   planId,
   title,
   dest,
-  persist = true,
   canEdit = true,
   viewerUserId = null,
   isOwner = false,
   isAdmin = false,
   canManageMembers = false,
+  isPublic = false,
   initialBudget,
   initialEntries,
+  authorName,
 }: PlannerWorkspaceProps) {
   return (
     <PlannerProvider
       initialDays={initialDays}
       planId={planId}
       dest={dest}
-      persist={persist}
       canEdit={canEdit}
       viewerUserId={viewerUserId}
       isOwner={isOwner}
       isAdmin={isAdmin}
-      canManageMembers={canManageMembers}>
+      canManageMembers={canManageMembers}
+      isPublic={isPublic}>
       <PlannerWorkspaceContent
-        persist={persist}
         title={title}
         canEdit={canEdit}
         initialBudget={initialBudget}
         initialEntries={initialEntries}
+        authorName={authorName}
       />
     </PlannerProvider>
   );

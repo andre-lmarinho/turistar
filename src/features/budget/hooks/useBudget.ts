@@ -12,12 +12,10 @@ export function useBudget(
   options: {
     initialBudget?: number;
     initialEntries?: Entry[];
-    persist?: boolean;
     canEdit?: boolean;
   } = {}
 ) {
-  const { initialBudget = 0, initialEntries, persist = true, canEdit = true } = options;
-  const editingEnabled = canEdit;
+  const { initialBudget = 0, initialEntries, canEdit = true } = options;
   const [budget, setBudgetState] = useState(initialBudget);
   const [entries, setEntries] = useState<Entry[]>(initialEntries ?? []);
 
@@ -29,8 +27,9 @@ export function useBudget(
   const [persistError, setPersistError] = useState<string | null>(null);
   const qc = useQueryClient();
 
-  const persistEnabled = persist && Boolean(planId);
-  const canPersist = persistEnabled && editingEnabled;
+  // persistence follows edit access: a read-only viewer never fetches or writes, and renders
+  // the initialEntries/initialBudget passed in from the snapshot.
+  const persistEnabled = canEdit && Boolean(planId);
   const queryKey = ["budget", planId] as const;
 
   const budgetQuery = useQuery<BudgetQueryResult, Error, BudgetQueryResult, typeof queryKey>({
@@ -55,7 +54,7 @@ export function useBudget(
   const saveBudget = saveBudgetMutation.mutate;
   const setBudget = (value: number) => {
     setBudgetState(value);
-    if (!canPersist) return;
+    if (!persistEnabled) return;
     if (!budgetQuery.isSuccess) return;
     if (value === initialBudgetRef.current) return;
     setPersistError(null);
@@ -108,7 +107,7 @@ export function useBudget(
   const addEntryMut = addEntryMutation.mutateAsync;
 
   const handleAdd = async () => {
-    if (!editingEnabled) return;
+    if (!canEdit) return;
     if (!desc || amount <= 0) return;
     setPersistError(null);
     if (persistEnabled) {
@@ -141,7 +140,7 @@ export function useBudget(
   const updateEntryMut = updateEntryMutation.mutateAsync;
 
   const handleUpdateEntry = async (index: number, updated: Entry) => {
-    if (!editingEnabled) return;
+    if (!canEdit) return;
     if (index < 0 || index >= entries.length) return;
     const previousEntries = [...entries];
     setEntries((prev) => {
@@ -167,7 +166,7 @@ export function useBudget(
   const deleteEntryMut = deleteEntryMutation.mutateAsync;
 
   const handleDeleteEntry = async (index: number) => {
-    if (!editingEnabled) return;
+    if (!canEdit) return;
     if (index < 0 || index >= entries.length) return;
     const entry = entries[index];
     const previousEntries = [...entries];

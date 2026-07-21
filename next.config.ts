@@ -25,11 +25,6 @@ const nextConfig: NextConfig = {
         destination: "/friends",
         permanent: true,
       },
-      {
-        source: "/inspiration/:city",
-        destination: "/p/inspiration/:city",
-        permanent: true,
-      },
     ];
   },
   async headers() {

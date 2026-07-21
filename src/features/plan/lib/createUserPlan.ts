@@ -5,6 +5,7 @@ import { fetchWikidataImage } from "@/features/search/services/WikidataService";
 import { requireUser } from "@/shared/lib/auth/session";
 
 import { createPlan } from "./createPlan";
+import { setPlanVisibility } from "./setPlanVisibility";
 import { updatePlanCoverImage } from "./updatePlanCoverImage";
 
 interface PlannerDestination {
@@ -20,6 +21,7 @@ export interface CreatePlannerPlanInput {
   destination: PlannerDestination;
   startDate: string;
   endDate: string;
+  isPublic?: boolean;
 }
 
 export interface CreatePlannerPlanResult {
@@ -29,7 +31,7 @@ export interface CreatePlannerPlanResult {
 
 export async function createUserPlan(input: CreatePlannerPlanInput): Promise<CreatePlannerPlanResult> {
   const user = await requireUser();
-  const { title, destination, startDate, endDate } = input;
+  const { title, destination, startDate, endDate, isPublic } = input;
 
   // Start fetching cover image asynchronously without blocking plan creation
   // Same pattern as activities: placeId -> wikidataId -> imageUrl
@@ -61,6 +63,18 @@ export async function createUserPlan(input: CreatePlannerPlanInput): Promise<Cre
     endDate,
     { userId: user.id } // Don't wait for cover image on initial creation
   );
+
+  // Plans are created private (is_public defaults to false); publish only when asked.
+  // Best-effort: the plan is already persisted, so a publish failure must not fail creation
+  // (that would surface as "Failed to create plan", prompt a retry, and leave a duplicate).
+  // The owner can still publish later from the Share dialog.
+  if (isPublic) {
+    try {
+      await setPlanVisibility(id, true);
+    } catch (error) {
+      console.error("Failed to publish plan on creation; left private", { planId: id, error });
+    }
+  }
 
   // Update cover image in the background after plan is created
   // Errors are logged but not thrown to avoid breaking the response

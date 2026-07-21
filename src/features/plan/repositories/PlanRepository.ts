@@ -28,6 +28,7 @@ export type PlanRecord = {
   budget: number | null;
   startDate: string | null;
   endDate: string | null;
+  isPublic: boolean;
   destinations: PlanDestinationRecord[];
 };
 
@@ -62,6 +63,7 @@ type PlanRow = {
   budget: number | null;
   start_date: string | null;
   end_date: string | null;
+  is_public: boolean;
   plan_destinations: PlanDestinationRow[] | null;
 };
 
@@ -91,6 +93,7 @@ function mapPlanRow(row: PlanRow): PlanRecord {
     budget: row.budget,
     startDate: row.start_date,
     endDate: row.end_date,
+    isPublic: row.is_public,
     destinations: mapDestinations(row.plan_destinations),
   };
 }
@@ -178,6 +181,7 @@ export async function fetchPlanByIdWithMembers(
         budget,
         start_date,
         end_date,
+        is_public,
         plan_destinations(destinations(name)),
         plan_members!left(user_id, tier)
       `
@@ -218,6 +222,7 @@ export async function fetchPlanBySlug(
         budget,
         start_date,
         end_date,
+        is_public,
         plan_destinations(destinations(name)),
         plan_members!left(user_id, tier)
       `
@@ -241,6 +246,56 @@ export async function fetchPlanBySlug(
     ...mapPlanRow(data),
     members: mapMembers(data.plan_members),
   };
+}
+
+// Members-free plan fetch for the public read-only path. Anonymous viewers have no grant on
+// plan_members, so embedding it (as fetchPlanBySlug does) would fail with a permission error.
+// RLS ("Public plans are readable") returns a row only when is_public = true.
+const PUBLIC_PLAN_SELECT = `
+  id,
+  title,
+  user_id,
+  budget,
+  start_date,
+  end_date,
+  is_public,
+  plan_destinations(destinations(name))
+`;
+
+export async function fetchPublicPlanById(
+  planId: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<PlanRecord | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from("plans")
+    .select(PUBLIC_PLAN_SELECT)
+    .eq("id", planId)
+    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({ operation: "fetchPublicPlanById", identifiers: { planId }, error });
+  }
+
+  return data ? mapPlanRow(data) : null;
+}
+
+export async function fetchPublicPlanBySlug(
+  slug: string,
+  { client }: PlanRepositoryOptions = {}
+): Promise<PlanRecord | null> {
+  const supabase = getClient(client);
+  const { data, error } = (await supabase
+    .from("plans")
+    .select(PUBLIC_PLAN_SELECT)
+    .eq("public_slug", slug)
+    .maybeSingle()) as unknown as { data: PlanRow | null; error: unknown };
+
+  if (error) {
+    throw formatSupabaseError({ operation: "fetchPublicPlanBySlug", identifiers: { slug }, error });
+  }
+
+  return data ? mapPlanRow(data) : null;
 }
 
 export async function fetchLatestSnapshot(
