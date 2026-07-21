@@ -46,10 +46,14 @@ describe("getPublicPlans", () => {
     expect(await getPublicPlans()).toEqual([]);
   });
 
-  it("throws a contextual error when the query fails", async () => {
+  it("degrades to an empty list (and warns) when the query fails", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const { supabase } = buildSelectMock({ data: null, error: new Error("db down") });
     vi.mocked(createSupabaseServerClient).mockReturnValue(supabase);
 
-    await expect(getPublicPlans()).rejects.toThrow(/getPublicPlans/);
+    expect(await getPublicPlans()).toEqual([]);
+    expect(warnSpy).toHaveBeenCalled();
+
+    warnSpy.mockRestore();
   });
 });

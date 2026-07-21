@@ -6,6 +6,10 @@ import { Card } from "@/shared/ui/card";
 export async function InspirationLink() {
   const plans = await getPublicPlans();
 
+  // Nothing public yet (or the discovery query degraded): omit the section rather than render an
+  // empty grid.
+  if (plans.length === 0) return null;
+
   return (
     <Section>
       <Container id="inspiration">
