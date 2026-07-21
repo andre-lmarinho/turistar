@@ -15,7 +15,7 @@ export function Card({ href, title, image, className }: CardProps) {
   const bg = image
     ? isPrepared
       ? image
-      : `url("${image.replace(/"/g, '\\"')}")`
+      : `url("${image.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`
     : "linear-gradient(135deg, #8b5cf6 0%, #22d3ee 100%)";
 
   return (
