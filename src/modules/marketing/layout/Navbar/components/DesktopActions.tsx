@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SOLUTIONS_CALLOUT } from "@/modules/marketing/layout/Navbar/data";
 import { supabase } from "@/shared/lib/supabaseClient";
 import { formatSupabaseError } from "@/shared/lib/supabaseErrors";
 import { Button } from "@/shared/ui/button";
@@ -64,7 +65,7 @@ export function DesktopActions() {
         </Button>
       ) : (
         <>
-          <Button href="/p/inspiration/rome" variant="ghost">
+          <Button href={SOLUTIONS_CALLOUT.href} variant="ghost">
             Try a demo
           </Button>
           <Button href="/signup">Get started</Button>

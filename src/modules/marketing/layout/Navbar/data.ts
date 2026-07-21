@@ -22,7 +22,9 @@ export const EXPLORE_ITEMS: SolutionItem[] = [
 export const NAV_LINKS: NavLink[] = [{ href: "/friends", label: "Friends" }];
 
 export const SOLUTIONS_CALLOUT = {
-  href: "/p/inspiration/rome",
+  // ponytail: hardcoded public_slug of the "A 4 day trip to Rome" public plan
+  // (the old /p/inspiration/* routes were removed with the static inspirations).
+  href: "/p/xGAJQ3na6Zlh",
   eyebrow: "Try it now!",
   title: "Open Rome Demo",
   description: "Explore Rome like a local with ready-to-book activities.",
