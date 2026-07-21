@@ -24,7 +24,7 @@ export default async function DashboardPlannersPage({ params }: DashboardPlanner
 
   return (
     <>
-      <InspirationsView />
+      <InspirationsView excludePlanIds={plans.map((plan) => plan.id)} />
       <PlannersView plans={plans} />
     </>
   );

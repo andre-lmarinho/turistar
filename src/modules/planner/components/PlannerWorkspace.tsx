@@ -35,7 +35,6 @@ export interface PlannerWorkspaceProps {
   canEdit?: boolean;
   viewerUserId?: string | null;
   isOwner?: boolean;
-  isAdmin?: boolean;
   canManageMembers?: boolean;
   isPublic?: boolean;
   initialBudget?: number;
@@ -219,7 +218,6 @@ export function PlannerWorkspace({
   canEdit = true,
   viewerUserId = null,
   isOwner = false,
-  isAdmin = false,
   canManageMembers = false,
   isPublic = false,
   initialBudget,
@@ -234,7 +232,6 @@ export function PlannerWorkspace({
       canEdit={canEdit}
       viewerUserId={viewerUserId}
       isOwner={isOwner}
-      isAdmin={isAdmin}
       canManageMembers={canManageMembers}
       isPublic={isPublic}>
       <PlannerWorkspaceContent

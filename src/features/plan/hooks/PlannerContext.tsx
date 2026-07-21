@@ -69,7 +69,6 @@ interface PlannerContextValue {
   canEdit: boolean;
   viewerUserId: string | null;
   isOwner: boolean;
-  isAdmin: boolean;
   canManageMembers: boolean;
   isPublic: boolean;
 }
@@ -81,7 +80,6 @@ interface PlannerProviderProps {
   canEdit?: boolean;
   viewerUserId?: string | null;
   isOwner?: boolean;
-  isAdmin?: boolean;
   canManageMembers?: boolean;
   isPublic?: boolean;
 }
@@ -116,7 +114,6 @@ export function usePlannerContextValue({
   canEdit = true,
   viewerUserId = null,
   isOwner = false,
-  isAdmin = false,
   canManageMembers = false,
   isPublic = false,
 }: PlannerProviderProps): PlannerContextValue {
@@ -411,7 +408,6 @@ export function usePlannerContextValue({
     canEdit,
     viewerUserId,
     isOwner,
-    isAdmin,
     canManageMembers,
     isPublic,
   };

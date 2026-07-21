@@ -2,8 +2,13 @@ import { getPublicPlans } from "@/features/plan/lib/getPublicPlans";
 import { Card } from "@/shared/ui/card/Card";
 import { CardGrid } from "@/shared/ui/card/CardGrid";
 
-export async function InspirationsView() {
-  const plans = await getPublicPlans();
+export async function InspirationsView({ excludePlanIds = [] }: { excludePlanIds?: string[] }) {
+  const exclude = new Set(excludePlanIds);
+  const plans = (await getPublicPlans()).filter((plan) => !exclude.has(plan.id));
+
+  // "Fellow travelers" excludes the viewer's own plans (already listed under "Your planners");
+  // hide the whole section when nothing else is public.
+  if (plans.length === 0) return null;
 
   return (
     <section className="space-y-3">

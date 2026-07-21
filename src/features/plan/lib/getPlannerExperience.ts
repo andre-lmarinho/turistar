@@ -31,7 +31,6 @@ export interface PlannerExperience {
   viewerUserId: string | null;
   canEdit: boolean;
   isOwner: boolean;
-  isAdmin: boolean;
   canManageMembers: boolean;
   isPublic: boolean;
   initialDays?: DayPlan[];
@@ -89,7 +88,6 @@ export async function getPlannerExperience({
       // Reaching this branch requires ownership or membership, which is exactly edit access.
       canEdit: true,
       isOwner,
-      isAdmin,
       canManageMembers: isAdmin,
       isPublic: plan.isPublic,
       initialDays: snapshotDays.length > 0 ? snapshotDays : buildDaysFromRange(plan.startDate, plan.endDate),
@@ -128,7 +126,6 @@ async function buildReadOnlyExperience(
     viewerUserId,
     canEdit: false,
     isOwner: false,
-    isAdmin: false,
     canManageMembers: false,
     isPublic: plan.isPublic,
     initialDays: snapshotDays.length > 0 ? snapshotDays : buildDaysFromRange(plan.startDate, plan.endDate),
