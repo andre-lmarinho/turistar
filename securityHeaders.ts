@@ -10,7 +10,9 @@ export function buildCsp({ isDev, nonce }: { isDev: boolean; nonce: string }): s
   const common = [
     "default-src 'self'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://i.pravatar.cc https://commons.wikimedia.org https://*.basemaps.cartocdn.com",
+    // upload.wikimedia.org: commons Special:FilePath 302-redirects there, and CSP
+    // checks redirect targets. images.unsplash.com: DEFAULT_PLAN_COVER_IMAGE.
+    "img-src 'self' data: blob: https://i.pravatar.cc https://commons.wikimedia.org https://upload.wikimedia.org https://images.unsplash.com https://*.basemaps.cartocdn.com",
     "font-src 'self' data:",
     "frame-src https://vercel.live https://www.youtube-nocookie.com",
     "frame-ancestors 'none'",

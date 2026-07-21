@@ -82,7 +82,7 @@ export async function getPlannerExperience({
     return {
       planId: plan.id,
       slug: bySlug ? trimmed : undefined,
-      destination: dest ?? plan.destinations[0]?.name ?? "Destination TBD",
+      destination: dest ?? plan.destinationName ?? "Destination TBD",
       title: plan.title ?? undefined,
       viewerUserId: user.id,
       // Reaching this branch requires ownership or membership, which is exactly edit access.
@@ -121,7 +121,7 @@ async function buildReadOnlyExperience(
   return {
     planId: plan.id,
     slug,
-    destination: dest ?? plan.destinations[0]?.name ?? "Destination TBD",
+    destination: dest ?? plan.destinationName ?? "Destination TBD",
     title: plan.title ?? undefined,
     viewerUserId,
     canEdit: false,

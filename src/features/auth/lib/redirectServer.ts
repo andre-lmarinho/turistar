@@ -12,5 +12,5 @@ export async function redirectIfAuthenticated(nextPath: string | null): Promise<
   }
 
   const slug = await ensureProfile();
-  redirect(nextPath ?? `/u/${slug}/planners`);
+  redirect(nextPath ?? `/u/${slug}`);
 }

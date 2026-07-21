@@ -16,7 +16,6 @@ Profile Feature
 
 Profile Data
   └─> Search Feature (country codes from destinations)
-        └─> VisitedCountries Feature (aggregate countries from user plans)
 ```
 
 ## Dependencies

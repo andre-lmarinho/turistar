@@ -64,7 +64,7 @@ describe("useLeaveRedirect", () => {
 
     expect(leave.mutateAsync).toHaveBeenCalledTimes(1);
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(pushMock).toHaveBeenCalledWith("/u/member-slug/planners");
+    expect(pushMock).toHaveBeenCalledWith("/u/member-slug");
     expect(refreshMock).toHaveBeenCalledTimes(1);
     expect(result.current.isLeaving).toBe(false);
   });
@@ -81,7 +81,7 @@ describe("useLeaveRedirect", () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith("/api/profile/slug", expect.objectContaining({ method: "GET" }));
-    expect(pushMock).toHaveBeenCalledWith("/u/viewer-slug/planners");
+    expect(pushMock).toHaveBeenCalledWith("/u/viewer-slug");
     expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 

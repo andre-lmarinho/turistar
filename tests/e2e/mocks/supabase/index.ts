@@ -34,7 +34,10 @@ type PlanRow = {
   start_date: string | null;
   end_date: string | null;
   is_public: boolean;
-  plan_destinations: { destinations: { name: string; country?: string | null } }[] | null;
+  destination_name: string | null;
+  destination_country: string | null;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 type PlanMemberRow = {
@@ -199,6 +202,7 @@ type TableName =
 class MockQueryBuilder<TTable extends TableName> {
   private eqFilters: EqFilters = {};
   private gtFilters: GtFilters = {};
+  private notNullColumns: string[] = [];
   private orderFilters: OrderFilter[] = [];
   private limitCount: number | null = null;
   private insertData: Record<string, unknown> | Record<string, unknown>[] | null = null;
@@ -231,6 +235,12 @@ class MockQueryBuilder<TTable extends TableName> {
 
   eq(column: string, value: unknown) {
     this.eqFilters[column] = value;
+    return this;
+  }
+
+  // Only the `.not(col, "is", null)` shape the app uses is supported.
+  not(column: string, _operator: "is", _value: null) {
+    this.notNullColumns.push(column);
     return this;
   }
 
@@ -311,9 +321,12 @@ class MockQueryBuilder<TTable extends TableName> {
   }
 
   private async fetchRows() {
-    const rows = (await this.client.queryTable(this.table, this.eqFilters, this.gtFilters)) as Array<
+    let rows = (await this.client.queryTable(this.table, this.eqFilters, this.gtFilters)) as Array<
       Record<string, unknown>
     >;
+    if (this.notNullColumns.length) {
+      rows = rows.filter((row) => this.notNullColumns.every((column) => row[column] != null));
+    }
     const orderedRows = this.applyOrderFilters(rows);
     if (this.limitCount != null) {
       return orderedRows.slice(0, this.limitCount);
@@ -399,9 +412,10 @@ class MockSupabaseClientImpl {
         start_date: "2024-01-01",
         end_date: "2024-01-05",
         is_public: true,
-        plan_destinations: [
-          { destinations: { name: DEFAULT_DESTINATION, country: DEFAULT_DESTINATION_COUNTRY } },
-        ],
+        destination_name: DEFAULT_DESTINATION,
+        destination_country: DEFAULT_DESTINATION_COUNTRY,
+        latitude: -13.58,
+        longitude: -38.92,
       },
     ];
     this.profiles = [
@@ -500,16 +514,10 @@ class MockSupabaseClientImpl {
         this.syncPlanRow({
           start_date: rpcParams._start_date ?? this.plans[0]?.start_date ?? null,
           end_date: rpcParams._end_date ?? this.plans[0]?.end_date ?? null,
-          plan_destinations: rpcParams._dest_name
-            ? [
-                {
-                  destinations: {
-                    name: rpcParams._dest_name,
-                    country: rpcParams._dest_country ?? null,
-                  },
-                },
-              ]
-            : (this.plans[0]?.plan_destinations ?? null),
+          destination_name: rpcParams._dest_name ?? this.plans[0]?.destination_name ?? null,
+          destination_country: rpcParams._dest_country ?? this.plans[0]?.destination_country ?? null,
+          latitude: rpcParams._dest_lat ?? this.plans[0]?.latitude ?? null,
+          longitude: rpcParams._dest_long ?? this.plans[0]?.longitude ?? null,
           user_id: rpcParams._user_id ?? this.plans[0]?.user_id ?? null,
         });
         const snapshot = this.plan.snapshots[0];
@@ -705,7 +713,7 @@ class MockSupabaseClientImpl {
           end_date: plan.end_date,
           created_at: "2024-01-01T00:00:00.000Z",
           public_slug: plan.public_slug,
-          destination_name: plan.plan_destinations?.[0]?.destinations?.name ?? null,
+          destination_name: plan.destination_name,
           latest_snapshot_at: new Date().toISOString(),
         }));
 

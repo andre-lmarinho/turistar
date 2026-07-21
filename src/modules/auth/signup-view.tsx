@@ -162,7 +162,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
         return;
       }
 
-      router.push(safeNextPath ?? `/u/${result.slug}/planners`);
+      router.push(safeNextPath ?? `/u/${result.slug}`);
       router.refresh();
     } catch (error) {
       setFormError(getAuthErrorMessage(error, SIGN_UP_FALLBACK));

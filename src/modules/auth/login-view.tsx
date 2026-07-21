@@ -60,7 +60,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
         resolveProfile,
       });
 
-      router.push(safeNextPath ?? `/u/${slug}/planners`);
+      router.push(safeNextPath ?? `/u/${slug}`);
       router.refresh();
     } catch (error) {
       setFormError(getAuthErrorMessage(error, SIGN_IN_FALLBACK));

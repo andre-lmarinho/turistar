@@ -73,7 +73,7 @@ export function useLeaveRedirect({ viewerUserId, leave }: UseLeaveRedirectOption
 
         // Resolve redirect URL
         const slug = member.slug ?? (viewerUserId ? await fetchProfileSlug() : null);
-        const redirectUrl = slug ? `/u/${slug}/planners` : null;
+        const redirectUrl = slug ? `/u/${slug}` : null;
 
         if (redirectUrl) {
           router.push(redirectUrl);

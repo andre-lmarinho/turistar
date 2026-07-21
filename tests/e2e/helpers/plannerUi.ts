@@ -7,7 +7,7 @@ type PlannerMode = "planner" | "map" | "budget";
 
 export async function goToUserPlanners(page: Page) {
   await authenticateE2EUser(page);
-  await page.goto(`/u/${E2E_USER_SLUG}/planners`);
+  await page.goto(`/u/${E2E_USER_SLUG}`);
   await expect(page.getByRole("heading", { name: /your planners/i })).toBeVisible();
 }
 

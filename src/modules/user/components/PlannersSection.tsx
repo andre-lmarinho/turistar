@@ -8,9 +8,10 @@ import type { CreatePlannerPlanResult } from "@/features/plan/lib/createUserPlan
 import type { UserPlannerSummary } from "@/features/plan/lib/getUserPlanners";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
 import { Card, CardGrid } from "@/shared/ui/card";
+import { Kanban } from "@/shared/ui/icon";
 import { Popover, PopoverContent, PopoverTriggerButton } from "@/shared/ui/popover";
 
-interface PlannersViewProps {
+interface PlannersSectionProps {
   plans: UserPlannerSummary[];
 }
 
@@ -39,12 +40,12 @@ function NewPlannerTile() {
   );
 }
 
-export function PlannersView({ plans }: PlannersViewProps) {
+export function PlannersSection({ plans }: PlannersSectionProps) {
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-xl leading-none">📚</span>
-        <h1 className="text-foreground text-base font-semibold tracking-wide uppercase">Your planners</h1>
+        <Kanban className="text-primary h-5 w-5" aria-hidden="true" />
+        <h2 className="text-foreground text-base font-semibold">Your planners</h2>
       </div>
 
       <CardGrid>

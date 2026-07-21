@@ -22,10 +22,6 @@ type PlanIdentityRow = {
   user_id: string | null;
 };
 
-type PlanDestinationRow = {
-  destinations: { name: string | null } | null;
-};
-
 type PlanMemberRow = {
   user_id: string;
   tier: string;
@@ -38,7 +34,7 @@ type PlanRow = {
   budget: number | null;
   start_date: string | null;
   end_date: string | null;
-  plan_destinations: PlanDestinationRow[] | null;
+  destination_name: string | null;
 };
 
 type PlanWithMembersRow = PlanRow & {
@@ -144,7 +140,7 @@ describe("PlanRepository", () => {
         budget: 100,
         start_date: "2024-01-01",
         end_date: "2024-01-05",
-        plan_destinations: [{ destinations: { name: "Berlin" } }],
+        destination_name: "Berlin",
         plan_members: [{ user_id: "member-1", tier: "admin" }],
       };
       const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
@@ -159,7 +155,7 @@ describe("PlanRepository", () => {
         budget: 100,
         startDate: "2024-01-01",
         endDate: "2024-01-05",
-        destinations: [{ name: "Berlin" }],
+        destinationName: "Berlin",
         members: [{ userId: "member-1", tier: "admin" }],
       });
       expect(from).toHaveBeenCalledWith("plans");
@@ -204,7 +200,7 @@ describe("PlanRepository", () => {
         budget: 250,
         start_date: "2024-02-01",
         end_date: "2024-02-03",
-        plan_destinations: [{ destinations: { name: "Oslo" } }],
+        destination_name: "Oslo",
         plan_members: [{ user_id: "member-1", tier: "viewer" }],
       };
       const { supabase, from, chain: planQuery } = buildSupabaseMock("plans", { data, error: null });
@@ -219,11 +215,11 @@ describe("PlanRepository", () => {
         budget: 250,
         startDate: "2024-02-01",
         endDate: "2024-02-03",
-        destinations: [{ name: "Oslo" }],
+        destinationName: "Oslo",
         members: [{ userId: "member-1", tier: "viewer" }],
       });
       expect(from).toHaveBeenCalledWith("plans");
-      expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_destinations"));
+      expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("destination_name"));
       expect(planQuery.select).toHaveBeenCalledWith(expect.stringContaining("plan_members"));
       expect(planQuery.select).toHaveBeenCalledWith(expect.not.stringContaining("edit_token"));
       expect(planQuery.eq).toHaveBeenCalledWith("public_slug", "public-slug");
@@ -240,7 +236,7 @@ describe("PlanRepository", () => {
         start_date: "2024-05-01",
         end_date: "2024-05-04",
         is_public: true,
-        plan_destinations: [{ destinations: { name: "Lisbon" } }],
+        destination_name: "Lisbon",
       };
       const { supabase, from, chain } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);
@@ -255,7 +251,7 @@ describe("PlanRepository", () => {
         startDate: "2024-05-01",
         endDate: "2024-05-04",
         isPublic: true,
-        destinations: [{ name: "Lisbon" }],
+        destinationName: "Lisbon",
       });
       expect(from).toHaveBeenCalledWith("plans");
       expect(chain.select).toHaveBeenCalledWith(expect.stringContaining("is_public"));
@@ -282,7 +278,7 @@ describe("PlanRepository", () => {
         start_date: null,
         end_date: null,
         is_public: false,
-        plan_destinations: null,
+        destination_name: null,
       };
       const { supabase, chain } = buildSupabaseMock("plans", { data, error: null });
       vi.mocked(createSupabaseServerClient).mockReturnValueOnce(supabase);

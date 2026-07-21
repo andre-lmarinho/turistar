@@ -22,5 +22,4 @@ Collaborative Editing
 
 Plan Data
   └─> Search Feature (destination search for plan creation)
-        └─> VisitedCountries Feature (aggregates countries from destinations)
 ```

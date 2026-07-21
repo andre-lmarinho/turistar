@@ -11,12 +11,12 @@ export async function generatePlannerMetadata(identifier: string): Promise<Metad
   try {
     const { data } = await supabase
       .from("plans")
-      .select("title, plan_destinations(destinations(name))")
+      .select("title, destination_name")
       .eq(isUuid(identifier) ? "id" : "public_slug", identifier)
       .maybeSingle();
 
     const titleFromPlan = data?.title?.trim();
-    const titleFromDest = data?.plan_destinations?.[0]?.destinations?.name?.trim();
+    const titleFromDest = data?.destination_name?.trim();
     const resolvedTitle = titleFromPlan || titleFromDest || "Planner";
 
     return { title: `${resolvedTitle} | Turistar App` };

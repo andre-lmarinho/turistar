@@ -17,12 +17,6 @@ export async function goToPlanner(page: Page, planSlug = "plan-e2e-001") {
 
 export async function goToDashboard(page: Page) {
   await authenticateE2EUser(page);
-  await page.goto(`/u/${E2E_USER_SLUG}/planners`);
+  await page.goto(`/u/${E2E_USER_SLUG}`);
   await expect(page.getByRole("heading", { name: /your planners/i })).toBeVisible();
-}
-
-export async function goToInspirations(page: Page) {
-  await authenticateE2EUser(page);
-  await page.goto(`/u/${E2E_USER_SLUG}/inspirations`);
-  await expect(page.getByRole("heading", { name: /be inspired/i }).first()).toBeVisible();
 }

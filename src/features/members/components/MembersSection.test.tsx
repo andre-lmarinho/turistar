@@ -105,7 +105,7 @@ describe("MembersSection", () => {
     fireEvent.click(await screen.findByRole("option", { name: "Leave planner" }));
 
     await waitFor(() => expect(leaveMutateAsync).toHaveBeenCalled());
-    expect(pushMock).toHaveBeenCalledWith("/u/member-slug/planners");
+    expect(pushMock).toHaveBeenCalledWith("/u/member-slug");
     expect(refreshMock).toHaveBeenCalled();
   });
 });

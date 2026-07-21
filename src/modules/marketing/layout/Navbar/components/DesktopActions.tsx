@@ -54,7 +54,7 @@ export function DesktopActions() {
     };
   }, []);
 
-  const destination = profile?.slug ? `/u/${profile.slug}/planners` : null;
+  const destination = profile?.slug ? `/u/${profile.slug}` : null;
 
   return (
     <div className="ml-auto flex items-center gap-6 lg:ml-0 lg:justify-self-end">
