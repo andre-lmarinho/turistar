@@ -3,7 +3,7 @@ process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "anon";
 process.env.GEOAPIFY_KEY = process.env.GEOAPIFY_KEY ?? "test-key";
 
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import type React from "react";
 import { createElement } from "react";
 

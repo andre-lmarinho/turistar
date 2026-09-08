@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { GET } from "./route";
 
 function createRequest(segments: string[]): NextRequest {
-  return { url: "https://example.com/api/tiles/" + segments.join("/") + ".png" } as unknown as NextRequest;
+  return { url: `https://example.com/api/tiles/${segments.join("/")}.png` } as unknown as NextRequest;
 }
 
 describe("GET /api/tiles/[...segments]", () => {
