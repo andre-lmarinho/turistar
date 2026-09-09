@@ -1,7 +1,7 @@
 import { DemoGuideDialog } from "@/features/demo/components/DemoGuideDialog";
 import type { UserDestination, UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
-import { DashboardMap } from "@/modules/user/components/DashboardMap";
 import type { TravelCountry } from "@/modules/user/components/DestinationsMap";
+import { DestinationsMap } from "@/modules/user/components/DestinationsMap";
 import { PlannersSection } from "@/modules/user/components/PlannersSection";
 import { getUpcomingPlan, UpcomingTripSection } from "@/modules/user/components/UpcomingTripSection";
 import { MapPin } from "@/ui/components/icon";
@@ -63,7 +63,7 @@ export function DashboardView({ plans, destinations, isDemo = false }: Dashboard
               Your travel map
             </h2>
           </div>
-          <DashboardMap countries={countries} />
+          <DestinationsMap countries={countries} />
         </section>
 
         <PlannersSection plans={plans} />
