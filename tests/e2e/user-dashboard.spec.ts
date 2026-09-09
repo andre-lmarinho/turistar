@@ -21,6 +21,8 @@ test.describe("User dashboard", () => {
     await goToUserPlanners(page);
 
     await expect(page.getByRole("heading", { name: "Your travel map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Zoom in" })).toBeVisible();
+    await expect(page.getByRole("img", { name: "World travel map" })).toBeVisible();
+    await expect(page.getByText("Visited", { exact: true })).toBeVisible();
+    await expect(page.getByText("Yet to explore", { exact: true })).toBeVisible();
   });
 });
