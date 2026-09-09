@@ -1,10 +1,10 @@
 "use client";
 
-import L from "leaflet";
-import { useEffect, useMemo, useState } from "react";
-import { GeoJSON, MapContainer, Popup, TileLayer, useMap, ZoomControl } from "react-leaflet";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-import { dashboardTileUrl, tileAttribution } from "@/ui/components/map/config";
+import { projectCountryPoint } from "@/modules/user/lib/projectCountryPoint";
+
+import { cn } from "@/ui/utils/cn";
 
 export type TravelCountry = {
   code: string;
@@ -13,150 +13,198 @@ export type TravelCountry = {
   trips: { id: string; title: string }[];
 };
 
-type CountryFeature = { properties: Record<string, unknown> | null };
-type CountryCollection = { features: CountryFeature[] };
-type SelectedCountry = TravelCountry & { name: string; position: [number, number] };
+type MapCountry = { code: string; name: string; path: string };
+type Polygon = { type: "Polygon"; coordinates: [number, number][][] };
+type MultiPolygon = { type: "MultiPolygon"; coordinates: [number, number][][][] };
+type CountryCollection = {
+  features: {
+    geometry: Polygon | MultiPolygon | null;
+    properties: { name: string; "ISO3166-1-Alpha-2": string };
+  }[];
+};
 
-const countriesUrl = "/data/countries.geojson";
-
-function countryKey(feature: CountryFeature): string {
-  const value = feature.properties?.["ISO3166-1-Alpha-2"] ?? feature.properties?.name;
-  return typeof value === "string" ? value.trim().toLocaleLowerCase() : "";
-}
-
-function countryName(feature: CountryFeature): string {
-  return typeof feature.properties?.name === "string" ? feature.properties.name : "Visited country";
-}
-
-function CountryLayer({ countries }: { countries: TravelCountry[] }) {
-  const map = useMap();
-  const [boundaries, setBoundaries] = useState<CountryCollection | null>(null);
-  const [selected, setSelected] = useState<SelectedCountry | null>(null);
-
-  const countriesByKey = useMemo(
-    () => new Map(countries.map((country) => [country.code.trim().toLocaleLowerCase(), country])),
-    [countries]
-  );
-
-  const matchedFeatures = useMemo(() => {
-    if (!boundaries) return [];
-    return boundaries.features.flatMap((feature) => {
-      const country = countriesByKey.get(countryKey(feature));
-      return country ? [{ feature, country }] : [];
-    });
-  }, [boundaries, countriesByKey]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(countriesUrl, { cache: "force-cache" })
-      .then((response) => {
-        if (!response.ok) throw new Error("Unable to load country boundaries");
-        return response.json() as Promise<CountryCollection>;
-      })
-      .then((data) => {
-        if (!cancelled) setBoundaries(data);
-      })
-      .catch(() => {
-        if (!cancelled) setBoundaries(null);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (matchedFeatures.length === 0) return;
-
-    const bounds = L.geoJSON(matchedFeatures.map(({ feature }) => feature) as never).getBounds();
-    if (bounds.isValid()) map.fitBounds(bounds, { padding: [32, 32], maxZoom: 5 });
-  }, [map, matchedFeatures]);
-
-  return (
-    <>
-      {matchedFeatures.map(({ feature, country }) => (
-        <GeoJSON
-          key={countryKey(feature) || countryName(feature)}
-          data={feature as never}
-          style={() => ({
-            color: selected?.code === country.code ? "var(--primary)" : "var(--border)",
-            weight: selected?.code === country.code ? 2 : 1,
-            fillColor: "var(--primary)",
-            fillOpacity: selected?.code === country.code ? 0.3 : 0.16,
-          })}
-          onEachFeature={(rawFeature, layer) => {
-            const typedFeature = rawFeature as CountryFeature;
-            const center = L.geoJSON(typedFeature as never)
-              .getBounds()
-              .getCenter();
-            const selectCountry = (position: [number, number]) =>
-              setSelected({ ...country, name: countryName(typedFeature), position });
-
-            layer.on({
-              mouseover: (event) => {
-                event.target.setStyle({ weight: 2, fillOpacity: 0.3 });
-                selectCountry([center.lat, center.lng]);
-              },
-              mouseout: (event) => {
-                event.target.setStyle({ weight: 1, fillOpacity: 0.16 });
-                setSelected(null);
-              },
-              click: (event) => selectCountry([event.latlng.lat, event.latlng.lng]),
-            });
-          }}
-        />
-      ))}
-      {selected ? (
-        <Popup
-          position={selected.position}
-          closeButton
-          autoPan={false}
-          eventHandlers={{ remove: () => setSelected(null) }}>
-          <div className="min-w-44 space-y-2">
-            <p className="font-semibold">{selected.name}</p>
-            <div className="text-muted-foreground flex gap-3 text-xs">
-              <span>
-                <strong className="text-foreground">{selected.tripCount}</strong>{" "}
-                {selected.tripCount === 1 ? "trip" : "trips"}
-              </span>
-              <span>
-                <strong className="text-foreground">{selected.locationCount}</strong>{" "}
-                {selected.locationCount === 1 ? "location" : "locations"}
-              </span>
-            </div>
-            <ul className="border-border space-y-1 border-t pt-2 text-xs">
-              {selected.trips.map((trip) => (
-                <li key={trip.id} className="truncate">
-                  {trip.title}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Popup>
-      ) : null}
-    </>
-  );
+// The local boundaries are already simplified and split at the antimeridian.
+// Equal Earth preserves relative country areas without a tile service.
+function countryPath(geometry: Polygon | MultiPolygon | null): string {
+  if (!geometry) return "";
+  const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+  return polygons
+    .flatMap((polygon) =>
+      polygon.map(
+        (ring) =>
+          `${ring
+            .map(
+              ([longitude, latitude], index) =>
+                `${index === 0 ? "M" : "L"}${projectCountryPoint(longitude, latitude)}`
+            )
+            .join(" ")}Z`
+      )
+    )
+    .join(" ");
 }
 
 export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
+  const [boundaries, setBoundaries] = useState<MapCountry[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const request = useRef<AbortController | null>(null);
+  const [hover, setHover] = useState<(MapCountry & { x: number; y: number }) | null>(null);
+  const descriptionId = useId();
+
+  const loadBoundaries = useCallback(() => {
+    request.current?.abort();
+    const controller = new AbortController();
+    request.current = controller;
+    setFailed(false);
+    fetch("/data/countries.geojson", { cache: "force-cache", signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Unable to load travel map country boundaries");
+        return response.json() as Promise<CountryCollection>;
+      })
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        setBoundaries(
+          data.features
+            .map((feature) => ({
+              code: feature.properties["ISO3166-1-Alpha-2"].toLowerCase(),
+              name: feature.properties.name,
+              path: countryPath(feature.geometry),
+            }))
+            .filter((country) => country.code !== "aq" && country.path)
+        );
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setFailed(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    loadBoundaries();
+    return () => request.current?.abort();
+  }, [loadBoundaries]);
+
+  const visited = countries.find((country) => country.code.trim().toLowerCase() === hover?.code);
+
+  function showCountry(target: EventTarget, pointer?: { clientX: number; clientY: number }) {
+    if (!(target instanceof SVGElement)) return;
+    const country = boundaries?.find((item) => item.name === target.dataset.country);
+    if (!country) return;
+    const bounds = target.ownerSVGElement?.parentElement?.getBoundingClientRect();
+    if (!bounds) return;
+    const countryBounds = target.getBoundingClientRect();
+    setHover({
+      ...country,
+      x: Math.max(
+        116,
+        Math.min(
+          bounds.width - 116,
+          (pointer?.clientX ?? countryBounds.x + countryBounds.width / 2) - bounds.left
+        )
+      ),
+      y: Math.max(64, (pointer?.clientY ?? countryBounds.y) - bounds.top),
+    });
+  }
+
+  if (failed)
+    return (
+      <div className="flex min-h-75 w-full flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 text-center shadow-sm">
+        <p className="text-muted-foreground text-sm" role="alert">
+          We couldn’t load your travel map.
+        </p>
+        <button
+          type="button"
+          className="text-foreground rounded-md border px-4 py-2 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+          onClick={loadBoundaries}>
+          Try again
+        </button>
+      </div>
+    );
+
+  if (!boundaries)
+    return (
+      <div
+        className="bg-muted min-h-75 w-full rounded-xl shadow-sm motion-safe:animate-pulse md:min-h-105"
+        role="status">
+        <span className="sr-only">Loading travel map…</span>
+      </div>
+    );
+
   return (
-    <MapContainer
-      center={[20, 0]}
-      zoom={2}
-      zoomControl={false}
-      zoomDelta={0.25}
-      zoomSnap={0.25}
-      wheelDebounceTime={100}
-      wheelPxPerZoomLevel={240}
-      worldCopyJump
-      scrollWheelZoom
-      style={{ width: "100%", height: "100%" }}>
-      <CountryLayer countries={countries} />
-      <ZoomControl position="bottomright" />
-      <TileLayer url={dashboardTileUrl} attribution={tileAttribution} maxZoom={20} />
-    </MapContainer>
+    <div className="w-full rounded-xl bg-white p-4 shadow-sm md:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="text-muted-foreground flex items-center gap-4 text-xs">
+          <span className="flex items-center gap-2">
+            <span className="bg-primary h-2.5 w-2.5 rounded-sm" />
+            Visited
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="bg-muted border-border h-2.5 w-2.5 rounded-sm border" />
+            Yet to explore
+          </span>
+        </div>
+      </div>
+      <figure
+        className="relative mx-auto max-w-5xl py-5"
+        onMouseOver={(event) => showCountry(event.target, event)}
+        onMouseOut={() => setHover(null)}
+        onFocus={(event) => showCountry(event.target)}
+        onClick={(event) => showCountry(event.target)}
+        onBlur={() => setHover(null)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setHover(null);
+        }}>
+        <svg viewBox="0 0 1000 460" className="w-full overflow-visible" aria-label="World travel map">
+          <title>World travel map</title>
+          {boundaries.map((country) => {
+            const isVisited = countries.some(
+              (visitedCountry) => visitedCountry.code.trim().toLowerCase() === country.code
+            );
+            const isSelected = hover?.name === country.name;
+            return (
+              <path
+                key={country.name}
+                d={country.path}
+                fillRule="evenodd"
+                vectorEffect="non-scaling-stroke"
+                strokeWidth={0.7}
+                data-country={country.name}
+                tabIndex={0}
+                aria-label={`${country.name} — ${isVisited ? "Visited" : "Not visited yet"}`}
+                aria-describedby={isSelected ? descriptionId : undefined}
+                className={cn(
+                  "stroke-white cursor-pointer focus-visible:outline-2 focus-visible:outline-ring",
+                  isVisited ? "fill-primary" : "fill-muted",
+                  isSelected && "fill-primary/60"
+                )}
+              />
+            );
+          })}
+        </svg>
+        {hover ? (
+          <div
+            id={descriptionId}
+            role="tooltip"
+            className="bg-popover text-popover-foreground border-border pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border px-3 py-2 shadow-md"
+            style={{ left: hover.x, top: hover.y - 12 }}>
+            <p className="text-sm font-semibold">{hover.name}</p>
+            <p className="text-muted-foreground text-xs">{visited ? "Visited" : "Not visited yet"}</p>
+            {visited ? (
+              <>
+                <p className="text-muted-foreground mt-2 text-xs tabular-nums">
+                  {visited.tripCount} {visited.tripCount === 1 ? "trip" : "trips"} · {visited.locationCount}{" "}
+                  {visited.locationCount === 1 ? "location" : "locations"}
+                </p>
+                <ul className="text-muted-foreground mt-2 text-xs">
+                  {visited.trips.map((trip) => (
+                    <li className="wrap-break-word" key={trip.id}>
+                      {trip.title}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </figure>
+    </div>
   );
 }
-
-export default DestinationsMap;
