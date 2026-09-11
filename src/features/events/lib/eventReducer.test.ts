@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import type { DayPlan } from "@/features/activity/types";
 
-import { applyEvent } from "../lib/eventReducer";
-import type { EventRecord } from "../types";
+import { applyEvent, reduceEvents } from "../lib/eventReducer";
+import type { EventRecord, PlanOperation } from "../types";
 
 const baseDay: DayPlan = {
   id: "day-1",
@@ -90,4 +90,67 @@ describe("eventReducer", () => {
 
     expect(result.map((day) => day.id)).toEqual(["day-b", "day-a", "day-c"]);
   });
+});
+
+it("replays the same transitions locally and from history without mutating the input", () => {
+  const original = structuredClone(baseDay);
+  const operations: PlanOperation[] = [
+    {
+      type: "day.created",
+      payload: { day: { id: "day-2", label: "Day 2", position: "2048", activities: [] } },
+    },
+    { type: "activity.updated", payload: { activityId: "a-1", patch: { description: "Local note" } } },
+    {
+      type: "activity.moved",
+      payload: { activityId: "a-1", fromDayId: "day-1", toDayId: "day-2", position: "1024" },
+    },
+    // A concurrent move has made the recorded source stale.
+    {
+      type: "activity.moved",
+      payload: { activityId: "a-1", fromDayId: "day-1", toDayId: "day-1", position: "4096" },
+    },
+    { type: "activity.deleted", payload: { activityId: "a-3" } },
+  ];
+  const local = operations.reduce(applyEvent, [baseDay]);
+  const history = operations.map(
+    (operation, index): EventRecord => ({
+      ...operation,
+      id: `e${index}`,
+      planId: "p1",
+      version: index + 1,
+      createdAt: new Date(0).toISOString(),
+    })
+  );
+  const confirmed = reduceEvents(
+    { days: [baseDay], version: 0, updatedAt: new Date(0).toISOString() },
+    history
+  );
+  expect(confirmed.days).toEqual(local);
+  expect(local[0].activities).toHaveLength(1);
+  expect(local[0].activities[0]).toMatchObject({ id: "a-1", description: "Local note" });
+  expect(local[1].activities).toEqual([]);
+  expect(baseDay).toEqual(original);
+});
+
+it("clears coordinates through JSON-safe patches without erasing unrelated fields", () => {
+  const located = { ...baseDay, activities: [{ ...baseDay.activities[0], latitude: 12, longitude: 34 }] };
+  const operation: PlanOperation = {
+    type: "activity.updated",
+    payload: { activityId: "a-1", patch: { address: "New address", latitude: null, longitude: null } },
+  };
+  const serialized: PlanOperation = JSON.parse(JSON.stringify(operation));
+  const updated = applyEvent([located], serialized)[0].activities[0];
+  expect(updated.latitude).toBeUndefined();
+  expect(updated.longitude).toBeUndefined();
+  expect(updated.title).toBe("Breakfast");
+  expect(updated.address).toBe("New address");
+});
+
+it("does not recreate an activity or remove it from its source when a move target is missing", () => {
+  const operation: PlanOperation = {
+    type: "activity.moved",
+    payload: { activityId: "a-1", fromDayId: "day-1", toDayId: "deleted-day", position: "1024" },
+  };
+  expect(applyEvent([baseDay], operation)).toEqual([baseDay]);
+  expect(applyEvent([], operation)).toEqual([]);
 });

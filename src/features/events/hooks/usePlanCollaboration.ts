@@ -1,14 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { cloneDays } from "@/features/activity/lib/activityOperations";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { DayPlan } from "@/features/activity/types";
 import { trpc } from "@/trpc/react";
 
-import { diffEvents } from "../lib/diffEvents";
-import { applyEvent, reduceEvents } from "../lib/eventReducer";
+import { applyEvent, normalizeDays, reduceEvents } from "../lib/eventReducer";
 import { subscribeToEvents } from "../services/eventsRealtimeClient";
-import type { EventInsert, EventRecord } from "../types";
+import type { EventInsert, EventRecord, EventState, PlanOperation } from "../types";
 
 interface UsePlanCollaborationOptions {
   enabled?: boolean;
@@ -16,243 +14,291 @@ interface UsePlanCollaborationOptions {
   initialDays?: DayPlan[];
 }
 
-interface PersistMutation {
-  mutate: (state: DayPlan[]) => void;
-  mutateAsync: (state: DayPlan[]) => Promise<void>;
-  isPending: boolean;
+class VersionGapError extends Error {
+  constructor(
+    planId: string,
+    readonly throughVersion: number
+  ) {
+    super(
+      `Unable to synchronize planner: planId=${planId}, incomplete history through version=${throughVersion}`
+    );
+  }
 }
 
-function applyOperations(days: DayPlan[], operations: EventInsert[], baseVersion: number): DayPlan[] {
-  const createdAt = new Date().toISOString();
-  return operations.reduce(
-    (current, operation, index) =>
-      applyEvent(current, {
-        ...operation,
-        version: baseVersion + index + 1,
-        createdAt,
-      }),
-    cloneDays(days)
-  );
+function createSession(planId: string, enabled: boolean, initialDays: DayPlan[]) {
+  const seed = normalizeDays(initialDays);
+  return {
+    planId,
+    enabled,
+    seed,
+    confirmed: { days: seed, version: 0 } as EventState,
+    pending: [] as EventInsert[],
+    received: new Map<number, EventRecord>(),
+    loaded: !enabled,
+    seedRequired: false,
+    seedQueued: false,
+    active: true,
+    generation: 0,
+    loading: null as Promise<boolean> | null,
+    sending: null as Promise<void> | null,
+    error: null as unknown,
+  };
+}
+
+type Session = ReturnType<typeof createSession>;
+
+function project(session: Session): DayPlan[] {
+  return session.pending.reduce(applyEvent, session.confirmed.days);
+}
+
+/** HTTP responses and realtime deliveries share one ordered confirmation path. */
+function receive(session: Session, events: EventRecord[]) {
+  for (const event of events) {
+    if (event.planId === session.planId) session.received.set(event.version, event);
+  }
+  if (!session.loaded) return;
+
+  for (const event of [...session.received.values()].sort((a, b) => a.version - b.version)) {
+    if (event.version > session.confirmed.version + 1) break;
+    if (event.version > session.confirmed.version) {
+      session.confirmed = {
+        days: applyEvent(session.confirmed.days, event),
+        version: event.version,
+      };
+    }
+    session.pending = session.pending.filter((pending) => pending.id !== event.id);
+    session.received.delete(event.version);
+  }
+  if (
+    session.error instanceof VersionGapError &&
+    session.received.size === 0 &&
+    session.confirmed.version >= session.error.throughVersion
+  ) {
+    session.error = null;
+  }
 }
 
 export function usePlanCollaboration(
   planId: string,
-  { enabled = true, actorId, initialDays }: UsePlanCollaborationOptions = {}
-): {
-  data?: DayPlan[];
-  isLoading: boolean;
-  error?: unknown;
-  persistDays: PersistMutation;
-  retryPending: () => Promise<void>;
-  hasPendingChanges: boolean;
-  version: number;
-} {
-  const versionRef = useRef(0);
-  const snapshotRef = useRef<DayPlan[]>([]);
-  const pendingEventIdsRef = useRef(new Set<string>());
-  const seedDaysRef = useRef(initialDays ? cloneDays(initialDays) : []);
-  const [state, setState] = useState<{ days: DayPlan[]; version: number } | null>(() =>
-    initialDays ? { days: cloneDays(initialDays), version: 0 } : null
-  );
-  const [isLoaded, setIsLoaded] = useState(!enabled);
-  const loadedRef = useRef(!enabled);
-  const pendingOperationsRef = useRef<EventInsert[] | null>(null);
-  const deferredPersistingRef = useRef(false);
-  const [hasPendingChanges, setHasPendingChanges] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<unknown>(null);
-  const [isPending, setIsPending] = useState(false);
-  const trpcUtils = trpc.useUtils();
-  const appendMutation = trpc.viewer.events.append.useMutation();
+  { enabled = true, actorId, initialDays = [] }: UsePlanCollaborationOptions = {}
+) {
+  // A different document gets a separate session; old network responses cannot write into it.
+  const [session, setSession] = useState(() => createSession(planId, enabled, initialDays));
+  if (session.planId !== planId || session.enabled !== enabled) {
+    setSession(createSession(planId, enabled, initialDays));
+  }
+  const [revision, render] = useReducer((value: number) => value + 1, 0);
+  const utils = trpc.useUtils();
+  const append = trpc.viewer.events.append.useMutation();
+  const transport = useRef({ utils, append, actorId });
+  transport.current = { utils, append, actorId };
 
-  const load = useCallback(async () => {
-    if (!planId || !enabled) return;
-    setIsLoading(true);
-    try {
-      const snapshot = await trpcUtils.viewer.snapshots.get.fetch({ planId });
-      const events = await trpcUtils.viewer.events.list.fetch({
-        planId,
-        sinceVersion: snapshot.version,
-      });
-      const reduced = reduceEvents(snapshot, events);
-      const baseDays =
-        reduced.version === 0 && reduced.days.length === 0 ? cloneDays(seedDaysRef.current) : reduced.days;
-      versionRef.current = reduced.version;
-      snapshotRef.current = cloneDays(baseDays);
-      const pendingOperations = pendingOperationsRef.current;
-      const displayedDays =
-        pendingOperations && !deferredPersistingRef.current
-          ? applyOperations(baseDays, pendingOperations, reduced.version)
-          : baseDays;
-      setState({ version: reduced.version, days: displayedDays });
-      setError(null);
-      loadedRef.current = true;
-      setIsLoaded(true);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setIsLoading(false);
+  const publish = useCallback(() => {
+    if (session.active) render();
+  }, [session]);
+
+  const load = useCallback((): Promise<boolean> => {
+    if (!session.active || !session.enabled || !session.planId) return Promise.resolve(false);
+    if (session.loading) return session.loading;
+    const generation = session.generation;
+    const current = () => session.active && session.generation === generation;
+    const sinceVersion = session.confirmed.version;
+    const request = async () => {
+      try {
+        const snapshot = await transport.current.utils.viewer.snapshots.get.fetch({ planId });
+        // A snapshot alone cannot acknowledge an append whose response was lost.
+        const events = await transport.current.utils.viewer.events.list.fetch({
+          planId,
+          sinceVersion: Math.min(snapshot.version, sinceVersion),
+        });
+        if (!current()) return false;
+        let expectedVersion = snapshot.version;
+        for (const event of events) {
+          if (event.version <= expectedVersion) continue;
+          if (event.version !== expectedVersion + 1) {
+            throw new Error(
+              `Unable to synchronize planner: planId=${planId}, missing version=${expectedVersion + 1}`
+            );
+          }
+          expectedVersion = event.version;
+        }
+        const reduced = reduceEvents(snapshot, events);
+        if (reduced.version >= session.confirmed.version) {
+          session.seedRequired = reduced.version === 0 && reduced.days.length === 0;
+          session.confirmed = session.seedRequired ? { version: 0, days: session.seed } : reduced;
+        }
+        session.loaded = true;
+        receive(session, events);
+        if (session.received.size > 0) {
+          throw new VersionGapError(planId, Math.max(...session.received.keys()));
+        }
+        return true;
+      } catch (error) {
+        if (
+          current() &&
+          (!(error instanceof VersionGapError) || !session.error || session.error instanceof VersionGapError)
+        ) {
+          // A transient gap must not replace an append failure that still requires retry.
+          session.error = error;
+        }
+        return false;
+      } finally {
+        if (current()) {
+          session.loading = null;
+          publish();
+        }
+      }
+    };
+    session.loading = request();
+    publish();
+    return session.loading;
+  }, [planId, publish, session]);
+
+  const flush = useCallback((): Promise<void> => {
+    if (session.sending) return session.sending;
+    if (!session.active || !session.loaded || session.loading || session.error || !session.pending.length) {
+      return Promise.resolve();
     }
-  }, [enabled, planId, trpcUtils]);
+    const generation = session.generation;
+    const current = () => session.active && session.generation === generation;
+    const send = async () => {
+      let conflicts = 0;
+      try {
+        while (current() && session.pending.length) {
+          if (session.loading && !(await session.loading)) return;
+          if (!current() || !session.pending.length) return;
+          if (session.seedRequired && !session.seedQueued) {
+            const seedEvents: EventInsert[] = session.seed.map((day, index) => ({
+              id: crypto.randomUUID(),
+              planId,
+              actorId: transport.current.actorId,
+              type: "day.created",
+              payload: { day: { ...day, position: day.position ?? String((index + 1) * 1024) } },
+            }));
+            session.pending = [...seedEvents, ...session.pending];
+            session.seedQueued = true;
+          }
+          const batch = [...session.pending];
+          const baseVersion = session.confirmed.version;
+          const response = await transport.current.append.mutateAsync({ planId, baseVersion, events: batch });
+          if (!current()) return;
+          receive(session, response.events);
+          publish();
+          if (response.version > session.confirmed.version || session.received.size > 0) {
+            if (!(await load())) return;
+          }
+          const unconfirmed = batch.some((event) =>
+            session.pending.some((pending) => pending.id === event.id)
+          );
+          if (unconfirmed) {
+            // The RPC reports version conflicts with an empty event list. Catch up before retrying.
+            if (++conflicts > 3 || response.version <= baseVersion) {
+              throw new Error(
+                `Unable to confirm planner changes: planId=${planId}, baseVersion=${baseVersion}`
+              );
+            }
+            if (!(await load())) return;
+          } else {
+            conflicts = 0;
+          }
+        }
+      } catch (error) {
+        // ponytail: keep the queue in memory. Durable offline storage is a separate feature.
+        if (current() && session.pending.length) session.error = error;
+      } finally {
+        if (current()) {
+          session.sending = null;
+          publish();
+        }
+      }
+    };
+    session.sending = send();
+    publish();
+    return session.sending;
+  }, [load, planId, publish, session]);
 
   useEffect(() => {
-    if (!planId || !enabled) return;
+    session.active = true;
+    session.generation += 1;
+    if (!enabled || !planId) return;
+    const channel = subscribeToEvents(
+      planId,
+      (event) => {
+        if (!session.active) return;
+        receive(session, [event]);
+        publish();
+        if (session.loaded && session.received.size > 0) void load();
+      },
+      undefined,
+      () => {
+        // SUBSCRIBED also runs after reconnect, closing the fetch/subscription gap.
+        const inFlight = session.loading;
+        if (inFlight) void inFlight.then(() => session.active && load());
+        else void load();
+      }
+    );
     void load();
-  }, [enabled, load, planId]);
-
-  const handleRealtimeEvent = useCallback(
-    (event: EventRecord) => {
-      if (!enabled) return;
-      if (pendingEventIdsRef.current.has(event.id)) {
-        pendingEventIdsRef.current.delete(event.id);
-      }
-      if (event.version <= versionRef.current) return;
-      if (event.version > versionRef.current + 1) {
-        void load();
-        return;
-      }
-      const nextDays = applyEvent(snapshotRef.current, event);
-      versionRef.current = event.version;
-      snapshotRef.current = cloneDays(nextDays);
-      const pendingOperations = pendingOperationsRef.current;
-      const displayedDays =
-        pendingOperations && !deferredPersistingRef.current
-          ? applyOperations(nextDays, pendingOperations, event.version)
-          : nextDays;
-      setState({ version: event.version, days: displayedDays });
-    },
-    [enabled, load]
-  );
-
-  useEffect(() => {
-    if (!planId || !enabled) return;
-    const channel = subscribeToEvents(planId, handleRealtimeEvent);
     return () => {
+      session.active = false;
+      session.generation += 1;
+      session.loading = null;
+      session.sending = null;
       void channel.unsubscribe();
     };
-  }, [enabled, handleRealtimeEvent, planId]);
+  }, [enabled, load, planId, publish, session]);
 
-  const appendEventsWithState = useCallback(
-    async (events: EventInsert[], baseVersion: number, previous: DayPlan[]) => {
-      const { version, events: storedEvents } = await appendMutation.mutateAsync({
-        planId,
-        baseVersion,
-        events,
-      });
-      let updated = cloneDays(previous);
-      for (const ev of storedEvents) {
-        pendingEventIdsRef.current.delete(ev.id);
-        updated = applyEvent(updated, ev);
-      }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: revision wakes the sender when the mutable queue changes.
+  useEffect(() => {
+    void flush();
+  }, [flush, revision]);
 
-      const appliedVersion = storedEvents.at(-1)?.version ?? baseVersion;
-      const expectedVersion = baseVersion + storedEvents.length;
-
-      versionRef.current = appliedVersion;
-      snapshotRef.current = cloneDays(updated);
-      setState({ version: appliedVersion, days: updated });
-
-      if (version > expectedVersion || appliedVersion !== version) {
-        await load();
-        return;
-      }
-
-      versionRef.current = version;
+  const dispatch = useCallback(
+    (build: (days: DayPlan[]) => PlanOperation[]) => {
+      if (!session.active || !enabled || !planId) return;
+      const operations = build(project(session));
+      session.pending.push(
+        ...operations.map(
+          (operation): EventInsert => ({
+            ...operation,
+            id: crypto.randomUUID(),
+            planId,
+            actorId: transport.current.actorId,
+          })
+        )
+      );
+      // No network, effect or server version is needed to publish an edit.
+      publish();
     },
-    [appendMutation, load, planId]
-  );
-
-  const mutateAsync = useCallback(
-    async (nextDays: DayPlan[]) => {
-      if (!planId || !enabled) return;
-      if (!loadedRef.current) {
-        const operations = diffEvents(planId, seedDaysRef.current, nextDays, actorId);
-        pendingOperationsRef.current = operations;
-        setHasPendingChanges(true);
-        setState((current) => ({ version: current?.version ?? 0, days: cloneDays(nextDays) }));
-        return;
-      }
-      const prevSnapshot = cloneDays(snapshotRef.current);
-      const events = diffEvents(planId, snapshotRef.current, nextDays, actorId);
-      if (events.length === 0) return;
-      const baseVersion = versionRef.current;
-      setIsPending(true);
-      let optimistic = cloneDays(snapshotRef.current);
-      let tempVersion = baseVersion;
-      const now = new Date().toISOString();
-      for (const event of events) {
-        pendingEventIdsRef.current.add(event.id);
-        tempVersion += 1;
-        const optimisticEvent = {
-          ...event,
-          version: tempVersion,
-          createdAt: now,
-        } as EventRecord;
-        optimistic = applyEvent(optimistic, optimisticEvent);
-      }
-      versionRef.current = tempVersion;
-      snapshotRef.current = cloneDays(optimistic);
-      setState({ version: tempVersion, days: optimistic });
-
-      try {
-        await appendEventsWithState(events, baseVersion, prevSnapshot);
-      } catch (err) {
-        for (const event of events) {
-          pendingEventIdsRef.current.delete(event.id);
-        }
-        versionRef.current = baseVersion;
-        snapshotRef.current = prevSnapshot;
-        setState({ version: baseVersion, days: prevSnapshot });
-        setError(err);
-        void load();
-        throw err;
-      } finally {
-        setIsPending(false);
-      }
-    },
-    [actorId, appendEventsWithState, enabled, load, planId]
+    [enabled, planId, publish, session]
   );
 
   const retryPending = useCallback(async () => {
-    const operations = pendingOperationsRef.current;
-    if (!loadedRef.current || !operations) return;
+    if (session.sending) return session.sending;
+    // Resolve uncertain writes by ID before resending at a newer base version.
+    if (!(await load())) return;
+    session.error = null;
+    publish();
+    await flush();
+  }, [flush, load, publish, session]);
 
-    const rebasedDays = applyOperations(snapshotRef.current, operations, versionRef.current);
-    deferredPersistingRef.current = true;
-    try {
-      await mutateAsync(rebasedDays);
-      if (pendingOperationsRef.current === operations) {
-        pendingOperationsRef.current = null;
-        setHasPendingChanges(false);
-      }
-    } finally {
-      deferredPersistingRef.current = false;
-    }
-  }, [mutateAsync]);
-
-  useEffect(() => {
-    if (!isLoaded || !pendingOperationsRef.current) return;
-    void retryPending().catch(() => undefined);
-  }, [isLoaded, retryPending]);
-
-  const persistDays = useMemo<PersistMutation>(
-    () => ({
-      mutate: (value: DayPlan[]) => {
-        void mutateAsync(value);
-      },
-      mutateAsync,
-      isPending,
-    }),
-    [isPending, mutateAsync]
-  );
+  const discardPending = useCallback(() => {
+    if (session.sending) return;
+    session.pending = [];
+    session.seedQueued = false;
+    session.error = null;
+    publish();
+    void load();
+  }, [load, publish, session]);
 
   return {
-    data: state?.days,
-    isLoading,
-    error,
-    persistDays,
+    data: project(session),
+    dispatch,
     retryPending,
-    hasPendingChanges,
-    version: state?.version ?? 0,
+    discardPending,
+    hasPendingChanges: session.pending.length > 0,
+    isPending: session.sending !== null,
+    isLoading: enabled && (session.loading !== null || (!session.loaded && !session.error)),
+    error: session.error,
+    version: session.confirmed.version,
   };
 }

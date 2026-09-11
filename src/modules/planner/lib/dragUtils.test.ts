@@ -1,7 +1,7 @@
 import type { DragOverEvent } from "@dnd-kit/core";
 import { describe, expect, it } from "vitest";
 import type { DayPlan } from "@/features/activity/types";
-import { applyDragMove, buildIndexMaps, type DragTarget, getDragTarget } from "./dragUtils";
+import { buildIndexMaps, getDragTarget } from "./dragUtils";
 
 function createActivity(
   id: string,
@@ -22,7 +22,7 @@ function createDay(id: string, activities: ReturnType<typeof createActivity>[] =
     id,
     label: `Day ${id}`,
     position: `a${id}`,
-    activities,
+    activities: activities.map((activity, index) => ({ ...activity, position: String((index + 1) * 1024) })),
   };
 }
 
@@ -150,99 +150,5 @@ describe("getDragTarget", () => {
     const result = getDragTarget(days, over, dayMap, activityMap);
 
     expect(result).toEqual({ dayIndex: 0, activityIndex: 1 });
-  });
-});
-
-describe("applyDragMove", () => {
-  it("returns same array when no change needed", () => {
-    const a1 = createActivity("a1");
-    const days = [createDay("1", [a1])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 0, activityIndex: 0 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result).toBe(days);
-  });
-
-  it("moves activity within same day", () => {
-    const a1 = createActivity("a1");
-    const a2 = createActivity("a2");
-    const a3 = createActivity("a3");
-    const days = [createDay("1", [a1, a2, a3])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 0, activityIndex: 2 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result[0].activities[0].id).toBe("a2");
-    expect(result[0].activities[1].id).toBe("a3");
-    expect(result[0].activities[2].id).toBe("a1");
-  });
-
-  it("moves activity to different day", () => {
-    const a1 = createActivity("a1");
-    const a2 = createActivity("a2");
-    const days = [createDay("1", [a1]), createDay("2", [a2])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 1, activityIndex: 0 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result[0].activities).toHaveLength(0);
-    expect(result[1].activities).toHaveLength(2);
-    expect(result[1].activities[0].id).toBe("a1");
-    expect(result[1].activities[1].id).toBe("a2");
-  });
-
-  it("returns original when activity not found", () => {
-    const days = [createDay("1", [createActivity("a1")])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 0, activityIndex: 0 };
-
-    const result = applyDragMove(days, "nonexistent", target, activityMap);
-
-    expect(result).toBe(days);
-  });
-
-  it("clamps insert index to valid range", () => {
-    const a1 = createActivity("a1");
-    const a2 = createActivity("a2");
-    const days = [createDay("1", [a1, a2])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 0, activityIndex: 100 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result[0].activities[1].id).toBe("a1");
-    expect(result[0].activities.length).toBe(2);
-  });
-
-  it("creates new array reference when changed", () => {
-    const a1 = createActivity("a1");
-    const a2 = createActivity("a2");
-    const days = [createDay("1", [a1]), createDay("2", [a2])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 1, activityIndex: 0 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result).not.toBe(days);
-    expect(result[0]).not.toBe(days[0]);
-    expect(result[1]).not.toBe(days[1]);
-  });
-
-  it("only clones affected days", () => {
-    const a1 = createActivity("a1");
-    const a2 = createActivity("a2");
-    const a3 = createActivity("a3");
-    const days = [createDay("1", [a1]), createDay("2", [a2]), createDay("3", [a3])];
-    const { activityMap } = buildIndexMaps(days);
-    const target: DragTarget = { dayIndex: 0, activityIndex: 1 };
-
-    const result = applyDragMove(days, "a1", target, activityMap);
-
-    expect(result[1]).toBe(days[1]);
-    expect(result[2]).toBe(days[2]);
   });
 });

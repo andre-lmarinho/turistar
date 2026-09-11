@@ -2,354 +2,375 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
 import type { DayPlan } from "@/features/activity/types";
-import type { EventInsert, EventRecord } from "@/features/events/types";
+import type { EventInsert, EventRecord, PlanOperation } from "@/features/events/types";
 import type { Snapshot } from "@/features/snapshots/types";
-
 import { usePlanCollaboration } from "./usePlanCollaboration";
 
-const trpcMocks = vi.hoisted(() => {
-  const fetchSnapshot = vi.fn<() => Promise<Snapshot>>();
+type AppendInput = { planId: string; baseVersion: number; events: EventInsert[] };
+type AppendResult = { version: number; events: EventRecord[] };
+const mocks = vi.hoisted(() => {
+  const fetchSnapshot = vi.fn<(input: { planId: string }) => Promise<Snapshot>>();
   const fetchEvents = vi.fn<(input: { planId: string; sinceVersion: number }) => Promise<EventRecord[]>>();
-  const appendEvents =
+  const appendEvents = vi.fn<(input: AppendInput) => Promise<AppendResult>>();
+  const subscribe =
     vi.fn<
-      (input: {
-        planId: string;
-        baseVersion: number;
-        events: EventInsert[];
-      }) => Promise<{ version: number; events: EventRecord[] }>
+      (
+        planId: string,
+        handler: (event: EventRecord) => void,
+        client?: unknown,
+        onReady?: () => void
+      ) => { unsubscribe: () => void }
     >();
-  const subscribeToPlan =
-    vi.fn<(planId: string, handler: (event: EventRecord) => void) => { unsubscribe: () => void }>();
-  const utils = {
-    viewer: {
-      snapshots: { get: { fetch: fetchSnapshot } },
-      events: { list: { fetch: fetchEvents } },
+  return {
+    fetchSnapshot,
+    fetchEvents,
+    appendEvents,
+    subscribe,
+    utils: {
+      viewer: { snapshots: { get: { fetch: fetchSnapshot } }, events: { list: { fetch: fetchEvents } } },
     },
+    mutation: { mutateAsync: appendEvents },
   };
-  const appendMutation = { mutateAsync: appendEvents };
-  return { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan, utils, appendMutation };
 });
-
 vi.mock("@/trpc/react", () => ({
   trpc: {
-    useUtils: () => trpcMocks.utils,
-    viewer: {
-      events: { append: { useMutation: () => trpcMocks.appendMutation } },
-    },
+    useUtils: () => mocks.utils,
+    viewer: { events: { append: { useMutation: () => mocks.mutation } } },
   },
 }));
+vi.mock("@/features/events/services/eventsRealtimeClient", () => ({ subscribeToEvents: mocks.subscribe }));
 
-vi.mock("@/features/events/services/eventsRealtimeClient", () => ({
-  __esModule: true,
-  subscribeToEvents: trpcMocks.subscribeToPlan,
-}));
+const day: DayPlan = {
+  id: "2026-09-10",
+  label: "Day 1",
+  position: "1024",
+  activities: [{ id: "a1", title: "Breakfast", color: "bg-[var(--color-1)]", position: "1024" }],
+};
+const snapshot = (version = 1, days = [day]): Snapshot => ({
+  version,
+  days,
+  updatedAt: new Date(0).toISOString(),
+});
+const update = (title: string): PlanOperation[] => [
+  { type: "activity.updated", payload: { activityId: "a1", patch: { title } } },
+];
+function stored(input: AppendInput): AppendResult {
+  return {
+    version: input.baseVersion + input.events.length,
+    events: input.events.map((event, index) => ({
+      ...event,
+      version: input.baseVersion + index + 1,
+      createdAt: new Date(0).toISOString(),
+    })),
+  };
+}
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason: Error) => void;
+  const promise = new Promise<T>((yes, no) => {
+    resolve = yes;
+    reject = no;
+  });
+  return { promise, resolve, reject };
+}
+const remote: EventRecord = {
+  id: "remote-1",
+  planId: "p1",
+  version: 2,
+  createdAt: new Date(0).toISOString(),
+  type: "activity.updated",
+  payload: { activityId: "a1", patch: { description: "Remote note" } },
+};
+function emit(event: EventRecord) {
+  act(() => mocks.subscribe.mock.calls.at(-1)?.[1](event));
+}
+async function loaded() {
+  const hook = renderHook(() => usePlanCollaboration("p1"));
+  await waitFor(() => expect(hook.result.current.isLoading).toBe(false));
+  return hook;
+}
 
-const { fetchSnapshot, fetchEvents, appendEvents, subscribeToPlan } = trpcMocks;
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.fetchSnapshot.mockReset().mockResolvedValue(snapshot());
+  mocks.fetchEvents.mockReset().mockResolvedValue([]);
+  mocks.appendEvents.mockReset().mockImplementation(async (input) => stored(input));
+  mocks.subscribe.mockReset().mockReturnValue({ unsubscribe: vi.fn() });
+});
 
 describe("usePlanCollaboration", () => {
-  const baseDay: DayPlan = {
-    id: "2023-01-01",
-    label: "Day 1",
-    position: "1024",
-    activities: [
-      {
-        id: "a1",
-        title: "Breakfast",
-        color: "bg-[var(--color-1)]",
-        position: "1024",
-      },
-    ],
-  };
-
-  beforeEach(() => {
-    fetchSnapshot.mockReset();
-    fetchEvents.mockReset();
-    appendEvents.mockReset();
-    subscribeToPlan.mockReset();
-    subscribeToPlan.mockReturnValue({ unsubscribe: vi.fn() });
-  });
-
-  test("loads snapshot and realtime events", async () => {
-    fetchSnapshot.mockResolvedValue({
-      version: 1,
-      days: [baseDay],
-      updatedAt: new Date().toISOString(),
-    });
-    const incomingEvent: EventRecord = {
-      id: "evt-1",
-      planId: "p1",
-      version: 2,
-      type: "activity.created",
-      createdAt: new Date().toISOString(),
-      payload: {
-        dayId: baseDay.id,
-        position: "2048",
-        activity: {
-          id: "a2",
-          title: "Museum",
-          color: "bg-[var(--color-2)]",
-          position: "2048",
-        },
-      },
-    };
-    fetchEvents.mockResolvedValue([]);
-    const listeners: Array<(event: EventRecord) => void> = [];
-    subscribeToPlan.mockImplementation((_planId: string, handler: (event: EventRecord) => void) => {
-      listeners.push(handler);
-      return { unsubscribe: vi.fn() };
-    });
-
-    const { result } = renderHook(() => usePlanCollaboration("p1"));
-
-    await waitFor(() => {
-      expect(result.current.data).toHaveLength(1);
-    });
-
-    act(() => {
-      for (const handler of listeners) {
-        handler(incomingEvent);
-      }
-    });
-
-    await waitFor(() => {
-      expect(result.current.data?.[0].activities).toHaveLength(2);
-    });
-  });
-
-  test("diffs updates and appends events with optimistic state", async () => {
-    fetchSnapshot.mockResolvedValue({
-      version: 1,
-      days: [baseDay],
-      updatedAt: new Date().toISOString(),
-    });
-    fetchEvents.mockResolvedValue([]);
-    appendEvents.mockImplementation(
-      async ({ events }: { planId: string; baseVersion: number; events: EventInsert[] }) => ({
-        version: 2,
-        events: events.map((event) => ({
-          ...event,
-          version: 2,
-          createdAt: new Date().toISOString(),
-        })) as EventRecord[],
-      })
-    );
-    const wrapper = renderHook(() => usePlanCollaboration("p1"));
-    await waitFor(() => expect(wrapper.result.current.data).toBeTruthy());
-
-    const updatedDays: DayPlan[] = [
-      {
-        ...baseDay,
-        activities: [
-          {
-            ...baseDay.activities[0],
-            title: "Breakfast at hotel",
-          },
-        ],
-      },
-    ];
-
-    await act(async () => {
-      await wrapper.result.current.persistDays.mutateAsync(updatedDays);
-    });
-
-    expect(appendEvents).toHaveBeenCalled();
-    const eventsArg = appendEvents.mock.calls[0][0].events;
-    expect(eventsArg[0].type).toBe("activity.updated");
-    expect(eventsArg[0].payload).toMatchObject({ activityId: "a1" });
-  });
-
-  test("resyncs when append response skips intermediate versions", async () => {
-    const initialSnapshot: Snapshot = {
-      version: 1,
-      days: [baseDay],
-      updatedAt: new Date().toISOString(),
-    };
-    const resyncedSnapshot: Snapshot = {
-      version: 4,
-      days: [
-        {
-          ...baseDay,
-          activities: [
-            {
-              ...baseDay.activities[0],
-              title: "Breakfast at hotel",
-            },
-            {
-              id: "a-remote",
-              title: "Lunch",
-              color: "bg-[var(--color-3)]",
-              position: "2048",
-            },
-          ],
-        },
-      ],
-      updatedAt: new Date().toISOString(),
-    };
-
-    fetchSnapshot.mockResolvedValueOnce(initialSnapshot);
-    fetchSnapshot.mockResolvedValueOnce(resyncedSnapshot);
-    fetchEvents.mockResolvedValue([]);
-    appendEvents.mockImplementation(
-      async ({ events }: { planId: string; baseVersion: number; events: EventInsert[] }) => ({
-        version: 4,
-        events: events.map((event) => ({
-          ...event,
-          version: 4,
-          createdAt: new Date().toISOString(),
-        })) as EventRecord[],
-      })
-    );
-
-    const { result } = renderHook(() => usePlanCollaboration("plan-resync"));
-    await waitFor(() => expect(result.current.data).toBeTruthy());
-
-    const updatedDays: DayPlan[] = [
-      {
-        ...baseDay,
-        activities: [
-          {
-            ...baseDay.activities[0],
-            title: "Breakfast at hotel",
-          },
-        ],
-      },
-    ];
-
-    await act(async () => {
-      await result.current.persistDays.mutateAsync(updatedDays);
-    });
-
-    await waitFor(() => {
-      expect(fetchSnapshot).toHaveBeenCalledTimes(2);
-    });
-
-    await waitFor(() => {
-      expect(result.current.data?.[0].activities).toHaveLength(2);
-      expect(result.current.version).toBe(4);
-    });
-  });
-  test("keeps date-derived days when the persisted snapshot is empty", async () => {
-    const initialDays = [baseDay];
-    fetchSnapshot.mockResolvedValue({ version: 0, days: [], updatedAt: new Date(0).toISOString() });
-    fetchEvents.mockResolvedValue([]);
-
-    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays }));
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    expect(result.current.data).toEqual(initialDays);
-    expect(result.current.version).toBe(0);
-  });
-
-  test("keeps seeded days optimistic while collaboration loads", async () => {
-    const initialDays = [baseDay];
-    const updatedDays = [
-      { ...baseDay, activities: [{ ...baseDay.activities[0], title: "Breakfast at hotel" }] },
-    ];
-    let resolveSnapshot: (snapshot: Snapshot) => void = () => undefined;
-    fetchSnapshot.mockReturnValueOnce(
-      new Promise<Snapshot>((resolve) => {
-        resolveSnapshot = resolve;
-      })
-    );
-    fetchEvents.mockResolvedValue([]);
-    appendEvents.mockImplementation(async ({ events }) => ({
-      version: 2,
-      events: events.map((event) => ({
-        ...event,
-        version: 2,
-        createdAt: new Date().toISOString(),
-      })) as EventRecord[],
-    }));
-
-    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays }));
-    expect(result.current.data).toEqual(initialDays);
-
-    act(() => result.current.persistDays.mutate(updatedDays));
-    expect(result.current.data?.[0].activities[0].title).toBe("Breakfast at hotel");
-
-    resolveSnapshot({ version: 1, days: initialDays, updatedAt: new Date().toISOString() });
-    await waitFor(() => expect(appendEvents).toHaveBeenCalled());
-  });
-
-  test("keeps deferred edits available after an append failure and retries them", async () => {
-    const initialDays = [baseDay];
-    const updatedDays = [
-      { ...baseDay, activities: [{ ...baseDay.activities[0], title: "Breakfast at hotel" }] },
-    ];
-    const snapshot: Snapshot = {
-      version: 1,
-      days: initialDays,
-      updatedAt: new Date().toISOString(),
-    };
-    fetchSnapshot.mockResolvedValue(snapshot);
-    fetchEvents.mockResolvedValue([]);
-    appendEvents.mockRejectedValueOnce(new Error("append failed"));
-    appendEvents.mockImplementationOnce(async ({ events }) => ({
-      version: 2,
-      events: events.map((event) => ({
-        ...event,
-        version: 2,
-        createdAt: new Date().toISOString(),
-      })) as EventRecord[],
-    }));
-
-    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays }));
-    act(() => result.current.persistDays.mutate(updatedDays));
-
-    await waitFor(() => expect(appendEvents).toHaveBeenCalledTimes(1));
+  test("renders edits immediately while append waits without inventing a confirmed version", async () => {
+    const response = deferred<AppendResult>();
+    mocks.appendEvents.mockReturnValue(response.promise);
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("Local title")));
+    expect(result.current.data[0].activities[0].title).toBe("Local title");
+    expect(result.current.version).toBe(1);
     expect(result.current.hasPendingChanges).toBe(true);
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+    expect(result.current.isPending).toBe(true);
+    await act(async () => response.resolve(stored(mocks.appendEvents.mock.calls[0][0])));
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+    expect(result.current.version).toBe(2);
+  });
 
-    await act(async () => {
-      await result.current.retryPending();
+  test("serializes requests while preserving a second edit when the first is acknowledged", async () => {
+    const first = deferred<AppendResult>();
+    const second = deferred<AppendResult>();
+    mocks.appendEvents.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("First")));
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+    act(() => result.current.dispatch((days) => update(`${days[0].activities[0].title} then second`)));
+    expect(result.current.data[0].activities[0].title).toBe("First then second");
+    expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+    await act(async () => first.resolve(stored(mocks.appendEvents.mock.calls[0][0])));
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(2));
+    expect(result.current.data[0].activities[0].title).toBe("First then second");
+    expect(mocks.appendEvents.mock.calls[1][0].baseVersion).toBe(2);
+    await act(async () => second.resolve(stored(mocks.appendEvents.mock.calls[1][0])));
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+  });
+
+  test.each([true, false])(
+    "deduplicates realtime and HTTP acknowledgements (realtime first: %s)",
+    async (realtimeFirst) => {
+      const response = deferred<AppendResult>();
+      mocks.appendEvents.mockReturnValue(response.promise);
+      const { result } = await loaded();
+      act(() => result.current.dispatch(() => update("Local")));
+      await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+      const accepted = stored(mocks.appendEvents.mock.calls[0][0]);
+      if (realtimeFirst) emit(accepted.events[0]);
+      await act(async () => response.resolve(accepted));
+      if (!realtimeFirst) emit(accepted.events[0]);
+      emit(accepted.events[0]);
+      await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+      expect(result.current.data[0].activities[0].title).toBe("Local");
+      expect(result.current.version).toBe(2);
+      expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test("keeps remote fields and pending local edits across a version conflict", async () => {
+    const response = deferred<AppendResult>();
+    mocks.appendEvents.mockReturnValueOnce(response.promise);
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("Local")));
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+    emit(remote);
+    expect(result.current.data[0].activities[0]).toMatchObject({
+      title: "Local",
+      description: "Remote note",
     });
+    expect(result.current.version).toBe(2);
+    mocks.fetchEvents.mockResolvedValue([remote]);
+    await act(async () => response.resolve({ version: 2, events: [] }));
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+    expect(mocks.appendEvents).toHaveBeenCalledTimes(2);
+    expect(mocks.appendEvents.mock.calls[1][0].baseVersion).toBe(2);
+    expect(result.current.data[0].activities[0]).toMatchObject({
+      title: "Local",
+      description: "Remote note",
+    });
+  });
 
-    expect(appendEvents).toHaveBeenCalledTimes(2);
+  test("retains failed edits and retries the same IDs only after explicit retry", async () => {
+    mocks.appendEvents.mockRejectedValueOnce(new Error("Network unavailable"));
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("Keep me")));
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    expect(result.current.data[0].activities[0].title).toBe("Keep me");
+    expect(result.current.hasPendingChanges).toBe(true);
+    expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+    const sent = mocks.appendEvents.mock.calls[0][0].events;
+    await act(async () => result.current.retryPending());
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+    expect(mocks.appendEvents.mock.calls[1][0].events).toEqual(sent);
+    expect(mocks.fetchEvents.mock.calls.at(-1)?.[0].sinceVersion).toBe(1);
+  });
+
+  test("acknowledges a committed batch after a lost response without sending it twice", async () => {
+    mocks.appendEvents.mockRejectedValueOnce(new Error("Response lost"));
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("Already saved")));
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    const accepted = stored(mocks.appendEvents.mock.calls[0][0]);
+    mocks.fetchEvents.mockResolvedValue(accepted.events);
+    await act(async () => result.current.retryPending());
+    expect(result.current.hasPendingChanges).toBe(false);
+    expect(result.current.data[0].activities[0].title).toBe("Already saved");
+    expect(result.current.version).toBe(2);
+    expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+  });
+
+  test("keeps early edits visible while initial loading and rebases them onto remote data", async () => {
+    const initial = deferred<Snapshot>();
+    const response = deferred<AppendResult>();
+    mocks.fetchSnapshot.mockReturnValue(initial.promise);
+    mocks.appendEvents.mockReturnValue(response.promise);
+    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays: [day] }));
+    act(() => result.current.dispatch(() => update("Early edit")));
+    expect(result.current.data[0].activities[0].title).toBe("Early edit");
+    expect(mocks.appendEvents).not.toHaveBeenCalled();
+    await act(async () =>
+      initial.resolve(
+        snapshot(1, [{ ...day, activities: [{ ...day.activities[0], description: "Remote note" }] }])
+      )
+    );
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+    expect(result.current.data[0].activities[0]).toMatchObject({
+      title: "Early edit",
+      description: "Remote note",
+    });
+    await act(async () => response.resolve(stored(mocks.appendEvents.mock.calls[0][0])));
+  });
+
+  test("persists every seeded day on the first mutation of an empty plan", async () => {
+    const seeds = [
+      { ...day, activities: [] },
+      { id: "2026-09-11", label: "Day 2", position: "2048", activities: [] },
+    ];
+    mocks.fetchSnapshot.mockResolvedValue(snapshot(0, []));
+    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays: seeds }));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    act(() =>
+      result.current.dispatch(() => [
+        {
+          type: "activity.created",
+          payload: {
+            dayId: day.id,
+            activity: day.activities[0],
+            position: "1024",
+          },
+        },
+      ])
+    );
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+    const events = mocks.appendEvents.mock.calls[0][0].events;
+    expect(events.filter((event) => event.type === "day.created").map((event) => event.payload.day)).toEqual(
+      seeds
+    );
+    expect(events.at(-1)?.type).toBe("activity.created");
+    expect(result.current.data.map(({ id, label }) => ({ id, label }))).toEqual(
+      seeds.map(({ id, label }) => ({ id, label }))
+    );
+  });
+
+  test("catches up missed events after realtime subscribes or reconnects", async () => {
+    const { result } = await loaded();
+    mocks.fetchEvents.mockResolvedValue([remote]);
+    act(() => mocks.subscribe.mock.calls.at(-1)?.[3]?.());
+    await waitFor(() => expect(result.current.version).toBe(2));
+    expect(result.current.data[0].activities[0].description).toBe("Remote note");
+  });
+
+  test("catches changes missed when subscription becomes ready during initial loading", async () => {
+    const initialEvents = deferred<EventRecord[]>();
+    mocks.fetchEvents.mockReturnValueOnce(initialEvents.promise).mockResolvedValue([remote]);
+    const { result } = renderHook(() => usePlanCollaboration("p1"));
+    await waitFor(() => expect(mocks.fetchEvents).toHaveBeenCalledTimes(1));
+    act(() => mocks.subscribe.mock.calls.at(-1)?.[3]?.());
+    await act(async () => initialEvents.resolve([]));
+    await waitFor(() => expect(result.current.version).toBe(2));
+    expect(result.current.data[0].activities[0].description).toBe("Remote note");
+  });
+
+  test("does not let an old catch-up response erase newer realtime state", async () => {
+    const catchup = deferred<EventRecord[]>();
+    const { result } = await loaded();
+    mocks.fetchEvents.mockReturnValueOnce(catchup.promise);
+    act(() => mocks.subscribe.mock.calls.at(-1)?.[3]?.());
+    await waitFor(() => expect(mocks.fetchEvents).toHaveBeenCalledTimes(2));
+    emit(remote);
+    await act(async () => catchup.resolve([]));
+    expect(result.current.version).toBe(2);
+    expect(result.current.data[0].activities[0].description).toBe("Remote note");
+  });
+
+  test("discards failed pending changes after refreshing the confirmed document", async () => {
+    mocks.appendEvents.mockRejectedValueOnce(new Error("Rejected"));
+    const { result } = await loaded();
+    act(() => result.current.dispatch(() => update("Discard me")));
+    await waitFor(() => expect(result.current.error).toBeTruthy());
+    mocks.fetchEvents.mockResolvedValue([remote]);
+    await act(async () => {
+      await result.current.discardPending();
+    });
+    await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+    expect(result.current.data[0].activities[0]).toMatchObject({
+      title: "Breakfast",
+      description: "Remote note",
+    });
+  });
+
+  test("ignores the previous plan's outstanding append after navigating", async () => {
+    const response = deferred<AppendResult>();
+    mocks.appendEvents.mockReturnValueOnce(response.promise);
+    const { result, rerender } = renderHook(({ planId }) => usePlanCollaboration(planId), {
+      initialProps: { planId: "p1" },
+    });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    act(() => result.current.dispatch(() => update("Old plan edit")));
+    await waitFor(() => expect(mocks.appendEvents).toHaveBeenCalledTimes(1));
+    const nextDay = { ...day, id: "new-day", label: "New plan", activities: [] };
+    mocks.fetchSnapshot.mockResolvedValue(snapshot(4, [nextDay]));
+    rerender({ planId: "p2" });
+    await waitFor(() => expect(result.current.data[0]?.id).toBe("new-day"));
+    await act(async () => response.resolve(stored(mocks.appendEvents.mock.calls[0][0])));
+    expect(result.current.data).toEqual([nextDay]);
+    expect(result.current.version).toBe(4);
     expect(result.current.hasPendingChanges).toBe(false);
   });
+});
 
-  test("rebases deferred operations onto remote changes", async () => {
-    const initialDays = [baseDay];
-    const updatedDays = [
-      { ...baseDay, activities: [{ ...baseDay.activities[0], title: "Breakfast at hotel" }] },
-    ];
-    const remoteDays = [
-      {
-        ...baseDay,
-        activities: [
-          ...baseDay.activities,
-          { id: "remote", title: "Museum", color: "bg-[var(--color-2)]", position: "2048" },
-        ],
-      },
-    ];
-    let resolveSnapshot: (snapshot: Snapshot) => void = () => undefined;
-    fetchSnapshot.mockReturnValueOnce(
-      new Promise<Snapshot>((resolve) => {
-        resolveSnapshot = resolve;
-      })
-    );
-    fetchEvents.mockResolvedValue([]);
-    appendEvents.mockImplementation(async ({ events }) => ({
-      version: 2,
-      events: events.map((event) => ({
-        ...event,
-        version: 2,
-        createdAt: new Date().toISOString(),
-      })) as EventRecord[],
-    }));
+it("allows retry after initial loading fails and keeps edits queued in the meantime", async () => {
+  mocks.fetchSnapshot.mockRejectedValueOnce(new Error("Offline"));
+  const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays: [day] }));
+  await waitFor(() => expect(result.current.error).toBeTruthy());
+  expect(result.current.isLoading).toBe(false);
+  act(() => result.current.dispatch(() => update("Early offline edit")));
+  expect(result.current.data[0].activities[0].title).toBe("Early offline edit");
+  expect(mocks.appendEvents).not.toHaveBeenCalled();
+  await act(async () => result.current.retryPending());
+  await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+  expect(result.current.error).toBeNull();
+  expect(result.current.version).toBe(2);
+});
 
-    const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays }));
-    act(() => result.current.persistDays.mutate(updatedDays));
-    resolveSnapshot({ version: 1, days: remoteDays, updatedAt: new Date().toISOString() });
+it("resumes queued edits automatically when realtime fills a version gap", async () => {
+  const { result } = await loaded();
+  const later = { ...remote, id: "remote-3", version: 3 };
+  emit(later);
+  await waitFor(() => expect(result.current.error).toBeTruthy());
+  act(() => result.current.dispatch(() => update("Queued during gap")));
+  expect(mocks.appendEvents).not.toHaveBeenCalled();
 
-    await waitFor(() => expect(appendEvents).toHaveBeenCalled());
-
-    const events = appendEvents.mock.calls[0][0].events;
-    expect(events).toHaveLength(1);
-    expect(events[0].type).toBe("activity.updated");
-    expect(result.current.data?.[0].activities).toHaveLength(2);
-    expect(result.current.data?.[0].activities[0].title).toBe("Breakfast at hotel");
+  emit(remote);
+  await waitFor(() => expect(result.current.hasPendingChanges).toBe(false));
+  expect(result.current.error).toBeNull();
+  expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+  expect(mocks.appendEvents.mock.calls[0][0].baseVersion).toBe(3);
+  expect(result.current.data[0].activities[0]).toMatchObject({
+    title: "Queued during gap",
+    description: "Remote note",
   });
+});
+
+it("does not clear an append failure when an unrelated realtime gap resolves", async () => {
+  const failure = new Error("Append response lost");
+  mocks.appendEvents.mockRejectedValueOnce(failure);
+  const { result } = await loaded();
+  act(() => result.current.dispatch(() => update("Uncertain write")));
+  await waitFor(() => expect(result.current.error).toBe(failure));
+
+  emit({ ...remote, id: "remote-3", version: 3 });
+  await waitFor(() => expect(mocks.fetchEvents).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(result.current.isLoading).toBe(false));
+  emit(remote);
+
+  expect(result.current.version).toBe(3);
+  expect(result.current.error).toBe(failure);
+  expect(result.current.hasPendingChanges).toBe(true);
+  expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
 });

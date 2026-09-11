@@ -27,9 +27,7 @@ vi.mock("@dnd-kit/modifiers", () => ({ restrictToWindowEdges: vi.fn() }));
 vi.mock("@/features/activity/hooks/useActivityColors", () => ({
   useActivityColors: () => ({ bg: "bg-[var(--color-1)]" }),
 }));
-vi.mock("@/features/activity/lib/activityOperations", () => ({
-  getActivity: (...args: unknown[]) => shared.getActivity(...args),
-}));
+
 vi.mock("@/modules/planner/hooks/useDragHandlers", () => ({
   useDragHandlers: (...args: unknown[]) => shared.useDragHandlers(...args),
 }));
@@ -43,6 +41,7 @@ const days: DayPlan[] = [
 ];
 beforeEach(() => {
   shared.useDragHandlers.mockReturnValue({
+    previewDays: days,
     activeId: null,
     sensors: [],
     handleDragStart: vi.fn(),
@@ -59,7 +58,7 @@ describe("TripView", () => {
       <TripView
         days={days}
         onActivitySelect={onActivitySelect}
-        onDaysChange={vi.fn()}
+        onActivityMove={vi.fn()}
         onFallbackAdd={vi.fn()}
       />
     );
@@ -70,7 +69,7 @@ describe("TripView", () => {
   });
   it("hides and restores the itinerary", () => {
     render(
-      <TripView days={days} onActivitySelect={vi.fn()} onDaysChange={vi.fn()} onFallbackAdd={vi.fn()} />
+      <TripView days={days} onActivitySelect={vi.fn()} onActivityMove={vi.fn()} onFallbackAdd={vi.fn()} />
     );
     fireEvent.click(screen.getByRole("button", { name: "Hide itinerary" }));
     expect(screen.getByRole("button", { name: "Show itinerary" })).toBeInTheDocument();
@@ -80,7 +79,12 @@ describe("TripView", () => {
   it("collapses all days and delegates adding", () => {
     const onFallbackAdd = vi.fn();
     render(
-      <TripView days={days} onActivitySelect={vi.fn()} onDaysChange={vi.fn()} onFallbackAdd={onFallbackAdd} />
+      <TripView
+        days={days}
+        onActivitySelect={vi.fn()}
+        onActivityMove={vi.fn()}
+        onFallbackAdd={onFallbackAdd}
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: "Collapse all days" }));
     expect(screen.queryByText("Museum")).not.toBeInTheDocument();

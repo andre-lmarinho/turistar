@@ -7,7 +7,7 @@ import { usePlannerDocument } from "./usePlannerDocument";
 
 const mocks = vi.hoisted(() => ({
   fetch: vi.fn(),
-  persistDays: vi.fn(),
+  dispatch: vi.fn(),
 }));
 
 vi.mock("@/features/events/hooks/usePlanCollaboration", () => ({
@@ -49,11 +49,9 @@ beforeEach(() => {
     version: 1,
     retryPending: async () => undefined,
     hasPendingChanges: false,
-    persistDays: {
-      mutate: mocks.persistDays,
-      mutateAsync: vi.fn(),
-      isPending: false,
-    },
+    dispatch: mocks.dispatch,
+    discardPending: vi.fn(),
+    isPending: false,
   });
 });
 
@@ -81,29 +79,28 @@ describe("usePlannerDocument", () => {
     });
   });
 
-  it("persists day changes through the optimistic collaboration mutation", () => {
+  it("builds activity intents against the latest document supplied by dispatch", () => {
     const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
-    const nextDays = [{ ...days[0], activities: [] }];
-
-    act(() => result.current.setDays(nextDays));
-
-    expect(mocks.persistDays).toHaveBeenCalledWith(nextDays);
+    act(() => result.current.moveActivity("activity-1", { toDayId: days[1].id }));
+    const build = mocks.dispatch.mock.calls[0][0];
+    expect(build(days)).toEqual([expect.objectContaining({ type: "activity.moved" })]);
+    expect(build([])).toEqual([]);
   });
 
-  it("syncs the selected range through the optimistic collaboration mutation", () => {
+  it("emits explicit date range events", () => {
     const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
-    const range = {
-      from: new Date("2025-01-10T00:00:00.000Z"),
-      to: new Date("2025-01-12T00:00:00.000Z"),
-    };
-
-    act(() => result.current.handleRangeChange(range));
-
-    expect(mocks.persistDays).toHaveBeenCalledWith([
-      expect.objectContaining({ id: "2025-01-10" }),
-      expect.objectContaining({ id: "2025-01-11" }),
-      expect.objectContaining({ id: "2025-01-12" }),
-    ]);
+    act(() =>
+      result.current.handleRangeChange({
+        from: new Date("2025-01-10T00:00:00Z"),
+        to: new Date("2025-01-12T00:00:00Z"),
+      })
+    );
+    expect(mocks.dispatch.mock.calls[0][0](days)).toContainEqual(
+      expect.objectContaining({
+        type: "day.created",
+        payload: { day: expect.objectContaining({ id: "2025-01-12" }) },
+      })
+    );
   });
 
   it("loads destination coordinates when editing", async () => {
@@ -122,4 +119,21 @@ describe("usePlannerDocument", () => {
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
   });
+});
+
+it("encodes clearing coordinates explicitly and preserves a sparse field patch", () => {
+  const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+  act(() =>
+    result.current.updateActivity("activity-1", {
+      address: "Changed",
+      latitude: undefined,
+      longitude: undefined,
+    })
+  );
+  expect(mocks.dispatch.mock.calls[0][0](days)).toEqual([
+    {
+      type: "activity.updated",
+      payload: { activityId: "activity-1", patch: { address: "Changed", latitude: null, longitude: null } },
+    },
+  ]);
 });

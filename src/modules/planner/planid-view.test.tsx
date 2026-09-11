@@ -1,11 +1,13 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
+import type { Activity } from "@/features/activity/types";
 import type { PlannerExperience } from "@/features/plan/services/PlanService";
 import type { PlannerMode } from "./components/ModeToggleButton";
 import { PlanIdView } from "./planid-view";
 
-const { updatePlanTitleMock } = vi.hoisted(() => ({
+const { updatePlanTitleMock, createActivityMock } = vi.hoisted(() => ({
+  createActivityMock: vi.fn(),
   updatePlanTitleMock: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -32,8 +34,11 @@ vi.mock("@/trpc/react", () => ({
 vi.mock("@/modules/planner/hooks/usePlannerDocument", () => ({
   usePlannerDocument: () => ({
     planId: "p1",
-    days: [],
-    setDays: vi.fn(),
+    days: [{ id: "day-1", label: "Day 1", activities: [] }],
+    createActivity: createActivityMock,
+    updateActivity: vi.fn(),
+    deleteActivity: vi.fn(),
+    moveActivity: vi.fn(),
     dest: "Trip",
     destCoords: null,
     currentRange: undefined,
@@ -51,7 +56,23 @@ vi.mock("@/modules/planner/views/MapView", () => ({
 }));
 
 vi.mock("@/modules/planner/components/ActivityDialog", () => ({
-  ActivityDialog: () => null,
+  ActivityDialog: ({
+    activity,
+    onSave,
+  }: {
+    activity: Activity | null;
+    onSave: (patch: Partial<Activity>) => void;
+  }) =>
+    activity ? (
+      <div>
+        <button type="button" onClick={() => onSave({ budget: 25, color: "blue" })}>
+          Set draft details
+        </button>
+        <button type="button" onClick={() => onSave({ title: "New museum" })}>
+          Name draft
+        </button>
+      </div>
+    ) : null,
 }));
 
 vi.mock("@/modules/planner/components/SharePlannerDialog", () => ({
@@ -98,4 +119,16 @@ describe("PlanIdView", () => {
       expect(updatePlanTitleMock).toHaveBeenCalledWith({ planId: "p1", title: "New Title" })
     );
   });
+});
+
+it("preserves edits made to a new activity before its title is entered", () => {
+  render(<PlanIdView experience={experience} />);
+  fireEvent.click(screen.getAllByRole("button", { name: /add activity/i })[0]);
+  fireEvent.click(screen.getByRole("button", { name: "Set draft details" }));
+  expect(createActivityMock).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole("button", { name: "Name draft" }));
+  expect(createActivityMock).toHaveBeenCalledWith(
+    "day-1",
+    expect.objectContaining({ title: "New museum", budget: 25, color: "blue" })
+  );
 });

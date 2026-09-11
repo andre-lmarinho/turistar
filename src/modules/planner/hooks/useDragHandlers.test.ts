@@ -1,4 +1,5 @@
-import { renderHook } from "@testing-library/react";
+import type { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { DayPlan } from "@/features/activity/types";
 import { useDragHandlers } from "./useDragHandlers";
@@ -70,4 +71,35 @@ describe("useDragHandlers", () => {
     expect(result.current.activeId).toBeNull();
     expect(typeof result.current.handleDragStart).toBe("function");
   });
+});
+
+it("projects the drag on new remote data and commits only an ID-based move", () => {
+  const onActivityMove = vi.fn();
+  const { result, rerender } = renderHook(({ days }) => useDragHandlers(days, { onActivityMove }), {
+    initialProps: { days: mockDays },
+  });
+  act(() => result.current.handleDragStart({ active: { id: "a1" } } as DragStartEvent));
+  act(() => result.current.handleDragOver({ active: { id: "a1" }, over: { id: "2" } } as DragOverEvent));
+  expect(result.current.previewDays[1].activities.map((activity) => activity.id)).toContain("a1");
+  const remoteDays = mockDays.map((day) => ({
+    ...day,
+    activities: day.activities.map((activity) =>
+      activity.id === "a2" ? { ...activity, title: "Remote title" } : activity
+    ),
+  }));
+  rerender({ days: remoteDays });
+  expect(result.current.previewDays[0].activities[0].title).toBe("Remote title");
+  act(() => result.current.handleDragEnd({ active: { id: "a1" }, over: null } as DragEndEvent));
+  expect(onActivityMove).toHaveBeenCalledWith("a1", { toDayId: "2", beforeActivityId: undefined });
+  expect(result.current.previewDays).toBe(remoteDays);
+});
+
+it("cancels preview without publishing a mutation", () => {
+  const onActivityMove = vi.fn();
+  const { result } = renderHook(() => useDragHandlers(mockDays, { onActivityMove }));
+  act(() => result.current.handleDragStart({ active: { id: "a1" } } as DragStartEvent));
+  act(() => result.current.handleDragOver({ active: { id: "a1" }, over: { id: "2" } } as DragOverEvent));
+  act(() => result.current.handleDragCancel());
+  expect(result.current.previewDays).toBe(mockDays);
+  expect(onActivityMove).not.toHaveBeenCalled();
 });

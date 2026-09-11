@@ -3,14 +3,7 @@
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { FocusEvent } from "react";
-import { useCallback, useEffect, useState } from "react";
-import {
-  addActivityAtIndex,
-  moveActivityPosition,
-  moveActivityToDay,
-  removeActivity,
-  updateActivity,
-} from "@/features/activity/lib/activityOperations";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createBlankActivity } from "@/features/activity/lib/placeholders";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { Entry } from "@/features/budget/types";
@@ -57,12 +50,36 @@ function PlannerContent({
   const {
     planId: documentPlanId,
     days,
-    setDays,
+    createActivity,
+    updateActivity,
+    deleteActivity: removeActivity,
+    moveActivity,
+    error: syncError,
+    retryPending,
+    discardPending,
+    hasPendingChanges,
+    isPending,
+    isLoading,
     currentRange,
     handleRangeChange,
     destCoords,
   } = usePlannerDocument({ initialDays, planId, dest: destination, viewerUserId });
-  const [selectedActivity, setSelectedActivity] = useState<(Activity & { dayId: string }) | null>(null);
+  const [selection, setSelection] = useState<{ id: string } | { draft: Activity; dayId: string } | null>(
+    null
+  );
+  const selectedDay =
+    selection && "id" in selection
+      ? days.find((day) => day.activities.some((activity) => activity.id === selection.id))
+      : undefined;
+  const selected =
+    selection && "id" in selection
+      ? selectedDay?.activities.find((activity) => activity.id === selection.id)
+      : selection?.draft;
+  const selectedDayId = selectedDay?.id ?? (selection && "dayId" in selection ? selection.dayId : "");
+  const selectedActivity = useMemo(
+    () => (selected ? { ...selected, dayId: selectedDayId } : null),
+    [selected, selectedDayId]
+  );
   const [hoveredDayId, setHoveredDayId] = useState<string | null>(null);
   const [hoveredActivityId, setHoveredActivityId] = useState<string | null>(null);
   const highlightDay = useCallback((dayId: string | null) => {
@@ -73,52 +90,53 @@ function PlannerContent({
     setHoveredActivityId(activityId);
     setHoveredDayId(null);
   }, []);
-  const selectActivity = useCallback((activity: Activity, dayId: string) => {
-    setSelectedActivity({ ...activity, dayId });
+  const selectActivity = useCallback((activity: Activity) => {
+    setSelection({ id: activity.id });
   }, []);
   const save = useCallback(
     (updates: Partial<Activity>) => {
-      if (!selectedActivity) return;
-      const currentDay = days.find((day) => day.id === selectedActivity.dayId);
-      if (!currentDay) return;
-      const nextActivity = { ...selectedActivity, ...updates };
-      const exists = currentDay.activities.some((activity) => activity.id === selectedActivity.id);
-      if (!exists) {
-        if (!nextActivity.title.trim()) return;
-        setDays(addActivityAtIndex(days, selectedActivity.dayId, nextActivity, currentDay.activities.length));
+      if (!selectedActivity || !selection) return;
+      if ("draft" in selection) {
+        const activity = { ...selection.draft, ...updates };
+        if (!activity.title.trim()) {
+          setSelection({ ...selection, draft: activity });
+          return;
+        }
+        createActivity(selection.dayId, activity);
+        setSelection({ id: activity.id });
       } else {
-        setDays(updateActivity(days, selectedActivity.id, updates));
+        updateActivity(selection.id, updates);
       }
-      setSelectedActivity(nextActivity);
     },
-    [days, selectedActivity, setDays]
+    [selectedActivity, selection, createActivity, updateActivity]
   );
   const changeDay = useCallback(
-    (newDayId: string) => {
-      if (!selectedActivity || selectedActivity.dayId === newDayId) return;
-      setDays(moveActivityToDay(days, selectedActivity.id, newDayId));
-      setSelectedActivity({ ...selectedActivity, dayId: newDayId });
+    (toDayId: string) => {
+      if (!selection) return;
+      if ("draft" in selection) setSelection({ ...selection, dayId: toDayId });
+      else moveActivity(selection.id, { toDayId });
     },
-    [days, selectedActivity, setDays]
+    [selection, moveActivity]
   );
   const changePosition = useCallback(
-    (newIndex: number) => {
-      if (selectedActivity) setDays(moveActivityPosition(days, selectedActivity.id, newIndex));
+    (index: number) => {
+      if (!selectedActivity || !selectedDay) return;
+      const remaining = selectedDay.activities.filter((activity) => activity.id !== selectedActivity.id);
+      moveActivity(selectedActivity.id, { toDayId: selectedDay.id, beforeActivityId: remaining[index]?.id });
     },
-    [days, selectedActivity, setDays]
+    [selectedActivity, selectedDay, moveActivity]
   );
   const deleteActivity = useCallback(() => {
-    if (!selectedActivity) return;
-    setDays(removeActivity(days, selectedActivity.id));
-    setSelectedActivity(null);
-  }, [days, selectedActivity, setDays]);
-  const closeDialog = useCallback(() => setSelectedActivity(null), []);
+    if (selection && "id" in selection) removeActivity(selection.id);
+    setSelection(null);
+  }, [selection, removeActivity]);
+  const closeDialog = useCallback(() => setSelection(null), []);
   const [title, setTitle] = useState(initialTitle);
   const updateTitleMutation = trpc.viewer.plan.updateTitle.useMutation();
 
   const handleFallbackAdd = useCallback((dayId: string) => {
     const activity = createBlankActivity();
-    setSelectedActivity({ ...activity, dayId });
+    setSelection({ draft: activity, dayId });
   }, []);
 
   useEffect(() => {
@@ -176,6 +194,34 @@ function PlannerContent({
         </div>
       </div>
 
+      {syncError ? (
+        <div role="alert" className="mb-3 flex items-center gap-3 text-sm">
+          <span>
+            {hasPendingChanges
+              ? "Some changes haven't been saved yet. Your edits are still visible."
+              : "The planner could not be synced."}
+          </span>
+          <button
+            type="button"
+            disabled={isPending || isLoading}
+            onClick={() => void retryPending()}
+            className="underline">
+            Retry
+          </button>
+          {hasPendingChanges ? (
+            <button
+              type="button"
+              disabled={isPending || isLoading}
+              onClick={() => {
+                if (window.confirm("Discard unsynced changes? Changes already saved will remain."))
+                  discardPending();
+              }}
+              className="underline">
+              Discard unsynced changes
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <div className="relative w-full flex-1 overflow-visible">
         {mode === "overview" || mode === "map" ? (
           <div className={`absolute inset-0 z-0 ${mode === "overview" ? "invisible xl:visible" : ""}`}>
@@ -196,7 +242,7 @@ function PlannerContent({
               <BoardView
                 days={days}
                 onActivitySelect={selectActivity}
-                onDaysChange={setDays}
+                onActivityMove={moveActivity}
                 onFallbackAdd={handleFallbackAdd}
               />
             </div>
@@ -204,7 +250,7 @@ function PlannerContent({
               <TripView
                 days={days}
                 onActivitySelect={selectActivity}
-                onDaysChange={setDays}
+                onActivityMove={moveActivity}
                 onFallbackAdd={handleFallbackAdd}
                 onDayHover={highlightDay}
                 onActivityHover={highlightActivity}
@@ -216,7 +262,7 @@ function PlannerContent({
             <BoardView
               days={days}
               onActivitySelect={selectActivity}
-              onDaysChange={setDays}
+              onActivityMove={moveActivity}
               onFallbackAdd={handleFallbackAdd}
             />
           </div>
@@ -267,6 +313,7 @@ export function PlanIdView({ experience }: { experience: PlannerExperience }) {
 
   return (
     <PlannerContent
+      key={experience.planId}
       title={title}
       isDemo={experience.isDemo}
       initialEntries={experience.initialEntries}

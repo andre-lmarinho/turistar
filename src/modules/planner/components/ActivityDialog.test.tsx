@@ -112,12 +112,10 @@ describe("ActivityDialog", () => {
     expect(input).toHaveValue(0.5);
     expect(input).toBeValid();
     fireEvent.blur(input);
-    expect(onSave).toHaveBeenLastCalledWith(
-      expect.objectContaining({ duration: 0, budget: 0, [field]: 0.5 })
-    );
+    expect(onSave).toHaveBeenLastCalledWith({ [field]: 0.5 });
     fireEvent.change(input, { target: { value: "" } });
     fireEvent.blur(input);
-    expect(onSave).toHaveBeenLastCalledWith(expect.objectContaining({ duration: 0, budget: 0 }));
+    expect(onSave).toHaveBeenLastCalledWith({ [field]: 0 });
   });
 
   it("discards uncommitted edits on Cancel", () => {

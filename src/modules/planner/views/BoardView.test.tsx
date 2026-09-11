@@ -8,7 +8,6 @@ import { BoardView } from "./BoardView";
 
 const shared = vi.hoisted(() => ({
   useDragHandlersMock: vi.fn(),
-  getActivityMock: vi.fn(),
 }));
 
 vi.mock("@dnd-kit/core", () => ({
@@ -37,9 +36,7 @@ vi.mock("@dnd-kit/sortable", () => ({
 }));
 
 vi.mock("@dnd-kit/utilities", () => ({ CSS: { Transform: { toString: () => undefined } } }));
-vi.mock("@/features/activity/lib/activityOperations", () => ({
-  getActivity: (...args: unknown[]) => shared.getActivityMock(...args),
-}));
+
 vi.mock("@/modules/planner/hooks/useDragHandlers", () => ({
   useDragHandlers: (...args: unknown[]) => shared.useDragHandlersMock(...args),
 }));
@@ -52,6 +49,7 @@ const days: DayPlan[] = [
 
 beforeEach(() => {
   shared.useDragHandlersMock.mockReturnValue({
+    previewDays: days,
     activeId: null,
     sensors: [],
     handleDragStart: vi.fn(),
@@ -59,7 +57,6 @@ beforeEach(() => {
     handleDragEnd: vi.fn(),
     handleDragCancel: vi.fn(),
   });
-  shared.getActivityMock.mockReset();
 });
 
 describe("BoardView", () => {

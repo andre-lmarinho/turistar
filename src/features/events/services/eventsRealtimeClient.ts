@@ -12,7 +12,8 @@ type PlannerRealtimeChannel = ReturnType<SupabaseClient["channel"]>;
 export function subscribeToEvents(
   planId: string,
   handler: (event: EventRecord) => void,
-  client: SupabaseClient = supabase
+  client: SupabaseClient = supabase,
+  onReady?: () => void
 ): PlannerRealtimeChannel {
   const channel = client
     .channel(`plan-events-${planId}`)
@@ -28,6 +29,8 @@ export function subscribeToEvents(
         }
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      if (status === "SUBSCRIBED") onReady?.();
+    });
   return channel;
 }

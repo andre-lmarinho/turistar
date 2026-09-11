@@ -98,7 +98,12 @@ export const ActivityDialog = memo(function ActivityDialog({
     const values = { ...next, title: next.title.trim(), address: next.address.trim() };
     setDraft(values);
     if (JSON.stringify(values) === JSON.stringify(lastSubmitted.current)) return;
-    onSave({ ...values, duration: Number(values.duration), budget: Number(values.budget) });
+    const patch: Partial<Activity> = Object.fromEntries(
+      Object.entries(values)
+        .filter(([key, value]) => value !== lastSubmitted.current[key as keyof ActivityDraft])
+        .map(([key, value]) => [key, key === "duration" || key === "budget" ? Number(value) : value])
+    );
+    onSave(patch);
     lastSubmitted.current = values;
   };
   const commitAndClose = () => {
