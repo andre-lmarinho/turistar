@@ -374,3 +374,58 @@ it("does not clear an append failure when an unrelated realtime gap resolves", a
   expect(result.current.hasPendingChanges).toBe(true);
   expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
 });
+
+it("rejects edits while disabled and ignores empty intents", async () => {
+  const { result, rerender } = renderHook(({ enabled }) => usePlanCollaboration("p1", { enabled }), {
+    initialProps: { enabled: false },
+  });
+  expect(result.current.dispatch(() => update("Ignored"))).toBe(false);
+  expect(mocks.subscribe).not.toHaveBeenCalled();
+  expect(mocks.fetchSnapshot).not.toHaveBeenCalled();
+  rerender({ enabled: true });
+  await waitFor(() => expect(result.current.isLoading).toBe(false));
+  expect(result.current.dispatch(() => [])).toBe(false);
+  expect(mocks.appendEvents).not.toHaveBeenCalled();
+  expect(result.current.hasPendingChanges).toBe(false);
+});
+
+it("ignores other plans and unsubscribes on unmount", async () => {
+  const { result, unmount } = await loaded();
+  emit({ ...remote, planId: "another-plan" });
+  expect(result.current.version).toBe(1);
+  expect(result.current.data[0].activities[0].description).toBeUndefined();
+  const channel = mocks.subscribe.mock.results[0].value;
+  unmount();
+  expect(channel.unsubscribe).toHaveBeenCalledOnce();
+  expect(result.current.dispatch(() => update("After unmount"))).toBe(false);
+  expect(mocks.appendEvents).not.toHaveBeenCalled();
+});
+
+it("stops retrying an unconfirmed response that makes no progress", async () => {
+  mocks.appendEvents.mockResolvedValue({ version: 1, events: [] });
+  const { result } = await loaded();
+  act(() => result.current.dispatch(() => update("Keep unsaved")));
+  await waitFor(() => expect(result.current.error).toEqual(expect.any(Error)));
+  expect(result.current.data[0].activities[0].title).toBe("Keep unsaved");
+  expect(result.current.hasPendingChanges).toBe(true);
+  expect(mocks.appendEvents).toHaveBeenCalledTimes(1);
+});
+
+it("keeps queued edits when fetched history contains a missing version", async () => {
+  mocks.fetchEvents.mockResolvedValue([{ ...remote, version: 3 }]);
+  const { result } = renderHook(() => usePlanCollaboration("p1", { initialDays: [day] }));
+  act(() => result.current.dispatch(() => update("Keep draft")));
+  await waitFor(() =>
+    expect(result.current.error).toEqual(
+      expect.objectContaining({
+        message: "Unable to synchronize planner: planId=p1, missing version=2",
+      })
+    )
+  );
+  expect(result.current.data[0].activities[0].title).toBe("Keep draft");
+  expect(mocks.appendEvents).not.toHaveBeenCalled();
+  mocks.fetchEvents.mockResolvedValue([remote]);
+  await act(async () => result.current.retryPending());
+  expect(result.current.hasPendingChanges).toBe(false);
+  expect(result.current.error).toBeNull();
+});

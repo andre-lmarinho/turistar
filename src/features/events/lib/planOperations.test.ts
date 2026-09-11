@@ -248,3 +248,9 @@ describe("date range transitions", () => {
     expect(result[0].label).not.toBe("Old Label");
   });
 });
+
+it("avoids queuing moves that leave the activity in the same position", () => {
+  expect(moveActivityOperation(days, "a", { toDayId: days[0].id, beforeActivityId: "a" })).toEqual([]);
+  expect(moveActivityOperation(days, "a", { toDayId: days[0].id, beforeActivityId: "b" })).toEqual([]);
+  expect(moveActivityOperation(days, "b", { toDayId: days[0].id })).toEqual([]);
+});

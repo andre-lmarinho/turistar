@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Activity, DayPlan } from "@/features/activity/types";
 import { usePlanCollaboration } from "@/features/events/hooks/usePlanCollaboration";
@@ -56,7 +56,60 @@ beforeEach(() => {
   });
 });
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
+
 describe("usePlannerDocument", () => {
+  it("rejects blank activities without queuing an event", () => {
+    const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+    expect(result.current.createActivity(days[0].id, { id: "new", title: "  ", color: "blue" })).toBe(false);
+    expect(mocks.dispatch).not.toHaveBeenCalled();
+  });
+
+  it("deletes by activity ID without depending on its previous day", () => {
+    const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+    act(() => result.current.deleteActivity("activity-1"));
+    expect(mocks.dispatch.mock.calls[0][0]([])).toEqual([
+      { type: "activity.deleted", payload: { activityId: "activity-1" } },
+    ]);
+  });
+
+  it.each([{ data: [] }, { data: [{ ...days[0], id: "invalid-date" }] }])(
+    "omits the date range for unusable dates (%j)",
+    ({ data }) => {
+      const state = mockedUsePlanCollaboration("plan-1");
+      mockedUsePlanCollaboration.mockReturnValue({ ...state, data });
+      const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+      expect(result.current.currentRange).toBeUndefined();
+    }
+  );
+
+  it("seeds three consecutive days when the plan has no initial document", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-11T12:00:00Z"));
+    renderHook(() => usePlannerDocument({ planId: "plan-1" }));
+    expect(mockedUsePlanCollaboration.mock.calls.at(-1)?.[1]?.initialDays?.map((day) => day.id)).toEqual([
+      "2026-09-11",
+      "2026-09-12",
+      "2026-09-13",
+    ]);
+  });
+
+  it("ignores cleared ranges and treats a start date alone as a one-day trip", () => {
+    const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+    act(() => {
+      result.current.handleRangeChange(undefined);
+      result.current.handleRangeChange({ from: undefined });
+    });
+    expect(mocks.dispatch).not.toHaveBeenCalled();
+    act(() => result.current.handleRangeChange({ from: new Date("2025-01-10T00:00:00Z") }));
+    expect(mocks.dispatch.mock.calls[0][0](days)).toContainEqual({
+      type: "day.removed",
+      payload: { dayId: "2025-01-11" },
+    });
+  });
   it("uses the collaboration state as the document and derives its date range", () => {
     const { result } = renderHook(() =>
       usePlannerDocument({

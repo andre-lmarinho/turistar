@@ -77,3 +77,37 @@ describe("BoardView", () => {
     expect(onAddActivity).toHaveBeenCalledWith("d1", 1);
   });
 });
+
+it.each(["preview", "removed"])(
+  "renders the current preview and resolves its overlay by ID (%s)",
+  (activeId) => {
+    const preview = { id: "preview", title: "New remote title", color: "blue" };
+    const state = shared.useDragHandlersMock();
+    shared.useDragHandlersMock.mockReturnValue({
+      ...state,
+      activeId,
+      previewDays: [{ ...days[0], activities: [activity, preview] }],
+    });
+    render(<BoardView days={days} />);
+    expect(screen.getAllByText("New remote title")).toHaveLength(activeId === "preview" ? 2 : 1);
+    expect(screen.getAllByText("Museum")).toHaveLength(1);
+  }
+);
+
+it("selects an activity with its current day", () => {
+  const select = vi.fn();
+  render(<BoardView days={days} onActivitySelect={select} />);
+  fireEvent.click(screen.getByRole("button", { name: "Museum" }));
+  expect(select).toHaveBeenCalledExactlyOnceWith(activity, "d1");
+});
+
+it("stops background drag scrolling when the mouse is released", () => {
+  render(<BoardView days={days} />);
+  const board = screen.getByRole("list", { name: "Days" });
+  fireEvent.mouseDown(board, { clientX: 100 });
+  fireEvent.mouseMove(document, { clientX: 40 });
+  expect(board.scrollLeft).toBe(60);
+  fireEvent.mouseUp(document);
+  fireEvent.mouseMove(document, { clientX: 0 });
+  expect(board.scrollLeft).toBe(60);
+});

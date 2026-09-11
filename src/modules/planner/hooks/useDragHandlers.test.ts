@@ -7,12 +7,12 @@ import { useDragHandlers } from "./useDragHandlers";
 const createMockDay = (id: string, activities: string[]): DayPlan => ({
   id,
   label: `Day ${id}`,
-  position: `d${id}`,
-  activities: activities.map((aid) => ({
+  position: "1024",
+  activities: activities.map((aid, index) => ({
     id: aid,
     title: `Activity ${aid}`,
     color: "bg-[var(--color-0)]",
-    position: `a${aid}`,
+    position: String((index + 1) * 1024),
     description: "",
     address: "",
     duration: 60,
@@ -102,4 +102,27 @@ it("cancels preview without publishing a mutation", () => {
   act(() => result.current.handleDragCancel());
   expect(result.current.previewDays).toBe(mockDays);
   expect(onActivityMove).not.toHaveBeenCalled();
+});
+
+it.each([null, "a1", "missing"])("does not commit an invalid drop target (%s)", (target) => {
+  const onActivityMove = vi.fn();
+  const { result } = renderHook(() => useDragHandlers(mockDays, { onActivityMove }));
+  act(() => result.current.handleDragStart({ active: { id: "a1" } } as DragStartEvent));
+  act(() =>
+    result.current.handleDragEnd({
+      active: { id: "a1" },
+      over: target ? { id: target } : null,
+    } as DragEndEvent)
+  );
+  expect(onActivityMove).not.toHaveBeenCalled();
+  expect(result.current.activeId).toBeNull();
+  expect(result.current.previewDays).toBe(mockDays);
+});
+
+it("commits a drop before an activity without a preceding hover", () => {
+  const onActivityMove = vi.fn();
+  const { result } = renderHook(() => useDragHandlers(mockDays, { onActivityMove }));
+  act(() => result.current.handleDragStart({ active: { id: "a3" } } as DragStartEvent));
+  act(() => result.current.handleDragEnd({ active: { id: "a3" }, over: { id: "a2" } } as DragEndEvent));
+  expect(onActivityMove).toHaveBeenCalledExactlyOnceWith("a3", { toDayId: "1", beforeActivityId: "a2" });
 });
