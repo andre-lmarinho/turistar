@@ -6,12 +6,12 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ACTIVITY_TEXT } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
-import { getActivity } from "@/features/activity/lib/activityOperations";
 import type { Activity, DayPlan } from "@/features/activity/types";
+import type { ActivityDestination } from "@/features/events/lib/planOperations";
 import { useDragHandlers } from "@/modules/planner/hooks/useDragHandlers";
 import { containerCollisionDetection } from "@/modules/planner/lib/dragUtils";
 import { ChevronDown, Eye, EyeOff, GripVertical, List, Plus } from "@/ui/components/icon";
@@ -21,7 +21,7 @@ import { cn } from "@/ui/utils/cn";
 interface TripViewProps {
   days: DayPlan[];
   onActivitySelect: (activity: Activity, dayId: string) => void;
-  onDaysChange: (days: DayPlan[]) => void;
+  onActivityMove: (activityId: string, destination: ActivityDestination) => void;
   onFallbackAdd: (dayId: string, index: number) => void;
   onDayHover?: (dayId: string | null) => void;
   onActivityHover?: (activityId: string | null) => void;
@@ -233,23 +233,27 @@ function TripDay({
 export function TripView({
   days,
   onActivitySelect,
-  onDaysChange,
+  onActivityMove,
   onFallbackAdd,
   onDayHover = () => {},
   onActivityHover = () => {},
 }: TripViewProps) {
   const [isItineraryOpen, setIsItineraryOpen] = useState(true);
   const [collapsedDayIds, setCollapsedDayIds] = useState<Set<string>>(() => new Set());
-  const [draftDays, setDraftDays] = useState(days);
-  const { activeId, sensors, handleDragStart, handleDragOver, handleDragEnd, handleDragCancel } =
-    useDragHandlers(draftDays, { onDaysChange: setDraftDays, onDaysCommit: onDaysChange });
-
-  useEffect(() => {
-    if (!activeId) setDraftDays(days);
-  }, [activeId, days]);
-
+  const {
+    previewDays: draftDays,
+    activeId,
+    sensors,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    handleDragCancel,
+  } = useDragHandlers(days, { onActivityMove });
   const activeActivity = useMemo(
-    () => (activeId ? getActivity(draftDays, String(activeId)) : null),
+    () =>
+      activeId
+        ? draftDays.flatMap((day) => day.activities).find((activity) => activity.id === String(activeId))
+        : null,
     [activeId, draftDays]
   );
   const areAllDaysCollapsed = draftDays.length > 0 && collapsedDayIds.size === draftDays.length;

@@ -29,7 +29,7 @@ import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/p
 interface EditorDialogProps {
   activity: (Activity & { dayId: string }) | null;
   days: DayPlan[];
-  onSave: (values: Partial<Activity>) => void;
+  onSave: (values: Partial<Activity>) => boolean;
   onDelete?: () => void;
   onClose: () => void;
   onDayChange?: (dayId: string) => void;
@@ -97,14 +97,19 @@ export const ActivityDialog = memo(function ActivityDialog({
   const commit = (next = draft) => {
     const values = { ...next, title: next.title.trim(), address: next.address.trim() };
     setDraft(values);
-    if (JSON.stringify(values) === JSON.stringify(lastSubmitted.current)) return;
-    onSave({ ...values, duration: Number(values.duration), budget: Number(values.budget) });
+    if (JSON.stringify(values) === JSON.stringify(lastSubmitted.current)) return true;
+    const patch: Partial<Activity> = Object.fromEntries(
+      Object.entries(values)
+        .filter(([key, value]) => value !== lastSubmitted.current[key as keyof ActivityDraft])
+        .map(([key, value]) => [key, key === "duration" || key === "budget" ? Number(value) : value])
+    );
+    if (!onSave(patch)) return false;
     lastSubmitted.current = values;
+    return true;
   };
   const commitAndClose = () => {
     cancelSelection();
-    commit();
-    onClose();
+    if (commit()) onClose();
   };
   const revert = () => {
     cancelSelection();

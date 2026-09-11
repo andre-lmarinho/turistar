@@ -4,9 +4,12 @@ import { addDays, parseISO } from "date-fns";
 import { useCallback, useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 
-import { buildInitialDays, syncDaysWithRange } from "@/features/activity/lib/dayOperations";
-import type { DayPlan } from "@/features/activity/types";
+import { buildInitialDays } from "@/features/activity/lib/dayOperations";
+import type { Activity, DayPlan } from "@/features/activity/types";
 import { usePlanCollaboration } from "@/features/events/hooks/usePlanCollaboration";
+import { midpoint } from "@/features/events/lib/gapOrdering";
+import type { ActivityDestination } from "@/features/events/lib/planOperations";
+import { changeDateRangeOperations, moveActivityOperation } from "@/features/events/lib/planOperations";
 import { useDestinationCoordinates } from "@/features/search/hooks/useDestinationCoordinates";
 
 interface PlannerDocumentOptions {
@@ -41,7 +44,11 @@ export function usePlannerDocument({
   const seedDays = initialDays ?? buildInitialDays(getDefaultTripDates());
   const {
     data: days = seedDays,
-    persistDays,
+    dispatch,
+    error,
+    isPending,
+    isLoading,
+    discardPending,
     retryPending,
     hasPendingChanges,
   } = usePlanCollaboration(planId, {
@@ -51,11 +58,51 @@ export function usePlannerDocument({
   });
   const destCoords = useDestinationCoordinates(dest);
 
-  const setDays = useCallback(
-    (nextDays: DayPlan[]) => {
-      persistDays.mutate(nextDays);
+  const createActivity = useCallback(
+    (dayId: string, activity: Activity) => {
+      if (!activity.title.trim()) return false;
+      return dispatch((current) => {
+        const day = current.find((candidate) => candidate.id === dayId);
+        if (!day) return [];
+        return [
+          {
+            type: "activity.created",
+            payload: { dayId, activity, position: midpoint(day.activities.at(-1)?.position) },
+          },
+        ];
+      });
     },
-    [persistDays]
+    [dispatch]
+  );
+  const updateActivity = useCallback(
+    (activityId: string, patch: Partial<Activity>) => {
+      dispatch(() => [
+        {
+          type: "activity.updated",
+          payload: {
+            activityId,
+            patch: {
+              ...patch,
+              ...("latitude" in patch ? { latitude: patch.latitude ?? null } : {}),
+              ...("longitude" in patch ? { longitude: patch.longitude ?? null } : {}),
+            },
+          },
+        },
+      ]);
+    },
+    [dispatch]
+  );
+  const deleteActivity = useCallback(
+    (activityId: string) => {
+      dispatch(() => [{ type: "activity.deleted", payload: { activityId } }]);
+    },
+    [dispatch]
+  );
+  const moveActivity = useCallback(
+    (activityId: string, destination: ActivityDestination) => {
+      dispatch((current) => moveActivityOperation(current, activityId, destination));
+    },
+    [dispatch]
   );
 
   const currentRange = useMemo(() => {
@@ -70,16 +117,22 @@ export function usePlannerDocument({
     (range: DateRange | undefined) => {
       if (!range?.from) return;
 
-      const syncedDays = syncDaysWithRange(days, dateRangeToArray(range));
-      persistDays.mutate(syncedDays);
+      dispatch((current) => changeDateRangeOperations(current, dateRangeToArray(range)));
     },
-    [days, persistDays]
+    [dispatch]
   );
 
   return {
     planId,
     days,
-    setDays,
+    createActivity,
+    updateActivity,
+    deleteActivity,
+    moveActivity,
+    error,
+    isPending,
+    isLoading,
+    discardPending,
     dest,
     destCoords,
     currentRange,

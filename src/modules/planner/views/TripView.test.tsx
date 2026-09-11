@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import { TripView } from "./TripView";
 
-const shared = vi.hoisted(() => ({ useDragHandlers: vi.fn(), getActivity: vi.fn() }));
+const shared = vi.hoisted(() => ({ useDragHandlers: vi.fn() }));
 vi.mock("@dnd-kit/core", () => ({
   DndContext: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DragOverlay: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -27,9 +27,7 @@ vi.mock("@dnd-kit/modifiers", () => ({ restrictToWindowEdges: vi.fn() }));
 vi.mock("@/features/activity/hooks/useActivityColors", () => ({
   useActivityColors: () => ({ bg: "bg-[var(--color-1)]" }),
 }));
-vi.mock("@/features/activity/lib/activityOperations", () => ({
-  getActivity: (...args: unknown[]) => shared.getActivity(...args),
-}));
+
 vi.mock("@/modules/planner/hooks/useDragHandlers", () => ({
   useDragHandlers: (...args: unknown[]) => shared.useDragHandlers(...args),
 }));
@@ -43,6 +41,7 @@ const days: DayPlan[] = [
 ];
 beforeEach(() => {
   shared.useDragHandlers.mockReturnValue({
+    previewDays: days,
     activeId: null,
     sensors: [],
     handleDragStart: vi.fn(),
@@ -50,7 +49,6 @@ beforeEach(() => {
     handleDragEnd: vi.fn(),
     handleDragCancel: vi.fn(),
   });
-  shared.getActivity.mockReset();
 });
 describe("TripView", () => {
   it("renders the itinerary and selects an activity", () => {
@@ -59,7 +57,7 @@ describe("TripView", () => {
       <TripView
         days={days}
         onActivitySelect={onActivitySelect}
-        onDaysChange={vi.fn()}
+        onActivityMove={vi.fn()}
         onFallbackAdd={vi.fn()}
       />
     );
@@ -70,7 +68,7 @@ describe("TripView", () => {
   });
   it("hides and restores the itinerary", () => {
     render(
-      <TripView days={days} onActivitySelect={vi.fn()} onDaysChange={vi.fn()} onFallbackAdd={vi.fn()} />
+      <TripView days={days} onActivitySelect={vi.fn()} onActivityMove={vi.fn()} onFallbackAdd={vi.fn()} />
     );
     fireEvent.click(screen.getByRole("button", { name: "Hide itinerary" }));
     expect(screen.getByRole("button", { name: "Show itinerary" })).toBeInTheDocument();
@@ -80,7 +78,12 @@ describe("TripView", () => {
   it("collapses all days and delegates adding", () => {
     const onFallbackAdd = vi.fn();
     render(
-      <TripView days={days} onActivitySelect={vi.fn()} onDaysChange={vi.fn()} onFallbackAdd={onFallbackAdd} />
+      <TripView
+        days={days}
+        onActivitySelect={vi.fn()}
+        onActivityMove={vi.fn()}
+        onFallbackAdd={onFallbackAdd}
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: "Collapse all days" }));
     expect(screen.queryByText("Museum")).not.toBeInTheDocument();
@@ -88,4 +91,55 @@ describe("TripView", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "Add activity" })[0]);
     expect(onFallbackAdd).toHaveBeenCalledWith("day-1", 1);
   });
+});
+
+it.each(["preview", "removed"])(
+  "renders the current preview and resolves its overlay by ID (%s)",
+  (activeId) => {
+    const preview = { id: "preview", title: "New remote title", color: "blue" };
+    const state = shared.useDragHandlers();
+    shared.useDragHandlers.mockReturnValue({
+      ...state,
+      activeId,
+      previewDays: [{ ...days[0], activities: [activity, preview] }],
+    });
+    render(
+      <TripView days={days} onActivitySelect={vi.fn()} onActivityMove={vi.fn()} onFallbackAdd={vi.fn()} />
+    );
+    expect(screen.getAllByText("New remote title")).toHaveLength(activeId === "preview" ? 2 : 1);
+    expect(screen.getAllByText("Museum")).toHaveLength(1);
+  }
+);
+
+it("supports keyboard selection and hovering without selecting from the drag handle", () => {
+  const select = vi.fn();
+  const hover = vi.fn();
+  render(
+    <TripView
+      days={days}
+      onActivitySelect={select}
+      onActivityMove={vi.fn()}
+      onFallbackAdd={vi.fn()}
+      onActivityHover={hover}
+    />
+  );
+  const card = screen.getByRole("button", { name: "Museum" });
+  fireEvent.mouseEnter(card);
+  expect(hover).toHaveBeenLastCalledWith("activity-1");
+  fireEvent.mouseLeave(card);
+  expect(hover).toHaveBeenLastCalledWith(null);
+  fireEvent.click(screen.getByRole("button", { name: "Reorder Museum" }));
+  expect(select).not.toHaveBeenCalled();
+  fireEvent.keyDown(card, { key: "Enter" });
+  expect(select).toHaveBeenCalledWith(activity, "day-1");
+});
+
+it("expands a collapsed day when adding an activity", () => {
+  const add = vi.fn();
+  render(<TripView days={days} onActivitySelect={vi.fn()} onActivityMove={vi.fn()} onFallbackAdd={add} />);
+  fireEvent.click(screen.getAllByRole("button", { name: "Collapse day" })[0]);
+  expect(screen.queryByText("Museum")).not.toBeInTheDocument();
+  fireEvent.click(screen.getAllByRole("button", { name: "Add activity" })[0]);
+  expect(screen.getByText("Museum")).toBeInTheDocument();
+  expect(add).toHaveBeenCalledWith("day-1", 1);
 });

@@ -1,8 +1,15 @@
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { Snapshot } from "@/features/snapshots/types";
-import type { EventRecord, EventState } from "../types";
-import { cloneDay, sanitizeActivity } from "./activityState";
-import { parsePosition } from "./gapOrdering";
+import type { EventRecord, EventState, PlanOperation } from "../types";
+import { sanitizeActivity } from "./activityState";
+import { normalizePositions, parsePosition } from "./gapOrdering";
+
+export function normalizeDays(days: DayPlan[]): DayPlan[] {
+  return normalizePositions(days).map((day) => ({
+    ...day,
+    activities: normalizePositions(day.activities).map((activity) => ({ ...activity })),
+  }));
+}
 
 function toPositionNumber(position?: string): number {
   if (!position) return Number.MAX_SAFE_INTEGER;
@@ -19,11 +26,13 @@ function ensureDay(days: DayPlan[], dayId: string, label: string): { days: DayPl
   return { days: next, day: next[next.length - 1] };
 }
 
-function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
+export function applyEvent(days: DayPlan[], event: PlanOperation): DayPlan[] {
+  // Also clones days and activities: the transitions below mutate only this owned copy.
+  days = normalizeDays(days);
   switch (event.type) {
     case "activity.created": {
       const { dayId, activity, position } = event.payload;
-      const { days: ensuredDays, day } = ensureDay(days.map(cloneDay), dayId, activity.title);
+      const { days: ensuredDays, day } = ensureDay(days, dayId, activity.title);
       const sanitized = sanitizeActivity(activity, { defaultColor: "bg-[var(--color-1)]" });
       sanitized.position = position;
       const exists = day.activities.find((a) => a.id === sanitized.id);
@@ -38,13 +47,15 @@ function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
     }
     case "activity.updated": {
       const { activityId, patch } = event.payload;
-      const nextDays = days.map(cloneDay);
+      const nextDays = days;
       for (const day of nextDays) {
         const activity = day.activities.find((a) => a.id === activityId);
         if (!activity) continue;
         const updated: Activity = {
           ...activity,
           ...patch,
+          latitude: patch.latitude === null ? undefined : (patch.latitude ?? activity.latitude),
+          longitude: patch.longitude === null ? undefined : (patch.longitude ?? activity.longitude),
         };
         updated.title = sanitizeActivity(updated, { fallbackTitle: activity.title }).title;
         Object.assign(activity, updated);
@@ -60,23 +71,10 @@ function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
       }));
     }
     case "activity.moved": {
-      const { activityId, fromDayId, toDayId, position } = event.payload;
-      if (fromDayId === toDayId) {
-        const next = days.map(cloneDay);
-        const day = next.find((d) => d.id === fromDayId);
-        if (!day) return next;
-        const activityIndex = day.activities.findIndex((a) => a.id === activityId);
-        if (activityIndex === -1) return next;
-        const [activity] = day.activities.splice(activityIndex, 1);
-        activity.position = position;
-        const targetPosition = toPositionNumber(position);
-        const insertIdx = day.activities.findIndex((a) => toPositionNumber(a.position) > targetPosition);
-        if (insertIdx === -1) day.activities.push(activity);
-        else day.activities.splice(insertIdx, 0, activity);
-        return next;
-      }
-      const next = days.map(cloneDay);
-      const fromDay = next.find((d) => d.id === fromDayId);
+      const { activityId, toDayId, position } = event.payload;
+      const next = days;
+      // A concurrent move can make the recorded source stale. Server order wins.
+      const fromDay = next.find((day) => day.activities.some((activity) => activity.id === activityId));
       const toDay = next.find((d) => d.id === toDayId);
       if (!fromDay || !toDay) return next;
       const activityIndex = fromDay.activities.findIndex((a) => a.id === activityId);
@@ -92,7 +90,7 @@ function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
     case "day.created": {
       const { day } = event.payload;
       if (days.some((existing) => existing.id === day.id)) return days;
-      const next = days.map(cloneDay);
+      const next = days;
       const targetPosition = toPositionNumber(day.position);
       const insertIdx = next.findIndex((d) => toPositionNumber(d.position) > targetPosition);
       const sanitizedDay: DayPlan = {
@@ -124,7 +122,7 @@ function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
     }
     case "day.reordered": {
       const { dayId, position } = event.payload;
-      const next = days.map(cloneDay);
+      const next = days;
       const target = next.find((d) => d.id === dayId);
       if (!target) return next;
       target.position = position;
@@ -144,19 +142,15 @@ function applySingleEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
 export function reduceEvents(snapshot: Snapshot, events: EventRecord[]): EventState {
   let state: EventState = {
     version: snapshot.version,
-    days: snapshot.days.map(cloneDay),
+    days: normalizeDays(snapshot.days),
   };
 
   for (const event of events) {
     if (event.version <= state.version) continue;
     state = {
       version: event.version,
-      days: applySingleEvent(state.days, event),
+      days: applyEvent(state.days, event),
     };
   }
   return state;
-}
-
-export function applyEvent(days: DayPlan[], event: EventRecord): DayPlan[] {
-  return applySingleEvent(days.map(cloneDay), event);
 }

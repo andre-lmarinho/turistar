@@ -1,6 +1,5 @@
 import type { CollisionDetection, DragOverEvent } from "@dnd-kit/core";
 import { closestCenter, pointerWithin } from "@dnd-kit/core";
-
 import type { DayPlan } from "@/features/activity/types";
 
 export interface DragTarget {
@@ -58,59 +57,6 @@ export function getDragTarget(
   }
 
   return null;
-}
-
-/**
- * Apply a drag move to the days array.
- * Returns a new array if changed, or the original if no change.
- */
-export function applyDragMove(
-  days: DayPlan[],
-  activeId: string,
-  target: DragTarget,
-  activityMap: Map<string, { dayIdx: number; actIdx: number }>
-): DayPlan[] {
-  const source = activityMap.get(activeId);
-  if (!source) return days;
-
-  const { dayIdx: srcDayIdx, actIdx: srcActIdx } = source;
-  const { dayIndex: dstDayIdx, activityIndex: dstActIdx } = target;
-
-  // No change needed
-  if (srcDayIdx === dstDayIdx && srcActIdx === dstActIdx) {
-    return days;
-  }
-
-  const result = [...days];
-  const srcDay = days[srcDayIdx];
-  const dstDay = days[dstDayIdx];
-
-  if (!srcDay || !dstDay) return days;
-
-  // Clone source day
-  result[srcDayIdx] = {
-    ...srcDay,
-    activities: [...srcDay.activities],
-  };
-
-  // Remove from source
-  const [moved] = result[srcDayIdx].activities.splice(srcActIdx, 1);
-  if (!moved) return days;
-
-  // Clone destination day if different
-  if (srcDayIdx !== dstDayIdx) {
-    result[dstDayIdx] = {
-      ...dstDay,
-      activities: [...dstDay.activities],
-    };
-  }
-
-  // Insert at destination
-  const destinationActivities = result[dstDayIdx].activities;
-  const insertIndex = Math.min(Math.max(dstActIdx, 0), destinationActivities.length);
-  destinationActivities.splice(insertIndex, 0, moved);
-
-  return result;
 }
 
 /**

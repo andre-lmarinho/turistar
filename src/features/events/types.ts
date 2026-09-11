@@ -26,9 +26,15 @@ export interface ActivityCreatedPayload {
   position: string;
 }
 
+/** Null clears coordinates across the JSON event transport; undefined is omitted by JSON. */
+export type ActivityPatch = Omit<Partial<Activity>, "latitude" | "longitude"> & {
+  latitude?: number | null;
+  longitude?: number | null;
+};
+
 export interface ActivityUpdatedPayload {
   activityId: string;
-  patch: Partial<Activity>;
+  patch: ActivityPatch;
 }
 
 export interface ActivityDeletedPayload {
@@ -69,6 +75,15 @@ export type EventRecord =
   | EventBase<"day.updated", DayUpdatedPayload>
   | EventBase<"day.removed", DayRemovedPayload>
   | EventBase<"day.reordered", DayReorderedPayload>;
+
+type OperationForRecord<TRecord extends EventRecord> = Pick<TRecord, "type" | "payload">;
+
+/** Domain transitions do not require server versions or timestamps. */
+export type PlanOperation = EventRecord extends infer TRecord
+  ? TRecord extends EventRecord
+    ? OperationForRecord<TRecord>
+    : never
+  : never;
 
 type EventInsertForRecord<TRecord extends EventRecord> = Omit<TRecord, "version" | "createdAt">;
 

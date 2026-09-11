@@ -6,12 +6,12 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 
 import { EMPTY_ACTIVITY_TITLE } from "@/features/activity/constants";
 import { useCardColors } from "@/features/activity/hooks/useActivityColors";
-import { getActivity } from "@/features/activity/lib/activityOperations";
 import type { Activity, DayPlan } from "@/features/activity/types";
+import type { ActivityDestination } from "@/features/events/lib/planOperations";
 import { useDragHandlers } from "@/modules/planner/hooks/useDragHandlers";
 import { containerCollisionDetection } from "@/modules/planner/lib/dragUtils";
 import { DollarSign, Hourglass, Plus } from "@/ui/components/icon";
@@ -20,7 +20,7 @@ import { cn } from "@/ui/utils/cn";
 interface BoardProps {
   days: DayPlan[];
   onActivitySelect?: (activity: Activity, dayId: string) => void;
-  onDaysChange?: (days: DayPlan[]) => void;
+  onActivityMove?: (activityId: string, destination: ActivityDestination) => void;
   onFallbackAdd?: (dayId: string, index: number) => void;
 }
 
@@ -40,18 +40,18 @@ const isInteractiveElement = (el: EventTarget | null): boolean =>
 export const BoardView = memo(function Board({
   days,
   onActivitySelect,
-  onDaysChange,
+  onActivityMove,
   onFallbackAdd,
 }: BoardProps) {
-  const [draftDays, setDraftDays] = useState(days);
-  const handleDaysCommit = useCallback(
-    (nextDays: BoardProps["days"]) => {
-      onDaysChange?.(nextDays);
-    },
-    [onDaysChange]
-  );
-  const { activeId, sensors, handleDragStart, handleDragOver, handleDragEnd, handleDragCancel } =
-    useDragHandlers(draftDays, { onDaysChange: setDraftDays, onDaysCommit: handleDaysCommit });
+  const {
+    previewDays: draftDays,
+    activeId,
+    sensors,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    handleDragCancel,
+  } = useDragHandlers(days, { onActivityMove });
   const boardRef = useRef<HTMLUListElement>(null);
   const dragCleanupRef = useRef<(() => void) | null>(null);
 
@@ -62,15 +62,10 @@ export const BoardView = memo(function Board({
     };
   }, []);
 
-  // Sync draftDays with props when not dragging
-  useEffect(() => {
-    if (!activeId) setDraftDays(days);
-  }, [activeId, days]);
-
   // Get active activity for drag overlay
   const activeActivity = useMemo(() => {
     if (!activeId) return null;
-    return getActivity(draftDays, String(activeId));
+    return draftDays.flatMap((day) => day.activities).find((activity) => activity.id === String(activeId));
   }, [activeId, draftDays]);
 
   // Drag scroll on non-interactive areas
