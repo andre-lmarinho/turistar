@@ -50,7 +50,7 @@ describe("ActivityDialog", () => {
           )
       )
     );
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
     fireEvent.change(screen.getByLabelText("Budget amount"), { target: { value: "25" } });
     const title = screen.getByRole("combobox", { name: "Title" });
@@ -76,7 +76,7 @@ describe("ActivityDialog", () => {
   });
 
   it("does not save an unchanged draft when optional fields are absent", async () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
@@ -85,7 +85,7 @@ describe("ActivityDialog", () => {
   });
 
   it("submits synchronously on blur and does not submit again on Done", () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
     const title = screen.getByRole("combobox", { name: "Title" });
@@ -102,7 +102,7 @@ describe("ActivityDialog", () => {
     ["Duration in hours", "duration"],
     ["Budget amount", "budget"],
   ])("updates and clears %s without changing the other numeric field", (label, field) => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
     const input = screen.getByLabelText(label);
     fireEvent.change(input, { target: { value: "0" } });
@@ -119,7 +119,7 @@ describe("ActivityDialog", () => {
   });
 
   it("discards uncommitted edits on Cancel", () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
     fireEvent.change(screen.getByLabelText("Notes"), { target: { value: "Discard me" } });
@@ -130,7 +130,7 @@ describe("ActivityDialog", () => {
   });
 
   it("reverts to the last submitted draft on Escape", async () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
     const title = screen.getByRole("combobox", { name: "Title" });
@@ -145,7 +145,7 @@ describe("ActivityDialog", () => {
   });
 
   it("persists removing a photo as an empty image URL", async () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     render(
       <ActivityDialog
         activity={{ ...activity, imageUrl: "https://example.com/photo.jpg" }}
@@ -168,7 +168,7 @@ describe("ActivityDialog", () => {
   });
 
   it("saves edited fields before closing with Done", async () => {
-    const onSave = vi.fn();
+    const onSave = vi.fn().mockReturnValue(true);
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
 
     fireEvent.change(screen.getByRole("combobox", { name: "Title" }), {
@@ -182,4 +182,18 @@ describe("ActivityDialog", () => {
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("dayId");
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("id");
   });
+});
+
+it("keeps rejected edits open and retries the same values on Done", () => {
+  const onSave = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(true);
+  const onClose = vi.fn();
+  render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+  fireEvent.change(screen.getByRole("combobox", { name: "Title" }), { target: { value: "Keep this draft" } });
+  fireEvent.click(screen.getByRole("button", { name: "Done" }));
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.getByRole("combobox", { name: "Title" })).toHaveValue("Keep this draft");
+  fireEvent.click(screen.getByRole("button", { name: "Done" }));
+  expect(onSave).toHaveBeenCalledTimes(2);
+  expect(onSave).toHaveBeenLastCalledWith({ title: "Keep this draft" });
+  expect(onClose).toHaveBeenCalledOnce();
 });

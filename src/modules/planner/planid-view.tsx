@@ -95,18 +95,18 @@ function PlannerContent({
   }, []);
   const save = useCallback(
     (updates: Partial<Activity>) => {
-      if (!selectedActivity || !selection) return;
+      if (!selectedActivity || !selection) return false;
       if ("draft" in selection) {
         const activity = { ...selection.draft, ...updates };
-        if (!activity.title.trim()) {
+        if (!activity.title.trim() || !createActivity(selection.dayId, activity)) {
           setSelection({ ...selection, draft: activity });
-          return;
+          return false;
         }
-        createActivity(selection.dayId, activity);
         setSelection({ id: activity.id });
       } else {
         updateActivity(selection.id, updates);
       }
+      return true;
     },
     [selectedActivity, selection, createActivity, updateActivity]
   );
@@ -213,8 +213,10 @@ function PlannerContent({
               type="button"
               disabled={isPending || isLoading}
               onClick={() => {
-                if (window.confirm("Discard unsynced changes? Changes already saved will remain."))
+                if (window.confirm("Discard unsynced changes? Changes already saved will remain.")) {
                   discardPending();
+                  setSelection(null);
+                }
               }}
               className="underline">
               Discard unsynced changes

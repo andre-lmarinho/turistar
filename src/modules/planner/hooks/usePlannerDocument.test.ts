@@ -1,8 +1,9 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { DayPlan } from "@/features/activity/types";
+import type { Activity, DayPlan } from "@/features/activity/types";
 import { usePlanCollaboration } from "@/features/events/hooks/usePlanCollaboration";
+import type { PlanOperation } from "@/features/events/types";
 import { usePlannerDocument } from "./usePlannerDocument";
 
 const mocks = vi.hoisted(() => ({
@@ -137,3 +138,19 @@ it("encodes clearing coordinates explicitly and preserves a sparse field patch",
     },
   ]);
 });
+
+it.each([true, false])(
+  "reports whether creation was accepted against the latest days (%s)",
+  (dayStillExists) => {
+    mocks.dispatch.mockImplementationOnce(
+      (build: (current: DayPlan[]) => PlanOperation[]) => build(dayStillExists ? days : []).length > 0
+    );
+    const { result } = renderHook(() => usePlannerDocument({ planId: "plan-1", initialDays: days }));
+    const activity: Activity = { id: "new", title: "Museum", color: "blue" };
+    let accepted: unknown;
+    act(() => {
+      accepted = result.current.createActivity(days[0].id, activity);
+    });
+    expect(accepted).toBe(dayStillExists);
+  }
+);

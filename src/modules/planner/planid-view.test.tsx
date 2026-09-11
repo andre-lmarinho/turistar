@@ -1,13 +1,15 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 
-import type { Activity } from "@/features/activity/types";
+import type { Activity, DayPlan } from "@/features/activity/types";
 import type { PlannerExperience } from "@/features/plan/services/PlanService";
 import type { PlannerMode } from "./components/ModeToggleButton";
 import { PlanIdView } from "./planid-view";
 
-const { updatePlanTitleMock, createActivityMock } = vi.hoisted(() => ({
+const { updatePlanTitleMock, createActivityMock, discardPendingMock, documentState } = vi.hoisted(() => ({
   createActivityMock: vi.fn(),
+  discardPendingMock: vi.fn(),
+  documentState: { days: [] as DayPlan[], error: null as Error | null, hasPendingChanges: false },
   updatePlanTitleMock: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -34,7 +36,8 @@ vi.mock("@/trpc/react", () => ({
 vi.mock("@/modules/planner/hooks/usePlannerDocument", () => ({
   usePlannerDocument: () => ({
     planId: "p1",
-    days: [{ id: "day-1", label: "Day 1", activities: [] }],
+    ...documentState,
+    discardPending: discardPendingMock,
     createActivity: createActivityMock,
     updateActivity: vi.fn(),
     deleteActivity: vi.fn(),
@@ -65,6 +68,7 @@ vi.mock("@/modules/planner/components/ActivityDialog", () => ({
   }) =>
     activity ? (
       <div>
+        <span data-testid="editor-title">{activity.title}</span>
         <button type="button" onClick={() => onSave({ budget: 25, color: "blue" })}>
           Set draft details
         </button>
@@ -95,6 +99,17 @@ vi.mock("@/modules/planner/components/ModeToggleButton", () => ({
 vi.mock("@/ui/components/calendar", () => ({
   DateRangePickerIcon: () => null,
 }));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  createActivityMock.mockImplementation((_dayId: string, activity: Activity) =>
+    Boolean(activity.title.trim())
+  );
+  documentState.days = [{ id: "day-1", label: "Day 1", activities: [] }];
+  documentState.error = null;
+  documentState.hasPendingChanges = false;
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("PlanIdView", () => {
   it("restores the initial title when blurred empty", async () => {
@@ -131,4 +146,33 @@ it("preserves edits made to a new activity before its title is entered", () => {
     "day-1",
     expect.objectContaining({ title: "New museum", budget: 25, color: "blue" })
   );
+});
+
+it("keeps the draft and its fields when creation is rejected", () => {
+  createActivityMock.mockReturnValue(false);
+  render(<PlanIdView experience={experience} />);
+  fireEvent.click(screen.getAllByRole("button", { name: /add activity/i })[0]);
+  fireEvent.click(screen.getByRole("button", { name: "Set draft details" }));
+  fireEvent.click(screen.getByRole("button", { name: "Name draft" }));
+  expect(screen.getByTestId("editor-title")).toHaveTextContent("New museum");
+  createActivityMock.mockReturnValue(true);
+  fireEvent.click(screen.getByRole("button", { name: "Name draft" }));
+  expect(createActivityMock).toHaveBeenLastCalledWith(
+    "day-1",
+    expect.objectContaining({ title: "New museum", budget: 25, color: "blue" })
+  );
+});
+
+it.each([true, false])("clears the editor only after confirming discard (%s)", (confirmed) => {
+  documentState.days[0].activities = [{ id: "a1", title: "Saved activity", color: "blue" }];
+  documentState.error = new Error("Failed to sync");
+  documentState.hasPendingChanges = true;
+  vi.spyOn(window, "confirm").mockReturnValue(confirmed);
+  render(<PlanIdView experience={experience} />);
+  fireEvent.click(screen.getAllByText("Saved activity")[0]);
+  expect(screen.getByTestId("editor-title")).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Discard unsynced changes" }));
+  expect(discardPendingMock).toHaveBeenCalledTimes(confirmed ? 1 : 0);
+  if (confirmed) expect(screen.queryByTestId("editor-title")).not.toBeInTheDocument();
+  else expect(screen.getByTestId("editor-title")).toBeInTheDocument();
 });

@@ -60,8 +60,8 @@ export function usePlannerDocument({
 
   const createActivity = useCallback(
     (dayId: string, activity: Activity) => {
-      if (!activity.title.trim()) return;
-      dispatch((current) => {
+      if (!activity.title.trim()) return false;
+      return dispatch((current) => {
         const day = current.find((candidate) => candidate.id === dayId);
         if (!day) return [];
         return [

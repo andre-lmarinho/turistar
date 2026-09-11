@@ -23,7 +23,7 @@ UI action -> dispatch -> pending queue -> immediate render
 HTTP response / realtime -> confirmed state -> reapply pending edits
 ```
 
-The UI displays `pending.reduce(applyEvent, confirmed.days)`. `dispatch` reads this state, so consecutive edits see each other even before React renders again. Local edits leave the confirmed version unchanged.
+The UI displays `pending.reduce(applyEvent, confirmed.days)`. `dispatch` reads this state, so consecutive edits see each other even before React renders again. Local edits leave the confirmed version unchanged. `dispatch` returns whether it queued any operations; this confirms local acceptance, not a server save.
 
 One append runs at a time per hook session. Users can keep editing while it waits. When the server confirms events, the hook removes their IDs from the queue and reapplies the remaining edits. HTTP responses and realtime events follow the same version order. Older fetch responses cannot replace newer confirmed state.
 
@@ -37,7 +37,7 @@ Each plan has its own session. Switching plans resets selection and form state; 
 
 The database does not enforce unique event IDs. A write can succeed even if its response is lost. Before retrying a failed request, the client fetches history from its previous confirmed version and removes pending IDs already saved. Starting from a fresh snapshot's version could skip those IDs and duplicate a write.
 
-Failed edits stay visible. The error banner offers Retry and asks for confirmation before discarding unsynced changes. Discard clears pending edits and refreshes the document; changes already saved remain. Validation and permission errors require the user to resolve the cause or discard the edits.
+Failed edits stay visible. The error banner offers Retry and asks for confirmation before discarding unsynced changes. Discard clears pending edits, closes the editor and refreshes the document; changes already saved remain. Validation and permission errors require the user to resolve the cause or discard the edits.
 
 ## Realtime recovery
 
@@ -47,7 +47,7 @@ Events that arrive out of order wait in a buffer. Missing versions trigger a fet
 
 ## Editing behavior
 
-- **Activity dialog:** saves only changed fields, so changing a title preserves another collaborator's notes. An untitled activity stays in a local draft until it has a title.
+- **Activity dialog:** saves only changed fields, so changing a title preserves another collaborator's notes. A new activity stays in a local draft until creation is accepted. If its day was removed, the editor keeps the draft so the user can choose another day and try again.
 - **Coordinates:** `null` in a patch removes a coordinate. An `undefined` value would be lost during JSON serialization.
 - **Drag and drop:** stores the active ID and destination. The reducer builds the preview from current data. Drop sends one move; cancel clears the preview.
 - **Dates:** shifting a range without changing its length keeps activities on the same trip-day. Resizing keeps overlapping dates and moves activities from removed days to the first or last remaining day.

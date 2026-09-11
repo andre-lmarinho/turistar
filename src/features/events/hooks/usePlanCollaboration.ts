@@ -254,8 +254,9 @@ export function usePlanCollaboration(
 
   const dispatch = useCallback(
     (build: (days: DayPlan[]) => PlanOperation[]) => {
-      if (!session.active || !enabled || !planId) return;
+      if (!session.active || !enabled || !planId) return false;
       const operations = build(project(session));
+      if (operations.length === 0) return false;
       session.pending.push(
         ...operations.map(
           (operation): EventInsert => ({
@@ -266,8 +267,9 @@ export function usePlanCollaboration(
           })
         )
       );
-      // No network, effect or server version is needed to publish an edit.
+      // Acceptance means queued locally, not confirmed by the server.
       publish();
+      return true;
     },
     [enabled, planId, publish, session]
   );
