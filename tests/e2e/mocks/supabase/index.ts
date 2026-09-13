@@ -134,7 +134,7 @@ type RpcParams = {
   leave_plan: {
     _plan_id: string;
   };
-  get_user_planners: Record<string, never>;
+  get_user_plan_summaries: Record<string, never>;
 };
 
 type EqFilters = Record<string, unknown>;
@@ -692,7 +692,7 @@ class MockSupabaseClientImpl {
       case "leave_plan": {
         return { data: true, error: null };
       }
-      case "get_user_planners": {
+      case "get_user_plan_summaries": {
         const userId = DEFAULT_OWNER_ID;
 
         // Filter plans owned by user or where user is member
@@ -711,10 +711,15 @@ class MockSupabaseClientImpl {
           title: plan.title,
           start_date: plan.start_date,
           end_date: plan.end_date,
-          created_at: "2024-01-01T00:00:00.000Z",
-          public_slug: plan.public_slug,
+          cover_image: null,
           destination_name: plan.destination_name,
-          latest_snapshot_at: new Date().toISOString(),
+          destination_country: plan.destination_country,
+          latitude: plan.latitude,
+          longitude: plan.longitude,
+          updated_at: this.plan.snapshots.at(-1)?.updated_at ?? null,
+          activity_count:
+            this.plan.snapshots.at(-1)?.state.days.reduce((total, day) => total + day.activities.length, 0) ??
+            0,
         }));
 
         return { data: result, error: null };

@@ -171,3 +171,126 @@ describe("PlanService", () => {
     });
   });
 });
+
+describe("dashboard projection", () => {
+  const summary = {
+    id: "plan-1",
+    title: "Trip",
+    destination_name: " Lisbon ",
+    start_date: null,
+    end_date: null,
+    updated_at: null,
+    cover_image: null,
+    destination_country: "PT",
+    latitude: null,
+    longitude: null,
+    activity_count: 2,
+  };
+
+  it("limits cards to 50 without truncating the map, preserving query order", async () => {
+    const rows = Array.from({ length: 55 }, (_, i) => ({ ...summary, id: `plan-${i}` }));
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue(rows);
+    const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+    expect(result.plans.map((p) => p.id)).toEqual(rows.slice(0, 50).map((p) => p.id));
+    expect(result.plans[0]).toEqual({
+      id: "plan-0",
+      title: "Trip",
+      destination: " Lisbon ",
+      startDate: null,
+      endDate: null,
+      updatedAt: null,
+      coverImage: null,
+    });
+    expect(result.destinations).toHaveLength(55);
+    expect(result.destinations.at(-1)).toEqual({
+      planId: "plan-54",
+      planTitle: "Trip",
+      startDate: null,
+      endDate: null,
+      name: "Lisbon",
+      country: "PT",
+      lat: null,
+      lng: null,
+      activityCount: 2,
+    });
+    expect(fetchUserPlanSummaries).toHaveBeenCalledOnce();
+  });
+
+  it("keeps destination-less cards but excludes them from the map", async () => {
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue([
+      { ...summary, destination_name: null },
+      { ...summary, id: "blank", destination_name: "  " },
+    ]);
+    const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+    expect(result.plans).toHaveLength(2);
+    expect(result.destinations).toEqual([]);
+  });
+
+  it("returns an empty dashboard when the user has no plans", async () => {
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue([]);
+    expect(await makeService({ fetchUserPlanSummaries }).getUserDashboard()).toEqual({
+      plans: [],
+      destinations: [],
+    });
+  });
+
+  it.each([
+    [null, "Lisbon", "Lisbon", "Untitled trip"],
+    [null, null, "Untitled plan", undefined],
+    ["  ", "Lisbon", "  ", "Untitled trip"],
+    [" Trip ", "Lisbon", " Trip ", "Trip"],
+  ])(
+    "uses the expected titles for %j and destination %j",
+    async (title, destination, cardTitle, mapTitle) => {
+      const fetchUserPlanSummaries = vi
+        .fn()
+        .mockResolvedValue([{ ...summary, title, destination_name: destination }]);
+      const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+      expect(result.plans[0].title).toBe(cardTitle);
+      expect(result.destinations[0]?.planTitle).toBe(mapTitle);
+    }
+  );
+
+  it("preserves dates, coordinates, cover and zero activity counts", async () => {
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue([
+      {
+        ...summary,
+        start_date: "2026-09-01",
+        end_date: "2026-09-03",
+        updated_at: "2026-09-01T12:00:00Z",
+        cover_image: "https://example.com/cover.jpg",
+        latitude: 0,
+        longitude: 0,
+        activity_count: 0,
+      },
+    ]);
+    const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+    expect(result.plans[0]).toMatchObject({
+      startDate: "2026-09-01",
+      endDate: "2026-09-03",
+      updatedAt: "2026-09-01T12:00:00Z",
+      coverImage: "https://example.com/cover.jpg",
+    });
+    expect(result.destinations[0]).toMatchObject({
+      startDate: "2026-09-01",
+      endDate: "2026-09-03",
+      lat: 0,
+      lng: 0,
+      activityCount: 0,
+    });
+  });
+
+  it("propagates read failures instead of returning an empty dashboard", async () => {
+    const error = new Error("Dashboard unavailable");
+    const fetchUserPlanSummaries = vi.fn().mockRejectedValue(error);
+    await expect(makeService({ fetchUserPlanSummaries }).getUserDashboard()).rejects.toBe(error);
+  });
+
+  it("requires authentication before querying", async () => {
+    const fetchUserPlanSummaries = vi.fn();
+    await expect(makeService({ fetchUserPlanSummaries }, null).getUserDashboard()).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
+    expect(fetchUserPlanSummaries).not.toHaveBeenCalled();
+  });
+});

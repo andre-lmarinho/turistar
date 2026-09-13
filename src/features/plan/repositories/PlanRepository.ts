@@ -1,7 +1,6 @@
 import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { SnapshotsRepository } from "@/features/snapshots/repositories/SnapshotsRepository";
 import { formatSupabaseError } from "@/lib/errors";
 import type { Database } from "@/supabase/types";
 
@@ -85,25 +84,8 @@ function mapMembers(rows: PlanMemberRow[] | null): PlanMemberRecord[] {
   return rows.map((row) => ({ userId: row.user_id, tier: row.tier }));
 }
 
-function countSnapshotActivities(state: unknown): number {
-  if (!state || typeof state !== "object" || !("days" in state)) return 0;
-  const days = state.days;
-  if (!Array.isArray(days)) return 0;
-
-  return days.reduce((total, day) => {
-    if (!day || typeof day !== "object" || !("activities" in day) || !Array.isArray(day.activities)) {
-      return total;
-    }
-    return total + day.activities.length;
-  }, 0);
-}
-
 export class PlanRepository {
-  private readonly snapshots: SnapshotsRepository;
-
-  constructor(private readonly client: SupabaseClient<Database>) {
-    this.snapshots = new SnapshotsRepository(client);
-  }
+  constructor(private readonly client: SupabaseClient<Database>) {}
 
   async fetchPlanIdentityById(planId: string): Promise<PlanIdentity | null> {
     const { data, error } = await this.client
@@ -176,78 +158,12 @@ export class PlanRepository {
     }
   }
 
-  async getUserPlanners(): Promise<UserPlannerSummary[]> {
-    const { data, error } = await this.client.rpc("get_user_planners");
-
+  async fetchUserPlanSummaries() {
+    const { data, error } = await this.client.rpc("get_user_plan_summaries");
     if (error) {
-      throw formatSupabaseError({ operation: "getUserPlanners", error });
+      throw formatSupabaseError({ operation: "fetchUserPlanSummaries", error });
     }
-
-    const rows = data ?? [];
-
-    return rows.map((row) => {
-      const title = row.title ?? row.destination_name ?? "Untitled plan";
-      const updatedAt = row.latest_snapshot_at ?? row.created_at ?? null;
-
-      return {
-        id: row.id,
-        title,
-        destination: row.destination_name,
-        startDate: row.start_date,
-        endDate: row.end_date,
-        updatedAt,
-        coverImage: row.cover_image,
-      };
-    });
-  }
-
-  async getUserDestinations(userId: string): Promise<UserDestination[]> {
-    const { data: memberships, error: membershipsError } = await this.client
-      .from("plan_members")
-      .select("plan_id")
-      .eq("user_id", userId);
-
-    if (membershipsError) {
-      throw formatSupabaseError({
-        operation: "getUserDestinations memberships",
-        identifiers: { userId },
-        error: membershipsError,
-      });
-    }
-
-    const memberPlanIds = memberships?.map((m) => m.plan_id) ?? [];
-    const query = this.client
-      .from("plans")
-      .select("id, title, start_date, end_date, destination_name, destination_country, latitude, longitude");
-    const scopedQuery = memberPlanIds.length
-      ? query.or(`user_id.eq.${userId},id.in.(${memberPlanIds.join(",")})`)
-      : query.eq("user_id", userId);
-    const { data, error } = await scopedQuery.not("destination_name", "is", null);
-
-    if (error) {
-      throw formatSupabaseError({ operation: "getUserDestinations", identifiers: { userId }, error });
-    }
-
-    const destinations = await Promise.all(
-      (data ?? []).map(async (row) => {
-        const name = row.destination_name?.trim();
-        if (!name) return null;
-        const snapshot = await this.snapshots.fetchSnapshot(row.id);
-        return {
-          planId: row.id,
-          planTitle: row.title?.trim() || "Untitled trip",
-          startDate: row.start_date,
-          endDate: row.end_date,
-          name,
-          country: row.destination_country,
-          lat: row.latitude,
-          lng: row.longitude,
-          activityCount: countSnapshotActivities(snapshot?.state),
-        };
-      })
-    );
-
-    return destinations.filter((destination): destination is UserDestination => destination !== null);
+    return data ?? [];
   }
 
   async updatePlanDates(planId: string, startDate: string, endDate: string): Promise<void> {

@@ -309,8 +309,24 @@ export type Database = {
           result_public_slug: string;
         }[];
       };
+      get_user_plan_summaries: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          activity_count: number;
+          cover_image: string;
+          destination_country: string;
+          destination_name: string;
+          end_date: string;
+          id: string;
+          latitude: number;
+          longitude: number;
+          start_date: string;
+          title: string;
+          updated_at: string;
+        }[];
+      };
       get_user_planners: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           cover_image: string;
           created_at: string;
@@ -323,11 +339,26 @@ export type Database = {
           title: string;
         }[];
       };
-      is_plan_admin: { Args: { _plan_id: string }; Returns: boolean };
-      is_plan_member: { Args: { _plan_id: string }; Returns: boolean };
-      leave_plan: { Args: { _plan_id: string }; Returns: undefined };
-      maybe_reset_demo: { Args: never; Returns: boolean };
-      plan_admin_count: { Args: { _plan_id: string }; Returns: number };
+      is_plan_admin: {
+        Args: { _plan_id: string };
+        Returns: boolean;
+      };
+      is_plan_member: {
+        Args: { _plan_id: string };
+        Returns: boolean;
+      };
+      leave_plan: {
+        Args: { _plan_id: string };
+        Returns: undefined;
+      };
+      maybe_reset_demo: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      plan_admin_count: {
+        Args: { _plan_id: string };
+        Returns: number;
+      };
       remove_plan_member: {
         Args: { _plan_id: string; _user_id: string };
         Returns: undefined;
