@@ -171,3 +171,66 @@ describe("PlanService", () => {
     });
   });
 });
+
+describe("dashboard projection", () => {
+  const summary = {
+    id: "plan-1",
+    title: "Trip",
+    destination_name: " Lisbon ",
+    start_date: null,
+    end_date: null,
+    updated_at: null,
+    cover_image: null,
+    destination_country: "PT",
+    latitude: null,
+    longitude: null,
+    activity_count: 2,
+  };
+
+  it("limits cards to 50 without truncating the map, preserving query order", async () => {
+    const rows = Array.from({ length: 55 }, (_, i) => ({ ...summary, id: `plan-${i}` }));
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue(rows);
+    const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+    expect(result.plans.map((p) => p.id)).toEqual(rows.slice(0, 50).map((p) => p.id));
+    expect(result.plans[0]).toEqual({
+      id: "plan-0",
+      title: "Trip",
+      destination: " Lisbon ",
+      startDate: null,
+      endDate: null,
+      updatedAt: null,
+      coverImage: null,
+    });
+    expect(result.destinations).toHaveLength(55);
+    expect(result.destinations.at(-1)).toEqual({
+      planId: "plan-54",
+      planTitle: "Trip",
+      startDate: null,
+      endDate: null,
+      name: "Lisbon",
+      country: "PT",
+      lat: null,
+      lng: null,
+      activityCount: 2,
+    });
+    expect(fetchUserPlanSummaries).toHaveBeenCalledOnce();
+  });
+
+  it("keeps destination-less cards but excludes them from the map", async () => {
+    const fetchUserPlanSummaries = vi.fn().mockResolvedValue([
+      { ...summary, destination_name: null },
+      { ...summary, id: "blank", destination_name: "  " },
+    ]);
+    const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
+    expect(result.plans).toHaveLength(2);
+    expect(result.destinations).toEqual([]);
+  });
+
+  it("requires authentication before querying", async () => {
+    const fetchUserPlanSummaries = vi.fn();
+    await expect(makeService({ fetchUserPlanSummaries }, null).getUserDashboard()).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
+    expect(fetchUserPlanSummaries).not.toHaveBeenCalled();
+  });
+});

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { buildSupabaseMock } from "@tests/utils/testHelpers";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { Database } from "@/supabase/types";
 
@@ -156,37 +156,38 @@ describe("PlanRepository", () => {
     });
   });
 
-  describe("getUserPlanners", () => {
-    it("maps rows using the rpc result", async () => {
-      const rpcData = [
-        {
-          id: "plan-1",
-          title: null,
-          start_date: "2024-01-01",
-          end_date: "2024-01-05",
-          created_at: "2023-12-31T00:00:00Z",
-          destination_name: "Lisbon",
-          latest_snapshot_at: "2024-01-03T12:00:00Z",
-          cover_image: null,
-        },
-      ];
-      const rpc = () => Promise.resolve({ data: rpcData, error: null });
-      const supabase = { rpc } as unknown as SupabaseClient<Database>;
+  describe("fetchUserPlanSummaries", () => {
+    it.each([0, 1, 75])("uses one RPC and no snapshot reads for %i plans", async (count) => {
+      const row = {
+        id: "plan-1",
+        title: null,
+        start_date: null,
+        end_date: null,
+        destination_name: "Lisbon",
+        destination_country: "PT",
+        latitude: 38.7,
+        longitude: -9.1,
+        updated_at: "2026-09-11T00:00:00Z",
+        cover_image: null,
+        activity_count: 3,
+      };
+      const rpc = vi.fn().mockResolvedValue({ data: Array.from({ length: count }, () => row), error: null });
+      const from = vi.fn(() => {
+        throw new Error("Dashboard must not hydrate snapshots");
+      });
+      const repo = makeRepo({ rpc, from } as unknown as SupabaseClient<Database>);
+      const result = await repo.fetchUserPlanSummaries();
+      expect(result).toHaveLength(count);
+      expect(rpc).toHaveBeenCalledExactlyOnceWith("get_user_plan_summaries");
+      expect(from).not.toHaveBeenCalled();
+      expect(result).toEqual(Array.from({ length: count }, () => row));
+    });
 
-      const result = await makeRepo(supabase).getUserPlanners();
-
-      expect(result).toEqual([
-        {
-          id: "plan-1",
-          title: "Lisbon",
-          destination: "Lisbon",
-          startDate: "2024-01-01",
-          endDate: "2024-01-05",
-          updatedAt: "2024-01-03T12:00:00Z",
-
-          coverImage: null,
-        },
-      ]);
+    it("reports query failures instead of showing an empty dashboard", async () => {
+      const rpc = vi.fn().mockResolvedValue({ data: null, error: new Error("Unavailable") });
+      await expect(
+        makeRepo({ rpc } as unknown as SupabaseClient<Database>).fetchUserPlanSummaries()
+      ).rejects.toThrow(expect.objectContaining({ operation: "fetchUserPlanSummaries" }));
     });
   });
 });
