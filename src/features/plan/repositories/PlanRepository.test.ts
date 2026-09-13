@@ -183,6 +183,14 @@ describe("PlanRepository", () => {
       expect(result).toEqual(Array.from({ length: count }, () => row));
     });
 
+    it("returns an empty list when the RPC returns no data", async () => {
+      const rpc = vi.fn().mockResolvedValue({ data: null, error: null });
+      expect(await makeRepo({ rpc } as unknown as SupabaseClient<Database>).fetchUserPlanSummaries()).toEqual(
+        []
+      );
+      expect(rpc).toHaveBeenCalledExactlyOnceWith("get_user_plan_summaries");
+    });
+
     it("reports query failures instead of showing an empty dashboard", async () => {
       const rpc = vi.fn().mockResolvedValue({ data: null, error: new Error("Unavailable") });
       await expect(
