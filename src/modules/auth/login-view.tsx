@@ -10,9 +10,9 @@ import { z } from "zod";
 
 import { signInWithPassword } from "@/features/auth/handlers/signInWithPassword";
 import { buildSignupHref, resolveNextPath } from "@/features/auth/lib/redirect";
-import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { validEmail } from "@/features/auth/utils/validEmail";
 import { demoSignIn } from "@/features/demo/lib/demoSignIn";
+import { getErrorMessage } from "@/lib/errors/getErrorMessage";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField } from "@/ui/components/form";
 import { AccessShell } from "@/ui/components/layout";
@@ -64,7 +64,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       router.push(safeNextPath ?? `/u/${slug}`);
       router.refresh();
     } catch (error) {
-      setFormError(getAuthErrorMessage(error, SIGN_IN_FALLBACK));
+      setFormError(getErrorMessage(error) ?? SIGN_IN_FALLBACK);
     }
   };
 
@@ -75,7 +75,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       router.push(`/u/${slug}`);
       router.refresh();
     } catch (error) {
-      setFormError(getAuthErrorMessage(error, SIGN_IN_FALLBACK));
+      setFormError(getErrorMessage(error) ?? SIGN_IN_FALLBACK);
     }
   };
 

@@ -2,8 +2,8 @@
 
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
-import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
-import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
+import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
+import { getErrorMessage } from "@/lib/errors/getErrorMessage";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader } from "@/ui/components/dialog";
@@ -55,7 +55,7 @@ export function AccountSettingsDialog({
       onOpenChange(false);
       window.location.assign(`/u/${normalizedUsername}`);
     } catch (cause) {
-      setError(getAuthErrorMessage(cause, "Unable to save your settings."));
+      setError(getErrorMessage(cause) ?? "Unable to save your settings.");
     }
   };
 

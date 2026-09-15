@@ -11,11 +11,11 @@ import { z } from "zod";
 
 import { registerWithPassword } from "@/features/auth/handlers/registerWithPassword";
 import { buildEmailRedirectUrl, buildLoginHref, resolveNextPath } from "@/features/auth/lib/redirect";
-import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { validEmail } from "@/features/auth/utils/validEmail";
 import { MIN_PASSWORD_LENGTH, validPassword } from "@/features/auth/utils/validPassword";
-import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
 import { demoSignIn } from "@/features/demo/lib/demoSignIn";
+import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
+import { getErrorMessage } from "@/lib/errors/getErrorMessage";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField, TextField } from "@/ui/components/form";
@@ -167,7 +167,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
       router.push(safeNextPath ?? `/u/${result.slug}`);
       router.refresh();
     } catch (error) {
-      setFormError(getAuthErrorMessage(error, SIGN_UP_FALLBACK));
+      setFormError(getErrorMessage(error) ?? SIGN_UP_FALLBACK);
     }
   };
 
@@ -185,7 +185,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
       router.push(`/u/${slug}`);
       router.refresh();
     } catch (error) {
-      setFormError(getAuthErrorMessage(error, SIGN_UP_FALLBACK));
+      setFormError(getErrorMessage(error) ?? SIGN_UP_FALLBACK);
     }
   };
 

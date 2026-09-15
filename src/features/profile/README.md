@@ -10,14 +10,13 @@ Manages user profiles with slug-based routing and auto-creation.
 
 ## Data Flow
 ```text
-Profile Feature
-  └─> Auth Feature (auto-create profiles on signup)
-        └─> Members Feature (display user info in member lists)
-
-Profile Data
-  └─> Search Feature (country codes from destinations)
+Auth Feature (signup and redirects)
+  └─> ProfileService (profile lookup, creation and updates)
+        └─> ProfileRepository
 ```
 
-## Dependencies
+## Boundaries
 
-- `@/features/auth/`
+- Username normalization and validation live in `utils/validUsername.ts`.
+- Profile creation accepts user data without depending on the Auth feature.
+- Shared error types live in `@/lib/errors/`.

@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 
 import { sendResetPasswordEmail } from "@/features/auth/handlers/sendResetPasswordEmail";
 import { buildLoginHref, buildResetPasswordRedirectUrl, resolveNextPath } from "@/features/auth/lib/redirect";
-import { getAuthErrorMessage } from "@/features/auth/utils/extractErrorMessage";
 import { validEmail } from "@/features/auth/utils/validEmail";
+import { getErrorMessage } from "@/lib/errors/getErrorMessage";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form } from "@/ui/components/form";
 import { AccessShell } from "@/ui/components/layout";
@@ -34,7 +34,7 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
       await sendResetPasswordEmail({ email, redirectTo });
       setEmailSent(true);
     } catch (error) {
-      setFormError(getAuthErrorMessage(error, RESET_PASSWORD_FALLBACK));
+      setFormError(getErrorMessage(error) ?? RESET_PASSWORD_FALLBACK);
     }
   };
 
