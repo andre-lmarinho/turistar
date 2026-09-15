@@ -35,7 +35,7 @@ test("translates signup and password recovery without changing routes", async ({
     await expect(page.getByText("Username already taken.")).toBeVisible();
     await expect(page.getByRole("textbox", { name: "Username" })).toHaveValue("e2e-owner");
     await page.goto("/forgot-password?next=%2Fp%2Fplan-e2e-001");
-    await page.getByRole("button", { name: "Send reset link" }).click();
+    await page.getByRole("button", { name: "Send link" }).click();
     await expect(page.getByText("Email is required.")).toBeVisible();
     await page.getByRole("combobox", { name: "Language" }).click();
     await page.getByRole("option", { name: "Português (Brasil)", exact: true }).click();
