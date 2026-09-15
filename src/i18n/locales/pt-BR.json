@@ -1,5 +1,6 @@
 {
   "language": "Idioma",
+  "unexpectedError": "Algo deu errado. Tente novamente.",
   "languageError": "Não foi possível mudar o idioma. Tente novamente.",
   "skipContent": "Pular para o conteúdo",
   "welcomeBack": "Boas-vindas de volta",

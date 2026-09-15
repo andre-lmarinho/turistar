@@ -1,38 +1,27 @@
-"use client";
-
 import { MutationCache, QueryClient } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
-import type { AppRouter } from "@/trpc/server/routers/_app";
 import { toast } from "@/ui/components/toast";
 
-const MAX_QUERY_RETRIES = 3;
-
-function isTRPCClientError(error: unknown): error is TRPCClientError<AppRouter> {
-  return error instanceof TRPCClientError;
-}
-
-function shouldRetryQuery(failureCount: number, error: unknown): boolean {
-  const code = isTRPCClientError(error) ? error.data?.code : undefined;
-
-  if (code === "BAD_REQUEST" || code === "FORBIDDEN" || code === "UNAUTHORIZED") {
-    return false;
-  }
-
-  return failureCount < MAX_QUERY_RETRIES;
-}
-
-export function createQueryClient() {
+export function createQueryClient(unexpectedError: string) {
   return new QueryClient({
     mutationCache: new MutationCache({
       onError: (error) => {
-        toast.error(error instanceof Error ? error.message : "Something went wrong. Try again.");
+        toast.error(error instanceof Error ? error.message : unexpectedError);
       },
     }),
     defaultOptions: {
       mutations: { retry: false },
       queries: {
         refetchOnWindowFocus: false,
-        retry: shouldRetryQuery,
+        retry(failureCount, error) {
+          if (
+            error instanceof TRPCClientError &&
+            ["BAD_REQUEST", "FORBIDDEN", "UNAUTHORIZED"].includes(error.data?.code)
+          ) {
+            return false;
+          }
+          return failureCount < 3;
+        },
         staleTime: 1000,
       },
     },

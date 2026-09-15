@@ -1,5 +1,6 @@
 {
   "language": "Language",
+  "unexpectedError": "Something went wrong. Try again.",
   "languageError": "Unable to change language. Try again.",
   "skipContent": "Skip to content",
   "welcomeBack": "Welcome back",
