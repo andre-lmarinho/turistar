@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/ui/components/button/Button";
@@ -21,6 +22,7 @@ function minutesUntilReset(): number {
 // visit so it doesn't nag, but still shows up before a stunned visitor guesses
 // the wrong thing.
 export function DemoGuideDialog({ isDemo }: DemoGuideDialogProps) {
+  const t = useTranslations();
   const [dismissed, setDismissed] = useState(false);
   const [minutesLeft, setMinutesLeft] = useState(minutesUntilReset);
 
@@ -38,56 +40,47 @@ export function DemoGuideDialog({ isDemo }: DemoGuideDialogProps) {
   return (
     <Dialog open onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="bg-background w-[min(92vw,30rem)] max-h-[min(90vh,40rem)] overflow-y-auto p-6 sm:p-7">
-        <DialogHeader
-          visuallyHidden
-          title="Welcome to the Turistar demo workspace"
-          description="You can view, edit and create trips here. Everything you change is automatically reset every hour."
-        />
+        <DialogHeader visuallyHidden title={t("demoTitle")} description={t("demoDescription")} />
 
         <div className="flex items-center gap-2">
           <MapIcon className="text-primary size-6 shrink-0" aria-hidden="true" />
           <p className="text-foreground text-2xl font-semibold tracking-tight">
-            Welcome to <span className="text-primary">Turistar</span>
+            {t("demoWelcome")} <span className="text-primary">{t("demoTuristar")}</span>
           </p>
         </div>
 
-        <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-          You can view, edit and create trips. All changes are automatically reset every hour.
-        </p>
+        <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{t("demoExplanation")}</p>
 
         <div className="from-primary/10 to-primary/5 mt-5 inline-flex items-center gap-2 self-start rounded-full bg-linear-to-r px-3 py-1.5">
           <Hourglass className="text-primary size-4" aria-hidden="true" />
           <span className="text-primary text-xs font-semibold tracking-wide">
-            Resets in about {Math.max(0, minutesLeft)} min
+            {t("demoResetsIn", { minutes: Math.max(0, minutesLeft) })}
           </span>
         </div>
 
         <section className="bg-card border-border mt-6 rounded-lg border p-4">
-          <h2 className="text-sm font-semibold">What is Turistar?</h2>
-          <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
-            A full-featured travel planner with real-time collaboration, itinerary, map, and budget in one
-            place — and nothing locked behind paid plans.
-          </p>
+          <h2 className="text-sm font-semibold">{t("demoWhatIs")}</h2>
+          <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{t("demoWhatIsDescription")}</p>
         </section>
 
         <section className="mt-6">
           <h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            With a free account you also get:
+            {t("demoFreeAccountTitle")}
           </h2>
           <ul className="mt-3 space-y-3">
             <li className="flex items-start gap-3">
               <Upload className="text-muted-foreground mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span className="text-sm">Upload custom photos for your activities.</span>
+              <span className="text-sm">{t("demoUploadFeature")}</span>
             </li>
             <li className="flex items-start gap-3">
               <Link2 className="text-muted-foreground mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span className="text-sm">Share plans and invite others to collaborate.</span>
+              <span className="text-sm">{t("demoShareFeature")}</span>
             </li>
           </ul>
         </section>
 
         <Button onClick={handleClose} className="mt-7 w-full text-base font-semibold">
-          Got it
+          {t("demoGotIt")}
         </Button>
       </DialogContent>
     </Dialog>

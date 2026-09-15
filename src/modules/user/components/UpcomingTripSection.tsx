@@ -1,5 +1,6 @@
 import { differenceInCalendarDays, format, isValid, parseISO, startOfToday } from "date-fns";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
@@ -16,19 +17,19 @@ function getTripStats(startDate: string, endDate: string | null) {
 
   if (!isValid(start)) {
     return [
-      { label: "Starts", value: "TBD" },
-      { label: "Duration", value: "TBD" },
-      { label: "Days away", value: "TBD" },
+      { label: "starts", value: "TBD" },
+      { label: "duration", value: "TBD" },
+      { label: "daysAway", value: "TBD" },
     ];
   }
 
   return [
-    { label: "Starts", value: format(start, "MMM d") },
+    { label: "starts", value: format(start, "MMM d") },
     {
-      label: "Duration",
+      label: "duration",
       value: end && isValid(end) ? `${differenceInCalendarDays(end, start) + 1} days` : "TBD",
     },
-    { label: "Days away", value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} days` },
+    { label: "daysAway", value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} days` },
   ];
 }
 
@@ -51,7 +52,8 @@ export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary
   );
 }
 
-export function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
+export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
+  const t = await getTranslations();
   const backgroundImage = plan.coverImage ?? DEFAULT_PLAN_COVER_IMAGE;
   const destination = plan.destination ?? plan.title;
   const tripStats = getTripStats(plan.startDate ?? "", plan.endDate);
@@ -77,7 +79,7 @@ export function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
 
         <div className="relative flex min-h-88 flex-col justify-between p-5 sm:p-6">
           <p className="w-fit rounded-full bg-black/35 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
-            Next trip
+            {t("nextTrip")}
           </p>
 
           <div
@@ -92,7 +94,7 @@ export function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
                 {tripStats.map((stat) => (
                   <div key={stat.label} className="min-w-0 px-2 text-center sm:px-4">
                     <dt className="text-muted-foreground text-[0.65rem] font-medium tracking-[0.12em] uppercase">
-                      {stat.label}
+                      {t(stat.label as "starts" | "duration" | "daysAway")}
                     </dt>
                     <dd className="mt-1 truncate text-sm font-semibold tabular-nums sm:text-base">
                       {stat.value}

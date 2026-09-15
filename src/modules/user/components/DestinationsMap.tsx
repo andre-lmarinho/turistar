@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { projectCountryPoint } from "@/modules/user/lib/projectCountryPoint";
@@ -44,6 +45,7 @@ function countryPath(geometry: Polygon | MultiPolygon | null): string {
 }
 
 export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
+  const t = useTranslations();
   const [boundaries, setBoundaries] = useState<MapCountry[] | null>(null);
   const [failed, setFailed] = useState(false);
   const request = useRef<AbortController | null>(null);
@@ -134,11 +136,11 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
         <div className="text-muted-foreground flex items-center gap-4 text-xs">
           <span className="flex items-center gap-2">
             <span className="bg-primary h-2.5 w-2.5 rounded-sm" />
-            Visited
+            {t("mapVisited")}
           </span>
           <span className="flex items-center gap-2">
             <span className="bg-muted border-border h-2.5 w-2.5 rounded-sm border" />
-            Yet to explore
+            {t("mapYetToExplore")}
           </span>
         </div>
       </div>
@@ -152,8 +154,8 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
         onKeyDown={(event) => {
           if (event.key === "Escape") setHover(null);
         }}>
-        <svg viewBox="0 0 1000 460" className="w-full overflow-visible" aria-label="World travel map">
-          <title>World travel map</title>
+        <svg viewBox="0 0 1000 460" className="w-full overflow-visible" aria-label={t("worldTravelMap")}>
+          <title>{t("worldTravelMap")}</title>
           {boundaries.map((country) => {
             const isVisited = countries.some(
               (visitedCountry) => visitedCountry.code.trim().toLowerCase() === country.code
@@ -168,7 +170,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
                 strokeWidth={0.7}
                 data-country={country.name}
                 tabIndex={0}
-                aria-label={`${country.name} — ${isVisited ? "Visited" : "Not visited yet"}`}
+                aria-label={`${country.name} — ${isVisited ? t("mapVisited") : t("notVisitedYet")}`}
                 aria-describedby={isSelected ? descriptionId : undefined}
                 className={cn(
                   "stroke-white cursor-pointer focus-visible:outline-2 focus-visible:outline-ring",
@@ -186,12 +188,12 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
             className="bg-popover text-popover-foreground border-border pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border px-3 py-2 shadow-md"
             style={{ left: hover.x, top: hover.y - 12 }}>
             <p className="text-sm font-semibold">{hover.name}</p>
-            <p className="text-muted-foreground text-xs">{visited ? "Visited" : "Not visited yet"}</p>
+            <p className="text-muted-foreground text-xs">{visited ? t("mapVisited") : t("notVisitedYet")}</p>
             {visited ? (
               <>
                 <p className="text-muted-foreground mt-2 text-xs tabular-nums">
-                  {visited.tripCount} {visited.tripCount === 1 ? "trip" : "trips"} · {visited.locationCount}{" "}
-                  {visited.locationCount === 1 ? "location" : "locations"}
+                  {t("tripCount", { count: visited.tripCount })} ·{" "}
+                  {t("locationCount", { count: visited.locationCount })}
                 </p>
                 <ul className="text-muted-foreground mt-2 text-xs">
                   {visited.trips.map((trip) => (
