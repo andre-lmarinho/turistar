@@ -1,5 +1,6 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 import { getSecurityHeaders } from "./securityHeaders";
 
 const withMDX = createMDX({
@@ -40,4 +41,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withMDX(nextConfig);
+export default createNextIntlPlugin()(withMDX(nextConfig));

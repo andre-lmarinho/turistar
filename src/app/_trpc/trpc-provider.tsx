@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
@@ -14,7 +15,8 @@ type TRPCProviderProps = {
 };
 
 export function TRPCProvider({ children }: TRPCProviderProps) {
-  const [queryClient] = useState(createQueryClient);
+  const t = useTranslations();
+  const [queryClient] = useState(() => createQueryClient(t("unexpectedError")));
   const [trpcClient] = useState(createTRPCClient);
 
   return (

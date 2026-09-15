@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-
+import { LanguageSelect } from "@/modules/auth/components/LanguageSelect";
 import { Logo } from "@/ui/components/logo";
 
 type AccessShellProps = {
@@ -10,7 +10,8 @@ type AccessShellProps = {
 
 export function AccessShell({ title, footer, children }: AccessShellProps) {
   return (
-    <main className="py-12 bg-card flex min-h-screen flex-col items-stretch justify-center">
+    <main id="main-content" className="py-12 bg-card flex min-h-screen flex-col items-stretch justify-center">
+      <LanguageSelect />
       <Logo className="justify-center" href="/" />
       <div className="flex flex-1 items-center justify-center flex-col gap-6">
         <h1 className="text-center text-3xl font-semibold tracking-tight">{title}</h1>

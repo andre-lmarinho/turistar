@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
@@ -12,24 +13,21 @@ import { signInWithPassword } from "@/features/auth/handlers/signInWithPassword"
 import { buildSignupHref, resolveNextPath } from "@/features/auth/lib/redirect";
 import { validEmail } from "@/features/auth/utils/validEmail";
 import { demoSignIn } from "@/features/demo/lib/demoSignIn";
-import { getErrorMessage } from "@/lib/errors/getErrorMessage";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField } from "@/ui/components/form";
 import { AccessShell } from "@/ui/components/layout";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required.").refine(validEmail, "Enter a valid email."),
-  password: z.string().min(1, "Password is required."),
+  email: z.string().min(1, "emailRequired").refine(validEmail, "emailInvalid"),
+  password: z.string().min(1, "passwordRequired"),
 });
 
-type LoginValues = z.infer<typeof loginSchema>;
+type LoginValues = { email: string; password: string };
 
 const DEFAULT_VALUES: LoginValues = {
   email: "",
   password: "",
 };
-
-const SIGN_IN_FALLBACK = "Unable to sign you in.";
 
 type LoginViewProps = {
   resolveProfile: () => Promise<string>;
@@ -37,20 +35,21 @@ type LoginViewProps = {
 };
 
 export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
+  const t = useTranslations();
+
   const router = useRouter();
   const safeNextPath = resolveNextPath(nextPath);
   const signupHref = buildSignupHref(safeNextPath);
   const forgotPasswordHref = safeNextPath
     ? `/forgot-password?next=${encodeURIComponent(safeNextPath)}`
     : "/forgot-password";
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<"signInError" | null>(null);
 
   const formMethods = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: DEFAULT_VALUES,
   });
   const { register, formState } = formMethods;
-
   const handleSubmit: SubmitHandler<LoginValues> = async (values) => {
     setFormError(null);
 
@@ -63,8 +62,8 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
 
       router.push(safeNextPath ?? `/u/${slug}`);
       router.refresh();
-    } catch (error) {
-      setFormError(getErrorMessage(error) ?? SIGN_IN_FALLBACK);
+    } catch {
+      setFormError("signInError");
     }
   };
 
@@ -74,23 +73,23 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       const slug = await demoSignIn(resolveProfile);
       router.push(`/u/${slug}`);
       router.refresh();
-    } catch (error) {
-      setFormError(getErrorMessage(error) ?? SIGN_IN_FALLBACK);
+    } catch {
+      setFormError("signInError");
     }
   };
 
   return (
     <AccessShell
-      title="Welcome back"
+      title={t("welcomeBack")}
       footer={
         <Link href={signupHref} className="text-foreground hover:underline">
-          Don't have an account?
+          {t("noAccount")}
         </Link>
       }>
       <Form form={formMethods} onSubmit={handleSubmit} className="grid gap-6" noValidate>
         <EmailField
-          label="Email"
-          placeholder="you@example.com"
+          label={t("email")}
+          placeholder={t("emailPlaceholder")}
           autoComplete="email"
           required
           {...register("email")}
@@ -98,24 +97,24 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
         <PasswordField
           label={
             <span className="flex w-full items-center justify-between">
-              <span>Password</span>
+              <span>{t("password")}</span>
               <Link href={forgotPasswordHref} className="text-muted-foreground hover:underline">
-                Forgot?
+                {t("forgotPassword")}
               </Link>
             </span>
           }
-          placeholder="Enter your password"
+          placeholder={t("passwordPlaceholder")}
           autoComplete="current-password"
           required
           {...register("password")}
         />
         {formError ? (
           <p role="alert" className="text-destructive text-sm">
-            {formError}
+            {t(formError)}
           </p>
         ) : null}
         <Button type="submit" disabled={formState.isSubmitting} className="text-base font-semibold">
-          {formState.isSubmitting ? "Signing in..." : "Sign in"}
+          {formState.isSubmitting ? t("signingIn") : t("signIn")}
         </Button>
       </Form>
       <div className="border-border mt-5 border-t pt-5">
@@ -123,7 +122,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           variant="accent"
           onClick={handleDemo}
           className="w-full py-3 text-base font-semibold shadow-sm transition-colors">
-          Explore the demo — no account needed
+          {t("exploreDemo")}
         </Button>
       </div>
     </AccessShell>

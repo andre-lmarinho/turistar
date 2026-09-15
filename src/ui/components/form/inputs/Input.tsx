@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { forwardRef, useState } from "react";
 
 import { Eye, EyeOff } from "@/ui/components/icon/lucide-icons";
@@ -24,10 +25,11 @@ export const EmailField = forwardRef<HTMLInputElement, InputFieldProps>(function
 
 export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
   function PasswordField(props, ref) {
+    const t = useTranslations();
     const [isVisible, setIsVisible] = useState(false);
     const toggleVisibility = () => setIsVisible((prev) => !prev);
 
-    const toggleLabel = isVisible ? "Hide password" : "Show password";
+    const toggleLabel = t(isVisible ? "hidePassword" : "showPassword");
 
     return (
       <InputField
