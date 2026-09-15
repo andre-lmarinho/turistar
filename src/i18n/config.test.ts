@@ -18,6 +18,7 @@ describe("interface locale", () => {
     ["invalid", "pt-PT", "pt-BR"],
     [undefined, "fr,pt;q=0.8,en;q=0.5", "pt-BR"],
     [undefined, "pt;q=0,en-GB;q=0.8", "en"],
+    [undefined, "pt;Q=0,en;q=0.5", "en"],
     [undefined, "pt;q=invalid,en", "en"],
     [undefined, "pt;q=0.2,en;q=0.9", "en"],
     [undefined, null, "en"],

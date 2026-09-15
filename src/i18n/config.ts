@@ -11,7 +11,7 @@ export function resolveLocale(cookie: unknown, acceptLanguage: string | null): L
     .split(",")
     .map((entry) => {
       const [tag, ...parameters] = entry.trim().split(";");
-      const quality = parameters.find((parameter) => parameter.trim().startsWith("q="));
+      const quality = parameters.find((parameter) => parameter.trim().toLowerCase().startsWith("q="));
       const weight = quality === undefined ? 1 : Number(quality.trim().slice(2));
       return { tag: tag.toLowerCase(), weight };
     })
