@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ToggleButton } from "@/ui/components/button";
 import type { LucideIcon } from "@/ui/components/icon";
 import { Calendar, DollarSign, List, Map as MapIcon } from "@/ui/components/icon";
@@ -7,11 +8,11 @@ import { Calendar, DollarSign, List, Map as MapIcon } from "@/ui/components/icon
 export const modeOrder = ["overview", "kanban", "map", "budget"] as const;
 export type PlannerMode = (typeof modeOrder)[number];
 
-const MODE_CONFIG: Record<PlannerMode, { label: string; icon: LucideIcon }> = {
-  overview: { label: "Trip", icon: Calendar },
-  kanban: { label: "Board", icon: List },
-  map: { label: "Map", icon: MapIcon },
-  budget: { label: "Budget", icon: DollarSign },
+const MODE_CONFIG: Record<PlannerMode, { labelKey: string; icon: LucideIcon }> = {
+  overview: { labelKey: "modeTrip", icon: Calendar },
+  kanban: { labelKey: "modeBoard", icon: List },
+  map: { labelKey: "modeMap", icon: MapIcon },
+  budget: { labelKey: "modeBudget", icon: DollarSign },
 };
 
 interface ModeToggleButtonProps {
@@ -21,12 +22,19 @@ interface ModeToggleButtonProps {
 }
 
 export function ModeToggleButton({ value, onChange, modes = modeOrder }: ModeToggleButtonProps) {
+  const t = useTranslations();
   return (
     <ToggleButton
       options={[...modes]}
       value={value}
       onChange={(mode) => onChange(mode as PlannerMode)}
-      renderOption={(mode) => MODE_CONFIG[mode as PlannerMode]}
+      renderOption={(mode) => {
+        const config = MODE_CONFIG[mode as PlannerMode];
+        return {
+          label: t(config.labelKey as "modeTrip" | "modeBoard" | "modeMap" | "modeBudget"),
+          icon: config.icon,
+        };
+      }}
       getOptionTestId={(mode) => `planner-mode-${mode}`}
     />
   );

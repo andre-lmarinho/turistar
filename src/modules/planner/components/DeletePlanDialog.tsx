@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { trpc } from "@/trpc/react";
 import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
 import { Trash2 } from "@/ui/components/icon";
@@ -14,6 +15,7 @@ type DeletePlanDialogProps = {
 };
 
 export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }: DeletePlanDialogProps) {
+  const t = useTranslations();
   const deleteMutation = trpc.viewer.plan.delete.useMutation();
   const isPending = deleteMutation.isPending;
   const router = useRouter();
@@ -44,7 +46,7 @@ export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }:
       trigger={
         <button
           type="button"
-          aria-label="Delete planner"
+          aria-label={t("deletePlanner")}
           disabled={isPending}
           className={cn(
             "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors disabled:cursor-not-allowed disabled:opacity-60",
@@ -53,9 +55,9 @@ export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }:
           <Trash2 className="size-4" aria-hidden="true" />
         </button>
       }
-      title="Delete planner"
-      description="This will permanently delete this planner and all of its data."
-      confirmLabel={isPending ? "Deleting..." : "Delete"}
+      title={t("deletePlanner")}
+      description={t("deletePlannerDescription")}
+      confirmLabel={isPending ? t("deleting") : t("deleteAction")}
       onConfirm={handleConfirm}
       isPending={isPending}
     />

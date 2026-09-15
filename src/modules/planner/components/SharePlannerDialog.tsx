@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
+import { useTranslations } from "next-intl";
 import type { SubmitEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ShareMember, ShareTier } from "@/features/members/types";
@@ -23,6 +23,7 @@ export function SharePlannerDialog({
   canManageMembers: boolean;
   viewerUserId: string | null;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const members = useShareMembers(planId, open);
 
@@ -31,11 +32,11 @@ export function SharePlannerDialog({
       <DialogTriggerButton
         type="button"
         className="text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors"
-        aria-label="Share planner">
+        aria-label={t("sharePlanner")}>
         <Share2 className="size-4" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent>
-        <DialogHeader title="Share planner" description="Invite people and manage planner members." />
+        <DialogHeader title={t("sharePlanner")} description={t("sharePlannerDescription")} />
         <div className="max-h-[75vh] space-y-4 overflow-y-auto p-4">
           <InviteForm planId={planId} canManageMembers={canManageMembers} members={members} />
           <MembersSection
@@ -50,19 +51,6 @@ export function SharePlannerDialog({
   );
 }
 
-const getInviteErrorMessage = (error: unknown) => {
-  const errorCode =
-    typeof error === "object" && error && "code" in error
-      ? String((error as { code?: unknown }).code ?? "")
-      : "";
-
-  if (errorCode === "USER_NOT_REGISTERED") {
-    return "This email has no account yet. Ask them to sign up first, then invite again.";
-  }
-
-  return "We could not add this member. Please try again.";
-};
-
 function InviteForm({
   planId,
   canManageMembers,
@@ -72,7 +60,21 @@ function InviteForm({
   canManageMembers: boolean;
   members: ReturnType<typeof useShareMembers>;
 }) {
+  const t = useTranslations();
   const { addMember, isLoading } = members;
+
+  const getInviteErrorMessage = (error: unknown) => {
+    const errorCode =
+      typeof error === "object" && error && "code" in error
+        ? String((error as { code?: unknown }).code ?? "")
+        : "";
+
+    if (errorCode === "USER_NOT_REGISTERED") {
+      return t("userNotRegistered");
+    }
+
+    return t("addMemberFailed");
+  };
   const [email, setEmail] = useState("");
   const [tier, setTier] = useState<ShareTier>("member");
   const [formError, setFormError] = useState("");
@@ -121,14 +123,14 @@ function InviteForm({
 
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
-      showError("Enter a valid email.");
+      showError(t("enterValidEmail"));
       return;
     }
 
     try {
       await addMember.mutateAsync({ planIdOrSlug: planId, email: trimmedEmail, tier });
       setEmail("");
-      showSuccess("Member added.");
+      showSuccess(t("memberAdded"));
     } catch (error) {
       showError(getInviteErrorMessage(error));
     }
@@ -142,7 +144,7 @@ function InviteForm({
           name="email"
           autoComplete="email"
           spellCheck={false}
-          placeholder="Email address…"
+          placeholder={t("emailAddressPlaceholder")}
           value={email}
           onChange={(event) => {
             setEmail(event.target.value);
@@ -158,7 +160,7 @@ function InviteForm({
           options={SHARE_TIER_OPTIONS}
           onChange={setTier}
           disabled={!canManageMembers}
-          ariaLabel="Select member role"
+          ariaLabel={t("selectMemberRole")}
           triggerClassName="w-28 shrink-0"
           contentClassName="w-28"
         />
@@ -166,12 +168,10 @@ function InviteForm({
           type="submit"
           className="shrink-0"
           disabled={!canManageMembers || addMember.isPending || isLoading}>
-          Share
+          {t("shareButton")}
         </Button>
       </form>
-      {!canManageMembers ? (
-        <p className="text-muted-foreground text-xs">Only admins can invite people.</p>
-      ) : null}
+      {!canManageMembers ? <p className="text-muted-foreground text-xs">{t("onlyAdminsInvite")}</p> : null}
       {formSuccess ? (
         <output className="text-foreground block text-xs" aria-live="polite">
           {formSuccess}
@@ -246,6 +246,7 @@ function ShareMemberRow({
   canManageMembers,
   mutations,
 }: ShareMemberRowProps) {
+  const t = useTranslations();
   const isOwner = ownerId === member.userId;
   const isSelf = viewerUserId === member.userId;
   const isAdmin = member.tier === "admin";
@@ -267,7 +268,7 @@ function ShareMemberRow({
     ...(canSelfLeave ? [LEAVE_OPTION] : []),
     ...(canRemove ? [REMOVE_OPTION] : []),
   ];
-  const displayName = member.displayName ?? (isOwner ? "Owner" : "User");
+  const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
   const displayLabel = isOwner ? `${displayName} (owner)` : displayName;
   const isMutating =
     mutations.updateTier.isPending || mutations.leave.isPending || mutations.removeMember.isPending;
@@ -333,6 +334,7 @@ function MembersSection({
   viewerUserId: string | null;
   members: ReturnType<typeof useShareMembers>;
 }) {
+  const t = useTranslations();
   const { data, isLoading, error, updateTier, removeMember, leave } = query;
   const memberMutations = { updateTier, removeMember, leave };
   const isLeaving = leave.isPending;
@@ -350,17 +352,17 @@ function MembersSection({
     <div className="space-y-3">
       {isLeaving ? (
         <p className="text-muted-foreground text-xs" aria-live="polite">
-          Leaving planner…
+          {t("leavingPlanner")}
         </p>
       ) : null}
-      {isLoading ? <p className="text-muted-foreground text-xs">Loading members…</p> : null}
-      {error ? <p className="text-destructive text-xs">Unable to load members.</p> : null}
+      {isLoading ? <p className="text-muted-foreground text-xs">{t("loadingMembers")}</p> : null}
+      {error ? <p className="text-destructive text-xs">{t("unableToLoadMembers")}</p> : null}
       {mutationError ? (
         <p role="alert" className="text-destructive text-xs">
-          Unable to update members. Please try again.
+          {t("unableToUpdateMembers")}
         </p>
       ) : null}
-      {shouldShowEmpty ? <p className="text-muted-foreground text-xs">No members yet.</p> : null}
+      {shouldShowEmpty ? <p className="text-muted-foreground text-xs">{t("noMembersYet")}</p> : null}
       {shouldShowList ? (
         <div className={cn("space-y-2", isLeaving && "pointer-events-none opacity-50")}>
           {members.map((member) => (
