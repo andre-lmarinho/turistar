@@ -20,7 +20,7 @@ export function LanguageSelect() {
   const [pending, startTransition] = useTransition();
   const [failed, setFailed] = useState(false);
   return (
-    <div className="relative flex flex-col items-center gap-2">
+    <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
       <Select.Root
         items={languages}
         value={locale}
@@ -42,7 +42,7 @@ export function LanguageSelect() {
           aria-label={t("language")}
           aria-busy={pending}
           aria-describedby={failed ? `${id}-error` : undefined}
-          className="group border-border/70 bg-background/70 text-foreground hover:bg-muted/50 active:bg-muted data-popup-open:bg-muted/50 flex min-h-11 items-center gap-2.5 rounded-full border px-3.5 py-2 text-sm font-medium shadow-xs transition-colors duration-150 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+          className="group border-border/70 bg-background/80 text-foreground hover:bg-muted/50 active:bg-muted data-popup-open:bg-muted/50 flex min-h-11 items-center gap-2.5 rounded-full border px-3.5 py-2 text-sm font-medium shadow-md backdrop-blur-sm transition-colors duration-150 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
           <Globe2 className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <Select.Value lang={locale} />
           {pending ? (
@@ -58,7 +58,7 @@ export function LanguageSelect() {
           )}
         </Select.Trigger>
         <Select.Portal>
-          <Select.Positioner sideOffset={8} align="center" alignItemWithTrigger={false} className="z-60">
+          <Select.Positioner sideOffset={8} align="end" alignItemWithTrigger={false} className="z-60">
             <Select.Popup className="border-border bg-background text-foreground w-60 max-w-[calc(100vw-2rem)] origin-(--transform-origin) rounded-2xl border p-1.5 shadow-lg outline-none transition-[opacity,transform] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 motion-reduce:transition-none">
               <Select.List aria-label={t("language")}>
                 {languages.map(({ value, label }) => (
@@ -79,7 +79,7 @@ export function LanguageSelect() {
         </Select.Portal>
       </Select.Root>
       {failed ? (
-        <p id={`${id}-error`} role="alert" className="text-destructive max-w-60 text-center text-sm">
+        <p id={`${id}-error`} role="alert" className="text-destructive max-w-60 text-right text-sm">
           {t("languageError")}
         </p>
       ) : null}

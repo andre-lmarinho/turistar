@@ -20,7 +20,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
   useSearchParams: () => mocks.params,
 }));
-vi.mock("@/ui/components/select/LanguageSelect", () => ({ LanguageSelect: () => null }));
+vi.mock("@/modules/auth/components/LanguageSelect", () => ({ LanguageSelect: () => null }));
 vi.mock("@/features/auth/handlers/sendResetPasswordEmail", () => ({ sendResetPasswordEmail: mocks.send }));
 vi.mock("@/features/auth/handlers/exchangeResetPasswordSession", () => ({
   exchangeResetPasswordSession: mocks.exchange,

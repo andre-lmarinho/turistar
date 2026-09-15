@@ -16,12 +16,12 @@ import { validEmail } from "@/features/auth/utils/validEmail";
 import { MIN_PASSWORD_LENGTH, validPassword } from "@/features/auth/utils/validPassword";
 import { demoSignIn } from "@/features/demo/lib/demoSignIn";
 import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
+import { LanguageSelect } from "@/modules/auth/components/LanguageSelect";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField, TextField } from "@/ui/components/form";
 import type { LucideIcon } from "@/ui/components/icon/lucide-icons";
 import { Kanban, LandPlot, Plane } from "@/ui/components/icon/lucide-icons";
-import { LanguageSelect } from "@/ui/components/select/LanguageSelect";
 
 import mock from "./media/app-mock.webp";
 
@@ -193,11 +193,9 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
 
   return (
     <main id="main-content" className="py-12 bg-card flex min-h-screen flex-col items-stretch justify-center">
+      <LanguageSelect />
       <div className="2xl:border-border items-center 2xl:bg-background grid w-full max-w-360 mx-auto grid-cols-1 grid-rows-1 overflow-hidden lg:grid-cols-2 2xl:rounded-[20px] 2xl:border 2xl:py-6">
         <div className="mt-0 mr-auto ml-auto flex w-full max-w-xl flex-col px-4 pt-6 md:px-20 lg:mt-24 2xl:px-28">
-          <div className="mb-6 flex justify-end">
-            <LanguageSelect />
-          </div>
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-semibold tracking-tight">{t("startPlanning")}</h1>
             <p className="text-muted-foreground text-base font-medium">{t("signupDescription")}</p>
