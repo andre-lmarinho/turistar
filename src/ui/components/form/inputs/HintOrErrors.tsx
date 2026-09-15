@@ -1,5 +1,6 @@
 "use client";
 
+import { type AppConfig, useTranslations } from "next-intl";
 import type { FieldValues } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 
@@ -10,6 +11,7 @@ type HintsOrErrorsProps = {
 };
 
 export function HintsOrErrors<T extends FieldValues = FieldValues>({ fieldName }: HintsOrErrorsProps) {
+  const t = useTranslations();
   const methods = useFormContext<T>();
 
   if (!methods) return null;
@@ -19,6 +21,6 @@ export function HintsOrErrors<T extends FieldValues = FieldValues>({ fieldName }
   const isFieldError = fieldError && "message" in fieldError && !fieldError.root;
   const message = isFieldError && typeof fieldError.message === "string" ? fieldError.message : null;
 
-  if (message) return <InputError message={message} />;
+  if (message) return <InputError message={t(message as keyof AppConfig["Messages"])} />;
   return null;
 }
