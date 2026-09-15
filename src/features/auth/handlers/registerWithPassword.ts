@@ -1,7 +1,7 @@
 import type { AuthResponse } from "@supabase/auth-js";
 import type { Session } from "@supabase/supabase-js";
 
-import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
+import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
 import { supabase } from "@/supabase/client";
 
 type RegisterWithPasswordInput = {

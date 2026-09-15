@@ -1,9 +1,7 @@
 import "server-only";
 import slugify from "@sindresorhus/slugify";
-import type { Viewer } from "@/features/auth/lib/session";
-import { extractErrorMessage } from "@/features/auth/utils/extractErrorMessage";
-import { normalizeUsername, validUsername } from "@/features/auth/utils/validUsername";
-import { ApplicationError } from "@/lib/errors";
+import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
+import { ApplicationError } from "@/lib/errors/ApplicationError";
 import { isRecord, readString } from "@/lib/typeGuards";
 
 import type { ProfileRepository } from "../repositories/ProfileRepository";
@@ -46,8 +44,12 @@ export class ProfileService {
     }
   }
 
-  async ensureProfile(viewer: Viewer): Promise<string> {
-    const metadata = viewer.user_metadata as Record<string, unknown> | null;
+  async ensureProfile(viewer: {
+    id: string;
+    email?: string | null;
+    user_metadata?: Record<string, unknown> | null;
+  }): Promise<string> {
+    const metadata = viewer.user_metadata ?? null;
     const displayName =
       readMetadataString(metadata, "full_name") ??
       readMetadataString(metadata, "name") ??
@@ -73,17 +75,7 @@ export class ProfileService {
         return (await this.repo.upsertProfile({ userId: viewer.id, slug, displayName, avatarUrl })).slug;
       } catch (error) {
         if (extractSupabaseErrorCode(error) === "23505" && slug !== slugs[slugs.length - 1]) continue;
-        const code = extractSupabaseErrorCode(error);
-        const message = extractErrorMessage(error);
-        throw new Error(
-          "ensureProfile upsert failed: userId=" +
-            viewer.id +
-            " slug=" +
-            slug +
-            (code ? ` code=${code}` : "") +
-            (message ? ` message=${message}` : ""),
-          { cause: error }
-        );
+        throw new Error(`ensureProfile upsert failed: userId=${viewer.id} slug=${slug}`, { cause: error });
       }
     }
     throw new Error(`ensureProfile failed to allocate a unique slug: userId=${viewer.id}`);

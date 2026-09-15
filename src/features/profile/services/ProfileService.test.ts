@@ -94,4 +94,14 @@ describe("ProfileService", () => {
       userId: "user-1",
     });
   });
+  it("preserves the technical failure as cause with operation context", async () => {
+    const cause = new Error("technical details", { cause: { code: "42501" } });
+    repositoryMocks.upsertProfile.mockRejectedValue(cause);
+
+    await expect(makeService().ensureProfile({ id: "user-1" })).rejects.toMatchObject({
+      message: "ensureProfile upsert failed: userId=user-1 slug=user-1",
+      cause,
+    });
+    expect(repositoryMocks.upsertProfile).toHaveBeenCalledTimes(1);
+  });
 });
