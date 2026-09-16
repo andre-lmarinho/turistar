@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { getViewer } from "@/features/auth/lib/session";
 import { ProfileRepository } from "@/features/profile/repositories/ProfileRepository";
 import { createSupabaseServerClient } from "@/supabase/server";
@@ -29,6 +31,7 @@ async function getUserProfile(): Promise<UserProfile> {
 }
 
 export async function AppBar() {
+  const t = await getTranslations();
   const { slug, displayName, email } = await getUserProfile();
   const isLoggedIn = Boolean(email);
 
@@ -41,10 +44,10 @@ export async function AppBar() {
         ) : (
           <div className="flex items-center gap-1.5">
             <Button href="/login" variant="ghost" className="min-h-11 px-3">
-              Log in
+              {t("logIn")}
             </Button>
             <Button href="/" className="min-h-11 rounded-xl px-4 shadow-sm">
-              Get started
+              {t("getStarted")}
             </Button>
           </div>
         )}

@@ -269,7 +269,7 @@ function ShareMemberRow({
     ...(canRemove ? [REMOVE_OPTION] : []),
   ];
   const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
-  const displayLabel = isOwner ? `${displayName} (owner)` : displayName;
+  const displayLabel = isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;
   const isMutating =
     mutations.updateTier.isPending || mutations.leave.isPending || mutations.removeMember.isPending;
 

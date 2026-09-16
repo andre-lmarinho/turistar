@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { AccountSettingsDialog } from "@/modules/layout/AccountSettingsDialog";
@@ -17,6 +18,7 @@ type AvatarMenuProps = {
 };
 
 export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const router = useRouter();
@@ -33,7 +35,7 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
         <PopoverTriggerButton
           aria-haspopup="dialog"
           aria-expanded={open}
-          aria-label="Account menu"
+          aria-label={t("accountMenu")}
           className="focus-visible:ring-ring flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:outline-none active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100">
           <Avatar displayName={displayName} size="lg" />
         </PopoverTriggerButton>
@@ -46,8 +48,8 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
           <div className="flex min-w-0 items-center gap-2 px-3 py-1">
             <Avatar displayName={displayName} size="lg" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{displayName ?? "Traveler"}</p>
-              <p className="text-muted-foreground truncate text-xs">{email ?? "Signed in"}</p>
+              <p className="truncate text-sm font-medium">{displayName ?? t("travelerFallback")}</p>
+              <p className="text-muted-foreground truncate text-xs">{email ?? t("signedIn")}</p>
             </div>
           </div>
 
@@ -60,7 +62,7 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
               }}
               className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition focus-visible:ring-2 focus-visible:outline-none">
               <Settings className="text-muted-foreground size-4" aria-hidden="true" />
-              Settings
+              {t("settings")}
             </button>
           </div>
 
@@ -70,7 +72,7 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
               onClick={handleSignOut}
               className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition focus-visible:ring-2 focus-visible:outline-none">
               <LogOut className="size-4" aria-hidden="true" />
-              Log out
+              {t("signOut")}
             </button>
           </div>
 

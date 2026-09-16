@@ -336,8 +336,8 @@ export const ActivityDialog = memo(function ActivityDialog({
 
               <Button
                 variant="ghost"
-                title="Close"
-                aria-label="Close"
+                title={t("close")}
+                aria-label={t("close")}
                 onClick={commitAndClose}
                 className="hover:bg-border size-8 rounded-full p-0">
                 <X className="size-4" aria-hidden="true" />

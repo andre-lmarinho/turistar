@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
@@ -25,6 +26,7 @@ export function AccountSettingsDialog({
   email,
   slug,
 }: AccountSettingsDialogProps) {
+  const t = useTranslations();
   const [name, setName] = useState(displayName ?? "");
   const [username, setUsername] = useState(slug ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +43,11 @@ export function AccountSettingsDialog({
     event.preventDefault();
     const normalizedUsername = normalizeUsername(username);
     if (!name.trim()) {
-      setError("Enter your name.");
+      setError(t("nameRequired"));
       return;
     }
     if (!validUsername(normalizedUsername)) {
-      setError("Use 1 to 28 lowercase letters, numbers, or hyphens.");
+      setError(t("usernameInvalid"));
       return;
     }
 
@@ -55,41 +57,41 @@ export function AccountSettingsDialog({
       onOpenChange(false);
       window.location.assign(`/u/${normalizedUsername}`);
     } catch (cause) {
-      setError(getErrorMessage(cause) ?? "Unable to save your settings.");
+      setError(getErrorMessage(cause) ?? t("settingsSaveFailed"));
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[calc(100%-2rem)] max-w-lg overflow-hidden rounded-2xl">
-        <DialogHeader title="Account settings" description="Update your name and public profile address." />
+        <DialogHeader title={t("accountSettings")} description={t("accountSettingsDescription")} />
         <form onSubmit={handleSubmit} className="grid gap-5 p-5">
           <div className="bg-muted/40 flex items-center gap-3 rounded-xl border p-3">
             <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-full">
               <UserRound className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium">{email ?? "Signed in"}</p>
-              <p className="text-muted-foreground text-xs">Your email cannot be changed here.</p>
+              <p className="text-sm font-medium">{email ?? t("signedIn")}</p>
+              <p className="text-muted-foreground text-xs">{t("emailCannotBeChanged")}</p>
             </div>
           </div>
 
           <div className="grid gap-4">
             <InputField
               id="account-display-name"
-              label="Name"
+              label={t("nameLabel")}
               name="displayName"
               value={name}
               onChange={(event) => setName(event.target.value)}
               autoComplete="name"
-              placeholder="What should we call you?"
+              placeholder={t("namePlaceholder")}
               maxLength={80}
               required
             />
             <div>
               <InputField
                 id="account-username"
-                label="Username"
+                label={t("username")}
                 name="username"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
@@ -99,7 +101,7 @@ export function AccountSettingsDialog({
                 required
               />
               <p className="text-muted-foreground mt-1 text-xs">
-                Your profile will be available at /u/{normalizeUsername(username) || "your-username"}.
+                {t("profileAvailableAt", { username: normalizeUsername(username) || "your-username" })}
               </p>
             </div>
           </div>
@@ -112,10 +114,10 @@ export function AccountSettingsDialog({
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t("cancel")}
             </Button>
             <Button type="submit" disabled={updateProfile.isPending}>
-              {updateProfile.isPending ? "Saving..." : "Save changes"}
+              {updateProfile.isPending ? t("saving") : t("saveChanges")}
             </Button>
           </div>
         </form>

@@ -1,27 +1,29 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { Logo } from "@/ui/components/logo";
 
 const EXTERNAL_LINK_CLASS = "underline underline-offset-2 hover:opacity-70";
 
 const RESOURCE_LINKS = [
-  { href: "/privacy", label: "Privacy" },
-  { href: "/terms", label: "Terms" },
+  { href: "/privacy", labelKey: "privacyPolicy" },
+  { href: "/terms", labelKey: "termsOfUse" },
 ] as const;
 
-export function Footer() {
+export async function Footer() {
+  const t = await getTranslations();
   return (
     <footer className="mx-3 py-16">
       <div className="mx-auto grid h-full w-full max-w-300 grid-cols-1 gap-8 md:grid-cols-[2fr_2fr]">
         <div>
           <Logo href="/" />
-          <p className="mt-5 px-2">Plan trips together with your itinerary, map, and budget in one place.</p>
+          <p className="mt-5 px-2">{t("footerTagline")}</p>
           <p className="mt-3 px-2">
-            {"Made with "}
+            {t("madeWith")}{" "}
             <span aria-label="heart" role="img">
               ❤️
-            </span>
-            {" by "}
+            </span>{" "}
+            {t("by")}{" "}
             <a
               href="https://andremarinho.me/"
               className={EXTERNAL_LINK_CLASS}
@@ -35,18 +37,18 @@ export function Footer() {
             className={`mt-2 inline-block px-2 ${EXTERNAL_LINK_CLASS}`}
             target="_blank"
             rel="noopener noreferrer">
-            GitHub
+            {t("github")}
           </a>
           <a href="mailto:support@turistar.me" className={`mt-2 inline-block px-2 ${EXTERNAL_LINK_CLASS}`}>
-            Support
+            {t("support")}
           </a>
         </div>
         <div className="grid grid-cols-2 gap-6 px-2">
-          <nav aria-label="Resources" className="flex flex-col gap-2">
-            <p className="font-semibold">Resources</p>
+          <nav aria-label={t("resources")} className="flex flex-col gap-2">
+            <p className="font-semibold">{t("resources")}</p>
             {RESOURCE_LINKS.map((link) => (
               <Link key={link.href} className="hover:opacity-70" href={link.href}>
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </nav>

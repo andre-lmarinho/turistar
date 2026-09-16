@@ -212,7 +212,7 @@ export function CategoryChart({
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={Math.round(percent)}
-                  aria-label={`${label} usage ${Math.round(percent)}%`}
+                  aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
                   className="bg-muted mt-2 h-1.5 rounded-full">
                   <div
                     className="h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none"
@@ -422,7 +422,7 @@ function ExpenseTable({
             <button
               type="button"
               onClick={() => setEditingId(entry.id)}
-              aria-label="Edit entry"
+              aria-label={t("editEntry")}
               disabled={disabled}
               className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
               <Pencil className="size-4" aria-hidden="true" />
@@ -430,7 +430,7 @@ function ExpenseTable({
             <button
               type="button"
               onClick={() => void onDelete(entry.id)}
-              aria-label="Delete entry"
+              aria-label={t("deleteEntry")}
               disabled={disabled}
               className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
               <Trash2 className="size-4" aria-hidden="true" />
@@ -452,7 +452,7 @@ function ExpenseTable({
         aria-labelledby="expense-table-caption"
         className="w-full border-separate border-spacing-y-2 text-sm">
         <caption id="expense-table-caption" className="sr-only">
-          Expenses table showing description, category, amount, and actions
+          {t("expenseTableCaption")}
         </caption>
         <thead className="text-muted-foreground text-xs uppercase tracking-wide">
           <tr>

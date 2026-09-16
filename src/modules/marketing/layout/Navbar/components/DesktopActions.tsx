@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { supabase } from "@/supabase/client";
 import { trpc } from "@/trpc/react";
@@ -8,6 +9,7 @@ import { Button } from "@/ui/components/button";
 type Profile = { slug: string | null };
 
 export function DesktopActions() {
+  const t = useTranslations();
   const [profile, setProfile] = useState<Profile | null>(null);
   const profileUtils = trpc.useUtils();
 
@@ -53,14 +55,14 @@ export function DesktopActions() {
     <div className="ml-auto flex items-center gap-6 lg:ml-0 lg:justify-self-end">
       {destination ? (
         <Button href={destination} variant="accent">
-          Go to Planner
+          {t("goToPlanner")}
         </Button>
       ) : (
         <>
           <Button href="/login" variant="ghost">
-            Log in
+            {t("logIn")}
           </Button>
-          <Button href="/">Get started</Button>
+          <Button href="/">{t("getStarted")}</Button>
         </>
       )}
     </div>
