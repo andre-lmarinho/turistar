@@ -11,7 +11,7 @@ import { Avatar } from "@/ui/components/avatar";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/ui/components/dialog";
 import { Share2 } from "@/ui/components/icon";
-import { SelectMenu, type SelectMenuOption } from "@/ui/components/select/SelectMenu";
+import { SelectMenu } from "@/ui/components/select/SelectMenu";
 import { cn } from "@/ui/utils/cn";
 
 export function SharePlannerDialog({
@@ -157,7 +157,7 @@ function InviteForm({
         />
         <SelectMenu
           value={tier}
-          options={SHARE_TIER_OPTIONS}
+          options={SHARE_TIER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
           onChange={setTier}
           disabled={!canManageMembers}
           ariaLabel={t("selectMemberRole")}
@@ -188,14 +188,14 @@ function InviteForm({
 
 type MemberMenuOption = ShareTier | "leave" | "remove";
 
-const LEAVE_OPTION: SelectMenuOption<MemberMenuOption> = {
+const LEAVE_OPTION = {
   value: "leave",
   label: "leavePlanner",
-};
-const REMOVE_OPTION: SelectMenuOption<MemberMenuOption> = {
+} as const;
+const REMOVE_OPTION = {
   value: "remove",
   label: "removeMember",
-};
+} as const;
 
 const isTier = (value: MemberMenuOption): value is ShareTier => value === "admin" || value === "member";
 
@@ -215,7 +215,7 @@ const getTierOptions = ({
   isOwner,
   isLastAdmin,
   currentTier,
-}: TierOptionsParams): ReadonlyArray<SelectMenuOption<MemberMenuOption>> => {
+}: TierOptionsParams) => {
   if (!canManageMembers && isSelf) {
     return SHARE_TIER_OPTIONS.filter((tierOption) => tierOption.value === currentTier);
   }
@@ -263,12 +263,11 @@ function ShareMemberRow({
     isLastAdmin,
     currentTier: member.tier,
   });
-  const translateLabel = (key: string) => t(key as Parameters<typeof t>[0]);
   const menuOptions = [
-    ...tierOptions.map((opt) => ({ ...opt, label: translateLabel(opt.label) })),
-    ...(canSelfLeave ? [{ ...LEAVE_OPTION, label: translateLabel(LEAVE_OPTION.label) }] : []),
-    ...(canRemove ? [{ ...REMOVE_OPTION, label: translateLabel(REMOVE_OPTION.label) }] : []),
-  ];
+    ...tierOptions,
+    ...(canSelfLeave ? [LEAVE_OPTION] : []),
+    ...(canRemove ? [REMOVE_OPTION] : []),
+  ].map((option) => ({ ...option, label: t(option.label) }));
   const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
   const displayLabel = isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;
   const isMutating =

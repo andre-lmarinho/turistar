@@ -1,7 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Activity, DayPlan } from "@/features/activity/types";
+import en from "@/i18n/locales/en.json";
+import pt from "@/i18n/locales/pt-BR.json";
 import { TripView } from "./TripView";
 
 const shared = vi.hoisted(() => ({ useDragHandlers: vi.fn() }));
@@ -36,8 +39,8 @@ vi.mock("@/ui/components/tooltip", () => ({
 }));
 const activity: Activity = { id: "activity-1", title: "Museum", color: "bg-[var(--color-1)]" };
 const days: DayPlan[] = [
-  { id: "day-1", label: "Mon, 05 Jul", activities: [activity] },
-  { id: "day-2", label: "Tue, 06 Jul", activities: [] },
+  { id: "2021-07-05", label: "Mon, Jul 05", activities: [activity] },
+  { id: "2021-07-06", label: "Tue, Jul 06", activities: [] },
 ];
 beforeEach(() => {
   shared.useDragHandlers.mockReturnValue({
@@ -62,9 +65,9 @@ describe("TripView", () => {
       />
     );
     expect(screen.getByText("Itinerary")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Mon, 05 Jul" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mon, Jul 05" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Museum" }));
-    expect(onActivitySelect).toHaveBeenCalledWith(activity, "day-1");
+    expect(onActivitySelect).toHaveBeenCalledWith(activity, "2021-07-05");
   });
   it("hides and restores the itinerary", () => {
     render(
@@ -89,7 +92,7 @@ describe("TripView", () => {
     expect(screen.queryByText("Museum")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Expand all days" }));
     fireEvent.click(screen.getAllByRole("button", { name: "Add activity" })[0]);
-    expect(onFallbackAdd).toHaveBeenCalledWith("day-1", 1);
+    expect(onFallbackAdd).toHaveBeenCalledWith("2021-07-05", 1);
   });
 });
 
@@ -128,10 +131,10 @@ it("supports keyboard selection and hovering without selecting from the drag han
   expect(hover).toHaveBeenLastCalledWith("activity-1");
   fireEvent.mouseLeave(card);
   expect(hover).toHaveBeenLastCalledWith(null);
-  fireEvent.click(screen.getByRole("button", { name: "Reorder Museum" }));
+  fireEvent.click(screen.getByRole("button", { name: "Reorder activity Museum" }));
   expect(select).not.toHaveBeenCalled();
   fireEvent.keyDown(card, { key: "Enter" });
-  expect(select).toHaveBeenCalledWith(activity, "day-1");
+  expect(select).toHaveBeenCalledWith(activity, "2021-07-05");
 });
 
 it("expands a collapsed day when adding an activity", () => {
@@ -141,5 +144,23 @@ it("expands a collapsed day when adding an activity", () => {
   expect(screen.queryByText("Museum")).not.toBeInTheDocument();
   fireEvent.click(screen.getAllByRole("button", { name: "Add activity" })[0]);
   expect(screen.getByText("Museum")).toBeInTheDocument();
-  expect(add).toHaveBeenCalledWith("day-1", 1);
+  expect(add).toHaveBeenCalledWith("2021-07-05", 1);
+});
+
+it("changes the date language without shifting the trip day in a western timezone", () => {
+  const view = (
+    <TripView days={days} onActivitySelect={vi.fn()} onActivityMove={vi.fn()} onFallbackAdd={vi.fn()} />
+  );
+  const { rerender } = render(
+    <NextIntlClientProvider locale="en" messages={en} timeZone="America/Sao_Paulo">
+      {view}
+    </NextIntlClientProvider>
+  );
+  expect(screen.getByRole("heading", { name: "Mon, Jul 05" })).toBeVisible();
+  rerender(
+    <NextIntlClientProvider locale="pt-BR" messages={pt} timeZone="America/Sao_Paulo">
+      {view}
+    </NextIntlClientProvider>
+  );
+  expect(screen.getByRole("heading", { name: "seg., 05 de jul." })).toBeVisible();
 });

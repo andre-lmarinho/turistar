@@ -5,7 +5,7 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
@@ -160,7 +160,7 @@ function TripDay({
   onActivityHover = () => {},
 }: TripDayProps) {
   const t = useTranslations();
-  const locale = useLocale();
+  const format = useFormatter();
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const activityIds = useMemo(() => day.activities.map((activity) => activity.id), [day.activities]);
   const insertIndex = day.activities.length;
@@ -183,10 +183,12 @@ function TripDay({
             {dayNumber}
           </span>
           <h2 className="truncate text-sm font-semibold">
-            {" "}
-            {new Intl.DateTimeFormat(locale, { weekday: "short", day: "2-digit", month: "short" }).format(
-              new Date(day.id)
-            )}
+            {format.dateTime(new Date(day.id), {
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              timeZone: "UTC",
+            })}
           </h2>
         </div>
         <div className="flex items-center gap-1">

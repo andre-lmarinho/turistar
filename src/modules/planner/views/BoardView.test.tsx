@@ -43,8 +43,8 @@ vi.mock("@/modules/planner/hooks/useDragHandlers", () => ({
 
 const activity: Activity = { id: "a1", title: "Museum", color: "bg-[var(--color-1)]" };
 const days: DayPlan[] = [
-  { id: "d1", label: "Mon, 05 Jul", activities: [activity] },
-  { id: "d2", label: "Tue, 06 Jul", activities: [] },
+  { id: "2021-07-05", label: "Mon, Jul 05", activities: [activity] },
+  { id: "2021-07-06", label: "Tue, Jul 06", activities: [] },
 ];
 
 beforeEach(() => {
@@ -63,9 +63,9 @@ describe("BoardView", () => {
   it("renders days and activities", () => {
     render(<BoardView days={days} />);
 
-    expect(screen.getByText("Mon, 05 Jul")).toBeInTheDocument();
+    expect(screen.getByText("Mon, Jul 05")).toBeInTheDocument();
     expect(screen.getByText("Museum")).toBeInTheDocument();
-    expect(screen.getByText("Tue, 06 Jul")).toBeInTheDocument();
+    expect(screen.getByText("Tue, Jul 06")).toBeInTheDocument();
   });
 
   it("delegates adding an activity to the dialog callback", () => {
@@ -74,7 +74,7 @@ describe("BoardView", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "Add activity" })[0]);
 
-    expect(onAddActivity).toHaveBeenCalledWith("d1", 1);
+    expect(onAddActivity).toHaveBeenCalledWith("2021-07-05", 1);
   });
 });
 
@@ -98,7 +98,7 @@ it("selects an activity with its current day", () => {
   const select = vi.fn();
   render(<BoardView days={days} onActivitySelect={select} />);
   fireEvent.click(screen.getByRole("button", { name: "Museum" }));
-  expect(select).toHaveBeenCalledExactlyOnceWith(activity, "d1");
+  expect(select).toHaveBeenCalledExactlyOnceWith(activity, "2021-07-05");
 });
 
 it("stops background drag scrolling when the mouse is released", () => {

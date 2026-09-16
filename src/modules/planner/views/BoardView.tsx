@@ -5,7 +5,7 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useCardColors } from "@/features/activity/hooks/useActivityColors";
@@ -280,7 +280,7 @@ export const DayColumn = memo(function DayColumn({
   onFallbackAdd,
 }: DayColumnProps) {
   const t = useTranslations();
-  const locale = useLocale();
+  const format = useFormatter();
   const { setNodeRef, isOver } = useDroppable({
     id: day.id,
   });
@@ -311,10 +311,12 @@ export const DayColumn = memo(function DayColumn({
           ) : null}
           <div className="min-w-0">
             <h2 className="truncate text-sm font-semibold">
-              {" "}
-              {new Intl.DateTimeFormat(locale, { weekday: "short", day: "2-digit", month: "short" }).format(
-                new Date(day.id)
-              )}
+              {format.dateTime(new Date(day.id), {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+                timeZone: "UTC",
+              })}
             </h2>
             <p className="text-muted-foreground mt-0.5 text-xs">
               {t("activityCount", { count: day.activities.length })}

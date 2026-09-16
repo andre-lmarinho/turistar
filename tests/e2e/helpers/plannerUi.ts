@@ -80,5 +80,5 @@ async function waitForPlannerMode(page: Page, mode: PlannerMode) {
     return;
   }
 
-  await expect(page.getByRole("region", { name: /summary/i })).toBeVisible();
+  await expect(page.getByRole("region", { name: /total spent/i })).toBeVisible();
 }

@@ -4,8 +4,10 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANO
 process.env.GEOAPIFY_KEY = process.env.GEOAPIFY_KEY ?? "test-key";
 
 import "@testing-library/jest-dom/vitest";
+import { NextIntlClientProvider } from "next-intl";
 import type React from "react";
 import { createElement } from "react";
+import messages from "./src/i18n/locales/en.json";
 
 function createSupabaseClientMock() {
   const channel = {
@@ -116,7 +118,11 @@ vi.mock("@testing-library/react", async () => {
 
   function WithClient({ children }: { children: React.ReactNode }) {
     const client = new QueryClient();
-    return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+    return (
+      <NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      </NextIntlClientProvider>
+    );
   }
 
   return {

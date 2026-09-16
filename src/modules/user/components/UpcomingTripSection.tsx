@@ -1,6 +1,6 @@
-import { differenceInCalendarDays, format, isValid, parseISO, startOfToday } from "date-fns";
+import { differenceInCalendarDays, isValid, parseISO, startOfToday } from "date-fns";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
@@ -9,31 +9,6 @@ import styles from "./UpcomingTripSection.module.css";
 
 interface UpcomingTripSectionProps {
   plan: UserPlannerSummary;
-}
-
-function getTripStats(startDate: string, endDate: string | null, t: (key: string) => string) {
-  const start = parseISO(startDate);
-  const end = endDate ? parseISO(endDate) : null;
-
-  if (!isValid(start)) {
-    return [
-      { label: "starts", value: t("tbd") },
-      { label: "duration", value: t("tbd") },
-      { label: "daysAway", value: t("tbd") },
-    ];
-  }
-
-  return [
-    { label: "starts", value: format(start, "MMM d") },
-    {
-      label: "duration",
-      value: end && isValid(end) ? `${differenceInCalendarDays(end, start) + 1} ${t("days")}` : t("tbd"),
-    },
-    {
-      label: "daysAway",
-      value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} ${t("days")}`,
-    },
-  ];
 }
 
 export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary | null {
@@ -56,12 +31,30 @@ export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary
 }
 
 export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
-  const t = await getTranslations();
+  const [t, format] = await Promise.all([getTranslations(), getFormatter()]);
   const backgroundImage = plan.coverImage ?? DEFAULT_PLAN_COVER_IMAGE;
   const destination = plan.destination ?? plan.title;
-  const tripStats = getTripStats(plan.startDate ?? "", plan.endDate, (key) =>
-    t(key as Parameters<typeof t>[0])
-  );
+  const start = parseISO(plan.startDate ?? "");
+  const end = parseISO(plan.endDate ?? "");
+  const tripStats = [
+    {
+      label: t("starts"),
+      value: isValid(start) ? format.dateTime(start, { month: "short", day: "numeric" }) : t("tbd"),
+    },
+    {
+      label: t("duration"),
+      value:
+        isValid(start) && isValid(end)
+          ? t("dayCount", { count: differenceInCalendarDays(end, start) + 1 })
+          : t("tbd"),
+    },
+    {
+      label: t("daysAway"),
+      value: isValid(start)
+        ? t("dayCount", { count: Math.max(0, differenceInCalendarDays(start, startOfToday())) })
+        : t("tbd"),
+    },
+  ];
   const isPreparedImage = backgroundImage.includes("url(") || backgroundImage.startsWith("linear-gradient");
   const image = isPreparedImage
     ? backgroundImage
@@ -99,7 +92,7 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
                 {tripStats.map((stat) => (
                   <div key={stat.label} className="min-w-0 px-2 text-center sm:px-4">
                     <dt className="text-muted-foreground text-[0.65rem] font-medium tracking-[0.12em] uppercase">
-                      {t(stat.label as "starts" | "duration" | "daysAway")}
+                      {stat.label}
                     </dt>
                     <dd className="mt-1 truncate text-sm font-semibold tabular-nums sm:text-base">
                       {stat.value}

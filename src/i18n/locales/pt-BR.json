@@ -214,6 +214,7 @@
   "amountDefault": "Valor",
   "usage": "consumo",
   "ownerSuffix": "(criador)",
+  "dayCount": "{count, plural, one {# dia} other {# dias}}",
   "days": "dias",
   "tbd": "A definir",
   "loadingSuggestions": "Carregando sugestões",

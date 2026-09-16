@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { memo, useEffect, useId, useRef, useState } from "react";
 
 import { ACTIVITY_COLORS } from "@/features/activity/constants";
@@ -75,7 +75,7 @@ export const ActivityDialog = memo(function ActivityDialog({
   isDemo,
 }: EditorDialogProps) {
   const t = useTranslations();
-  const locale = useLocale();
+  const format = useFormatter();
   const uploadInputId = useId();
   const [activePopup, setActivePopup] = useState<"color" | "day" | null>(null);
   const [draft, setDraft] = useState(() => createDraft(activity));
@@ -198,7 +198,14 @@ export const ActivityDialog = memo(function ActivityDialog({
                 open={activePopup === "day"}
                 onOpenChange={(open) => setActivePopup(open ? "day" : null)}>
                 <PopoverTriggerButton className="border-border bg-background text-foreground hover:bg-border inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors">
-                  {currentDay?.label ?? t("changeDay")}
+                  {currentDay
+                    ? format.dateTime(new Date(currentDay.id), {
+                        weekday: "short",
+                        day: "2-digit",
+                        month: "short",
+                        timeZone: "UTC",
+                      })
+                    : t("changeDay")}
                   <ChevronDown className="size-4" aria-hidden="true" />
                 </PopoverTriggerButton>
                 <PopoverContent
@@ -222,11 +229,12 @@ export const ActivityDialog = memo(function ActivityDialog({
                         className="mt-1 w-full rounded border px-2 py-1 text-sm">
                         {days.map((day) => (
                           <option key={day.id} value={day.id}>
-                            {new Intl.DateTimeFormat(locale, {
+                            {format.dateTime(new Date(day.id), {
                               weekday: "short",
                               day: "2-digit",
                               month: "short",
-                            }).format(new Date(day.id))}
+                              timeZone: "UTC",
+                            })}
                           </option>
                         ))}
                       </select>
@@ -300,7 +308,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                               color.bg.startsWith("#") ? "" : color.bg
                             } ${draft.color === color.bg ? "ring-primary ring-2" : "border-background"}`}
                             style={color.bg.startsWith("#") ? { backgroundColor: color.bg } : undefined}
-                            aria-label={t(color.name as Parameters<typeof t>[0])}
+                            aria-label={t(color.name)}
                             type="button"
                           />
                         ))}

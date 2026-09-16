@@ -1,5 +1,5 @@
 import type { QueryClient, UseMutationOptions } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AddMemberResult, ShareMembersData, ShareTier } from "@/features/members/types";
 import { SharePlannerDialog } from "./SharePlannerDialog";
@@ -143,6 +143,14 @@ describe("SharePlannerDialog", () => {
         ?.getObserversCount()
     ).toBe(1);
   });
+  it("shows translated role labels in the invitation selector", () => {
+    render(<SharePlannerDialog planId="plan-1" canManageMembers viewerUserId="owner" />);
+    fireEvent.click(screen.getByRole("button", { name: "Share planner" }));
+    const roles = within(screen.getByRole("combobox", { name: "Select member role" }));
+    expect(roles.getByRole("option", { name: "Admin" })).toBeVisible();
+    expect(roles.getByRole("option", { name: "Member" })).toBeVisible();
+  });
+
   it("adds a member through the shared mutation", async () => {
     openDialog();
     fireEvent.change(screen.getByPlaceholderText("Email address…"), { target: { value: "new@example.com" } });

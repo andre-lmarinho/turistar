@@ -37,7 +37,7 @@ export function moveActivityOperation(
 /** Preserve activities by trip-day when shifting dates, or by calendar date when resizing. */
 export function changeDateRangeOperations(days: DayPlan[], dates: Date[]): PlanOperation[] {
   if (!dates.length) return [];
-  const targets = dates.map((date) => formatDay(date));
+  const targets = dates.map(formatDay);
   const targetIds = new Set(targets.map((day) => day.id));
   const operations: PlanOperation[] = [];
   let projected = days;

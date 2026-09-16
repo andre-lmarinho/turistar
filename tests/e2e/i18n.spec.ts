@@ -11,10 +11,10 @@ test("language persists without changing the URL or another visitor's preference
     expect(await response?.text()).toContain('lang="pt-BR"');
     await b.goto("/login");
     await expect(a.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(a.getByRole("heading", { name: "Boas-vindas de volta" })).toBeVisible();
+    await expect(a.getByRole("heading", { name: "Olá novamente" })).toBeVisible();
     await a.getByLabel("E-mail", { exact: true }).fill("visitor@example.com");
     await a.getByRole("button", { name: "Entrar", exact: true }).click();
-    await expect(a.getByText("Informe sua senha.")).toBeVisible();
+    await expect(a.getByText("Digite sua senha.")).toBeVisible();
     await a.getByRole("combobox", { name: "Idioma" }).click();
     await a.getByRole("option", { name: "English", exact: true }).click();
     await expect(a.getByText("Password is required.")).toBeVisible();

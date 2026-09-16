@@ -2,11 +2,11 @@ import { MutationCache, QueryClient } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
 import { toast } from "@/ui/components/toast";
 
-export function createQueryClient(unexpectedError: string) {
+export function createQueryClient() {
   return new QueryClient({
     mutationCache: new MutationCache({
       onError: (error) => {
-        toast.error(error instanceof Error ? error.message : unexpectedError);
+        toast.error(error instanceof Error ? error.message : undefined);
       },
     }),
     defaultOptions: {

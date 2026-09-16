@@ -9,7 +9,7 @@ test.describe("Budget Management", () => {
   });
 
   test("displays budget summary section", async ({ page }) => {
-    const summary = page.getByRole("region", { name: /summary/i });
+    const summary = page.getByRole("region", { name: /total spent/i });
     await expect(summary).toBeVisible();
     await expect(summary.getByRole("heading", { name: /total spent/i })).toBeVisible();
     await expect(summary.getByRole("img", { name: /total spent/i })).toBeVisible();

@@ -8,12 +8,12 @@ import { Calendar, DollarSign, List, Map as MapIcon } from "@/ui/components/icon
 export const modeOrder = ["overview", "kanban", "map", "budget"] as const;
 export type PlannerMode = (typeof modeOrder)[number];
 
-const MODE_CONFIG: Record<PlannerMode, { labelKey: string; icon: LucideIcon }> = {
+const MODE_CONFIG = {
   overview: { labelKey: "modeTrip", icon: Calendar },
   kanban: { labelKey: "modeBoard", icon: List },
   map: { labelKey: "modeMap", icon: MapIcon },
   budget: { labelKey: "modeBudget", icon: DollarSign },
-};
+} as const satisfies Record<PlannerMode, { labelKey: string; icon: LucideIcon }>;
 
 interface ModeToggleButtonProps {
   value: PlannerMode;
@@ -31,7 +31,7 @@ export function ModeToggleButton({ value, onChange, modes = modeOrder }: ModeTog
       renderOption={(mode) => {
         const config = MODE_CONFIG[mode as PlannerMode];
         return {
-          label: t(config.labelKey as "modeTrip" | "modeBoard" | "modeMap" | "modeBudget"),
+          label: t(config.labelKey),
           icon: config.icon,
         };
       }}
