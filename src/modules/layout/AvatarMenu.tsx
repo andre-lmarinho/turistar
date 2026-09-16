@@ -80,13 +80,13 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
             <Link
               href="/privacy"
               className="hover:text-muted-foreground focus-visible:text-foreground underline-offset-2 hover:underline">
-              Privacy
+              {t("privacyPolicy")}
             </Link>
             <span aria-hidden="true">·</span>
             <Link
               href="/terms"
               className="hover:text-muted-foreground focus-visible:text-foreground underline-offset-2 hover:underline">
-              Terms of use
+              {t("termsOfUse")}
             </Link>
           </div>
         </PopoverContent>

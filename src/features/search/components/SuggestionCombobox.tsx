@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import { Spinner } from "@/ui/components/loading";
@@ -76,6 +77,7 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     inputRef,
     inputProps,
   } = props;
+  const t = useTranslations();
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
   const listId = `${inputId}-suggestions`;
@@ -178,13 +180,13 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
         />
         {loading ? (
           <div className="absolute inset-y-0 right-2 flex items-center">
-            <Spinner className="size-4" label="Loading suggestions" />
+            <Spinner className="size-4" label={t("loadingSuggestions")} />
           </div>
         ) : null}
       </div>
       {error ? (
         <p className="text-destructive mt-1 text-sm" role="alert" aria-live="assertive">
-          {typeof error === "string" ? error : "Failed to load suggestions."}
+          {typeof error === "string" ? error : t("failedToLoadSuggestions")}
         </p>
       ) : null}
       {open && !error ? (

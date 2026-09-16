@@ -110,13 +110,13 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
     return (
       <div className="flex min-h-75 w-full flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 text-center shadow-sm">
         <p className="text-muted-foreground text-sm" role="alert">
-          We couldn’t load your travel map.
+          {t("mapLoadFailed")}
         </p>
         <button
           type="button"
           className="text-foreground rounded-md border px-4 py-2 text-sm focus-visible:outline-2 focus-visible:outline-ring"
           onClick={loadBoundaries}>
-          Try again
+          {t("tryAgain")}
         </button>
       </div>
     );
@@ -126,7 +126,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
       <div
         className="bg-muted min-h-75 w-full rounded-xl shadow-sm motion-safe:animate-pulse md:min-h-105"
         role="status">
-        <span className="sr-only">Loading travel map…</span>
+        <span className="sr-only">{t("loadingMap")}</span>
       </div>
     );
 

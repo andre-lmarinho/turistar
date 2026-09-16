@@ -142,8 +142,8 @@ function PlannerContent({
   }, []);
 
   useEffect(() => {
-    document.title = `${title} | Turistar App`;
-  }, [title]);
+    document.title = `${title}${t("turistarAppSuffix")}`;
+  }, [title, t]);
 
   const handleTitleBlur = async () => {
     if (!title.trim()) {

@@ -190,11 +190,11 @@ type MemberMenuOption = ShareTier | "leave" | "remove";
 
 const LEAVE_OPTION: SelectMenuOption<MemberMenuOption> = {
   value: "leave",
-  label: "Leave planner",
+  label: "leavePlanner",
 };
 const REMOVE_OPTION: SelectMenuOption<MemberMenuOption> = {
   value: "remove",
-  label: "Remove member",
+  label: "removeMember",
 };
 
 const isTier = (value: MemberMenuOption): value is ShareTier => value === "admin" || value === "member";
@@ -263,10 +263,11 @@ function ShareMemberRow({
     isLastAdmin,
     currentTier: member.tier,
   });
+  const translateLabel = (key: string) => t(key as Parameters<typeof t>[0]);
   const menuOptions = [
-    ...tierOptions,
-    ...(canSelfLeave ? [LEAVE_OPTION] : []),
-    ...(canRemove ? [REMOVE_OPTION] : []),
+    ...tierOptions.map((opt) => ({ ...opt, label: translateLabel(opt.label) })),
+    ...(canSelfLeave ? [{ ...LEAVE_OPTION, label: translateLabel(LEAVE_OPTION.label) }] : []),
+    ...(canRemove ? [{ ...REMOVE_OPTION, label: translateLabel(REMOVE_OPTION.label) }] : []),
   ];
   const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
   const displayLabel = isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;

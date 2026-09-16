@@ -8,8 +8,6 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-
-import { ACTIVITY_TEXT } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
@@ -39,8 +37,9 @@ function TripActivityCard({
   dragHandle?: ReactNode;
   onHover?: (isHovered: boolean) => void;
 }) {
+  const t = useTranslations();
   const { bg } = useActivityColors(activity.color);
-  const title = activity.title.trim() || ACTIVITY_TEXT.untitledFallback;
+  const title = activity.title.trim() || t("untitledActivity");
 
   return (
     <article className="group relative overflow-hidden">
@@ -125,7 +124,7 @@ function SortableTripActivity({
           <Tooltip content={t("reorderActivity")}>
             <button
               type="button"
-              aria-label={`${t("reorderActivity")} ${activity.title || ACTIVITY_TEXT.untitledFallback}`}
+              aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
               className="text-muted-foreground hover:bg-muted focus-visible:ring-ring mr-1 inline-flex size-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-md transition active:cursor-grabbing focus-visible:ring-2"
               {...attributes}
               {...listeners}

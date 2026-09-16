@@ -11,15 +11,15 @@ interface UpcomingTripSectionProps {
   plan: UserPlannerSummary;
 }
 
-function getTripStats(startDate: string, endDate: string | null) {
+function getTripStats(startDate: string, endDate: string | null, t: (key: string) => string) {
   const start = parseISO(startDate);
   const end = endDate ? parseISO(endDate) : null;
 
   if (!isValid(start)) {
     return [
-      { label: "starts", value: "TBD" },
-      { label: "duration", value: "TBD" },
-      { label: "daysAway", value: "TBD" },
+      { label: "starts", value: t("tbd") },
+      { label: "duration", value: t("tbd") },
+      { label: "daysAway", value: t("tbd") },
     ];
   }
 
@@ -27,9 +27,12 @@ function getTripStats(startDate: string, endDate: string | null) {
     { label: "starts", value: format(start, "MMM d") },
     {
       label: "duration",
-      value: end && isValid(end) ? `${differenceInCalendarDays(end, start) + 1} days` : "TBD",
+      value: end && isValid(end) ? `${differenceInCalendarDays(end, start) + 1} ${t("days")}` : t("tbd"),
     },
-    { label: "daysAway", value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} days` },
+    {
+      label: "daysAway",
+      value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} ${t("days")}`,
+    },
   ];
 }
 
@@ -56,7 +59,9 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
   const t = await getTranslations();
   const backgroundImage = plan.coverImage ?? DEFAULT_PLAN_COVER_IMAGE;
   const destination = plan.destination ?? plan.title;
-  const tripStats = getTripStats(plan.startDate ?? "", plan.endDate);
+  const tripStats = getTripStats(plan.startDate ?? "", plan.endDate, (key) =>
+    t(key as Parameters<typeof t>[0])
+  );
   const isPreparedImage = backgroundImage.includes("url(") || backgroundImage.startsWith("linear-gradient");
   const image = isPreparedImage
     ? backgroundImage

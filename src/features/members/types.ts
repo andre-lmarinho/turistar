@@ -27,6 +27,6 @@ export type AddMemberResult = {
 // UI Constants
 
 export const SHARE_TIER_OPTIONS = [
-  { value: "admin" as const, label: "Admin" },
-  { value: "member" as const, label: "Member" },
+  { value: "admin" as const, label: "roleAdmin" },
+  { value: "member" as const, label: "roleMember" },
 ] as const;

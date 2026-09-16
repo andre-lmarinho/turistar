@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
@@ -29,7 +30,7 @@ export function LocationSearchInput({
   value,
   onChange,
   id = "location-input",
-  placeholder = "Location",
+  placeholder,
   label,
   className = "",
   inputClassName,
@@ -39,7 +40,9 @@ export function LocationSearchInput({
   onFocus: onFocusProp,
   onBlur,
 }: LocationSearchInputProps) {
+  const t = useTranslations();
   const [open, setOpen] = React.useState(false);
+  const resolvedPlaceholder = placeholder ?? t("location");
   const debounced = useDebounce(value);
   const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
   const openState = open && canSearch;
@@ -78,7 +81,7 @@ export function LocationSearchInput({
     <SuggestionCombobox<AutocompletePlace, PlaceSelection<AutocompletePlace>>
       id={id}
       label={label}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
       value={value}
       open={openState}
       onOpenChange={setOpen}
@@ -87,8 +90,8 @@ export function LocationSearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? "Failed to load location suggestions." : undefined}
-      emptyMessage="No suggestions found."
+      error={error ? t("failedToLoadLocations") : undefined}
+      emptyMessage={t("noSuggestionsFound")}
       className={className}
       inputClassName={
         inputClassName ??

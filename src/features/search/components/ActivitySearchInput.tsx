@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
@@ -38,7 +39,7 @@ export function ActivitySearchInput({
   value,
   onChange,
   id = "activity-suggestion-input",
-  placeholder = "Search activity",
+  placeholder,
   label,
   className,
   inputClassName,
@@ -51,7 +52,9 @@ export function ActivitySearchInput({
   onInputBlur,
   onInputKeyDown,
 }: ActivitySearchInputProps) {
+  const t = useTranslations();
   const [open, setOpen] = React.useState(false);
+  const resolvedPlaceholder = placeholder ?? t("searchActivity");
 
   const debounced = useDebounce(value);
   const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
@@ -95,7 +98,7 @@ export function ActivitySearchInput({
     <SuggestionCombobox<ActivitySuggestion, PlaceSelection<ActivitySuggestion>>
       id={id}
       label={label}
-      placeholder={placeholder}
+      placeholder={resolvedPlaceholder}
       value={value}
       open={openState}
       onOpenChange={setOpen}
@@ -104,8 +107,8 @@ export function ActivitySearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? "Failed to load suggestions." : undefined}
-      emptyMessage="No suggestions found."
+      error={error ? t("failedToLoadSuggestions") : undefined}
+      emptyMessage={t("noSuggestionsFound")}
       className={className}
       inputClassName={
         inputClassName ??

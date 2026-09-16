@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { memo, useEffect, useId, useRef, useState } from "react";
 
-import { ACTIVITY_COLORS, ACTIVITY_TEXT } from "@/features/activity/constants";
+import { ACTIVITY_COLORS } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import { ActivitySearchInput } from "@/features/search/components/ActivitySearchInput";
@@ -300,7 +300,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                               color.bg.startsWith("#") ? "" : color.bg
                             } ${draft.color === color.bg ? "ring-primary ring-2" : "border-background"}`}
                             style={color.bg.startsWith("#") ? { backgroundColor: color.bg } : undefined}
-                            aria-label={color.name}
+                            aria-label={t(color.name as Parameters<typeof t>[0])}
                             type="button"
                           />
                         ))}
@@ -352,7 +352,7 @@ export const ActivityDialog = memo(function ActivityDialog({
             label={t("activityTitle")}
             value={draft.title}
             onChange={handleTitleChange}
-            placeholder={ACTIVITY_TEXT.emptyTitle}
+            placeholder={t("addTitlePlaceholder")}
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
             suggestionHook={useActivitySuggestions}

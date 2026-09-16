@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 
@@ -18,12 +19,13 @@ interface Props {
 
 export function DateRangePicker({ className, value, onChange, disabled = false }: Props) {
   const [open, setOpen] = React.useState(false);
+  const t = useTranslations();
 
   const label = value?.from
     ? value.to
       ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
       : format(value.from, "LLL dd, y")
-    : "Pick a date range";
+    : t("pickDateRange");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,12 +61,13 @@ export function DateRangePicker({ className, value, onChange, disabled = false }
 export function DateRangePickerIcon({ className, value, onChange, disabled = false }: Props) {
   const [open, setOpen] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
+  const t = useTranslations();
 
   const label = value?.from
     ? value.to
       ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
       : format(value.from, "LLL dd, y")
-    : "Pick a date range";
+    : t("pickDateRange");
 
   React.useEffect(() => {
     setMounted(true);

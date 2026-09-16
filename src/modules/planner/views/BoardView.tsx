@@ -8,8 +8,6 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { memo, useEffect, useMemo, useRef } from "react";
-
-import { EMPTY_ACTIVITY_TITLE } from "@/features/activity/constants";
 import { useCardColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
@@ -143,6 +141,7 @@ export const ActivityCard = memo(function ActivityCard({
   onClick,
   bgColor,
 }: ActivityCardProps) {
+  const t = useTranslations();
   const { title, duration, budget, color, imageUrl } = activity;
 
   const { border: borderColorClass } = useCardColors(
@@ -183,7 +182,7 @@ export const ActivityCard = memo(function ActivityCard({
           ) : null}
           <div className="min-w-0 px-4 py-3 pl-5">
             <h3 className="truncate text-sm font-semibold leading-5">
-              {title.trim() ? title : EMPTY_ACTIVITY_TITLE}
+              {title.trim() ? title : t("untitledActivity")}
             </h3>
             {activity.description ? (
               <p className="text-muted-foreground mt-1 line-clamp-2 text-xs leading-4">
