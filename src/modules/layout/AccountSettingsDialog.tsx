@@ -5,27 +5,20 @@ import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
 import { getErrorMessage } from "@/lib/errors/getErrorMessage";
+import { LanguageSelect } from "@/modules/auth/components/LanguageSelect";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader } from "@/ui/components/dialog";
 import { InputField } from "@/ui/components/form";
-import { UserRound } from "@/ui/components/icon";
 
 type AccountSettingsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   displayName: string | null;
-  email: string | null;
   slug: string | null;
 };
 
-export function AccountSettingsDialog({
-  open,
-  onOpenChange,
-  displayName,
-  email,
-  slug,
-}: AccountSettingsDialogProps) {
+export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }: AccountSettingsDialogProps) {
   const t = useTranslations();
   const [name, setName] = useState(displayName ?? "");
   const [username, setUsername] = useState(slug ?? "");
@@ -66,15 +59,7 @@ export function AccountSettingsDialog({
       <DialogContent className="w-[calc(100%-2rem)] max-w-lg overflow-hidden rounded-2xl">
         <DialogHeader title={t("accountSettings")} description={t("accountSettingsDescription")} />
         <form onSubmit={handleSubmit} className="grid gap-5 p-5">
-          <div className="bg-muted/40 flex items-center gap-3 rounded-xl border p-3">
-            <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-full">
-              <UserRound className="size-5" aria-hidden="true" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium">{email ?? t("signedIn")}</p>
-              <p className="text-muted-foreground text-xs">{t("emailCannotBeChanged")}</p>
-            </div>
-          </div>
+          <LanguageSelect className="flex flex-col items-start gap-2" />
 
           <div className="grid gap-4">
             <InputField

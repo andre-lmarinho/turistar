@@ -96,7 +96,6 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
         displayName={displayName}
-        email={email}
         slug={slug}
       />
     </>

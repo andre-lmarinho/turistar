@@ -13,14 +13,14 @@ const languages = [
   { value: "pt-BR", label: "Português (Brasil)" },
 ];
 
-export function LanguageSelect() {
+export function LanguageSelect({ className }: { className?: string }) {
   const locale = useLocale();
   const t = useTranslations();
   const id = useId();
   const [pending, startTransition] = useTransition();
   const [failed, setFailed] = useState(false);
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
+    <div className={className ?? "fixed top-4 right-4 z-50 flex flex-col items-end gap-2"}>
       <Select.Root
         items={languages}
         value={locale}
