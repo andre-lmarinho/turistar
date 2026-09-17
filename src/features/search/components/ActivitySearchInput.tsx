@@ -16,7 +16,6 @@ interface ActivitySearchInputProps {
   value: string;
   onChange: (value: string | PlaceSelection<ActivitySuggestion>) => void;
   id?: string;
-  placeholder?: string;
   label?: string;
   className?: string;
   inputClassName?: string;
@@ -27,19 +26,15 @@ interface ActivitySearchInputProps {
   inputProps?: Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
-  > & {
-    [key: string]: unknown;
-  };
-  onInputFocus?: () => void;
-  onInputBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onInputKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  >;
+  onFocus?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export function ActivitySearchInput({
   value,
   onChange,
   id = "activity-suggestion-input",
-  placeholder,
   label,
   className,
   inputClassName,
@@ -48,13 +43,11 @@ export function ActivitySearchInput({
   suggestionHook,
   inputRef,
   inputProps,
-  onInputFocus,
-  onInputBlur,
-  onInputKeyDown,
+  onFocus,
+  onBlur,
 }: ActivitySearchInputProps) {
   const t = useTranslations();
   const [open, setOpen] = React.useState(false);
-  const resolvedPlaceholder = placeholder ?? t("searchActivity");
 
   const debounced = useDebounce(value);
   const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
@@ -98,7 +91,7 @@ export function ActivitySearchInput({
     <SuggestionCombobox<ActivitySuggestion, PlaceSelection<ActivitySuggestion>>
       id={id}
       label={label}
-      placeholder={resolvedPlaceholder}
+      placeholder={t("searchActivity")}
       value={value}
       open={openState}
       onOpenChange={setOpen}
@@ -133,9 +126,8 @@ export function ActivitySearchInput({
       )}
       inputRef={inputRef}
       inputProps={inputProps}
-      onInputFocus={onInputFocus}
-      onInputBlur={onInputBlur}
-      onInputKeyDown={onInputKeyDown}
+      onFocus={onFocus}
+      onBlur={onBlur}
     />
   );
 }

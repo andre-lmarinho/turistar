@@ -14,7 +14,7 @@ export interface SuggestionOption<T> {
   value: T;
 }
 
-interface SuggestionComboboxBaseProps<T> {
+interface SuggestionComboboxProps<T, TSelection = T> {
   id?: string;
   label?: string;
   placeholder?: string;
@@ -24,36 +24,21 @@ interface SuggestionComboboxBaseProps<T> {
   onInputChange: (value: string) => void;
   options: SuggestionOption<T>[];
   loading?: boolean;
-  error?: string | boolean;
+  error?: string;
   emptyMessage?: string;
   className?: string;
   inputClassName?: string;
   renderOption?: (option: SuggestionOption<T>, state: { active: boolean }) => React.ReactNode;
-  onInputFocus?: () => void;
-  onInputBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onInputKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
   inputProps?: Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
-  > & {
-    [key: string]: unknown;
-  };
-}
-
-interface SuggestionComboboxPropsWithMap<T, TSelection> extends SuggestionComboboxBaseProps<T> {
+  >;
   mapOptionToSelection: (option: SuggestionOption<T>) => TSelection;
   onSelect: (selection: TSelection, option: SuggestionOption<T>) => void;
 }
-
-interface SuggestionComboboxPropsWithoutMap<T> extends SuggestionComboboxBaseProps<T> {
-  mapOptionToSelection?: undefined;
-  onSelect: (selection: T, option: SuggestionOption<T>) => void;
-}
-
-type SuggestionComboboxProps<T, TSelection = T> =
-  | SuggestionComboboxPropsWithMap<T, TSelection>
-  | SuggestionComboboxPropsWithoutMap<T>;
 
 export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxProps<T, TSelection>) {
   const {
@@ -71,9 +56,8 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     className,
     inputClassName,
     renderOption,
-    onInputFocus,
-    onInputBlur,
-    onInputKeyDown,
+    onFocus,
+    onBlur,
     inputRef,
     inputProps,
   } = props;
@@ -92,12 +76,8 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   }, [options.length]);
 
   const handleSelect = (option: SuggestionOption<T>) => {
-    if (props.mapOptionToSelection) {
-      const selection = props.mapOptionToSelection(option);
-      props.onSelect(selection, option);
-    } else {
-      props.onSelect(option.value, option);
-    }
+    const selection = props.mapOptionToSelection(option);
+    props.onSelect(selection, option);
     onOpenChange(false);
     setActiveIndex(-1);
   };
@@ -110,11 +90,11 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
 
   const handleInputFocus = () => {
     onOpenChange(true);
-    onInputFocus?.();
+    onFocus?.();
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    onInputBlur?.(event);
+    onBlur?.(event);
     const related = event.relatedTarget as Node | null;
     if (related && containerRef.current?.contains(related)) {
       return;
@@ -140,8 +120,6 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
         handleSelect(option);
       }
     }
-
-    onInputKeyDown?.(event);
   };
 
   const defaultInputClassName =

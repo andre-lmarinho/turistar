@@ -360,13 +360,12 @@ export const ActivityDialog = memo(function ActivityDialog({
             label={t("activityTitle")}
             value={draft.title}
             onChange={handleTitleChange}
-            placeholder={t("addTitlePlaceholder")}
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
             suggestionHook={useActivitySuggestions}
             inputRef={titleInputRef}
             inputClassName="focus:ring-primary w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            onInputBlur={() => commit()}
+            onBlur={() => commit()}
             inputProps={{ name: "title", required: true, "aria-required": true }}
           />
         </div>
