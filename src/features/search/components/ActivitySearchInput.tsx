@@ -91,7 +91,7 @@ export function ActivitySearchInput({
     <SuggestionCombobox<ActivitySuggestion, PlaceSelection<ActivitySuggestion>>
       id={id}
       label={label}
-      placeholder={t("searchActivity")}
+      placeholder={t("addTitlePlaceholder")}
       value={value}
       open={openState}
       onOpenChange={setOpen}
