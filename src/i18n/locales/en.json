@@ -221,7 +221,6 @@
   "failedToLoadSuggestions": "Failed to load suggestions.",
   "noSuggestionsFound": "No suggestions found.",
   "searchActivity": "Search activity",
-  "location": "Location",
   "failedToLoadLocations": "Failed to load location suggestions.",
   "pickDateRange": "Pick a date range",
   "select": "Select",

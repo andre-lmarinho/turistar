@@ -15,8 +15,7 @@ interface LocationSearchInputProps {
   value: string;
   onChange: (val: string | PlaceSelection<AutocompletePlace>) => void;
   id?: string;
-  placeholder?: string;
-  label?: string;
+  placeholder: string;
   className?: string;
   inputClassName?: string;
   latitude?: number;
@@ -31,7 +30,6 @@ export function LocationSearchInput({
   onChange,
   id = "location-input",
   placeholder,
-  label,
   className = "",
   inputClassName,
   latitude,
@@ -42,7 +40,6 @@ export function LocationSearchInput({
 }: LocationSearchInputProps) {
   const t = useTranslations();
   const [open, setOpen] = React.useState(false);
-  const resolvedPlaceholder = placeholder ?? t("location");
   const debounced = useDebounce(value);
   const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
   const openState = open && canSearch;
@@ -80,8 +77,7 @@ export function LocationSearchInput({
   return (
     <SuggestionCombobox<AutocompletePlace, PlaceSelection<AutocompletePlace>>
       id={id}
-      label={label}
-      placeholder={resolvedPlaceholder}
+      placeholder={placeholder}
       value={value}
       open={openState}
       onOpenChange={setOpen}
