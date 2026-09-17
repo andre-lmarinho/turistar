@@ -9,14 +9,14 @@ afterEach(() => vi.unstubAllGlobals());
 
 const activity: Activity & { dayId: string } = {
   id: "activity-1",
-  dayId: "day-1",
+  dayId: "2024-01-01",
   title: "Visit museum",
   color: "bg-[var(--color-1)]",
 };
 
 const days: DayPlan[] = [
   {
-    id: "day-1",
+    id: "2024-01-01",
     label: "Day 1",
     activities: [activity],
   },

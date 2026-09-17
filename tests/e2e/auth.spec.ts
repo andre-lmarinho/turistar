@@ -27,9 +27,9 @@ test("translates signup and password recovery without changing routes", async ({
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Comece a planejar" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Termos", exact: true })).toHaveAttribute("href", "/terms");
-    await page.getByRole("textbox", { name: "Nome de usuário" }).fill("e2e-owner");
+    await page.getByRole("textbox", { name: "Usuário" }).fill("e2e-owner");
     await page.getByRole("textbox", { name: "E-mail" }).click();
-    await expect(page.getByText("Este nome de usuário já está em uso.")).toBeVisible();
+    await expect(page.getByText("Esse nome de usuário já está em uso.")).toBeVisible();
     await page.getByRole("combobox", { name: "Idioma" }).click();
     await page.getByRole("option", { name: "English", exact: true }).click();
     await expect(page.getByText("Username already taken.")).toBeVisible();
@@ -39,7 +39,7 @@ test("translates signup and password recovery without changing routes", async ({
     await expect(page.getByText("Email is required.")).toBeVisible();
     await page.getByRole("combobox", { name: "Language" }).click();
     await page.getByRole("option", { name: "Português (Brasil)", exact: true }).click();
-    await expect(page.getByText("Informe seu e-mail.")).toBeVisible();
+    await expect(page.getByText("Digite seu e-mail.")).toBeVisible();
     await expect(page).toHaveURL(/forgot-password\?next=%2Fp%2Fplan-e2e-001$/);
     await page.goto("/forgot-password/reset");
     await expect(page.getByRole("heading", { name: "Redefina sua senha" })).toBeVisible();

@@ -2,6 +2,7 @@
 
 import type { LatLngExpression, LeafletMouseEvent } from "leaflet";
 import L from "leaflet";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useMemo, useRef } from "react";
 import {
   Tooltip as LeafletTooltip,
@@ -68,6 +69,7 @@ export const MapView = React.memo(function MapView({
   onDayHover,
   className,
 }: MapViewProps) {
+  const t = useTranslations();
   const defaultBg = getCssColor(getDefaultColor()) ?? "var(--color-0)";
   const dayPaths = useMemo(
     () =>
@@ -104,7 +106,7 @@ export const MapView = React.memo(function MapView({
         wheelDebounceTime={100}
         wheelPxPerZoomLevel={240}
         style={{ width: "100%", height: "100%" }}
-        aria-label="Itinerary map">
+        aria-label={t("itineraryMap")}>
         <FitAllMarkers coords={allCoords} />
         <ZoomControl position="bottomright" />
         <TileLayer url={plannerTileUrl} attribution={tileAttribution} maxZoom={20} />
@@ -140,7 +142,7 @@ export const MapView = React.memo(function MapView({
                     },
                   }}>
                   <LeafletTooltip direction="top" offset={[0, -16]}>
-                    {activity.title.trim() || "Untitled activity"}
+                    {activity.title.trim() || t("untitledActivity")}
                   </LeafletTooltip>
                 </Marker>
               );

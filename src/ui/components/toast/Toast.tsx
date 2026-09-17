@@ -2,17 +2,20 @@
 
 import { Toast as BaseToast } from "@base-ui/react/toast";
 
+import { useTranslations } from "next-intl";
+
 import { cn } from "@/ui/utils/cn";
 
 export const toastManager = BaseToast.createToastManager();
 
 export const toast = {
-  error: (message: string) => toastManager.add({ title: message, type: "error" }),
+  error: (message?: string) => toastManager.add({ title: message, type: "error" }),
   message: (message: string) => toastManager.add({ title: message }),
   success: (message: string) => toastManager.add({ title: message, type: "success" }),
 };
 
 function ToastList() {
+  const t = useTranslations();
   const { toasts } = BaseToast.useToastManager();
 
   return toasts.map((item) => (
@@ -25,7 +28,7 @@ function ToastList() {
         "data-[type=success]:border-(--success) data-[type=success]:text-(--success)",
         "data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity"
       )}>
-      <BaseToast.Title className="font-medium" />
+      <BaseToast.Title className="font-medium">{item.title ?? t("unexpectedError")}</BaseToast.Title>
       <BaseToast.Description className="text-muted-foreground" />
     </BaseToast.Root>
   ));

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 import type { DayPlan } from "@/features/activity/types";
@@ -7,6 +8,15 @@ import type { CategoryKey, Entry } from "@/features/budget/types";
 import { CATEGORIES, CHART_COLORS } from "@/features/budget/types";
 import { trpc } from "@/trpc/react";
 import { Check, DollarSign, Pencil, Plus, Trash2, X } from "@/ui/components/icon";
+
+const CATEGORY_TRANSLATION_KEYS = {
+  transport: "categoryTransport",
+  lodging: "categoryLodging",
+  food: "categoryFood",
+  activities: "categoryActivities",
+  shopping: "categoryShopping",
+  documents: "categoryDocuments",
+} as const;
 
 const currencySymbol = "\u0024";
 const EMPTY_ENTRIES: Entry[] = [];
@@ -160,6 +170,7 @@ export function CategoryChart({
   totalSpent: number;
   categoryTotals: Record<CategoryKey, number>;
 }) {
+  const t = useTranslations();
   const maxCategoryValue = Math.max(...Object.values(categoryTotals), 0);
 
   return (
@@ -168,20 +179,21 @@ export function CategoryChart({
       className="border-border bg-card h-fit rounded-2xl border p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
         <h2 id="budget-categories-heading" className="font-semibold tracking-[-0.02em]">
-          Categories
+          {t("categories")}
         </h2>
       </div>
 
       {totalSpent <= 0 ? (
         <p className="bg-muted/35 text-muted-foreground rounded-xl px-3 py-6 text-center text-sm">
-          No expenses yet
+          {t("noExpensesYet")}
         </p>
       ) : (
         <div>
           {CATEGORIES.map((category, index) => {
             const value = categoryTotals[category.key] || 0;
             const percent = maxCategoryValue > 0 ? Math.min(100, (value / maxCategoryValue) * 100) : 0;
-            const { label, icon: Icon } = category;
+            const { icon: Icon } = category;
+            const label = t(CATEGORY_TRANSLATION_KEYS[category.key]);
 
             return (
               <div key={category.key} className="py-2">
@@ -200,7 +212,7 @@ export function CategoryChart({
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={Math.round(percent)}
-                  aria-label={`${label} usage ${Math.round(percent)}%`}
+                  aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
                   className="bg-muted mt-2 h-1.5 rounded-full">
                   <div
                     className="h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none"
@@ -220,6 +232,7 @@ export function CategoryChart({
 }
 
 export function Summary({ totalSpent, persistError }: { totalSpent: number; persistError: string | null }) {
+  const t = useTranslations();
   if (persistError) {
     return (
       <p role="alert" className="text-destructive text-sm">
@@ -229,12 +242,12 @@ export function Summary({ totalSpent, persistError }: { totalSpent: number; pers
   }
 
   return (
-    <section aria-label="Summary">
+    <section aria-label={t("totalSpent")}>
       <article className="border-border bg-card rounded-2xl border p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="font-semibold tracking-[-0.02em]">Total spent</h2>
-            <p className="text-muted-foreground mt-0.5 text-sm">All recorded expenses</p>
+            <h2 className="font-semibold tracking-[-0.02em]">{t("totalSpent")}</h2>
+            <p className="text-muted-foreground mt-0.5 text-sm">{t("allRecordedExpenses")}</p>
           </div>
           <span className="bg-card text-foreground inline-flex size-10 shrink-0 items-center justify-center rounded-xl">
             <DollarSign className="size-5" strokeWidth={2.25} aria-hidden="true" />
@@ -242,7 +255,7 @@ export function Summary({ totalSpent, persistError }: { totalSpent: number; pers
         </div>
 
         <div className="mt-6">
-          <AmountDisplay value={totalSpent} ariaLabel="Total spent" />
+          <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
         </div>
       </article>
     </section>
@@ -264,6 +277,7 @@ function ExpenseEditor({
   onCancel?: () => void;
   disabled: boolean;
 }) {
+  const t = useTranslations();
   const [draft, setDraft] = useState<ExpenseDraft>(() =>
     entry ? { ...entry, amount: String(entry.amount) } : EMPTY_DRAFT
   );
@@ -294,10 +308,10 @@ function ExpenseEditor({
           ref={descriptionRef}
           id={`description-${id}`}
           name="description"
-          aria-label="Description"
+          aria-label={t("descriptionLabel")}
           value={draft.description}
           onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-          placeholder="Description"
+          placeholder={t("descriptionLabel")}
           autoComplete="off"
           disabled={disabled || submitting}
           className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
@@ -306,7 +320,7 @@ function ExpenseEditor({
       <td className="p-2">
         <select
           id={`category-${id}`}
-          aria-label="Category"
+          aria-label={t("categoryLabel")}
           value={draft.category}
           disabled={disabled || submitting}
           onChange={(event) => {
@@ -314,9 +328,9 @@ function ExpenseEditor({
             if (category) setDraft({ ...draft, category: category.key });
           }}
           className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring">
-          {CATEGORIES.map(({ key, label }) => (
+          {CATEGORIES.map(({ key }) => (
             <option key={key} value={key}>
-              {label}
+              {t(CATEGORY_TRANSLATION_KEYS[key])}
             </option>
           ))}
         </select>
@@ -328,13 +342,13 @@ function ExpenseEditor({
           </span>
           <input
             id={`amount-${id}`}
-            aria-label="Amount"
+            aria-label={t("amountLabel")}
             value={draft.amount}
             disabled={disabled || submitting}
             onChange={(event) => setDraft({ ...draft, amount: event.target.value })}
             type="text"
             inputMode="decimal"
-            placeholder="Amount"
+            placeholder={t("amountLabel")}
             autoComplete="off"
             className={inputClasses}
           />
@@ -345,7 +359,7 @@ function ExpenseEditor({
           <button
             type="button"
             onClick={() => void save()}
-            aria-label={entry ? "Save entry" : "Add expense"}
+            aria-label={entry ? t("saveEntry") : t("addExpense")}
             disabled={disabled || submitting || isInvalid}
             className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border disabled:opacity-50">
             {entry ? (
@@ -358,7 +372,7 @@ function ExpenseEditor({
             <button
               type="button"
               onClick={onCancel}
-              aria-label="Cancel edit"
+              aria-label={t("cancelEdit")}
               disabled={disabled || submitting}
               className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
               <X className="size-4" aria-hidden="true" />
@@ -381,6 +395,7 @@ function ExpenseTable({
   onDelete: (entryId: string) => Promise<void>;
   disabled: boolean;
 }) {
+  const t = useTranslations();
   const [editingId, setEditingId] = useState<string | null>(null);
   const renderRow = (entry: Entry) => {
     if (editingId === entry.id)
@@ -398,7 +413,7 @@ function ExpenseTable({
         <th scope="row" className="p-2 text-left font-medium">
           {entry.description}
         </th>
-        <td className="p-2">{CATEGORIES.find(({ key }) => key === entry.category)?.label ?? "Unknown"}</td>
+        <td className="p-2">{t(CATEGORY_TRANSLATION_KEYS[entry.category])}</td>
         <td className="p-2 text-right">
           <AmountDisplay value={entry.amount} compact />
         </td>
@@ -407,7 +422,7 @@ function ExpenseTable({
             <button
               type="button"
               onClick={() => setEditingId(entry.id)}
-              aria-label="Edit entry"
+              aria-label={t("editEntry")}
               disabled={disabled}
               className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
               <Pencil className="size-4" aria-hidden="true" />
@@ -415,7 +430,7 @@ function ExpenseTable({
             <button
               type="button"
               onClick={() => void onDelete(entry.id)}
-              aria-label="Delete entry"
+              aria-label={t("deleteEntry")}
               disabled={disabled}
               className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
               <Trash2 className="size-4" aria-hidden="true" />
@@ -430,28 +445,28 @@ function ExpenseTable({
     <section className="min-w-0" aria-labelledby="expenses-heading">
       <div className="mb-3 flex items-center justify-between">
         <h2 id="expenses-heading" className="font-semibold tracking-[-0.02em]">
-          Expenses
+          {t("expenses")}
         </h2>
       </div>
       <table
         aria-labelledby="expense-table-caption"
         className="w-full border-separate border-spacing-y-2 text-sm">
         <caption id="expense-table-caption" className="sr-only">
-          Expenses table showing description, category, amount, and actions
+          {t("expenseTableCaption")}
         </caption>
         <thead className="text-muted-foreground text-xs uppercase tracking-wide">
           <tr>
             <th scope="col" className="p-2 text-left font-normal">
-              Description
+              {t("descriptionLabel")}
             </th>
             <th scope="col" className="p-2 text-left font-normal">
-              Category
+              {t("categoryLabel")}
             </th>
             <th scope="col" className="w-32 p-2 text-right font-normal">
-              Amount
+              {t("amountLabel")}
             </th>
             <th scope="col" className="p-2 text-right font-normal">
-              Actions
+              {t("actionsLabel")}
             </th>
           </tr>
         </thead>

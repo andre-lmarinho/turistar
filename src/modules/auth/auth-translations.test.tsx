@@ -52,8 +52,8 @@ describe("auth translations", () => {
     mocks.available.mockResolvedValue({ available: false });
     const view = <SignupView finalizeProfile={vi.fn()} />;
     const { rerender } = render(localized(view));
-    fireEvent.change(screen.getByLabelText("Nome de usuário"), { target: { value: "taken" } });
-    fireEvent.blur(screen.getByLabelText("Nome de usuário"));
+    fireEvent.change(screen.getByLabelText("Usuário"), { target: { value: "taken" } });
+    fireEvent.blur(screen.getByLabelText("Usuário"));
     expect(await screen.findByText(pt.usernameTaken)).toBeVisible();
     rerender(localized(view, "en"));
     expect(await screen.findByText(en.usernameTaken)).toBeVisible();
@@ -66,7 +66,7 @@ describe("auth translations", () => {
     mocks.register.mockResolvedValue({ status: "needs-confirmation" });
     const view = <SignupView finalizeProfile={vi.fn()} />;
     const { rerender } = render(localized(view));
-    fireEvent.change(screen.getByLabelText("Nome de usuário"), { target: { value: "new-user" } });
+    fireEvent.change(screen.getByLabelText("Usuário"), { target: { value: "new-user" } });
     fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "test@example.com" } });
     fireEvent.change(screen.getByLabelText("Senha", { exact: true }), { target: { value: "safe-password" } });
     fireEvent.click(screen.getByRole("button", { name: pt.createAccount }));

@@ -5,10 +5,9 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-
-import { ACTIVITY_TEXT } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
@@ -38,8 +37,9 @@ function TripActivityCard({
   dragHandle?: ReactNode;
   onHover?: (isHovered: boolean) => void;
 }) {
+  const t = useTranslations();
   const { bg } = useActivityColors(activity.color);
-  const title = activity.title.trim() || ACTIVITY_TEXT.untitledFallback;
+  const title = activity.title.trim() || t("untitledActivity");
 
   return (
     <article className="group relative overflow-hidden">
@@ -105,6 +105,7 @@ function SortableTripActivity({
   onSelect: () => void;
   onHover?: (isHovered: boolean) => void;
 }) {
+  const t = useTranslations();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: activity.id,
     animateLayoutChanges: () => false,
@@ -120,10 +121,10 @@ function SortableTripActivity({
         onSelect={onSelect}
         onHover={onHover}
         dragHandle={
-          <Tooltip content="Reorder activity">
+          <Tooltip content={t("reorderActivity")}>
             <button
               type="button"
-              aria-label={`Reorder ${activity.title || ACTIVITY_TEXT.untitledFallback}`}
+              aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
               className="text-muted-foreground hover:bg-muted focus-visible:ring-ring mr-1 inline-flex size-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-md transition active:cursor-grabbing focus-visible:ring-2"
               {...attributes}
               {...listeners}
@@ -158,6 +159,8 @@ function TripDay({
   onDayHover = () => {},
   onActivityHover = () => {},
 }: TripDayProps) {
+  const t = useTranslations();
+  const format = useFormatter();
   const { setNodeRef, isOver } = useDroppable({ id: day.id });
   const activityIds = useMemo(() => day.activities.map((activity) => activity.id), [day.activities]);
   const insertIndex = day.activities.length;
@@ -179,23 +182,30 @@ function TripDay({
           <span className="bg-primary text-primary-foreground inline-flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-semibold">
             {dayNumber}
           </span>
-          <h2 className="truncate text-sm font-semibold">{day.label}</h2>
+          <h2 className="truncate text-sm font-semibold">
+            {format.dateTime(new Date(day.id), {
+              weekday: "short",
+              day: "2-digit",
+              month: "short",
+              timeZone: "UTC",
+            })}
+          </h2>
         </div>
         <div className="flex items-center gap-1">
-          <Tooltip content="Add activity">
+          <Tooltip content={t("addActivity")}>
             <button
               type="button"
               onClick={handleAdd}
-              aria-label="Add activity"
+              aria-label={t("addActivity")}
               className="text-muted-foreground hover:bg-background hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
               <Plus size={15} aria-hidden="true" />
             </button>
           </Tooltip>
-          <Tooltip content={isCollapsed ? "Expand day" : "Collapse day"}>
+          <Tooltip content={isCollapsed ? t("expandDay") : t("collapseDay")}>
             <button
               type="button"
               onClick={() => onCollapsedChange(!isCollapsed)}
-              aria-label={isCollapsed ? "Expand day" : "Collapse day"}
+              aria-label={isCollapsed ? t("expandDay") : t("collapseDay")}
               aria-expanded={!isCollapsed}
               className="text-muted-foreground hover:bg-background hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
               <ChevronDown
@@ -220,8 +230,8 @@ function TripDay({
           </SortableContext>
           {day.activities.length === 0 ? (
             <div className="bg-muted/20 px-3 py-6 text-sm">
-              <p className="font-medium">Nothing planned yet</p>
-              <p className="text-muted-foreground mt-1 text-xs">Add a stop to start shaping this day.</p>
+              <p className="font-medium">{t("nothingPlannedYet")}</p>
+              <p className="text-muted-foreground mt-1 text-xs">{t("addStopHint")}</p>
             </div>
           ) : null}
         </div>
@@ -238,6 +248,7 @@ export function TripView({
   onDayHover = () => {},
   onActivityHover = () => {},
 }: TripViewProps) {
+  const t = useTranslations();
   const [isItineraryOpen, setIsItineraryOpen] = useState(true);
   const [collapsedDayIds, setCollapsedDayIds] = useState<Set<string>>(() => new Set());
   const {
@@ -266,13 +277,13 @@ export function TripView({
       {isItineraryOpen ? (
         <aside className="bg-card pointer-events-auto absolute top-4 bottom-4 left-4 flex w-[min(20rem,calc(100%-2rem))] flex-col overflow-hidden rounded-xl border shadow-md">
           <div className="flex items-center justify-between border-b py-2 px-3">
-            <p className="text-sm font-semibold">Itinerary</p>
+            <p className="text-sm font-semibold">{t("itinerary")}</p>
             <div className="flex items-center gap-1">
-              <Tooltip content={areAllDaysCollapsed ? "Expand all days" : "Collapse all days"}>
+              <Tooltip content={areAllDaysCollapsed ? t("expandAllDays") : t("collapseAllDays")}>
                 <button
                   type="button"
                   onClick={toggleAllDays}
-                  aria-label={areAllDaysCollapsed ? "Expand all days" : "Collapse all days"}
+                  aria-label={areAllDaysCollapsed ? t("expandAllDays") : t("collapseAllDays")}
                   className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
                   <ChevronDown
                     className={cn("size-4 transition-transform", areAllDaysCollapsed && "-rotate-90")}
@@ -280,11 +291,11 @@ export function TripView({
                   />
                 </button>
               </Tooltip>
-              <Tooltip content="Hide itinerary">
+              <Tooltip content={t("hideItinerary")}>
                 <button
                   type="button"
                   onClick={() => setIsItineraryOpen(false)}
-                  aria-label="Hide itinerary"
+                  aria-label={t("hideItinerary")}
                   className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
                   <EyeOff size={16} aria-hidden="true" />
                 </button>
@@ -302,7 +313,7 @@ export function TripView({
             onDragCancel={handleDragCancel}>
             {draftDays.length > 0 ? (
               <ol
-                aria-label="Days"
+                aria-label={t("daysLabel")}
                 className="flex-1 overflow-y-auto [scrollbar-color:var(--border)_transparent] scrollbar-thin [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1">
                 {draftDays.map((day, dayIndex) => (
                   <TripDay
@@ -328,10 +339,8 @@ export function TripView({
             ) : (
               <div className="m-4 rounded-lg border border-dashed p-5 text-center">
                 <List className="text-muted-foreground mx-auto mb-3" size={20} aria-hidden="true" />
-                <p className="text-sm font-semibold">Your itinerary starts with dates</p>
-                <p className="text-muted-foreground mt-1 text-xs">
-                  Choose the trip dates above, then add activities to each day.
-                </p>
+                <p className="text-sm font-semibold">{t("itineraryStartsWithDates")}</p>
+                <p className="text-muted-foreground mt-1 text-xs">{t("chooseTripDatesHint")}</p>
               </div>
             )}
             <DragOverlay>
@@ -345,7 +354,7 @@ export function TripView({
           onClick={() => setIsItineraryOpen(true)}
           className="bg-card hover:bg-muted focus-visible:ring-ring pointer-events-auto absolute top-4 left-4 inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium shadow-md transition focus-visible:ring-2 focus-visible:ring-offset-2">
           <List size={16} aria-hidden="true" />
-          Show itinerary
+          {t("showItinerary")}
           <Eye size={16} aria-hidden="true" />
         </button>
       )}

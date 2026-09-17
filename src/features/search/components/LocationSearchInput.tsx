@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
@@ -14,8 +15,7 @@ interface LocationSearchInputProps {
   value: string;
   onChange: (val: string | PlaceSelection<AutocompletePlace>) => void;
   id?: string;
-  placeholder?: string;
-  label?: string;
+  placeholder: string;
   className?: string;
   inputClassName?: string;
   latitude?: number;
@@ -29,8 +29,7 @@ export function LocationSearchInput({
   value,
   onChange,
   id = "location-input",
-  placeholder = "Location",
-  label,
+  placeholder,
   className = "",
   inputClassName,
   latitude,
@@ -39,6 +38,7 @@ export function LocationSearchInput({
   onFocus: onFocusProp,
   onBlur,
 }: LocationSearchInputProps) {
+  const t = useTranslations();
   const [open, setOpen] = React.useState(false);
   const debounced = useDebounce(value);
   const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
@@ -77,7 +77,6 @@ export function LocationSearchInput({
   return (
     <SuggestionCombobox<AutocompletePlace, PlaceSelection<AutocompletePlace>>
       id={id}
-      label={label}
       placeholder={placeholder}
       value={value}
       open={openState}
@@ -87,15 +86,15 @@ export function LocationSearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? "Failed to load location suggestions." : undefined}
-      emptyMessage="No suggestions found."
+      error={error ? t("failedToLoadLocations") : undefined}
+      emptyMessage={t("noSuggestionsFound")}
       className={className}
       inputClassName={
         inputClassName ??
         "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
       }
-      onInputFocus={onFocusProp}
-      onInputBlur={onBlur}
+      onFocus={onFocusProp}
+      onBlur={onBlur}
     />
   );
 }

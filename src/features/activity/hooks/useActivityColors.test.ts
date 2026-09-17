@@ -10,7 +10,7 @@ describe("useActivityColors", () => {
   });
 
   it("returns matching color when found by name", () => {
-    const { result } = renderHook(() => useActivityColors("Teal"));
+    const { result } = renderHook(() => useActivityColors("colorTeal"));
     expect(result.current.bg).toBe("bg-[var(--color-3)]");
     expect(result.current.border).toBe("border-[var(--color-3-border)]");
   });

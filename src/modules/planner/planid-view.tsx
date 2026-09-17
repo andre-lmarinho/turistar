@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type { FocusEvent } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createBlankActivity } from "@/features/activity/lib/placeholders";
@@ -47,6 +48,7 @@ function PlannerContent({
   canManageMembers: boolean;
 }) {
   const [mode, setMode] = useState<PlannerMode>("overview");
+  const t = useTranslations();
   const {
     planId: documentPlanId,
     days,
@@ -140,8 +142,8 @@ function PlannerContent({
   }, []);
 
   useEffect(() => {
-    document.title = `${title} | Turistar App`;
-  }, [title]);
+    document.title = `${title}${t("turistarAppSuffix")}`;
+  }, [title, t]);
 
   const handleTitleBlur = async () => {
     if (!title.trim()) {
@@ -165,7 +167,7 @@ function PlannerContent({
           <input
             id="planner-title"
             name="title"
-            aria-label="Planner title"
+            aria-label={t("plannerTitleLabel")}
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -196,30 +198,26 @@ function PlannerContent({
 
       {syncError ? (
         <div role="alert" className="mb-3 flex items-center gap-3 text-sm">
-          <span>
-            {hasPendingChanges
-              ? "Some changes haven't been saved yet. Your edits are still visible."
-              : "The planner could not be synced."}
-          </span>
+          <span>{hasPendingChanges ? t("unsyncedChanges") : t("syncFailed")}</span>
           <button
             type="button"
             disabled={isPending || isLoading}
             onClick={() => void retryPending()}
             className="underline">
-            Retry
+            {t("retry")}
           </button>
           {hasPendingChanges ? (
             <button
               type="button"
               disabled={isPending || isLoading}
               onClick={() => {
-                if (window.confirm("Discard unsynced changes? Changes already saved will remain.")) {
+                if (window.confirm(t("discardConfirm"))) {
                   discardPending();
                   setSelection(null);
                 }
               }}
               className="underline">
-              Discard unsynced changes
+              {t("discardUnsynced")}
             </button>
           ) : null}
         </div>

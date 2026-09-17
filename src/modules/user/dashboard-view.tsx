@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { DemoGuideDialog } from "@/features/demo/components/DemoGuideDialog";
 import type { UserDestination, UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import type { TravelCountry } from "@/modules/user/components/DestinationsMap";
@@ -47,7 +49,8 @@ function buildCountrySummaries(destinations: UserDestination[]): TravelCountry[]
   }));
 }
 
-export function DashboardView({ plans, destinations, isDemo = false }: DashboardViewProps) {
+export async function DashboardView({ plans, destinations, isDemo = false }: DashboardViewProps) {
+  const t = await getTranslations();
   const countries = buildCountrySummaries(destinations);
   const upcomingPlan = getUpcomingPlan(plans);
 
@@ -60,7 +63,7 @@ export function DashboardView({ plans, destinations, isDemo = false }: Dashboard
           <div className="flex items-center gap-2">
             <MapPin className="text-primary h-5 w-5" aria-hidden="true" />
             <h2 id="map-heading" className="text-foreground text-base font-semibold">
-              Your travel map
+              {t("yourTravelMap")}
             </h2>
           </div>
           <DestinationsMap countries={countries} />

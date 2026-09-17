@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getViewer } from "@/features/auth/lib/session";
 import { isDemoUser } from "@/features/demo/lib/demo";
 import { resetDemoIfStale } from "@/features/demo/lib/resetDemoIfStale";
@@ -9,9 +10,10 @@ import { ProfileService } from "@/features/profile/services/ProfileService";
 import { DashboardView } from "@/modules/user/dashboard-view";
 import { createSupabaseServerClient } from "@/supabase/server";
 
-export const metadata: Metadata = {
-  title: "Your travels | Turistar App",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations();
+  return { title: t("dashboardTitle") };
+}
 
 interface UserDashboardPageProps {
   params: Promise<{ slug: string }>;

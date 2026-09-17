@@ -1,6 +1,7 @@
 "use client";
 
 import { addDays } from "date-fns";
+import { useTranslations } from "next-intl";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
@@ -25,6 +26,7 @@ function getDefaultRange(): DateRange {
 }
 
 export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps) {
+  const t = useTranslations();
   const [range, setRange] = useState<DateRange | undefined>(getDefaultRange());
   const [dest, setDest] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -58,14 +60,14 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!range?.from || !range?.to) {
-      setError("Please select your travel dates.");
+      setError(t("selectTravelDates"));
       return;
     }
 
     setError("");
     const destParam = dest.trim().split(",")[0];
     if (!destParam) {
-      setError("Please choose a destination.");
+      setError(t("chooseDestination"));
       return;
     }
 
@@ -94,30 +96,30 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
         destination: destParam,
         message: err instanceof Error ? err.message : "Unknown error",
       });
-      setError("Failed to create plan. Please try again.");
+      setError(t("createPlanFailed"));
     }
   };
 
   return (
     <>
-      {loading ? <LoadingScreen text="Creating plan..." /> : null}
+      {loading ? <LoadingScreen text={t("creatingPlan")} /> : null}
       <form onSubmit={handleSubmit} noValidate className="grid gap-4">
         <fieldset className="grid gap-2" aria-labelledby="dest-label">
           <legend id="dest-label" className="sr-only">
-            Destination
+            {t("destinationLabel")}
           </legend>
           <LocationSearchInput
             id="dest-input"
             value={dest}
             onChange={handleDestChange}
-            placeholder="Destination"
+            placeholder={t("destinationLabel")}
             autocompleteHook={useDestinationAutocomplete}
           />
         </fieldset>
 
         <fieldset className="grid gap-2" aria-labelledby="daterange-label">
           <legend id="daterange-label" className="sr-only">
-            Travel dates
+            {t("travelDatesLabel")}
           </legend>
 
           <DateRangePicker
@@ -129,7 +131,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
         </fieldset>
 
         <Button data-testid="create-trip-submit" type="submit" disabled={loading} className="w-full">
-          Create trip
+          {t("createTrip")}
         </Button>
 
         {error ? (

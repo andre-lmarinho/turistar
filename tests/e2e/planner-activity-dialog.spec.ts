@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { EMPTY_ACTIVITY_TITLE } from "@/features/activity/constants";
 import { goToPlannerPage, openInlineActivity } from "./helpers/plannerUi";
 
 test.describe("Activity Dialog", () => {
@@ -19,7 +18,7 @@ test.describe("Activity Dialog", () => {
 
   test("inline input displays placeholder text", async ({ page }) => {
     const inlineInput = await openInlineActivity(page);
-    await expect(inlineInput).toHaveAttribute("placeholder", EMPTY_ACTIVITY_TITLE);
+    await expect(inlineInput).toHaveAttribute("placeholder", "Add a title");
   });
 
   test("cancel button is visible when adding activity", async ({ page }) => {

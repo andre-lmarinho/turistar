@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import type { CreatePlannerPlanResult } from "@/features/plan/services/PlanService";
@@ -17,6 +18,7 @@ interface PlannersSectionProps {
 function CreateTripDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const t = useTranslations();
 
   function handlePlanCreated(plan: CreatePlannerPlanResult) {
     setOpen(false);
@@ -31,19 +33,16 @@ function CreateTripDialog() {
         <span className="bg-primary-foreground/15 flex size-10 items-center justify-center rounded-full">
           <Plus className="size-5" aria-hidden="true" />
         </span>
-        <span className="mt-3 text-sm font-semibold">Create a trip</span>
-        <span className="mt-1 text-xs opacity-80">Start with a destination</span>
+        <span className="mt-3 text-sm font-semibold">{t("createTrip")}</span>
+        <span className="mt-1 text-xs opacity-80">{t("startWithDestination")}</span>
       </DialogTriggerButton>
       <DialogTriggerButton
         className="bg-primary text-primary-foreground fixed right-5 bottom-5 inline-flex size-12 cursor-pointer items-center justify-center rounded-full shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:right-8 sm:bottom-8"
-        aria-label="Create a trip">
+        aria-label={t("createTrip")}>
         <Plus className="size-5" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent className="w-[calc(100%-2rem)] max-w-md p-0">
-        <DialogHeader
-          title="Create a trip"
-          description="Choose a destination and travel dates for your new trip."
-        />
+        <DialogHeader title={t("createTrip")} description={t("createTripDescription")} />
         <div className="max-h-[75vh] overflow-y-auto p-4">
           <PlannerCreationForm onPlanCreated={handlePlanCreated} />
         </div>
@@ -53,11 +52,13 @@ function CreateTripDialog() {
 }
 
 export function PlannersSection({ plans }: PlannersSectionProps) {
+  const t = useTranslations();
+
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
         <Plane className="text-primary h-5 w-5" aria-hidden="true" />
-        <h2 className="text-foreground text-base font-semibold">Your trips</h2>
+        <h2 className="text-foreground text-base font-semibold">{t("yourTrips")}</h2>
       </div>
 
       <CardGrid>

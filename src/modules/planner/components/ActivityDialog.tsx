@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useFormatter, useTranslations } from "next-intl";
 import { memo, useEffect, useId, useRef, useState } from "react";
 
-import { ACTIVITY_COLORS, ACTIVITY_TEXT } from "@/features/activity/constants";
+import { ACTIVITY_COLORS } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import { ActivitySearchInput } from "@/features/search/components/ActivitySearchInput";
@@ -73,6 +74,8 @@ export const ActivityDialog = memo(function ActivityDialog({
   destCoords,
   isDemo,
 }: EditorDialogProps) {
+  const t = useTranslations();
+  const format = useFormatter();
   const uploadInputId = useId();
   const [activePopup, setActivePopup] = useState<"color" | "day" | null>(null);
   const [draft, setDraft] = useState(() => createDraft(activity));
@@ -164,11 +167,7 @@ export const ActivityDialog = memo(function ActivityDialog({
         commitAndClose();
       }}>
       <DialogContent className="flex w-[95%] max-w-113 flex-col p-0">
-        <DialogHeader
-          visuallyHidden
-          title="Edit Activity"
-          description="Edit the selected activity title, schedule position, location, notes, budget, and visual details."
-        />
+        <DialogHeader visuallyHidden title={t("editActivity")} description={t("editActivityDescription")} />
 
         <div
           className={`group relative rounded-t-lg ${
@@ -189,7 +188,7 @@ export const ActivityDialog = memo(function ActivityDialog({
               variant="ghost"
               className="border-border hover:bg-border absolute right-2 bottom-2 z-20 border py-1 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
               onClick={handleRemoveImage}>
-              Remove photo
+              {t("removePhoto")}
             </Button>
           )}
 
@@ -199,11 +198,18 @@ export const ActivityDialog = memo(function ActivityDialog({
                 open={activePopup === "day"}
                 onOpenChange={(open) => setActivePopup(open ? "day" : null)}>
                 <PopoverTriggerButton className="border-border bg-background text-foreground hover:bg-border inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors">
-                  {currentDay?.label ?? "Change Day"}
+                  {currentDay
+                    ? format.dateTime(new Date(currentDay.id), {
+                        weekday: "short",
+                        day: "2-digit",
+                        month: "short",
+                        timeZone: "UTC",
+                      })
+                    : t("changeDay")}
                   <ChevronDown className="size-4" aria-hidden="true" />
                 </PopoverTriggerButton>
                 <PopoverContent
-                  title="Change Day"
+                  title={t("changeDay")}
                   side="bottom"
                   align="start"
                   sideOffset={8}
@@ -211,7 +217,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                   <div className="flex gap-2 p-4">
                     <div className="w-[65%]">
                       <label htmlFor="day-select" className="text-xs font-bold">
-                        Day
+                        {t("day")}
                       </label>
                       <select
                         id="day-select"
@@ -223,14 +229,19 @@ export const ActivityDialog = memo(function ActivityDialog({
                         className="mt-1 w-full rounded border px-2 py-1 text-sm">
                         {days.map((day) => (
                           <option key={day.id} value={day.id}>
-                            {day.label}
+                            {format.dateTime(new Date(day.id), {
+                              weekday: "short",
+                              day: "2-digit",
+                              month: "short",
+                              timeZone: "UTC",
+                            })}
                           </option>
                         ))}
                       </select>
                     </div>
                     <div className="w-[30%]">
                       <label htmlFor="position-select" className="text-xs font-bold">
-                        Position
+                        {t("position")}
                       </label>
                       <select
                         id="position-select"
@@ -253,8 +264,8 @@ export const ActivityDialog = memo(function ActivityDialog({
               {onDelete && (
                 <Button
                   variant="ghost"
-                  title="Delete"
-                  aria-label="Delete"
+                  title={t("delete")}
+                  aria-label={t("delete")}
                   onClick={onDelete}
                   className="hover:bg-border size-8 rounded-full p-0">
                   <Trash2 className="size-4" aria-hidden="true" />
@@ -265,13 +276,13 @@ export const ActivityDialog = memo(function ActivityDialog({
                 open={activePopup === "color"}
                 onOpenChange={(open) => setActivePopup(open ? "color" : null)}>
                 <PopoverTriggerButton
-                  title="Card Color"
+                  title={t("cardColor")}
                   className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors">
                   <Palette className="size-4" aria-hidden="true" />
-                  <span className="sr-only">Card color</span>
+                  <span className="sr-only">{t("cardColorSr")}</span>
                 </PopoverTriggerButton>
                 <PopoverContent
-                  title="Card Background"
+                  title={t("cardBackground")}
                   side="bottom"
                   align="end"
                   sideOffset={8}
@@ -282,12 +293,12 @@ export const ActivityDialog = memo(function ActivityDialog({
                         variant="ghost"
                         className="border-border hover:bg-muted/60 border"
                         onClick={handleRemoveImage}>
-                        Remove photo
+                        {t("removePhoto")}
                       </Button>
                     )}
 
                     <div>
-                      <span className="text-xs font-bold">Colors</span>
+                      <span className="text-xs font-bold">{t("colors")}</span>
                       <div className="mt-2 flex flex-wrap justify-between gap-2">
                         {ACTIVITY_COLORS.map((color) => (
                           <button
@@ -297,7 +308,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                               color.bg.startsWith("#") ? "" : color.bg
                             } ${draft.color === color.bg ? "ring-primary ring-2" : "border-background"}`}
                             style={color.bg.startsWith("#") ? { backgroundColor: color.bg } : undefined}
-                            aria-label={color.name}
+                            aria-label={t(color.name)}
                             type="button"
                           />
                         ))}
@@ -309,7 +320,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                         <label
                           htmlFor={uploadInputId}
                           className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors">
-                          Upload image
+                          {t("uploadImage")}
                         </label>
                         <input
                           id={uploadInputId}
@@ -333,8 +344,8 @@ export const ActivityDialog = memo(function ActivityDialog({
 
               <Button
                 variant="ghost"
-                title="Close"
-                aria-label="Close"
+                title={t("close")}
+                aria-label={t("close")}
                 onClick={commitAndClose}
                 className="hover:bg-border size-8 rounded-full p-0">
                 <X className="size-4" aria-hidden="true" />
@@ -346,29 +357,28 @@ export const ActivityDialog = memo(function ActivityDialog({
         <div className="relative m-4">
           <ActivitySearchInput
             id="title"
-            label="Title"
+            label={t("activityTitle")}
             value={draft.title}
             onChange={handleTitleChange}
-            placeholder={ACTIVITY_TEXT.emptyTitle}
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
             suggestionHook={useActivitySuggestions}
             inputRef={titleInputRef}
             inputClassName="focus:ring-primary w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
-            onInputBlur={() => commit()}
+            onBlur={() => commit()}
             inputProps={{ name: "title", required: true, "aria-required": true }}
           />
         </div>
 
         <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
           <legend id="time-budget-legend" className="sr-only">
-            Duration and Budget
+            {t("duration")} {t("budgetLabel")}
           </legend>
 
           {(
             [
-              ["duration", "Duration", "Duration in hours", "Hrs", Hourglass],
-              ["budget", "Budget", "Budget amount", "Budget", DollarSign],
+              ["duration", t("duration"), t("durationHours"), t("hrs"), Hourglass],
+              ["budget", t("budgetLabel"), t("budgetAmount"), t("budgetLabel"), DollarSign],
             ] as const
           ).map(([field, label, accessibleLabel, placeholder, Icon]) => (
             <div key={field}>
@@ -397,7 +407,7 @@ export const ActivityDialog = memo(function ActivityDialog({
         <div className="mb-2 px-4">
           <label htmlFor="activity-address" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <MapPin size={12} aria-hidden="true" />
-            <span>Address</span>
+            <span>{t("activityAddress")}</span>
           </label>
           <LocationSearchInput
             id="activity-address"
@@ -410,7 +420,7 @@ export const ActivityDialog = memo(function ActivityDialog({
               }
             }}
             onBlur={() => commit()}
-            placeholder="Search address"
+            placeholder={t("searchAddress")}
             className="w-full"
             inputClassName="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
             latitude={destCoords?.lat}
@@ -422,7 +432,7 @@ export const ActivityDialog = memo(function ActivityDialog({
         <div className="mb-2 px-4">
           <label htmlFor="activity-notes" className="mb-1 flex items-center gap-1 text-xs font-bold">
             <AlignLeft size={12} aria-hidden="true" />
-            <span>Notes</span>
+            <span>{t("activityNotes")}</span>
           </label>
           <textarea
             id="activity-notes"
@@ -430,7 +440,7 @@ export const ActivityDialog = memo(function ActivityDialog({
             value={draft.description}
             onChange={(e) => updateDraft({ description: e.target.value })}
             onBlur={() => commit()}
-            placeholder="Add a more detailed description."
+            placeholder={t("addNotesPlaceholder")}
             rows={3}
             className="focus:ring-primary w-full resize-none rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
           />
@@ -444,10 +454,10 @@ export const ActivityDialog = memo(function ActivityDialog({
               revert();
               onClose();
             }}>
-            Cancel
+            {t("cancel")}
           </Button>
           <Button type="button" onClick={commitAndClose}>
-            Done
+            {t("done")}
           </Button>
         </div>
       </DialogContent>

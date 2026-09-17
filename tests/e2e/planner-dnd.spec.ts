@@ -13,7 +13,7 @@ test.describe("Planner Smoke Tests", () => {
   });
 
   test("displays day headings", async ({ page }) => {
-    const firstDay = page.getByRole("heading", { name: /day 1/i });
+    const firstDay = page.getByRole("heading", { name: "Mon, Jan 01" });
     await expect(firstDay).toBeVisible();
   });
 
@@ -34,7 +34,7 @@ test.describe("Planner Smoke Tests", () => {
 
   test("displays budget section when tab is clicked", async ({ page }) => {
     await openPlannerMode(page, "budget");
-    const budgetSection = page.getByRole("region", { name: /summary/i });
+    const budgetSection = page.getByRole("region", { name: /total spent/i });
     await expect(budgetSection).toBeVisible();
   });
 

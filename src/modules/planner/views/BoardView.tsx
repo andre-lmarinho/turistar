@@ -5,10 +5,9 @@ import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
+import { useFormatter, useTranslations } from "next-intl";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { memo, useEffect, useMemo, useRef } from "react";
-
-import { EMPTY_ACTIVITY_TITLE } from "@/features/activity/constants";
 import { useCardColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
@@ -43,6 +42,7 @@ export const BoardView = memo(function Board({
   onActivityMove,
   onFallbackAdd,
 }: BoardProps) {
+  const t = useTranslations();
   const {
     previewDays: draftDays,
     activeId,
@@ -105,7 +105,7 @@ export const BoardView = memo(function Board({
       onDragCancel={handleDragCancel}>
       <ul
         ref={boardRef}
-        aria-label="Days"
+        aria-label={t("daysLabel")}
         onMouseDown={handleMouseDown}
         className="bg-background m-0 flex h-full flex-1 list-none gap-3 overflow-x-auto overflow-y-hidden rounded-2xl border p-2 select-none cursor-default md:gap-4 md:p-4">
         {draftDays.map((day, dayIndex) => (
@@ -141,6 +141,7 @@ export const ActivityCard = memo(function ActivityCard({
   onClick,
   bgColor,
 }: ActivityCardProps) {
+  const t = useTranslations();
   const { title, duration, budget, color, imageUrl } = activity;
 
   const { border: borderColorClass } = useCardColors(
@@ -181,7 +182,7 @@ export const ActivityCard = memo(function ActivityCard({
           ) : null}
           <div className="min-w-0 px-4 py-3 pl-5">
             <h3 className="truncate text-sm font-semibold leading-5">
-              {title.trim() ? title : EMPTY_ACTIVITY_TITLE}
+              {title.trim() ? title : t("untitledActivity")}
             </h3>
             {activity.description ? (
               <p className="text-muted-foreground mt-1 line-clamp-2 text-xs leading-4">
@@ -278,6 +279,8 @@ export const DayColumn = memo(function DayColumn({
   onActivitySelect,
   onFallbackAdd,
 }: DayColumnProps) {
+  const t = useTranslations();
+  const format = useFormatter();
   const { setNodeRef, isOver } = useDroppable({
     id: day.id,
   });
@@ -307,9 +310,16 @@ export const DayColumn = memo(function DayColumn({
             </span>
           ) : null}
           <div className="min-w-0">
-            <h2 className="truncate text-sm font-semibold">{day.label}</h2>
+            <h2 className="truncate text-sm font-semibold">
+              {format.dateTime(new Date(day.id), {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+                timeZone: "UTC",
+              })}
+            </h2>
             <p className="text-muted-foreground mt-0.5 text-xs">
-              {day.activities.length} {day.activities.length === 1 ? "activity" : "activities"}
+              {t("activityCount", { count: day.activities.length })}
             </p>
           </div>
         </div>
@@ -339,7 +349,7 @@ export const DayColumn = memo(function DayColumn({
           onClick={() => onFallbackAdd?.(day.id, day.activities.length)}
           className="bg-background hover:bg-muted text-foreground flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl border border-dashed px-3 py-2 text-left text-sm font-medium transition active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100">
           <Plus size={18} aria-hidden="true" />
-          <span>{"Add activity"}</span>
+          <span>{t("addActivity")}</span>
         </button>
       </div>
     </section>

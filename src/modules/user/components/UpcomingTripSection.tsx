@@ -1,5 +1,6 @@
-import { differenceInCalendarDays, format, isValid, parseISO, startOfToday } from "date-fns";
+import { differenceInCalendarDays, isValid, parseISO, startOfToday } from "date-fns";
 import Link from "next/link";
+import { getFormatter, getTranslations } from "next-intl/server";
 
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
@@ -8,28 +9,6 @@ import styles from "./UpcomingTripSection.module.css";
 
 interface UpcomingTripSectionProps {
   plan: UserPlannerSummary;
-}
-
-function getTripStats(startDate: string, endDate: string | null) {
-  const start = parseISO(startDate);
-  const end = endDate ? parseISO(endDate) : null;
-
-  if (!isValid(start)) {
-    return [
-      { label: "Starts", value: "TBD" },
-      { label: "Duration", value: "TBD" },
-      { label: "Days away", value: "TBD" },
-    ];
-  }
-
-  return [
-    { label: "Starts", value: format(start, "MMM d") },
-    {
-      label: "Duration",
-      value: end && isValid(end) ? `${differenceInCalendarDays(end, start) + 1} days` : "TBD",
-    },
-    { label: "Days away", value: `${Math.max(0, differenceInCalendarDays(start, startOfToday()))} days` },
-  ];
 }
 
 export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary | null {
@@ -51,10 +30,31 @@ export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary
   );
 }
 
-export function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
+export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
+  const [t, format] = await Promise.all([getTranslations(), getFormatter()]);
   const backgroundImage = plan.coverImage ?? DEFAULT_PLAN_COVER_IMAGE;
   const destination = plan.destination ?? plan.title;
-  const tripStats = getTripStats(plan.startDate ?? "", plan.endDate);
+  const start = parseISO(plan.startDate ?? "");
+  const end = parseISO(plan.endDate ?? "");
+  const tripStats = [
+    {
+      label: t("starts"),
+      value: isValid(start) ? format.dateTime(start, { month: "short", day: "numeric" }) : t("tbd"),
+    },
+    {
+      label: t("duration"),
+      value:
+        isValid(start) && isValid(end)
+          ? t("dayCount", { count: differenceInCalendarDays(end, start) + 1 })
+          : t("tbd"),
+    },
+    {
+      label: t("daysAway"),
+      value: isValid(start)
+        ? t("dayCount", { count: Math.max(0, differenceInCalendarDays(start, startOfToday())) })
+        : t("tbd"),
+    },
+  ];
   const isPreparedImage = backgroundImage.includes("url(") || backgroundImage.startsWith("linear-gradient");
   const image = isPreparedImage
     ? backgroundImage
@@ -77,7 +77,7 @@ export function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
 
         <div className="relative flex min-h-88 flex-col justify-between p-5 sm:p-6">
           <p className="w-fit rounded-full bg-black/35 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
-            Next trip
+            {t("nextTrip")}
           </p>
 
           <div

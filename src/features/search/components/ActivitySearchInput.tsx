@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
@@ -15,7 +16,6 @@ interface ActivitySearchInputProps {
   value: string;
   onChange: (value: string | PlaceSelection<ActivitySuggestion>) => void;
   id?: string;
-  placeholder?: string;
   label?: string;
   className?: string;
   inputClassName?: string;
@@ -26,19 +26,15 @@ interface ActivitySearchInputProps {
   inputProps?: Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
-  > & {
-    [key: string]: unknown;
-  };
-  onInputFocus?: () => void;
-  onInputBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onInputKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  >;
+  onFocus?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export function ActivitySearchInput({
   value,
   onChange,
   id = "activity-suggestion-input",
-  placeholder = "Search activity",
   label,
   className,
   inputClassName,
@@ -47,10 +43,10 @@ export function ActivitySearchInput({
   suggestionHook,
   inputRef,
   inputProps,
-  onInputFocus,
-  onInputBlur,
-  onInputKeyDown,
+  onFocus,
+  onBlur,
 }: ActivitySearchInputProps) {
+  const t = useTranslations();
   const [open, setOpen] = React.useState(false);
 
   const debounced = useDebounce(value);
@@ -95,7 +91,7 @@ export function ActivitySearchInput({
     <SuggestionCombobox<ActivitySuggestion, PlaceSelection<ActivitySuggestion>>
       id={id}
       label={label}
-      placeholder={placeholder}
+      placeholder={t("addTitlePlaceholder")}
       value={value}
       open={openState}
       onOpenChange={setOpen}
@@ -104,8 +100,8 @@ export function ActivitySearchInput({
       onSelect={(selection) => onChange(selection)}
       mapOptionToSelection={mapOptionToSelection}
       loading={loading}
-      error={error ? "Failed to load suggestions." : undefined}
-      emptyMessage="No suggestions found."
+      error={error ? t("failedToLoadSuggestions") : undefined}
+      emptyMessage={t("noSuggestionsFound")}
       className={className}
       inputClassName={
         inputClassName ??
@@ -130,9 +126,8 @@ export function ActivitySearchInput({
       )}
       inputRef={inputRef}
       inputProps={inputProps}
-      onInputFocus={onInputFocus}
-      onInputBlur={onInputBlur}
-      onInputKeyDown={onInputKeyDown}
+      onFocus={onFocus}
+      onBlur={onBlur}
     />
   );
 }
