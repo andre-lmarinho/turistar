@@ -38,7 +38,12 @@ describe("usePlaceSelection", () => {
   it.each(["network", "http", "json"])("keeps suggestion data on a %s failure", async (failure) => {
     const fetch = vi.fn();
     if (failure === "network") fetch.mockRejectedValue(new Error("offline"));
-    else fetch.mockResolvedValue(new Response("invalid json", { status: failure === "http" ? 500 : 200 }));
+    else
+      fetch.mockResolvedValue(
+        new Response(failure === "http" ? '{"details":{}}' : "invalid json", {
+          status: failure === "http" ? 500 : 200,
+        })
+      );
     vi.stubGlobal("fetch", fetch);
     const { result } = renderHook(() => usePlaceSelection());
     expect(await result.current.selectPlace(selection)).toMatchObject({
@@ -85,7 +90,12 @@ describe("useDestinationCoordinates", () => {
     async (failure) => {
       const fetch = vi.fn();
       if (failure === "network") fetch.mockRejectedValue(new Error("offline"));
-      else fetch.mockResolvedValue(new Response("invalid json", { status: failure === "http" ? 500 : 200 }));
+      else
+        fetch.mockResolvedValue(
+          new Response(failure === "http" ? '{"results":[]}' : "invalid json", {
+            status: failure === "http" ? 500 : 200,
+          })
+        );
       vi.stubGlobal("fetch", fetch);
       const { result } = renderHook(() => useDestinationCoordinates("Salvador"));
       await waitFor(() =>

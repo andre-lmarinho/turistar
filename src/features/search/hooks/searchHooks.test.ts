@@ -1,7 +1,16 @@
-import { renderHook } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook, waitFor } from "@testing-library/react";
+import { createElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useActivitySuggestions, useAddressAutocomplete, useDestinationAutocomplete } from "./searchHooks";
+
+function createTestWrapper() {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const wrapper = ({ children }: { children: React.ReactNode }) =>
+    createElement(QueryClientProvider, { client }, children);
+  return { client, wrapper };
+}
 
 const hookTestCases = [
   { name: "useActivitySuggestions", hook: useActivitySuggestions, input: "test" },
@@ -28,35 +37,43 @@ describe.each(hookTestCases)("$name", ({ hook, input }) => {
   });
 
   it("returns empty results for empty query", () => {
+    const fetchSpy = vi.spyOn(global, "fetch");
     const { result } = renderHook(() => hook(""));
 
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("returns empty results for whitespace-only query", () => {
+    const fetchSpy = vi.spyOn(global, "fetch");
     const { result } = renderHook(() => hook("   "));
 
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("returns empty results for single character query", () => {
+    const fetchSpy = vi.spyOn(global, "fetch");
     const { result } = renderHook(() => hook("a"));
 
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("returns empty results for two character query", () => {
+    const fetchSpy = vi.spyOn(global, "fetch");
     const { result } = renderHook(() => hook("ab"));
 
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("initiates fetch for valid query length", () => {
@@ -84,15 +101,23 @@ describe.each(hookTestCases)("$name", ({ hook, input }) => {
     expect(fetchSpy.mock.calls[0][0]).toContain("paris");
   });
 
-  it("handles fetch rejection without throwing", () => {
+  it("handles fetch rejection without throwing", async () => {
     vi.spyOn(global, "fetch").mockRejectedValue(new Error("Network error"));
+    const { wrapper } = createTestWrapper();
 
-    expect(() => renderHook(() => hook(input))).not.toThrow();
+    const { result } = renderHook(() => hook(input), { wrapper });
+
+    await waitFor(() => expect(result.current.error).toBe(true));
   });
 
-  it("handles HTTP error response without throwing", () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(new Response(null, { status: 500 }));
+  it("handles HTTP error response without throwing", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 })
+    );
+    const { wrapper } = createTestWrapper();
 
-    expect(() => renderHook(() => hook(input))).not.toThrow();
+    const { result } = renderHook(() => hook(input), { wrapper });
+
+    await waitFor(() => expect(result.current.error).toBe(true));
   });
 });

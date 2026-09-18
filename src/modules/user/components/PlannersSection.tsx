@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/plan/config";
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
 import type { CreatePlannerPlanResult } from "@/features/plan/services/PlanService";
-import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/search/config";
 import { PlannerCreationForm } from "@/modules/user/components/PlannerCreationForm";
 import { Card, CardGrid } from "@/ui/components/card";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/ui/components/dialog";

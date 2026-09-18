@@ -7,9 +7,12 @@ const { mockFetchGeoapifyAutocomplete } = vi.hoisted(() => ({
   mockFetchGeoapifyAutocomplete: vi.fn(),
 }));
 
-vi.mock("@/features/search/services/GeoapifyService", () => ({
-  fetchGeoapifyAutocomplete: mockFetchGeoapifyAutocomplete,
-}));
+vi.mock("@/features/search/services/GeoapifyService", async () => {
+  const actual = await vi.importActual<typeof import("@/features/search/services/GeoapifyService")>(
+    "@/features/search/services/GeoapifyService"
+  );
+  return { ...actual, fetchGeoapifyAutocomplete: mockFetchGeoapifyAutocomplete };
+});
 
 const createRequest = (search: string): NextRequest => {
   return { url: `https://example.com/api/places/city-country${search}` } as NextRequest;

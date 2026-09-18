@@ -7,9 +7,12 @@ const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
-vi.mock("@/features/search/services/GeoapifyService", () => ({
-  fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch,
-}));
+vi.mock("@/features/search/services/GeoapifyService", async () => {
+  const actual = await vi.importActual<typeof import("@/features/search/services/GeoapifyService")>(
+    "@/features/search/services/GeoapifyService"
+  );
+  return { ...actual, fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch };
+});
 
 const createRequest = (search: string): NextRequest => {
   return { url: `https://example.com/api/places/search${search}` } as NextRequest;

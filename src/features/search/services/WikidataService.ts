@@ -1,6 +1,6 @@
 import "server-only";
 
-import { WIKIDATA_IMAGE_WIDTH } from "../config";
+const WIKIDATA_IMAGE_WIDTH = 400;
 
 type WikidataEntityResponse = {
   entities?: Record<

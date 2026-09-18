@@ -131,4 +131,47 @@ describe("GeoapifyService", () => {
       expect(result.timezone).toBeUndefined();
     });
   });
+
+  describe("readGeoapifyCoordinates", () => {
+    it("ignores whitespace-only coordinate values", async () => {
+      const { readGeoapifyCoordinates } = await import("./GeoapifyService");
+      const params = new URLSearchParams({ lat: " ", lon: " " });
+      expect(readGeoapifyCoordinates(params)).toEqual({ lat: undefined, lon: undefined });
+    });
+  });
+
+  describe("validateGeoapifyQuery", () => {
+    it("returns an error response when the parameter is missing", async () => {
+      const { validateGeoapifyQuery } = await import("./GeoapifyService");
+      const result = validateGeoapifyQuery(new URLSearchParams(), "text");
+
+      expect(result).toBeInstanceOf(Response);
+      if (result instanceof Response) {
+        expect(result.status).toBe(400);
+        await expect(result.json()).resolves.toEqual({ error: "Query is required." });
+      }
+    });
+
+    it("returns an error response when the value is shorter than the minimum", async () => {
+      const { validateGeoapifyQuery } = await import("./GeoapifyService");
+      const params = new URLSearchParams({ text: "aa" });
+      const result = validateGeoapifyQuery(params, "text");
+
+      expect(result).toBeInstanceOf(Response);
+      if (result instanceof Response) {
+        expect(result.status).toBe(400);
+        await expect(result.json()).resolves.toEqual({
+          error: "Query must be at least 3 characters.",
+        });
+      }
+    });
+
+    it("returns the string when the parameter is valid", async () => {
+      const { validateGeoapifyQuery } = await import("./GeoapifyService");
+      const params = new URLSearchParams({ text: "aaa" });
+      const result = validateGeoapifyQuery(params, "text");
+
+      expect(result).toBe("aaa");
+    });
+  });
 });
