@@ -122,10 +122,6 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     }
   };
 
-  const defaultInputClassName =
-    inputClassName ??
-    "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none";
-
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       {label ? (
@@ -153,7 +149,10 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
           onBlur={handleInputBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={defaultInputClassName}
+          className={
+            inputClassName ??
+            "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
+          }
           autoComplete="off"
         />
         {loading ? (

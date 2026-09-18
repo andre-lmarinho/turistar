@@ -1,14 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React from "react";
+import type React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
-import { useDebounce } from "@/features/search/hooks/useDebounce";
-import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/features/search/lib/geoapify/config";
 import type { ActivitySuggestion, PlaceSelection } from "@/features/search/types";
 import { cn } from "@/ui/utils/cn";
 
+import { useSearchInput } from "../hooks/useSearchInput";
 import type { SuggestionOption } from "./SuggestionCombobox";
 import { SuggestionCombobox } from "./SuggestionCombobox";
 
@@ -31,6 +30,29 @@ interface ActivitySearchInputProps {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
+const mapResult = (suggestion: ActivitySuggestion, idx: number): SuggestionOption<ActivitySuggestion> => ({
+  id: suggestion.placeId ?? `${suggestion.latitude}-${suggestion.longitude}-${idx}`,
+  label: suggestion.name,
+  description: suggestion.formatted,
+  meta: suggestion.category,
+  value: suggestion,
+});
+
+const mapOptionToSelection = (
+  option: SuggestionOption<ActivitySuggestion>
+): PlaceSelection<ActivitySuggestion> => ({
+  id: option.id,
+  placeId: option.value.placeId,
+  name: option.value.name,
+  formatted: option.value.formatted,
+  description: option.value.description,
+  category: option.value.category,
+  latitude: option.value.latitude,
+  longitude: option.value.longitude,
+  raw: option.value,
+  source: "activity",
+});
+
 export function ActivitySearchInput({
   value,
   onChange,
@@ -47,45 +69,13 @@ export function ActivitySearchInput({
   onBlur,
 }: ActivitySearchInputProps) {
   const t = useTranslations();
-  const [open, setOpen] = React.useState(false);
-
-  const debounced = useDebounce(value);
-  const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
-  const openState = open && canSearch;
-
-  const { results, loading, error } = suggestionHook(debounced, {
-    enabled: openState,
+  const { open, setOpen, options, loading, error } = useSearchInput({
+    hook: suggestionHook,
+    value,
     latitude,
     longitude,
+    mapResult,
   });
-
-  const options = React.useMemo(() => {
-    return results.map(
-      (suggestion: ActivitySuggestion, idx: number): SuggestionOption<ActivitySuggestion> => ({
-        id: suggestion.placeId ?? `${suggestion.latitude}-${suggestion.longitude}-${idx}`,
-        label: suggestion.name,
-        description: suggestion.formatted,
-        meta: suggestion.category,
-        value: suggestion,
-      })
-    );
-  }, [results]);
-
-  const mapOptionToSelection = React.useCallback(
-    (option: SuggestionOption<ActivitySuggestion>): PlaceSelection<ActivitySuggestion> => ({
-      id: option.id,
-      placeId: option.value.placeId,
-      name: option.value.name,
-      formatted: option.value.formatted,
-      description: option.value.description,
-      category: option.value.category,
-      latitude: option.value.latitude,
-      longitude: option.value.longitude,
-      raw: option.value,
-      source: "activity",
-    }),
-    []
-  );
 
   return (
     <SuggestionCombobox<ActivitySuggestion, PlaceSelection<ActivitySuggestion>>
@@ -93,7 +83,7 @@ export function ActivitySearchInput({
       label={label}
       placeholder={t("addTitlePlaceholder")}
       value={value}
-      open={openState}
+      open={open}
       onOpenChange={setOpen}
       onInputChange={(next) => onChange(next)}
       options={options}

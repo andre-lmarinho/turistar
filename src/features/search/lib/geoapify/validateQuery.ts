@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/features/search/lib/geoapify/config";
+const MIN_QUERY_LENGTH = 3;
 
 /**
  * Validates a Geoapify text query and returns its normalized value.
@@ -11,9 +11,9 @@ export function validateGeoapifyQuery(searchParams: URLSearchParams, param: stri
     return NextResponse.json({ error: "Query is required." }, { status: 400 });
   }
 
-  if (value.length < GEOAPIFY_MIN_QUERY_LENGTH) {
+  if (value.length < MIN_QUERY_LENGTH) {
     return NextResponse.json(
-      { error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.` },
+      { error: `Query must be at least ${MIN_QUERY_LENGTH} characters.` },
       { status: 400 }
     );
   }

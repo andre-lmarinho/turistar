@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 import type { CreatePlannerPlanResult } from "@/features/plan/services/PlanService";
 import { LocationSearchInput } from "@/features/search/components/LocationSearchInput";
-import { useDestinationAutocomplete } from "@/features/search/hooks/useDestinationAutocomplete";
+import { useDestinationAutocomplete } from "@/features/search/hooks/searchHooks";
 import type { AutocompletePlace } from "@/features/search/types";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";

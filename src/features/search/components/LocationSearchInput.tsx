@@ -1,13 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
-import { useDebounce } from "@/features/search/hooks/useDebounce";
-import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/features/search/lib/geoapify/config";
 import type { AutocompletePlace, PlaceSelection } from "@/features/search/types";
 
+import { useSearchInput } from "../hooks/useSearchInput";
 import type { SuggestionOption } from "./SuggestionCombobox";
 import { SuggestionCombobox } from "./SuggestionCombobox";
 
@@ -25,6 +23,27 @@ interface LocationSearchInputProps {
   onBlur?: () => void;
 }
 
+const mapResult = (place: AutocompletePlace, idx: number): SuggestionOption<AutocompletePlace> => ({
+  id: place.placeId ?? `${place.latitude}-${place.longitude}-${idx}`,
+  label: place.name,
+  value: place,
+});
+
+const mapOptionToSelection = (
+  option: SuggestionOption<AutocompletePlace>
+): PlaceSelection<AutocompletePlace> => ({
+  id: option.id,
+  placeId: option.value.placeId,
+  name: option.value.name,
+  formatted: option.value.formatted ?? option.value.name,
+  description: option.value.description,
+  category: option.value.category,
+  latitude: option.value.latitude,
+  longitude: option.value.longitude,
+  raw: option.value,
+  source: "location",
+});
+
 export function LocationSearchInput({
   value,
   onChange,
@@ -39,47 +58,20 @@ export function LocationSearchInput({
   onBlur,
 }: LocationSearchInputProps) {
   const t = useTranslations();
-  const [open, setOpen] = React.useState(false);
-  const debounced = useDebounce(value);
-  const canSearch = debounced.trim().length >= GEOAPIFY_MIN_QUERY_LENGTH;
-  const openState = open && canSearch;
-
-  const { results, loading, error } = autocompleteHook(debounced, {
-    enabled: openState,
+  const { open, setOpen, options, loading, error } = useSearchInput({
+    hook: autocompleteHook,
+    value,
     latitude,
     longitude,
+    mapResult,
   });
-
-  const options = React.useMemo(() => {
-    return results.map((place: AutocompletePlace, idx: number) => ({
-      id: place.placeId ?? `${place.latitude}-${place.longitude}-${idx}`,
-      label: place.name,
-      value: place,
-    }));
-  }, [results]);
-
-  const mapOptionToSelection = React.useCallback(
-    (option: SuggestionOption<AutocompletePlace>): PlaceSelection<AutocompletePlace> => ({
-      id: option.id,
-      placeId: option.value.placeId,
-      name: option.value.name,
-      formatted: option.value.formatted ?? option.value.name,
-      description: option.value.description,
-      category: option.value.category,
-      latitude: option.value.latitude,
-      longitude: option.value.longitude,
-      raw: option.value,
-      source: "location",
-    }),
-    []
-  );
 
   return (
     <SuggestionCombobox<AutocompletePlace, PlaceSelection<AutocompletePlace>>
       id={id}
       placeholder={placeholder}
       value={value}
-      open={openState}
+      open={open}
       onOpenChange={setOpen}
       onInputChange={(next) => onChange(next)}
       options={options}

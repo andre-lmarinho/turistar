@@ -1,1 +1,0 @@
-export const GEOAPIFY_MIN_QUERY_LENGTH = 3;
