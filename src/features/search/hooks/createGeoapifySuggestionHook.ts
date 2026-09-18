@@ -2,8 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/features/search/lib/geoapify/config";
-
 interface SuggestionHookOptions {
   enabled?: boolean;
   latitude?: number;
@@ -32,7 +30,7 @@ export type SuggestionHook<TResult> = (
 export function createGeoapifySuggestionHook<TResult>({
   endpoint,
   queryKeyPrefix,
-  minimumQueryLength = GEOAPIFY_MIN_QUERY_LENGTH,
+  minimumQueryLength = 3,
   paramName = "text",
   mapResults,
 }: SuggestionHookConfig<TResult>): SuggestionHook<TResult> {

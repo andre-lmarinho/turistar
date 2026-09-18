@@ -1,17 +1,18 @@
 import type { NextRequest } from "next/server";
 import { vi } from "vitest";
 
-import { GEOAPIFY_MIN_QUERY_LENGTH } from "@/features/search/lib/geoapify/config";
-
 import { GET } from "./route";
 
 const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
-vi.mock("@/features/search/services/GeoapifyService", () => ({
-  fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch,
-}));
+vi.mock("@/features/search/services/GeoapifyService", async () => {
+  const actual = await vi.importActual<typeof import("@/features/search/services/GeoapifyService")>(
+    "@/features/search/services/GeoapifyService"
+  );
+  return { ...actual, fetchGeoapifyPlaceSearch: mockFetchGeoapifyPlaceSearch };
+});
 
 const createRequest = (search: string): NextRequest => {
   return { url: `https://example.com/api/places/search${search}` } as NextRequest;
@@ -30,12 +31,12 @@ describe("GET /api/places/search", () => {
   });
 
   it("returns 400 when the name parameter is shorter than the minimum characters", async () => {
-    const shortQuery = "a".repeat(GEOAPIFY_MIN_QUERY_LENGTH - 1);
+    const shortQuery = "a".repeat(3 - 1);
     const res = await GET(createRequest(`?name=${shortQuery}`));
 
     expect(res.status).toBe(400);
     await expect(res.json()).resolves.toEqual({
-      error: `Query must be at least ${GEOAPIFY_MIN_QUERY_LENGTH} characters.`,
+      error: `Query must be at least 3 characters.`,
     });
   });
 

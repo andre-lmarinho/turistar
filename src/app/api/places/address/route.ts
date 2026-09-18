@@ -1,7 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { readGeoapifyCoordinates, validateGeoapifyQuery } from "@/features/search/lib/geoapify/validateQuery";
-import { fetchGeoapifyAddressAutocomplete } from "@/features/search/services/GeoapifyService";
+import {
+  fetchGeoapifyAddressAutocomplete,
+  readGeoapifyCoordinates,
+  validateGeoapifyQuery,
+} from "@/features/search/services/GeoapifyService";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
