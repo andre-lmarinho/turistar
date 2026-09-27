@@ -1,68 +1,11 @@
-# Build, Test & Development Commands
+# Command reference
 
-## Development Commands
+[CONTRIBUTING.md](../CONTRIBUTING.md) is the command reference for humans and agents:
 
-- `pnpm dev` - Start development server for web app
-- `pnpm dev:e2e` - Start dev server with E2E flags on port 3100
+- [Local development](../CONTRIBUTING.md#local-development)
+- [Configuration](../CONTRIBUTING.md#configuration)
+- [Checks and focused tests](../CONTRIBUTING.md#checks)
+- [Database workflow](../CONTRIBUTING.md#database-workflow)
+- [Deployment](../CONTRIBUTING.md#deployment)
 
-## Build Commands
-
-- `pnpm build` - Build all packages and apps
-- `pnpm start` - Serve the compiled build locally
-- `pnpm serve:prod` - Serve build on 0.0.0.0:3000
-
-## Lint & Type Check
-
-- `pnpm lint` - Run Biome Lint on codebase
-- `pnpm lint:fix` - Run Biome and apply safe fixes
-- `pnpm typecheck` - Run TypeScript type checking
-- `pnpm typecheck:ci` - Run TypeScript type checking in CI
-- `pnpm format` - Format code with Biome
-
-## Testing Commands
-
-### Unit Tests
-
-- `pnpm test` - Run unit tests (vitest)
-- `pnpm test -- <filename>` - Run tests for specific file
-- `pnpm test -- <filename> -t "<testName>"` - Run specific test by name
-- `pnpm test:watch` - Run tests in watch mode
-
-### Integration Tests
-
-- `pnpm test -- "**/*.integration.test.ts"` - Run integration tests (vitest)
-- `pnpm test -- <filename>` - Run integration tests for specific file
-- `pnpm test -- <filename> -t "<testName>"` - Run specific integration test by name
-
-### End-to-End Tests
-
-- `pnpm e2e` - Run end-to-end tests (Playwright)
-- `pnpm e2e -- <filename>` - Run E2E tests for specific file
-- `pnpm e2e -- <filename> --grep "<testName>"` - Run specific E2E test by name
-
-## Database Commands
-
-- `pnpm gen:types` - Generate Supabase types (requires `SUPABASE_PROJECT_ID`)
-
-## Useful Development Patterns
-
-### Running Single Tests
-
-```bash
-# Unit test specific file
-pnpm test -- tests/some-file.test.ts
-
-# Integration test specific file
-pnpm test -- tests/some-file.integration.test.ts
-
-# E2E test specific file
-pnpm e2e -- tests/planning-flow.e2e.ts
-
-# Run specific test by name
-pnpm e2e -- tests/planning-flow.e2e.ts --grep "should create plan"
-```
-
-### Environment Setup
-
-- Copy `.env.example` to `.env.local` and configure
-- Run `pnpm dev` for initial development setup with database
+For agent work, follow the checks and permission boundaries in [AGENTS.md](../AGENTS.md). `pnpm typecheck:ci` checks the whole project; test and Biome commands can target individual files. Ask before running a full build or E2E suite.

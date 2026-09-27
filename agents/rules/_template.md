@@ -1,26 +1,20 @@
 ---
-title: Rule Title Here
+title: Rule title
 impact: MEDIUM
-impactDescription: Optional description of impact (e.g., "20-50% improvement")
-tags: tag1, tag2
+impactDescription: Concrete consequence of following this rule
+tags: relevant, searchable, terms
 ---
 
-## Rule Title Here
+# Rule title
 
-**Impact: MEDIUM (optional impact description)**
+State the rule and explain why it matters in this repository.
 
-Brief explanation of the rule and why it matters. This should be clear and concise, explaining the performance implications.
+## Apply it
 
-**Incorrect (description of what's wrong):**
+- Describe the required behavior.
+- Include a short example only if it clarifies a decision.
+- Identify exceptions explicitly and keep them consistent with `AGENTS.md`.
 
-```typescript
-// Bad code example here
-const bad = example()
-```
+## References
 
-**Correct (description of what's right):**
-
-```typescript
-// Good code example here
-const good = example()
-```
+Link to the relevant source file or project document. Avoid copying a full implementation into the rule.

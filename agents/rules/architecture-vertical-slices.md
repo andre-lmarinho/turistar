@@ -1,58 +1,25 @@
 ---
-title: Organize Code by Domain Using Vertical Slices
+title: Organize Domain Code in Feature Slices
 impact: CRITICAL
-impactDescription: Dramatically improves discoverability and reduces cross-team conflicts
-tags: architecture, vertical-slices, ddd, organization
+impactDescription: Makes domain ownership and dependencies easier to follow
+tags: architecture, vertical-slices, organization
 ---
 
-## Organize Code by Domain Using Vertical Slices
+# Organize domain code in feature slices
 
-**Impact: CRITICAL**
+Keep domain behavior in `src/features/<feature>/`, with its services, repositories, types, hooks, and components as needed. Avoid creating global service or repository directories that scatter one domain across the application.
 
-Our codebase is organized by domain, not by technical layer. The `src/features` directory is the heart of this architectural approach. Each folder inside represents a complete vertical slice of the application, driven by the domain it touches.
+The surrounding layers have separate responsibilities:
 
-**Incorrect (traditional layered architecture):**
+| Location | Responsibility |
+| --- | --- |
+| `src/app/` | Routes, Server Components, and HTTP entry points |
+| `src/modules/` | Screens that compose features |
+| `src/features/` | Domain behavior and feature-specific UI |
+| `src/trpc/server/routers/` | tRPC schemas, handlers, and router composition |
+| `src/ui/` | Shared UI primitives |
+| `src/lib/` | Shared utilities and infrastructure helpers |
 
-```
-src/
-  controllers/
-    activityController.ts
-    planController.ts
-  services/
-    activityService.ts
-    planService.ts
-  repositories/
-    activityRepository.ts
-    planRepository.ts
-```
+Feature tests are usually colocated as `.test.ts` or `.test.tsx`; cross-application browser tests live in `tests/e2e/`. Add only the folders a feature needs. Features can depend on one another through explicit services, types, and helpers; document important dependencies in the feature README.
 
-This creates problems: changes to one feature require touching files scattered across multiple directories, it's hard to understand what a feature does because its code is fragmented, and teams step on each other's toes.
-
-**Correct (vertical slice architecture):**
-
-```
-src/features/
-  activity/
-    services/
-    repositories/
-    components/
-    tests/
-  plan/
-    services/
-    repositories/
-    components/
-    tests/
-```
-
-Each feature folder is a self-contained vertical slice that includes:
-- Domain logic: Core business rules and entities specific to that feature
-- Application services: Use case orchestration for that domain
-- Repositories: Data access specific to that feature's needs
-- UI components: Frontend components related to this feature
-- Tests: Unit, integration, and e2e tests for this feature
-
-**Benefits:**
-- Everything related to a feature lives in one directory
-- You can understand the entire feature by exploring one directory
-- Teams can work on different features without conflicts
-- Features are loosely coupled and can evolve independently
+See the [feature index](../../src/features/README.md) and [architecture guide](../../ARCHITECTURE.md) for the current boundaries.

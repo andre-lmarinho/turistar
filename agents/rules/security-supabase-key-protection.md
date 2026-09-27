@@ -1,58 +1,17 @@
 ---
 title: Supabase Key Protection
 impact: CRITICAL
-impactDescription: Prevents catastrophic security breaches and credential exposure
-tags: security, supabase, keys, credentials, secrets
+impactDescription: Prevents credential exposure and unintended privileged access
+tags: security, supabase, keys, credentials
 ---
 
-## Supabase Key Protection
+# Protect Supabase keys
 
-Supabase service role keys have admin privileges and must never be exposed in client-side code, API responses, or logs.
+Never expose `SUPABASE_SERVICE_ROLE_KEY` in client code, API responses, logs, or query payloads. Never commit credentials or put privileged keys in `NEXT_PUBLIC_*` variables.
 
-**Incorrect (exposing service role key):**
+- The [browser client](../../src/supabase/client.ts) uses the public URL and anon key.
+- The [request-scoped server client](../../src/supabase/server.ts) uses the public configuration with the caller's session cookies.
+- The [service-role client](../../src/supabase/serviceRole.ts) is server-only and privileged. Server-side placement prevents browser exposure; callers must still enforce the authorization required for the operation.
+- Return only the data needed by the caller. Use [explicit column selection](data-prefer-select-over-include.md), including in server-side code.
 
-```typescript
-// API route exposing sensitive key
-export async function GET() {
-  return Response.json({
-    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY, // ❌ NEVER do this
-    message: "Here are your admin credentials!"
-  });
-}
-
-// Client component with embedded key
-export function ClientComponent() {
-  const serviceKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // ❌ NEVER embed keys
-  return <div>Key: {serviceKey}</div>;
-}
-```
-
-**Correct (proper key protection):**
-
-```typescript
-// API route - never expose keys
-export async function GET() {
-  const data = await getUserData();
-  return Response.json({ data }); // ✅ Only return necessary data
-}
-
-// Server-side usage only
-export async function serverAction() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY! // ✅ Safe on server only
-  );
-  
-  return await supabase.from('users').select('*');
-}
-```
-
-**Key Rules:**
-
-- ❌ Never expose service role keys in API responses or client-side code
-- ✅ Use service role keys only on server-side
-- ✅ Use `NEXT_PUBLIC_SUPABASE_ANON_KEY` for client-side access
-
-**Benefits:**
-
-Prevents catastrophic data breaches through proper credential isolation.
+See [configuration](../../CONTRIBUTING.md#configuration) for environment setup and [authorization](architecture-page-level-auth.md) for access boundaries.

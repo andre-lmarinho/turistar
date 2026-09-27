@@ -1,25 +1,28 @@
-# Planner Feature
+# Plan
 
-The planner feature orchestrates collaborative trip editing, drag-and-drop scheduling, and budget tracking for shared itineraries.
+Coordinates plan creation, access, initial planner data, dashboard queries and metadata changes on the server.
 
-## Workflow summary
+## How it works
 
-1. Load the latest snapshot from `plan_snapshots`.
-2. Subscribe to `plan_events` via Supabase Realtime and apply incoming events locally.
-3. When the UI changes, compute minimal events with `diffPlanEvents.ts`, persist them optimistically, and reconcile the confirmed results.
-4. On version gaps, refetch the snapshot and replay events so clients converge on the same version.
+- A page supplies the current viewer to `createPlanService`. `getPlannerExperience` resolves the plan by ID or slug and requires the viewer to be its owner or a member.
+- Loading reads the latest itinerary snapshot and expense entries. If the snapshot has no days, the service builds initial days from the plan's date range.
+- The [planner module](../../modules/README.md) receives that initial data. Later activity and day edits use [events](../events/README.md).
+- Creation saves the owner, dates and destination metadata. A best-effort Geoapify/Wikidata lookup supplies the cover image.
+- Dashboard queries use plan summaries; the cards show the latest 50 plans and the destination map uses the full result.
+- Members can update plan metadata. Deleting a plan requires ownership.
 
-## Data Flow
-```text
-Plan Feature
-  └─> Activity Feature (organizes activities by day)
-        └─> Events Feature (generates events for all changes)
-              └─> Snapshots Feature (updates snapshots when events are appended)
+## Main files
 
-Collaborative Editing
-  └─> Members Feature (user permissions and access control)
-        └─> Budget Feature (plan-level budget tracking)
+| File | Responsibility |
+| --- | --- |
+| [PlanService.ts](services/PlanService.ts) | Access checks and plan workflows. |
+| [createPlanService.ts](services/createPlanService.ts) | Wires repositories, snapshot service and viewer. |
+| [PlanRepository.ts](repositories/PlanRepository.ts) | Plan queries and database operations. |
+| [helpers.ts](lib/helpers.ts) | Initial days from stored dates. |
 
-Plan Data
-  └─> Search Feature (destination search for plan creation)
-```
+## Related docs
+
+- [Architecture](../../../ARCHITECTURE.md)
+- [Snapshots](../snapshots/README.md)
+- [Members](../members/README.md)
+- [Feature guide](../README.md)

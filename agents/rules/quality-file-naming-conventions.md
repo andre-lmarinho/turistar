@@ -1,50 +1,20 @@
 ---
 title: File Naming Conventions
 impact: CRITICAL
-impactDescription: Ensures consistency and discoverability across codebase
-tags: file-structure, naming, conventions, organization
+impactDescription: Makes file roles and exported classes easier to identify
+tags: file-structure, naming, conventions
 ---
 
-## File Naming Conventions
+# Name files for their role
 
-Consistent file naming makes codebase predictable and easy to navigate.
+| File type | Convention | Example |
+| --- | --- | --- |
+| Repository class | PascalCase with `Repository` suffix | `PlanRepository.ts` |
+| Service class | PascalCase with `Service` suffix | `PlanService.ts` |
+| React component | PascalCase | `Button.tsx` |
 
-**Repository Files:**
+Use descriptive class and component names that match their files. Avoid generic names such as `Manager` or shortened suffixes such as `Repo`.
 
-Repository files must include `Repository` suffix and use PascalCase.
+Next.js route files retain framework names such as `page.tsx`, `layout.tsx`, and `route.ts`. Existing screen entry files also include names such as `planid-view.tsx`; check imports before renaming an existing file.
 
-```typescript
-// Bad: Generic names, no suffix
-export class PlanRepo { }
-
-// Good: Clear naming with Repository suffix
-export class PlanRepository { }
-```
-
-**Service Files:**
-
-Service files must include `Service` suffix and use PascalCase.
-
-```typescript
-// Bad: Generic names
-export class Manager { }
-
-// Good: Descriptive names with Service suffix
-export class MembershipService { }
-```
-
-**Component Files:**
-
-React components must use PascalCase.
-
-```typescript
-// Bad: camelCase or kebab-case
-export const userProfile = () => { };
-
-// Good: PascalCase for components
-export const UserProfile = () => { };
-```
-
-**Benefits:**
-
-Predictable file structure with better discoverability and consistency.
+Examples: [PlanRepository](../../src/features/plan/repositories/PlanRepository.ts), [PlanService](../../src/features/plan/services/PlanService.ts), and [Button](../../src/ui/components/button/Button.tsx).

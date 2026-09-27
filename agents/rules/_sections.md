@@ -1,52 +1,17 @@
-# Sections
+# Rule sections
 
-This file defines all sections, their ordering, impact levels, and descriptions.
-The section ID (in parentheses) is the filename prefix used to group rules.
+Use these filename prefixes to group related rules. Each rule declares its own impact in frontmatter; the level indicates review priority, not a measured performance gain.
 
----
+| Prefix | Scope |
+| --- | --- |
+| `architecture-` | Domain ownership and authorization boundaries |
+| `quality-` | Naming, readability, and implementation quality |
+| `security-` | Credentials and protection of user data |
+| `data-` | Queries, repositories, DTOs, and database boundaries |
+| `api-` | Transport, validation, and API contracts |
+| `performance-` | Measured runtime or bundle concerns |
+| `uiux-` | Interaction, accessibility, and visual behavior |
+| `testing-` | Behavior checks and coverage |
+| `patterns-` | Reusable implementation patterns |
 
-## 1. Architecture (architecture)
-
-**Impact:** CRITICAL
-**Description:** Vertical Slice Architecture and Domain-Driven Design patterns that form the foundation of our codebase organization.
-
-## 2. Code Quality (quality)
-
-**Impact:** CRITICAL
-**Description:** Standards for maintaining high-quality, maintainable code including PR reviews, testing, and accountability.
-
-## 3. Security (security)
-
-**Impact:** CRITICAL
-**Description:** Security patterns that prevent data breaches and protect user information.
-
-## 4. Data Layer (data)
-
-**Impact:** HIGH
-**Description:** Repository patterns, DTOs, and technology isolation to prevent coupling and enable maintainability.
-
-## 5. API Design (api)
-
-**Impact:** HIGH
-**Description:** Controller patterns, API stability, and proper separation of HTTP concerns from business logic.
-
-## 6. Performance (performance)
-
-**Impact:** HIGH
-**Description:** Algorithm complexity, data structure choices, and performance patterns for enterprise scale.
-
-## 7. Ui/Ux (uiux)
-
-**Impact:** HIGH
-**Description:** General standards for UI and UX.
-
-## 8. Testing (testing)
-
-**Impact:** MEDIUM-HIGH
-**Description:** Test coverage requirements and testing strategies for maintaining code quality.
-
-## 9. Design Patterns (patterns)
-
-**Impact:** MEDIUM
-**Description:** Factory patterns, dependency injection, and other design patterns for clean, maintainable code.
-
+The [rule index](README.md) lists the rules that currently exist. API and performance prefixes are available for future rules.

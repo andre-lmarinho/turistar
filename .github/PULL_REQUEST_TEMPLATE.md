@@ -1,46 +1,29 @@
+<!-- PR authoring guidance:
+
+When drafting this description from a diff and context:
+- Output Markdown only. Remove this template guidance and all placeholders.
+- Summarize the concrete change and why it matters in one to three sentences.
+- List key changes only when they add information beyond the summary.
+- Report checks actually performed and their results. Label remaining checks as suggested verification.
+- For documentation changes, explain how commands, paths, and examples were verified.
+- Include notes only for relevant tradeoffs, limitations, or follow-up work.
+- Do not invent behavior, test results, issue numbers, or missing context.
+
+See CONTRIBUTING.md#pull-requests for PR scope and workflow.
+End PR authoring guidance. -->
+
 ## What does this PR do?
 
-<!--
-Briefly explain what this PR changes and why it exists. Focus on intent, scope, and impact. Avoid implementation details. -->
-
-<!--
-
-(optional and can be deleted if not needed)
-- Fixes #XXXX (GitHub issue number)
-
--->
+<!-- Explain the concrete change and why it matters in one to three sentences. Link the issue if relevant. -->
 
 **Key changes:**
 
-- Change 1
-- Change 2
-- Change 3
+<!-- Optional: list changes that add detail beyond the summary. Remove this section when unnecessary. -->
 
 ## How should this be tested?
 
-<!-- Describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. List any relevant details for your test configuration. Write details that help to start the tests.
+<!-- Record checks actually run and their results. Include focused reproduction steps and expected behavior when useful. Clearly label checks that remain to be run. -->
 
-**Pre-requisites (if any):**
-- Required environment variables:
-- Minimal test data needed:
-- Other setup notes:
+## Notes
 
-1. Perform step one. Expected result: describe the correct behavior.
-
-2. Perform step two. Expected result: describe the correct behavior.
-
-3. Perform step three. Expected result: describe the correct behavior.
-
--->
-
-1. step 1
-2. step 2
-3. step 3
-
-<!--
-
-## Notes (optional and can be deleted if not needed)
-
-Add reviewer context, trade-offs, or follow-ups if needed.
-
--->
+<!-- Optional: tradeoffs, limitations, or follow-up work relevant to review. Remove this section when unnecessary. -->

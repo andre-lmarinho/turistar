@@ -1,59 +1,24 @@
 ---
-title: Page-Level Authorization Checks in Next.js
+title: Authorize Protected Entry Points
 impact: CRITICAL
-impactDescription: Prevents unauthorized access to sensitive data
+impactDescription: Prevents unauthorized access to private data and mutations
 tags: security, nextjs, authorization, architecture
 ---
 
-## Page-Level Authorization Checks in Next.js
+# Authorize protected entry points
 
-**Impact: CRITICAL (Prevents unauthorized access to sensitive data)**
+Resolve authentication in the page or Server Component that renders private data. Layouts can persist across navigation without rerunning their checks, so they cannot protect a route or mutation on their own.
 
-Resolve authentication in the page or Server Component that renders private data, and authorize each protected Server Action, Route Handler, and tRPC procedure independently. Do not use a layout as the only authorization check: layouts can persist across navigations and do not re-render for every route change.
+- Resolve the session with `getViewer()` in a restricted `page.tsx` or Server Component.
+- Keep resource membership and role checks in the owning Service. RLS is the database authorization boundary.
+- Redirect before rendering private UI; keep resource policy out of pages and Proxy.
+- Authorize every protected Server Action, Route Handler, and tRPC operation independently. UI checks do not protect other entry points.
+- Proxy refreshes the Supabase session and adds transport headers; it does not decide access.
 
-**Incorrect (auth checks in layout):**
+## Follow the current flow
 
-```tsx
-// app/admin/layout.tsx - DON'T DO THIS
-export default async function AdminLayout({ children }) {
-  const viewer = await getViewer();
-  if (!viewer) {
-    redirect("/");
-  }
-  return <div>{children}</div>;
-}
-```
+The [planner page](../../src/app/(webapp)/p/[planId]/page.tsx) resolves the viewer, asks [PlanService](../../src/features/plan/services/PlanService.ts) for the authorized planner experience, then maps access errors to a redirect or not-found response.
 
-**Correct (auth checks in page):**
+The [authenticated tRPC procedure](../../src/trpc/server/procedures/authedProcedure.ts) requires a viewer before invoking a protected handler. Resource access must still be checked by the operation's Service and database policies.
 
-```tsx
-// app/admin/page.tsx
-import { redirect } from "next/navigation";
-import { getViewer } from "@/features/auth/lib/session";
-
-export default async function AdminPage() {
-  const viewer = await getViewer();
-
-  if (!viewer) {
-    redirect("/"); // Or show an error
-  }
-
-  // Use a Service for resource membership and role checks.
-  // The authenticated Viewer exposes fields such as `id` and `email`.
-  return <div>Protected content for {viewer.email ?? viewer.id}</div>;
-}
-```
-
-**Why layouts are unsafe for auth:**
-- Partial rendering means layouts can persist across navigations without re-running their checks.
-- APIs, Server Actions, Route Handlers, and tRPC procedures are independent entry points; protected operations must authorize themselves.
-- A layout check alone can therefore leave a data or mutation entry point unprotected.
-
-**Key rules:**
-- Resolve the session in a restricted `page.tsx` or Server Component with `getViewer()`.
-- Keep resource membership and role checks in the owning Service; RLS remains the final authorization boundary.
-- Redirect before rendering private UI, but do not duplicate resource policy in pages or proxy.
-- Every protected Server Action, Route Handler, and tRPC procedure must authorize its own operation; UI and Proxy checks are not sufficient.
-- Proxy only refreshes the Supabase session and emits transport headers; it does not decide access.
-
-Reference: [Next.js Security Best Practices](https://nextjs.org/docs/app/building-your-application/authentication)
+See [session resolution](../../src/features/auth/lib/session.ts) and the [architecture guide](../../ARCHITECTURE.md) for the supporting code.

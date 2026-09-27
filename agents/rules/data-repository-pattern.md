@@ -1,82 +1,26 @@
 ---
-title: Isolate Technology Choices Behind Repositories
+title: Keep Database Access Behind Repositories
 impact: CRITICAL
-impactDescription: Enables technology changes without codebase-wide refactors
-tags: data, repository, supabase, orm, isolation
+impactDescription: Keeps database details out of domain logic and UI
+tags: data, repository, supabase, isolation
 ---
 
-## Isolate Technology Choices Behind Repositories
+# Keep database access behind repositories
 
-**Impact: CRITICAL**
+Repositories own database queries and RPC calls. Services own business rules, authorization decisions, and use-case orchestration. Keep these responsibilities separate when adding or changing behavior.
 
-Technology choices must not seep through the application. The Supabase problem illustrates this perfectly: we currently have references to Supabase scattered across hundreds of files. This creates massive coupling and makes technology changes prohibitively expensive.
+- Inject the database client into the Repository and the Repository into the Service.
+- Keep database row types private to the data layer; expose explicit DTOs or records to callers.
+- Select columns explicitly, including nested relations.
+- Distinguish an absent record from a failed query. Include the operation and identifiers when reporting database errors.
+- Keep business validation and domain transformations in Services.
 
-**Incorrect (Supabase leaking throughout codebase):**
+## Current composition
 
-```typescript
-// In a service file
-import { supabase } from '@/supabase/client';
+[createPlanService](../../src/features/plan/services/createPlanService.ts) creates the request-scoped Supabase client, constructs repositories, and passes them into Services. Other features are composed in tRPC handlers, such as [appendEventsHandler](../../src/trpc/server/routers/viewer/events/append.handler.ts).
 
-async function getPlan(id: string) {
-  // Direct Supabase usage in service
-  const { data } = await supabase
-    .from('plans')
-    .select('*, plan_destinations(*)')
-    .eq('id', id)
-    .single();
-  return data;
-}
-```
+[PlanRepository](../../src/features/plan/repositories/PlanRepository.ts) demonstrates typed client injection, explicit queries, row-to-record mapping, and contextual errors. [PlanService](../../src/features/plan/services/PlanService.ts) handles the corresponding domain operations.
 
-**Correct (Repository abstraction):**
+Supabase client creation and authentication also live in infrastructure and auth modules. Domain database access must still go through Repositories.
 
-```typescript
-// In repository file
-import { supabase } from '@/supabase/server';
-import type { Database } from '@/supabase/types';
-import type { Plan } from './types';
-
-export class PlanRepository {
-  async findById(id: string): Promise<Plan | null> {
-    const { data, error } = await supabase
-      .from('plans')
-      .select('id, title, destination_name, user_id')
-      .eq('id', id)
-      .single();
-    
-    if (error || !data) return null;
-    
-    return this.mapToDTO(data);
-  }
-
-  private mapToDTO(row: Database['public']['Tables']['plans']['Row']): Plan {
-    return {
-      id: row.id,
-      title: row.title,
-      destinationName: row.destination_name,
-      ownerId: row.user_id,
-    };
-  }
-}
-
-// In service file - no Supabase knowledge
-import { PlanRepository } from "./repositories/PlanRepository";
-
-async function getPlan(id: string) {
-  return this.planRepository.findById(id);
-}
-```
-
-**The standard:**
-- All database access must go through Repository classes
-- Repositories are the only code that knows about Supabase (or any other database client)
-- No business logic should be in repositories
-- Repositories are injected via Dependency Injection containers
-- Repositories should expose DTOs, never raw Supabase row types
-- Use explicit column selection, never `select('*')`
-
-**Benefits:**
-If we ever switch from Supabase to another database client, the only changes required are:
-- Repository implementations
-- DI container wiring for new repositories
-- Nothing else in the codebase should care or change
+See [method naming](data-repository-methods.md) and [authorization](architecture-page-level-auth.md).
