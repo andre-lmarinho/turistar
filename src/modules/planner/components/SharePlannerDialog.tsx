@@ -10,8 +10,8 @@ import { trpc } from "@/trpc/react";
 import { Avatar } from "@/ui/components/avatar";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/ui/components/dialog";
-import { Share2 } from "@/ui/components/icon";
-import { SelectMenu } from "@/ui/components/select/SelectMenu";
+import { ChevronDown, Share2 } from "@/ui/components/icon";
+import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/popover";
 import { cn } from "@/ui/utils/cn";
 
 export function SharePlannerDialog({
@@ -48,6 +48,65 @@ export function SharePlannerDialog({
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+type SelectMenuProps<T extends string> = {
+  value: T;
+  options: ReadonlyArray<{ value: T; label: string }>;
+  onChange: (value: T) => void;
+  ariaLabel: string;
+  disabled?: boolean;
+  align?: "start" | "end";
+};
+
+function SelectMenu<T extends string>({
+  value,
+  options,
+  onChange,
+  ariaLabel,
+  disabled,
+  align = "start",
+}: SelectMenuProps<T>) {
+  const [open, setOpen] = useState(false);
+  // assumes `value` is always one of `options` (the caller builds options from the value's
+  // source). Trigger falls back to the aria-label if that ever breaks; add a placeholder prop if not.
+  const selectedLabel = options.find((option) => option.value === value)?.label;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTriggerButton
+        className="border-border bg-background text-foreground inline-flex w-28 shrink-0 items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        aria-haspopup="listbox"
+        aria-label={ariaLabel}
+        disabled={disabled}>
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown className="text-muted-foreground size-4" aria-hidden="true" />
+      </PopoverTriggerButton>
+      <PopoverContent side="bottom" align={align} sideOffset={6} className="w-38 p-1">
+        <div role="listbox" className="space-y-1">
+          {options.map((option) => {
+            const isSelected = option.value === value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                className={`hover:bg-muted/60 inline-flex w-full items-center rounded-md px-2 py-1 text-left text-sm transition-colors focus-visible:bg-muted/60 focus-visible:outline-none ${
+                  isSelected ? "bg-muted/60 text-foreground" : "text-muted-foreground"
+                }`}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
+                }}>
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -161,8 +220,6 @@ function InviteForm({
           onChange={setTier}
           disabled={!canManageMembers}
           ariaLabel={t("selectMemberRole")}
-          triggerClassName="w-28 shrink-0"
-          contentClassName="w-28"
         />
         <Button
           type="submit"
@@ -314,8 +371,6 @@ function ShareMemberRow({
           onChange={handleMenuChange}
           disabled={!canSelect || isMutating}
           ariaLabel={`${displayName} role`}
-          triggerClassName="w-28 shrink-0"
-          contentClassName="w-38"
           align="end"
         />
       </div>
