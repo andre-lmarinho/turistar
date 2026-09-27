@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form";
 import { sendResetPasswordEmail } from "@/features/auth/handlers/sendResetPasswordEmail";
 import { buildLoginHref, buildResetPasswordRedirectUrl, resolveNextPath } from "@/features/auth/lib/redirect";
 import { validEmail } from "@/features/auth/utils/validEmail";
+import { AccessShell } from "@/modules/auth/components/AccessShell";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form } from "@/ui/components/form";
-import { AccessShell } from "@/ui/components/layout";
 
 export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
   const t = useTranslations();

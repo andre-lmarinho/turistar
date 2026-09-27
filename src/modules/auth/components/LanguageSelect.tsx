@@ -1,12 +1,13 @@
 "use client";
 
 import { Select } from "@base-ui/react/select";
-import { Check, ChevronDown, Globe2, LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState, useTransition } from "react";
 import { setLocale } from "@/i18n/actions";
 import { isLocale } from "@/i18n/config";
 import { Button } from "@/ui/components/button/Button";
+import { Check, ChevronDown, Globe2 } from "@/ui/components/icon";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 const languages = [
   { value: "en", label: "English" },
@@ -46,10 +47,7 @@ export function LanguageSelect({ className }: { className?: string }) {
           <Globe2 className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <Select.Value lang={locale} />
           {pending ? (
-            <LoaderCircle
-              className="size-3.5 shrink-0 animate-spin motion-reduce:animate-none"
-              aria-hidden="true"
-            />
+            <Spinner className="size-3.5 shrink-0" />
           ) : (
             <ChevronDown
               className="text-muted-foreground size-3.5 shrink-0 transition-transform duration-150 group-data-popup-open:rotate-180 motion-reduce:transition-none"

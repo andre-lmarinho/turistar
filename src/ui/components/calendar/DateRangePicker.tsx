@@ -15,9 +15,10 @@ interface Props {
   value: DateRange | undefined;
   onChange: (range: DateRange | undefined) => void;
   disabled?: boolean;
+  iconOnly?: boolean;
 }
 
-export function DateRangePicker({ className, value, onChange, disabled = false }: Props) {
+export function DateRangePicker({ className, value, onChange, disabled = false, iconOnly = false }: Props) {
   const [open, setOpen] = React.useState(false);
   const t = useTranslations();
 
@@ -30,67 +31,33 @@ export function DateRangePicker({ className, value, onChange, disabled = false }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTriggerButton
-        className={cn(
-          "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors",
-          !value?.from && "text-muted-foreground",
-          className
-        )}
         aria-label={label}
-        disabled={disabled}>
-        <span className={cn("flex-1 truncate text-left", !value?.from && "text-muted-foreground italic")}>
-          {label}
-        </span>
-        <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
-      </PopoverTriggerButton>
-
-      <PopoverContent className="mt-2 w-full max-w-108 p-0 shadow-lg" align="start" side="bottom">
-        <Calendar
-          mode="range"
-          selected={value}
-          onSelect={onChange}
-          defaultMonth={value?.from}
-          numberOfMonths={2}
-          disabled={disabled ? () => true : undefined}
-        />
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-// Icon-only version matching button icon style
-export function DateRangePickerIcon({ className, value, onChange, disabled = false }: Props) {
-  const [open, setOpen] = React.useState(false);
-  const [mounted, setMounted] = React.useState(false);
-  const t = useTranslations();
-
-  const label = value?.from
-    ? value.to
-      ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
-      : format(value.from, "LLL dd, y")
-    : t("pickDateRange");
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTriggerButton
-        title={label}
-        aria-label={label}
-        data-testid="date-picker"
+        title={iconOnly ? label : undefined}
+        data-testid={iconOnly ? "date-picker" : undefined}
         className={cn(
-          "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors",
+          iconOnly
+            ? "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors"
+            : "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors",
+          !iconOnly && !value?.from && "text-muted-foreground",
           className
         )}
         disabled={disabled}>
-        <CalendarIcon className="size-4" aria-hidden="true" />
+        {iconOnly ? (
+          <CalendarIcon className="size-4" aria-hidden="true" />
+        ) : (
+          <>
+            <span className={cn("flex-1 truncate text-left", !value?.from && "text-muted-foreground italic")}>
+              {label}
+            </span>
+            <CalendarIcon className="text-muted-foreground size-4" aria-hidden="true" />
+          </>
+        )}
       </PopoverTriggerButton>
-      <PopoverContent className="mt-2 min-w-125 p-0 shadow-lg" align="start" side="bottom">
+
+      <PopoverContent
+        className={cn("mt-2 p-0 shadow-lg", iconOnly ? "min-w-125" : "w-full max-w-108")}
+        align="start"
+        side="bottom">
         <Calendar
           mode="range"
           selected={value}

@@ -15,8 +15,11 @@ import {
 
 import { getDefaultColor } from "@/features/activity/constants";
 import type { Activity, DayPlan } from "@/features/activity/types";
-import { plannerTileUrl, tileAttribution } from "@/ui/components/map/config";
 import { cn } from "@/ui/utils/cn";
+
+const plannerTileUrl = "/api/tiles/voyager/{z}/{x}/{y}.png";
+const tileAttribution =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
 
 function getCssColor(cls?: string): string | undefined {
   if (!cls) return undefined;
