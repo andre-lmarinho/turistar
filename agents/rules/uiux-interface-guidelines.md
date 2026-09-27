@@ -2,8 +2,10 @@
 title: Web Interface Guidelines
 impact: HIGH
 impactDescription: Concise rules for building accessible, fast, delightful UIs. Use MUST/SHOULD/NEVER to guide decisions.
-tags: quality, ui, acessibility
+tags: quality, ui, accessibility
 ---
+
+# Web interface guidelines
 
 ## Interactions
 

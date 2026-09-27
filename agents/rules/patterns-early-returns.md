@@ -1,61 +1,20 @@
 ---
-title: Early Returns Pattern
+title: Early Returns
 impact: MEDIUM
-impactDescription: Reduces nesting and improves code readability
-tags: patterns, readability, structure, early-return
+impactDescription: Makes validation and the main execution path easier to follow
+tags: patterns, readability, early-return
 ---
 
-## Early Returns Pattern
+# Use early returns
 
-Use early returns to reduce nesting. Handle edge cases at function start, then focus on happy path.
+Handle invalid input, missing records, and empty work before the main operation. Throw a contextual error for a failure; return early when there is no work to do.
 
-**Incorrect (deep nesting):**
+For example, `EventsService.appendEvents` validates the version and then handles an empty event batch:
 
 ```typescript
-// Bad: Deep nesting with multiple if statements
-export async function getUserPlan(userId, planId) {
-  const user = await getUserById(userId);
-  if (user) {
-    const plan = await getPlanById(planId);
-    if (plan) {
-      if (plan.ownerId === userId) {
-        return { user, plan };
-      } else {
-        throw new Error('Not plan owner');
-      }
-    } else {
-      throw new Error('Plan not found');
-    }
-  } else {
-    throw new Error('User not found');
-  }
+if (events.length === 0) {
+  return { version: baseVersion, events: [] };
 }
 ```
 
-**Correct (early returns):**
-
-```typescript
-// Good: Early returns for validation, then happy path
-export async function getUserPlan(userId, planId) {
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  const plan = await getPlanById(planId);
-  if (!plan) {
-    throw new Error('Plan not found');
-  }
-
-  if (plan.ownerId !== userId) {
-    throw new Error('Not plan owner');
-  }
-
-  // Happy path - all validation passed
-  return { user, plan };
-}
-```
-
-**Benefits:**
-
-Cleaner code flow with better readability and maintainability.
+The remaining code can fetch the snapshot and append events without another nested branch. See [EventsService](../../src/features/events/services/EventsService.ts) for the full flow.

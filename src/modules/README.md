@@ -1,97 +1,28 @@
-# Modules Architecture
+# Modules
 
-## Strategic Overview
+Modules compose the screens rendered by [App Router pages](../app/) using feature logic and [shared UI components](../ui/). See the [architecture overview](../../ARCHITECTURE.md) for the complete request and data flows.
 
-The `src/modules` directory implements a **presentation layer architecture** that bridges Next.js routing (`app/`) and business logic (`features/`). This layered approach provides clean separation between UI composition and domain logic.
+## Areas
 
-## Module Responsibilities
+| Area | Responsibilities | Start here |
+| --- | --- | --- |
+| `auth` | Login, signup, password recovery, and language selection | [LoginView](auth/login-view.tsx) |
+| `layout` | App navigation, account settings, and sign-out | [AppBar](layout/AppBar.tsx) |
+| `marketing` | Public navigation, footer, legal-page layout, and SEO markup | [LegalArticle](marketing/layout/LegalArticle.tsx) |
+| `planner` | Board, trip, map, and budget views; activity editing and sharing | [PlanIdView](planner/planid-view.tsx) |
+| `user` | Dashboard, travel map, upcoming trip, and plan creation | [DashboardView](user/dashboard-view.tsx) |
 
-### **Presentation Layer Focus**
-- UI composition and component orchestration
-- Form handling and validation
-- User interaction patterns
-- Route-level data fetching and prop passing
-- Layout and navigation concerns
+## How screens use data
 
-### **Key Characteristics**
-- Client-side React components (`"use client"`)
-- Form validation with react-hook-form + zod
-- State management for UI concerns only
-- One-way dependency: **Modules → Features**
+Modules include both server and client components. `DashboardView` and `AppBar` render on the server; interactive forms and planner views use client components.
 
-## Module Dependencies Summary
+- Pages load initial data and pass it to screens. The [planner page](../app/(webapp)/p/[planId]/page.tsx) obtains a planner experience from `PlanService` and handles access failures before rendering `PlanIdView`.
+- Client components call [tRPC](../trpc/README.md) for operations such as [creating a plan](user/components/PlannerCreationForm.tsx), changing its title, managing members, and updating budgets.
+- Activity and day edits go through [usePlannerDocument](planner/hooks/usePlannerDocument.ts), which builds operations for [usePlanCollaboration](../features/events/hooks/usePlanCollaboration.ts). That feature hook owns optimistic updates, persistence, and realtime synchronization. [useDragHandlers](planner/hooks/useDragHandlers.ts) manages the drag preview.
+- Auth screens call feature auth handlers. `AppBar` reads the current profile through a repository, and [AvatarMenu](layout/AvatarMenu.tsx) calls Supabase Auth to sign out.
 
-| Module | Feature Dependencies | Primary Role |
-|--------|---------------------|--------------|
-| `auth` | `features/auth` | Authentication UI |
-| `planner` | `modules/planner/views/BoardView`, `features/budget`, `features/plan`, `features/members` | Main Workspace |
-| `user` | `features/plan`, `features/search` | User Dashboard |
+## Making changes
 
+Keep screen composition and interaction state in the relevant module. Put reusable UI in `src/ui`, shared utilities in `src/lib`, and domain behavior in the appropriate [feature](../features/README.md). Pages remain the entry point for route access decisions.
 
-## Integration Patterns
-
-### **Route Integration**
-Modules integrate with Next.js App Router through page components:
-
-```typescript
-// Route: /login
-// src/app/(auth)/login/page.tsx
-import { LoginView } from "@/modules/auth/login-view";
-
-// Route: /p/[planId]  
-// src/app/(webapp)/p/[planId]/page.tsx
-import { PlanIdView } from "@/modules/planner/planid-view";
-```
-
-### **Feature Dependencies**
-Modules import business logic from features:
-
-```typescript
-// Auth module
-import { signInWithPassword } from "@/features/auth/handlers/signInWithPassword";
-
-// Planner module  
-import BoardView from "@/modules/planner/views/BoardView";
-import { usePlannerDocument } from "@/modules/planner/hooks/usePlannerDocument";
-
-// User module
-import { PlannerCreationForm } from "@/features/plan/components/PlannerCreationForm";
-```
-
-## When to Create New Modules
-
-### **Add a Module When:**
-1. **New Route Area** - Distinct section of the app (e.g., `/admin`, `/settings`)
-2. **Complex UI Composition** - Multi-feature orchestration needed
-3. **User Workflow** - Complete user journey spanning multiple features
-4. **Layout Requirements** - Specific layout patterns for a section
-
-### **Use Existing Module When:**
-1. **Simple Component** - Add to appropriate existing module
-2. **Feature-Only Logic** - Keep in features layer
-3. **Shared UI** - Use `shared/ui/` components
-
-## Development Guidelines
-
-### **Module Boundaries**
-- Modules should contain **only presentation logic**
-- No business rules or domain logic in modules
-- All data operations go through features
-
-### **Import Rules**
-- ✅ Modules can import from features
-- ❌ Features cannot import from modules  
-- ✅ Both can import from `shared/ui/`
-- ✅ Both can import from `shared/lib/`
-
-### **State Management**
-- UI state: React state in modules
-- Business state: Feature hooks and contexts
-- Server state: Feature repositories and services
-
-### **Testing Strategy**
-- Module tests: UI interactions with mocked features
-- Feature tests: Business logic in isolation
-- Integration tests: Module + feature interaction
-
-This layered architecture provides excellent separation between UI and business logic, enabling scalable development with clear boundaries and testable code.
+Tests live beside their implementations, including [planner screen tests](planner/planid-view.test.tsx), [drag interaction tests](planner/hooks/useDragHandlers.test.ts), and [auth translation tests](auth/auth-translations.test.tsx). Follow the [contribution checks](../../CONTRIBUTING.md#checks) when changing a screen.

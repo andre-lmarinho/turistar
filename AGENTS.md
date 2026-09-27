@@ -1,191 +1,83 @@
-# Turistar Development Guide for AI Agents
+<!-- intent-skills:start -->
+## Skill Loading
 
-You are a senior engineer working in a pnpm-managed Next.js project. You prioritize type safety, security, and small, reviewable diffs.
+Before editing files for a substantial task:
+- Run `pnpm dlx @tanstack/intent@latest list` from the workspace root to see available local skills.
+- If a listed skill matches the task, run `pnpm dlx @tanstack/intent@latest load <package>#<skill>` before changing files.
+- Use the loaded `SKILL.md` guidance while making the change.
+- Monorepos: when working across packages, run the skill check from the workspace root and prefer the local skill for the package being changed.
+- Multiple matches: prefer the most specific local skill for the package or concern you are changing; load additional skills only when the task spans multiple packages or concerns.
+<!-- intent-skills:end -->
 
-## Do
+# Turistar Agent Guide
 
-- Use explicit column selection in Supabase queries for performance and security (avoid `select('*')`)
-- Use `import type { X }` for TypeScript type imports
-- Use early returns to reduce nesting: `if (!planner) return null;`
-- Use descriptive errors with context (include the operation and identifiers involved)
-- Use conventional commits: `feat:`, `fix:`, `refactor:`
-- Create PRs in draft mode by default
-- Run `pnpm typecheck:ci` before concluding CI failures are unrelated to your changes
-- Import directly from source files, not barrel files (e.g., `shared/ui/components/button` not `shared/ui`)
-- Use `date-fns` or native `Date` instead of Day.js
-- Put permission checks in `page.tsx`, never in `layout.tsx`
-- Use `ast-grep` for searching if available; otherwise use `rg` (ripgrep), then fall back to `grep`
+Work in this pnpm-managed Next.js application with type safety, security, and small, reviewable diffs.
 
-## Don't
+## Project documentation
 
-- Never use `as any` - use proper type-safe solutions instead
-- Never expose `SUPABASE_SERVICE_ROLE_KEY` anywhere client-side or in logs
-- Never commit secrets or API keys
-- Never put business logic in repositories - that belongs in Services
-- Never use barrel imports from index.ts files
-- Never skip running type checks before pushing
-- Never create large PRs (>500 lines or >10 files) - split them instead
+- [README](README.md): product overview and entry points.
+- [Architecture](ARCHITECTURE.md): code ownership, request flow, and data model.
+- [Contributing](CONTRIBUTING.md): setup, commands, database workflow, and PRs.
+- [Engineering rules](agents/rules/README.md): repository-specific implementation guidance.
 
-## Commands
+Routes live in `src/app/`, domain code in `src/features/`, composed screens in `src/modules/`, tRPC in `src/trpc/`, shared UI in `src/ui/`, and utilities in `src/lib/`. Database migrations live in `supabase/migrations/`; `supabase/schema.supabase.sql` is a context snapshot, not an executable setup script.
 
-### File-scoped (preferred for speed)
+## Implementation rules
 
-```bash
-# Type check - always run on changed files
-pnpm typecheck:ci
+- Follow the [repository rules](agents/rules/README.md).
+- Use explicit column selection in Supabase queries; avoid `select('*')`.
+- Keep business logic in Services and data access in Repositories.
+- Use `import type { X }` for TypeScript type imports.
+- Import directly from source files, never from `index.ts` barrels. For example: `@/ui/components/button/Button`.
+- Use early returns to reduce nesting.
+- Include the operation and relevant identifiers in descriptive errors.
+- Use `date-fns` or native `Date` instead of Day.js.
+- Put permission checks in `page.tsx`, never in `layout.tsx`. Follow the [authorization rule](agents/rules/architecture-page-level-auth.md) for Services and protected entry points.
+- Use `ast-grep` for searching if available; otherwise use `rg`, then `grep`.
 
-# Lint and format single file
-npx biome check --write path/to/file.tsx
+## Checks and pull requests
 
-# Unit test specific file
-pnpm test -- path/to/file.test.ts
-
-# Unit test specific file + specific test
-pnpm test -- path/to/file.test.ts -t "specific test name"
-
-# Integration test specific file
-pnpm test -- path/to/file.integration.test.ts
-
-# Integration test specific file + specific test
-pnpm test -- path/to/file.integration.test.ts -t "specific test name"
-
-# E2E test specific file
-pnpm e2e -- path/to/file.e2e.ts
-
-# E2E test specific file + specific test
-pnpm e2e -- path/to/file.e2e.ts --grep "specific test name"
-```
-
-### Project-wide (use sparingly)
-
-```bash
-# Development
-pnpm dev                 # Start dev server
-
-# Build & check
-pnpm build               # Build all packages
-pnpm lint:fix            # Lint and format all
-pnpm typecheck           # Type check all
-
-# Tests
-pnpm test                # All unit tests
-pnpm e2e                 # All E2E tests
-
-# Database
-pnpm gen:types           # Regenerate types after schema changes
-```
+- Run `pnpm typecheck:ci` for changed code. It checks the whole project, including route type generation.
+- Run relevant tests and Biome checks; use the [focused commands](CONTRIBUTING.md#checks) while iterating.
+- Ensure `pnpm lint`, type checking, and relevant tests pass before opening a PR.
+- Never skip type checks before pushing. Run `pnpm typecheck:ci` before concluding CI failures are unrelated to your changes.
+- Use conventional commits and PR titles, such as `feat(scope): description`, `fix:`, or `refactor:`.
+- Create PRs in draft mode by default.
+- Never create a PR with more than 500 changed lines or 10 files; split it into smaller PRs.
+- Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md) and verify that no secrets or API keys are included.
 
 ## Boundaries
 
-### Always do
-
-- Run type check on changed files
-- Run relevant tests and biome check
-- Use explicit column selection in Supabase queries
-- Follow conventional commits for PR titles
-- Follow **[repository rules](agents/rules/)**
-
 ### Ask first
 
-- Adding new dependencies
-- Schema changes to `supabase/schema.supabase`
-- Changes affecting multiple features
-- Deleting files
-- Running full build or E2E suites
+- Adding new dependencies.
+- Schema changes, including changes to `supabase/schema.supabase.sql`.
+- Changes affecting multiple features.
+- Deleting files.
+- Running full build or E2E suites.
 
 ### Never do
 
-- Commit secrets, API keys, or `.env` files
-- Expose `SUPABASE_SERVICE_ROLE_KEY` in any query
-- Use `as any` type casting
-- Force push or rebase shared branches
-- Modify generated files directly
+- Use `as any` casts.
+- Commit secrets, API keys, or `.env` files.
+- Expose `SUPABASE_SERVICE_ROLE_KEY` client-side, in logs, or in any query.
+- Force push or rebase shared branches.
+- Modify generated files directly.
 
-## Project Structure
+## When stuck
 
-```text
-app/                         # Main Next.js application
-supabase/                    # Database schema (schema.supabase) and migrations
-shared/ui/                   # Shared UI components
-features/                    # Feature-specific code
-shared/lib/                  # Shared utilities
-```
+- Ask for clarification before making large speculative changes.
+- Propose a short plan for complex tasks.
+- Open a draft PR with notes if unsure about the approach.
+- Fix type errors before test failures; they are often the root cause.
+- For missing database enums or types, regenerate types using the [database workflow](CONTRIBUTING.md#database-workflow) and restart the TypeScript server.
 
-### Key files
+<!-- BEGIN:nextjs-agent-rules -->
 
-- Routes: `app/` (App Router)
-- Database schema: `supabase/schema.supabase`
+# This is NOT the Next.js you know
 
-## Tech Stack
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
-- **Framework**: Next.js 15+ (App Router in some areas)
-- **Language**: TypeScript (strict)
-- **Database**: PostgreSQL with Supabase ORM
-- **Auth**: Supabase Auth
-- **Styling**: Tailwind CSS
-- **Testing**: Vitest (unit), Playwright (E2E)
-- **i18n**: next-i18next
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
-## Code Examples
-
-### Good error handling
-
-```typescript
-// Good - Descriptive error with context
-throw new Error(`Unable to save planner: planId=${planId} userId=${userId}`);
-
-// Bad - Generic error
-throw new Error('Save failed');
-```
-
-### Good Supabase query
-
-```typescript
-// Good - Use explicit columns for performance and security
-const { data, error } = await supabase
-  .from('planners')
-  .select('id, title, starts_at, ends_at')
-  .eq('id', planId)
-  .single();
-
-// Bad - Include fetches all fields including sensitive ones
-const { data: bad } = await supabase.from('planners').select('*').eq('id', planId);
-```
-
-### Good imports
-
-```typescript
-// Good - Type imports and direct paths
-import type { Planner } from '@/shared/types/planner';
-import { Button } from '@/ui/components/button';
-
-// Bad - Regular import for types, barrel imports
-import { Planner } from '@/shared/types';
-import { Button } from '@/ui/components';
-```
-
-## PR Checklist
-
-- [ ] Title follows conventional commits: `feat(scope): description`
-- [ ] Type check passes: `pnpm typecheck:ci`
-- [ ] Lint passes: `pnpm lint`
-- [ ] Relevant tests pass
-- [ ] Diff is small and focused (<500 lines, <10 files)
-- [ ] No secrets or API keys committed
-- [ ] Created as draft PR
-
-## When Stuck
-
-- Ask a clarifying question before making large speculative changes
-- Propose a short plan for complex tasks
-- Open a draft PR with notes if unsure about approach
-- Fix type errors before test failures - they're often the root cause
-- If you see missing enum/type errors run `pnpm gen:types` and restart the TypeScript server
-
-## Extended Documentation
-
-For detailed information, see the `agents/` directory:
-
-- **[agents/README.md](agents/README.md)** - Architecture overview and patterns
-- **[agents/rules/](agents/rules/)** - Modular engineering rules (performance, architecture, data layer, security, patterns, etc.)
-- **[agents/commands.md](agents/commands.md)** - Complete command reference
+<!-- END:nextjs-agent-rules -->

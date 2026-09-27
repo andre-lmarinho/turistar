@@ -1,77 +1,16 @@
 ---
 title: Composition Over Prop Drilling
 impact: MEDIUM
-impactDescription: Reduces prop complexity and improves component maintainability
-tags: react, patterns, composition, context, prop-drilling
+impactDescription: Keeps intermediate components independent of unrelated data
+tags: react, patterns, composition, context
 ---
 
-## Composition Over Prop Drilling
+# Prefer component composition
 
-Use React children and context instead of passing props through multiple components. Prop drilling creates tight coupling.
+Use React children, component slots, and shared context to avoid passing data through components that do not use it.
 
-**Incorrect (prop drilling):**
+- Compose content through `children` or named slots when an intermediate component only controls layout.
+- Use context for state that multiple nested components need.
+- Keep state and behavior with the component or provider that owns them.
 
-```typescript
-// Bad: Props passed through multiple levels
-export function Layout({ user, theme, onLogout, children }) {
-  return (
-    <div className={theme.mode}>
-      <Header user={user} onLogout={onLogout} />
-      <main>{children}</main>
-    </div>
-  );
-}
-
-export function Header({ user, onLogout }) {
-  return (
-    <header>
-      <span>Welcome, {user.name}</span>
-      <button onClick={onLogout}>Logout</button>
-    </header>
-  );
-}
-```
-
-**Correct (composition with context):**
-
-```typescript
-// Good: Using context for shared state
-const AuthContext = createContext({ user: null, logout: () => {} });
-
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const logout = () => setUser(null);
-
-  return (
-    <AuthContext.Provider value={{ user, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-export function Layout({ children }) {
-  const { theme } = useTheme();
-  
-  return (
-    <div className={theme.mode}>
-      <Header />
-      <main>{children}</main>
-    </div>
-  );
-}
-
-export function Header() {
-  const { user, logout } = useAuth();
-  
-  return (
-    <header>
-      <span>Welcome, {user.name}</span>
-      <button onClick={logout}>Logout</button>
-    </header>
-  );
-}
-```
-
-**Benefits:**
-
-Cleaner component hierarchy with better maintainability and reusability.
+[AccessShell](../../src/ui/components/layout/AccessShell.tsx) accepts `children` and a `footer` slot so each authentication screen supplies its content. [ClientProviders](../../src/app/providers.tsx) composes shared providers around the application.

@@ -1,38 +1,27 @@
-# Snapshots Feature
+# Snapshots
 
-Handles persisted plan snapshots for fast state hydration in event sourcing system.
+Reads and validates the latest saved itinerary so a plan can load without replaying its entire event history.
 
-## Overview
+## How it works
 
-This feature provides:
-- Automatic snapshot creation and updates via events system
-- Fast plan state recovery without replaying all events
-- Schema validation and type safety for snapshot data
+- `plan_snapshots` holds one current row per plan. Its state contains days and activities; the row also records the version and update timestamp.
+- `SnapshotsService` validates the row and normalizes ordering positions. A missing row becomes an empty document at version zero.
+- `EventsService` computes the next state with the shared event reducer. `append_plan_events` saves the snapshot and event batch atomically.
+- The plan service uses snapshots for initial data; the collaboration hook loads snapshots and subsequent events for recovery. See [events](../events/README.md) for retry and realtime behavior.
 
-## Key Concepts
+Expense entries and members use their own tables and queries; [Architecture](../../../ARCHITECTURE.md) describes those persistence paths.
 
-### Event Sourcing Integration
-- Snapshots are automatically created when events are appended
-- Each event updates the snapshot state and version atomically
-- Latest snapshot stored per plan (no version history)
+## Main files
 
-### State Loading
-1. Load latest snapshot for fast initial state
-2. Apply events since snapshot version
-3. Subscribe to real-time events for live updates
+| File | Responsibility |
+| --- | --- |
+| [SnapshotsRepository.ts](repositories/SnapshotsRepository.ts) | Reads the current row from `plan_snapshots`. |
+| [SnapshotsService.ts](services/SnapshotsService.ts) | Validation and empty-document fallback. |
+| [snapshotSchemas.ts](repositories/snapshotSchemas.ts) | Stored shape, domain mapping and position normalization. |
+| [types.ts](types.ts) | Snapshot returned to callers. |
 
-## Data Flow
-```text
-Snapshots Feature
-  └─> Events Feature (creates/updates snapshots when events are appended)
-        └─> Plan Feature (loads snapshots for fast state initialization)
+## Related docs
 
-State Loading
-  └─> All plan-related features (Activity, Budget, Members)
-        └─> Fast state hydration without replaying all events
-```
-
-## Dependencies
-
-- `@/features/events/`
-- `@/features/activity/`
+- [Architecture](../../../ARCHITECTURE.md)
+- [Plan](../plan/README.md)
+- [Feature guide](../README.md)

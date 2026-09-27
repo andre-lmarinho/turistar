@@ -1,19 +1,20 @@
-# Planner events and sync
+# Events and synchronization
 
-This feature saves planner changes as events and keeps local edits in sync with the server. The UI applies edits immediately. The same reducer handles local edits, drag previews and saved events, including snapshot updates and history replay.
+Saves activity and day changes as events and keeps local edits in sync with the server. The UI applies edits immediately. The same reducer handles local edits, drag previews and saved events, including snapshot updates and history replay.
 
 ## Main files
 
 | File | Responsibility |
 | --- | --- |
-| [`usePlannerDocument`](../../modules/planner/hooks/usePlannerDocument.ts) | Provides activity and date actions to the UI. |
-| [`planOperations`](lib/planOperations.ts) | Builds events for moves and date changes. A move identifies the destination day and the activity it should precede. |
-| [`usePlanCollaboration`](hooks/usePlanCollaboration.ts) | Keeps confirmed state and pending edits, sends requests and handles server updates. |
-| [`eventReducer`](lib/eventReducer.ts) | Applies each change to the document. |
+| [usePlannerDocument.ts](../../modules/planner/hooks/usePlannerDocument.ts) | Provides activity and date actions to the UI. |
+| [planOperations.ts](lib/planOperations.ts) | Builds events for moves and date changes. A move identifies the destination day and the activity it should precede. |
+| [usePlanCollaboration.ts](hooks/usePlanCollaboration.ts) | Keeps confirmed state and pending edits, sends requests and handles server updates. |
+| [eventReducer.ts](lib/eventReducer.ts) | Applies each change to the document. |
+| [EventsService.ts](services/EventsService.ts) | Builds the next snapshot and appends the event batch through the repository. |
 
-A `PlanOperation` has a `type` and `payload`. The hook assigns an ID when it queues the operation. The server assigns its version and timestamp.
+A [PlanOperation](types.ts) has a `type` and `payload`. The hook assigns an ID when it queues the operation. The server assigns its version and timestamp.
 
-## How edits reach the server
+## How it works
 
 ```text
 UI action -> dispatch -> pending queue -> immediate render
@@ -35,7 +36,7 @@ Each plan has its own session. Switching plans resets selection and form state; 
 
 `append_plan_events` locks the snapshot and checks `base_version`. A version mismatch returns the current version and **an empty event list**. The client fetches the missing events and retries against the updated version, with a limit on consecutive conflict retries.
 
-The database does not enforce unique event IDs. A write can succeed even if its response is lost. Before retrying a failed request, the client fetches history from its previous confirmed version and removes pending IDs already saved. Starting from a fresh snapshot's version could skip those IDs and duplicate a write.
+Client event IDs are stored in `plan_events.event_id`, which has no uniqueness constraint. A write can succeed even if its response is lost. Before retrying a failed request, the client fetches history from its previous confirmed version and removes pending IDs already saved. Starting from a fresh snapshot's version could skip those IDs and duplicate a write.
 
 Failed edits stay visible. The error banner offers Retry and asks for confirmation before discarding unsynced changes. Discard clears pending edits, closes the editor and refreshes the document; changes already saved remain. Validation and permission errors require the user to resolve the cause or discard the edits.
 
@@ -72,3 +73,10 @@ pnpm typecheck:ci
 Use `pnpm exec vitest run <paths>` to select suites; `pnpm test -- <paths>` can run the entire suite with the current script setup.
 
 Tests cover edits during pending requests, retry after a lost response, version gaps and reconnects. They also check date changes, drag previews and form drafts. Network timing is controlled in tests; production latency still needs a browser check against a deployed preview.
+
+## Related docs
+
+- [Architecture](../../../ARCHITECTURE.md)
+- [Snapshots](../snapshots/README.md)
+- [Contributing](../../../CONTRIBUTING.md)
+- [Feature guide](../README.md)

@@ -1,41 +1,27 @@
 ---
 title: Prioritize Clarity Over Cleverness
 impact: HIGH
-impactDescription: Reduces cognitive load and improves maintainability
+impactDescription: Keeps implementations easy to understand and change
 tags: quality, simplicity, readability
 ---
 
-## Prioritize Clarity Over Cleverness
+# Prefer simple implementations
 
-**Impact: HIGH**
+Solve the current problem with code another contributor can follow quickly. Avoid abstractions introduced only for possible future uses. Simplicity should preserve the functionality the task requires.
 
-The goal is code that is easy to read and understand quickly, not elegant complexity. Simple systems reduce the cognitive load for every engineer.
+Before adding complexity, check:
 
-**Questions to ask yourself:**
-- Am I actually solving the problem at hand?
-- Am I thinking too much about possible future use cases?
-- Have I considered at least 1 other alternative for solving this? How does it compare?
+- Does this solve the requested behavior?
+- Is the extra abstraction needed by an existing caller?
+- Is there a clearer alternative, and what does it change?
 
-**Incorrect (clever but hard to understand):**
-
-```typescript
-// Clever one-liner that's hard to parse
-const result = data.reduce((a, b) => ({...a, [b.id]: (a[b.id] || []).concat(b)}), {});
-```
-
-**Correct (clear and readable):**
+For example, grouping items is easy to read as a loop:
 
 ```typescript
-// Clear, step-by-step approach
 const groupedById: Record<string, Item[]> = {};
 
 for (const item of data) {
-  if (!groupedById[item.id]) {
-    groupedById[item.id] = [];
-  }
+  if (!groupedById[item.id]) groupedById[item.id] = [];
   groupedById[item.id].push(item);
 }
 ```
-
-**Important note:**
-Simple doesn't mean lacking in features. Just because our goal is to create simple systems, this doesn't mean they should feel anemic and lacking obvious functionality.

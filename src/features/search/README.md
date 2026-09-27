@@ -1,28 +1,32 @@
-# Search Feature
+# Search
 
-Location and activity search using Geoapify and Wikidata APIs with autocomplete.
+Provides destination, address and activity suggestions through Geoapify, plus optional place images from Wikidata.
 
-## Features
-- **Destination search** - Cities, states, and countries for planner creation
-- **Address search** - Street-level locations for activity addresses
-- **Activity search** - Points of interest and attractions
-- **Autocomplete** - Real-time suggestions with debouncing and caching
-- **HTTP boundary** - Same-origin Route Handlers proxy Geoapify and Wikidata so API keys remain server-only.
-- **Keyboard navigation** - Full accessibility support
+## How it works
 
-## Data Flow
+Search inputs debounce text and cache results with TanStack Query. Client hooks call `/api/places/*` route handlers, which use server-only provider services. Geoapify requires `GEOAPIFY_KEY`; see [setup](../../../CONTRIBUTING.md).
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│ Search Feature                                              │
-│   • Provides activity location and title search             │
-│   • Provides destination search for planner creation        │
-└────┬────────────────────────────────────────────────────────┘
-     │
-     ├──> Activity Feature (activity search)
-     │      └──> Plan Feature
-     │
-     ├──> Plan Feature (destination search)
-     │
-     └──> Profile Feature (user location data)
-```
+| Endpoint | Purpose |
+| --- | --- |
+| `/api/places/city-country` | Destinations for plan creation and map positioning. |
+| `/api/places/address` | Activity addresses. |
+| `/api/places/search` | Activity/place suggestions. |
+| `/api/places/details` | Place details and an optional Wikidata image. |
+
+Selecting a place combines suggestion data with optional place details for the activity draft. If that request fails, the selection keeps its available address and coordinates. Selecting another place cancels the previous request.
+
+## Main files
+
+| File | Responsibility |
+| --- | --- |
+| [SuggestionCombobox.tsx](components/SuggestionCombobox.tsx) | Shared suggestion UI. |
+| [searchHooks.ts](hooks/searchHooks.ts) | Query hooks and their endpoints. |
+| [usePlaceSelection.ts](hooks/usePlaceSelection.ts) | Selected-place details and cancellation. |
+| [GeoapifyService.ts](services/GeoapifyService.ts) | Query validation and Geoapify requests. |
+| [WikidataService.ts](services/WikidataService.ts) | Optional image lookup. |
+
+## Related docs
+
+- [Architecture](../../../ARCHITECTURE.md)
+- [Plan](../plan/README.md)
+- [Feature guide](../README.md)

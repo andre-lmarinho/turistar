@@ -1,53 +1,24 @@
 ---
 title: Use Explicit Column Selection in Supabase Queries
 impact: HIGH
-impactDescription: Reduces data transfer and improves query performance
+impactDescription: Limits query payloads and accidental field exposure
 tags: supabase, database, performance, security
 ---
 
-## Use Explicit Column Selection in Supabase Queries
+# Use explicit column selection
 
-**Impact: HIGH (Reduces data transfer and improves query performance)**
+Select the columns a caller needs, including columns in nested relationships. Avoid `select('*')` and nested wildcards. Explicit selection limits payloads and keeps returned fields reviewable; authorization still belongs in Services and database policies.
 
-Using explicit column selection instead of `select('*')` in Supabase queries fetches only the fields you need, improving performance and preventing accidental exposure of sensitive data.
-
-**Incorrect (using select('*') fetches all fields):**
+For example, the plan repository fetches a plan and its members with:
 
 ```typescript
-const { data: plan } = await supabase
-  .from('plans')
-  .select('*') // This gets ALL plan fields including sensitive ones
-  .eq('id', planId)
-  .single();
+const { data, error } = await this.client
+  .from("plans")
+  .select(
+    "id, title, user_id, budget, start_date, end_date, destination_name, plan_members!left(user_id, tier)"
+  )
+  .eq("id", planId)
+  .maybeSingle();
 ```
 
-**Correct (using explicit column selection):**
-
-```typescript
-const { data: plan } = await supabase
-  .from('plans')
-  .select('id, title, destination_name, start_date, end_date') // Only needed fields
-  .eq('id', planId)
-  .single();
-
-// For relational queries, specify nested columns explicitly
-const { data: plan } = await supabase
-  .from('plans')
-  .select(`
-    id, 
-    title, 
-    destination_name,
-    plan_destinations (
-      destinations (name, country)
-    )
-  `)
-  .eq('id', planId)
-  .single();
-```
-
-**Benefits:**
-- **Performance**: Smaller payloads, faster queries
-- **Security**: Prevents accidental exposure of sensitive fields (e.g., `user_id`, `created_at`)
-- **Clarity**: Makes data requirements explicit
-
-**Exception:** Use `select('*')` only when debugging or in admin tools where all fields are genuinely needed.
+Handle the query error and map the result before returning it. See [PlanRepository](../../src/features/plan/repositories/PlanRepository.ts) for the complete method and [repository boundaries](data-repository-pattern.md) for error and DTO handling.
