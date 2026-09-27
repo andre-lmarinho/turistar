@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { FormEvent } from "react";
+
+import type { SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
 import { getErrorMessage } from "@/lib/errors/getErrorMessage";
@@ -32,7 +33,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
     setError(null);
   }, [displayName, open, slug]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalizedUsername = normalizeUsername(username);
     if (!name.trim()) {
