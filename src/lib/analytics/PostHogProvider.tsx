@@ -9,7 +9,7 @@ import { isDemoUser } from "@/features/demo/lib/demo";
 import { createSupabaseBrowserClient } from "@/supabase/client";
 
 const PROJECT_TOKEN = process.env.NEXT_PUBLIC_POSTHUG_PROJECT_TOKEN;
-const API_HOST = process.env.NEXT_PUBLIC_POSTHUG_HOST ?? "https://us.i.posthog.com";
+const API_HOST = process.env.NEXT_PUBLIC_POSTHUG_HOST;
 
 type PageGroup = "auth_home" | "planner";
 
@@ -88,8 +88,6 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
       api_host: API_HOST,
       capture_pageview: false,
       capture_pageleave: false,
-      autocapture: false,
-      disable_session_recording: true,
     });
   }, []);
 
