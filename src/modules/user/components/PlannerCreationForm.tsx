@@ -2,7 +2,8 @@
 
 import { addDays } from "date-fns";
 import { useTranslations } from "next-intl";
-import type { FormEvent } from "react";
+
+import type { SubmitEvent } from "react";
 import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 import type { CreatePlannerPlanResult } from "@/features/plan/services/PlanService";
@@ -57,7 +58,7 @@ export function PlannerCreationForm({ onPlanCreated }: PlannerCreationFormProps)
     }
   }
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
     if (!range?.from || !range?.to) {
       setError(t("selectTravelDates"));
