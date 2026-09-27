@@ -9,7 +9,7 @@ Features group domain types, operations and data access. Start with [Architectur
 | [Activity](activity/README.md) | Day and activity types, draft creation and display colors. |
 | [Auth](auth/README.md) | Sign-in, registration, password recovery and server viewer lookup. |
 | [Budget](budget/README.md) | Expense entries and stored plan budgets. |
-| [Demo](demo/lib/demoSignIn.ts) | Shared demo account, onboarding dialog and reset on dashboard entry. |
+| [Demo](demo/README.md) | Shared account, baseline data and reset behavior. |
 | [Events](events/README.md) | Activity/day edits, optimistic state, persistence and realtime recovery. |
 | [Members](members/README.md) | Plan membership and administrative operations. |
 | [Plan](plan/README.md) | Plan creation, access, initial data, dashboard queries and metadata. |
@@ -23,7 +23,7 @@ Keep business rules in services and database access in repositories. Compose scr
 
 Activity and day edits use the event log and snapshots. Expense entries, members and profiles have their own persistence paths. See [Architecture](../../ARCHITECTURE.md) before adding a new write path.
 
-The demo uses a shared authenticated account. [resetDemoIfStale](demo/lib/resetDemoIfStale.ts) attempts a reset when its dashboard is opened; the database decides whether a reset is due.
+See the [demo guide](demo/README.md) for shared-account and reset behavior.
 
 ## Related docs
 
