@@ -21,7 +21,6 @@ export {
   LandPlot,
   Link2,
   List,
-  LoaderCircle,
   LogOut,
   Map,
   MapPin,

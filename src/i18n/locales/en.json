@@ -217,7 +217,6 @@
   "dayCount": "{count, plural, one {# day} other {# days}}",
   "days": "days",
   "tbd": "TBD",
-  "loadingSuggestions": "Loading suggestions",
   "failedToLoadSuggestions": "Failed to load suggestions.",
   "noSuggestionsFound": "No suggestions found.",
   "failedToLoadLocations": "Failed to load location suggestions.",

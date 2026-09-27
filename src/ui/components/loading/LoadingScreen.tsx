@@ -41,7 +41,7 @@ export function LoadingScreen({ text = "Loading..." }: LoadingScreenProps) {
       </div>
       {/* Text */}
       <output aria-live="polite" className="flex items-center gap-2 text-lg">
-        <Spinner className="size-6" aria-hidden="true" />
+        <Spinner className="size-6" />
         <span>{text}</span>
       </output>
     </div>,

@@ -136,6 +136,7 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
           ref={inputRef}
           role="combobox"
           aria-expanded={open}
+          aria-busy={loading}
           aria-controls={listId}
           aria-activedescendant={
             activeIndex >= 0 && options[activeIndex]
@@ -157,7 +158,7 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
         />
         {loading ? (
           <div className="absolute inset-y-0 right-2 flex items-center">
-            <Spinner className="size-4" label={t("loadingSuggestions")} />
+            <Spinner className="size-4" />
           </div>
         ) : null}
       </div>
