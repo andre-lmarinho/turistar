@@ -124,7 +124,7 @@ vi.mock("@/modules/planner/components/ModeToggleButton", () => ({
 }));
 
 vi.mock("@/ui/components/calendar", () => ({
-  DateRangePickerIcon: () => null,
+  DateRangePicker: () => null,
 }));
 
 beforeEach(() => {

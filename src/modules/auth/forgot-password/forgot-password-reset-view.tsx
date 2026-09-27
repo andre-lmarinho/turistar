@@ -11,9 +11,9 @@ import { updatePassword } from "@/features/auth/handlers/updatePassword";
 import { buildLoginHref, resolveNextPath } from "@/features/auth/lib/redirect";
 import { readResetPasswordParams } from "@/features/auth/utils/readResetPasswordParams";
 import { MIN_PASSWORD_LENGTH, validPassword } from "@/features/auth/utils/validPassword";
+import { AccessShell } from "@/modules/auth/components/AccessShell";
 import { Button } from "@/ui/components/button/Button";
 import { Form, PasswordField } from "@/ui/components/form";
-import { AccessShell } from "@/ui/components/layout";
 
 function getHashParams(): URLSearchParams | null {
   if (typeof window === "undefined") return null;

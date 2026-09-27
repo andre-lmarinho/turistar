@@ -1,12 +1,12 @@
 "use client";
 
 import { Select } from "@base-ui/react/select";
-import { Check, ChevronDown, Globe2, LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState, useTransition } from "react";
 import { setLocale } from "@/i18n/actions";
 import { isLocale } from "@/i18n/config";
 import { Button } from "@/ui/components/button/Button";
+import { Check, ChevronDown, Globe2, LoaderCircle } from "@/ui/components/icon";
 
 const languages = [
   { value: "en", label: "English" },

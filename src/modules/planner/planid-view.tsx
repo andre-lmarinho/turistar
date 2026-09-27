@@ -15,7 +15,7 @@ import { SharePlannerDialog } from "@/modules/planner/components/SharePlannerDia
 import { BoardView } from "@/modules/planner/views/BoardView";
 import { BudgetView } from "@/modules/planner/views/BudgetView";
 import { trpc } from "@/trpc/react";
-import { DateRangePickerIcon } from "@/ui/components/calendar";
+import { DateRangePicker } from "@/ui/components/calendar";
 
 import type { PlannerMode } from "./components/ModeToggleButton";
 import { ModeToggleButton } from "./components/ModeToggleButton";
@@ -177,7 +177,7 @@ function PlannerContent({
           />
         </h1>
         <div className="flex flex-none items-center gap-1 self-end md:self-end">
-          <DateRangePickerIcon value={currentRange} onChange={handleRangeChange} />
+          <DateRangePicker iconOnly value={currentRange} onChange={handleRangeChange} />
           <DeletePlanDialog planId={documentPlanId} isOwner={isOwner} isDemo={isDemo} />
           {!isDemo ? (
             <SharePlannerDialog

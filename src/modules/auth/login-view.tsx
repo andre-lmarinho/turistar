@@ -13,9 +13,9 @@ import { signInWithPassword } from "@/features/auth/handlers/signInWithPassword"
 import { buildSignupHref, resolveNextPath } from "@/features/auth/lib/redirect";
 import { validEmail } from "@/features/auth/utils/validEmail";
 import { demoSignIn } from "@/features/demo/lib/demoSignIn";
+import { AccessShell } from "@/modules/auth/components/AccessShell";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField } from "@/ui/components/form";
-import { AccessShell } from "@/ui/components/layout";
 
 const loginSchema = z.object({
   email: z.string().min(1, "emailRequired").refine(validEmail, "emailInvalid"),

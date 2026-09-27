@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@/ui/components/icon";
+import { ChevronDown, ChevronLeft, ChevronRight } from "@/ui/components/icon";
 
 import { cn } from "@/ui/utils/cn";
 
@@ -94,14 +94,14 @@ export function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
-            return <ChevronLeftIcon aria-hidden="true" className={cn("size-4", className)} {...props} />;
+            return <ChevronLeft aria-hidden="true" className={cn("size-4", className)} {...props} />;
           }
 
           if (orientation === "right") {
-            return <ChevronRightIcon aria-hidden="true" className={cn("size-4", className)} {...props} />;
+            return <ChevronRight aria-hidden="true" className={cn("size-4", className)} {...props} />;
           }
 
-          return <ChevronDownIcon aria-hidden="true" className={cn("size-4", className)} {...props} />;
+          return <ChevronDown aria-hidden="true" className={cn("size-4", className)} {...props} />;
         },
         DayButton: CalendarDayButton,
         WeekNumber: ({ children, ...props }) => {
