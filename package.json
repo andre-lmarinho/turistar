@@ -24,6 +24,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "typecheck:ci": "next typegen && tsc --noEmit --pretty false",
     "test": "vitest run",
+    "test:db": "node scripts/test-database.mjs",
     "test:watch": "vitest --watch",
     "e2e": "playwright test",
     "gen:types": "supabase gen types typescript --schema public > src/supabase/types.ts",

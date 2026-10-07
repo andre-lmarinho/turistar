@@ -103,6 +103,29 @@ Use `pnpm exec vitest run <path>` for file selection. Unit and component tests l
 sets the enforced thresholds. The [CI workflow](.github/workflows/ci.yml) runs lint, types, unit tests,
 a production build, and browser tests.
 
+### Database tests
+
+```sh
+supabase start
+pnpm db:migrate
+pnpm test:db
+```
+
+The runner discovers credentials from the running local stack in memory and rejects non-loopback
+URLs. It does not load hosted credentials, start containers, or reset your database. SQL tests live in
+`supabase/tests/database/*.test.sql` and use pgTAP inside `BEGIN`/`ROLLBACK`. Use real authenticated
+roles and JWT claims when testing RLS; a successful query as the database owner does not prove access.
+
+Auth integration tests live in `tests/database/*.integration-test.ts`, run with a separate Node Vitest
+configuration, and call the real local Auth and Data APIs. Fixtures use unique emails and clean up only
+the accounts they created. Keep credentials and session objects out of assertions and logs. Ordinary
+`pnpm test` remains independent of Docker.
+
+The database CI job rebuilds a disposable Supabase database from migrations and seed, checks schema
+errors, and runs both suites. Its reset is safe for that isolated CI database; avoid resetting local
+development data unless you intend to discard it. This follows cal.diy's separation of real database
+integration tests from unit tests, using Supabase's native pgTAP runner instead of Prisma fixtures.
+
 ### Browser tests
 
 Install the browser once, then select the relevant suite:
@@ -134,7 +157,7 @@ The executable schema lives in [`supabase/migrations`](supabase/migrations).
 For database changes, follow the repository's [approval boundaries](AGENTS.md#boundaries), create a
 versioned migration with the Supabase CLI, and verify it locally. The
 [migration workflow](.github/workflows/supabase-migrations.yml) checks that migrations and seed data
-can rebuild the database and pass `supabase db lint`.
+can rebuild the database, pass `supabase db lint`, and pass `pnpm test:db`.
 
 After an approved schema change, regenerate the public types from the intended database. For local
 Supabase:

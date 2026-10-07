@@ -1,22 +1,42 @@
-name: Supabase Migration Validation
+name: Supabase Database Validation
 
 on:
   pull_request:
     paths:
-      - supabase/config.toml
-      - supabase/migrations/**
-      - supabase/seed.sql
+      - .github/workflows/supabase-migrations.yml
+      - supabase/**
+      - tests/database/**
+      - scripts/test-database.mjs
+      - vitest.database.config.ts
+      - package.json
+      - pnpm-lock.yaml
+      - src/features/auth/**
+      - src/features/profile/**
+      - src/features/plan/**
+      - src/features/events/**
 
 permissions:
   contents: read
 
 jobs:
   validate:
-    name: Supabase migrations
+    name: Supabase database
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v3
@@ -24,10 +44,17 @@ jobs:
           version: 2.105.0
 
       - name: Start local Supabase
-        run: supabase start
+        run: supabase start > /dev/null
 
       - name: Rebuild database from migrations and seed
         run: supabase db reset --local
 
       - name: Check database for schema errors
         run: supabase db lint --local --fail-on=error
+
+      - name: Run SQL and Auth integration tests
+        run: pnpm test:db
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup
