@@ -49,7 +49,7 @@ Events that arrive out of order wait in a buffer. Missing versions trigger a fet
 ## Editing behavior
 
 - **Activity dialog:** saves only changed fields, so changing a title preserves another collaborator's notes. A new activity stays in a local draft until creation is accepted. If its day was removed, the editor keeps the draft so the user can choose another day and try again.
-- **Coordinates:** `null` in a patch removes a coordinate. An `undefined` value would be lost during JSON serialization.
+- **Coordinates:** `null` in a patch removes a coordinate; omission preserves it, and zero is a valid value. An `undefined` value would be lost during JSON serialization. The shared event input schema validates payloads in tRPC and in `EventsService` before building a snapshot or writing events; non-finite coordinates are rejected instead of becoming `null` during serialization.
 - **Drag and drop:** stores the active ID and destination. The reducer builds the preview from current data. Drop sends one move; cancel clears the preview.
 - **Dates:** shifting a range without changing its length keeps activities on the same trip-day. Resizing keeps overlapping dates and moves activities from removed days to the first or last remaining day.
 
