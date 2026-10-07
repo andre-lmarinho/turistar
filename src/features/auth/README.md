@@ -4,7 +4,8 @@ Handles Supabase sign-in, registration, password recovery and server-side viewer
 
 ## How it works
 
-- Browser handlers call Supabase Auth. Sign-in resolves the user's profile; registration finalizes it when a session is available, or returns a confirmation-required result.
+- Browser handlers call Supabase Auth. Sign-in resolves the user's profile; registration resolves it when a session is available, or returns a confirmation-required result.
+- Profile creation belongs to the database Auth trigger, so resolving a profile after login does not overwrite account settings.
 - Password recovery sends an email, exchanges the returned code for a session and updates the password.
 - `getViewer` validates the server request with `auth.getUser()`. Pages use the viewer to enforce route access; tRPC uses it for authenticated procedures.
 - [proxy.ts](../../../proxy.ts) refreshes session cookies and supplies CSP headers. The `/u/[slug]` and `/p/[planId]` pages own their access checks.
