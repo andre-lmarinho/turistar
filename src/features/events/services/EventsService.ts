@@ -2,11 +2,11 @@ import "server-only";
 
 import { buildSnapshotStateForAppend } from "@/features/events/lib/snapshotStateBuilder";
 import type { SnapshotsService } from "@/features/snapshots/services/SnapshotsService";
-import { ApplicationError } from "@/lib/errors";
+import { ApplicationError } from "@/lib/errors/ApplicationError";
 
 import type { EventsRepository } from "../repositories/EventsRepository";
 import type { EventInsert, EventRecord } from "../types";
-import { AppendEventsResponseSchema, EventRowSchema, mapEvent } from "./eventsSchemas";
+import { AppendEventsResponseSchema, EventInsertSchema, EventRowSchema, mapEvent } from "./eventsSchemas";
 
 export class EventsService {
   constructor(
@@ -31,6 +31,16 @@ export class EventsService {
     if (events.length === 0) {
       return { version: baseVersion, events: [] };
     }
+
+    const parsedEvents = EventInsertSchema.array().safeParse(events);
+    if (!parsedEvents.success) {
+      throw new ApplicationError(
+        "BAD_REQUEST",
+        `appendEvents failed for planId=${planId}: invalid event payload.`,
+        { cause: parsedEvents.error }
+      );
+    }
+    events = parsedEvents.data;
 
     const snapshot = await this.snapshots.fetchSnapshot(planId);
     const history =
