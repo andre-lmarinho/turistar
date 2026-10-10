@@ -44,6 +44,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
     ? `/forgot-password?next=${encodeURIComponent(safeNextPath)}`
     : "/forgot-password";
   const [formError, setFormError] = useState<"signInError" | null>(null);
+  const [isDemoPending, setIsDemoPending] = useState(false);
 
   const formMethods = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -68,12 +69,18 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
   };
 
   const handleDemo = async () => {
+    if (isDemoPending) {
+      return;
+    }
+
     setFormError(null);
+    setIsDemoPending(true);
     try {
       const slug = await demoSignIn(resolveProfile);
       router.push(`/u/${slug}`);
       router.refresh();
     } catch {
+      setIsDemoPending(false);
       setFormError("signInError");
     }
   };
@@ -121,8 +128,10 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
         <Button
           variant="accent"
           onClick={handleDemo}
+          disabled={isDemoPending}
+          aria-busy={isDemoPending}
           className="w-full py-3 text-base font-semibold shadow-sm transition-colors">
-          {t("exploreDemo")}
+          {isDemoPending ? t("openingDemo") : t("exploreDemo")}
         </Button>
       </div>
     </AccessShell>

@@ -13,6 +13,7 @@
   "signIn": "Sign in",
   "signingIn": "Signing in...",
   "exploreDemo": "Explore the demo — no account needed",
+  "openingDemo": "Opening demo...",
   "signInError": "Unable to sign you in. Check your details and try again.",
   "emailRequired": "Email is required.",
   "emailInvalid": "Enter a valid email.",
