@@ -7,17 +7,6 @@ import type { Database } from "@/supabase/types";
 
 import type { ProfileRecord, ProfileSummary } from "../types";
 
-export type ProfileUpsertPayload = {
-  userId: string;
-  slug: string;
-  displayName: string | null;
-  avatarUrl: string | null;
-};
-
-export type ProfileUpsertResult = {
-  slug: string;
-};
-
 export type ProfileUpdatePayload = {
   userId: string;
   slug: string;
@@ -104,36 +93,5 @@ export class ProfileRepository {
     }
 
     return { userId: data.id, slug: data.slug, displayName: data.display_name, avatarUrl: data.avatar_url };
-  }
-
-  async upsertProfile(payload: ProfileUpsertPayload): Promise<ProfileUpsertResult> {
-    const { userId, slug, displayName, avatarUrl } = payload;
-    const { data, error } = await this.client
-      .from("profiles")
-      .upsert(
-        {
-          id: userId,
-          slug,
-          display_name: displayName,
-          avatar_url: avatarUrl,
-        },
-        { onConflict: "id" }
-      )
-      .select("slug")
-      .single();
-
-    if (error) {
-      throw formatSupabaseError({ operation: "upsertProfile", identifiers: { userId, slug }, error });
-    }
-
-    if (!data) {
-      throw formatSupabaseError({ operation: "upsertProfile:missing-row", identifiers: { userId, slug } });
-    }
-
-    if (!data.slug) {
-      throw formatSupabaseError({ operation: "upsertProfile:missing-slug", identifiers: { userId, slug } });
-    }
-
-    return { slug: data.slug };
   }
 }
