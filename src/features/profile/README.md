@@ -4,7 +4,7 @@ Provisions user profiles and manages their slug, display name and avatar metadat
 
 ## How it works
 
-- The Auth user creation trigger provisions a profile in the signup transaction, including a unique slug of at most 28 characters. Existing profiles are preserved.
+- The Auth user creation trigger provisions a profile in the signup transaction, using the requested, normalized username (1–28 characters). Invalid or taken usernames reject signup instead of allocating a different slug. Existing profiles are preserved.
 - Auth flows call `ensureProfile` only to resolve the stored slug after a session exists. It performs a read and never creates or updates a profile.
 - Profile creation and deletion are unavailable to authenticated clients. Account editing keeps its existing owner policies. The migration refuses to proceed if an existing Auth user has no profile.
 - Account updates normalize and validate the username, require a display name and report slug conflicts. Authenticated tRPC handlers supply the viewer's user ID.

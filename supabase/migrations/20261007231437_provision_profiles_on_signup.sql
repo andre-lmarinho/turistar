@@ -21,50 +21,28 @@ security definer
 set search_path = ''
 as $$
 declare
-  base_slug text := lower(btrim(coalesce(new.raw_user_meta_data ->> 'username', '')));
-  candidate text;
-  suffix text;
-  violated_constraint text;
-  attempt integer;
+  username text := lower(btrim(new.raw_user_meta_data ->> 'username'));
 begin
-  if length(base_slug) not between 1 and 28
-    or base_slug !~ '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$' then
-    base_slug := 'traveler-' || left(replace(new.id::text, '-', ''), 19);
+  if jsonb_typeof(new.raw_user_meta_data -> 'username') is distinct from 'string'
+    or length(username) not between 1 and 28
+    or username !~ '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$' then
+    raise exception 'provision_user_profile: invalid username for userId=%', new.id
+      using errcode = '22023';
   end if;
 
-  -- ponytail: bounded collision retries; the unique constraint arbitrates concurrent signups.
-  for attempt in 0..9 loop
-    candidate := base_slug;
-    if attempt > 0 then
-      suffix := left(replace(new.id::text, '-', ''), 8)
-        || case when attempt > 1 then '-' || attempt::text else '' end;
-      candidate := rtrim(left(base_slug, 27 - length(suffix)), '-') || '-' || suffix;
-    end if;
-
-    begin
-      insert into public.profiles (id, slug, display_name, avatar_url)
-      values (
-        new.id,
-        candidate,
-        coalesce(
-          nullif(btrim(new.raw_user_meta_data ->> 'full_name'), ''),
-          nullif(btrim(new.raw_user_meta_data ->> 'name'), ''),
-          nullif(btrim(new.raw_user_meta_data ->> 'username'), ''),
-          nullif(split_part(new.email, '@', 1), ''),
-          candidate
-        ),
-        nullif(btrim(new.raw_user_meta_data ->> 'avatar_url'), '')
-      );
-      return new;
-    exception when unique_violation then
-      get stacked diagnostics violated_constraint = constraint_name;
-      if violated_constraint <> 'profiles_slug_key' then
-        raise;
-      end if;
-    end;
-  end loop;
-
-  raise exception 'Profile provisioning could not allocate a slug for userId=%', new.id;
+  -- The unique constraint rejects a taken username; never rename it implicitly.
+  insert into public.profiles (id, slug, display_name, avatar_url)
+  values (
+    new.id,
+    username,
+    coalesce(
+      nullif(btrim(new.raw_user_meta_data ->> 'full_name'), ''),
+      nullif(btrim(new.raw_user_meta_data ->> 'name'), ''),
+      username
+    ),
+    nullif(btrim(new.raw_user_meta_data ->> 'avatar_url'), '')
+  );
+  return new;
 end;
 $$;
 
