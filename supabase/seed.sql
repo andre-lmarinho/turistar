@@ -23,7 +23,7 @@ on conflict (provider_id, provider) do nothing;
 
 insert into public.profiles (id, slug, display_name)
 values ('36a3b688-e770-4656-8262-6592809b46ad', 'demouser', 'Demo User')
-on conflict (id) do nothing;
+on conflict (id) do update set slug = excluded.slug, display_name = excluded.display_name;
 
 
 -- 2. The two curated demo plans, owned by the demo account (fixed UUIDs so the app/repo

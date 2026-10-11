@@ -6,14 +6,12 @@ import { ProfileService } from "./ProfileService";
 const repositoryMocks = vi.hoisted(() => ({
   fetchProfileByUserId: vi.fn(),
   updateProfile: vi.fn(),
-  upsertProfile: vi.fn(),
 }));
 
 function makeService(): ProfileService {
   return new ProfileService({
     fetchProfileByUserId: repositoryMocks.fetchProfileByUserId,
     updateProfile: repositoryMocks.updateProfile,
-    upsertProfile: repositoryMocks.upsertProfile,
   } as unknown as ProfileRepository);
 }
 
@@ -21,7 +19,6 @@ describe("ProfileService", () => {
   beforeEach(() => {
     repositoryMocks.fetchProfileByUserId.mockReset();
     repositoryMocks.updateProfile.mockReset();
-    repositoryMocks.upsertProfile.mockReset();
   });
 
   it("returns the authenticated viewer profile", async () => {
@@ -78,30 +75,26 @@ describe("ProfileService", () => {
     });
   });
 
-  it("allocates a stable unique slug after a conflict", async () => {
-    repositoryMocks.upsertProfile
-      .mockRejectedValueOnce(new Error("duplicate", { cause: { code: "23505" } }))
-      .mockResolvedValueOnce({ slug: "ada-user-1" });
-
-    await expect(
-      makeService().ensureProfile({ id: "user-1", email: "ada@example.com", user_metadata: null })
-    ).resolves.toBe("ada-user-1");
-    expect(repositoryMocks.upsertProfile).toHaveBeenCalledTimes(2);
-    expect(repositoryMocks.upsertProfile).toHaveBeenLastCalledWith({
-      avatarUrl: null,
-      displayName: "ada",
-      slug: "ada-user-1",
+  it("resolves the stored slug without replacing account settings with auth metadata", async () => {
+    repositoryMocks.fetchProfileByUserId.mockResolvedValue({
       userId: "user-1",
+      slug: "custom-slug",
+      displayName: "Custom name",
+      avatarUrl: "custom-avatar",
     });
+    const viewer = { id: "user-1", email: "original@example.com", user_metadata: { username: "original" } };
+    await expect(makeService().ensureProfile(viewer)).resolves.toBe("custom-slug");
+    expect(repositoryMocks.updateProfile).not.toHaveBeenCalled();
   });
-  it("preserves the technical failure as cause with operation context", async () => {
-    const cause = new Error("technical details", { cause: { code: "42501" } });
-    repositoryMocks.upsertProfile.mockRejectedValue(cause);
 
-    await expect(makeService().ensureProfile({ id: "user-1" })).rejects.toMatchObject({
-      message: "ensureProfile upsert failed: userId=user-1 slug=user-1",
-      cause,
-    });
-    expect(repositoryMocks.upsertProfile).toHaveBeenCalledTimes(1);
+  it("reports missing provisioning instead of creating a profile during login", async () => {
+    repositoryMocks.fetchProfileByUserId.mockResolvedValue(null);
+    await expect(makeService().ensureProfile({ id: "user-1" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("propagates profile read failures", async () => {
+    const cause = new Error("database unavailable");
+    repositoryMocks.fetchProfileByUserId.mockRejectedValue(cause);
+    await expect(makeService().ensureProfile({ id: "user-1" })).rejects.toBe(cause);
   });
 });

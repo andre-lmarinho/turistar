@@ -1,5 +1,4 @@
 import "server-only";
-import slugify from "@sindresorhus/slugify";
 import { normalizeUsername, validUsername } from "@/features/profile/utils/validUsername";
 import { ApplicationError } from "@/lib/errors/ApplicationError";
 import { isRecord, readString } from "@/lib/typeGuards";
@@ -44,47 +43,13 @@ export class ProfileService {
     }
   }
 
-  async ensureProfile(viewer: {
-    id: string;
-    email?: string | null;
-    user_metadata?: Record<string, unknown> | null;
-  }): Promise<string> {
-    const metadata = viewer.user_metadata ?? null;
-    const displayName =
-      readMetadataString(metadata, "full_name") ??
-      readMetadataString(metadata, "name") ??
-      readMetadataString(metadata, "user_name") ??
-      readMetadataString(metadata, "username") ??
-      viewer.email?.split("@")[0] ??
-      null;
-    const avatarUrl = readMetadataString(metadata, "avatar_url");
-    const base =
-      readMetadataString(metadata, "username") ??
-      readMetadataString(metadata, "user_name") ??
-      readMetadataString(metadata, "preferred_username") ??
-      readMetadataString(metadata, "full_name") ??
-      viewer.email?.split("@")[0] ??
-      viewer.id;
-    const baseSlug =
-      slugify(base, { separator: "-", lowercase: true }) ||
-      slugify(viewer.id, { separator: "-", lowercase: true });
-    const viewerSlug = slugify(viewer.id, { separator: "-", lowercase: true });
-    const slugs = [baseSlug, `${baseSlug}-${viewerSlug}`];
-    for (const slug of slugs) {
-      try {
-        return (await this.repo.upsertProfile({ userId: viewer.id, slug, displayName, avatarUrl })).slug;
-      } catch (error) {
-        if (extractSupabaseErrorCode(error) === "23505" && slug !== slugs[slugs.length - 1]) continue;
-        throw new Error(`ensureProfile upsert failed: userId=${viewer.id} slug=${slug}`, { cause: error });
-      }
+  async ensureProfile(viewer: { id: string }): Promise<string> {
+    const profile = await this.getViewerProfile(viewer.id);
+    if (!profile.slug) {
+      throw new ApplicationError("NOT_FOUND", `ensureProfile: missing slug for userId=${viewer.id}`);
     }
-    throw new Error(`ensureProfile failed to allocate a unique slug: userId=${viewer.id}`);
+    return profile.slug;
   }
-}
-
-function readMetadataString(metadata: Record<string, unknown> | null, key: string): string | null {
-  const value = metadata?.[key];
-  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
 function extractSupabaseErrorCode(error: unknown): string | null {
