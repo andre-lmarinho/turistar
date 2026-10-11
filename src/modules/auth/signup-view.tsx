@@ -77,6 +77,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
   const [formError, setFormError] = useState<"signupError" | "signupConfirmation" | "signInError" | null>(
     null
   );
+  const [isDemoPending, setIsDemoPending] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState<
     "idle" | "checking" | "available" | "taken" | "invalid" | "error"
   >("idle");
@@ -175,12 +176,18 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
     usernameStatus === "error";
 
   const handleDemo = async () => {
+    if (isDemoPending) {
+      return;
+    }
+
     setFormError(null);
+    setIsDemoPending(true);
     try {
       const slug = await demoSignIn(finalizeProfile);
       router.push(`/u/${slug}`);
       router.refresh();
     } catch {
+      setIsDemoPending(false);
       setFormError("signInError");
     }
   };
@@ -230,8 +237,10 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
             <Button
               variant="accent"
               onClick={handleDemo}
+              disabled={isDemoPending}
+              aria-busy={isDemoPending}
               className="w-full py-3 text-base font-semibold shadow-sm transition-colors">
-              {t("exploreDemo")}
+              {isDemoPending ? t("openingDemo") : t("exploreDemo")}
             </Button>
           </div>
           <div className="text-muted-foreground mt-10 flex h-full flex-col justify-end pb-6 text-sm">

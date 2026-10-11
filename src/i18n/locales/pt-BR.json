@@ -13,6 +13,7 @@
   "signIn": "Entrar",
   "signingIn": "Entrando...",
   "exploreDemo": "Experimente a demo — sem precisar de conta",
+  "openingDemo": "Abrindo demo...",
   "signInError": "Não foi possível entrar. Verifique seu e-mail e senha e tente de novo.",
   "emailRequired": "Digite seu e-mail.",
   "emailInvalid": "Digite um e-mail válido.",
