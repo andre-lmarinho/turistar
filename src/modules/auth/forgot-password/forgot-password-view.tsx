@@ -11,6 +11,7 @@ import { validEmail } from "@/features/auth/utils/validEmail";
 import { AccessShell } from "@/modules/auth/components/AccessShell";
 import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form } from "@/ui/components/form";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
   const t = useTranslations();
@@ -44,11 +45,17 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
           {t("backToLogin")}
         </Link>
       }>
-      <Form form={formMethods} onSubmit={handleSubmit} className="grid gap-6" noValidate>
+      <Form
+        form={formMethods}
+        onSubmit={handleSubmit}
+        className="grid gap-6"
+        aria-busy={formState.isSubmitting}
+        noValidate>
         <EmailField
           label={t("email")}
           placeholder={t("emailPlaceholder")}
           autoComplete="email"
+          readOnly={formState.isSubmitting}
           required
           {...register("email", {
             required: "emailRequired",
@@ -65,10 +72,18 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
             {t("resetEmailSent")}
           </output>
         ) : null}
-        <Button type="submit" disabled={formState.isSubmitting} className="text-base font-semibold">
-          {formState.isSubmitting ? t("sendingResetLink") : t("sendResetLink")}
+        <Button
+          type="submit"
+          disabled={formState.isSubmitting}
+          aria-busy={formState.isSubmitting}
+          className="min-h-11 gap-2 text-base font-semibold">
+          {formState.isSubmitting ? <Spinner className="size-4" /> : null}
+          {t("sendResetLink")}
         </Button>
       </Form>
+      <p role="status" className="sr-only">
+        {formState.isSubmitting ? t("sendingResetLink") : ""}
+      </p>
     </AccessShell>
   );
 }

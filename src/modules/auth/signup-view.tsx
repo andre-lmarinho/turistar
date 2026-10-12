@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,6 +22,7 @@ import { Button } from "@/ui/components/button/Button";
 import { EmailField, Form, PasswordField, TextField } from "@/ui/components/form";
 import type { LucideIcon } from "@/ui/components/icon/lucide-icons";
 import { Kanban, LandPlot, Plane } from "@/ui/components/icon/lucide-icons";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 import mock from "./media/app-mock.webp";
 
@@ -74,14 +75,13 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
   const router = useRouter();
   const safeNextPath = resolveNextPath(nextPath);
   const loginHref = buildLoginHref(safeNextPath);
-  const [formError, setFormError] = useState<"signupError" | "signupConfirmation" | "signInError" | null>(
-    null
-  );
-  const [isDemoPending, setIsDemoPending] = useState(false);
-  const [usernameStatus, setUsernameStatus] = useState<
-    "idle" | "checking" | "available" | "taken" | "invalid" | "error"
-  >("idle");
-  const lastCheckedUsernameRef = useRef<string | null>(null);
+  const [formError, setFormError] = useState<"signupError" | "signInError" | null>(null);
+  const [confirmationRequired, setConfirmationRequired] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"signup" | "demo" | null>(null);
+  const authPendingRef = useRef(false);
+  const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking">("idle");
+  const usernameCheckIdRef = useRef(0);
+  const usernameStatusId = useId();
   const profileUtils = trpc.useUtils();
 
   const formMethods = useForm<SignupValues>({
@@ -90,7 +90,8 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
   });
   const { register, formState, setError, clearErrors, getValues } = formMethods;
 
-  async function checkUsername(rawUsername: string): Promise<boolean> {
+  async function checkUsername(rawUsername: string, focusError = false): Promise<boolean> {
+    const checkId = ++usernameCheckIdRef.current;
     const normalized = normalizeUsername(rawUsername);
 
     if (!normalized) {
@@ -100,13 +101,9 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
     }
 
     if (!validUsername(normalized)) {
-      setUsernameStatus("invalid");
-      setError("username", { message: "usernameInvalid" }, { shouldFocus: false });
+      setUsernameStatus("idle");
+      setError("username", { message: "usernameInvalid" }, { shouldFocus: focusError });
       return false;
-    }
-
-    if (lastCheckedUsernameRef.current === normalized) {
-      return usernameStatus === "available";
     }
 
     setUsernameStatus("checking");
@@ -116,34 +113,39 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
       const { available } = await profileUtils.public.profile.availability.fetch({ username: normalized });
 
       const currentNormalized = normalizeUsername(getValues("username") ?? "");
-      if (currentNormalized !== normalized) {
+      if (currentNormalized !== normalized || checkId !== usernameCheckIdRef.current) {
         return false;
       }
 
-      lastCheckedUsernameRef.current = normalized;
-
       if (available) {
-        setUsernameStatus("available");
+        setUsernameStatus("idle");
         clearErrors("username");
         return true;
       }
 
-      setUsernameStatus("taken");
-      setError("username", { message: "usernameTaken" }, { shouldFocus: false });
+      setUsernameStatus("idle");
+      setError("username", { message: "usernameTaken" }, { shouldFocus: focusError });
       return false;
     } catch {
-      setUsernameStatus("error");
-      setError("username", { message: "usernameCheckFailed" }, { shouldFocus: false });
+      if (checkId !== usernameCheckIdRef.current) return false;
+      setUsernameStatus("idle");
+      setError("username", { message: "usernameCheckFailed" }, { shouldFocus: focusError });
       return false;
     }
   }
 
   const handleSubmit: SubmitHandler<SignupValues> = async (values) => {
+    if (authPendingRef.current) return;
+    authPendingRef.current = true;
+    setPendingAction("signup");
     setFormError(null);
+    setConfirmationRequired(false);
 
     try {
-      const isAvailable = await checkUsername(values.username);
+      const isAvailable = await checkUsername(values.username, true);
       if (!isAvailable) {
+        authPendingRef.current = false;
+        setPendingAction(null);
         return;
       }
 
@@ -157,44 +159,50 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
       });
 
       if (result.status === "needs-confirmation") {
-        setFormError("signupConfirmation");
+        setConfirmationRequired(true);
+        authPendingRef.current = false;
+        setPendingAction(null);
         return;
       }
 
       router.push(safeNextPath ?? `/u/${result.slug}`);
       router.refresh();
     } catch {
+      authPendingRef.current = false;
+      setPendingAction(null);
       setFormError("signupError");
     }
   };
 
-  const disableSubmit =
-    formState.isSubmitting ||
-    usernameStatus === "checking" ||
-    usernameStatus === "taken" ||
-    usernameStatus === "invalid" ||
-    usernameStatus === "error";
+  const isPending = pendingAction !== null || formState.isSubmitting;
 
   const handleDemo = async () => {
-    if (isDemoPending) {
-      return;
-    }
+    if (authPendingRef.current || formState.isSubmitting) return;
 
+    authPendingRef.current = true;
     setFormError(null);
-    setIsDemoPending(true);
+    setConfirmationRequired(false);
+    setPendingAction("demo");
     try {
       const slug = await demoSignIn(finalizeProfile);
       router.push(`/u/${slug}`);
       router.refresh();
     } catch {
-      setIsDemoPending(false);
+      authPendingRef.current = false;
+      setPendingAction(null);
       setFormError("signInError");
     }
   };
 
   const usernameField = register("username", {
     onBlur: () => {
+      if (authPendingRef.current) return;
       void checkUsername(getValues("username") ?? "");
+    },
+    onChange: () => {
+      usernameCheckIdRef.current++;
+      setUsernameStatus("idle");
+      clearErrors("username");
     },
   });
 
@@ -207,12 +215,36 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
             <h1 className="text-3xl font-semibold tracking-tight">{t("startPlanning")}</h1>
             <p className="text-muted-foreground text-base font-medium">{t("signupDescription")}</p>
           </div>
-          <Form form={formMethods} onSubmit={handleSubmit} className="mt-12 grid gap-6" noValidate>
-            <TextField label={t("username")} required {...usernameField} />
+          <Form
+            form={formMethods}
+            onSubmit={handleSubmit}
+            className="mt-12 grid gap-6"
+            aria-busy={isPending}
+            noValidate>
+            <div>
+              <TextField
+                label={t("username")}
+                autoComplete="username"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                aria-describedby={usernameStatusId}
+                readOnly={isPending}
+                required
+                {...usernameField}
+              />
+              <p
+                id={usernameStatusId}
+                role="status"
+                className={usernameStatus === "checking" ? "text-muted-foreground mt-2 text-sm" : "sr-only"}>
+                {usernameStatus === "checking" ? t("checkingUsername") : ""}
+              </p>
+            </div>
             <EmailField
               label={t("email")}
               placeholder={t("emailPlaceholder")}
               autoComplete="email"
+              readOnly={isPending}
               required
               {...register("email")}
             />
@@ -221,6 +253,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
               placeholder={t("createPasswordPlaceholder")}
               autoComplete="new-password"
               minLength={MIN_PASSWORD_LENGTH}
+              readOnly={isPending}
               required
               {...register("password")}
             />
@@ -229,20 +262,38 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
                 {t(formError)}
               </p>
             ) : null}
-            <Button type="submit" disabled={disableSubmit} className="text-base font-semibold">
-              {formState.isSubmitting ? t("creatingAccount") : t("createAccount")}
+            {confirmationRequired ? (
+              <p role="status" className="text-muted-foreground text-sm">
+                {t("signupConfirmation")}
+              </p>
+            ) : null}
+            <Button
+              type="submit"
+              disabled={isPending}
+              aria-busy={pendingAction === "signup"}
+              className="min-h-11 gap-2 text-base font-semibold">
+              {pendingAction === "signup" ? <Spinner className="size-4" /> : null}
+              {t("createAccount")}
             </Button>
           </Form>
           <div className="mt-5">
             <Button
               variant="accent"
               onClick={handleDemo}
-              disabled={isDemoPending}
-              aria-busy={isDemoPending}
-              className="w-full py-3 text-base font-semibold shadow-sm transition-colors">
-              {isDemoPending ? t("openingDemo") : t("exploreDemo")}
+              disabled={isPending}
+              aria-busy={pendingAction === "demo"}
+              className="w-full gap-2 py-3 text-base font-semibold shadow-sm transition-colors">
+              {pendingAction === "demo" ? <Spinner className="size-4" /> : null}
+              {t("exploreDemo")}
             </Button>
           </div>
+          <p role="status" className="sr-only">
+            {pendingAction === "demo"
+              ? t("openingDemo")
+              : pendingAction === "signup"
+                ? t("creatingAccount")
+                : ""}
+          </p>
           <div className="text-muted-foreground mt-10 flex h-full flex-col justify-end pb-6 text-sm">
             <p>
               {t.rich("existingAccount", {
@@ -269,7 +320,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
             </p>
           </div>
         </div>
-        <div className="border-border lg:bg-muted/30 mx-auto mt-24 w-full max-w-2xl flex flex-col justify-between rounded-l-2xl pl-4 lg:mt-0 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12">
+        <div className="border-border lg:bg-muted/30 mx-auto hidden w-full max-w-2xl flex-col justify-between rounded-l-2xl pl-4 lg:flex lg:max-w-full lg:border lg:py-12 lg:pl-12">
           <div className="border-default bg-muted/30 hidden rounded-tl-2xl rounded-br-none rounded-bl-2xl border border-r-0 border-dashed lg:block lg:py-1.5 lg:pl-1.5">
             <Image src={mock} alt="" className="block" aria-hidden="true" width={681} height={520} />
           </div>
