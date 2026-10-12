@@ -10,7 +10,9 @@ type AccessShellProps = {
 
 export function AccessShell({ title, footer, children }: AccessShellProps) {
   return (
-    <main id="main-content" className="py-12 bg-card flex min-h-screen flex-col items-stretch justify-center">
+    <main
+      id="main-content"
+      className="py-12 bg-card flex min-h-screen flex-col items-stretch justify-center px-4">
       <LanguageSelect />
       <Logo className="justify-center" href="/" />
       <div className="flex flex-1 items-center justify-center flex-col gap-6">

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { Activity, DayPlan } from "@/features/activity/types";
@@ -55,7 +55,7 @@ describe("ActivityDialog", () => {
     fireEvent.change(screen.getByLabelText("Budget amount"), { target: { value: "25" } });
     const title = screen.getByRole("combobox", { name: "Title" });
     fireEvent.focus(title);
-    fireEvent.mouseDown(await screen.findByRole("option", { name: /Museum/ }));
+    fireEvent.click(await screen.findByRole("option", { name: /Museum/ }));
     await waitFor(() =>
       expect(onSave).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -74,6 +74,65 @@ describe("ActivityDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
     await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
   });
+
+  it.each(["Done", "Enter"])(
+    "saves selected place coordinates through %s without waiting for details",
+    async (action) => {
+      let finishDetails!: (response: Response) => void;
+      let detailsSignal: AbortSignal | undefined;
+      vi.stubGlobal(
+        "fetch",
+        vi.fn((url: string, options?: RequestInit) => {
+          if (url.startsWith("/api/places/details")) {
+            detailsSignal = options?.signal ?? undefined;
+            return new Promise<Response>((resolve) => {
+              finishDetails = resolve;
+            });
+          }
+          return Promise.resolve(
+            new Response(
+              JSON.stringify({
+                results: [
+                  {
+                    placeId: "selected-museum",
+                    name: "Selected Museum, a long address",
+                    formatted: "Museum address",
+                    latitude: 1,
+                    longitude: 2,
+                  },
+                ],
+              })
+            )
+          );
+        })
+      );
+      const onSave = vi.fn().mockReturnValue(true);
+      const onClose = vi.fn();
+      render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+      const title = screen.getByRole("combobox", { name: "Title" });
+      fireEvent.change(title, { target: { value: "My query" } });
+      fireEvent.focus(title);
+      fireEvent.click(await screen.findByRole("option", { name: /Selected Museum/ }));
+      expect(title).toHaveValue("Selected Museum");
+      expect(screen.getByRole("combobox", { name: "Address" })).toHaveValue("Museum address");
+      expect(onSave).not.toHaveBeenCalled();
+      if (action === "Done") fireEvent.click(screen.getByRole("button", { name: "Done" }));
+      else fireEvent.keyDown(title, { key: "Enter" });
+      expect(onSave).toHaveBeenCalledExactlyOnceWith({
+        title: "Selected Museum",
+        address: "Museum address",
+        latitude: 1,
+        longitude: 2,
+      });
+      expect(onClose).toHaveBeenCalledOnce();
+      expect(detailsSignal?.aborted).toBe(true);
+      await act(async () =>
+        finishDetails(new Response(JSON.stringify({ details: { description: "Too late" } })))
+      );
+      expect(onSave).toHaveBeenCalledOnce();
+      expect(screen.getByLabelText("Notes")).not.toHaveValue("Too late");
+    }
+  );
 
   it("does not save an unchanged draft when optional fields are absent", async () => {
     const onSave = vi.fn().mockReturnValue(true);
@@ -181,6 +240,43 @@ describe("ActivityDialog", () => {
     );
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("dayId");
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("id");
+  });
+
+  it("explains an empty title and focuses it without discarding the draft", () => {
+    const onSave = vi.fn().mockReturnValue(true);
+    const onClose = vi.fn();
+    render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+    const title = screen.getByRole("combobox", { name: "Title" });
+    fireEvent.change(title, { target: { value: " " } });
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    expect(title).toHaveAttribute("aria-invalid", "true");
+    expect(title).toHaveFocus();
+    expect(screen.getByRole("alert")).toHaveTextContent("Enter an activity title");
+    expect(onSave).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("rejects negative amounts before committing the activity", () => {
+    const onSave = vi.fn().mockReturnValue(true);
+    render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
+    const budget = screen.getByLabelText("Budget amount");
+    fireEvent.change(budget, { target: { value: "-5" } });
+    fireEvent.blur(budget);
+    expect(budget).toHaveValue(-5);
+    expect(budget).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("alert")).toHaveTextContent("greater than or equal to zero");
+    expect(onSave).not.toHaveBeenCalled();
+  });
+
+  it("submits free text with Enter without choosing an unhighlighted suggestion", () => {
+    const onSave = vi.fn().mockReturnValue(true);
+    const onClose = vi.fn();
+    render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+    const title = screen.getByRole("combobox", { name: "Title" });
+    fireEvent.change(title, { target: { value: "My own title" } });
+    fireEvent.keyDown(title, { key: "Enter" });
+    expect(onSave).toHaveBeenCalledWith({ title: "My own title" });
+    expect(onClose).toHaveBeenCalledOnce();
   });
 });
 

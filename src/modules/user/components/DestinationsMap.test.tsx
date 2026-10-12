@@ -22,14 +22,14 @@ describe("travel map", () => {
     fireEvent.mouseOver(brazil);
     expect(screen.getByText("Brazil adventure")).toBeVisible();
     expect(screen.getByText("1 trip · 3 locations")).toBeVisible();
-    fireEvent.mouseOut(brazil);
+    fireEvent.mouseLeave(brazil.closest("figure") as HTMLElement);
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
     expect(brazil).toHaveClass("fill-primary");
     const france = screen.getByLabelText("France — Not visited yet");
     fireEvent.mouseOver(france);
     expect(within(screen.getByRole("tooltip")).getByText("France")).toBeVisible();
     expect(screen.queryByText("Brazil adventure")).not.toBeInTheDocument();
-    fireEvent.mouseOut(france);
+    fireEvent.mouseLeave(france.closest("figure") as HTMLElement);
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(
@@ -48,6 +48,30 @@ describe("travel map", () => {
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
     fireEvent.click(brazil);
     expect(within(screen.getByRole("tooltip")).getByText("Brazil adventure")).toBeVisible();
+  });
+
+  it("uses one tab stop and arrow keys to explore countries without trapping keyboard navigation", async () => {
+    render(<DestinationsMap countries={countries} />);
+    const brazil = await screen.findByRole("button", { name: "Brazil — Visited" });
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.filter((button) => button.getAttribute("tabindex") === "0")).toEqual([brazil]);
+    fireEvent.focus(brazil);
+    fireEvent.keyDown(brazil, { key: "ArrowRight" });
+    expect(document.activeElement).not.toBe(brazil);
+    expect(document.activeElement).toHaveAttribute("tabindex", "0");
+    expect(buttons.filter((button) => button.getAttribute("tabindex") === "0")).toHaveLength(1);
+    expect(document.activeElement).toHaveAccessibleDescription(expect.stringContaining("Use the arrow keys"));
+  });
+
+  it("keeps details open while the pointer moves into the tooltip", async () => {
+    render(<DestinationsMap countries={countries} />);
+    const brazil = await screen.findByRole("button", { name: "Brazil — Visited" });
+    fireEvent.mouseOver(brazil);
+    fireEvent.mouseOut(brazil, { relatedTarget: screen.getByRole("tooltip") });
+    fireEvent.mouseOver(screen.getByRole("tooltip"));
+    expect(screen.getByText("Brazil adventure")).toBeVisible();
+    fireEvent.keyDown(brazil, { key: "Escape" });
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 
   it("keeps the world explorable without any visited countries", async () => {

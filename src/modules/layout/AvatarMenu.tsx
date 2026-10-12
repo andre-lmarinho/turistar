@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { AccountSettingsDialog } from "@/modules/layout/AccountSettingsDialog";
 import { supabase } from "@/supabase/client";
 import { Avatar } from "@/ui/components/avatar";
 import { LogOut, Settings } from "@/ui/components/icon";
+import { Spinner } from "@/ui/components/loading/Spinner";
 import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/popover";
 
 type AvatarMenuProps = {
@@ -21,12 +22,26 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutFailed, setSignOutFailed] = useState(false);
+  const signOutInFlight = useRef(false);
   const router = useRouter();
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    if (signOutInFlight.current) return;
+    signOutInFlight.current = true;
+    setSigningOut(true);
+    setSignOutFailed(false);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.replace("/login");
+      router.refresh();
+    } catch {
+      signOutInFlight.current = false;
+      setSigningOut(false);
+      setSignOutFailed(true);
+    }
   }
 
   return (
@@ -56,11 +71,12 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
           <div className="border-border mt-2 grid gap-1 border-t pt-1">
             <button
               type="button"
+              disabled={signingOut}
               onClick={() => {
                 setOpen(false);
                 setSettingsOpen(true);
               }}
-              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition focus-visible:ring-2 focus-visible:outline-none">
+              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
               <Settings className="text-muted-foreground size-4" aria-hidden="true" />
               {t("settings")}
             </button>
@@ -69,23 +85,31 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
           <div className="border-border mt-1 border-t pt-1">
             <button
               type="button"
+              disabled={signingOut}
+              aria-busy={signingOut}
+              aria-describedby={signOutFailed ? "sign-out-error" : undefined}
               onClick={handleSignOut}
-              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-10 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition focus-visible:ring-2 focus-visible:outline-none">
-              <LogOut className="size-4" aria-hidden="true" />
+              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+              {signingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" aria-hidden="true" />}
               {t("signOut")}
             </button>
           </div>
+          {signOutFailed ? (
+            <p id="sign-out-error" role="alert" className="text-destructive px-3 py-2 text-sm">
+              {t("signOutFailed")}
+            </p>
+          ) : null}
 
-          <div className="text-muted-foreground/70 mt-1 flex items-center justify-center gap-2 border-t pt-2 text-[11px]">
+          <div className="text-muted-foreground mt-1 flex flex-wrap items-center justify-center gap-x-2 border-t text-[11px]">
             <Link
               href="/privacy"
-              className="hover:text-muted-foreground focus-visible:text-foreground underline-offset-2 hover:underline">
+              className="hover:text-foreground focus-visible:text-foreground inline-flex min-h-11 items-center underline-offset-2 hover:underline">
               {t("privacyPolicy")}
             </Link>
             <span aria-hidden="true">·</span>
             <Link
               href="/terms"
-              className="hover:text-muted-foreground focus-visible:text-foreground underline-offset-2 hover:underline">
+              className="hover:text-foreground focus-visible:text-foreground inline-flex min-h-11 items-center underline-offset-2 hover:underline">
               {t("termsOfUse")}
             </Link>
           </div>

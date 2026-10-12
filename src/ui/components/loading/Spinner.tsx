@@ -10,7 +10,7 @@ export function Spinner({ className, ...props }: ComponentPropsWithoutRef<"span"
       {...props}
       aria-hidden="true"
       className={cn(
-        "border-primary motion-reduce:animate-none inline-block size-5 animate-spin rounded-full border-2 border-t-transparent",
+        "border-current motion-reduce:animate-none inline-block size-5 shrink-0 animate-spin rounded-full border-2 border-t-transparent",
         className
       )}
     />

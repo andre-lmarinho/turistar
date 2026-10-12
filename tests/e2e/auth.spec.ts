@@ -44,7 +44,8 @@ test("translates signup and password recovery without changing routes", async ({
     await page.goto("/forgot-password/reset");
     await expect(page.getByRole("heading", { name: "Redefina sua senha" })).toBeVisible();
     await expect(page.getByText("O link de recuperação é inválido ou expirou.")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Atualizar senha" })).toBeDisabled();
+    await expect(page.getByRole("link", { name: "Solicitar um novo link de recuperação" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Atualizar senha" })).toHaveCount(0);
   } finally {
     await context.close();
   }

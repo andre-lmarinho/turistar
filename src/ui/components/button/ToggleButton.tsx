@@ -41,25 +41,11 @@ function ToggleButtonInner<T extends string = string>(
     <div
       ref={ref}
       className={cn(
-        "bg-background border-border relative flex h-10 overflow-hidden rounded-md border p-1",
+        "bg-background border-border relative flex h-10 rounded-md border p-1",
         disabled && "opacity-50",
         className
       )}
-      style={{
-        anchorName: "--nav",
-      }}
       {...props}>
-      <div
-        className="bg-primary absolute rounded-sm transition-all duration-200 ease-out"
-        style={{
-          positionAnchor: "--active",
-          top: "anchor(top)",
-          right: "anchor(right)",
-          bottom: "anchor(bottom)",
-          left: "anchor(left)",
-        }}
-      />
-
       {options.map((option) => {
         const isSelected = option === value;
         const optionConfig = renderOption?.(option);
@@ -74,19 +60,12 @@ function ToggleButtonInner<T extends string = string>(
             disabled={disabled}
             data-testid={getOptionTestId?.(option)}
             aria-pressed={isSelected}
-            style={
-              isSelected
-                ? {
-                    anchorName: "--active",
-                  }
-                : undefined
-            }
             className={cn(
-              "relative z-10 flex-1 cursor-pointer px-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              isSelected ? "text-primary-foreground" : "text-foreground hover:text-foreground"
+              "relative flex-1 cursor-pointer rounded-sm px-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-not-allowed",
+              isSelected ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
             )}>
             <div className="flex h-full w-full items-center justify-center gap-2 p-2">
-              {Icon && <Icon aria-hidden="true" className="h-4 w-4" />}
+              {Icon && <Icon aria-hidden="true" className="size-4 shrink-0" />}
               {label}
             </div>
           </button>

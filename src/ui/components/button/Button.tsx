@@ -8,13 +8,13 @@ import { forwardRef } from "react";
 import { cn } from "@/ui/utils/cn";
 
 const buttonVariants = cva(
-  "focus-visible:ring-primary/60 inline-flex cursor-pointer items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+  "focus-visible:ring-ring inline-flex min-h-6 min-w-6 cursor-pointer items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground",
-        accent: "bg-accent text-foreground",
-        ghost: "bg-background text-foreground",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+        accent: "bg-accent text-foreground hover:bg-accent/90",
+        ghost: "bg-background text-foreground hover:bg-muted",
       },
     },
     defaultVariants: { variant: "primary" },

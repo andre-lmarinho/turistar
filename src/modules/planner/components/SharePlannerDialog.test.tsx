@@ -118,9 +118,10 @@ describe("SharePlannerDialog", () => {
   });
   it("shows translated role labels in the invitation selector", async () => {
     openDialog();
-    fireEvent.click(screen.getByRole("button", { name: "Select member role" }));
-    expect(await screen.findByRole("option", { name: "Admin" })).toBeVisible();
-    expect(screen.getByRole("option", { name: "Member" })).toBeVisible();
+
+    expect(screen.getByRole("combobox", { name: "Select member role" })).toHaveValue("member");
+    expect(screen.getAllByRole("option", { name: "Admin" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("option", { name: "Member" }).length).toBeGreaterThan(0);
   });
 
   it("adds a member through the shared mutation", async () => {
@@ -140,10 +141,10 @@ describe("SharePlannerDialog", () => {
   it("keeps invitation and owner role changes unavailable to ordinary members", async () => {
     openDialog(false, "member");
     expect(screen.getByRole("button", { name: "Share" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Owner role" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "Member role" }));
-    expect(screen.queryByRole("option", { name: "Admin" })).toBeNull();
-    expect(await screen.findByRole("option", { name: "Leave planner" })).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Role for Owner" })).toBeDisabled();
+    const memberRole = screen.getByRole("combobox", { name: "Role for Member" });
+    expect(memberRole.querySelector('option[value="admin"]')).toBeNull();
+    expect(memberRole.querySelector('option[value="leave"]')).toHaveTextContent("Leave planner");
   });
   it("rolls back a failed optimistic role change", async () => {
     let fail!: (reason: Error) => void;
@@ -154,23 +155,68 @@ describe("SharePlannerDialog", () => {
         })
     );
     openDialog();
-    fireEvent.click(screen.getByRole("button", { name: "Member role" }));
-    fireEvent.click(await screen.findByRole("option", { name: "Admin" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Role for Member" }), {
+      target: { value: "admin" },
+    });
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Member role" })).toHaveTextContent("Admin")
+      expect(screen.getByRole("combobox", { name: "Role for Member" })).toHaveValue("admin")
     );
     await act(async () => fail(new Error("offline")));
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Member role" })).toHaveTextContent("Member")
+      expect(screen.getByRole("combobox", { name: "Role for Member" })).toHaveValue("member")
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Unable to update members");
   });
   it("navigates to the server-provided destination after leaving", async () => {
     openDialog(false, "member");
-    fireEvent.click(screen.getByRole("button", { name: "Member role" }));
-    fireEvent.click(await screen.findByRole("option", { name: "Leave planner" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Role for Member" }), {
+      target: { value: "leave" },
+    });
+    expect(shared.leave).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Leave planner" }));
     await waitFor(() => expect(shared.leave).toHaveBeenCalledWith({ planIdOrSlug: "plan-1" }));
     await waitFor(() => expect(shared.push).toHaveBeenCalledWith("/"));
     expect(shared.refresh).toHaveBeenCalledOnce();
+  });
+
+  it("locks the invitation while pending and submits only once", async () => {
+    let resolve!: (result: AddMemberResult) => void;
+    shared.add.mockImplementationOnce(
+      () =>
+        new Promise<AddMemberResult>((done) => {
+          resolve = done;
+        })
+    );
+    openDialog();
+    const email = screen.getByRole("textbox", { name: "Email address…" });
+    fireEvent.change(email, { target: { value: "new@example.com" } });
+    const submit = screen.getByRole("button", { name: "Share" });
+    fireEvent.click(submit);
+    fireEvent.click(submit);
+    await waitFor(() => expect(shared.add).toHaveBeenCalledOnce());
+    expect(email).toBeDisabled();
+    expect(screen.getByRole("combobox", { name: "Select member role" })).toBeDisabled();
+    expect(submit).toHaveAttribute("aria-busy", "true");
+    await act(async () => resolve({ userId: "new-member", tier: "member" }));
+    expect(await screen.findByText("Member added.")).toBeInTheDocument();
+    expect(email).toHaveValue("");
+  });
+
+  it("keeps member removal reversible until confirmed and preserves the member after failure", async () => {
+    shared.remove.mockRejectedValueOnce(new Error("offline"));
+    openDialog();
+    fireEvent.change(screen.getByRole("combobox", { name: "Role for Member" }), {
+      target: { value: "remove" },
+    });
+    expect(shared.remove).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Cancel" }));
+    expect(shared.remove).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByRole("combobox", { name: "Role for Member" }), {
+      target: { value: "remove" },
+    });
+    fireEvent.click(await screen.findByRole("button", { name: "Remove member" }));
+    await waitFor(() => expect(shared.remove).toHaveBeenCalledOnce());
+    expect(await screen.findByRole("alertdialog", { name: "Remove member" })).toBeInTheDocument();
+    expect(shared.client?.getQueryData<ShareMembersData>(["members"])?.members).toHaveLength(2);
   });
 });

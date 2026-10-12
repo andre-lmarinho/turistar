@@ -44,21 +44,16 @@ function TripActivityCard({
   return (
     <article className="group relative overflow-hidden">
       <span aria-hidden="true" className={cn("absolute inset-y-0 left-0 w-1", bg)} />
-      {/* A native button cannot contain the drag-handle button. */}
-      {/* biome-ignore lint/a11y/useSemanticElements: preserves the required nested drag handle semantics. */}
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         onClick={onSelect}
         onMouseEnter={() => onHover?.(true)}
         onMouseLeave={() => onHover?.(false)}
         data-no-drag-scroll
-        onKeyDown={(event) => {
-          if (event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
-          event.preventDefault();
-          onSelect?.();
-        }}
-        className="hover:bg-muted/60 focus-visible:ring-ring flex min-w-0 cursor-pointer items-center gap-3 px-3 py-2.5 pl-4 text-left transition focus-visible:ring-2 focus-visible:ring-inset">
+        className={cn(
+          "hover:bg-muted/60 focus-visible:ring-ring flex w-full min-w-0 cursor-pointer items-center gap-3 px-3 py-2.5 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-inset",
+          dragHandle && "pr-12"
+        )}>
         <span
           aria-hidden="true"
           className={cn("relative size-9 shrink-0 overflow-hidden rounded-full", !activity.imageUrl && bg)}>
@@ -90,8 +85,8 @@ function TripActivityCard({
             <span className="text-muted-foreground mt-1 block truncate text-xs">{activity.description}</span>
           ) : null}
         </span>
-        {dragHandle}
-      </div>
+      </button>
+      {dragHandle}
     </article>
   );
 }
@@ -106,10 +101,11 @@ function SortableTripActivity({
   onHover?: (isHovered: boolean) => void;
 }) {
   const t = useTranslations();
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: activity.id,
-    animateLayoutChanges: () => false,
-  });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({
+      id: activity.id,
+      animateLayoutChanges: () => false,
+    });
 
   return (
     <div
@@ -123,9 +119,10 @@ function SortableTripActivity({
         dragHandle={
           <Tooltip content={t("reorderActivity")}>
             <button
+              ref={setActivatorNodeRef}
               type="button"
               aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
-              className="text-muted-foreground hover:bg-muted focus-visible:ring-ring mr-1 inline-flex size-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-md transition active:cursor-grabbing focus-visible:ring-2"
+              className="text-muted-foreground hover:bg-muted focus-visible:ring-ring absolute top-1/2 right-2 inline-flex size-8 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-md transition-colors active:cursor-grabbing focus-visible:ring-2"
               {...attributes}
               {...listeners}
               onClick={(event) => event.stopPropagation()}>
@@ -344,7 +341,11 @@ export function TripView({
               </div>
             )}
             <DragOverlay>
-              {activeActivity ? <TripActivityCard activity={activeActivity} /> : null}
+              {activeActivity ? (
+                <div inert aria-hidden="true">
+                  <TripActivityCard activity={activeActivity} />
+                </div>
+              ) : null}
             </DragOverlay>
           </DndContext>
         </aside>

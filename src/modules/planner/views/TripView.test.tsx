@@ -133,7 +133,9 @@ it("supports keyboard selection and hovering without selecting from the drag han
   expect(hover).toHaveBeenLastCalledWith(null);
   fireEvent.click(screen.getByRole("button", { name: "Reorder activity Museum" }));
   expect(select).not.toHaveBeenCalled();
-  fireEvent.keyDown(card, { key: "Enter" });
+  expect(card.tagName).toBe("BUTTON");
+  expect(card.contains(screen.getByRole("button", { name: "Reorder activity Museum" }))).toBe(false);
+  fireEvent.click(card);
   expect(select).toHaveBeenCalledWith(activity, "2021-07-05");
 });
 

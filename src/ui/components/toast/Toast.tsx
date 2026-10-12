@@ -23,10 +23,10 @@ function ToastList() {
       key={item.id}
       toast={item}
       className={cn(
-        "bg-card text-card-foreground w-80 rounded-lg border p-4 text-sm shadow-lg",
+        "bg-card text-card-foreground w-80 max-w-[calc(100vw-2rem)] rounded-lg border p-4 text-sm shadow-lg",
         "data-[type=error]:border-destructive data-[type=error]:text-destructive",
         "data-[type=success]:border-(--success) data-[type=success]:text-(--success)",
-        "data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity"
+        "data-starting-style:opacity-0 data-ending-style:opacity-0 transition-opacity motion-reduce:transition-none"
       )}>
       <BaseToast.Title className="font-medium">{item.title ?? t("unexpectedError")}</BaseToast.Title>
       <BaseToast.Description className="text-muted-foreground" />

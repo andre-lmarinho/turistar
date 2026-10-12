@@ -2,6 +2,7 @@
 
 import { cva } from "class-variance-authority";
 import { forwardRef, useId } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { cn } from "@/ui/utils/cn";
 
@@ -23,7 +24,7 @@ export const inputStyles = cva(
     "focus:ring-ring",
     "disabled:bg-muted",
     "disabled:cursor-not-allowed",
-    "transition",
+    "transition-colors",
   ],
   {
     variants: {
@@ -47,6 +48,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function InputField(props, ref) {
   const generatedId = useId();
+  const form = useFormContext();
   const {
     id,
     name,
@@ -61,15 +63,19 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
   const fieldName = name ?? "";
   const resolvedLabel = label ?? fieldName;
 
-  const disabled = readOnly || passThrough.disabled;
   const inputId = typeof id === "string" && id.trim().length > 0 ? id : generatedId;
+  const error = fieldName ? form?.getFieldState(fieldName, form.formState).error : undefined;
+  const errorId = `${inputId}-error`;
+  const describedBy =
+    [passThrough["aria-describedby"], error ? errorId : undefined].filter(Boolean).join(" ") || undefined;
   const sharedInputProps = {
     ...passThrough,
     id: inputId,
     name: fieldName || undefined,
     type,
     readOnly,
-    disabled,
+    "aria-invalid": error ? true : passThrough["aria-invalid"],
+    "aria-describedby": describedBy,
   };
   const shouldRenderLabel = Boolean(resolvedLabel);
 
@@ -77,7 +83,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
     <div>
       {shouldRenderLabel ? <Label htmlFor={inputId}>{resolvedLabel}</Label> : null}
       {addOnSuffix ? (
-        <div className={cn(inputStyles({ size }), "flex items-center gap-2")}>
+        <div
+          className={cn(
+            inputStyles({ size }),
+            "focus-within:border-ring focus-within:ring-ring flex items-center gap-2 focus-within:ring-2"
+          )}>
           <input
             {...sharedInputProps}
             className={cn("min-w-0 flex-1 bg-transparent outline-none", className)}
@@ -88,7 +98,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
       ) : (
         <Input {...sharedInputProps} ref={ref} size={size} className={className} />
       )}
-      {fieldName ? <HintsOrErrors fieldName={fieldName} /> : null}
+      {fieldName ? <HintsOrErrors fieldName={fieldName} id={errorId} /> : null}
     </div>
   );
 });

@@ -45,7 +45,7 @@ function FitAllMarkers({ coords }: { coords: LatLngExpression[] }) {
       previousCoords.current?.length === coords.length &&
       previousCoords.current.every((coord, index) => L.latLng(coord).equals(L.latLng(coords[index])));
     if (!unchanged) {
-      map.fitBounds(L.latLngBounds(coords), { padding: [50, 50] });
+      map.fitBounds(L.latLngBounds(coords), { padding: [50, 50], maxZoom: 13 });
       previousCoords.current = coords;
     }
   }, [coords, map]);
@@ -96,13 +96,19 @@ export const MapView = React.memo(function MapView({
   );
 
   const allCoords = dayPaths.flatMap((path) => path.coords);
+  const visibleCoords =
+    allCoords.length > 0
+      ? allCoords
+      : destCoords
+        ? [[destCoords.lat, destCoords.lng] as [number, number]]
+        : [];
   const center: LatLngExpression = allCoords[0] ?? (destCoords ? [destCoords.lat, destCoords.lng] : [0, 0]);
 
   return (
     <div className={cn("relative isolate w-full overflow-hidden rounded-xl border", className ?? "h-full")}>
       <MapContainer
         center={center}
-        zoom={13}
+        zoom={visibleCoords.length ? 13 : 2}
         zoomControl={false}
         zoomDelta={0.25}
         zoomSnap={0.25}
@@ -110,13 +116,14 @@ export const MapView = React.memo(function MapView({
         wheelPxPerZoomLevel={240}
         style={{ width: "100%", height: "100%" }}
         aria-label={t("itineraryMap")}>
-        <FitAllMarkers coords={allCoords} />
+        <FitAllMarkers coords={visibleCoords} />
         <ZoomControl position="bottomright" />
         <TileLayer url={plannerTileUrl} attribution={tileAttribution} maxZoom={20} />
         {dayPaths.map(({ day, dayIndex, activities, coords }) => (
           <React.Fragment key={day.id}>
             {coords.map((position, index) => {
               const activity = activities[index];
+              const label = activity.title.trim() || t("untitledActivity");
               const background = getCssColor(activity.color) ?? defaultBg;
               const isDimmed = highlightedActivityId
                 ? highlightedActivityId !== activity.id
@@ -132,7 +139,9 @@ export const MapView = React.memo(function MapView({
               });
               return (
                 <Marker
-                  key={activity.id}
+                  key={`${activity.id}:${label}`}
+                  title={label}
+                  alt={label}
                   position={position}
                   icon={icon}
                   eventHandlers={{
@@ -145,7 +154,7 @@ export const MapView = React.memo(function MapView({
                     },
                   }}>
                   <LeafletTooltip direction="top" offset={[0, -16]}>
-                    {activity.title.trim() || t("untitledActivity")}
+                    {label}
                   </LeafletTooltip>
                 </Marker>
               );

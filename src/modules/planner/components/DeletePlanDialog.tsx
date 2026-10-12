@@ -49,7 +49,7 @@ export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }:
           aria-label={t("deletePlanner")}
           disabled={isPending}
           className={cn(
-            "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+            "text-foreground hover:bg-muted/60 focus-visible:ring-ring inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 md:size-8",
             className
           )}>
           <Trash2 className="size-4" aria-hidden="true" />
@@ -57,7 +57,10 @@ export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }:
       }
       title={t("deletePlanner")}
       description={t("deletePlannerDescription")}
-      confirmLabel={isPending ? t("deleting") : t("deleteAction")}
+      confirmLabel={t("deleteAction")}
+      pendingLabel={t("deleting")}
+      cancelLabel={t("cancel")}
+      closeLabel={t("close")}
       onConfirm={handleConfirm}
       isPending={isPending}
     />

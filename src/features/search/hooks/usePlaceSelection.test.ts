@@ -11,6 +11,20 @@ afterEach(() => {
 const selection = { name: "Museum, a long address", placeId: "place/1", latitude: 0, longitude: 12 };
 
 describe("usePlaceSelection", () => {
+  it.each([
+    { rawAddress: "", expected: selection.name },
+    { rawAddress: "Raw address", expected: "Raw address" },
+  ])("uses '$expected' when the formatted selection address is empty", async ({ rawAddress, expected }) => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response('{"details":{"formatted":""}}')));
+    const { result } = renderHook(() => usePlaceSelection());
+    const place = await result.current.selectPlace({
+      ...selection,
+      formatted: "",
+      raw: { ...selection, formatted: rawAddress },
+    });
+    expect(place?.address).toBe(expected);
+  });
+
   it("normalizes the title and enriches the selection with details", async () => {
     const fetch = vi.fn().mockResolvedValue(
       new Response(

@@ -39,7 +39,11 @@ vi.mock("leaflet", () => ({
   __esModule: true,
   default: {
     divIcon: () => ({}),
-    latLng: vi.fn(() => ({ equals: () => false })),
+    latLng: vi.fn((coordinates: [number, number]) => ({
+      coordinates,
+      equals: (other: { coordinates: [number, number] }) =>
+        coordinates[0] === other.coordinates[0] && coordinates[1] === other.coordinates[1],
+    })),
     latLngBounds: vi.fn(() => ({})),
   },
 }));
@@ -61,7 +65,7 @@ beforeEach(() => {
   shared.setSelectedActivity.mockClear();
 });
 
-describe.skip("FitAllMarkers effect", () => {
+describe("FitAllMarkers effect", () => {
   const baseActivity = { id: "a1", title: "A1", color: "bg-[var(--color-1)]" };
 
   const buildDays = ([lat, lng]: [number, number]): DayPlan[] => [
@@ -109,7 +113,7 @@ describe.skip("FitAllMarkers effect", () => {
   });
 });
 
-describe.skip("Marker accessibility", () => {
+describe("Marker accessibility", () => {
   it("sets each marker title", () => {
     const days: DayPlan[] = [
       {
@@ -238,5 +242,14 @@ describe("map render integration", () => {
 
     renderMapView(buildDays("A2", 2, 2));
     expect(shared.markers).toHaveLength(2);
+  });
+
+  it("fits a destination resolved after the map mounted, without zooming beyond street level", () => {
+    const { rerender } = renderMapView([]);
+    expect(shared.map.fitBounds).not.toHaveBeenCalled();
+    rerender(
+      <MapView days={[]} destCoords={{ lat: 3, lng: 4 }} onActivitySelect={shared.setSelectedActivity} />
+    );
+    expect(shared.map.fitBounds).toHaveBeenCalledWith({}, { padding: [50, 50], maxZoom: 13 });
   });
 });

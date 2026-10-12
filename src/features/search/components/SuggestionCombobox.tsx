@@ -66,7 +66,17 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   const inputId = id ?? generatedId;
   const listId = `${inputId}-suggestions`;
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const localInputRef = React.useRef<HTMLInputElement>(null);
+  const resolvedInputRef = inputRef ?? localInputRef;
   const [activeIndex, setActiveIndex] = React.useState(-1);
+  const listVisible = open && !error && options.length > 0;
+
+  React.useEffect(() => {
+    if (!listVisible || activeIndex < 0) return;
+    containerRef.current
+      ?.querySelector<HTMLElement>(`[data-option-index="${activeIndex}"]`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex, listVisible]);
 
   React.useEffect(() => {
     setActiveIndex((prev) => {
@@ -88,12 +98,14 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     onOpenChange(true);
   };
 
-  const handleInputFocus = () => {
+  const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     onOpenChange(true);
+    inputProps?.onFocus?.(event);
     onFocus?.();
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    inputProps?.onBlur?.(event);
     onBlur?.(event);
     const related = event.relatedTarget as Node | null;
     if (related && containerRef.current?.contains(related)) {
@@ -104,6 +116,21 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    inputProps?.onKeyDown?.(event);
+    if (event.defaultPrevented || event.nativeEvent.isComposing) return;
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      event.stopPropagation();
+      onOpenChange(false);
+      setActiveIndex(-1);
+      return;
+    }
+    if (event.key === "Tab") {
+      onOpenChange(false);
+      setActiveIndex(-1);
+      return;
+    }
+    if (error || loading) return;
     if (event.key === "ArrowDown" && options.length > 0) {
       event.preventDefault();
       onOpenChange(true);
@@ -111,10 +138,9 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     } else if (event.key === "ArrowUp" && options.length > 0) {
       event.preventDefault();
       onOpenChange(true);
-      setActiveIndex((idx) => (idx - 1 + options.length) % options.length);
-    } else if ((event.key === "Enter" || event.key === "Tab") && open && options.length > 0) {
-      const idx = activeIndex >= 0 ? activeIndex : 0;
-      const option = options[idx];
+      setActiveIndex((idx) => (idx <= 0 ? options.length - 1 : idx - 1));
+    } else if (event.key === "Enter" && listVisible && activeIndex >= 0) {
+      const option = options[activeIndex];
       if (option) {
         event.preventDefault();
         handleSelect(option);
@@ -133,13 +159,14 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
         <input
           {...inputProps}
           id={inputId}
-          ref={inputRef}
+          ref={resolvedInputRef}
           role="combobox"
-          aria-expanded={open}
+          aria-autocomplete="list"
+          aria-expanded={listVisible}
           aria-busy={loading}
-          aria-controls={listId}
+          aria-controls={listVisible ? listId : undefined}
           aria-activedescendant={
-            activeIndex >= 0 && options[activeIndex]
+            listVisible && activeIndex >= 0 && options[activeIndex]
               ? `${listId}-option-${options[activeIndex].id}`
               : undefined
           }
@@ -150,10 +177,11 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
           onBlur={handleInputBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={
+          className={cn(
             inputClassName ??
-            "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
-          }
+              "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm",
+            loading && "pr-8"
+          )}
           autoComplete="off"
         />
         {loading ? (
@@ -172,20 +200,27 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
           <div
             id={listId}
             role="listbox"
-            className="bg-background absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded border text-sm shadow">
+            aria-label={label ?? placeholder}
+            className="bg-background absolute z-10 mt-1 max-h-48 w-full overscroll-contain overflow-auto rounded border text-sm shadow">
             {options.map((option, idx) => (
               <button
                 key={option.id}
                 id={`${listId}-option-${option.id}`}
+                data-option-index={idx}
                 role="option"
                 aria-selected={activeIndex === idx}
                 tabIndex={-1}
                 type="button"
                 className={cn(
-                  "w-full px-3 py-2 text-left transition",
+                  "min-h-11 w-full px-3 py-2 text-left transition-colors",
                   activeIndex === idx ? "bg-accent" : "hover:bg-accent"
                 )}
-                onMouseDown={() => handleSelect(option)}>
+                onPointerDown={(event) => event.preventDefault()}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  handleSelect(option);
+                  resolvedInputRef.current?.focus();
+                }}>
                 {renderOption ? (
                   renderOption(option, { active: activeIndex === idx })
                 ) : (

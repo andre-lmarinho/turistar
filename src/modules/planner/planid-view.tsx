@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { FocusEvent } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createBlankActivity } from "@/features/activity/lib/placeholders";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { Entry } from "@/features/budget/types";
@@ -15,7 +15,9 @@ import { SharePlannerDialog } from "@/modules/planner/components/SharePlannerDia
 import { BoardView } from "@/modules/planner/views/BoardView";
 import { BudgetView } from "@/modules/planner/views/BudgetView";
 import { trpc } from "@/trpc/react";
+import { Button } from "@/ui/components/button/Button";
 import { DateRangePicker } from "@/ui/components/calendar";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 import type { PlannerMode } from "./components/ModeToggleButton";
 import { ModeToggleButton } from "./components/ModeToggleButton";
@@ -24,7 +26,18 @@ import { TripView } from "./views/TripView";
 
 const MapView = dynamic(() => import("@/modules/planner/views/MapView"), {
   ssr: false,
+  loading: () => <MapLoading />,
 });
+
+function MapLoading() {
+  const t = useTranslations();
+  return (
+    <div className="bg-muted/30 flex h-full items-center justify-center gap-2 rounded-xl" role="status">
+      <Spinner className="size-4" />
+      <span className="text-muted-foreground text-sm">{t("loadingMap")}</span>
+    </div>
+  );
+}
 
 function PlannerContent({
   title: initialTitle,
@@ -134,6 +147,10 @@ function PlannerContent({
   }, [selection, removeActivity]);
   const closeDialog = useCallback(() => setSelection(null), []);
   const [title, setTitle] = useState(initialTitle);
+  const savedTitle = useRef(initialTitle);
+  const titleRequestPending = useRef(false);
+  const [titleSaving, setTitleSaving] = useState(false);
+  const [titleError, setTitleError] = useState(false);
   const updateTitleMutation = trpc.viewer.plan.updateTitle.useMutation();
 
   const handleFallbackAdd = useCallback((dayId: string) => {
@@ -146,22 +163,38 @@ function PlannerContent({
   }, [title, t]);
 
   const handleTitleBlur = async () => {
-    if (!title.trim()) {
-      setTitle(initialTitle);
+    if (titleRequestPending.current) return;
+    const nextTitle = title.trim();
+    if (!nextTitle) {
+      setTitle(savedTitle.current);
+      setTitleError(false);
       return;
     }
-    await updateTitleMutation.mutateAsync({ planId: documentPlanId, title: title.trim() });
+    setTitle(nextTitle);
+    if (nextTitle === savedTitle.current) return;
+    titleRequestPending.current = true;
+    setTitleSaving(true);
+    setTitleError(false);
+    try {
+      await updateTitleMutation.mutateAsync({ planId: documentPlanId, title: nextTitle });
+      savedTitle.current = nextTitle;
+    } catch {
+      setTitleError(true);
+    } finally {
+      titleRequestPending.current = false;
+      setTitleSaving(false);
+    }
   };
 
   return (
     <main
       id="main-content"
       className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:px-6 md:pb-8 xl:px-8">
-      <div className="flex w-full flex-row justify-between gap-4 pb-4 md:items-center">
-        <h1 className="bg-card relative inline-block min-w-[1ch] flex-none cursor-pointer rounded-md py-2 text-xl font-semibold capitalize whitespace-nowrap hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
+      <div className="flex w-full min-w-0 flex-wrap justify-between gap-x-4 gap-y-2 pb-4 md:items-center">
+        <h1 className="bg-card relative inline-block min-w-[1ch] max-w-full cursor-pointer rounded-md py-2 text-xl font-semibold whitespace-nowrap hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
           <span
             aria-hidden="true"
-            className="invisible whitespace-pre rounded-md border-2 border-transparent px-2 py-1">
+            className="invisible block truncate whitespace-pre rounded-md border-2 border-transparent px-2 py-1">
             {title}
           </span>
           <input
@@ -170,13 +203,28 @@ function PlannerContent({
             aria-label={t("plannerTitleLabel")}
             type="text"
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            onBlur={handleTitleBlur}
+            onChange={(event) => {
+              setTitle(event.target.value);
+              setTitleError(false);
+            }}
+            onBlur={() => void handleTitleBlur()}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.nativeEvent.isComposing) event.currentTarget.blur();
+              if (event.key === "Escape") {
+                event.preventDefault();
+                setTitle(savedTitle.current);
+                setTitleError(false);
+              }
+            }}
+            disabled={titleSaving}
+            aria-busy={titleSaving}
+            aria-invalid={titleError || undefined}
+            aria-describedby={titleError ? "planner-title-error" : undefined}
             onFocus={(event: FocusEvent<HTMLInputElement>) => event.target.select()}
-            className="focus-visible:border-border focus-visible:bg-background focus-visible:ring-ring absolute inset-0 cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="focus-visible:border-border focus-visible:bg-background focus-visible:ring-ring absolute inset-0 min-w-0 cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
           />
         </h1>
-        <div className="flex flex-none items-center gap-1 self-end md:self-end">
+        <div className="ml-auto flex flex-none items-center gap-1 self-end">
           <DateRangePicker iconOnly value={currentRange} onChange={handleRangeChange} />
           <DeletePlanDialog planId={documentPlanId} isOwner={isOwner} isDemo={isDemo} />
           {!isDemo ? (
@@ -196,19 +244,35 @@ function PlannerContent({
         </div>
       </div>
 
-      {syncError ? (
-        <div role="alert" className="mb-3 flex items-center gap-3 text-sm">
-          <span>{hasPendingChanges ? t("unsyncedChanges") : t("syncFailed")}</span>
-          <button
-            type="button"
-            disabled={isPending || isLoading}
-            onClick={() => void retryPending()}
-            className="underline">
+      {titleSaving ? <output className="sr-only">{t("savingChanges")}</output> : null}
+      {titleError ? (
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+          <p id="planner-title-error" role="alert" className="text-destructive">
+            {t("plannerTitleSaveFailed")}
+          </p>
+          <Button variant="ghost" onClick={() => void handleTitleBlur()}>
             {t("retry")}
-          </button>
+          </Button>
+        </div>
+      ) : null}
+
+      {syncError ? (
+        <div role="alert" className="mb-3 flex flex-wrap items-center gap-3 text-sm">
+          <span>{hasPendingChanges ? t("unsyncedChanges") : t("syncFailed")}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isPending || isLoading}
+            aria-busy={isPending || isLoading}
+            onClick={() => void retryPending()}
+            className="gap-2">
+            {isPending || isLoading ? <Spinner className="size-4" /> : null}
+            {t("retry")}
+          </Button>
           {hasPendingChanges ? (
-            <button
+            <Button
               type="button"
+              variant="ghost"
               disabled={isPending || isLoading}
               onClick={() => {
                 if (window.confirm(t("discardConfirm"))) {
@@ -218,10 +282,11 @@ function PlannerContent({
               }}
               className="underline">
               {t("discardUnsynced")}
-            </button>
+            </Button>
           ) : null}
         </div>
       ) : null}
+      {!syncError && isPending ? <output className="sr-only">{t("savingChanges")}</output> : null}
       <div className="relative w-full flex-1 overflow-visible">
         {mode === "overview" || mode === "map" ? (
           <div className={`absolute inset-0 z-0 ${mode === "overview" ? "invisible xl:visible" : ""}`}>

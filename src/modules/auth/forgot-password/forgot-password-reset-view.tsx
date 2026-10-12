@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { exchangeResetPasswordSession } from "@/features/auth/handlers/exchangeResetPasswordSession";
@@ -14,6 +14,7 @@ import { MIN_PASSWORD_LENGTH, validPassword } from "@/features/auth/utils/validP
 import { AccessShell } from "@/modules/auth/components/AccessShell";
 import { Button } from "@/ui/components/button/Button";
 import { Form, PasswordField } from "@/ui/components/form";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 function getHashParams(): URLSearchParams | null {
   if (typeof window === "undefined") return null;
@@ -25,9 +26,17 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
   const t = useTranslations();
   const safeNextPath = resolveNextPath(nextPath);
   const loginHref = buildLoginHref(safeNextPath);
+  const forgotPasswordHref = safeNextPath
+    ? `/forgot-password?next=${encodeURIComponent(safeNextPath)}`
+    : "/forgot-password";
   const [formError, setFormError] = useState<"invalidResetLink" | "resetPasswordError" | null>(null);
   const [exchangeState, setExchangeState] = useState<"idle" | "validating" | "ready" | "error">("idle");
   const [passwordUpdated, setPasswordUpdated] = useState(false);
+  const successMessageRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (passwordUpdated) successMessageRef.current?.focus();
+  }, [passwordUpdated]);
 
   const formMethods = useForm<{ password: string }>({
     defaultValues: { password: "" },
@@ -55,17 +64,20 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
       setFormError(null);
       setExchangeState("validating");
 
-      const result = await exchangeResetPasswordSession(resetCode);
-
-      if (!isActive) return;
-
-      if (result.status === "error") {
+      try {
+        const result = await exchangeResetPasswordSession(resetCode);
+        if (!isActive) return;
+        if (result.status === "error") {
+          setExchangeState("error");
+          setFormError("invalidResetLink");
+          return;
+        }
+        setExchangeState("ready");
+      } catch {
+        if (!isActive) return;
         setExchangeState("error");
         setFormError("invalidResetLink");
-        return;
       }
-
-      setExchangeState("ready");
     }
 
     void validateResetCode(code);
@@ -103,40 +115,61 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
           {t("backToLogin")}
         </Link>
       }>
-      <Form form={formMethods} onSubmit={handleSubmit} className="grid gap-6" noValidate>
-        <PasswordField
-          label={t("newPassword")}
-          placeholder={t("createPasswordPlaceholder")}
-          autoComplete="new-password"
-          minLength={MIN_PASSWORD_LENGTH}
-          required
-          {...register("password", {
-            required: "passwordRequired",
-            validate: (value) => (validPassword(value) ? true : "passwordMinLength"),
-          })}
-        />
-        {exchangeState === "validating" ? (
-          <output className="text-muted-foreground text-sm" aria-live="polite">
-            {t("validatingResetLink")}
-          </output>
-        ) : null}
-        {formError ? (
+      {exchangeState === "idle" || exchangeState === "validating" ? (
+        <p role="status" className="text-muted-foreground flex items-center gap-2 text-sm">
+          <Spinner className="size-4 shrink-0" />
+          {t("validatingResetLink")}
+        </p>
+      ) : exchangeState === "error" ? (
+        <div className="grid gap-6">
           <p role="alert" className="text-destructive text-sm">
-            {t(formError)}
+            {t("invalidResetLink")}
           </p>
-        ) : null}
-        {passwordUpdated ? (
-          <output className="text-muted-foreground text-sm" aria-live="polite">
-            {t("passwordUpdated")}
-          </output>
-        ) : null}
-        <Button
-          type="submit"
-          disabled={formState.isSubmitting || exchangeState !== "ready"}
-          className="text-base font-semibold">
-          {formState.isSubmitting ? t("updatingPassword") : t("updatePassword")}
-        </Button>
-      </Form>
+          <Button href={forgotPasswordHref} className="min-h-11">
+            {t("requestNewResetLink")}
+          </Button>
+        </div>
+      ) : passwordUpdated ? (
+        <p ref={successMessageRef} role="status" tabIndex={-1} className="text-muted-foreground text-sm">
+          {t("passwordUpdated")}
+        </p>
+      ) : (
+        <Form
+          form={formMethods}
+          onSubmit={handleSubmit}
+          className="grid gap-6"
+          aria-busy={formState.isSubmitting}
+          noValidate>
+          <PasswordField
+            label={t("newPassword")}
+            placeholder={t("createPasswordPlaceholder")}
+            autoComplete="new-password"
+            minLength={MIN_PASSWORD_LENGTH}
+            readOnly={formState.isSubmitting}
+            required
+            {...register("password", {
+              required: "passwordRequired",
+              validate: (value) => (validPassword(value) ? true : "passwordMinLength"),
+            })}
+          />
+          {formError ? (
+            <p role="alert" className="text-destructive text-sm">
+              {t(formError)}
+            </p>
+          ) : null}
+          <Button
+            type="submit"
+            disabled={formState.isSubmitting}
+            aria-busy={formState.isSubmitting}
+            className="min-h-11 gap-2 text-base font-semibold">
+            {formState.isSubmitting ? <Spinner className="size-4" /> : null}
+            {t("updatePassword")}
+          </Button>
+        </Form>
+      )}
+      <p role="status" className="sr-only">
+        {formState.isSubmitting ? t("updatingPassword") : ""}
+      </p>
     </AccessShell>
   );
 }

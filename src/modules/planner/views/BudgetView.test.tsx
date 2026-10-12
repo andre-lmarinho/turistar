@@ -166,12 +166,62 @@ describe("BudgetView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
     await waitFor(() => expect(screen.getByLabelText("Total spent: $50.00")).toBeInTheDocument());
     await act(async () => fail(new Error("offline")));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Failed to save budget entry");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    expect(screen.getByLabelText("Total spent: $125.00")).toBeInTheDocument();
     expect(shared.client?.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
     expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
     await waitFor(() => expect(shared.updateEntry).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
+  });
+
+  it.each(["cancel", "snapshot"])("allows saving again after %s preparation fails", async (stage) => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
+    const client = shared.client;
+    if (!client) throw new Error("Missing budget query client");
+    if (stage === "cancel") vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
+    else
+      vi.spyOn(client, "getQueryData").mockImplementationOnce(() => {
+        throw new Error("Unavailable");
+      });
+
+    fireEvent.click(screen.getByRole("button", { name: "Edit entry" }));
+    fireEvent.change(screen.getAllByLabelText("Amount")[0], { target: { value: "10" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    expect(shared.updateEntry).not.toHaveBeenCalled();
+    expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
+    expect(screen.getByRole("button", { name: "Save entry" })).toBeEnabled();
+    expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
+
+    fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
+    await waitFor(() =>
+      expect(shared.updateEntry).toHaveBeenCalledExactlyOnceWith({ entry: { ...entry, amount: 10 } })
+    );
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
+  });
+
+  it.each(["cancel", "snapshot"])("allows deleting again after %s preparation fails", async (stage) => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
+    const client = shared.client;
+    if (!client) throw new Error("Missing budget query client");
+    if (stage === "cancel") vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
+    else
+      vi.spyOn(client, "getQueryData").mockImplementationOnce(() => {
+        throw new Error("Unavailable");
+      });
+
+    const deleteButton = screen.getByRole("button", { name: "Delete entry" });
+    fireEvent.click(deleteButton);
+    fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
+    expect(shared.deleteEntry).not.toHaveBeenCalled();
+    expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
+    expect(deleteButton).toBeEnabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    await waitFor(() => expect(shared.deleteEntry).toHaveBeenCalledExactlyOnceWith({ entryId: entry.id }));
+    await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
   });
 
   it("restores a deleted entry when persistence fails", async () => {
@@ -184,9 +234,45 @@ describe("BudgetView", () => {
     );
     render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
     fireEvent.click(screen.getByRole("button", { name: "Delete entry" }));
+    expect(shared.deleteEntry).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
     await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
     await act(async () => fail(new Error("offline")));
     expect(await screen.findByText("Airport transfer")).toBeInTheDocument();
-    expect(screen.getByRole("alert")).toHaveTextContent("Failed to delete budget entry");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
+  });
+
+  it("explains invalid entries and focuses the first invalid field", () => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+    const description = screen.getByLabelText("Description");
+    expect(description).toHaveFocus();
+    expect(description).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Amount")).toHaveAttribute("aria-invalid", "true");
+    expect(shared.createEntry).not.toHaveBeenCalled();
+    fireEvent.change(description, { target: { value: "Dinner" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+    expect(screen.getByLabelText("Amount")).toHaveFocus();
+  });
+
+  it("saves the row from Enter and prevents duplicate submissions", async () => {
+    let resolve!: (id: string) => void;
+    shared.createEntry.mockImplementationOnce(
+      () =>
+        new Promise<string>((done) => {
+          resolve = done;
+        })
+    );
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+    fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Dinner" } });
+    const amount = screen.getByLabelText("Amount");
+    fireEvent.change(amount, { target: { value: "20" } });
+    fireEvent.keyDown(amount, { key: "Enter" });
+    fireEvent.keyDown(amount, { key: "Enter" });
+    await waitFor(() => expect(shared.createEntry).toHaveBeenCalledOnce());
+    expect(screen.getByRole("button", { name: "Add expense" })).toHaveAttribute("aria-busy", "true");
+    expect(amount).toBeDisabled();
+    await act(async () => resolve("dinner"));
+    expect(await screen.findByText("Dinner")).toBeInTheDocument();
   });
 });

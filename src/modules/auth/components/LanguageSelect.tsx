@@ -57,14 +57,14 @@ export function LanguageSelect({ className }: { className?: string }) {
         </Select.Trigger>
         <Select.Portal>
           <Select.Positioner sideOffset={8} align="end" alignItemWithTrigger={false} className="z-60">
-            <Select.Popup className="border-border bg-background text-foreground w-60 max-w-[calc(100vw-2rem)] origin-(--transform-origin) rounded-2xl border p-1.5 shadow-lg outline-none transition-[opacity,transform] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 motion-reduce:transition-none">
+            <Select.Popup className="border-border bg-background text-foreground w-60 max-w-[calc(100vw-2rem)] origin-(--transform-origin) rounded-2xl border p-1.5 shadow-lg outline-none focus-visible:ring-2 focus-visible:ring-ring transition-[opacity,transform] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 motion-reduce:transition-none">
               <Select.List aria-label={t("language")}>
                 {languages.map(({ value, label }) => (
                   <Select.Item
                     key={value}
                     value={value}
                     label={label}
-                    className="data-highlighted:bg-muted/60 data-selected:bg-muted/30 flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm outline-none">
+                    className="data-highlighted:bg-muted/60 data-highlighted:ring-2 data-highlighted:ring-inset data-highlighted:ring-ring data-selected:bg-muted/30 flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm outline-none">
                     <Select.ItemText lang={value}>{label}</Select.ItemText>
                     <Select.ItemIndicator>
                       <Check className="size-4" aria-hidden="true" />

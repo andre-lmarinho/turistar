@@ -1,7 +1,8 @@
 "use client";
 
 import type { DragEndEvent, DragOverEvent, DragStartEvent, UniqueIdentifier } from "@dnd-kit/core";
-import { PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useCallback, useRef, useState } from "react";
 import type { DayPlan } from "@/features/activity/types";
 import { applyEvent } from "@/features/events/lib/eventReducer";
@@ -25,7 +26,8 @@ export function useDragHandlers(days: DayPlan[], { onActivityMove }: UseDragHand
   previewRef.current = previewDays;
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 0, tolerance: 4 } })
+    useSensor(TouchSensor, { activationConstraint: { delay: 0, tolerance: 4 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
   const resolveDestination = useCallback((event: DragOverEvent | DragEndEvent) => {
     if (!event.over || event.active.id === event.over.id) return destinationRef.current;
