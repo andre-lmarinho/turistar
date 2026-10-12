@@ -161,6 +161,54 @@ describe("PlanIdView", () => {
       expect(updatePlanTitleMock).toHaveBeenCalledWith({ planId: "p1", title: "New Title" })
     );
   });
+
+  it("does not write an unchanged title and restores the last saved title after an empty edit", async () => {
+    render(<PlanIdView experience={experience} />);
+    const input = screen.getByLabelText("Planner title");
+    fireEvent.blur(input);
+    expect(updatePlanTitleMock).not.toHaveBeenCalled();
+    fireEvent.change(input, { target: { value: "Saved title" } });
+    fireEvent.blur(input);
+    await waitFor(() => expect(input).not.toBeDisabled());
+    fireEvent.change(input, { target: { value: "" } });
+    fireEvent.blur(input);
+    expect(input).toHaveValue("Saved title");
+    expect(updatePlanTitleMock).toHaveBeenCalledOnce();
+  });
+
+  it("keeps a failed title edit visible and offers a retry", async () => {
+    updatePlanTitleMock.mockRejectedValueOnce(new Error("offline"));
+    render(<PlanIdView experience={experience} />);
+    const input = screen.getByLabelText("Planner title");
+    fireEvent.change(input, { target: { value: "Retry this title" } });
+    fireEvent.blur(input);
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the trip title");
+    expect(input).toHaveValue("Retry this title");
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    await waitFor(() => expect(updatePlanTitleMock).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
+  });
+
+  it("prevents overlapping title requests while saving", async () => {
+    let resolve!: () => void;
+    updatePlanTitleMock.mockImplementationOnce(
+      () =>
+        new Promise<void>((done) => {
+          resolve = done;
+        })
+    );
+    render(<PlanIdView experience={experience} />);
+    const input = screen.getByLabelText("Planner title");
+    fireEvent.change(input, { target: { value: "Save once" } });
+    fireEvent.blur(input);
+    fireEvent.blur(input);
+    expect(input).toBeDisabled();
+    expect(input).toHaveAttribute("aria-busy", "true");
+    expect(updatePlanTitleMock).toHaveBeenCalledOnce();
+    resolve();
+    await waitFor(() => expect(input).not.toBeDisabled());
+  });
 });
 
 it("preserves edits made to a new activity before its title is entered", () => {

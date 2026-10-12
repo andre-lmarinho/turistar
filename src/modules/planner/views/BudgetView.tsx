@@ -7,7 +7,10 @@ import type { DayPlan } from "@/features/activity/types";
 import type { CategoryKey, Entry } from "@/features/budget/types";
 import { CATEGORIES, CHART_COLORS } from "@/features/budget/types";
 import { trpc } from "@/trpc/react";
+import { Button } from "@/ui/components/button/Button";
+import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
 import { Check, DollarSign, Pencil, Plus, Trash2, X } from "@/ui/components/icon";
+import { Spinner } from "@/ui/components/loading/Spinner";
 
 const CATEGORY_TRANSLATION_KEYS = {
   transport: "categoryTransport",
@@ -29,15 +32,23 @@ interface Props {
 }
 
 export function BudgetView({ planId, days, initialEntries }: Props) {
+  const t = useTranslations();
   const activitiesTotal = days.reduce(
     (sum, day: DayPlan) =>
       sum + day.activities.reduce((total, activity) => total + (activity.budget ?? 0), 0),
     0
   );
   const [persistError, setPersistError] = useState<string | null>(null);
+  const [isWriting, setIsWriting] = useState(false);
+  const writePending = useRef(false);
   const utils = trpc.useUtils();
   const cache = utils.viewer.budget.get;
-  const { data } = trpc.viewer.budget.get.useQuery(
+  const {
+    data,
+    error: loadError,
+    isFetching,
+    refetch,
+  } = trpc.viewer.budget.get.useQuery(
     { planId },
     {
       initialData: { budget: 0, entries: initialEntries ?? EMPTY_ENTRIES },
@@ -59,9 +70,12 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
   const createEntry = trpc.viewer.budget.createEntry.useMutation();
   const updateEntry = trpc.viewer.budget.updateEntry.useMutation();
   const deleteEntry = trpc.viewer.budget.deleteEntry.useMutation();
-  const isPending = createEntry.isPending || updateEntry.isPending || deleteEntry.isPending;
+  const isPending = isWriting || createEntry.isPending || updateEntry.isPending || deleteEntry.isPending;
 
   const saveEntry = async (entry: ExpenseInput) => {
+    if (writePending.current) return false;
+    writePending.current = true;
+    setIsWriting(true);
     await cache.cancel({ planId });
     const previous = cache.getData({ planId });
     setPersistError(null);
@@ -87,13 +101,18 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
       return true;
     } catch {
       cache.setData({ planId }, previous);
-      setPersistError(`Failed to save budget entry: planId=${planId} entryId=${entry.id ?? "new"}`);
+      setPersistError(t("budgetSaveFailed"));
       return false;
     } finally {
       void cache.invalidate({ planId });
+      writePending.current = false;
+      setIsWriting(false);
     }
   };
   const removeEntry = async (entryId: string) => {
+    if (writePending.current) return;
+    writePending.current = true;
+    setIsWriting(true);
     await cache.cancel({ planId });
     const previous = cache.getData({ planId });
     setPersistError(null);
@@ -105,21 +124,44 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
       await deleteEntry.mutateAsync({ entryId });
     } catch {
       cache.setData({ planId }, previous);
-      setPersistError(`Failed to delete budget entry: planId=${planId} entryId=${entryId}`);
+      throw new Error("Unable to delete expense");
     } finally {
       void cache.invalidate({ planId });
+      writePending.current = false;
+      setIsWriting(false);
     }
   };
 
   return (
     <div className="bg-background flex h-full w-full flex-col gap-5 overflow-y-auto rounded-2xl border p-2 [scrollbar-color:var(--border)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
+      {loadError ? (
+        <div className="space-y-2">
+          <p role="alert" className="text-destructive text-sm">
+            {t("budgetLoadFailed")}
+          </p>
+          <Button
+            variant="ghost"
+            disabled={isFetching}
+            aria-busy={isFetching}
+            onClick={() => void refetch()}
+            className="gap-2">
+            {isFetching ? <Spinner className="size-4" /> : null}
+            {t("retry")}
+          </Button>
+        </div>
+      ) : null}
       <div className="grid min-w-0 grid-cols-1 items-start gap-5 md:grid-cols-2 xl:grid-cols-[18rem_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-5 md:contents xl:flex">
           <Summary totalSpent={totalSpent} persistError={persistError} />
           <CategoryChart totalSpent={totalSpent} categoryTotals={categoryTotals} />
         </div>
         <div className="md:col-span-2 xl:col-span-1">
-          <ExpenseTable entries={entries} onSave={saveEntry} onDelete={removeEntry} disabled={isPending} />
+          <ExpenseTable
+            entries={entries}
+            onSave={saveEntry}
+            onDelete={removeEntry}
+            disabled={isPending || Boolean(loadError)}
+          />
         </div>
       </div>
     </div>
@@ -203,7 +245,7 @@ export function CategoryChart({
                     <span className="truncate text-sm">{label}</span>
                   </div>
                   <span className="text-muted-foreground shrink-0 text-xs font-medium tabular-nums">
-                    $\{value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
 
@@ -215,7 +257,7 @@ export function CategoryChart({
                   aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
                   className="bg-muted mt-2 h-1.5 rounded-full">
                   <div
-                    className="h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none"
+                    className="h-full rounded-full"
                     style={{
                       width: `${percent}%`,
                       backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
@@ -233,14 +275,6 @@ export function CategoryChart({
 
 export function Summary({ totalSpent, persistError }: { totalSpent: number; persistError: string | null }) {
   const t = useTranslations();
-  if (persistError) {
-    return (
-      <p role="alert" className="text-destructive text-sm">
-        {persistError}
-      </p>
-    );
-  }
-
   return (
     <section aria-label={t("totalSpent")}>
       <article className="border-border bg-card rounded-2xl border p-4 shadow-sm">
@@ -257,6 +291,11 @@ export function Summary({ totalSpent, persistError }: { totalSpent: number; pers
         <div className="mt-6">
           <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
         </div>
+        {persistError ? (
+          <p role="alert" className="text-destructive mt-3 text-sm">
+            {persistError}
+          </p>
+        ) : null}
       </article>
     </section>
   );
@@ -282,15 +321,26 @@ function ExpenseEditor({
     entry ? { ...entry, amount: String(entry.amount) } : EMPTY_DRAFT
   );
   const [submitting, setSubmitting] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
+  const submitPending = useRef(false);
   const descriptionRef = useRef<HTMLInputElement>(null);
+  const amountRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (entry) descriptionRef.current?.focus();
   }, [entry]);
   const amount = Number(draft.amount);
   const isInvalid = !Number.isFinite(amount) || !draft.description.trim() || amount <= 0;
   const save = async () => {
-    if (submitting || isInvalid) return;
+    if (submitPending.current || disabled) return;
+    if (isInvalid) {
+      setShowErrors(true);
+      if (!draft.description.trim()) descriptionRef.current?.focus();
+      else amountRef.current?.focus();
+      return;
+    }
+    submitPending.current = true;
     setSubmitting(true);
+    setShowErrors(false);
     try {
       if (await onSave({ ...draft, description: draft.description.trim(), amount })) {
         if (entry) onCancel?.();
@@ -298,24 +348,43 @@ function ExpenseEditor({
       }
     } finally {
       setSubmitting(false);
+      submitPending.current = false;
     }
   };
   const id = entry?.id ?? "new-row";
   return (
-    <tr className="border-border">
+    <tr
+      className="border-border"
+      onKeyDown={(event) => {
+        if (
+          event.key !== "Enter" ||
+          event.nativeEvent.isComposing ||
+          !(event.target instanceof HTMLInputElement)
+        )
+          return;
+        event.preventDefault();
+        void save();
+      }}>
       <td className="p-2">
         <input
           ref={descriptionRef}
           id={`description-${id}`}
           name="description"
           aria-label={t("descriptionLabel")}
+          aria-invalid={(showErrors && !draft.description.trim()) || undefined}
+          aria-describedby={showErrors && !draft.description.trim() ? `description-error-${id}` : undefined}
           value={draft.description}
           onChange={(event) => setDraft({ ...draft, description: event.target.value })}
           placeholder={t("descriptionLabel")}
           autoComplete="off"
           disabled={disabled || submitting}
-          className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
         />
+        {showErrors && !draft.description.trim() ? (
+          <p id={`description-error-${id}`} role="alert" className="text-destructive mt-1 text-xs">
+            {t("expenseDescriptionRequired")}
+          </p>
+        ) : null}
       </td>
       <td className="p-2">
         <select
@@ -327,7 +396,7 @@ function ExpenseEditor({
             const category = CATEGORIES.find(({ key }) => key === event.target.value);
             if (category) setDraft({ ...draft, category: category.key });
           }}
-          className="h-10 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring">
+          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm">
           {CATEGORIES.map(({ key }) => (
             <option key={key} value={key}>
               {t(CATEGORY_TRANSLATION_KEYS[key])}
@@ -342,7 +411,12 @@ function ExpenseEditor({
           </span>
           <input
             id={`amount-${id}`}
+            ref={amountRef}
             aria-label={t("amountLabel")}
+            aria-invalid={(showErrors && (!Number.isFinite(amount) || amount <= 0)) || undefined}
+            aria-describedby={
+              showErrors && (!Number.isFinite(amount) || amount <= 0) ? `amount-error-${id}` : undefined
+            }
             value={draft.amount}
             disabled={disabled || submitting}
             onChange={(event) => setDraft({ ...draft, amount: event.target.value })}
@@ -353,6 +427,11 @@ function ExpenseEditor({
             className={inputClasses}
           />
         </div>
+        {showErrors && (!Number.isFinite(amount) || amount <= 0) ? (
+          <p id={`amount-error-${id}`} role="alert" className="text-destructive mt-1 text-xs">
+            {t("expenseAmountInvalid")}
+          </p>
+        ) : null}
       </td>
       <td className="p-2 text-right">
         <div className="flex justify-end gap-2">
@@ -360,9 +439,12 @@ function ExpenseEditor({
             type="button"
             onClick={() => void save()}
             aria-label={entry ? t("saveEntry") : t("addExpense")}
-            disabled={disabled || submitting || isInvalid}
-            className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border disabled:opacity-50">
-            {entry ? (
+            aria-busy={submitting}
+            disabled={disabled || submitting}
+            className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 md:size-8">
+            {submitting ? (
+              <Spinner className="size-4" />
+            ) : entry ? (
               <Check className="size-4" aria-hidden="true" />
             ) : (
               <Plus className="size-4" aria-hidden="true" />
@@ -374,7 +456,7 @@ function ExpenseEditor({
               onClick={onCancel}
               aria-label={t("cancelEdit")}
               disabled={disabled || submitting}
-              className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
+              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
               <X className="size-4" aria-hidden="true" />
             </button>
           )}
@@ -397,6 +479,7 @@ function ExpenseTable({
 }) {
   const t = useTranslations();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingEntry, setDeletingEntry] = useState<Entry | null>(null);
   const renderRow = (entry: Entry) => {
     if (editingId === entry.id)
       return (
@@ -424,15 +507,15 @@ function ExpenseTable({
               onClick={() => setEditingId(entry.id)}
               aria-label={t("editEntry")}
               disabled={disabled}
-              className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
+              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
               <Pencil className="size-4" aria-hidden="true" />
             </button>
             <button
               type="button"
-              onClick={() => void onDelete(entry.id)}
+              onClick={() => setDeletingEntry(entry)}
               aria-label={t("deleteEntry")}
               disabled={disabled}
-              className="border-border bg-background inline-flex size-8 items-center justify-center rounded-full border">
+              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
               <Trash2 className="size-4" aria-hidden="true" />
             </button>
           </div>
@@ -448,33 +531,54 @@ function ExpenseTable({
           {t("expenses")}
         </h2>
       </div>
-      <table
-        aria-labelledby="expense-table-caption"
-        className="w-full border-separate border-spacing-y-2 text-sm">
-        <caption id="expense-table-caption" className="sr-only">
-          {t("expenseTableCaption")}
-        </caption>
-        <thead className="text-muted-foreground text-xs uppercase tracking-wide">
-          <tr>
-            <th scope="col" className="p-2 text-left font-normal">
-              {t("descriptionLabel")}
-            </th>
-            <th scope="col" className="p-2 text-left font-normal">
-              {t("categoryLabel")}
-            </th>
-            <th scope="col" className="w-32 p-2 text-right font-normal">
-              {t("amountLabel")}
-            </th>
-            <th scope="col" className="p-2 text-right font-normal">
-              {t("actionsLabel")}
-            </th>
-          </tr>
-        </thead>
-        <tbody className="[&>tr]:rounded-xl [&>tr]:border [&>tr]:bg-background [&>tr]:shadow-sm">
-          {entries.map(renderRow)}
-          <ExpenseEditor onSave={onSave} disabled={disabled} />
-        </tbody>
-      </table>
+      <section
+        className="overflow-x-auto overscroll-x-contain rounded-xl focus-visible:ring-2 focus-visible:ring-ring"
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: allows keyboard users to scroll the expense table horizontally.
+        tabIndex={0}
+        aria-label={t("expenseTableCaption")}>
+        <table
+          aria-labelledby="expense-table-caption"
+          className="w-full min-w-[36rem] border-separate border-spacing-y-2 text-sm">
+          <caption id="expense-table-caption" className="sr-only">
+            {t("expenseTableCaption")}
+          </caption>
+          <thead className="text-muted-foreground text-xs uppercase tracking-wide">
+            <tr>
+              <th scope="col" className="p-2 text-left font-normal">
+                {t("descriptionLabel")}
+              </th>
+              <th scope="col" className="p-2 text-left font-normal">
+                {t("categoryLabel")}
+              </th>
+              <th scope="col" className="w-32 p-2 text-right font-normal">
+                {t("amountLabel")}
+              </th>
+              <th scope="col" className="p-2 text-right font-normal">
+                {t("actionsLabel")}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="[&>tr]:rounded-xl [&>tr]:border [&>tr]:bg-background [&>tr]:shadow-sm">
+            {entries.map(renderRow)}
+            <ExpenseEditor onSave={onSave} disabled={disabled} />
+          </tbody>
+        </table>
+      </section>
+      <ConfirmationDialog
+        open={Boolean(deletingEntry)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingEntry(null);
+        }}
+        title={t("deleteEntry")}
+        description={t("deleteExpenseConfirm")}
+        confirmLabel={t("deleteAction")}
+        cancelLabel={t("cancel")}
+        closeLabel={t("close")}
+        errorMessage={t("budgetDeleteFailed")}
+        onConfirm={async () => {
+          if (deletingEntry) await onDelete(deletingEntry.id);
+        }}
+      />
     </section>
   );
 }

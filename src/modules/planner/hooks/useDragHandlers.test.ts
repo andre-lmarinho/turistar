@@ -39,7 +39,7 @@ describe("useDragHandlers", () => {
   it("returns sensors configuration", () => {
     const { result } = renderHook(() => useDragHandlers(mockDays));
     expect(result.current.sensors).toBeDefined();
-    expect(result.current.sensors.length).toBe(2);
+    expect(result.current.sensors.length).toBe(3);
   });
 
   it("returns all handler functions", () => {

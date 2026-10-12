@@ -10,10 +10,11 @@ import type { Activity, DayPlan } from "@/features/activity/types";
 import { ActivitySearchInput } from "@/features/search/components/ActivitySearchInput";
 import { LocationSearchInput } from "@/features/search/components/LocationSearchInput";
 import { useActivitySuggestions, useAddressAutocomplete } from "@/features/search/hooks/searchHooks";
-import { usePlaceSelection } from "@/features/search/hooks/usePlaceSelection";
+import { getPlaceSelectionValues, usePlaceSelection } from "@/features/search/hooks/usePlaceSelection";
 import type { ActivitySuggestion, PlaceSelection } from "@/features/search/types";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader } from "@/ui/components/dialog";
+import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
 import {
   AlignLeft,
   ChevronDown,
@@ -24,6 +25,7 @@ import {
   Trash2,
   X,
 } from "@/ui/components/icon";
+import { Spinner } from "@/ui/components/loading/Spinner";
 import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/popover";
 
 interface EditorDialogProps {
@@ -78,6 +80,10 @@ export const ActivityDialog = memo(function ActivityDialog({
   const uploadInputId = useId();
   const [activePopup, setActivePopup] = useState<"color" | "day" | null>(null);
   const [draft, setDraft] = useState(() => createDraft(activity));
+  const [saveError, setSaveError] = useState<"title" | "number" | "save" | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [isSelectingPlace, setIsSelectingPlace] = useState(false);
+  const placeRequest = useRef(0);
   const lastSubmitted = useRef(draft);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const initialTitle = useRef(draft.title);
@@ -92,6 +98,9 @@ export const ActivityDialog = memo(function ActivityDialog({
   const closePopovers = () => setActivePopup(null);
   const updateDraft = (patch: Partial<ActivityDraft>) => {
     cancelSelection();
+    placeRequest.current += 1;
+    setIsSelectingPlace(false);
+    setSaveError(null);
     setDraft((previous) => ({ ...previous, ...patch }));
   };
 
@@ -99,22 +108,40 @@ export const ActivityDialog = memo(function ActivityDialog({
   const commit = (next = draft) => {
     const values = { ...next, title: next.title.trim(), address: next.address.trim() };
     setDraft(values);
+    if (!values.title) {
+      setSaveError("title");
+      return false;
+    }
+    if (
+      [values.duration, values.budget].some((value) => !Number.isFinite(Number(value)) || Number(value) < 0)
+    ) {
+      setSaveError("number");
+      return false;
+    }
+    setSaveError(null);
     if (JSON.stringify(values) === JSON.stringify(lastSubmitted.current)) return true;
     const patch: Partial<Activity> = Object.fromEntries(
       Object.entries(values)
         .filter(([key, value]) => value !== lastSubmitted.current[key as keyof ActivityDraft])
         .map(([key, value]) => [key, key === "duration" || key === "budget" ? Number(value) : value])
     );
-    if (!onSave(patch)) return false;
+    if (!onSave(patch)) {
+      setSaveError("save");
+      return false;
+    }
     lastSubmitted.current = values;
     return true;
   };
   const commitAndClose = () => {
     cancelSelection();
     if (commit()) onClose();
+    else if (!draft.title.trim()) titleInputRef.current?.focus();
   };
   const revert = () => {
     cancelSelection();
+    placeRequest.current += 1;
+    setIsSelectingPlace(false);
+    setSaveError(null);
     setDraft(lastSubmitted.current);
   };
   const handleColorSelect = (color: string) => {
@@ -127,11 +154,21 @@ export const ActivityDialog = memo(function ActivityDialog({
     commit({ ...draft, imageUrl: "" });
   };
   const handleUploadImage = (file: File) => {
-    if (isDemo || file.size > MAX_FILE_SIZE) return;
+    if (isDemo) return;
+    setImageError(null);
+    if (file.size > MAX_FILE_SIZE) {
+      setImageError(t("imageTooLarge"));
+      return;
+    }
+    if (!["image/png", "image/jpeg"].includes(file.type)) {
+      setImageError(t("imageTypeUnsupported"));
+      return;
+    }
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === "string") updateDraft({ imageUrl: reader.result });
     };
+    reader.onerror = () => setImageError(t("imageUploadFailed"));
     reader.readAsDataURL(file);
   };
   const handleTitleChange = async (value: string | PlaceSelection<ActivitySuggestion>) => {
@@ -139,14 +176,27 @@ export const ActivityDialog = memo(function ActivityDialog({
       updateDraft({ title: value });
       return;
     }
+    const request = ++placeRequest.current;
+    const selectedPlace = getPlaceSelectionValues(value);
+    const selectedDraft = {
+      ...draft,
+      ...selectedPlace,
+      description: selectedPlace.description ?? "",
+      imageUrl: draft.imageUrl,
+    };
+    setDraft(selectedDraft);
+    setSaveError(null);
+    setIsSelectingPlace(true);
     const place = await selectPlace(value);
+    if (request !== placeRequest.current) return;
+    setIsSelectingPlace(false);
     if (!place) return;
     const next = {
-      ...draft,
+      ...selectedDraft,
       ...place,
       description: place.description ?? "",
       address: place.address ?? "",
-      imageUrl: place.imageUrl ?? draft.imageUrl,
+      imageUrl: place.imageUrl ?? selectedDraft.imageUrl,
     };
     commit(next);
   };
@@ -165,7 +215,19 @@ export const ActivityDialog = memo(function ActivityDialog({
         }
         commitAndClose();
       }}>
-      <DialogContent className="flex w-[95%] max-w-113 flex-col p-0">
+      <DialogContent
+        className="flex w-[95%] max-w-113 flex-col p-0"
+        onKeyDown={(event) => {
+          if (event.defaultPrevented || event.nativeEvent.isComposing || event.key !== "Enter") return;
+          const target = event.target;
+          if (
+            (target instanceof HTMLInputElement && target.type !== "file") ||
+            (target instanceof HTMLTextAreaElement && (event.ctrlKey || event.metaKey))
+          ) {
+            event.preventDefault();
+            commitAndClose();
+          }
+        }}>
         <DialogHeader visuallyHidden title={t("editActivity")} description={t("editActivityDescription")} />
 
         <div
@@ -261,14 +323,24 @@ export const ActivityDialog = memo(function ActivityDialog({
 
             <div className="flex items-center gap-2">
               {onDelete && (
-                <Button
-                  variant="ghost"
+                <ConfirmationDialog
                   title={t("delete")}
-                  aria-label={t("delete")}
-                  onClick={onDelete}
-                  className="hover:bg-border size-8 rounded-full p-0">
-                  <Trash2 className="size-4" aria-hidden="true" />
-                </Button>
+                  description={t("deleteActivityConfirm")}
+                  confirmLabel={t("deleteAction")}
+                  cancelLabel={t("cancel")}
+                  closeLabel={t("close")}
+                  errorMessage={t("activitySaveFailed")}
+                  onConfirm={onDelete}
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      title={t("delete")}
+                      aria-label={t("delete")}
+                      className="hover:bg-border size-11 rounded-full p-0 md:size-8">
+                      <Trash2 className="size-4" aria-hidden="true" />
+                    </Button>
+                  }
+                />
               )}
 
               <Popover
@@ -276,7 +348,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                 onOpenChange={(open) => setActivePopup(open ? "color" : null)}>
                 <PopoverTriggerButton
                   title={t("cardColor")}
-                  className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors">
+                  className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors md:size-8">
                   <Palette className="size-4" aria-hidden="true" />
                   <span className="sr-only">{t("cardColorSr")}</span>
                 </PopoverTriggerButton>
@@ -308,6 +380,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                             } ${draft.color === color.bg ? "ring-primary ring-2" : "border-background"}`}
                             style={color.bg.startsWith("#") ? { backgroundColor: color.bg } : undefined}
                             aria-label={t(color.name)}
+                            aria-pressed={draft.color === color.bg}
                             type="button"
                           />
                         ))}
@@ -318,7 +391,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                       <div>
                         <label
                           htmlFor={uploadInputId}
-                          className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors">
+                          className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-ring">
                           {t("uploadImage")}
                         </label>
                         <input
@@ -335,6 +408,11 @@ export const ActivityDialog = memo(function ActivityDialog({
                           }}
                           className="sr-only"
                         />
+                        {imageError ? (
+                          <p role="alert" className="text-destructive mt-2 text-sm">
+                            {imageError}
+                          </p>
+                        ) : null}
                       </div>
                     )}
                   </div>
@@ -346,7 +424,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                 title={t("close")}
                 aria-label={t("close")}
                 onClick={commitAndClose}
-                className="hover:bg-border size-8 rounded-full p-0">
+                className="hover:bg-border size-11 rounded-full p-0 md:size-8">
                 <X className="size-4" aria-hidden="true" />
               </Button>
             </div>
@@ -363,10 +441,22 @@ export const ActivityDialog = memo(function ActivityDialog({
             longitude={destCoords?.lng}
             suggestionHook={useActivitySuggestions}
             inputRef={titleInputRef}
-            inputClassName="focus:ring-primary w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            inputClassName="focus:ring-ring w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
             onBlur={() => commit()}
-            inputProps={{ name: "title", required: true, "aria-required": true }}
+            inputProps={{
+              name: "title",
+              required: true,
+              "aria-required": true,
+              "aria-invalid": saveError === "title" || undefined,
+              "aria-describedby": saveError === "title" ? "activity-save-error" : undefined,
+            }}
           />
+          {isSelectingPlace ? (
+            <output className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
+              <Spinner className="size-4" />
+              {t("loadingPlaceDetails")}
+            </output>
+          ) : null}
         </div>
 
         <fieldset className="mb-4 flex gap-2 px-4" aria-labelledby="time-budget-legend">
@@ -391,9 +481,11 @@ export const ActivityDialog = memo(function ActivityDialog({
                 onChange={(event) => updateDraft({ [field]: event.target.value })}
                 onBlur={() => commit()}
                 aria-label={accessibleLabel}
+                aria-invalid={saveError === "number" || undefined}
+                aria-describedby={saveError === "number" ? "activity-save-error" : undefined}
                 type="number"
                 placeholder={placeholder}
-                className="focus:ring-primary w-22 rounded border px-2 py-1 text-right text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                className="focus:ring-ring w-22 rounded border px-2 py-1 text-right text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
                 autoComplete="off"
                 min={0}
                 step="any"
@@ -421,7 +513,8 @@ export const ActivityDialog = memo(function ActivityDialog({
             onBlur={() => commit()}
             placeholder={t("searchAddress")}
             className="w-full"
-            inputClassName="focus:ring-primary w-full rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            inputProps={{ name: "address" }}
+            inputClassName="focus:ring-ring w-full rounded p-1 text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
             autocompleteHook={useAddressAutocomplete}
@@ -441,9 +534,20 @@ export const ActivityDialog = memo(function ActivityDialog({
             onBlur={() => commit()}
             placeholder={t("addNotesPlaceholder")}
             rows={3}
-            className="focus:ring-primary w-full resize-none rounded p-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            className="focus:ring-ring w-full resize-none rounded p-1 text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
           />
         </div>
+        {saveError ? (
+          <p id="activity-save-error" role="alert" className="text-destructive px-4 pb-3 text-sm">
+            {t(
+              saveError === "title"
+                ? "activityTitleRequired"
+                : saveError === "number"
+                  ? "activityNumberInvalid"
+                  : "activitySaveFailed"
+            )}
+          </p>
+        ) : null}
         <div className="flex items-center justify-end gap-2 border-t px-4 py-3">
           <Button
             type="button"

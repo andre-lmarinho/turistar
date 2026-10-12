@@ -166,7 +166,8 @@ describe("BudgetView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
     await waitFor(() => expect(screen.getByLabelText("Total spent: $50.00")).toBeInTheDocument());
     await act(async () => fail(new Error("offline")));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Failed to save budget entry");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    expect(screen.getByLabelText("Total spent: $125.00")).toBeInTheDocument();
     expect(shared.client?.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
     expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
@@ -184,9 +185,45 @@ describe("BudgetView", () => {
     );
     render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
     fireEvent.click(screen.getByRole("button", { name: "Delete entry" }));
+    expect(shared.deleteEntry).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
     await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
     await act(async () => fail(new Error("offline")));
     expect(await screen.findByText("Airport transfer")).toBeInTheDocument();
-    expect(screen.getByRole("alert")).toHaveTextContent("Failed to delete budget entry");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
+  });
+
+  it("explains invalid entries and focuses the first invalid field", () => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+    const description = screen.getByLabelText("Description");
+    expect(description).toHaveFocus();
+    expect(description).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Amount")).toHaveAttribute("aria-invalid", "true");
+    expect(shared.createEntry).not.toHaveBeenCalled();
+    fireEvent.change(description, { target: { value: "Dinner" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+    expect(screen.getByLabelText("Amount")).toHaveFocus();
+  });
+
+  it("saves the row from Enter and prevents duplicate submissions", async () => {
+    let resolve!: (id: string) => void;
+    shared.createEntry.mockImplementationOnce(
+      () =>
+        new Promise<string>((done) => {
+          resolve = done;
+        })
+    );
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+    fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Dinner" } });
+    const amount = screen.getByLabelText("Amount");
+    fireEvent.change(amount, { target: { value: "20" } });
+    fireEvent.keyDown(amount, { key: "Enter" });
+    fireEvent.keyDown(amount, { key: "Enter" });
+    await waitFor(() => expect(shared.createEntry).toHaveBeenCalledOnce());
+    expect(screen.getByRole("button", { name: "Add expense" })).toHaveAttribute("aria-busy", "true");
+    expect(amount).toBeDisabled();
+    await act(async () => resolve("dinner"));
+    expect(await screen.findByText("Dinner")).toBeInTheDocument();
   });
 });

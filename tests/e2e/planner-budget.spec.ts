@@ -16,7 +16,7 @@ test.describe("Budget Management", () => {
   });
 
   test("displays expenses table", async ({ page }) => {
-    const expensesSection = page.getByRole("region", { name: /expenses/i });
+    const expensesSection = page.getByRole("region", { name: "Expenses", exact: true });
     await expect(expensesSection).toBeVisible();
 
     await expect(expensesSection.getByRole("table")).toBeVisible();
@@ -27,7 +27,7 @@ test.describe("Budget Management", () => {
   });
 
   test("adds a new expense", async ({ page }) => {
-    const expensesSection = page.getByRole("region", { name: /expenses/i });
+    const expensesSection = page.getByRole("region", { name: "Expenses", exact: true });
 
     const descriptionInput = expensesSection.getByRole("textbox", { name: /description/i }).first();
     await expect(descriptionInput).toBeVisible();
@@ -53,7 +53,7 @@ test.describe("Budget Management", () => {
   });
 
   test("has add expense button enabled when description and amount are filled", async ({ page }) => {
-    const expensesSection = page.getByRole("region", { name: /expenses/i });
+    const expensesSection = page.getByRole("region", { name: "Expenses", exact: true });
 
     const addButton = expensesSection.getByRole("button", { name: /add expense/i });
     const descriptionInput = expensesSection.getByRole("textbox", { name: /description/i }).first();

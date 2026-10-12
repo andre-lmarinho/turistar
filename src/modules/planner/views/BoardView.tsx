@@ -6,14 +6,14 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
-import type { MouseEvent as ReactMouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { useCardColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
 import { useDragHandlers } from "@/modules/planner/hooks/useDragHandlers";
 import { containerCollisionDetection } from "@/modules/planner/lib/dragUtils";
-import { DollarSign, Hourglass, Plus } from "@/ui/components/icon";
+import { DollarSign, GripVertical, Hourglass, Plus } from "@/ui/components/icon";
 import { cn } from "@/ui/utils/cn";
 
 interface BoardProps {
@@ -133,6 +133,7 @@ export interface ActivityCardProps {
   onSelect?: () => void;
   onClick?: () => void;
   bgColor?: string;
+  dragHandle?: ReactNode;
 }
 
 export const ActivityCard = memo(function ActivityCard({
@@ -140,6 +141,7 @@ export const ActivityCard = memo(function ActivityCard({
   onSelect,
   onClick,
   bgColor,
+  dragHandle,
 }: ActivityCardProps) {
   const t = useTranslations();
   const { title, duration, budget, color, imageUrl } = activity;
@@ -165,7 +167,7 @@ export const ActivityCard = memo(function ActivityCard({
         onClick={handleClick}>
         <div
           className={cn(
-            "relative flex w-full cursor-grab flex-col overflow-hidden rounded-xl border-2 bg-background text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100",
+            "relative flex w-full cursor-grab flex-col overflow-hidden rounded-xl border-2 bg-background text-left shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100",
             borderColorClass
           )}>
           {imageUrl ? (
@@ -180,7 +182,7 @@ export const ActivityCard = memo(function ActivityCard({
               }}
             />
           ) : null}
-          <div className="min-w-0 px-4 py-3 pl-5">
+          <div className={cn("min-w-0 px-4 py-3 pl-5", dragHandle && "pr-12")}>
             <h3 className="truncate text-sm font-semibold leading-5">
               {title.trim() ? title : t("untitledActivity")}
             </h3>
@@ -208,6 +210,7 @@ export const ActivityCard = memo(function ActivityCard({
           </div>
         </div>
       </button>
+      {dragHandle}
     </article>
   );
 });
@@ -229,14 +232,18 @@ export const DraggableCard = memo(function DraggableCard({
   dragOverlay = false,
   className,
 }: DraggableCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id,
-    animateLayoutChanges: () => false,
-  });
+  const t = useTranslations();
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({
+      id,
+      animateLayoutChanges: () => false,
+    });
 
   if (dragOverlay) {
     return (
       <div
+        inert
+        aria-hidden="true"
         className={cn(
           "bg-background pointer-events-none origin-bottom rotate-2 cursor-grabbing rounded-xl border shadow-lg opacity-95 backdrop-blur-md",
           className
@@ -256,15 +263,30 @@ export const DraggableCard = memo(function DraggableCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "relative touch-none list-none transition-opacity duration-200",
+        "relative touch-none list-none transition-opacity duration-200 motion-reduce:transition-none",
         isDragging ? "cursor-grabbing" : "cursor-grab",
         className
       )}
       data-no-drag-scroll
-      {...attributes}
-      {...listeners}>
+      onPointerDown={(event) => listeners?.onPointerDown?.(event)}
+      onTouchStart={(event) => listeners?.onTouchStart?.(event)}>
       <div className={cn(isDragging && "opacity-0")}>
-        <ActivityCard activity={activity} onSelect={onSelect} bgColor={bgColor} />
+        <ActivityCard
+          activity={activity}
+          onSelect={onSelect}
+          bgColor={bgColor}
+          dragHandle={
+            <button
+              ref={setActivatorNodeRef}
+              type="button"
+              {...attributes}
+              onKeyDown={(event) => listeners?.onKeyDown?.(event)}
+              aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
+              className="text-muted-foreground hover:bg-muted focus-visible:ring-ring absolute top-2 right-2 inline-flex size-11 cursor-grab touch-none items-center justify-center rounded-md focus-visible:ring-2 active:cursor-grabbing md:size-8">
+              <GripVertical className="size-4" aria-hidden="true" />
+            </button>
+          }
+        />
       </div>
       {isDragging && (
         <div className="bg-primary/5 border-primary/50 absolute inset-0 rounded-xl border-2 border-dashed" />

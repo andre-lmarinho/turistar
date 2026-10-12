@@ -3,15 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { SubmitEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { ShareMember, ShareTier } from "@/features/members/types";
 import { SHARE_TIER_OPTIONS } from "@/features/members/types";
 import { trpc } from "@/trpc/react";
 import { Avatar } from "@/ui/components/avatar";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/ui/components/dialog";
-import { ChevronDown, Share2 } from "@/ui/components/icon";
-import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/popover";
+import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
+import { Share2 } from "@/ui/components/icon";
+import { Spinner } from "@/ui/components/loading/Spinner";
 import { cn } from "@/ui/utils/cn";
 
 export function SharePlannerDialog({
@@ -28,16 +29,24 @@ export function SharePlannerDialog({
   const members = useShareMembers(planId, open);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!members.isMutating) setOpen(nextOpen);
+      }}>
       <DialogTriggerButton
         type="button"
-        className="text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors"
+        className="text-foreground hover:bg-muted/60 inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors md:size-8"
         aria-label={t("sharePlanner")}>
         <Share2 className="size-4" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent>
-        <DialogHeader title={t("sharePlanner")} description={t("sharePlannerDescription")} />
-        <div className="max-h-[75vh] space-y-4 overflow-y-auto p-4">
+        <DialogHeader
+          title={t("sharePlanner")}
+          description={t("sharePlannerDescription")}
+          closeDisabled={members.isMutating}
+        />
+        <div className="space-y-4 p-4">
           <InviteForm planId={planId} canManageMembers={canManageMembers} members={members} />
           <MembersSection
             planId={planId}
@@ -57,56 +66,25 @@ type SelectMenuProps<T extends string> = {
   onChange: (value: T) => void;
   ariaLabel: string;
   disabled?: boolean;
-  align?: "start" | "end";
 };
 
-function SelectMenu<T extends string>({
-  value,
-  options,
-  onChange,
-  ariaLabel,
-  disabled,
-  align = "start",
-}: SelectMenuProps<T>) {
-  const [open, setOpen] = useState(false);
-  // assumes `value` is always one of `options` (the caller builds options from the value's
-  // source). Trigger falls back to the aria-label if that ever breaks; add a placeholder prop if not.
-  const selectedLabel = options.find((option) => option.value === value)?.label;
-
+function SelectMenu<T extends string>({ value, options, onChange, ariaLabel, disabled }: SelectMenuProps<T>) {
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTriggerButton
-        className="border-border bg-background text-foreground inline-flex w-28 shrink-0 items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-        aria-haspopup="listbox"
-        aria-label={ariaLabel}
-        disabled={disabled}>
-        <span className="truncate">{selectedLabel}</span>
-        <ChevronDown className="text-muted-foreground size-4" aria-hidden="true" />
-      </PopoverTriggerButton>
-      <PopoverContent side="bottom" align={align} sideOffset={6} className="w-38 p-1">
-        <div role="listbox" className="space-y-1">
-          {options.map((option) => {
-            const isSelected = option.value === value;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                className={`hover:bg-muted/60 inline-flex w-full items-center rounded-md px-2 py-1 text-left text-sm transition-colors focus-visible:bg-muted/60 focus-visible:outline-none ${
-                  isSelected ? "bg-muted/60 text-foreground" : "text-muted-foreground"
-                }`}
-                onClick={() => {
-                  onChange(option.value);
-                  setOpen(false);
-                }}>
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <select
+      value={value}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onChange={(event) => {
+        const option = options.find((item) => item.value === event.target.value);
+        if (option) onChange(option.value);
+      }}
+      className="border-border bg-background text-foreground min-h-11 w-32 shrink-0 rounded-md border px-3 py-2 text-base focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:min-h-9 md:text-sm">
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
   );
 }
 
@@ -120,7 +98,10 @@ function InviteForm({
   members: ReturnType<typeof useShareMembers>;
 }) {
   const t = useTranslations();
-  const { addMember, isLoading } = members;
+  const { addMember, isLoading, isMutating } = members;
+  const emailId = useId();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const requestPending = useRef(false);
 
   const getInviteErrorMessage = (error: unknown) => {
     const errorCode =
@@ -138,35 +119,14 @@ function InviteForm({
   const [tier, setTier] = useState<ShareTier>("member");
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
-  const successTimeoutRef = useRef<number | null>(null);
-
-  const clearSuccessTimeout = useCallback(() => {
-    if (successTimeoutRef.current === null) {
-      return;
-    }
-    window.clearTimeout(successTimeoutRef.current);
-    successTimeoutRef.current = null;
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      clearSuccessTimeout();
-    };
-  }, [clearSuccessTimeout]);
-
   const clearMessages = () => {
     setFormError("");
     setFormSuccess("");
-    clearSuccessTimeout();
   };
 
   const showSuccess = (message: string) => {
     setFormSuccess(message);
     setFormError("");
-    clearSuccessTimeout();
-    successTimeoutRef.current = window.setTimeout(() => {
-      setFormSuccess("");
-    }, 3000);
   };
 
   const showError = (message: string) => {
@@ -176,30 +136,49 @@ function InviteForm({
 
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!canManageMembers) {
+    if (!canManageMembers || requestPending.current || isMutating || isLoading) {
       return;
     }
 
     const trimmedEmail = email.trim();
-    if (!trimmedEmail) {
+    if (!trimmedEmail || !emailRef.current?.validity.valid) {
       showError(t("enterValidEmail"));
+      emailRef.current?.focus();
       return;
     }
 
+    requestPending.current = true;
+    clearMessages();
     try {
       await addMember.mutateAsync({ planIdOrSlug: planId, email: trimmedEmail, tier });
       setEmail("");
       showSuccess(t("memberAdded"));
     } catch (error) {
       showError(getInviteErrorMessage(error));
+    } finally {
+      requestPending.current = false;
     }
   };
 
   return (
     <div className="space-y-2">
-      <form className="flex w-full flex-nowrap items-center gap-2" onSubmit={handleSubmit}>
+      <form
+        className="flex w-full flex-wrap items-center gap-2"
+        onSubmit={handleSubmit}
+        noValidate
+        aria-busy={addMember.isPending}>
+        <label htmlFor={emailId} className="sr-only">
+          {t("emailAddressPlaceholder")}
+        </label>
         <input
+          id={emailId}
+          ref={emailRef}
           type="email"
+          required
+          aria-invalid={
+            formError === t("enterValidEmail") || formError === t("userNotRegistered") || undefined
+          }
+          aria-describedby={formError ? `${emailId}-error` : undefined}
           name="email"
           autoComplete="email"
           spellCheck={false}
@@ -211,20 +190,22 @@ function InviteForm({
               clearMessages();
             }
           }}
-          className="border-border bg-background text-foreground min-w-0 flex-1 rounded-md border px-3 py-2 text-sm"
-          disabled={!canManageMembers}
+          className="border-border bg-background text-foreground min-h-11 min-w-0 basis-full rounded-md border px-3 py-2 text-base md:min-h-9 md:flex-1 md:basis-auto md:text-sm"
+          disabled={!canManageMembers || isMutating || isLoading}
         />
         <SelectMenu
           value={tier}
           options={SHARE_TIER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
           onChange={setTier}
-          disabled={!canManageMembers}
+          disabled={!canManageMembers || isMutating || isLoading}
           ariaLabel={t("selectMemberRole")}
         />
         <Button
           type="submit"
-          className="shrink-0"
-          disabled={!canManageMembers || addMember.isPending || isLoading}>
+          className="ml-auto shrink-0 gap-2"
+          aria-busy={addMember.isPending}
+          disabled={!canManageMembers || isMutating || isLoading}>
+          {addMember.isPending ? <Spinner className="size-4" /> : null}
           {t("shareButton")}
         </Button>
       </form>
@@ -235,7 +216,7 @@ function InviteForm({
         </output>
       ) : null}
       {formError ? (
-        <p className="text-destructive text-xs" role="alert">
+        <p id={`${emailId}-error`} className="text-destructive text-xs" role="alert">
           {formError}
         </p>
       ) : null}
@@ -292,6 +273,7 @@ type ShareMemberRowProps = {
   viewerUserId: string | null;
   canManageMembers: boolean;
   mutations: MemberMutations;
+  isMutating: boolean;
 };
 
 function ShareMemberRow({
@@ -302,6 +284,7 @@ function ShareMemberRow({
   viewerUserId,
   canManageMembers,
   mutations,
+  isMutating,
 }: ShareMemberRowProps) {
   const t = useTranslations();
   const isOwner = ownerId === member.userId;
@@ -327,21 +310,16 @@ function ShareMemberRow({
   ].map((option) => ({ ...option, label: t(option.label) }));
   const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
   const displayLabel = isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;
-  const isMutating =
-    mutations.updateTier.isPending || mutations.leave.isPending || mutations.removeMember.isPending;
+  const [confirmation, setConfirmation] = useState<"leave" | "remove" | null>(null);
 
   const handleMenuChange = (nextValue: MemberMenuOption) => {
+    if (isMutating) return;
     if (nextValue === "leave") {
-      if (canSelfLeave) {
-        mutations.leave.mutate({ planIdOrSlug: planId });
-      }
+      if (canSelfLeave) setConfirmation("leave");
       return;
     }
-
     if (nextValue === "remove") {
-      if (canRemove) {
-        mutations.removeMember.mutate({ planIdOrSlug: planId, userId: member.userId });
-      }
+      if (canRemove) setConfirmation("remove");
       return;
     }
 
@@ -370,10 +348,30 @@ function ShareMemberRow({
           options={menuOptions}
           onChange={handleMenuChange}
           disabled={!canSelect || isMutating}
-          ariaLabel={`${displayName} role`}
-          align="end"
+          ariaLabel={t("memberRoleLabel", { name: displayName })}
         />
       </div>
+      <ConfirmationDialog
+        open={confirmation !== null}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) setConfirmation(null);
+        }}
+        title={t(confirmation === "leave" ? "leavePlanner" : "removeMember")}
+        description={
+          confirmation === "leave"
+            ? t("leavePlannerConfirm")
+            : t("removeMemberConfirm", { name: displayName })
+        }
+        confirmLabel={t(confirmation === "leave" ? "leavePlanner" : "removeMember")}
+        cancelLabel={t("cancel")}
+        closeLabel={t("close")}
+        errorMessage={t("unableToUpdateMembers")}
+        isPending={isMutating}
+        onConfirm={async () => {
+          if (confirmation === "leave") await mutations.leave.mutateAsync({ planIdOrSlug: planId });
+          else await mutations.removeMember.mutateAsync({ planIdOrSlug: planId, userId: member.userId });
+        }}
+      />
     </div>
   );
 }
@@ -390,7 +388,7 @@ function MembersSection({
   members: ReturnType<typeof useShareMembers>;
 }) {
   const t = useTranslations();
-  const { data, isLoading, error, updateTier, removeMember, leave } = query;
+  const { data, isLoading, error, updateTier, removeMember, leave, isMutating, isFetching, refetch } = query;
   const memberMutations = { updateTier, removeMember, leave };
   const isLeaving = leave.isPending;
   const mutationError = updateTier.error || removeMember.error || leave.error;
@@ -410,8 +408,28 @@ function MembersSection({
           {t("leavingPlanner")}
         </p>
       ) : null}
-      {isLoading ? <p className="text-muted-foreground text-xs">{t("loadingMembers")}</p> : null}
-      {error ? <p className="text-destructive text-xs">{t("unableToLoadMembers")}</p> : null}
+      {isLoading ? (
+        <output className="text-muted-foreground flex items-center gap-2 text-sm">
+          <Spinner className="size-4" />
+          {t("loadingMembers")}
+        </output>
+      ) : null}
+      {error ? (
+        <div className="space-y-2">
+          <p role="alert" className="text-destructive text-sm">
+            {t("unableToLoadMembers")}
+          </p>
+          <Button
+            variant="ghost"
+            disabled={isFetching}
+            aria-busy={isFetching}
+            onClick={() => void refetch()}
+            className="gap-2">
+            {isFetching ? <Spinner className="size-4" /> : null}
+            {t("retry")}
+          </Button>
+        </div>
+      ) : null}
       {mutationError ? (
         <p role="alert" className="text-destructive text-xs">
           {t("unableToUpdateMembers")}
@@ -419,7 +437,7 @@ function MembersSection({
       ) : null}
       {shouldShowEmpty ? <p className="text-muted-foreground text-xs">{t("noMembersYet")}</p> : null}
       {shouldShowList ? (
-        <div className={cn("space-y-2", isLeaving && "pointer-events-none opacity-50")}>
+        <div aria-busy={isMutating} className={cn("space-y-2", isLeaving && "opacity-50")}>
           {members.map((member) => (
             <ShareMemberRow
               key={member.userId}
@@ -430,6 +448,7 @@ function MembersSection({
               viewerUserId={viewerUserId}
               canManageMembers={canManageMembers}
               mutations={memberMutations}
+              isMutating={isMutating}
             />
           ))}
         </div>
@@ -487,19 +506,12 @@ function useShareMembers(planId: string, enabled: boolean) {
   });
 
   const removeMutation = trpc.viewer.members.remove.useMutation({
-    onMutate: async ({ userId }) => {
-      await utils.viewer.members.get.cancel({ planIdOrSlug: planId });
-      const previous = utils.viewer.members.get.getData({ planIdOrSlug: planId });
-      utils.viewer.members.get.setData({ planIdOrSlug: planId }, (current) => {
-        if (!current) return current;
-        return { ...current, members: current.members.filter((member) => member.userId !== userId) };
-      });
-      return { previous };
-    },
-    onError: (_error, _input, context) => {
-      if (context?.previous) {
-        utils.viewer.members.get.setData({ planIdOrSlug: planId }, context.previous);
-      }
+    onSuccess: (_result, { userId }) => {
+      utils.viewer.members.get.setData(
+        { planIdOrSlug: planId },
+        (current) =>
+          current && { ...current, members: current.members.filter((member) => member.userId !== userId) }
+      );
     },
     onSettled: () => utils.viewer.members.get.invalidate({ planIdOrSlug: planId }),
   });
@@ -514,6 +526,11 @@ function useShareMembers(planId: string, enabled: boolean) {
 
   return {
     ...query,
+    isMutating:
+      addMutation.isPending ||
+      updateMutation.isPending ||
+      removeMutation.isPending ||
+      leaveMutation.isPending,
     addMember: addMutation,
     updateTier: updateMutation,
     removeMember: removeMutation,
