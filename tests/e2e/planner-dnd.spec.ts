@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 
 import {
@@ -66,8 +67,9 @@ test.describe("Planner Smoke Tests", () => {
   test("drags cards by their body and preserves click and keyboard interactions", async ({ page }) => {
     test.setTimeout(60_000);
     await page.locator('[data-testid="planner-mode-kanban"]:visible').first().click();
-    const firstTitle = "UX drag first";
-    const secondTitle = "UX drag second";
+    const suffix = randomUUID().slice(0, 8);
+    const firstTitle = `UX drag first ${suffix}`;
+    const secondTitle = `UX drag second ${suffix}`;
     for (const title of [firstTitle, secondTitle]) {
       const input = await openInlineActivity(page);
       await input.fill(title);
@@ -81,7 +83,7 @@ test.describe("Planner Smoke Tests", () => {
       .getByTestId("day-scroll")
       .first()
       .locator("h3")
-      .filter({ hasText: /^UX drag / });
+      .filter({ hasText: new RegExp(`^UX drag (first|second) ${suffix}$`) });
     await expect(titles).toHaveText([firstTitle, secondTitle]);
     const firstCard = page.getByRole("button", { name: firstTitle, exact: true });
     const secondCard = page.getByRole("button", { name: secondTitle, exact: true });
@@ -109,7 +111,10 @@ test.describe("Planner Smoke Tests", () => {
     await handle.focus();
     await page.keyboard.press("Space");
     await expect(handle).toHaveAttribute("aria-pressed", "true");
-    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+    // KeyboardSensor attaches its listener in a timer; a frame alone can finish before that task.
+    await page.evaluate(
+      () => new Promise<void>((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)))
+    );
     await page.keyboard.press("ArrowDown");
     await expect(titles).toHaveText([firstTitle, secondTitle]);
     await Promise.all([
@@ -124,7 +129,10 @@ test.describe("Planner Smoke Tests", () => {
     for (const title of [firstTitle, secondTitle]) {
       await page.getByRole("button", { name: title, exact: true }).click();
       await page.getByRole("dialog").getByRole("button", { name: "Delete", exact: true }).click();
-      await page.getByRole("alertdialog").getByRole("button", { name: "Delete", exact: true }).click();
+      await Promise.all([
+        page.waitForResponse((response) => response.url().includes("viewer.events.append") && response.ok()),
+        page.getByRole("alertdialog").getByRole("button", { name: "Delete", exact: true }).click(),
+      ]);
       await expect(page.getByRole("heading", { name: title, exact: true })).toHaveCount(0);
     }
   });
