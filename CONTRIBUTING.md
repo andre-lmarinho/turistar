@@ -103,6 +103,31 @@ Use `pnpm exec vitest run <path>` for file selection. Unit and component tests l
 sets the enforced thresholds. The [CI workflow](.github/workflows/ci.yml) runs lint, types, unit tests,
 a production build, and browser tests.
 
+### Integration tests
+
+```sh
+supabase start
+pnpm db:migrate
+pnpm test:integration
+```
+
+Like cal.diy's `VITEST_MODE=integration`, this mode selects `.integration-test.ts` files separately
+from unit tests. It uses Node and real Supabase clients without the unit-test setup or SSR mock.
+Local credentials are read from `supabase status` in memory; hosted URLs and credentials are not used.
+Email confirmation must be disabled, as in the checked-in local configuration.
+
+Fixtures use unique usernames/emails and delete only their own plans, profiles, and Auth users in FK
+order. Tests run sequentially across files to avoid Auth rate-limit interference. Ordinary `pnpm test`
+does not require Docker; integration tests fail if Supabase is unavailable or no tests are selected.
+
+The existing Supabase workflow runs integration tests after its migration/seed rebuild and schema
+lint. Its disposable database is reset once per job, not before each test. The job now also runs for
+changes to the covered Profile, Events, and Snapshot code, test support, and dependencies; it skips
+unrelated UI and unit-test-only changes. Replaced PR runs are cancelled. Compared with migration-only
+validation, this adds dependency setup, test execution, and additional triggers for the Supabase job.
+Studio, Storage, Realtime, Edge Functions, and analytics are excluded from this job; these tests do
+not cover those services. Database dumps are not cached, so each CI run validates current migrations.
+
 ### Browser tests
 
 Install the browser once, then select the relevant suite:
@@ -134,7 +159,7 @@ The executable schema lives in [`supabase/migrations`](supabase/migrations).
 For database changes, follow the repository's [approval boundaries](AGENTS.md#boundaries), create a
 versioned migration with the Supabase CLI, and verify it locally. The
 [migration workflow](.github/workflows/supabase-migrations.yml) checks that migrations and seed data
-can rebuild the database and pass `supabase db lint`.
+can rebuild the database, pass `supabase db lint`, and run the integration suite.
 
 After an approved schema change, regenerate the public types from the intended database. For local
 Supabase:

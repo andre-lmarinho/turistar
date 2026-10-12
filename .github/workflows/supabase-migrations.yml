@@ -6,6 +6,25 @@ on:
       - supabase/config.toml
       - supabase/migrations/**
       - supabase/seed.sql
+      - .github/workflows/supabase-migrations.yml
+      - package.json
+      - pnpm-lock.yaml
+      - vitest.config.ts
+      - tests/integration/**
+      - tests/__mocks__/serverOnly.ts
+      - src/supabase/types.ts
+      - src/lib/errors/**
+      - src/lib/typeGuards.ts
+      - src/features/profile/**/*.ts
+      - src/features/events/**/*.ts
+      - src/features/snapshots/**/*.ts
+      - src/features/activity/types.ts
+      - src/features/plan/repositories/PlanRepository.ts
+      - '!src/**/*.test.ts'
+
+concurrency:
+  group: supabase-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -13,10 +32,23 @@ permissions:
 jobs:
   validate:
     name: Supabase migrations
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v3
@@ -24,10 +56,17 @@ jobs:
           version: 2.105.0
 
       - name: Start local Supabase
-        run: supabase start
+        run: supabase start --exclude studio,imgproxy,storage-api,realtime,edge-runtime,logflare,vector,supavisor,postgres-meta > /dev/null
 
       - name: Rebuild database from migrations and seed
         run: supabase db reset --local
 
       - name: Check database for schema errors
         run: supabase db lint --local --fail-on=error
+
+      - name: Run integration tests
+        run: pnpm test:integration
+
+      - name: Stop disposable Supabase
+        if: always()
+        run: supabase stop --no-backup
