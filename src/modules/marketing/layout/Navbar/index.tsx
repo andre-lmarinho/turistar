@@ -25,11 +25,11 @@ export function Navbar() {
       <div
         ref={shellRef}
         data-elevated="false"
-        className="data-[elevated=true]:bg-background data-[elevated=true]:lg:border-border mx-auto max-w-6xl rounded-2xl border border-transparent bg-transparent px-2 transition-[background-color,border-color] duration-300 ease-out data-[elevated=true]:lg:border lg:px-8">
-        <div className="flex items-center justify-between gap-3 lg:py-2">
+        className="data-[elevated=true]:bg-background data-[elevated=true]:lg:border-border mx-auto max-w-6xl rounded-2xl border border-transparent bg-transparent px-2 transition-[background-color,border-color] duration-150 ease-out data-[elevated=true]:lg:border motion-reduce:transition-none lg:px-8">
+        <nav className="flex min-h-12 items-center justify-between gap-3 lg:py-2">
           <Logo href="/" />
           <DesktopActions />
-        </div>
+        </nav>
       </div>
     </header>
   );

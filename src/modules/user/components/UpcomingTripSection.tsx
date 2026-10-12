@@ -63,7 +63,7 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
     <section aria-labelledby="upcoming-trip-heading">
       <Link
         href={`/p/${plan.id}`}
-        className="group relative block min-h-88 overflow-hidden rounded-2xl bg-muted shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        className="group relative block min-h-88 overflow-hidden rounded-2xl bg-muted shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none">
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-cover bg-center"
@@ -82,7 +82,9 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
           <div
             className={`${styles.ticket} overflow-hidden rounded-2xl bg-background text-foreground shadow-lg`}>
             <div className="flex items-center px-5 py-4 sm:px-6">
-              <h2 id="upcoming-trip-heading" className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              <h2
+                id="upcoming-trip-heading"
+                className="min-w-0 wrap-break-word text-2xl font-semibold tracking-tight sm:text-3xl">
                 {destination}
               </h2>
             </div>

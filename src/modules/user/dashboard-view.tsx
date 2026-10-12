@@ -56,6 +56,7 @@ export async function DashboardView({ plans, destinations, isDemo = false }: Das
 
   return (
     <main id="main-content" className="bg-card min-h-[calc(100dvh-4rem)] w-full">
+      <h1 className="sr-only">{t("dashboardHeading")}</h1>
       <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 md:px-8">
         {upcomingPlan ? <UpcomingTripSection plan={upcomingPlan} /> : null}
 

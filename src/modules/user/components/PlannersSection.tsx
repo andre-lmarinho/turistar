@@ -18,6 +18,7 @@ interface PlannersSectionProps {
 function CreateTripDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
   const t = useTranslations();
 
   function handlePlanCreated(plan: CreatePlannerPlanResult) {
@@ -26,10 +27,14 @@ function CreateTripDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!creating) setOpen(nextOpen);
+      }}>
       <DialogTriggerButton
         data-testid="create-trip-trigger"
-        className="border-primary bg-primary text-primary-foreground group flex min-h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl border p-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        className="border-primary bg-primary text-primary-foreground group flex min-h-48 w-full cursor-pointer flex-col items-center justify-center rounded-xl border p-4 text-center shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none">
         <span className="bg-primary-foreground/15 flex size-10 items-center justify-center rounded-full">
           <Plus className="size-5" aria-hidden="true" />
         </span>
@@ -37,14 +42,18 @@ function CreateTripDialog() {
         <span className="mt-1 text-xs opacity-80">{t("startWithDestination")}</span>
       </DialogTriggerButton>
       <DialogTriggerButton
-        className="bg-primary text-primary-foreground fixed right-5 bottom-5 inline-flex size-12 cursor-pointer items-center justify-center rounded-full shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:right-8 sm:bottom-8"
+        className="bg-primary text-primary-foreground fixed right-5 bottom-[max(1.25rem,env(safe-area-inset-bottom))] inline-flex size-12 cursor-pointer items-center justify-center rounded-full shadow-lg transition-shadow hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none sm:right-8 sm:bottom-8"
         aria-label={t("createTrip")}>
         <Plus className="size-5" aria-hidden="true" />
       </DialogTriggerButton>
       <DialogContent className="w-[calc(100%-2rem)] max-w-md p-0">
-        <DialogHeader title={t("createTrip")} description={t("createTripDescription")} />
-        <div className="max-h-[75vh] overflow-y-auto p-4">
-          <PlannerCreationForm onPlanCreated={handlePlanCreated} />
+        <DialogHeader
+          title={t("createTrip")}
+          description={t("createTripDescription")}
+          closeDisabled={creating}
+        />
+        <div className="p-4">
+          <PlannerCreationForm onPlanCreated={handlePlanCreated} onPendingChange={setCreating} />
         </div>
       </DialogContent>
     </Dialog>

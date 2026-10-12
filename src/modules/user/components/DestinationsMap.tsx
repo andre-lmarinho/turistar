@@ -50,7 +50,10 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
   const [failed, setFailed] = useState(false);
   const request = useRef<AbortController | null>(null);
   const [hover, setHover] = useState<(MapCountry & { x: number; y: number }) | null>(null);
+  const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const descriptionId = useId();
+  const instructionsId = useId();
+  const figureRef = useRef<HTMLElement>(null);
 
   const loadBoundaries = useCallback(() => {
     request.current?.abort();
@@ -108,13 +111,13 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
 
   if (failed)
     return (
-      <div className="flex min-h-75 w-full flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 text-center shadow-sm">
+      <div className="bg-background flex min-h-75 w-full flex-col items-center justify-center gap-3 rounded-xl p-6 text-center shadow-sm md:min-h-105">
         <p className="text-muted-foreground text-sm" role="alert">
           {t("mapLoadFailed")}
         </p>
         <button
           type="button"
-          className="text-foreground rounded-md border px-4 py-2 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+          className="text-foreground min-h-11 rounded-md border px-4 py-2 text-sm focus-visible:outline-2 focus-visible:outline-ring"
           onClick={loadBoundaries}>
           {t("tryAgain")}
         </button>
@@ -130,8 +133,15 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
       </div>
     );
 
+  const activeName =
+    activeCountry ??
+    boundaries.find((boundary) =>
+      countries.some((country) => country.code.trim().toLowerCase() === boundary.code)
+    )?.name ??
+    boundaries[0]?.name;
+
   return (
-    <div className="w-full rounded-xl bg-white p-4 shadow-sm md:p-6">
+    <div className="bg-background w-full rounded-xl p-4 shadow-sm md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-muted-foreground flex items-center gap-4 text-xs">
           <span className="flex items-center gap-2">
@@ -145,15 +155,56 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
         </div>
       </div>
       <figure
+        ref={figureRef}
         className="relative mx-auto max-w-5xl py-5"
         onMouseOver={(event) => showCountry(event.target, event)}
-        onMouseOut={() => setHover(null)}
-        onFocus={(event) => showCountry(event.target)}
+        onMouseLeave={() => {
+          if (hover && figureRef.current?.contains(document.activeElement) && document.activeElement) {
+            showCountry(document.activeElement);
+            return;
+          }
+          setHover(null);
+        }}
+        onFocus={(event) => {
+          const target = event.target;
+          if (target instanceof SVGElement && target.dataset.country)
+            setActiveCountry(target.dataset.country);
+          showCountry(target);
+        }}
         onClick={(event) => showCountry(event.target)}
-        onBlur={() => setHover(null)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setHover(null);
+        }}
         onKeyDown={(event) => {
-          if (event.key === "Escape") setHover(null);
+          if (event.key === "Escape" && hover) {
+            event.stopPropagation();
+            setHover(null);
+            return;
+          }
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            showCountry(event.target);
+            return;
+          }
+          const direction =
+            event.key === "ArrowRight" || event.key === "ArrowDown"
+              ? 1
+              : event.key === "ArrowLeft" || event.key === "ArrowUp"
+                ? -1
+                : 0;
+          if (!direction) return;
+          event.preventDefault();
+          const index = boundaries.findIndex((country) => country.name === activeName);
+          const nextCountry = boundaries[(index + direction + boundaries.length) % boundaries.length];
+          if (!nextCountry) return;
+          const paths = figureRef.current?.querySelectorAll<SVGElement>("[data-country]");
+          Array.from(paths ?? [])
+            .find((path) => path.dataset.country === nextCountry.name)
+            ?.focus();
         }}>
+        <p id={instructionsId} className="sr-only">
+          {t("mapKeyboardInstructions")}
+        </p>
         <svg viewBox="0 0 1000 460" className="w-full overflow-visible" aria-label={t("worldTravelMap")}>
           <title>{t("worldTravelMap")}</title>
           {boundaries.map((country) => {
@@ -162,6 +213,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
             );
             const isSelected = hover?.name === country.name;
             return (
+              // biome-ignore lint/a11y/useSemanticElements: Geographic SVG paths cannot be replaced with HTML buttons.
               <path
                 key={country.name}
                 d={country.path}
@@ -169,9 +221,10 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
                 vectorEffect="non-scaling-stroke"
                 strokeWidth={0.7}
                 data-country={country.name}
-                tabIndex={0}
+                role="button"
+                tabIndex={country.name === activeName ? 0 : -1}
                 aria-label={`${country.name} — ${isVisited ? t("mapVisited") : t("notVisitedYet")}`}
-                aria-describedby={isSelected ? descriptionId : undefined}
+                aria-describedby={isSelected ? `${instructionsId} ${descriptionId}` : instructionsId}
                 className={cn(
                   "stroke-white cursor-pointer focus-visible:outline-2 focus-visible:outline-ring",
                   isVisited ? "fill-primary" : "fill-muted",
@@ -185,7 +238,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
           <div
             id={descriptionId}
             role="tooltip"
-            className="bg-popover text-popover-foreground border-border pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border px-3 py-2 shadow-md"
+            className="bg-popover text-popover-foreground border-border absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border px-3 py-2 shadow-md"
             style={{ left: hover.x, top: hover.y - 12 }}>
             <p className="text-sm font-semibold">{hover.name}</p>
             <p className="text-muted-foreground text-xs">{visited ? t("mapVisited") : t("notVisitedYet")}</p>
