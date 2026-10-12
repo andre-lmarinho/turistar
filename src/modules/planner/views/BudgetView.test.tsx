@@ -175,6 +175,55 @@ describe("BudgetView", () => {
     await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
   });
 
+  it.each(["cancel", "snapshot"])("allows saving again after %s preparation fails", async (stage) => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
+    const client = shared.client;
+    if (!client) throw new Error("Missing budget query client");
+    if (stage === "cancel") vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
+    else
+      vi.spyOn(client, "getQueryData").mockImplementationOnce(() => {
+        throw new Error("Unavailable");
+      });
+
+    fireEvent.click(screen.getByRole("button", { name: "Edit entry" }));
+    fireEvent.change(screen.getAllByLabelText("Amount")[0], { target: { value: "10" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    expect(shared.updateEntry).not.toHaveBeenCalled();
+    expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
+    expect(screen.getByRole("button", { name: "Save entry" })).toBeEnabled();
+    expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
+
+    fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
+    await waitFor(() =>
+      expect(shared.updateEntry).toHaveBeenCalledExactlyOnceWith({ entry: { ...entry, amount: 10 } })
+    );
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
+  });
+
+  it.each(["cancel", "snapshot"])("allows deleting again after %s preparation fails", async (stage) => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
+    const client = shared.client;
+    if (!client) throw new Error("Missing budget query client");
+    if (stage === "cancel") vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
+    else
+      vi.spyOn(client, "getQueryData").mockImplementationOnce(() => {
+        throw new Error("Unavailable");
+      });
+
+    const deleteButton = screen.getByRole("button", { name: "Delete entry" });
+    fireEvent.click(deleteButton);
+    fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
+    expect(shared.deleteEntry).not.toHaveBeenCalled();
+    expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
+    expect(deleteButton).toBeEnabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    await waitFor(() => expect(shared.deleteEntry).toHaveBeenCalledExactlyOnceWith({ entryId: entry.id }));
+    await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
+  });
+
   it("restores a deleted entry when persistence fails", async () => {
     let fail!: (reason: Error) => void;
     shared.deleteEntry.mockImplementationOnce(

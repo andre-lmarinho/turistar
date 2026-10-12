@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 import type { DayPlan } from "@/features/activity/types";
-import type { CategoryKey, Entry } from "@/features/budget/types";
+import type { BudgetQueryResult, CategoryKey, Entry } from "@/features/budget/types";
 import { CATEGORIES, CHART_COLORS } from "@/features/budget/types";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";
@@ -76,10 +76,11 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
     if (writePending.current) return false;
     writePending.current = true;
     setIsWriting(true);
-    await cache.cancel({ planId });
-    const previous = cache.getData({ planId });
+    let previous: BudgetQueryResult | undefined;
     setPersistError(null);
     try {
+      await cache.cancel({ planId });
+      previous = cache.getData({ planId });
       if (entry.id) {
         const updated = { ...entry, id: entry.id };
         cache.setData(
@@ -100,35 +101,36 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
       }
       return true;
     } catch {
-      cache.setData({ planId }, previous);
+      if (previous) cache.setData({ planId }, previous);
       setPersistError(t("budgetSaveFailed"));
       return false;
     } finally {
-      void cache.invalidate({ planId });
       writePending.current = false;
       setIsWriting(false);
+      void cache.invalidate({ planId });
     }
   };
   const removeEntry = async (entryId: string) => {
     if (writePending.current) return;
     writePending.current = true;
     setIsWriting(true);
-    await cache.cancel({ planId });
-    const previous = cache.getData({ planId });
+    let previous: BudgetQueryResult | undefined;
     setPersistError(null);
-    cache.setData(
-      { planId },
-      (current) => current && { ...current, entries: current.entries.filter((item) => item.id !== entryId) }
-    );
     try {
+      await cache.cancel({ planId });
+      previous = cache.getData({ planId });
+      cache.setData(
+        { planId },
+        (current) => current && { ...current, entries: current.entries.filter((item) => item.id !== entryId) }
+      );
       await deleteEntry.mutateAsync({ entryId });
     } catch {
-      cache.setData({ planId }, previous);
+      if (previous) cache.setData({ planId }, previous);
       throw new Error("Unable to delete expense");
     } finally {
-      void cache.invalidate({ planId });
       writePending.current = false;
       setIsWriting(false);
+      void cache.invalidate({ planId });
     }
   };
 
