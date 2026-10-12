@@ -66,3 +66,14 @@ describe("EmailField", () => {
     expect(input).toHaveAttribute("inputmode", "email");
   });
 });
+
+describe("field accessibility", () => {
+  it("keeps read-only values focusable and selectable", () => {
+    render(<EmailField name="email" label="Email" value="traveler@example.test" readOnly />);
+    const input = screen.getByLabelText("Email");
+    expect(input).not.toBeDisabled();
+    expect(input).toHaveAttribute("readonly");
+    input.focus();
+    expect(input).toHaveFocus();
+  });
+});

@@ -3,6 +3,21 @@
 import { useEffect, useRef } from "react";
 import type { ActivitySuggestion, PlaceSelection } from "../types";
 
+export function getPlaceSelectionValues(selection: PlaceSelection<ActivitySuggestion>) {
+  const raw = selection.raw;
+  const name = (raw?.name ?? selection.name).trim();
+  const comma = name.indexOf(",");
+  const title = (comma > 0 && comma < name.length / 2 ? name.slice(0, comma).trim() : name) || selection.name;
+  return {
+    title,
+    address: selection.formatted ?? raw?.formatted ?? selection.name,
+    description: selection.description ?? raw?.description,
+    latitude: selection.latitude,
+    longitude: selection.longitude,
+    imageUrl: undefined as string | undefined,
+  };
+}
+
 export function usePlaceSelection() {
   const pending = useRef<AbortController | null>(null);
   const cancelSelection = () => pending.current?.abort();
@@ -12,20 +27,8 @@ export function usePlaceSelection() {
     cancelSelection();
     const controller = new AbortController();
     pending.current = controller;
-    const raw = selection.raw;
-    const name = (raw?.name ?? selection.name).trim();
-    const comma = name.indexOf(",");
-    const title =
-      (comma > 0 && comma < name.length / 2 ? name.slice(0, comma).trim() : name) || selection.name;
-    const place = {
-      title,
-      address: selection.formatted ?? raw?.formatted ?? selection.name,
-      description: selection.description ?? raw?.description,
-      latitude: selection.latitude,
-      longitude: selection.longitude,
-      imageUrl: undefined as string | undefined,
-    };
-    const placeId = selection.placeId ?? raw?.placeId;
+    const place = getPlaceSelectionValues(selection);
+    const placeId = selection.placeId ?? selection.raw?.placeId;
     if (placeId) {
       try {
         const response = await fetch(`/api/places/details?placeId=${encodeURIComponent(placeId)}`, {

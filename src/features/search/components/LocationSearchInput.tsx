@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { InputHTMLAttributes, RefObject } from "react";
 
 import type { SuggestionHook } from "@/features/search/hooks/createGeoapifySuggestionHook";
 import type { AutocompletePlace, PlaceSelection } from "@/features/search/types";
@@ -13,6 +14,12 @@ interface LocationSearchInputProps {
   value: string;
   onChange: (val: string | PlaceSelection<AutocompletePlace>) => void;
   id?: string;
+  label?: string;
+  inputRef?: RefObject<HTMLInputElement | null>;
+  inputProps?: Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    "id" | "value" | "onChange" | "role" | "aria-expanded" | "aria-controls" | "aria-activedescendant"
+  >;
   placeholder: string;
   className?: string;
   inputClassName?: string;
@@ -47,7 +54,10 @@ const mapOptionToSelection = (
 export function LocationSearchInput({
   value,
   onChange,
-  id = "location-input",
+  id,
+  label,
+  inputRef,
+  inputProps,
   placeholder,
   className = "",
   inputClassName,
@@ -69,6 +79,9 @@ export function LocationSearchInput({
   return (
     <SuggestionCombobox<AutocompletePlace, PlaceSelection<AutocompletePlace>>
       id={id}
+      label={label}
+      inputRef={inputRef}
+      inputProps={inputProps}
       placeholder={placeholder}
       value={value}
       open={open}
@@ -83,7 +96,7 @@ export function LocationSearchInput({
       className={className}
       inputClassName={
         inputClassName ??
-        "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
+        "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm"
       }
       onFocus={onFocusProp}
       onBlur={onBlur}

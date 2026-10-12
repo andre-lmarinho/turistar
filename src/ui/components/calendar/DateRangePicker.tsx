@@ -1,7 +1,8 @@
 "use client";
 
 import { format } from "date-fns";
-import { useTranslations } from "next-intl";
+import { enUS, ptBR } from "date-fns/locale";
+import { useLocale, useTranslations } from "next-intl";
 import * as React from "react";
 import type { DateRange } from "react-day-picker";
 
@@ -10,7 +11,7 @@ import { Popover, PopoverContent, PopoverTriggerButton } from "@/ui/components/p
 import { cn } from "@/ui/utils/cn";
 import { Calendar } from "./Calendar";
 
-interface Props {
+interface Props extends Omit<React.ComponentPropsWithoutRef<"button">, "value" | "onChange" | "children"> {
   className?: string;
   value: DateRange | undefined;
   onChange: (range: DateRange | undefined) => void;
@@ -18,26 +19,32 @@ interface Props {
   iconOnly?: boolean;
 }
 
-export function DateRangePicker({ className, value, onChange, disabled = false, iconOnly = false }: Props) {
+export const DateRangePicker = React.forwardRef<HTMLButtonElement, Props>(function DateRangePicker(
+  { className, value, onChange, disabled = false, iconOnly = false, ...props },
+  ref
+) {
   const [open, setOpen] = React.useState(false);
   const t = useTranslations();
+  const locale = useLocale() === "pt-BR" ? ptBR : enUS;
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, "LLL dd")} - ${format(value.to, "LLL dd, y")}`
-      : format(value.from, "LLL dd, y")
+      ? `${format(value.from, "LLL dd", { locale })} - ${format(value.to, "LLL dd, y", { locale })}`
+      : format(value.from, "LLL dd, y", { locale })
     : t("pickDateRange");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTriggerButton
-        aria-label={label}
+        {...props}
+        ref={ref}
+        aria-label={props["aria-label"] ?? label}
         title={iconOnly ? label : undefined}
         data-testid={iconOnly ? "date-picker" : undefined}
         className={cn(
           iconOnly
-            ? "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors"
-            : "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors",
+            ? "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            : "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
           !iconOnly && !value?.from && "text-muted-foreground",
           className
         )}
@@ -54,11 +61,9 @@ export function DateRangePicker({ className, value, onChange, disabled = false, 
         )}
       </PopoverTriggerButton>
 
-      <PopoverContent
-        className={cn("mt-2 p-0 shadow-lg", iconOnly ? "min-w-125" : "w-full max-w-108")}
-        align="start"
-        side="bottom">
+      <PopoverContent className="p-0 shadow-lg" align="start" side="bottom" sideOffset={8}>
         <Calendar
+          locale={locale}
           mode="range"
           selected={value}
           onSelect={onChange}
@@ -69,4 +74,4 @@ export function DateRangePicker({ className, value, onChange, disabled = false, 
       </PopoverContent>
     </Popover>
   );
-}
+});

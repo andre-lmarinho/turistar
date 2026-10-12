@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { createRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { DateRangePicker } from "./DateRangePicker";
@@ -68,4 +69,28 @@ describe("DateRangePicker", () => {
     await waitFor(() => expect(screen.queryByRole("button", { name: /12th May 2026/ })).toBeNull());
     expect(onChange).not.toHaveBeenCalled();
   });
+});
+
+it("forwards form error semantics and the trigger ref", () => {
+  const ref = createRef<HTMLButtonElement>();
+  render(
+    <>
+      <label id="dates-label" htmlFor="dates">
+        Travel dates
+      </label>
+      <DateRangePicker
+        ref={ref}
+        id="dates"
+        value={undefined}
+        onChange={vi.fn()}
+        aria-labelledby="dates-label"
+        aria-invalid
+        aria-describedby="dates-error"
+      />
+      <p id="dates-error">Choose both dates</p>
+    </>
+  );
+  expect(ref.current).toBe(screen.getByRole("button", { name: "Travel dates" }));
+  expect(ref.current).toHaveAttribute("aria-invalid", "true");
+  expect(ref.current).toHaveAccessibleDescription("Choose both dates");
 });

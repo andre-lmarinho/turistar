@@ -27,12 +27,9 @@ export function Tooltip({
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger render={children} />
         <TooltipPrimitive.Portal>
-          <TooltipPrimitive.Positioner side={position} align="center" sideOffset={6}>
+          <TooltipPrimitive.Positioner side={position} align="center" sideOffset={6} className="z-70">
             <TooltipPrimitive.Popup
-              className={cn(
-                "text-background bg-foreground pointer-events-none z-50 rounded px-2 py-1 text-xs",
-                className
-              )}>
+              className={cn("text-background bg-foreground z-70 rounded px-2 py-1 text-xs", className)}>
               {content}
             </TooltipPrimitive.Popup>
           </TooltipPrimitive.Positioner>

@@ -56,7 +56,7 @@ const mapOptionToSelection = (
 export function ActivitySearchInput({
   value,
   onChange,
-  id = "activity-suggestion-input",
+  id,
   label,
   className,
   inputClassName,
@@ -95,7 +95,7 @@ export function ActivitySearchInput({
       className={className}
       inputClassName={
         inputClassName ??
-        "bg-background focus:ring-primary flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
+        "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-sm transition focus:ring-2 focus:outline-none"
       }
       renderOption={(option, { active }) => (
         <div className="flex flex-col gap-0.5">
