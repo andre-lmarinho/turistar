@@ -38,6 +38,43 @@ function Search({ onSelect = vi.fn(), onEscape = vi.fn() }) {
 }
 
 describe("SuggestionCombobox", () => {
+  it("forwards native focus and blur events alongside dedicated callbacks and popup behavior", () => {
+    const nativeFocus = vi.fn();
+    const nativeBlur = vi.fn();
+    const focus = vi.fn();
+    const blur = vi.fn();
+    const changeOpen = vi.fn();
+    render(
+      <SuggestionCombobox
+        label="Place"
+        value=""
+        open={false}
+        onOpenChange={changeOpen}
+        onInputChange={vi.fn()}
+        options={options}
+        mapOptionToSelection={(option) => option.value}
+        onSelect={vi.fn()}
+        onFocus={focus}
+        onBlur={blur}
+        inputProps={{ onFocus: nativeFocus, onBlur: nativeBlur }}
+      />
+    );
+    const input = screen.getByRole("combobox", { name: "Place" });
+    fireEvent.focus(input);
+    expect(nativeFocus).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ type: "focus", target: input })
+    );
+    expect(focus).toHaveBeenCalledOnce();
+    expect(changeOpen).toHaveBeenLastCalledWith(true);
+
+    fireEvent.blur(input);
+    expect(nativeBlur).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ type: "blur", target: input })
+    );
+    expect(blur).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ type: "blur", target: input }));
+    expect(changeOpen).toHaveBeenLastCalledWith(false);
+  });
+
   it("lets Tab leave the field without selecting a suggestion", () => {
     const select = vi.fn();
     render(<Search onSelect={select} />);

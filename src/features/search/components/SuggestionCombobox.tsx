@@ -98,12 +98,14 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
     onOpenChange(true);
   };
 
-  const handleInputFocus = () => {
+  const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
     onOpenChange(true);
+    inputProps?.onFocus?.(event);
     onFocus?.();
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    inputProps?.onBlur?.(event);
     onBlur?.(event);
     const related = event.relatedTarget as Node | null;
     if (related && containerRef.current?.contains(related)) {
