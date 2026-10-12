@@ -1,10 +1,49 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import { createRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 
+import pt from "@/i18n/locales/pt-BR.json";
 import { DateRangePicker } from "./DateRangePicker";
 
 describe("DateRangePicker", () => {
+  it.each([
+    { to: undefined, label: "12 mai 2026" },
+    { to: new Date(2026, 4, 19), label: "12 mai - 19 mai 2026" },
+  ])("uses day-first labels in pt-BR: $label", ({ to, label }) => {
+    const value = { from: new Date(2026, 4, 12), to };
+    const { rerender } = render(
+      <NextIntlClientProvider locale="pt-BR" messages={pt}>
+        <DateRangePicker value={value} onChange={vi.fn()} />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByRole("button", { name: label })).toHaveTextContent(label);
+
+    rerender(
+      <NextIntlClientProvider locale="pt-BR" messages={pt}>
+        <DateRangePicker iconOnly value={value} onChange={vi.fn()} />
+      </NextIntlClientProvider>
+    );
+    expect(screen.getByRole("button", { name: label })).toHaveAttribute("title", label);
+  });
+
+  it("returns Date values with unchanged ISO serialization when picking in pt-BR", async () => {
+    const onChange = vi.fn();
+    render(
+      <NextIntlClientProvider locale="pt-BR" messages={pt}>
+        <DateRangePicker value={{ from: new Date(2026, 4, 12) }} onChange={onChange} />
+      </NextIntlClientProvider>
+    );
+    fireEvent.click(screen.getByRole("button", { name: "12 mai 2026" }));
+    fireEvent.click(await screen.findByRole("button", { name: /17.*maio.*2026/i }));
+
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    const selected = onChange.mock.calls.at(-1)?.[0];
+    expect(selected).toEqual({ from: new Date(2026, 4, 12), to: new Date(2026, 4, 17) });
+    expect(selected.from.toISOString()).toBe("2026-05-12T00:00:00.000Z");
+    expect(selected.to.toISOString()).toBe("2026-05-17T00:00:00.000Z");
+  });
+
   it("falls back to the translated placeholder when no range is selected", () => {
     render(<DateRangePicker value={undefined} onChange={vi.fn()} />);
 

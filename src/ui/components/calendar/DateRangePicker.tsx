@@ -26,11 +26,13 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, Props>(functi
   const [open, setOpen] = React.useState(false);
   const t = useTranslations();
   const locale = useLocale() === "pt-BR" ? ptBR : enUS;
+  const datePattern = locale === ptBR ? "dd LLL" : "LLL dd";
+  const dateWithYearPattern = locale === ptBR ? "dd LLL y" : "LLL dd, y";
 
   const label = value?.from
     ? value.to
-      ? `${format(value.from, "LLL dd", { locale })} - ${format(value.to, "LLL dd, y", { locale })}`
-      : format(value.from, "LLL dd, y", { locale })
+      ? `${format(value.from, datePattern, { locale })} - ${format(value.to, dateWithYearPattern, { locale })}`
+      : format(value.from, dateWithYearPattern, { locale })
     : t("pickDateRange");
 
   return (
