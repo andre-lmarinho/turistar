@@ -10,7 +10,7 @@ export function getPlaceSelectionValues(selection: PlaceSelection<ActivitySugges
   const title = (comma > 0 && comma < name.length / 2 ? name.slice(0, comma).trim() : name) || selection.name;
   return {
     title,
-    address: selection.formatted ?? raw?.formatted ?? selection.name,
+    address: selection.formatted || raw?.formatted || selection.name,
     description: selection.description ?? raw?.description,
     latitude: selection.latitude,
     longitude: selection.longitude,
