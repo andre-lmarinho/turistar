@@ -123,6 +123,7 @@ export const MapView = React.memo(function MapView({
           <React.Fragment key={day.id}>
             {coords.map((position, index) => {
               const activity = activities[index];
+              const label = activity.title.trim() || t("untitledActivity");
               const background = getCssColor(activity.color) ?? defaultBg;
               const isDimmed = highlightedActivityId
                 ? highlightedActivityId !== activity.id
@@ -138,9 +139,9 @@ export const MapView = React.memo(function MapView({
               });
               return (
                 <Marker
-                  key={activity.id}
-                  title={activity.title.trim() || t("untitledActivity")}
-                  alt={activity.title.trim() || t("untitledActivity")}
+                  key={`${activity.id}:${label}`}
+                  title={label}
+                  alt={label}
                   position={position}
                   icon={icon}
                   eventHandlers={{
@@ -153,7 +154,7 @@ export const MapView = React.memo(function MapView({
                     },
                   }}>
                   <LeafletTooltip direction="top" offset={[0, -16]}>
-                    {activity.title.trim() || t("untitledActivity")}
+                    {label}
                   </LeafletTooltip>
                 </Marker>
               );
