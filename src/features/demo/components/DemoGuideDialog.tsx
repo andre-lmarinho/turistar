@@ -43,17 +43,17 @@ export function DemoGuideDialog({ isDemo }: DemoGuideDialogProps) {
         <DialogHeader visuallyHidden title={t("demoTitle")} description={t("demoDescription")} />
 
         <div className="flex items-center gap-2">
-          <MapIcon className="text-primary size-6 shrink-0" aria-hidden="true" />
+          <MapIcon className="text-primary-text size-6 shrink-0" aria-hidden="true" />
           <p className="text-foreground text-2xl font-semibold tracking-tight">
-            {t("demoWelcome")} <span className="text-primary">{t("demoTuristar")}</span>
+            {t("demoWelcome")} <span className="text-primary-text">{t("demoTuristar")}</span>
           </p>
         </div>
 
         <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{t("demoExplanation")}</p>
 
-        <div className="from-primary/10 to-primary/5 mt-5 inline-flex items-center gap-2 self-start rounded-full bg-linear-to-r px-3 py-1.5">
-          <Hourglass className="text-primary size-4" aria-hidden="true" />
-          <span className="text-primary text-xs font-semibold tracking-wide">
+        <div className="from-selection to-background mt-5 inline-flex items-center gap-2 self-start rounded-full bg-linear-to-r px-3 py-1.5">
+          <Hourglass className="text-primary-text size-4" aria-hidden="true" />
+          <span className="text-primary-text text-xs font-semibold tracking-wide">
             {t("demoResetsIn", { minutes: Math.max(0, minutesLeft) })}
           </span>
         </div>

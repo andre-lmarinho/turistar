@@ -191,7 +191,7 @@ function PlannerContent({
       id="main-content"
       className="bg-card relative flex flex-1 flex-col overflow-hidden p-4 md:px-6 md:pb-8 xl:px-8">
       <div className="flex w-full min-w-0 flex-wrap justify-between gap-x-4 gap-y-2 pb-4 md:items-center">
-        <h1 className="bg-card relative inline-block min-w-[1ch] max-w-full cursor-pointer rounded-md py-2 text-xl font-semibold whitespace-nowrap hover:bg-[color-mix(in_oklch,var(--card)_75%,var(--card-foreground)_5%)]">
+        <h1 className="bg-card relative inline-block min-w-[1ch] max-w-full cursor-pointer rounded-md py-2 text-xl font-semibold whitespace-nowrap hover:bg-interactive-hover">
           <span
             aria-hidden="true"
             className="invisible block truncate whitespace-pre rounded-md border-2 border-transparent px-2 py-1">
@@ -247,7 +247,7 @@ function PlannerContent({
       {titleSaving ? <output className="sr-only">{t("savingChanges")}</output> : null}
       {titleError ? (
         <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
-          <p id="planner-title-error" role="alert" className="text-destructive">
+          <p id="planner-title-error" role="alert" className="text-destructive-text">
             {t("plannerTitleSaveFailed")}
           </p>
           <Button variant="ghost" onClick={() => void handleTitleBlur()}>

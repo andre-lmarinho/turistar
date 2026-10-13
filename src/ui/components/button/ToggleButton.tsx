@@ -62,7 +62,9 @@ function ToggleButtonInner<T extends string = string>(
             aria-pressed={isSelected}
             className={cn(
               "relative flex-1 cursor-pointer rounded-sm px-2 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-not-allowed",
-              isSelected ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
+              isSelected
+                ? "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:ring-primary-foreground"
+                : "text-foreground hover:bg-interactive-hover"
             )}>
             <div className="flex h-full w-full items-center justify-center gap-2 p-2">
               {Icon && <Icon aria-hidden="true" className="size-4 shrink-0" />}

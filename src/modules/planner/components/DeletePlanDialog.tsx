@@ -49,7 +49,7 @@ export function DeletePlanDialog({ className, isDemo = false, planId, isOwner }:
           aria-label={t("deletePlanner")}
           disabled={isPending}
           className={cn(
-            "text-foreground hover:bg-muted/60 focus-visible:ring-ring inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 md:size-8",
+            "text-foreground hover:bg-interactive-hover focus-visible:ring-ring inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 md:size-8",
             className
           )}>
           <Trash2 className="size-4" aria-hidden="true" />

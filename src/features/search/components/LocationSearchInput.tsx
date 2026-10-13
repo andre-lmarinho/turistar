@@ -96,7 +96,7 @@ export function LocationSearchInput({
       className={className}
       inputClassName={
         inputClassName ??
-        "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm"
+        "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border border-input px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm"
       }
       onFocus={onFocusProp}
       onBlur={onBlur}

@@ -137,7 +137,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
           autocompleteHook={useDestinationAutocomplete}
         />
         {error?.field === "destination" ? (
-          <p id="destination-error" role="alert" className="text-destructive text-sm">
+          <p id="destination-error" role="alert" className="text-destructive-text text-sm">
             {error.message}
           </p>
         ) : null}
@@ -159,7 +159,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
           aria-invalid={error?.field === "dates"}
         />
         {error?.field === "dates" ? (
-          <p id="dates-error" role="alert" className="text-destructive text-sm">
+          <p id="dates-error" role="alert" className="text-destructive-text text-sm">
             {error.message}
           </p>
         ) : null}
@@ -179,7 +179,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
       </p>
 
       {error?.field === "submit" ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-destructive-text text-sm">
           {error.message}
         </p>
       ) : null}

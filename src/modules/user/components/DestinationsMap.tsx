@@ -228,7 +228,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
                 className={cn(
                   "stroke-white cursor-pointer focus-visible:outline-2 focus-visible:outline-ring",
                   isVisited ? "fill-primary" : "fill-muted",
-                  isSelected && "fill-primary/60"
+                  isSelected && (isVisited ? "fill-primary-hover" : "fill-map-unvisited-hover")
                 )}
               />
             );

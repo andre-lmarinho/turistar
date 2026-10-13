@@ -43,7 +43,7 @@ export function LanguageSelect({ className }: { className?: string }) {
           aria-label={t("language")}
           aria-busy={pending}
           aria-describedby={failed ? `${id}-error` : undefined}
-          className="group border-border/70 bg-background/80 text-foreground hover:bg-muted/50 active:bg-muted data-popup-open:bg-muted/50 flex min-h-11 items-center gap-2.5 rounded-full border px-3.5 py-2 text-sm font-medium shadow-md backdrop-blur-sm transition-colors duration-150 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+          className="group border-border/70 bg-background/80 text-foreground hover:bg-interactive-hover active:bg-interactive-active data-popup-open:bg-interactive-active flex min-h-11 items-center gap-2.5 rounded-full border px-3.5 py-2 text-sm font-medium shadow-md backdrop-blur-sm transition-colors duration-150 disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
           <Globe2 className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
           <Select.Value lang={locale} />
           {pending ? (
@@ -64,7 +64,7 @@ export function LanguageSelect({ className }: { className?: string }) {
                     key={value}
                     value={value}
                     label={label}
-                    className="data-highlighted:bg-muted/60 data-highlighted:ring-2 data-highlighted:ring-inset data-highlighted:ring-ring data-selected:bg-muted/30 flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm outline-none">
+                    className="data-highlighted:bg-interactive-hover data-highlighted:text-foreground data-highlighted:ring-2 data-highlighted:ring-inset data-highlighted:ring-ring data-selected:bg-selection data-selected:text-selection-foreground data-selected:data-highlighted:bg-selection-hover flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm outline-none">
                     <Select.ItemText lang={value}>{label}</Select.ItemText>
                     <Select.ItemIndicator>
                       <Check className="size-4" aria-hidden="true" />
@@ -77,7 +77,7 @@ export function LanguageSelect({ className }: { className?: string }) {
         </Select.Portal>
       </Select.Root>
       {failed ? (
-        <p id={`${id}-error`} role="alert" className="text-destructive max-w-60 text-right text-sm">
+        <p id={`${id}-error`} role="alert" className="text-destructive-text max-w-60 text-right text-sm">
           {t("languageError")}
         </p>
       ) : null}

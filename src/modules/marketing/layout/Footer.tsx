@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { Logo } from "@/ui/components/logo";
 
-const EXTERNAL_LINK_CLASS = "underline underline-offset-2 hover:opacity-70";
+const EXTERNAL_LINK_CLASS = "underline underline-offset-2 hover:text-primary-text";
 
 const RESOURCE_LINKS = [
   { href: "/privacy", labelKey: "privacyPolicy" },
@@ -47,7 +47,7 @@ export async function Footer() {
           <nav aria-label={t("resources")} className="flex flex-col gap-2">
             <p className="font-semibold">{t("resources")}</p>
             {RESOURCE_LINKS.map((link) => (
-              <Link key={link.href} className="hover:opacity-70" href={link.href}>
+              <Link key={link.href} className="hover:text-primary-text" href={link.href}>
                 {t(link.labelKey)}
               </Link>
             ))}

@@ -122,7 +122,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
         </p>
       ) : exchangeState === "error" ? (
         <div className="grid gap-6">
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive-text text-sm">
             {t("invalidResetLink")}
           </p>
           <Button href={forgotPasswordHref} className="min-h-11">
@@ -153,7 +153,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
             })}
           />
           {formError ? (
-            <p role="alert" className="text-destructive text-sm">
+            <p role="alert" className="text-destructive-text text-sm">
               {t(formError)}
             </p>
           ) : null}

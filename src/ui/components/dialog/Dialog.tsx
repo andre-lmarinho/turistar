@@ -34,7 +34,7 @@ function DialogHeader({
           <DialogPrimitive.Title className="text-lg font-semibold">{title}</DialogPrimitive.Title>
           <DialogPrimitive.Close
             disabled={closeDisabled}
-            className="text-muted-foreground hover:bg-muted/60 hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+            className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground inline-flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
             aria-label={closeLabel ?? t("close")}>
             <X className="size-4" aria-hidden="true" />
           </DialogPrimitive.Close>

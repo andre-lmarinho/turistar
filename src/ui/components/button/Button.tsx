@@ -12,9 +12,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        accent: "bg-accent text-foreground hover:bg-accent/90",
-        ghost: "bg-background text-foreground hover:bg-muted",
+        primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+        accent: "bg-accent text-accent-foreground hover:bg-accent-hover",
+        ghost: "bg-background text-foreground hover:bg-interactive-hover",
       },
     },
     defaultVariants: { variant: "primary" },

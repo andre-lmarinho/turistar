@@ -62,7 +62,7 @@ export async function DashboardView({ plans, destinations, isDemo = false }: Das
 
         <section aria-labelledby="map-heading" className="space-y-3">
           <div className="flex items-center gap-2">
-            <MapPin className="text-primary h-5 w-5" aria-hidden="true" />
+            <MapPin className="text-primary-text h-5 w-5" aria-hidden="true" />
             <h2 id="map-heading" className="text-foreground text-base font-semibold">
               {t("yourTravelMap")}
             </h2>

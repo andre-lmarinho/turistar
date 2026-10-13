@@ -247,7 +247,7 @@ export const ActivityDialog = memo(function ActivityDialog({
           {draft.imageUrl && (
             <Button
               variant="ghost"
-              className="border-border hover:bg-border absolute right-2 bottom-2 z-20 border py-1 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
+              className="border-border hover:bg-interactive-hover absolute right-2 bottom-2 z-20 border py-1 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
               onClick={handleRemoveImage}>
               {t("removePhoto")}
             </Button>
@@ -258,7 +258,7 @@ export const ActivityDialog = memo(function ActivityDialog({
               <Popover
                 open={activePopup === "day"}
                 onOpenChange={(open) => setActivePopup(open ? "day" : null)}>
-                <PopoverTriggerButton className="border-border bg-background text-foreground hover:bg-border inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors">
+                <PopoverTriggerButton className="border-border bg-background text-foreground hover:bg-interactive-hover inline-flex cursor-pointer items-center gap-1 rounded-md border px-3 py-1 text-xs font-medium transition-colors">
                   {currentDay
                     ? format.dateTime(new Date(currentDay.id), {
                         weekday: "short",
@@ -287,7 +287,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                           onDayChange?.(e.target.value);
                           closePopovers();
                         }}
-                        className="mt-1 w-full rounded border px-2 py-1 text-sm">
+                        className="border-input bg-background text-foreground mt-1 w-full rounded border px-2 py-1 text-sm">
                         {days.map((day) => (
                           <option key={day.id} value={day.id}>
                             {format.dateTime(new Date(day.id), {
@@ -308,7 +308,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                         id="position-select"
                         value={currentIndex >= 0 ? currentIndex : 0}
                         onChange={(e) => onPositionChange?.(Number(e.target.value))}
-                        className="mt-1 w-full rounded border px-2 py-1 text-sm">
+                        className="border-input bg-background text-foreground mt-1 w-full rounded border px-2 py-1 text-sm">
                         {dayPositions.map((pos) => (
                           <option key={pos} value={pos}>
                             {pos + 1}
@@ -336,7 +336,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                       variant="ghost"
                       title={t("delete")}
                       aria-label={t("delete")}
-                      className="hover:bg-border size-11 rounded-full p-0 md:size-8">
+                      className="hover:bg-interactive-hover size-11 rounded-full p-0 md:size-8">
                       <Trash2 className="size-4" aria-hidden="true" />
                     </Button>
                   }
@@ -348,7 +348,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                 onOpenChange={(open) => setActivePopup(open ? "color" : null)}>
                 <PopoverTriggerButton
                   title={t("cardColor")}
-                  className="bg-background text-foreground hover:bg-border hover:text-foreground inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors md:size-8">
+                  className="bg-background text-foreground hover:bg-interactive-hover hover:text-foreground inline-flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors md:size-8">
                   <Palette className="size-4" aria-hidden="true" />
                   <span className="sr-only">{t("cardColorSr")}</span>
                 </PopoverTriggerButton>
@@ -362,7 +362,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                     {draft.imageUrl && (
                       <Button
                         variant="ghost"
-                        className="border-border hover:bg-muted/60 border"
+                        className="border-border hover:bg-interactive-hover border"
                         onClick={handleRemoveImage}>
                         {t("removePhoto")}
                       </Button>
@@ -391,7 +391,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                       <div>
                         <label
                           htmlFor={uploadInputId}
-                          className="border-border bg-background text-foreground hover:bg-muted/60 inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-ring">
+                          className="border-border bg-background text-foreground hover:bg-interactive-hover inline-flex cursor-pointer items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors focus-within:ring-2 focus-within:ring-ring">
                           {t("uploadImage")}
                         </label>
                         <input
@@ -409,7 +409,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                           className="sr-only"
                         />
                         {imageError ? (
-                          <p role="alert" className="text-destructive mt-2 text-sm">
+                          <p role="alert" className="text-destructive-text mt-2 text-sm">
                             {imageError}
                           </p>
                         ) : null}
@@ -424,7 +424,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                 title={t("close")}
                 aria-label={t("close")}
                 onClick={commitAndClose}
-                className="hover:bg-border size-11 rounded-full p-0 md:size-8">
+                className="hover:bg-interactive-hover size-11 rounded-full p-0 md:size-8">
                 <X className="size-4" aria-hidden="true" />
               </Button>
             </div>
@@ -485,7 +485,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                 aria-describedby={saveError === "number" ? "activity-save-error" : undefined}
                 type="number"
                 placeholder={placeholder}
-                className="focus:ring-ring w-22 rounded border px-2 py-1 text-right text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
+                className="border-input focus:ring-ring w-22 rounded border px-2 py-1 text-right text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
                 autoComplete="off"
                 min={0}
                 step="any"
@@ -538,7 +538,7 @@ export const ActivityDialog = memo(function ActivityDialog({
           />
         </div>
         {saveError ? (
-          <p id="activity-save-error" role="alert" className="text-destructive px-4 pb-3 text-sm">
+          <p id="activity-save-error" role="alert" className="text-destructive-text px-4 pb-3 text-sm">
             {t(
               saveError === "title"
                 ? "activityTitleRequired"
