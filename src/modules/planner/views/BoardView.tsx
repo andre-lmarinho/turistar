@@ -282,14 +282,14 @@ export const DraggableCard = memo(function DraggableCard({
               {...attributes}
               onKeyDown={(event) => listeners?.onKeyDown?.(event)}
               aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
-              className="text-muted-foreground hover:bg-muted focus-visible:ring-ring absolute top-2 right-2 inline-flex size-11 cursor-grab touch-none items-center justify-center rounded-md focus-visible:ring-2 active:cursor-grabbing md:size-8">
+              className="text-muted-foreground hover:bg-interactive-hover focus-visible:ring-ring absolute top-2 right-2 inline-flex size-11 cursor-grab touch-none items-center justify-center rounded-md focus-visible:ring-2 active:cursor-grabbing md:size-8">
               <GripVertical className="size-4" aria-hidden="true" />
             </button>
           }
         />
       </div>
       {isDragging && (
-        <div className="bg-primary/5 border-primary/50 absolute inset-0 rounded-xl border-2 border-dashed" />
+        <div className="bg-selection border-primary absolute inset-0 rounded-xl border-2 border-dashed" />
       )}
     </div>
   );
@@ -369,7 +369,7 @@ export const DayColumn = memo(function DayColumn({
         <button
           type="button"
           onClick={() => onFallbackAdd?.(day.id, day.activities.length)}
-          className="bg-background hover:bg-muted text-foreground flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl border border-dashed px-3 py-2 text-left text-sm font-medium transition active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100">
+          className="bg-background hover:bg-interactive-hover text-foreground flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl border border-dashed px-3 py-2 text-left text-sm font-medium transition active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100">
           <Plus size={18} aria-hidden="true" />
           <span>{t("addActivity")}</span>
         </button>

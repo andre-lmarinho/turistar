@@ -24,7 +24,7 @@ const CATEGORY_TRANSLATION_KEYS = {
 const currencySymbol = "\u0024";
 const EMPTY_ENTRIES: Entry[] = [];
 const inputClasses =
-  "h-11 w-full rounded-xl border border-border bg-background px-3 pl-8 text-right text-base font-semibold tabular-nums outline-none transition-shadow focus:ring-2 focus:ring-ring focus:ring-offset-1";
+  "h-11 w-full rounded-xl border border-input bg-background px-3 pl-8 text-right text-base font-semibold tabular-nums outline-none transition-shadow focus:ring-2 focus:ring-ring focus:ring-offset-1";
 interface Props {
   planId: string;
   days: DayPlan[];
@@ -138,7 +138,7 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
     <div className="bg-background flex h-full w-full flex-col gap-5 overflow-y-auto rounded-2xl border p-2 [scrollbar-color:var(--border)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
       {loadError ? (
         <div className="space-y-2">
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive-text text-sm">
             {t("budgetLoadFailed")}
           </p>
           <Button
@@ -294,7 +294,7 @@ export function Summary({ totalSpent, persistError }: { totalSpent: number; pers
           <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
         </div>
         {persistError ? (
-          <p role="alert" className="text-destructive mt-3 text-sm">
+          <p role="alert" className="text-destructive-text mt-3 text-sm">
             {persistError}
           </p>
         ) : null}
@@ -380,10 +380,10 @@ function ExpenseEditor({
           placeholder={t("descriptionLabel")}
           autoComplete="off"
           disabled={disabled || submitting}
-          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
+          className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
         />
         {showErrors && !draft.description.trim() ? (
-          <p id={`description-error-${id}`} role="alert" className="text-destructive mt-1 text-xs">
+          <p id={`description-error-${id}`} role="alert" className="text-destructive-text mt-1 text-xs">
             {t("expenseDescriptionRequired")}
           </p>
         ) : null}
@@ -398,7 +398,7 @@ function ExpenseEditor({
             const category = CATEGORIES.find(({ key }) => key === event.target.value);
             if (category) setDraft({ ...draft, category: category.key });
           }}
-          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm">
+          className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm">
           {CATEGORIES.map(({ key }) => (
             <option key={key} value={key}>
               {t(CATEGORY_TRANSLATION_KEYS[key])}
@@ -430,7 +430,7 @@ function ExpenseEditor({
           />
         </div>
         {showErrors && (!Number.isFinite(amount) || amount <= 0) ? (
-          <p id={`amount-error-${id}`} role="alert" className="text-destructive mt-1 text-xs">
+          <p id={`amount-error-${id}`} role="alert" className="text-destructive-text mt-1 text-xs">
             {t("expenseAmountInvalid")}
           </p>
         ) : null}

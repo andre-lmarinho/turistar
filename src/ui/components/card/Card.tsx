@@ -17,7 +17,7 @@ export function Card({ href, title, description, image, className }: CardProps) 
     ? isPrepared
       ? image
       : `url("${image.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}")`
-    : "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)";
+    : "linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)";
 
   return (
     <Link

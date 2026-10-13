@@ -88,14 +88,14 @@ function ConfirmationDialog({
             <AlertDialog.Title className="text-sm font-medium">{title}</AlertDialog.Title>
             <AlertDialog.Close
               disabled={busy}
-              className="text-muted-foreground hover:bg-muted/60 hover:text-foreground focus-visible:ring-ring inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground focus-visible:ring-ring inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={closeLabel ?? t("close")}>
               <X className="size-4" aria-hidden="true" />
             </AlertDialog.Close>
           </div>
           <AlertDialog.Description className="mt-3 text-sm">{description}</AlertDialog.Description>
           {failed ? (
-            <p role="alert" className="text-destructive mt-3 text-sm">
+            <p role="alert" className="text-destructive-text mt-3 text-sm">
               {errorMessage ?? t("unexpectedError")}
             </p>
           ) : null}
@@ -104,7 +104,7 @@ function ConfirmationDialog({
               {cancelLabel ?? t("cancel")}
             </AlertDialog.Close>
             <Button
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive-hover"
               onClick={handleConfirm}
               disabled={busy}
               aria-busy={busy}>

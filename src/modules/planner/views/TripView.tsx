@@ -51,7 +51,7 @@ function TripActivityCard({
         onMouseLeave={() => onHover?.(false)}
         data-no-drag-scroll
         className={cn(
-          "hover:bg-muted/60 focus-visible:ring-ring flex w-full min-w-0 cursor-pointer items-center gap-3 px-3 py-2.5 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-inset",
+          "hover:bg-interactive-hover focus-visible:ring-ring flex w-full min-w-0 cursor-pointer items-center gap-3 px-3 py-2.5 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-inset",
           dragHandle && "pr-12"
         )}>
         <span
@@ -122,7 +122,7 @@ function SortableTripActivity({
               ref={setActivatorNodeRef}
               type="button"
               aria-label={`${t("reorderActivity")} ${activity.title || t("untitledActivity")}`}
-              className="text-muted-foreground hover:bg-muted focus-visible:ring-ring absolute top-1/2 right-2 inline-flex size-8 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-md transition-colors active:cursor-grabbing focus-visible:ring-2"
+              className="text-muted-foreground hover:bg-interactive-hover focus-visible:ring-ring absolute top-1/2 right-2 inline-flex size-8 -translate-y-1/2 cursor-grab touch-none items-center justify-center rounded-md transition-colors active:cursor-grabbing focus-visible:ring-2"
               {...attributes}
               {...listeners}
               onClick={(event) => event.stopPropagation()}>
@@ -194,7 +194,7 @@ function TripDay({
               type="button"
               onClick={handleAdd}
               aria-label={t("addActivity")}
-              className="text-muted-foreground hover:bg-background hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
+              className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
               <Plus size={15} aria-hidden="true" />
             </button>
           </Tooltip>
@@ -204,7 +204,7 @@ function TripDay({
               onClick={() => onCollapsedChange(!isCollapsed)}
               aria-label={isCollapsed ? t("expandDay") : t("collapseDay")}
               aria-expanded={!isCollapsed}
-              className="text-muted-foreground hover:bg-background hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
+              className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
               <ChevronDown
                 className={cn("size-4 transition-transform", isCollapsed && "-rotate-90")}
                 aria-hidden="true"
@@ -281,7 +281,7 @@ export function TripView({
                   type="button"
                   onClick={toggleAllDays}
                   aria-label={areAllDaysCollapsed ? t("expandAllDays") : t("collapseAllDays")}
-                  className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
+                  className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
                   <ChevronDown
                     className={cn("size-4 transition-transform", areAllDaysCollapsed && "-rotate-90")}
                     aria-hidden="true"
@@ -293,7 +293,7 @@ export function TripView({
                   type="button"
                   onClick={() => setIsItineraryOpen(false)}
                   aria-label={t("hideItinerary")}
-                  className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
+                  className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground focus-visible:ring-ring inline-flex size-8 cursor-pointer items-center justify-center rounded-md transition focus-visible:ring-2">
                   <EyeOff size={16} aria-hidden="true" />
                 </button>
               </Tooltip>
@@ -353,7 +353,7 @@ export function TripView({
         <button
           type="button"
           onClick={() => setIsItineraryOpen(true)}
-          className="bg-card hover:bg-muted focus-visible:ring-ring pointer-events-auto absolute top-4 left-4 inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium shadow-md transition focus-visible:ring-2 focus-visible:ring-offset-2">
+          className="bg-card hover:bg-interactive-hover focus-visible:ring-ring pointer-events-auto absolute top-4 left-4 inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium shadow-md transition focus-visible:ring-2 focus-visible:ring-offset-2">
           <List size={16} aria-hidden="true" />
           {t("showItinerary")}
           <Eye size={16} aria-hidden="true" />

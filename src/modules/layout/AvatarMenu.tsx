@@ -51,7 +51,7 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
           aria-haspopup="dialog"
           aria-expanded={open}
           aria-label={t("accountMenu")}
-          className="focus-visible:ring-ring flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:outline-none active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100">
+          className="focus-visible:ring-ring flex size-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-interactive-hover focus-visible:ring-2 focus-visible:outline-none active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100">
           <Avatar displayName={displayName} size="lg" />
         </PopoverTriggerButton>
 
@@ -76,7 +76,7 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
                 setOpen(false);
                 setSettingsOpen(true);
               }}
-              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+              className="hover:bg-interactive-hover focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
               <Settings className="text-muted-foreground size-4" aria-hidden="true" />
               {t("settings")}
             </button>
@@ -89,13 +89,13 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
               aria-busy={signingOut}
               aria-describedby={signOutFailed ? "sign-out-error" : undefined}
               onClick={handleSignOut}
-              className="hover:bg-muted/60 focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+              className="hover:bg-interactive-hover focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
               {signingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" aria-hidden="true" />}
               {t("signOut")}
             </button>
           </div>
           {signOutFailed ? (
-            <p id="sign-out-error" role="alert" className="text-destructive px-3 py-2 text-sm">
+            <p id="sign-out-error" role="alert" className="text-destructive-text px-3 py-2 text-sm">
               {t("signOutFailed")}
             </p>
           ) : null}

@@ -117,7 +117,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 required
               />
               {error?.field === "displayName" ? (
-                <p id="account-name-error" role="alert" className="text-destructive mt-1 text-sm">
+                <p id="account-name-error" role="alert" className="text-destructive-text mt-1 text-sm">
                   {error.message}
                 </p>
               ) : null}
@@ -147,7 +147,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 required
               />
               {error?.field === "username" ? (
-                <p id="account-username-error" role="alert" className="text-destructive mt-1 text-sm">
+                <p id="account-username-error" role="alert" className="text-destructive-text mt-1 text-sm">
                   {error.message}
                 </p>
               ) : null}
@@ -158,7 +158,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
           </div>
 
           {error?.field === "submit" ? (
-            <p className="text-destructive text-sm" role="alert">
+            <p className="text-destructive-text text-sm" role="alert">
               {error.message}
             </p>
           ) : null}

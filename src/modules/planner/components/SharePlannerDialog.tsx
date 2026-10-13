@@ -36,7 +36,7 @@ export function SharePlannerDialog({
       }}>
       <DialogTriggerButton
         type="button"
-        className="text-foreground hover:bg-muted/60 inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors md:size-8"
+        className="text-foreground hover:bg-interactive-hover inline-flex size-11 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors md:size-8"
         aria-label={t("sharePlanner")}>
         <Share2 className="size-4" aria-hidden="true" />
       </DialogTriggerButton>
@@ -78,7 +78,7 @@ function SelectMenu<T extends string>({ value, options, onChange, ariaLabel, dis
         const option = options.find((item) => item.value === event.target.value);
         if (option) onChange(option.value);
       }}
-      className="border-border bg-background text-foreground min-h-11 w-32 shrink-0 rounded-md border px-3 py-2 text-base focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:min-h-9 md:text-sm">
+      className="border-input bg-background text-foreground min-h-11 w-32 shrink-0 rounded-md border px-3 py-2 text-base focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:min-h-9 md:text-sm">
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -190,7 +190,7 @@ function InviteForm({
               clearMessages();
             }
           }}
-          className="border-border bg-background text-foreground min-h-11 min-w-0 basis-full rounded-md border px-3 py-2 text-base md:min-h-9 md:flex-1 md:basis-auto md:text-sm"
+          className="border-input bg-background text-foreground min-h-11 min-w-0 basis-full rounded-md border px-3 py-2 text-base md:min-h-9 md:flex-1 md:basis-auto md:text-sm"
           disabled={!canManageMembers || isMutating || isLoading}
         />
         <SelectMenu
@@ -216,7 +216,7 @@ function InviteForm({
         </output>
       ) : null}
       {formError ? (
-        <p id={`${emailId}-error`} className="text-destructive text-xs" role="alert">
+        <p id={`${emailId}-error`} className="text-destructive-text text-xs" role="alert">
           {formError}
         </p>
       ) : null}
@@ -416,7 +416,7 @@ function MembersSection({
       ) : null}
       {error ? (
         <div className="space-y-2">
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive-text text-sm">
             {t("unableToLoadMembers")}
           </p>
           <Button
@@ -431,7 +431,7 @@ function MembersSection({
         </div>
       ) : null}
       {mutationError ? (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-destructive-text text-xs">
           {t("unableToUpdateMembers")}
         </p>
       ) : null}

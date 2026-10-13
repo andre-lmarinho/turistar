@@ -45,8 +45,8 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, Props>(functi
         data-testid={iconOnly ? "date-picker" : undefined}
         className={cn(
           iconOnly
-            ? "text-foreground hover:bg-muted/60 inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-            : "border-border bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            ? "text-foreground hover:bg-interactive-hover inline-flex size-8 cursor-pointer items-center justify-center rounded-sm px-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            : "border-input bg-background text-foreground inline-flex w-full cursor-pointer items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm font-normal transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
           !iconOnly && !value?.from && "text-muted-foreground",
           className
         )}

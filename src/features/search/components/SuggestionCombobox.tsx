@@ -179,7 +179,7 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
           placeholder={placeholder}
           className={cn(
             inputClassName ??
-              "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm",
+              "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border border-input px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm",
             loading && "pr-8"
           )}
           autoComplete="off"
@@ -191,7 +191,7 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
         ) : null}
       </div>
       {error ? (
-        <p className="text-destructive mt-1 text-sm" role="alert" aria-live="assertive">
+        <p className="text-destructive-text mt-1 text-sm" role="alert" aria-live="assertive">
           {typeof error === "string" ? error : t("failedToLoadSuggestions")}
         </p>
       ) : null}
@@ -213,7 +213,9 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
                 type="button"
                 className={cn(
                   "min-h-11 w-full px-3 py-2 text-left transition-colors",
-                  activeIndex === idx ? "bg-accent" : "hover:bg-accent"
+                  activeIndex === idx
+                    ? "bg-selection text-selection-foreground hover:bg-selection-hover"
+                    : "hover:bg-interactive-hover"
                 )}
                 onPointerDown={(event) => event.preventDefault()}
                 onMouseDown={(event) => event.preventDefault()}

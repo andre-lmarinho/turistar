@@ -46,7 +46,7 @@ function PopoverContent({
             <div className="relative flex items-center justify-end p-2">
               <h2 className="absolute inset-0 p-3 text-center text-sm font-medium">{title}</h2>
               <PopoverPrimitive.Close
-                className="text-muted-foreground hover:bg-muted/60 hover:text-foreground z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring"
+                className="text-muted-foreground hover:bg-interactive-hover hover:text-foreground z-10 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={t("close")}>
                 <X className="size-4" aria-hidden="true" />
               </PopoverPrimitive.Close>

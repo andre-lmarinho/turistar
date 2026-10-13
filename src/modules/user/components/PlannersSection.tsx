@@ -66,7 +66,7 @@ export function PlannersSection({ plans }: PlannersSectionProps) {
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
-        <Plane className="text-primary h-5 w-5" aria-hidden="true" />
+        <Plane className="text-primary-text h-5 w-5" aria-hidden="true" />
         <h2 className="text-foreground text-base font-semibold">{t("yourTrips")}</h2>
       </div>
 

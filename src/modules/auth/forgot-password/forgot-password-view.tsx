@@ -63,7 +63,7 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
           })}
         />
         {formError ? (
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive-text text-sm">
             {t(formError)}
           </p>
         ) : null}

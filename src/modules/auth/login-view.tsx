@@ -137,7 +137,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           />
         </div>
         {formError ? (
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive-text text-sm">
             {t(formError)}
           </p>
         ) : null}
