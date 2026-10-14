@@ -242,10 +242,11 @@ describe("ActivityDialog", () => {
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("id");
   });
 
-  it("explains an empty title and focuses it without discarding the draft", () => {
+  it("explains an empty title and focuses it without discarding the draft", async () => {
     const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+    await waitFor(() => expect(screen.getAllByRole("button")[0]).toHaveFocus());
     const title = screen.getByRole("combobox", { name: "Title" });
     fireEvent.change(title, { target: { value: " " } });
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
@@ -256,14 +257,18 @@ describe("ActivityDialog", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it("rejects negative amounts before committing the activity", () => {
+  it.each(["Duration in hours", "Budget amount"])("focuses invalid %s on submission", async (label) => {
     const onSave = vi.fn().mockReturnValue(true);
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
-    const budget = screen.getByLabelText("Budget amount");
-    fireEvent.change(budget, { target: { value: "-5" } });
-    fireEvent.blur(budget);
-    expect(budget).toHaveValue(-5);
-    expect(budget).toHaveAttribute("aria-invalid", "true");
+    await waitFor(() => expect(screen.getAllByRole("button")[0]).toHaveFocus());
+    const input = screen.getByLabelText(label);
+    fireEvent.change(input, { target: { value: "-5" } });
+    const done = screen.getByRole("button", { name: "Done" });
+    done.focus();
+    fireEvent.click(done);
+    expect(input).toHaveValue(-5);
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input).toHaveFocus();
     expect(screen.getByRole("alert")).toHaveTextContent("greater than or equal to zero");
     expect(onSave).not.toHaveBeenCalled();
   });

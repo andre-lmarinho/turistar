@@ -143,9 +143,11 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
           </p>
           <Button
             variant="ghost"
-            disabled={isFetching}
+            aria-disabled={isFetching}
             aria-busy={isFetching}
-            onClick={() => void refetch()}
+            onClick={() => {
+              if (!isFetching) void refetch();
+            }}
             className="gap-2">
             {isFetching ? <Spinner className="size-4" /> : null}
             {t("retry")}
@@ -327,9 +329,10 @@ function ExpenseEditor({
   const submitPending = useRef(false);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
+  const editing = Boolean(entry);
   useEffect(() => {
-    if (entry) descriptionRef.current?.focus();
-  }, [entry]);
+    if (editing) descriptionRef.current?.focus();
+  }, [editing]);
   const amount = Number(draft.amount);
   const isInvalid = !Number.isFinite(amount) || !draft.description.trim() || amount <= 0;
   const save = async () => {
@@ -379,7 +382,7 @@ function ExpenseEditor({
           onChange={(event) => setDraft({ ...draft, description: event.target.value })}
           placeholder={t("descriptionLabel")}
           autoComplete="off"
-          disabled={disabled || submitting}
+          readOnly={disabled || submitting}
           className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
         />
         {showErrors && !draft.description.trim() ? (
@@ -420,7 +423,7 @@ function ExpenseEditor({
               showErrors && (!Number.isFinite(amount) || amount <= 0) ? `amount-error-${id}` : undefined
             }
             value={draft.amount}
-            disabled={disabled || submitting}
+            readOnly={disabled || submitting}
             onChange={(event) => setDraft({ ...draft, amount: event.target.value })}
             type="text"
             inputMode="decimal"
@@ -442,8 +445,8 @@ function ExpenseEditor({
             onClick={() => void save()}
             aria-label={entry ? t("saveEntry") : t("addExpense")}
             aria-busy={submitting}
-            disabled={disabled || submitting}
-            className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 md:size-8">
+            aria-disabled={disabled || submitting}
+            className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring aria-disabled:opacity-50 md:size-8">
             {submitting ? (
               <Spinner className="size-4" />
             ) : entry ? (

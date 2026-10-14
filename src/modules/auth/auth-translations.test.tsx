@@ -48,6 +48,35 @@ beforeEach(() => {
 });
 
 describe("auth translations", () => {
+  it.each(["email", "password"])(
+    "preserves %s recovery focus and blocks duplicate submissions",
+    async (field) => {
+      const request = Promise.withResolvers<never>();
+      const handler = field === "email" ? mocks.send : mocks.update;
+      handler.mockReturnValue(request.promise);
+      render(localized(field === "email" ? <ForgotPasswordView /> : <ResetPasswordView />, "en"));
+      const input = await screen.findByLabelText(field === "email" ? en.email : en.newPassword);
+      fireEvent.change(input, {
+        target: { value: field === "email" ? "test@example.com" : "safe-password" },
+      });
+      const submit = screen.getByRole("button", {
+        name: field === "email" ? en.sendResetLink : en.updatePassword,
+      });
+      submit.focus();
+      fireEvent.click(submit);
+      fireEvent.click(submit);
+      await waitFor(() => expect(handler).toHaveBeenCalledOnce());
+      expect(submit).toHaveAttribute("aria-disabled", "true");
+      expect(submit).toHaveFocus();
+      await act(async () => request.reject(new Error("Offline")));
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        field === "email" ? en.resetEmailError : en.resetPasswordError
+      );
+      expect(submit).toHaveAttribute("aria-disabled", "false");
+      expect(submit).toHaveFocus();
+    }
+  );
+
   it("keeps username availability errors and entered values when the language changes", async () => {
     mocks.available.mockResolvedValue({ available: false });
     const view = <SignupView finalizeProfile={vi.fn()} />;

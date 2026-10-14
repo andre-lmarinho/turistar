@@ -155,17 +155,22 @@ describe("SharePlannerDialog", () => {
         })
     );
     openDialog();
-    fireEvent.change(screen.getByRole("combobox", { name: "Role for Member" }), {
+    await waitFor(() => expect(screen.getByRole("button", { name: "Close" })).toHaveFocus());
+    const role = screen.getByRole("combobox", { name: "Role for Member" });
+    role.focus();
+    fireEvent.change(role, {
       target: { value: "admin" },
     });
     await waitFor(() =>
       expect(screen.getByRole("combobox", { name: "Role for Member" })).toHaveValue("admin")
     );
+    expect(role).toHaveFocus();
     await act(async () => fail(new Error("offline")));
     await waitFor(() =>
       expect(screen.getByRole("combobox", { name: "Role for Member" })).toHaveValue("member")
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Unable to update members");
+    expect(role).toHaveFocus();
   });
   it("navigates to the server-provided destination after leaving", async () => {
     openDialog(false, "member");
@@ -194,8 +199,11 @@ describe("SharePlannerDialog", () => {
     fireEvent.click(submit);
     fireEvent.click(submit);
     await waitFor(() => expect(shared.add).toHaveBeenCalledOnce());
-    expect(email).toBeDisabled();
-    expect(screen.getByRole("combobox", { name: "Select member role" })).toBeDisabled();
+    expect(email).toHaveAttribute("readonly");
+    expect(screen.getByRole("combobox", { name: "Select member role" })).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
     expect(submit).toHaveAttribute("aria-busy", "true");
     await act(async () => resolve({ userId: "new-member", tier: "member" }));
     expect(await screen.findByText("Member added.")).toBeInTheDocument();

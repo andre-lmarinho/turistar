@@ -86,6 +86,8 @@ export const ActivityDialog = memo(function ActivityDialog({
   const placeRequest = useRef(0);
   const lastSubmitted = useRef(draft);
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const durationInputRef = useRef<HTMLInputElement>(null);
+  const budgetInputRef = useRef<HTMLInputElement>(null);
   const initialTitle = useRef(draft.title);
   useEffect(() => {
     if (!initialTitle.current.trim()) titleInputRef.current?.scrollIntoView({ block: "center" });
@@ -136,6 +138,10 @@ export const ActivityDialog = memo(function ActivityDialog({
     cancelSelection();
     if (commit()) onClose();
     else if (!draft.title.trim()) titleInputRef.current?.focus();
+    else if (!Number.isFinite(Number(draft.duration)) || Number(draft.duration) < 0)
+      durationInputRef.current?.focus();
+    else if (!Number.isFinite(Number(draft.budget)) || Number(draft.budget) < 0)
+      budgetInputRef.current?.focus();
   };
   const revert = () => {
     cancelSelection();
@@ -477,6 +483,7 @@ export const ActivityDialog = memo(function ActivityDialog({
               </label>
               <input
                 id={field}
+                ref={field === "duration" ? durationInputRef : budgetInputRef}
                 value={draft[field]}
                 onChange={(event) => updateDraft({ [field]: event.target.value })}
                 onBlur={() => commit()}

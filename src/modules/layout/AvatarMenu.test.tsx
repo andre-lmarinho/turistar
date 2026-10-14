@@ -39,7 +39,7 @@ describe("AvatarMenu sign out", () => {
     fireEvent.click(button);
     fireEvent.click(button);
 
-    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute("aria-disabled", "true");
     expect(button).toHaveAttribute("aria-busy", "true");
     expect(screen.getByRole("button", { name: "Settings" })).toBeDisabled();
     expect(mocks.signOut).toHaveBeenCalledTimes(1);

@@ -64,21 +64,23 @@ describe.each(views)("%s authentication actions", (name, renderView) => {
     );
     renderLocalized();
 
-    fireEvent.click(screen.getByRole("button", { name: en.exploreDemo }));
     const pendingButton = screen.getByRole("button", { name: en.exploreDemo });
+    pendingButton.focus();
+    fireEvent.click(pendingButton);
     fireEvent.click(pendingButton);
 
     expect(mocks.demoSignIn).toHaveBeenCalledTimes(1);
-    expect(pendingButton).toBeDisabled();
+    expect(pendingButton).toHaveAttribute("aria-disabled", "true");
     expect(pendingButton).toHaveAttribute("aria-busy", "true");
+    expect(pendingButton).toHaveFocus();
     expect(
       screen.getByRole("button", { name: name === "login" ? en.signIn : en.createAccount })
-    ).toBeDisabled();
+    ).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByText(en.openingDemo)).toBeInTheDocument();
 
     resolveSignIn("demo");
     await vi.waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/u/demo"));
-    expect(screen.getByRole("button", { name: en.exploreDemo })).toBeDisabled();
+    expect(screen.getByRole("button", { name: en.exploreDemo })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("restores the button and shows the error when the demo sign-in fails", async () => {
@@ -131,7 +133,7 @@ describe.each(views)("%s authentication actions", (name, renderView) => {
     await vi.waitFor(() => expect(authentication).toHaveBeenCalledTimes(1));
 
     const demoButton = screen.getByRole("button", { name: en.exploreDemo });
-    expect(demoButton).toBeDisabled();
+    expect(demoButton).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(demoButton);
     expect(mocks.demoSignIn).not.toHaveBeenCalled();
     const submitButton = screen.getByRole("button", {
@@ -141,8 +143,8 @@ describe.each(views)("%s authentication actions", (name, renderView) => {
 
     finish({ slug: "profile", status: "signed-in" });
     await vi.waitFor(() => expect(mocks.push).toHaveBeenCalledWith("/u/profile"));
-    expect(submitButton).toBeDisabled();
-    expect(demoButton).toBeDisabled();
+    expect(submitButton).toHaveAttribute("aria-disabled", "true");
+    expect(demoButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("restores both authentication actions after email authentication fails", async () => {

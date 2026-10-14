@@ -66,19 +66,30 @@ type SelectMenuProps<T extends string> = {
   onChange: (value: T) => void;
   ariaLabel: string;
   disabled?: boolean;
+  pending?: boolean;
 };
 
-function SelectMenu<T extends string>({ value, options, onChange, ariaLabel, disabled }: SelectMenuProps<T>) {
+function SelectMenu<T extends string>(props: SelectMenuProps<T>) {
+  const { value, options, onChange, ariaLabel, disabled, pending } = props;
   return (
     <select
       value={value}
       aria-label={ariaLabel}
       disabled={disabled}
+      aria-disabled={pending || disabled}
+      onPointerDown={(event) => {
+        if (pending) event.preventDefault();
+      }}
+      onKeyDown={(event) => {
+        if (pending && !event.ctrlKey && !event.metaKey && event.key !== "Tab" && event.key !== "Escape")
+          event.preventDefault();
+      }}
       onChange={(event) => {
+        if (disabled || pending) return;
         const option = options.find((item) => item.value === event.target.value);
         if (option) onChange(option.value);
       }}
-      className="border-input bg-background text-foreground min-h-11 w-32 shrink-0 rounded-md border px-3 py-2 text-base focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:min-h-9 md:text-sm">
+      className="border-input bg-background text-foreground min-h-11 w-32 shrink-0 rounded-md border px-3 py-2 text-base focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60 md:min-h-9 md:text-sm">
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -191,20 +202,23 @@ function InviteForm({
             }
           }}
           className="border-input bg-background text-foreground min-h-11 min-w-0 basis-full rounded-md border px-3 py-2 text-base md:min-h-9 md:flex-1 md:basis-auto md:text-sm"
-          disabled={!canManageMembers || isMutating || isLoading}
+          disabled={!canManageMembers || isLoading}
+          readOnly={isMutating}
         />
         <SelectMenu
           value={tier}
           options={SHARE_TIER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
           onChange={setTier}
-          disabled={!canManageMembers || isMutating || isLoading}
+          disabled={!canManageMembers || isLoading}
+          pending={isMutating}
           ariaLabel={t("selectMemberRole")}
         />
         <Button
           type="submit"
           className="ml-auto shrink-0 gap-2"
           aria-busy={addMember.isPending}
-          disabled={!canManageMembers || isMutating || isLoading}>
+          disabled={!canManageMembers || isLoading}
+          aria-disabled={isMutating}>
           {addMember.isPending ? <Spinner className="size-4" /> : null}
           {t("shareButton")}
         </Button>
@@ -347,7 +361,8 @@ function ShareMemberRow({
           value={member.tier}
           options={menuOptions}
           onChange={handleMenuChange}
-          disabled={!canSelect || isMutating}
+          disabled={!canSelect}
+          pending={isMutating}
           ariaLabel={t("memberRoleLabel", { name: displayName })}
         />
       </div>
@@ -421,9 +436,11 @@ function MembersSection({
           </p>
           <Button
             variant="ghost"
-            disabled={isFetching}
+            aria-disabled={isFetching}
             aria-busy={isFetching}
-            onClick={() => void refetch()}
+            onClick={() => {
+              if (!isFetching) void refetch();
+            }}
             className="gap-2">
             {isFetching ? <Spinner className="size-4" /> : null}
             {t("retry")}

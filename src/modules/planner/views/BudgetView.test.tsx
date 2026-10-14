@@ -163,13 +163,17 @@ describe("BudgetView", () => {
     render(<BudgetView planId="plan-1" days={days} initialEntries={[entry]} />);
     fireEvent.click(screen.getByRole("button", { name: "Edit entry" }));
     fireEvent.change(screen.getAllByLabelText("Amount")[0], { target: { value: "10" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
+    const submit = screen.getByRole("button", { name: "Save entry" });
+    submit.focus();
+    fireEvent.click(submit);
     await waitFor(() => expect(screen.getByLabelText("Total spent: $50.00")).toBeInTheDocument());
+    expect(submit).toHaveFocus();
     await act(async () => fail(new Error("offline")));
     expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
     expect(screen.getByLabelText("Total spent: $125.00")).toBeInTheDocument();
     expect(shared.client?.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
     expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
+    expect(submit).toHaveFocus();
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
     await waitFor(() => expect(shared.updateEntry).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
@@ -271,7 +275,7 @@ describe("BudgetView", () => {
     fireEvent.keyDown(amount, { key: "Enter" });
     await waitFor(() => expect(shared.createEntry).toHaveBeenCalledOnce());
     expect(screen.getByRole("button", { name: "Add expense" })).toHaveAttribute("aria-busy", "true");
-    expect(amount).toBeDisabled();
+    expect(amount).toHaveAttribute("readonly");
     await act(async () => resolve("dinner"));
     expect(await screen.findByText("Dinner")).toBeInTheDocument();
   });

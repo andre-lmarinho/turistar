@@ -85,11 +85,11 @@ export function AvatarMenu({ displayName, email, slug }: AvatarMenuProps) {
           <div className="border-border mt-1 border-t pt-1">
             <button
               type="button"
-              disabled={signingOut}
               aria-busy={signingOut}
+              aria-disabled={signingOut}
               aria-describedby={signOutFailed ? "sign-out-error" : undefined}
               onClick={handleSignOut}
-              className="hover:bg-interactive-hover focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60 motion-reduce:transition-none">
+              className="hover:bg-interactive-hover focus-visible:ring-ring flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none aria-disabled:cursor-wait aria-disabled:opacity-60 motion-reduce:transition-none">
               {signingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" aria-hidden="true" />}
               {t("signOut")}
             </button>

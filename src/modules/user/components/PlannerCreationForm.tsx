@@ -67,7 +67,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
 
   const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
-    if (submitting.current) return;
+    if (submitting.current || loading) return;
 
     setError(null);
     const destParam = dest.trim().split(",")[0];
@@ -127,7 +127,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
           inputRef={destinationRef}
           inputProps={{
             name: "destination",
-            disabled: loading,
+            readOnly: loading,
             "aria-invalid": error?.field === "destination",
             "aria-describedby": error?.field === "destination" ? "destination-error" : undefined,
           }}
@@ -168,7 +168,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
       <Button
         data-testid="create-trip-submit"
         type="submit"
-        disabled={loading}
+        aria-disabled={loading}
         aria-busy={loading}
         className="w-full gap-2">
         {loading ? <Spinner className="size-4" /> : null}

@@ -209,19 +209,22 @@ function PlannerContent({
             }}
             onBlur={() => void handleTitleBlur()}
             onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.nativeEvent.isComposing) event.currentTarget.blur();
+              if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+                event.preventDefault();
+                void handleTitleBlur();
+              }
               if (event.key === "Escape") {
                 event.preventDefault();
                 setTitle(savedTitle.current);
                 setTitleError(false);
               }
             }}
-            disabled={titleSaving}
+            readOnly={titleSaving}
             aria-busy={titleSaving}
             aria-invalid={titleError || undefined}
             aria-describedby={titleError ? "planner-title-error" : undefined}
             onFocus={(event: FocusEvent<HTMLInputElement>) => event.target.select()}
-            className="focus-visible:border-border focus-visible:bg-background focus-visible:ring-ring absolute inset-0 min-w-0 cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
+            className="focus-visible:border-border focus-visible:bg-background focus-visible:ring-ring absolute inset-0 min-w-0 cursor-pointer rounded-md border-2 border-transparent bg-transparent px-2 py-1 transition-colors outline-none focus:cursor-text focus-visible:ring-2 focus-visible:ring-offset-2 read-only:cursor-wait read-only:opacity-70"
           />
         </h1>
         <div className="ml-auto flex flex-none items-center gap-1 self-end">
@@ -262,9 +265,11 @@ function PlannerContent({
           <Button
             type="button"
             variant="ghost"
-            disabled={isPending || isLoading}
+            aria-disabled={isPending || isLoading}
             aria-busy={isPending || isLoading}
-            onClick={() => void retryPending()}
+            onClick={() => {
+              if (!isPending && !isLoading) void retryPending();
+            }}
             className="gap-2">
             {isPending || isLoading ? <Spinner className="size-4" /> : null}
             {t("retry")}

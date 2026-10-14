@@ -143,7 +143,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
         ) : null}
         <Button
           type="submit"
-          disabled={isPending}
+          aria-disabled={isPending}
           aria-busy={pendingAction === "login"}
           className="min-h-11 gap-2 text-base font-semibold">
           {pendingAction === "login" ? <Spinner className="size-4" /> : null}
@@ -154,7 +154,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
         <Button
           variant="accent"
           onClick={handleDemo}
-          disabled={isPending}
+          aria-disabled={isPending}
           aria-busy={pendingAction === "demo"}
           className="w-full gap-2 py-3 text-base font-semibold shadow-sm transition-colors">
           {pendingAction === "demo" ? <Spinner className="size-4" /> : null}

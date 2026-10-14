@@ -74,7 +74,7 @@ export function ForgotPasswordView({ nextPath }: { nextPath?: string | null }) {
         ) : null}
         <Button
           type="submit"
-          disabled={formState.isSubmitting}
+          aria-disabled={formState.isSubmitting}
           aria-busy={formState.isSubmitting}
           className="min-h-11 gap-2 text-base font-semibold">
           {formState.isSubmitting ? <Spinner className="size-4" /> : null}
