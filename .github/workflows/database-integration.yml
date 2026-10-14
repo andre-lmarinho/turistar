@@ -1,26 +1,7 @@
-name: Supabase Migration Validation
+name: Database Integration
 
 on:
   pull_request:
-    paths:
-      - supabase/config.toml
-      - supabase/migrations/**
-      - supabase/seed.sql
-      - .github/workflows/supabase-migrations.yml
-      - package.json
-      - pnpm-lock.yaml
-      - vitest.config.ts
-      - tests/integration/**
-      - tests/__mocks__/serverOnly.ts
-      - src/supabase/types.ts
-      - src/lib/errors/**
-      - src/lib/typeGuards.ts
-      - src/features/profile/**/*.ts
-      - src/features/events/**/*.ts
-      - src/features/snapshots/**/*.ts
-      - src/features/activity/types.ts
-      - src/features/plan/repositories/PlanRepository.ts
-      - '!src/**/*.test.ts'
 
 concurrency:
   group: supabase-${{ github.event.pull_request.number || github.ref }}
@@ -31,7 +12,7 @@ permissions:
 
 jobs:
   validate:
-    name: Supabase migrations
+    name: Database integration
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
