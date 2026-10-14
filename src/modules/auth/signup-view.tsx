@@ -269,7 +269,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
             ) : null}
             <Button
               type="submit"
-              disabled={isPending}
+              aria-disabled={isPending}
               aria-busy={pendingAction === "signup"}
               className="min-h-11 gap-2 text-base font-semibold">
               {pendingAction === "signup" ? <Spinner className="size-4" /> : null}
@@ -280,7 +280,7 @@ export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
             <Button
               variant="accent"
               onClick={handleDemo}
-              disabled={isPending}
+              aria-disabled={isPending}
               aria-busy={pendingAction === "demo"}
               className="w-full gap-2 py-3 text-base font-semibold shadow-sm transition-colors">
               {pendingAction === "demo" ? <Spinner className="size-4" /> : null}

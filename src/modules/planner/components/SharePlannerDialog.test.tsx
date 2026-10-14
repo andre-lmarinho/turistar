@@ -194,7 +194,7 @@ describe("SharePlannerDialog", () => {
     fireEvent.click(submit);
     fireEvent.click(submit);
     await waitFor(() => expect(shared.add).toHaveBeenCalledOnce());
-    expect(email).toBeDisabled();
+    expect(email).toHaveAttribute("readonly");
     expect(screen.getByRole("combobox", { name: "Select member role" })).toBeDisabled();
     expect(submit).toHaveAttribute("aria-busy", "true");
     await act(async () => resolve({ userId: "new-member", tier: "member" }));
