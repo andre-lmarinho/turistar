@@ -10,6 +10,12 @@ interface UpcomingTripSectionProps {
   plan: UserPlannerSummary;
 }
 
+function isPlanInProgress(plan: UserPlannerSummary, today: Date): boolean {
+  const start = parseISO(plan.startDate ?? "");
+  const end = parseISO(plan.endDate ?? "");
+  return isValid(start) && isValid(end) && start <= today && end >= today;
+}
+
 export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary | null {
   const today = startOfToday();
 
@@ -19,7 +25,7 @@ export function getUpcomingPlan(plans: UserPlannerSummary[]): UserPlannerSummary
         if (!plan.startDate) return false;
 
         const startDate = parseISO(plan.startDate);
-        return isValid(startDate) && startDate >= today;
+        return isValid(startDate) && (startDate >= today || isPlanInProgress(plan, today));
       })
       .toSorted((firstPlan, secondPlan) => {
         const firstDate = firstPlan.startDate ?? "";
@@ -35,9 +41,11 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
   const destination = plan.destination ?? plan.title;
   const start = parseISO(plan.startDate ?? "");
   const end = parseISO(plan.endDate ?? "");
+  const today = startOfToday();
+  const inProgress = isPlanInProgress(plan, today);
   const tripStats = [
     {
-      label: t("starts"),
+      label: t(inProgress ? "started" : "starts"),
       value: isValid(start) ? format.dateTime(start, { month: "short", day: "numeric" }) : t("tbd"),
     },
     {
@@ -48,10 +56,12 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
           : t("tbd"),
     },
     {
-      label: t("daysAway"),
-      value: isValid(start)
-        ? t("dayCount", { count: Math.max(0, differenceInCalendarDays(start, startOfToday())) })
-        : t("tbd"),
+      label: t(inProgress ? "ends" : "daysAway"),
+      value: inProgress
+        ? format.dateTime(end, { month: "short", day: "numeric" })
+        : isValid(start)
+          ? t("dayCount", { count: Math.max(0, differenceInCalendarDays(start, today)) })
+          : t("tbd"),
     },
   ];
   const isPreparedImage = backgroundImage.includes("url(") || backgroundImage.startsWith("linear-gradient");
@@ -76,7 +86,7 @@ export async function UpcomingTripSection({ plan }: UpcomingTripSectionProps) {
 
         <div className="relative flex min-h-88 flex-col justify-between p-5 sm:p-6">
           <p className="w-fit rounded-full bg-black/35 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
-            {t("nextTrip")}
+            {t(inProgress ? "currentTrip" : "nextTrip")}
           </p>
 
           <div
