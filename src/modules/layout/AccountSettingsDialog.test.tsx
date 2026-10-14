@@ -8,8 +8,6 @@ const mocks = vi.hoisted(() => ({
   mutateAsync: vi.fn(),
   replace: vi.fn(),
   refresh: vi.fn(),
-  pending: false,
-  realMutation: false,
 }));
 
 vi.mock("@/trpc/react", () => ({
@@ -17,12 +15,8 @@ vi.mock("@/trpc/react", () => ({
     viewer: {
       profile: {
         update: {
-          useMutation: () => {
-            const mutation = useMutation({ mutationFn: mocks.mutateAsync });
-            return mocks.realMutation
-              ? mutation
-              : { mutateAsync: mocks.mutateAsync, isPending: mocks.pending };
-          },
+          useMutation: () =>
+            useMutation({ mutationFn: (variables: unknown) => mocks.mutateAsync(variables) }),
         },
       },
     },
@@ -35,16 +29,19 @@ function dialog(onOpenChange = vi.fn()) {
   return <AccountSettingsDialog open onOpenChange={onOpenChange} displayName="Traveler" slug="traveler" />;
 }
 
+async function openDialog(onOpenChange = vi.fn()) {
+  render(dialog(onOpenChange));
+  await waitFor(() => expect(screen.getByRole("button", { name: "Close" })).toHaveFocus());
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
-  mocks.pending = false;
-  mocks.realMutation = false;
   mocks.mutateAsync.mockResolvedValue({});
 });
 
 describe("AccountSettingsDialog", () => {
-  it("focuses and describes the invalid field without sending a mutation", () => {
-    render(dialog());
+  it("focuses and describes the invalid field without sending a mutation", async () => {
+    await openDialog();
     const name = screen.getByLabelText("Name");
     fireEvent.change(name, { target: { value: " " } });
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
@@ -64,7 +61,7 @@ describe("AccountSettingsDialog", () => {
 
   it("keeps entered values on failure and focuses an occupied username", async () => {
     mocks.mutateAsync.mockRejectedValue({ data: { code: "CONFLICT" }, message: "Database details" });
-    render(dialog());
+    await openDialog();
     const username = screen.getByLabelText("Username");
     fireEvent.change(username, { target: { value: "occupied" } });
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
@@ -75,58 +72,72 @@ describe("AccountSettingsDialog", () => {
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 
-  it("focuses an occupied username after the pending input becomes enabled again", async () => {
-    mocks.realMutation = true;
-    let reject: (cause: unknown) => void = () => {};
-    mocks.mutateAsync.mockReturnValue(
-      new Promise((_, rejectPromise) => {
-        reject = rejectPromise;
-      })
-    );
-    render(dialog());
+  it("preserves submit focus while saving and focuses an occupied username after failure", async () => {
+    const mutation = Promise.withResolvers<unknown>();
+    mocks.mutateAsync.mockReturnValue(mutation.promise);
+    await openDialog();
     const username = screen.getByLabelText("Username");
     const submit = screen.getByRole("button", { name: "Save changes" });
     submit.focus();
     fireEvent.click(submit);
-    await waitFor(() => expect(username).toBeDisabled());
-    await act(async () => reject({ data: { code: "CONFLICT" } }));
-    await waitFor(() => expect(username).toHaveFocus());
+    await waitFor(() => expect(username).toHaveAttribute("readonly"));
     expect(username).toBeEnabled();
+    expect(submit).toHaveFocus();
+    await act(async () => mutation.reject({ data: { code: "CONFLICT" } }));
+    await waitFor(() => expect(username).toHaveFocus());
+    await act(
+      () =>
+        new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+    );
+    expect(username).toHaveFocus();
+    expect(username).not.toHaveAttribute("readonly");
     expect(username).toHaveAccessibleDescription(expect.stringContaining("Username already taken."));
   });
 
   it("prevents repeated submissions and dismissal while saving, preserving the action label", async () => {
-    let reject: (cause: unknown) => void = () => {};
-    mocks.mutateAsync.mockReturnValue(
-      new Promise((_, rejectPromise) => {
-        reject = rejectPromise;
-      })
-    );
+    const mutation = Promise.withResolvers<unknown>();
+    mocks.mutateAsync.mockReturnValue(mutation.promise);
     const onOpenChange = vi.fn();
-    const { rerender } = render(dialog(onOpenChange));
-    const form = screen.getByRole("button", { name: "Save changes" }).closest("form");
+    await openDialog(onOpenChange);
+    const submit = screen.getByRole("button", { name: "Save changes" });
+    const form = submit.closest("form");
     expect(form).not.toBeNull();
+    submit.focus();
     fireEvent.submit(form as HTMLFormElement);
+    fireEvent.submit(form as HTMLFormElement);
+    await waitFor(() => expect(mocks.mutateAsync).toHaveBeenCalledTimes(1));
+
+    await waitFor(() => expect(submit).toHaveAttribute("aria-disabled", "true"));
+    expect(submit).toBeEnabled();
+    expect(submit).toHaveAttribute("aria-busy", "true");
+    expect(submit).toHaveFocus();
+    expect(screen.getByRole("status")).toHaveTextContent("Saving");
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
+    expect(screen.getByLabelText("Name")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Username")).toHaveAttribute("readonly");
+    fireEvent.click(submit);
     fireEvent.submit(form as HTMLFormElement);
     expect(mocks.mutateAsync).toHaveBeenCalledTimes(1);
-
-    mocks.pending = true;
-    rerender(dialog(onOpenChange));
-    expect(screen.getByRole("button", { name: "Save changes" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Save changes" })).toHaveAttribute("aria-busy", "true");
-    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
-    expect(screen.getByLabelText("Username")).toBeDisabled();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    fireEvent.keyDown(submit, { key: "Escape" });
     expect(onOpenChange).not.toHaveBeenCalled();
 
-    await act(async () => reject(new Error("Internal details")));
+    await act(async () => mutation.reject(new Error("Internal details")));
     expect(await screen.findByRole("alert")).toHaveTextContent("Unable to save your settings.");
     expect(screen.queryByText("Internal details")).not.toBeInTheDocument();
+    await waitFor(() => expect(submit).toHaveAttribute("aria-disabled", "false"));
+    expect(submit).toHaveFocus();
+    expect(screen.getByLabelText("Username")).not.toHaveAttribute("readonly");
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Close" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("normalizes the submitted username and refreshes the updated profile without reloading the page", async () => {
     const onOpenChange = vi.fn();
-    render(dialog(onOpenChange));
+    await openDialog(onOpenChange);
     fireEvent.change(screen.getByLabelText("Username"), { target: { value: " Updated-Name " } });
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
 

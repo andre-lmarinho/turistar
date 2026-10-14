@@ -43,23 +43,21 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
   }, [displayName, open, slug]);
 
   useEffect(() => {
-    if (updateProfile.isPending) return;
+    if (!open || updateProfile.isPending) return;
     if (error?.field === "displayName") nameRef.current?.focus();
     if (error?.field === "username") usernameRef.current?.focus();
-  }, [error, updateProfile.isPending]);
+  }, [error, open, updateProfile.isPending]);
 
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (submitting.current) return;
+    if (submitting.current || updateProfile.isPending) return;
     const normalizedUsername = normalizeUsername(username);
     if (!name.trim()) {
       setError({ field: "displayName", message: t("nameRequired") });
-      nameRef.current?.focus();
       return;
     }
     if (!validUsername(normalizedUsername)) {
       setError({ field: "username", message: t("usernameInvalid") });
-      usernameRef.current?.focus();
       return;
     }
 
@@ -81,12 +79,13 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
     }
   };
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (submitting.current || updateProfile.isPending) return;
+    onOpenChange(nextOpen);
+  };
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        if (!submitting.current) onOpenChange(nextOpen);
-      }}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="w-[calc(100%-2rem)] max-w-lg rounded-2xl">
         <DialogHeader
           title={t("accountSettings")}
@@ -111,7 +110,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 autoComplete="name"
                 placeholder={t("namePlaceholder")}
                 maxLength={80}
-                disabled={updateProfile.isPending}
+                readOnly={updateProfile.isPending}
                 aria-invalid={error?.field === "displayName"}
                 aria-describedby={error?.field === "displayName" ? "account-name-error" : undefined}
                 required
@@ -137,7 +136,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 spellCheck={false}
                 autoCapitalize="none"
                 maxLength={28}
-                disabled={updateProfile.isPending}
+                readOnly={updateProfile.isPending}
                 aria-invalid={error?.field === "username"}
                 aria-describedby={
                   error?.field === "username"
@@ -168,12 +167,12 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
               type="button"
               variant="ghost"
               disabled={updateProfile.isPending}
-              onClick={() => onOpenChange(false)}>
+              onClick={() => handleOpenChange(false)}>
               {t("cancel")}
             </Button>
             <Button
               type="submit"
-              disabled={updateProfile.isPending}
+              aria-disabled={updateProfile.isPending}
               aria-busy={updateProfile.isPending}
               className="gap-2">
               {updateProfile.isPending ? <Spinner className="size-4" /> : null}
