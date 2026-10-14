@@ -62,7 +62,7 @@ describe("AccountSettingsDialog", () => {
     expect(username).toHaveAttribute("aria-invalid", "true");
   });
 
-  it("keeps entered values on failure and focuses an occupied username", async () => {
+  it("keeps entered values on failure and identifies an occupied username", async () => {
     mocks.mutateAsync.mockRejectedValue({ data: { code: "CONFLICT" }, message: "Database details" });
     render(dialog());
     const username = screen.getByLabelText("Username");
@@ -71,11 +71,11 @@ describe("AccountSettingsDialog", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Username already taken.");
     expect(username).toHaveValue("occupied");
-    expect(username).toHaveFocus();
+    expect(username).toHaveAttribute("aria-invalid", "true");
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 
-  it("focuses an occupied username after the pending input becomes enabled again", async () => {
+  it("announces an occupied username without moving focus after saving", async () => {
     mocks.realMutation = true;
     let reject: (cause: unknown) => void = () => {};
     mocks.mutateAsync.mockReturnValue(
@@ -84,14 +84,15 @@ describe("AccountSettingsDialog", () => {
       })
     );
     render(dialog());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Close" })).toHaveFocus());
     const username = screen.getByLabelText("Username");
     const submit = screen.getByRole("button", { name: "Save changes" });
     submit.focus();
     fireEvent.click(submit);
-    await waitFor(() => expect(username).toBeDisabled());
+    await waitFor(() => expect(username).toHaveAttribute("readonly"));
     await act(async () => reject({ data: { code: "CONFLICT" } }));
-    await waitFor(() => expect(username).toHaveFocus());
-    expect(username).toBeEnabled();
+    await waitFor(() => expect(username).not.toHaveAttribute("readonly"));
+    expect(submit).toHaveFocus();
     expect(username).toHaveAccessibleDescription(expect.stringContaining("Username already taken."));
   });
 
@@ -112,10 +113,10 @@ describe("AccountSettingsDialog", () => {
 
     mocks.pending = true;
     rerender(dialog(onOpenChange));
-    expect(screen.getByRole("button", { name: "Save changes" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save changes" })).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByRole("button", { name: "Save changes" })).toHaveAttribute("aria-busy", "true");
     expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
-    expect(screen.getByLabelText("Username")).toBeDisabled();
+    expect(screen.getByLabelText("Username")).toHaveAttribute("readonly");
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(onOpenChange).not.toHaveBeenCalled();
 

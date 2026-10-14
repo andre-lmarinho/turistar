@@ -42,12 +42,6 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
     setError(null);
   }, [displayName, open, slug]);
 
-  useEffect(() => {
-    if (updateProfile.isPending) return;
-    if (error?.field === "displayName") nameRef.current?.focus();
-    if (error?.field === "username") usernameRef.current?.focus();
-  }, [error, updateProfile.isPending]);
-
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (submitting.current) return;
@@ -111,7 +105,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 autoComplete="name"
                 placeholder={t("namePlaceholder")}
                 maxLength={80}
-                disabled={updateProfile.isPending}
+                readOnly={updateProfile.isPending}
                 aria-invalid={error?.field === "displayName"}
                 aria-describedby={error?.field === "displayName" ? "account-name-error" : undefined}
                 required
@@ -137,7 +131,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
                 spellCheck={false}
                 autoCapitalize="none"
                 maxLength={28}
-                disabled={updateProfile.isPending}
+                readOnly={updateProfile.isPending}
                 aria-invalid={error?.field === "username"}
                 aria-describedby={
                   error?.field === "username"
@@ -173,7 +167,7 @@ export function AccountSettingsDialog({ open, onOpenChange, displayName, slug }:
             </Button>
             <Button
               type="submit"
-              disabled={updateProfile.isPending}
+              aria-disabled={updateProfile.isPending}
               aria-busy={updateProfile.isPending}
               className="gap-2">
               {updateProfile.isPending ? <Spinner className="size-4" /> : null}

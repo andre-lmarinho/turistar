@@ -209,14 +209,14 @@ function PlannerContent({
             }}
             onBlur={() => void handleTitleBlur()}
             onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.nativeEvent.isComposing) event.currentTarget.blur();
+              if (event.key === "Enter" && !event.nativeEvent.isComposing) void handleTitleBlur();
               if (event.key === "Escape") {
                 event.preventDefault();
                 setTitle(savedTitle.current);
                 setTitleError(false);
               }
             }}
-            disabled={titleSaving}
+            readOnly={titleSaving}
             aria-busy={titleSaving}
             aria-invalid={titleError || undefined}
             aria-describedby={titleError ? "planner-title-error" : undefined}
