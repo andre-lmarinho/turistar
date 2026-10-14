@@ -13,13 +13,16 @@ if (!["localhost", "127.0.0.1", "[::1]"].includes(new URL(local.API_URL).hostnam
   throw new Error("Integration tests require local Supabase.");
 }
 const auth = { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false };
+export function localClient() {
+  return createClient<Database>(local.API_URL, local.ANON_KEY, { auth });
+}
 export const admin = createClient<Database>(local.API_URL, local.SERVICE_ROLE_KEY, { auth });
 export const anonymous = createClient<Database>(local.API_URL, local.ANON_KEY, { auth });
 const userIds = new Set<string>();
 const planIds = new Set<string>();
 
 export async function signup(username = `integration-${randomUUID().slice(0, 8)}`) {
-  const client = createClient<Database>(local.API_URL, local.ANON_KEY, { auth });
+  const client = localClient();
   const email = `integration-${randomUUID()}@example.test`;
   const password = `Test-${randomUUID()}!`;
   const result = await client.auth.signUp({ email, password, options: { data: { username } } });
