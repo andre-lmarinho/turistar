@@ -1,3 +1,4 @@
+import { startOfToday } from "date-fns";
 import { getTranslations } from "next-intl/server";
 
 import { DemoGuideDialog } from "@/features/demo/components/DemoGuideDialog";
@@ -5,7 +6,7 @@ import type { UserDestination, UserPlannerSummary } from "@/features/plan/reposi
 import type { TravelCountry } from "@/modules/user/components/DestinationsMap";
 import { DestinationsMap } from "@/modules/user/components/DestinationsMap";
 import { PlannersSection } from "@/modules/user/components/PlannersSection";
-import { getUpcomingPlan, UpcomingTripSection } from "@/modules/user/components/UpcomingTripSection";
+import { getHighlightedPlan, UpcomingTripSection } from "@/modules/user/components/UpcomingTripSection";
 import { MapPin } from "@/ui/components/icon";
 
 interface DashboardViewProps {
@@ -52,13 +53,14 @@ function buildCountrySummaries(destinations: UserDestination[]): TravelCountry[]
 export async function DashboardView({ plans, destinations, isDemo = false }: DashboardViewProps) {
   const t = await getTranslations();
   const countries = buildCountrySummaries(destinations);
-  const upcomingPlan = getUpcomingPlan(plans);
+  const today = startOfToday();
+  const highlightedPlan = getHighlightedPlan(plans, today);
 
   return (
     <main id="main-content" className="bg-card min-h-[calc(100dvh-4rem)] w-full">
       <h1 className="sr-only">{t("dashboardHeading")}</h1>
       <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 md:px-8">
-        {upcomingPlan ? <UpcomingTripSection plan={upcomingPlan} /> : null}
+        {highlightedPlan ? <UpcomingTripSection plan={highlightedPlan} today={today} /> : null}
 
         <section aria-labelledby="map-heading" className="space-y-3">
           <div className="flex items-center gap-2">
