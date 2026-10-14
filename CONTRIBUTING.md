@@ -120,11 +120,10 @@ Fixtures use unique usernames/emails and delete only their own plans, profiles, 
 order. Tests run sequentially across files to avoid Auth rate-limit interference. Ordinary `pnpm test`
 does not require Docker; integration tests fail if Supabase is unavailable or no tests are selected.
 
-The existing Supabase workflow runs integration tests after its migration/seed rebuild and schema
-lint. Its disposable database is reset once per job, not before each test. The job now also runs for
-changes to the covered Profile, Events, and Snapshot code, test support, and dependencies; it skips
-unrelated UI and unit-test-only changes. Replaced PR runs are cancelled. Compared with migration-only
-validation, this adds dependency setup, test execution, and additional triggers for the Supabase job.
+The [Database Integration workflow](.github/workflows/database-integration.yml) runs integration tests after its migration/seed rebuild and schema
+lint. Its disposable database is reset once per job, not before each test. Database Integration runs
+on every pull request, so new features and shared dependencies need no path-filter maintenance.
+Replaced PR runs are cancelled.
 Studio, Storage, Realtime, Edge Functions, and analytics are excluded from this job; these tests do
 not cover those services. Database dumps are not cached, so each CI run validates current migrations.
 
