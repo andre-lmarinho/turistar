@@ -10,9 +10,6 @@ tags: testing, coverage, quality, ci
 Every PR must test the behavior it introduces or modifies. Prioritize authorization, data boundaries, failure paths, and other behavior that could regress. Coverage is a useful signal; assertions must still verify meaningful outcomes.
 
 - Vitest tests use `.test.ts` or `.test.tsx` under `src/` or `tests/`.
-- Database tests use `.integration-test.ts`, Vitest, and real local Supabase clients.
-  Keep assertions in TypeScript; SQL may prepare fixtures when needed. Do not introduce
-  pgTAP or a separate SQL test suite. Follow the existing integration helpers and CI.
 - Playwright tests live in `tests/e2e/` and exercise browser flows using the project's E2E fixtures and mock mode.
 - CI enables Vitest coverage and enforces the thresholds in [vitest.config.ts](../../vitest.config.ts). Its include pattern covers production source files even when tests do not import them.
 - Keep the coverage floor passing and raise it deliberately as coverage improves.
