@@ -25,7 +25,7 @@ export function LanguageSelect({ className }: { className?: string }) {
       <Select.Root
         items={languages}
         value={locale}
-        disabled={pending}
+        readOnly={pending}
         modal={false}
         onValueChange={(value) => {
           if (!isLocale(value) || value === locale) return;

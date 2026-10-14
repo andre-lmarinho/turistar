@@ -191,7 +191,8 @@ function InviteForm({
             }
           }}
           className="border-input bg-background text-foreground min-h-11 min-w-0 basis-full rounded-md border px-3 py-2 text-base md:min-h-9 md:flex-1 md:basis-auto md:text-sm"
-          disabled={!canManageMembers || isMutating || isLoading}
+          disabled={!canManageMembers || isLoading}
+          readOnly={isMutating}
         />
         <SelectMenu
           value={tier}
@@ -204,7 +205,8 @@ function InviteForm({
           type="submit"
           className="ml-auto shrink-0 gap-2"
           aria-busy={addMember.isPending}
-          disabled={!canManageMembers || isMutating || isLoading}>
+          disabled={!canManageMembers || isLoading}
+          aria-disabled={isMutating}>
           {addMember.isPending ? <Spinner className="size-4" /> : null}
           {t("shareButton")}
         </Button>

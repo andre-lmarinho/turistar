@@ -168,7 +168,7 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
       <Button
         data-testid="create-trip-submit"
         type="submit"
-        disabled={loading}
+        aria-disabled={loading}
         aria-busy={loading}
         className="w-full gap-2">
         {loading ? <Spinner className="size-4" /> : null}

@@ -115,7 +115,7 @@ describe("PlannerCreationForm", () => {
     mocks.pending = true;
     render(<PlannerCreationForm onPlanCreated={vi.fn()} />);
     const submit = screen.getByRole("button", { name: "Create a trip" });
-    expect(submit).toBeDisabled();
+    expect(submit).toHaveAttribute("aria-disabled", "true");
     expect(submit).toHaveAttribute("aria-busy", "true");
     expect(screen.getByLabelText("Destination")).toBeDisabled();
     expect(screen.getByRole("button", { name: /Travel dates/ })).toBeDisabled();
