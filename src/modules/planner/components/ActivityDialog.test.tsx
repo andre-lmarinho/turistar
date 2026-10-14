@@ -242,10 +242,11 @@ describe("ActivityDialog", () => {
     expect(onSave.mock.calls[0][0]).not.toHaveProperty("id");
   });
 
-  it("explains an empty title and focuses it without discarding the draft", () => {
+  it("explains an empty title and focuses it without discarding the draft", async () => {
     const onSave = vi.fn().mockReturnValue(true);
     const onClose = vi.fn();
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
+    await waitFor(() => expect(screen.getAllByRole("button")[0]).toHaveFocus());
     const title = screen.getByRole("combobox", { name: "Title" });
     fireEvent.change(title, { target: { value: " " } });
     fireEvent.click(screen.getByRole("button", { name: "Done" }));

@@ -93,7 +93,7 @@ it("keeps one confirmation pending and offers a retry after failure", async () =
   fireEvent.click(button);
   fireEvent.click(button);
   expect(onConfirm).toHaveBeenCalledTimes(1);
-  expect(button).toBeDisabled();
+  expect(button).toHaveAttribute("aria-disabled", "true");
   expect(button).toHaveAttribute("aria-busy", "true");
   expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
   fireEvent.keyDown(screen.getByRole("alertdialog"), { key: "Escape" });

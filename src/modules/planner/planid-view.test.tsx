@@ -169,7 +169,7 @@ describe("PlanIdView", () => {
     expect(updatePlanTitleMock).not.toHaveBeenCalled();
     fireEvent.change(input, { target: { value: "Saved title" } });
     fireEvent.blur(input);
-    await waitFor(() => expect(input).not.toBeDisabled());
+    await waitFor(() => expect(input).not.toHaveAttribute("readonly"));
     fireEvent.change(input, { target: { value: "" } });
     fireEvent.blur(input);
     expect(input).toHaveValue("Saved title");
@@ -201,13 +201,15 @@ describe("PlanIdView", () => {
     render(<PlanIdView experience={experience} />);
     const input = screen.getByLabelText("Planner title");
     fireEvent.change(input, { target: { value: "Save once" } });
-    fireEvent.blur(input);
-    fireEvent.blur(input);
-    expect(input).toBeDisabled();
+    input.focus();
+    fireEvent.keyDown(input, { key: "Enter" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).toHaveAttribute("readonly");
+    expect(input).toHaveFocus();
     expect(input).toHaveAttribute("aria-busy", "true");
     expect(updatePlanTitleMock).toHaveBeenCalledOnce();
     resolve();
-    await waitFor(() => expect(input).not.toBeDisabled());
+    await waitFor(() => expect(input).not.toHaveAttribute("readonly"));
   });
 });
 

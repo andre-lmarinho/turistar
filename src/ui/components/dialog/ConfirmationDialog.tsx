@@ -106,7 +106,7 @@ function ConfirmationDialog({
             <Button
               className="bg-destructive text-destructive-foreground hover:bg-destructive-hover"
               onClick={handleConfirm}
-              disabled={busy}
+              aria-disabled={busy}
               aria-busy={busy}>
               {busy ? <Spinner className="size-4" /> : null}
               {confirmLabel}

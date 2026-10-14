@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useFormatter, useTranslations } from "next-intl";
-import { memo, useEffect, useId, useRef, useState } from "react";
+import { memo, useId, useRef, useState } from "react";
 
 import { ACTIVITY_COLORS } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
@@ -86,10 +86,6 @@ export const ActivityDialog = memo(function ActivityDialog({
   const placeRequest = useRef(0);
   const lastSubmitted = useRef(draft);
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const initialTitle = useRef(draft.title);
-  useEffect(() => {
-    if (!initialTitle.current.trim()) titleInputRef.current?.scrollIntoView({ block: "center" });
-  }, []);
   const { selectPlace, cancelSelection } = usePlaceSelection();
   const { bg } = useActivityColors(draft.color);
   const currentDay = days.find((d) => d.id === activity?.dayId);

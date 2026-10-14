@@ -271,7 +271,7 @@ describe("BudgetView", () => {
     fireEvent.keyDown(amount, { key: "Enter" });
     await waitFor(() => expect(shared.createEntry).toHaveBeenCalledOnce());
     expect(screen.getByRole("button", { name: "Add expense" })).toHaveAttribute("aria-busy", "true");
-    expect(amount).toBeDisabled();
+    expect(amount).toHaveAttribute("readonly");
     await act(async () => resolve("dinner"));
     expect(await screen.findByText("Dinner")).toBeInTheDocument();
   });
