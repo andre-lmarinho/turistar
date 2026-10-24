@@ -14,9 +14,7 @@ const mocks = vi.hoisted(() => {
     capture: vi.fn((event: string) => {
       calls.push(posthog.__loaded ? event : `${event}:before-init`);
     }),
-    identify: vi.fn(),
     reset: vi.fn(),
-    opt_out_capturing: vi.fn(),
   };
   return { calls, posthog, pathname: "/" };
 });
