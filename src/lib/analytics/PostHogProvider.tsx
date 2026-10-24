@@ -24,11 +24,23 @@ function isAnalyticsDisabled(): boolean {
   return window.localStorage.getItem("turistar.analytics.disabled") === "1";
 }
 
+// Child effects run before parent effects, so every effect initializes the SDK before it uses it.
+function ensureAnalytics(): boolean {
+  if (!PROJECT_TOKEN || isAnalyticsDisabled()) return false;
+  if (posthog.__loaded) return true;
+  posthog.init(PROJECT_TOKEN, {
+    api_host: API_HOST,
+    capture_pageview: false,
+    capture_pageleave: false,
+  });
+  return true;
+}
+
 function PageAnalytics() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!PROJECT_TOKEN || isAnalyticsDisabled()) return;
+    if (!ensureAnalytics()) return;
     const pageGroup = getPageGroup(pathname);
     if (!pageGroup) return;
 
@@ -57,7 +69,7 @@ function PageAnalytics() {
 
 function AccountAnalytics() {
   useEffect(() => {
-    if (!PROJECT_TOKEN || isAnalyticsDisabled()) return;
+    if (!ensureAnalytics()) return;
     const supabase = createSupabaseBrowserClient();
 
     const syncAccount = async () => {
@@ -82,15 +94,6 @@ function AccountAnalytics() {
 }
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    if (!PROJECT_TOKEN || isAnalyticsDisabled()) return;
-    posthog.init(PROJECT_TOKEN, {
-      api_host: API_HOST,
-      capture_pageview: false,
-      capture_pageleave: false,
-    });
-  }, []);
-
   return (
     <>
       {children}
