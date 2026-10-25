@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getImageProps } from "next/image";
 import { resolveNextPath } from "@/features/auth/lib/redirect";
 import { redirectIfAuthenticated } from "@/features/auth/lib/redirectServer";
 import { getViewer } from "@/features/auth/lib/session";
@@ -6,6 +7,7 @@ import { ProfileRepository } from "@/features/profile/repositories/ProfileReposi
 import { ProfileService } from "@/features/profile/services/ProfileService";
 import { ApplicationError } from "@/lib/errors";
 import { SITE_URL } from "@/lib/urls/siteUrl";
+import signupIllustration from "@/modules/auth/media/app-mock.webp";
 import { SignupView } from "@/modules/auth/signup-view";
 import SeoJsonLd from "@/modules/marketing/seo/SeoJsonLd";
 import { createSupabaseServerClient } from "@/supabase/server";
@@ -60,8 +62,24 @@ export default async function SignupRoute({ searchParams }: { searchParams?: Pro
     return new ProfileService(new ProfileRepository(createSupabaseServerClient())).ensureProfile(viewer);
   }
 
+  const { props: illustration } = getImageProps({
+    src: signupIllustration,
+    alt: "",
+    width: 681,
+    height: 520,
+  });
+
   return (
     <>
+      {/* Only desktop displays this LCP image; start its request before CSS/layout completes. */}
+      <link
+        rel="preload"
+        as="image"
+        href={illustration.src}
+        imageSrcSet={illustration.srcSet}
+        media="(min-width: 1024px)"
+        fetchPriority="high"
+      />
       <SeoJsonLd />
       <SignupView finalizeProfile={finalizeProfileAction} nextPath={nextPath} />
     </>
