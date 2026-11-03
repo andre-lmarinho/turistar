@@ -49,6 +49,10 @@ it("initializes PostHog before the initial homepage pageview", () => {
 
   expect(mocks.calls[0]).toBe("init");
   expect(mocks.posthog.init).toHaveBeenCalledTimes(1);
+  expect(mocks.posthog.init).toHaveBeenCalledWith(
+    "test-token",
+    expect.objectContaining({ capture_pageview: false, capture_pageleave: true })
+  );
   expect(pageviews()).toEqual(["$pageview"]);
   expect(mocks.posthog.capture).toHaveBeenCalledWith("$pageview", { page_group: "auth_home" });
 });
