@@ -31,7 +31,7 @@ function ensureAnalytics(): boolean {
   posthog.init(PROJECT_TOKEN, {
     api_host: API_HOST,
     capture_pageview: false,
-    capture_pageleave: false,
+    capture_pageleave: true,
   });
   return true;
 }
