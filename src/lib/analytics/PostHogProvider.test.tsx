@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { StrictMode } from "react";
 import { beforeEach, expect, it, vi } from "vitest";
 
@@ -14,9 +14,20 @@ const mocks = vi.hoisted(() => {
     capture: vi.fn((event: string) => {
       calls.push(posthog.__loaded ? event : `${event}:before-init`);
     }),
-    reset: vi.fn(),
+    userState: "anonymous",
+    get_property: vi.fn(() => posthog.userState),
+    identify: vi.fn(() => {
+      posthog.userState = "identified";
+    }),
+    reset: vi.fn(() => {
+      posthog.userState = "anonymous";
+    }),
   };
-  return { calls, posthog, pathname: "/" };
+  const auth = {
+    user: null as { id: string; email: string } | null,
+    onChange: () => {},
+  };
+  return { auth, calls, posthog, pathname: "/" };
 });
 
 vi.mock("posthog-js", () => ({ default: mocks.posthog }));
@@ -24,8 +35,12 @@ vi.mock("next/navigation", () => ({ usePathname: () => mocks.pathname }));
 vi.mock("@/supabase/client", () => ({
   createSupabaseBrowserClient: () => ({
     auth: {
-      getUser: () => Promise.resolve({ data: { user: null } }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }),
+      getUser: () => Promise.resolve({ data: { user: mocks.auth.user } }),
+      onAuthStateChange: (callback: () => void) => {
+        mocks.auth.onChange = callback;
+        callback();
+        return { data: { subscription: { unsubscribe: vi.fn() } } };
+      },
     },
   }),
 }));
@@ -40,6 +55,8 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.calls.length = 0;
   mocks.posthog.__loaded = false;
+  mocks.posthog.userState = "anonymous";
+  mocks.auth.user = null;
   mocks.pathname = "/";
   window.localStorage.clear();
 });
@@ -77,6 +94,28 @@ it("initializes once before any capture in Strict Mode", () => {
   expect(mocks.calls[0]).toBe("init");
   expect(mocks.posthog.init).toHaveBeenCalledTimes(1);
   expect(mocks.calls).not.toContain("$pageview:before-init");
+});
+
+it("keeps the anonymous startup session so the recording includes the landing pageview", async () => {
+  render(<PostHogProvider>content</PostHogProvider>);
+
+  await waitFor(() => expect(mocks.posthog.get_property).toHaveBeenCalledWith("$user_state"));
+  expect(mocks.posthog.reset).not.toHaveBeenCalled();
+  expect(pageviews()).toEqual(["$pageview"]);
+});
+
+it("resets the identity on sign-out", async () => {
+  mocks.auth.user = { id: "user-1", email: "traveler@example.com" };
+  render(<PostHogProvider>content</PostHogProvider>);
+  await waitFor(() => expect(mocks.posthog.identify).toHaveBeenCalled());
+
+  mocks.auth.user = null;
+  mocks.auth.onChange();
+
+  await waitFor(() => expect(mocks.posthog.reset).toHaveBeenCalledTimes(1));
+  mocks.auth.onChange();
+  await waitFor(() => expect(mocks.posthog.get_property).toHaveBeenCalledTimes(2));
+  expect(mocks.posthog.reset).toHaveBeenCalledTimes(1);
 });
 
 it("skips initialization and capture when analytics is disabled", () => {

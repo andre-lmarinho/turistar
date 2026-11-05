@@ -77,7 +77,8 @@ function AccountAnalytics() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        posthog.reset();
+        // reset() starts a new session, so anonymous visits skip it to keep the landing pageview in the recording.
+        if (posthog.get_property("$user_state") === "identified") posthog.reset();
         return;
       }
       posthog.identify(user.id, { is_demo: isDemoUser(user.email) });
