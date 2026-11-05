@@ -4,13 +4,13 @@ Modules compose the screens rendered by [App Router pages](../app/) using featur
 
 ## Areas
 
-| Area | Responsibilities | Start here |
-| --- | --- | --- |
-| `auth` | Login, signup, password recovery, and language selection | [LoginView](auth/login-view.tsx) |
-| `layout` | App navigation, account settings, and sign-out | [AppBar](layout/AppBar.tsx) |
-| `marketing` | Public navigation, footer, legal-page layout, and SEO markup | [LegalArticle](marketing/layout/LegalArticle.tsx) |
-| `planner` | Board, trip, map, and budget views; activity editing and sharing | [PlanIdView](planner/planid-view.tsx) |
-| `user` | Dashboard, travel map, upcoming trip, and plan creation | [DashboardView](user/dashboard-view.tsx) |
+| Area        | Responsibilities                                                 | Start here                                        |
+| ----------- | ---------------------------------------------------------------- | ------------------------------------------------- |
+| `auth`      | Login, signup, password recovery, and language selection         | [LoginView](auth/login-view.tsx)                  |
+| `layout`    | App navigation, account settings, and sign-out                   | [AppBar](layout/AppBar.tsx)                       |
+| `marketing` | Public navigation, footer, legal-page layout, and SEO markup     | [LegalArticle](marketing/layout/LegalArticle.tsx) |
+| `planner`   | Board, trip, map, and budget views; activity editing and sharing | [PlanIdView](planner/planid-view.tsx)             |
+| `user`      | Dashboard, travel map, upcoming trip, and plan creation          | [DashboardView](user/dashboard-view.tsx)          |
 
 ## How screens use data
 

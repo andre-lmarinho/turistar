@@ -11,12 +11,12 @@ Defines the itinerary's days and activities, creates local drafts and supplies a
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [types.ts](types.ts) | `Activity`, `DayPlan` and color types. |
-| [dayOperations.ts](lib/dayOperations.ts) | Date labels and initial days. |
-| [placeholders.ts](lib/placeholders.ts) | Activity IDs, draft defaults and placeholder detection. |
-| [useActivityColors.ts](hooks/useActivityColors.ts) | Color values used by activity cards. |
+| File                                               | Responsibility                                          |
+| -------------------------------------------------- | ------------------------------------------------------- |
+| [types.ts](types.ts)                               | `Activity`, `DayPlan` and color types.                  |
+| [dayOperations.ts](lib/dayOperations.ts)           | Date labels and initial days.                           |
+| [placeholders.ts](lib/placeholders.ts)             | Activity IDs, draft defaults and placeholder detection. |
+| [useActivityColors.ts](hooks/useActivityColors.ts) | Color values used by activity cards.                    |
 
 ## Related docs
 

@@ -14,13 +14,13 @@ The demo feature signs visitors into a shared account, explains how it works, an
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [demo.ts](lib/demo.ts) | Demo account identity and detection. |
-| [demoSignIn.ts](lib/demoSignIn.ts) | Shared-account sign-in through the auth handler. |
-| [resetDemoIfStale.ts](lib/resetDemoIfStale.ts) | Server-side reset request on dashboard entry. |
-| [DemoRepository.ts](repositories/DemoRepository.ts) | Calls the `maybe_reset_demo` database function. |
-| [DemoGuideDialog.tsx](components/DemoGuideDialog.tsx) | Shared-account introduction. |
+| File                                                  | Responsibility                                   |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| [demo.ts](lib/demo.ts)                                | Demo account identity and detection.             |
+| [demoSignIn.ts](lib/demoSignIn.ts)                    | Shared-account sign-in through the auth handler. |
+| [resetDemoIfStale.ts](lib/resetDemoIfStale.ts)        | Server-side reset request on dashboard entry.    |
+| [DemoRepository.ts](repositories/DemoRepository.ts)   | Calls the `maybe_reset_demo` database function.  |
+| [DemoGuideDialog.tsx](components/DemoGuideDialog.tsx) | Shared-account introduction.                     |
 
 The login and signup entry points are in the [auth module](../../modules/README.md). The reset is triggered by the [user dashboard page](../../app/(webapp)/u/[slug]/page.tsx).
 

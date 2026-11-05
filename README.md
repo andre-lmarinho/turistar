@@ -49,15 +49,15 @@ issues, see [Local development](CONTRIBUTING.md#local-development).
 Turistar is a single Next.js App Router application using React, TypeScript, Tailwind CSS, tRPC,
 TanStack Query, and Supabase Auth/PostgreSQL/Realtime. See [`package.json`](package.json) for versions.
 
-| Start here | What it explains |
-| --- | --- |
-| [Architecture](ARCHITECTURE.md) | Domain concepts, data flows, persistence, and access control. |
-| [Feature index](src/features/README.md) | Product capabilities and their code entry points. |
-| [Modules](src/modules/README.md) | Page composition and interactive views. |
-| [tRPC](src/trpc/README.md) | API context, routers, and procedures. |
-| [Internationalization](src/i18n/README.md) | Locale selection and translations. |
-| [Contributing](CONTRIBUTING.md) | Setup, checks, database workflow, and deployment. |
-| [Agent instructions](AGENTS.md) | Constraints and workflow for coding agents. |
+| Start here                                 | What it explains                                              |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| [Architecture](ARCHITECTURE.md)            | Domain concepts, data flows, persistence, and access control. |
+| [Feature index](src/features/README.md)    | Product capabilities and their code entry points.             |
+| [Modules](src/modules/README.md)           | Page composition and interactive views.                       |
+| [tRPC](src/trpc/README.md)                 | API context, routers, and procedures.                         |
+| [Internationalization](src/i18n/README.md) | Locale selection and translations.                            |
+| [Contributing](CONTRIBUTING.md)            | Setup, checks, database workflow, and deployment.             |
+| [Agent instructions](AGENTS.md)            | Constraints and workflow for coding agents.                   |
 
 ## Contribute
 

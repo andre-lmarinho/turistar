@@ -4,18 +4,18 @@ Features group domain types, operations and data access. Start with [Architectur
 
 ## Feature guide
 
-| Feature | Responsibility |
-| --- | --- |
-| [Activity](activity/README.md) | Day and activity types, draft creation and display colors. |
-| [Auth](auth/README.md) | Sign-in, registration, password recovery and server viewer lookup. |
-| [Budget](budget/README.md) | Expense entries and stored plan budgets. |
-| [Demo](demo/README.md) | Shared account, baseline data and reset behavior. |
-| [Events](events/README.md) | Activity/day edits, optimistic state, persistence and realtime recovery. |
-| [Members](members/README.md) | Plan membership and administrative operations. |
-| [Plan](plan/README.md) | Plan creation, access, initial data, dashboard queries and metadata. |
-| [Profile](profile/README.md) | Profile provisioning, usernames and account details. |
-| [Search](search/README.md) | Destination and activity search through Geoapify, with Wikidata images. |
-| [Snapshots](snapshots/README.md) | Reading and validating the latest persisted itinerary state. |
+| Feature                          | Responsibility                                                           |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| [Activity](activity/README.md)   | Day and activity types, draft creation and display colors.               |
+| [Auth](auth/README.md)           | Sign-in, registration, password recovery and server viewer lookup.       |
+| [Budget](budget/README.md)       | Expense entries and stored plan budgets.                                 |
+| [Demo](demo/README.md)           | Shared account, baseline data and reset behavior.                        |
+| [Events](events/README.md)       | Activity/day edits, optimistic state, persistence and realtime recovery. |
+| [Members](members/README.md)     | Plan membership and administrative operations.                           |
+| [Plan](plan/README.md)           | Plan creation, access, initial data, dashboard queries and metadata.     |
+| [Profile](profile/README.md)     | Profile provisioning, usernames and account details.                     |
+| [Search](search/README.md)       | Destination and activity search through Geoapify, with Wikidata images.  |
+| [Snapshots](snapshots/README.md) | Reading and validating the latest persisted itinerary state.             |
 
 ## Working in a feature
 
