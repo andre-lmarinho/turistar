@@ -40,13 +40,13 @@ recreates it and removes local changes.
 
 ### Common setup issues
 
-| Symptom | Check |
-| --- | --- |
-| `supabase` is missing or cannot start containers | Install the CLI and start the container runtime. |
-| Username availability fails | Set the local `SUPABASE_SERVICE_ROLE_KEY` and restart Next.js. |
-| Place search or map tiles fail | Set `GEOAPIFY_KEY` or `CARTO_KEY`, respectively. |
-| Auth emails return to the wrong origin | Match the browser origin with Supabase's site URL and allowed redirects. |
-| Database objects are missing | Run `pnpm db:migrate`; use a reset only if local data can be discarded. |
+| Symptom                                          | Check                                                                    |
+| ------------------------------------------------ | ------------------------------------------------------------------------ |
+| `supabase` is missing or cannot start containers | Install the CLI and start the container runtime.                         |
+| Username availability fails                      | Set the local `SUPABASE_SERVICE_ROLE_KEY` and restart Next.js.           |
+| Place search or map tiles fail                   | Set `GEOAPIFY_KEY` or `CARTO_KEY`, respectively.                         |
+| Auth emails return to the wrong origin           | Match the browser origin with Supabase's site URL and allowed redirects. |
+| Database objects are missing                     | Run `pnpm db:migrate`; use a reset only if local data can be discarded.  |
 
 ## Configuration
 
@@ -59,16 +59,16 @@ supabase status -o env
 This command includes credentials. Copy the needed values into `.env.local`; keep the output out of
 logs, issues, and commits. Use the key from your running local stack, not a hosted project's key.
 
-| Variable | Used for |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Browser and server connection to Supabase. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public client key; row access is controlled by the viewer's session and RLS. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only username availability lookup with privileged access. |
-| `GEOAPIFY_KEY` | Server-side destination search, place details, and geocoding. |
-| `CARTO_KEY` | Server-side map tile requests. |
+| Variable                            | Used for                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`          | Browser and server connection to Supabase.                                         |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | Public client key; row access is controlled by the viewer's session and RLS.       |
+| `SUPABASE_SERVICE_ROLE_KEY`         | Server-only username availability lookup with privileged access.                   |
+| `GEOAPIFY_KEY`                      | Server-side destination search, place details, and geocoding.                      |
+| `CARTO_KEY`                         | Server-side map tile requests.                                                     |
 | `NEXT_PUBLIC_POSTHUG_PROJECT_TOKEN` | Optional browser analytics; leave blank to disable. The spelling matches the code. |
-| `NEXT_PUBLIC_POSTHUG_HOST` | Optional analytics endpoint read by the current provider. |
-| `NEXT_PUBLIC_SITE_URL` | Explicit server-side URL origin for absolute links where the URL helper is used. |
+| `NEXT_PUBLIC_POSTHUG_HOST`          | Optional analytics endpoint read by the current provider.                          |
+| `NEXT_PUBLIC_SITE_URL`              | Explicit server-side URL origin for absolute links where the URL helper is used.   |
 
 The example file lists `NEXT_PUBLIC_POSTHOG_HOST`, but the current
 [provider](src/lib/analytics/PostHogProvider.tsx) reads `NEXT_PUBLIC_POSTHUG_HOST`; use the latter when
@@ -149,11 +149,11 @@ or E2E suite.
 The executable schema lives in [`supabase/migrations`](supabase/migrations).
 [`supabase/schema.supabase.sql`](supabase/schema.supabase.sql) is a context-only table reference.
 
-| Command | Effect |
-| --- | --- |
+| Command           | Effect                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
 | `pnpm db:migrate` | Apply pending migrations without resetting the local database. Review migrations for changes to existing data. |
-| `pnpm db:reset` | Recreate the local database, apply migrations, and run `supabase/seed.sql`. Deletes local data. |
-| `pnpm db:stop` | Stop local Supabase while preserving its data. |
+| `pnpm db:reset`   | Recreate the local database, apply migrations, and run `supabase/seed.sql`. Deletes local data.                |
+| `pnpm db:stop`    | Stop local Supabase while preserving its data.                                                                 |
 
 For database changes, follow the repository's [approval boundaries](AGENTS.md#boundaries), create a
 versioned migration with the Supabase CLI, and verify it locally. The

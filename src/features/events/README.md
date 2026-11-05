@@ -4,13 +4,13 @@ Saves activity and day changes as events and keeps local edits in sync with the 
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [usePlannerDocument.ts](../../modules/planner/hooks/usePlannerDocument.ts) | Provides activity and date actions to the UI. |
-| [planOperations.ts](lib/planOperations.ts) | Builds events for moves and date changes. A move identifies the destination day and the activity it should precede. |
-| [usePlanCollaboration.ts](hooks/usePlanCollaboration.ts) | Keeps confirmed state and pending edits, sends requests and handles server updates. |
-| [eventReducer.ts](lib/eventReducer.ts) | Applies each change to the document. |
-| [EventsService.ts](services/EventsService.ts) | Builds the next snapshot and appends the event batch through the repository. |
+| File                                                                       | Responsibility                                                                                                      |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| [usePlannerDocument.ts](../../modules/planner/hooks/usePlannerDocument.ts) | Provides activity and date actions to the UI.                                                                       |
+| [planOperations.ts](lib/planOperations.ts)                                 | Builds events for moves and date changes. A move identifies the destination day and the activity it should precede. |
+| [usePlanCollaboration.ts](hooks/usePlanCollaboration.ts)                   | Keeps confirmed state and pending edits, sends requests and handles server updates.                                 |
+| [eventReducer.ts](lib/eventReducer.ts)                                     | Applies each change to the document.                                                                                |
+| [EventsService.ts](services/EventsService.ts)                              | Builds the next snapshot and appends the event batch through the repository.                                        |
 
 A [PlanOperation](types.ts) has a `type` and `payload`. The hook assigns an ID when it queues the operation. The server assigns its version and timestamp.
 

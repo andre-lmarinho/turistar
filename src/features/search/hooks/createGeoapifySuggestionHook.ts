@@ -34,6 +34,7 @@ export function createGeoapifySuggestionHook<TResult>({
   paramName = "text",
   mapResults,
 }: SuggestionHookConfig<TResult>): SuggestionHook<TResult> {
+  // biome-ignore lint/correctness/noComponentHookFactories: searchHooks.ts calls this factory only at module scope, keeping hook identities stable.
   return function useGeoapifySuggestions(
     query: string,
     options: SuggestionHookOptions = {}

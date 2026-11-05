@@ -302,7 +302,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                       </label>
                       <select
                         id="position-select"
-                        value={currentIndex >= 0 ? currentIndex : 0}
+                        value={Math.max(currentIndex, 0)}
                         onChange={(e) => onPositionChange?.(Number(e.target.value))}
                         className="border-input bg-background text-foreground mt-1 w-full rounded border px-2 py-1 text-sm">
                         {dayPositions.map((pos) => (

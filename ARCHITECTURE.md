@@ -8,15 +8,15 @@ For installation and commands, see [Contributing](CONTRIBUTING.md).
 
 ## Domain model
 
-| Concept | Meaning and storage |
-| --- | --- |
-| Plan | Trip owner, destination, dates, title, and cover image in `plans`. |
-| Day and activity | Ordered itinerary content inside snapshot `state.days`; activities have stable IDs. |
-| Event | An itinerary operation stored in `plan_events`, with an event ID and a version scoped to the plan. |
-| Snapshot | Itinerary state and the version it represents in `plan_snapshots`. |
-| Expense | A separate record in `budget_entries`; activity costs also contribute to displayed totals. |
-| Membership | A user's `admin` or `member` tier in `plan_members`. Ownership comes from `plans.user_id`. |
-| Profile | Display name, avatar, and unique dashboard slug in `profiles`, associated with an Auth user. |
+| Concept          | Meaning and storage                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------- |
+| Plan             | Trip owner, destination, dates, title, and cover image in `plans`.                                 |
+| Day and activity | Ordered itinerary content inside snapshot `state.days`; activities have stable IDs.                |
+| Event            | An itinerary operation stored in `plan_events`, with an event ID and a version scoped to the plan. |
+| Snapshot         | Itinerary state and the version it represents in `plan_snapshots`.                                 |
+| Expense          | A separate record in `budget_entries`; activity costs also contribute to displayed totals.         |
+| Membership       | A user's `admin` or `member` tier in `plan_members`. Ownership comes from `plans.user_id`.         |
+| Profile          | Display name, avatar, and unique dashboard slug in `profiles`, associated with an Auth user.       |
 
 Snapshots contain days and activities. Budget entries, membership, and profile data have separate read
 and write paths. The database also retains `plans.budget`; the current budget view focuses on expenses
@@ -24,17 +24,17 @@ and activity costs.
 
 ## Code map
 
-| Location | Responsibility |
-| --- | --- |
-| [`src/app`](src/app) | Pages, layouts, server actions, and HTTP route handlers. |
-| [`src/modules`](src/modules/README.md) | Auth, planner, dashboard, layout, and marketing compositions. |
-| [`src/features`](src/features/README.md) | Domain types, operations, hooks, services, and repositories. |
-| [`src/trpc`](src/trpc/README.md) | API context, validation, procedures, and handlers. |
-| [`src/supabase`](src/supabase) | Browser, server, and privileged clients plus generated database types. |
-| [`src/ui`](src/ui) | Reusable UI components, styling, and media. |
-| [`src/lib`](src/lib) | Shared errors, environment configuration, URLs, and analytics. |
-| [`src/i18n`](src/i18n/README.md) | Locale resolution and translation catalogs. |
-| [`supabase`](supabase) | Migrations, local configuration, and demo seed data. |
+| Location                                 | Responsibility                                                         |
+| ---------------------------------------- | ---------------------------------------------------------------------- |
+| [`src/app`](src/app)                     | Pages, layouts, server actions, and HTTP route handlers.               |
+| [`src/modules`](src/modules/README.md)   | Auth, planner, dashboard, layout, and marketing compositions.          |
+| [`src/features`](src/features/README.md) | Domain types, operations, hooks, services, and repositories.           |
+| [`src/trpc`](src/trpc/README.md)         | API context, validation, procedures, and handlers.                     |
+| [`src/supabase`](src/supabase)           | Browser, server, and privileged clients plus generated database types. |
+| [`src/ui`](src/ui)                       | Reusable UI components, styling, and media.                            |
+| [`src/lib`](src/lib)                     | Shared errors, environment configuration, URLs, and analytics.         |
+| [`src/i18n`](src/i18n/README.md)         | Locale resolution and translation catalogs.                            |
+| [`supabase`](supabase)                   | Migrations, local configuration, and demo seed data.                   |
 
 Modules can compose multiple features. Features must not import modules or routes; the corresponding
 [Biome rules](biome.json) enforce this direction. Services coordinate domain behavior, and repositories

@@ -12,12 +12,12 @@ Stores categorized expense entries and the plan's budget value. The planner's bu
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [BudgetService.ts](services/BudgetService.ts) | Budget and expense operations. |
-| [BudgetRepository.ts](repositories/BudgetRepository.ts) | Reads and writes to `plans` and `budget_entries`. |
-| [types.ts](types.ts) | Entry shape, category keys and display configuration. |
-| [BudgetView.tsx](../../modules/planner/views/BudgetView.tsx) | Query state, expense editing and derived totals. |
+| File                                                         | Responsibility                                        |
+| ------------------------------------------------------------ | ----------------------------------------------------- |
+| [BudgetService.ts](services/BudgetService.ts)                | Budget and expense operations.                        |
+| [BudgetRepository.ts](repositories/BudgetRepository.ts)      | Reads and writes to `plans` and `budget_entries`.     |
+| [types.ts](types.ts)                                         | Entry shape, category keys and display configuration. |
+| [BudgetView.tsx](../../modules/planner/views/BudgetView.tsx) | Query state, expense editing and derived totals.      |
 
 ## Related docs
 

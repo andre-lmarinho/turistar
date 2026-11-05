@@ -13,12 +13,12 @@ Provisions user profiles and manages their slug, display name and avatar metadat
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [ProfileService.ts](services/ProfileService.ts) | Profile lookup and update rules. |
-| [ProfileRepository.ts](repositories/ProfileRepository.ts) | Reads and writes to `profiles`. |
-| [validUsername.ts](utils/validUsername.ts) | Username normalization and format rules. |
-| [AccountSettingsDialog.tsx](../../modules/layout/AccountSettingsDialog.tsx) | Profile editing UI. |
+| File                                                                        | Responsibility                           |
+| --------------------------------------------------------------------------- | ---------------------------------------- |
+| [ProfileService.ts](services/ProfileService.ts)                             | Profile lookup and update rules.         |
+| [ProfileRepository.ts](repositories/ProfileRepository.ts)                   | Reads and writes to `profiles`.          |
+| [validUsername.ts](utils/validUsername.ts)                                  | Username normalization and format rules. |
+| [AccountSettingsDialog.tsx](../../modules/layout/AccountSettingsDialog.tsx) | Profile editing UI.                      |
 
 ## Related docs
 

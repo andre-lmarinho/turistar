@@ -9,12 +9,12 @@ tags: data, repository, naming, methods
 
 Use concise names that describe the data operation and its result.
 
-| Convention | Example |
-| --- | --- |
-| Avoid repeating the repository's entity name | `findById`, `create`, `delete` |
-| Make included relationships visible | `findByIdWithMembers` |
-| Describe selection criteria rather than a screen or report | `findByOwnerId` |
-| Keep business actions in Services | A Service coordinates validation and Repository calls |
+| Convention                                                 | Example                                               |
+| ---------------------------------------------------------- | ----------------------------------------------------- |
+| Avoid repeating the repository's entity name               | `findById`, `create`, `delete`                        |
+| Make included relationships visible                        | `findByIdWithMembers`                                 |
+| Describe selection criteria rather than a screen or report | `findByOwnerId`                                       |
+| Keep business actions in Services                          | A Service coordinates validation and Repository calls |
 
 Names such as `include`, `with`, or `andRelations` should reflect the relationships actually returned. Keep queries reusable without adding abstractions for hypothetical callers.
 

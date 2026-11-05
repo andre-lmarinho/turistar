@@ -13,12 +13,12 @@ Coordinates plan creation, access, initial planner data, dashboard queries and m
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [PlanService.ts](services/PlanService.ts) | Access checks and plan workflows. |
+| File                                                  | Responsibility                                   |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| [PlanService.ts](services/PlanService.ts)             | Access checks and plan workflows.                |
 | [createPlanService.ts](services/createPlanService.ts) | Wires repositories, snapshot service and viewer. |
-| [PlanRepository.ts](repositories/PlanRepository.ts) | Plan queries and database operations. |
-| [helpers.ts](lib/helpers.ts) | Initial days from stored dates. |
+| [PlanRepository.ts](repositories/PlanRepository.ts)   | Plan queries and database operations.            |
+| [helpers.ts](lib/helpers.ts)                          | Initial days from stored dates.                  |
 
 ## Related docs
 

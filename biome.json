@@ -1,6 +1,11 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "root": true,
+  "markdown": {
+    "parser": {
+      "frontmatter": true
+    }
+  },
   "css": {
     "parser": {
       "tailwindDirectives": true,

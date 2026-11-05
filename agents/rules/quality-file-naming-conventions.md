@@ -7,11 +7,11 @@ tags: file-structure, naming, conventions
 
 # Name files for their role
 
-| File type | Convention | Example |
-| --- | --- | --- |
+| File type        | Convention                          | Example             |
+| ---------------- | ----------------------------------- | ------------------- |
 | Repository class | PascalCase with `Repository` suffix | `PlanRepository.ts` |
-| Service class | PascalCase with `Service` suffix | `PlanService.ts` |
-| React component | PascalCase | `Button.tsx` |
+| Service class    | PascalCase with `Service` suffix    | `PlanService.ts`    |
+| React component  | PascalCase                          | `Button.tsx`        |
 
 Use descriptive class and component names that match their files. Avoid generic names such as `Manager` or shortened suffixes such as `Repo`.
 

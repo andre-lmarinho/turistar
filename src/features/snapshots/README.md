@@ -13,12 +13,12 @@ Expense entries and members use their own tables and queries; [Architecture](../
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [SnapshotsRepository.ts](repositories/SnapshotsRepository.ts) | Reads the current row from `plan_snapshots`. |
-| [SnapshotsService.ts](services/SnapshotsService.ts) | Validation and empty-document fallback. |
-| [snapshotSchemas.ts](repositories/snapshotSchemas.ts) | Stored shape, domain mapping and position normalization. |
-| [types.ts](types.ts) | Snapshot returned to callers. |
+| File                                                          | Responsibility                                           |
+| ------------------------------------------------------------- | -------------------------------------------------------- |
+| [SnapshotsRepository.ts](repositories/SnapshotsRepository.ts) | Reads the current row from `plan_snapshots`.             |
+| [SnapshotsService.ts](services/SnapshotsService.ts)           | Validation and empty-document fallback.                  |
+| [snapshotSchemas.ts](repositories/snapshotSchemas.ts)         | Stored shape, domain mapping and position normalization. |
+| [types.ts](types.ts)                                          | Snapshot returned to callers.                            |
 
 ## Related docs
 

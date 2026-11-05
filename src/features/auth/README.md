@@ -13,13 +13,13 @@ Handles Supabase sign-in, registration, password recovery and server-side viewer
 
 ## Main files
 
-| File | Responsibility |
-| --- | --- |
-| [signInWithPassword.ts](handlers/signInWithPassword.ts) | Sign-in and profile resolution. |
-| [registerWithPassword.ts](handlers/registerWithPassword.ts) | Registration and email-confirmation outcome. |
-| [exchangeResetPasswordSession.ts](handlers/exchangeResetPasswordSession.ts) | Recovery session exchange. |
-| [session.ts](lib/session.ts) | Server viewer lookup. |
-| [redirect.ts](lib/redirect.ts) | Local redirect validation and auth URLs. |
+| File                                                                        | Responsibility                               |
+| --------------------------------------------------------------------------- | -------------------------------------------- |
+| [signInWithPassword.ts](handlers/signInWithPassword.ts)                     | Sign-in and profile resolution.              |
+| [registerWithPassword.ts](handlers/registerWithPassword.ts)                 | Registration and email-confirmation outcome. |
+| [exchangeResetPasswordSession.ts](handlers/exchangeResetPasswordSession.ts) | Recovery session exchange.                   |
+| [session.ts](lib/session.ts)                                                | Server viewer lookup.                        |
+| [redirect.ts](lib/redirect.ts)                                              | Local redirect validation and auth URLs.     |
 
 ## Related docs
 
