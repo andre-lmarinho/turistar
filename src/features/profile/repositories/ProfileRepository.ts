@@ -5,7 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { formatSupabaseError } from "@/lib/errors";
 import type { Database } from "@/supabase/types";
 
-import type { ProfileRecord, ProfileSummary } from "../types";
+import type { ProfileSummary } from "../types";
 
 export type ProfileUpdatePayload = {
   userId: string;
@@ -16,27 +16,14 @@ export type ProfileUpdatePayload = {
 export class ProfileRepository {
   constructor(private readonly client: SupabaseClient<Database>) {}
 
-  async fetchProfileBySlug(slug: string): Promise<ProfileRecord | null> {
-    const { data, error } = await this.client
-      .from("profiles")
-      .select("id, slug, display_name, avatar_url")
-      .eq("slug", slug)
-      .maybeSingle();
+  async existsBySlug(slug: string): Promise<boolean> {
+    const { data, error } = await this.client.from("profiles").select("id").eq("slug", slug).maybeSingle();
 
     if (error) {
-      throw formatSupabaseError({ operation: "fetchProfileBySlug", identifiers: { slug }, error });
+      throw formatSupabaseError({ operation: "existsBySlug", identifiers: { slug }, error });
     }
 
-    if (!data?.slug) {
-      return null;
-    }
-
-    return {
-      userId: data.id,
-      slug: data.slug,
-      displayName: data.display_name,
-      avatarUrl: data.avatar_url,
-    };
+    return data != null;
   }
 
   async fetchProfileByUserId(userId: string): Promise<ProfileSummary | null> {

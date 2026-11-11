@@ -43,6 +43,13 @@ export class ProfileService {
     }
   }
 
+  async isUsernameAvailable(username: string): Promise<boolean> {
+    if (!validUsername(username)) {
+      return false;
+    }
+    return !(await this.repo.existsBySlug(username));
+  }
+
   async ensureProfile(viewer: { id: string }): Promise<string> {
     const profile = await this.getViewerProfile(viewer.id);
     if (!profile.slug) {
