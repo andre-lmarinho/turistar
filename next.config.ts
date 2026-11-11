@@ -20,15 +20,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/**" },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: "/planning/group",
-        destination: "/friends",
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     const isDev = process.env.NODE_ENV !== "production";
     // CSP is not here: the proxy sets it with a per-request nonce.
