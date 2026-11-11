@@ -1,7 +1,15 @@
 export function resolveNextPath(next: unknown): string | null {
   if (typeof next !== "string") return null;
-  if (!next.startsWith("/") || next.startsWith("//")) return null;
-  return next;
+
+  const localOrigin = "https://turistar.invalid";
+
+  try {
+    const url = new URL(next, localOrigin);
+    if (!next.startsWith("/") || url.origin !== localOrigin) return null;
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return null;
+  }
 }
 
 export function buildSignupHref(nextPath: string | null): string {
