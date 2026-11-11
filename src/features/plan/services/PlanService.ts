@@ -1,6 +1,6 @@
 import "server-only";
 
-import { format } from "date-fns";
+import { format, isAfter, isValid } from "date-fns";
 import type { Viewer } from "@/features/auth/lib/session";
 import type { BudgetEntryRow } from "@/features/budget/repositories/BudgetRepository";
 import { BudgetRepository } from "@/features/budget/repositories/BudgetRepository";
@@ -62,6 +62,11 @@ interface GetPlannerExperienceArgs {
 
 function mapBudgetEntry(entry: BudgetEntryRow): Entry {
   return BudgetRepository.mapEntries([entry])[0];
+}
+
+function requireValidDateRange(from: Date, to: Date, operation: string): void {
+  if (isValid(from) && isValid(to) && !isAfter(from, to)) return;
+  throw new ApplicationError("BAD_REQUEST", `${operation}: start date must be on or before end date.`);
 }
 
 export class PlanService {
@@ -158,12 +163,14 @@ export class PlanService {
 
   async updatePlanDates(planId: string, from: Date, to: Date): Promise<void> {
     await this.requireMember(planId);
+    requireValidDateRange(from, to, "updatePlanDates");
     await this.repo.updatePlanDates(planId, format(from, "yyyy-MM-dd"), format(to, "yyyy-MM-dd"));
   }
 
   async createUserPlan(input: CreateUserPlanInput): Promise<CreateUserPlanResult> {
     const user = this.requireViewer("create a plan");
     const { title, destination, startDate, endDate } = input;
+    requireValidDateRange(new Date(startDate), new Date(endDate), "createUserPlan");
 
     const coverImage = destination.placeId
       ? fetchGeoapifyPlaceDetails(destination.placeId)
