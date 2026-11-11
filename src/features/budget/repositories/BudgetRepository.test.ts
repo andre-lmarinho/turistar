@@ -92,12 +92,12 @@ describe("BudgetRepository", () => {
       await expect(makeRepo(supabase).fetchPlanBudgetRow("plan-1")).rejects.toThrow("fetchPlanBudgetRow");
     });
 
-    it("returns null when no data found", async () => {
+    it("throws a missing-row error when no data is returned", async () => {
       const { supabase } = buildTableMock("plans", { data: null, error: null });
 
-      const result = await makeRepo(supabase).fetchPlanBudgetRow("plan-1");
-
-      expect(result).toBeNull();
+      await expect(makeRepo(supabase).fetchPlanBudgetRow("plan-1")).rejects.toThrow(
+        "fetchPlanBudgetRow:missing-row"
+      );
     });
   });
 
@@ -193,11 +193,13 @@ describe("BudgetRepository", () => {
   });
 
   describe("updateBudgetEntry", () => {
-    it("updates budget entry successfully", async () => {
+    it("returns the affected entry id", async () => {
       const payload = { description: "Updated Entry", category: "transport", amount: 200 };
-      const { supabase, chain } = buildTableMock("budget_entries", { data: null, error: null });
+      const { supabase, chain } = buildTableMock("budget_entries", { data: { id: "entry-1" }, error: null });
 
-      await expect(makeRepo(supabase).updateBudgetEntry("entry-1", payload)).resolves.toBeUndefined();
+      await expect(makeRepo(supabase).updateBudgetEntry("entry-1", payload)).resolves.toEqual({
+        id: "entry-1",
+      });
 
       expect(chain.update).toHaveBeenCalledWith({
         description: "Updated Entry",
@@ -205,6 +207,17 @@ describe("BudgetRepository", () => {
         amount: 200,
       });
       expect(chain.eq).toHaveBeenCalledWith("id", "entry-1");
+      expect(chain.select).toHaveBeenCalledWith("id");
+      expect(chain.single).toHaveBeenCalled();
+    });
+
+    it("throws when no row was affected", async () => {
+      const payload = { description: "Updated Entry", category: "transport", amount: 200 };
+      const { supabase } = buildTableMock("budget_entries", { data: null, error: null });
+
+      await expect(makeRepo(supabase).updateBudgetEntry("entry-1", payload)).rejects.toThrow(
+        "updateBudgetEntry:missing-row"
+      );
     });
 
     it("throws error when update fails", async () => {
@@ -218,13 +231,23 @@ describe("BudgetRepository", () => {
   });
 
   describe("deleteBudgetEntry", () => {
-    it("deletes budget entry successfully", async () => {
-      const { supabase, chain } = buildTableMock("budget_entries", { data: null, error: null });
+    it("returns the deleted entry id", async () => {
+      const { supabase, chain } = buildTableMock("budget_entries", { data: { id: "entry-1" }, error: null });
 
-      await expect(makeRepo(supabase).deleteBudgetEntry("entry-1")).resolves.toBeUndefined();
+      await expect(makeRepo(supabase).deleteBudgetEntry("entry-1")).resolves.toEqual({ id: "entry-1" });
 
       expect(chain.delete).toHaveBeenCalled();
       expect(chain.eq).toHaveBeenCalledWith("id", "entry-1");
+      expect(chain.select).toHaveBeenCalledWith("id");
+      expect(chain.single).toHaveBeenCalled();
+    });
+
+    it("throws when no row was deleted", async () => {
+      const { supabase } = buildTableMock("budget_entries", { data: null, error: null });
+
+      await expect(makeRepo(supabase).deleteBudgetEntry("entry-1")).rejects.toThrow(
+        "deleteBudgetEntry:missing-row"
+      );
     });
 
     it("throws error when delete fails", async () => {
