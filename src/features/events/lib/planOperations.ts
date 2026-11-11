@@ -1,8 +1,8 @@
 import { formatDay } from "@/features/activity/lib/dayOperations";
+import { midpoint, POSITION_SCALE } from "@/features/activity/lib/gapOrdering";
 import type { DayPlan } from "@/features/activity/types";
 import type { PlanOperation } from "../types";
 import { applyEvent } from "./eventReducer";
-import { midpoint } from "./gapOrdering";
 
 export interface ActivityDestination {
   toDayId: string;
@@ -46,7 +46,7 @@ export function changeDateRangeOperations(days: DayPlan[], dates: Date[]): PlanO
     projected = applyEvent(projected, operation);
   };
   for (const [index, target] of targets.entries()) {
-    const position = String((index + 1) * 1024);
+    const position = String((index + 1) * POSITION_SCALE);
     if (!days.some((day) => day.id === target.id)) {
       append({ type: "day.created", payload: { day: { ...target, position, activities: [] } } });
     } else {

@@ -1,8 +1,8 @@
+import { normalizePositions, parsePosition } from "@/features/activity/lib/gapOrdering";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import type { Snapshot } from "@/features/snapshots/types";
 import type { EventRecord, EventState, PlanOperation } from "../types";
 import { sanitizeActivity } from "./activityState";
-import { normalizePositions, parsePosition } from "./gapOrdering";
 
 export function normalizeDays(days: DayPlan[]): DayPlan[] {
   return normalizePositions(days).map((day) => ({
