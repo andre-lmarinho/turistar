@@ -165,7 +165,7 @@ export class PlanService {
     const user = this.requireViewer("create a plan");
     const { title, destination, startDate, endDate } = input;
 
-    const coverImagePromise = destination.placeId
+    const coverImage = destination.placeId
       ? fetchGeoapifyPlaceDetails(destination.placeId)
           .then((details) => (details.wikidataId ? fetchWikidataImage(details.wikidataId) : undefined))
           .catch((error) => {
@@ -175,7 +175,7 @@ export class PlanService {
             });
             return undefined;
           })
-      : Promise.resolve(undefined);
+      : undefined;
 
     const { id } = await this.repo.createPlan({
       title,
@@ -186,17 +186,8 @@ export class PlanService {
       startDate: startDate.slice(0, 10),
       endDate: endDate.slice(0, 10),
       userId: user.id,
+      coverImage: await coverImage,
     });
-
-    coverImagePromise
-      .then((coverImageUrl) => {
-        if (coverImageUrl) {
-          return this.repo.updatePlanCoverImage(id, coverImageUrl);
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to update cover image", { planId: id, error });
-      });
 
     return { planId: id };
   }
