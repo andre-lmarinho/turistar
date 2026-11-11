@@ -3,11 +3,13 @@ import { vi } from "vitest";
 
 import { GET } from "./route";
 
-const { mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() => ({
+const { mockGetViewer, mockFetchGeoapifyPlaceDetails, mockFetchWikidataImage } = vi.hoisted(() => ({
+  mockGetViewer: vi.fn(),
   mockFetchGeoapifyPlaceDetails: vi.fn(),
   mockFetchWikidataImage: vi.fn(),
 }));
 
+vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 vi.mock("@/features/search/services/GeoapifyService", () => ({
   fetchGeoapifyPlaceDetails: mockFetchGeoapifyPlaceDetails,
 }));
@@ -21,8 +23,21 @@ const createRequest = (search: string): NextRequest => {
 
 describe("GET /api/places/details", () => {
   beforeEach(() => {
+    mockGetViewer.mockReset();
+    mockGetViewer.mockResolvedValue({ id: "viewer-1" });
     mockFetchGeoapifyPlaceDetails.mockReset();
     mockFetchWikidataImage.mockReset();
+  });
+
+  it("rejects unauthenticated requests before loading place details", async () => {
+    mockGetViewer.mockResolvedValue(null);
+
+    const res = await GET(createRequest("?placeId=pid"));
+
+    expect(res.status).toBe(401);
+    await expect(res.json()).resolves.toEqual({ error: "Authentication required." });
+    expect(mockFetchGeoapifyPlaceDetails).not.toHaveBeenCalled();
+    expect(mockFetchWikidataImage).not.toHaveBeenCalled();
   });
 
   it("returns 400 when the placeId parameter is missing", async () => {

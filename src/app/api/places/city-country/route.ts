@@ -1,12 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getUnauthorizedResponse } from "@/app/api/routeAuth";
 import {
   fetchGeoapifyAutocomplete,
   readGeoapifyCoordinates,
   validateGeoapifyQuery,
 } from "@/features/search/services/GeoapifyService";
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 async function handleCityCountryAutocomplete(req: NextRequest) {
@@ -28,5 +28,8 @@ async function handleCityCountryAutocomplete(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const unauthorizedResponse = await getUnauthorizedResponse();
+  if (unauthorizedResponse) return unauthorizedResponse;
+
   return handleCityCountryAutocomplete(req);
 }
