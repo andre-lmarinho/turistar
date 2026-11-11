@@ -5,3 +5,8 @@ export interface Snapshot {
   days: DayPlan[];
   updatedAt: string;
 }
+
+/** JSONB payload persisted in plan_snapshots.state and passed to the append RPC. */
+export interface PersistedSnapshotState {
+  days: DayPlan[];
+}

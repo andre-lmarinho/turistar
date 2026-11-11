@@ -3,17 +3,17 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { EventInsert } from "@/features/events/types";
-import type { SnapshotRow } from "@/features/snapshots/repositories/SnapshotsRepository";
+import type { PersistedSnapshotState } from "@/features/snapshots/types";
 import { formatSupabaseError } from "@/lib/errors";
 import type { Database, Json } from "@/supabase/types";
 
 export type EventRow = Database["public"]["Tables"]["plan_events"]["Row"];
 export type AppendEventsResponse = Database["public"]["Functions"]["append_plan_events"]["Returns"];
 
-type SnapshotState = SnapshotRow["state"];
+type SnapshotState = PersistedSnapshotState;
 
 type AppendPlanEventsArgs = Database["public"]["Functions"]["append_plan_events"]["Args"] & {
-  snapshot_state?: SnapshotState;
+  snapshot_state?: Json;
 };
 
 type AppendEventsOptions = {
@@ -51,9 +51,9 @@ export class EventsRepository {
     const args: AppendPlanEventsArgs = {
       plan_id: planId,
       base_version: baseVersion,
-      // Typed event union is serialized to jsonb at the RPC boundary.
+      // Typed event union and snapshot state are serialized to jsonb at the RPC boundary.
       events: events as unknown as Json,
-      ...(snapshotState ? { snapshot_state: snapshotState } : {}),
+      ...(snapshotState ? { snapshot_state: snapshotState as unknown as Json } : {}),
     };
     const { data, error } = await this.client.rpc("append_plan_events", args);
 
