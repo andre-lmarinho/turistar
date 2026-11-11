@@ -27,8 +27,12 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
     });
   } catch (error) {
     if (error instanceof ApplicationError) {
-      if (error.code === "UNAUTHORIZED") redirect("/login");
-      notFound();
+      if (error.code === "UNAUTHORIZED") {
+        redirect(`/login?next=${encodeURIComponent(`/p/${planId}`)}`);
+      }
+      if (error.code === "NOT_FOUND" || error.code === "FORBIDDEN") {
+        notFound();
+      }
     }
     throw error;
   }
