@@ -122,10 +122,8 @@ describe("PlanService", () => {
 
   describe("createUserPlan", () => {
     it("requires a user and delegates to the repo, returning formatted output", async () => {
-      const service = makeService({
-        createPlan: vi.fn().mockResolvedValue({ id: "plan-123" }),
-        updatePlanCoverImage: vi.fn().mockResolvedValue(undefined),
-      });
+      const createPlan = vi.fn().mockResolvedValue({ id: "plan-123" });
+      const service = makeService({ createPlan });
 
       const result = await service.createUserPlan({
         title: "Paris trip",
@@ -135,9 +133,20 @@ describe("PlanService", () => {
       });
 
       expect(result).toEqual({ planId: "plan-123" });
+      expect(createPlan).toHaveBeenCalledWith({
+        title: "Paris trip",
+        destName: "Paris",
+        destLat: undefined,
+        destLong: undefined,
+        destCountry: "FR",
+        startDate: "2024-01-10",
+        endDate: "2024-01-15",
+        userId: "owner-1",
+        coverImage: undefined,
+      });
     });
 
-    it("updates cover image in the background when placeId is provided", async () => {
+    it("creates the plan with its resolved cover image", async () => {
       vi.mocked(fetchGeoapifyPlaceDetails).mockResolvedValue({
         placeId: "place-123",
         name: "Paris",
@@ -148,12 +157,8 @@ describe("PlanService", () => {
         categories: [],
       });
       vi.mocked(fetchWikidataImage).mockResolvedValue("https://wikimedia.org/image.jpg");
-      const updateCover = vi.fn().mockResolvedValue(undefined);
-
-      const service = makeService({
-        createPlan: vi.fn().mockResolvedValue({ id: "plan-123" }),
-        updatePlanCoverImage: updateCover,
-      });
+      const createPlan = vi.fn().mockResolvedValue({ id: "plan-123" });
+      const service = makeService({ createPlan });
 
       await service.createUserPlan({
         title: "Paris trip",
@@ -162,12 +167,31 @@ describe("PlanService", () => {
         endDate: "2024-01-15T00:00:00Z",
       });
 
-      await vi.waitFor(
-        () => {
-          expect(updateCover).toHaveBeenCalledWith("plan-123", "https://wikimedia.org/image.jpg");
-        },
-        { timeout: 1000 }
+      expect(createPlan).toHaveBeenCalledWith(
+        expect.objectContaining({ coverImage: "https://wikimedia.org/image.jpg" })
       );
+    });
+
+    it("creates the plan without a cover when image lookup fails", async () => {
+      const error = new Error("provider unavailable");
+      vi.mocked(fetchGeoapifyPlaceDetails).mockRejectedValue(error);
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const createPlan = vi.fn().mockResolvedValue({ id: "plan-123" });
+      const service = makeService({ createPlan });
+
+      await service.createUserPlan({
+        title: "Paris trip",
+        destination: { name: "Paris", placeId: "place-123" },
+        startDate: "2024-01-10T00:00:00Z",
+        endDate: "2024-01-15T00:00:00Z",
+      });
+
+      expect(createPlan).toHaveBeenCalledWith(expect.objectContaining({ coverImage: undefined }));
+      expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch cover image metadata", {
+        placeId: "place-123",
+        error,
+      });
+      consoleSpy.mockRestore();
     });
   });
 });

@@ -178,21 +178,6 @@ export class PlanRepository {
     }
   }
 
-  async updatePlanCoverImage(planId: string, coverImageUrl: string): Promise<void> {
-    try {
-      const { error } = await this.client
-        .from("plans")
-        .update({ cover_image: coverImageUrl })
-        .eq("id", planId);
-
-      if (error) {
-        console.error("Failed to update plan cover image", { planId, error });
-      }
-    } catch (error) {
-      console.error("Unexpected error updating plan cover image", { planId, error });
-    }
-  }
-
   async delete(planId: string): Promise<void> {
     const { error } = await this.client.from("plans").delete().eq("id", planId);
 
