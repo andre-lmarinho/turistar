@@ -1,16 +1,38 @@
 import type { NextRequest } from "next/server";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "./route";
+
+const { mockGetViewer } = vi.hoisted(() => ({ mockGetViewer: vi.fn() }));
+
+vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 
 function createRequest(segments: string[]): NextRequest {
   return { url: `https://example.com/api/tiles/${segments.join("/")}.png` } as unknown as NextRequest;
 }
 
 describe("GET /api/tiles/[...segments]", () => {
+  beforeEach(() => {
+    mockGetViewer.mockReset();
+    mockGetViewer.mockResolvedValue({ id: "viewer-1" });
+  });
+
   afterEach(() => {
     delete process.env.CARTO_KEY;
     vi.restoreAllMocks();
+  });
+
+  it("rejects unauthenticated requests before contacting CARTO", async () => {
+    mockGetViewer.mockResolvedValue(null);
+    process.env.CARTO_KEY = "server-key";
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    const segments = ["voyager", "3", "1", "2.png"];
+
+    const res = await GET(createRequest(segments), { params: Promise.resolve({ segments }) });
+
+    expect(res.status).toBe(401);
+    await expect(res.json()).resolves.toEqual({ error: "Authentication required." });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("returns 400 when the segment count is wrong", async () => {

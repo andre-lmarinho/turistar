@@ -1,11 +1,16 @@
 import "server-only";
 
+import { getUnauthorizedResponse } from "@/app/api/routeAuth";
+
 const ALLOWED = new Set(["voyager", "light_all", "dark_all"]);
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ segments: string[] }> }) {
+  const unauthorizedResponse = await getUnauthorizedResponse();
+  if (unauthorizedResponse) return unauthorizedResponse;
+
   const segments = (await params).segments;
   if (segments.length !== 4) return new Response("Bad request", { status: 400 });
 
