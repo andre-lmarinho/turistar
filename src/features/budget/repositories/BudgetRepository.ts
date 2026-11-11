@@ -30,7 +30,7 @@ function isCategoryKey(value: string): value is CategoryKey {
 export class BudgetRepository {
   constructor(private readonly client: SupabaseClient<Database>) {}
 
-  async fetchPlanBudgetRow(planId: string): Promise<BudgetPlanRow | null> {
+  async fetchPlanBudgetRow(planId: string): Promise<BudgetPlanRow> {
     const { data, error } = await this.client.from("plans").select("budget").eq("id", planId).single();
 
     if (error) {
@@ -41,7 +41,14 @@ export class BudgetRepository {
       });
     }
 
-    return data ?? null;
+    if (!data) {
+      throw formatSupabaseError({
+        operation: "fetchPlanBudgetRow:missing-row",
+        identifiers: { planId },
+      });
+    }
+
+    return data;
   }
 
   async fetchPlanBudgetEntries(planId: string): Promise<BudgetEntryRow[]> {
@@ -61,7 +68,7 @@ export class BudgetRepository {
     return data ?? [];
   }
 
-  async updatePlanBudget(planId: string, newBudget: number): Promise<BudgetPlanRow | null> {
+  async updatePlanBudget(planId: string, newBudget: number): Promise<BudgetPlanRow> {
     const { data, error } = await this.client
       .from("plans")
       .update({ budget: newBudget })
@@ -77,7 +84,14 @@ export class BudgetRepository {
       });
     }
 
-    return data ?? null;
+    if (!data) {
+      throw formatSupabaseError({
+        operation: "updatePlanBudget:missing-row",
+        identifiers: { planId },
+      });
+    }
+
+    return data;
   }
 
   async createBudgetEntry(planId: string, payload: BudgetEntryInsertPayload): Promise<{ id: string }> {
@@ -110,15 +124,17 @@ export class BudgetRepository {
     return data;
   }
 
-  async updateBudgetEntry(entryId: string, payload: BudgetEntryInsertPayload): Promise<void> {
-    const { error } = await this.client
+  async updateBudgetEntry(entryId: string, payload: BudgetEntryInsertPayload): Promise<{ id: string }> {
+    const { data, error } = await this.client
       .from("budget_entries")
       .update({
         description: payload.description,
         category: payload.category,
         amount: payload.amount,
       })
-      .eq("id", entryId);
+      .eq("id", entryId)
+      .select("id")
+      .single();
 
     if (error) {
       throw formatSupabaseError({
@@ -127,10 +143,24 @@ export class BudgetRepository {
         error,
       });
     }
+
+    if (!data) {
+      throw formatSupabaseError({
+        operation: "updateBudgetEntry:missing-row",
+        identifiers: { entryId },
+      });
+    }
+
+    return data;
   }
 
-  async deleteBudgetEntry(entryId: string): Promise<void> {
-    const { error } = await this.client.from("budget_entries").delete().eq("id", entryId);
+  async deleteBudgetEntry(entryId: string): Promise<{ id: string }> {
+    const { data, error } = await this.client
+      .from("budget_entries")
+      .delete()
+      .eq("id", entryId)
+      .select("id")
+      .single();
 
     if (error) {
       throw formatSupabaseError({
@@ -139,6 +169,15 @@ export class BudgetRepository {
         error,
       });
     }
+
+    if (!data) {
+      throw formatSupabaseError({
+        operation: "deleteBudgetEntry:missing-row",
+        identifiers: { entryId },
+      });
+    }
+
+    return data;
   }
 
   static mapEntries(rows: BudgetEntryRow[]): Entry[] {

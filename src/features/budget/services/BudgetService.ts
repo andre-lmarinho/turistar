@@ -18,7 +18,7 @@ export class BudgetService {
     const entries = BudgetRepository.mapEntries(entryRows);
 
     return {
-      budget: budgetRow?.budget ?? 0,
+      budget: budgetRow.budget ?? 0,
       entries,
     };
   }
@@ -28,7 +28,7 @@ export class BudgetService {
       throw new ApplicationError("BAD_REQUEST", "Budget cannot be negative");
     }
     const data = await this.repo.updatePlanBudget(planId, newBudget);
-    return data?.budget ?? newBudget;
+    return data.budget ?? newBudget;
   }
 
   async createBudgetEntry(planId: string, payload: BudgetEntryInput): Promise<string> {
