@@ -118,9 +118,39 @@ describe("PlanService", () => {
       const service = makeService({}, null);
       await expect(call(service)).rejects.toMatchObject({ code: "UNAUTHORIZED" });
     });
+
+    it("rejects a reversed date update before writing", async () => {
+      const updatePlanDates = vi.fn();
+      const service = makeService({
+        fetchPlanByIdWithMembers: vi.fn().mockResolvedValue(OWNED_PLAN),
+        updatePlanDates,
+      });
+
+      await expect(
+        service.updatePlanDates("plan-1", new Date("2024-01-15"), new Date("2024-01-10"))
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+      expect(updatePlanDates).not.toHaveBeenCalled();
+    });
   });
 
   describe("createUserPlan", () => {
+    it("rejects a reversed date range before looking up a cover or writing", async () => {
+      const createPlan = vi.fn();
+      const service = makeService({ createPlan });
+
+      await expect(
+        service.createUserPlan({
+          title: "Paris trip",
+          destination: { name: "Paris", placeId: "place-123" },
+          startDate: "2024-01-15T00:00:00Z",
+          endDate: "2024-01-10T00:00:00Z",
+        })
+      ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+      expect(fetchGeoapifyPlaceDetails).not.toHaveBeenCalled();
+      expect(createPlan).not.toHaveBeenCalled();
+    });
+
     it("requires a user and delegates to the repo, returning formatted output", async () => {
       const service = makeService({
         createPlan: vi.fn().mockResolvedValue({ id: "plan-123" }),
