@@ -15,19 +15,15 @@ type UserProfile = {
 };
 
 async function getUserProfile(): Promise<UserProfile> {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) return { slug: null, displayName: null, email: null };
+  const viewer = await getViewer();
+  if (!viewer) return { slug: null, displayName: null, email: null };
 
-    const profile = await new ProfileRepository(createSupabaseServerClient()).fetchProfileByUserId(viewer.id);
-    return {
-      slug: profile?.slug ?? null,
-      displayName: profile?.displayName ?? null,
-      email: viewer.email ?? null,
-    };
-  } catch {
-    return { slug: null, displayName: null, email: null };
-  }
+  const profile = await new ProfileRepository(createSupabaseServerClient()).fetchProfileByUserId(viewer.id);
+  return {
+    slug: profile?.slug ?? null,
+    displayName: profile?.displayName ?? null,
+    email: viewer.email ?? null,
+  };
 }
 
 export async function AppBar() {
