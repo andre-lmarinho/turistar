@@ -4,11 +4,13 @@ import { vi } from "vitest";
 
 import { GET } from "./route";
 
-const { mockValidateGeoapifyQuery, mockFetchGeoapifyAddressAutocomplete } = vi.hoisted(() => ({
+const { mockGetViewer, mockValidateGeoapifyQuery, mockFetchGeoapifyAddressAutocomplete } = vi.hoisted(() => ({
+  mockGetViewer: vi.fn(),
   mockValidateGeoapifyQuery: vi.fn(),
   mockFetchGeoapifyAddressAutocomplete: vi.fn(),
 }));
 
+vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 vi.mock("@/features/search/services/GeoapifyService", async () => {
   const actual = await vi.importActual<typeof import("@/features/search/services/GeoapifyService")>(
     "@/features/search/services/GeoapifyService"
@@ -27,8 +29,21 @@ const createRequest = (search: string): NextRequest =>
 
 describe("GET /api/places/address", () => {
   beforeEach(() => {
+    mockGetViewer.mockReset();
+    mockGetViewer.mockResolvedValue({ id: "viewer-1" });
     mockValidateGeoapifyQuery.mockReset();
     mockFetchGeoapifyAddressAutocomplete.mockReset();
+  });
+
+  it("rejects unauthenticated requests before validation", async () => {
+    mockGetViewer.mockResolvedValue(null);
+
+    const res = await GET(createRequest("?text=home"));
+
+    expect(res.status).toBe(401);
+    await expect(res.json()).resolves.toEqual({ error: "Authentication required." });
+    expect(mockValidateGeoapifyQuery).not.toHaveBeenCalled();
+    expect(mockFetchGeoapifyAddressAutocomplete).not.toHaveBeenCalled();
   });
 
   it("returns the validation error response when present", async () => {

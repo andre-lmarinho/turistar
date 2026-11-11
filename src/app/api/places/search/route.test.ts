@@ -3,10 +3,12 @@ import { vi } from "vitest";
 
 import { GET } from "./route";
 
-const { mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
+const { mockGetViewer, mockFetchGeoapifyPlaceSearch } = vi.hoisted(() => ({
+  mockGetViewer: vi.fn(),
   mockFetchGeoapifyPlaceSearch: vi.fn(),
 }));
 
+vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 vi.mock("@/features/search/services/GeoapifyService", async () => {
   const actual = await vi.importActual<typeof import("@/features/search/services/GeoapifyService")>(
     "@/features/search/services/GeoapifyService"
@@ -20,7 +22,19 @@ const createRequest = (search: string): NextRequest => {
 
 describe("GET /api/places/search", () => {
   beforeEach(() => {
+    mockGetViewer.mockReset();
+    mockGetViewer.mockResolvedValue({ id: "viewer-1" });
     mockFetchGeoapifyPlaceSearch.mockReset();
+  });
+
+  it("rejects unauthenticated requests before calling Geoapify", async () => {
+    mockGetViewer.mockResolvedValue(null);
+
+    const res = await GET(createRequest("?name=forte"));
+
+    expect(res.status).toBe(401);
+    await expect(res.json()).resolves.toEqual({ error: "Authentication required." });
+    expect(mockFetchGeoapifyPlaceSearch).not.toHaveBeenCalled();
   });
 
   it("returns 400 when the name parameter is missing", async () => {

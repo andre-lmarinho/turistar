@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { getUnauthorizedResponse } from "@/app/api/routeAuth";
 import { fetchGeoapifyPlaceDetails } from "@/features/search/services/GeoapifyService";
 import { fetchWikidataImage } from "@/features/search/services/WikidataService";
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 async function handleLocalDetails(req: NextRequest) {
@@ -25,5 +25,8 @@ async function handleLocalDetails(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const unauthorizedResponse = await getUnauthorizedResponse();
+  if (unauthorizedResponse) return unauthorizedResponse;
+
   return handleLocalDetails(req);
 }
