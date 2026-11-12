@@ -1,9 +1,4 @@
-import { BudgetRepository } from "@/features/budget/repositories/BudgetRepository";
-import { PlanRepository } from "@/features/plan/repositories/PlanRepository";
-import { PlanService } from "@/features/plan/services/PlanService";
-import { ProfileRepository } from "@/features/profile/repositories/ProfileRepository";
-import { SnapshotsRepository } from "@/features/snapshots/repositories/SnapshotsRepository";
-import { SnapshotsService } from "@/features/snapshots/services/SnapshotsService";
+import { createPlanService } from "@/features/plan/services/createPlanService";
 
 import type { AuthedTRPCContext } from "../../../createContext";
 import type { UpdatePlanTitleInput } from "./updateTitle.schema";
@@ -15,12 +10,5 @@ export async function updatePlanTitleHandler({
   ctx: AuthedTRPCContext;
   input: UpdatePlanTitleInput;
 }) {
-  const service = new PlanService(
-    new PlanRepository(ctx.supabase),
-    new BudgetRepository(ctx.supabase),
-    new ProfileRepository(ctx.supabase),
-    new SnapshotsService(new SnapshotsRepository(ctx.supabase)),
-    ctx.viewer
-  );
-  return service.updatePlanTitle(input.planId, input.title);
+  return createPlanService(ctx.viewer, ctx.supabase).updatePlanTitle(input.planId, input.title);
 }

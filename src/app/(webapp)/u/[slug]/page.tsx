@@ -36,8 +36,7 @@ export default async function UserDashboardPage({ params }: UserDashboardPagePro
     await resetDemoIfStale();
   }
 
-  const { service } = createPlanService(viewer);
-  const { plans, destinations } = await service.getUserDashboard();
+  const { plans, destinations } = await createPlanService(viewer).getUserDashboard();
 
   return <DashboardView plans={plans} destinations={destinations} isDemo={isDemo} />;
 }

@@ -21,7 +21,7 @@ export default async function PlannerPlanPage({ params, searchParams }: PageProp
   let experience: PlannerExperience;
   try {
     const viewer = await getViewer();
-    experience = await createPlanService(viewer).service.getPlannerExperience({
+    experience = await createPlanService(viewer).getPlannerExperience({
       identifier: planId,
       dest,
     });
