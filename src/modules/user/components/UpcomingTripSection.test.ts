@@ -2,7 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
-import { getHighlightedPlan, UpcomingTripSection } from "./UpcomingTripSection";
+import { getHighlightedPlan } from "@/modules/user/lib/dashboardModel";
+import { UpcomingTripSection } from "./UpcomingTripSection";
 
 vi.mock("next-intl/server", async () => {
   const { createTranslator, createFormatter } = await import("next-intl");

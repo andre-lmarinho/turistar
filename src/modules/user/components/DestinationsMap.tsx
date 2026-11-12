@@ -3,16 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
+import type { TravelCountry } from "@/modules/user/lib/dashboardModel";
 import { projectCountryPoint } from "@/modules/user/lib/projectCountryPoint";
 
 import { cn } from "@/ui/utils/cn";
-
-export type TravelCountry = {
-  code: string;
-  tripCount: number;
-  locationCount: number;
-  trips: { id: string; title: string }[];
-};
 
 type MapCountry = { code: string; name: string; path: string };
 type Polygon = { type: "Polygon"; coordinates: [number, number][][] };

@@ -3,51 +3,16 @@ import { getTranslations } from "next-intl/server";
 
 import { DemoGuideDialog } from "@/features/demo/components/DemoGuideDialog";
 import type { UserDestination, UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
-import type { TravelCountry } from "@/modules/user/components/DestinationsMap";
 import { DestinationsMap } from "@/modules/user/components/DestinationsMap";
 import { PlannersSection } from "@/modules/user/components/PlannersSection";
-import { getHighlightedPlan, UpcomingTripSection } from "@/modules/user/components/UpcomingTripSection";
+import { UpcomingTripSection } from "@/modules/user/components/UpcomingTripSection";
+import { buildCountrySummaries, getHighlightedPlan } from "@/modules/user/lib/dashboardModel";
 import { MapPin } from "@/ui/components/icon";
 
 interface DashboardViewProps {
   plans: UserPlannerSummary[];
   destinations: UserDestination[];
   isDemo?: boolean;
-}
-
-function buildCountrySummaries(destinations: UserDestination[]): TravelCountry[] {
-  const summaries = new Map<
-    string,
-    {
-      tripIds: Set<string>;
-      locationCount: number;
-      trips: Map<string, { id: string; title: string }>;
-    }
-  >();
-
-  for (const destination of destinations) {
-    const code = destination.country?.trim();
-    if (!code) continue;
-
-    const key = code.toLocaleLowerCase();
-    const summary = summaries.get(key) ?? {
-      tripIds: new Set<string>(),
-      locationCount: 0,
-      trips: new Map<string, { id: string; title: string }>(),
-    };
-
-    summary.tripIds.add(destination.planId);
-    summary.locationCount += destination.activityCount;
-    summary.trips.set(destination.planId, { id: destination.planId, title: destination.planTitle });
-    summaries.set(key, summary);
-  }
-
-  return Array.from(summaries, ([code, summary]) => ({
-    code,
-    tripCount: summary.tripIds.size,
-    locationCount: summary.locationCount,
-    trips: Array.from(summary.trips.values()),
-  }));
 }
 
 export async function DashboardView({ plans, destinations, isDemo = false }: DashboardViewProps) {
