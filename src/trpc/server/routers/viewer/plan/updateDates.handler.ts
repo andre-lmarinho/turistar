@@ -1,9 +1,4 @@
-import { BudgetRepository } from "@/features/budget/repositories/BudgetRepository";
-import { PlanRepository } from "@/features/plan/repositories/PlanRepository";
-import { PlanService } from "@/features/plan/services/PlanService";
-import { ProfileRepository } from "@/features/profile/repositories/ProfileRepository";
-import { SnapshotsRepository } from "@/features/snapshots/repositories/SnapshotsRepository";
-import { SnapshotsService } from "@/features/snapshots/services/SnapshotsService";
+import { createPlanService } from "@/features/plan/services/createPlanService";
 
 import type { AuthedTRPCContext } from "../../../createContext";
 import type { UpdatePlanDatesInput } from "./updateDates.schema";
@@ -15,12 +10,9 @@ export async function updatePlanDatesHandler({
   ctx: AuthedTRPCContext;
   input: UpdatePlanDatesInput;
 }) {
-  const service = new PlanService(
-    new PlanRepository(ctx.supabase),
-    new BudgetRepository(ctx.supabase),
-    new ProfileRepository(ctx.supabase),
-    new SnapshotsService(new SnapshotsRepository(ctx.supabase)),
-    ctx.viewer
+  return createPlanService(ctx.viewer, ctx.supabase).updatePlanDates(
+    input.planId,
+    new Date(input.from),
+    new Date(input.to)
   );
-  return service.updatePlanDates(input.planId, new Date(input.from), new Date(input.to));
 }
