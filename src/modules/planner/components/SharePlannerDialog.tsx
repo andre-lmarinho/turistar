@@ -1,12 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { SubmitEvent } from "react";
 import { useId, useRef, useState } from "react";
+import { usePlanMembers } from "@/features/members/hooks/usePlanMembers";
+import { isTier, type MemberMenuOption, resolveMemberRowPolicy } from "@/features/members/lib/memberPolicy";
 import type { ShareMember, ShareTier } from "@/features/members/types";
 import { SHARE_TIER_OPTIONS } from "@/features/members/types";
-import { trpc } from "@/trpc/react";
 import { Avatar } from "@/ui/components/avatar";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader, DialogTriggerButton } from "@/ui/components/dialog";
@@ -26,7 +26,7 @@ export function SharePlannerDialog({
 }) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
-  const members = useShareMembers(planId, open);
+  const members = usePlanMembers(planId, open);
 
   return (
     <Dialog
@@ -95,7 +95,7 @@ function InviteForm({
 }: {
   planId: string;
   canManageMembers: boolean;
-  members: ReturnType<typeof useShareMembers>;
+  members: ReturnType<typeof usePlanMembers>;
 }) {
   const t = useTranslations();
   const { addMember, isLoading, isMutating } = members;
@@ -226,8 +226,6 @@ function InviteForm({
   );
 }
 
-type MemberMenuOption = ShareTier | "leave" | "remove";
-
 const LEAVE_OPTION = {
   value: "leave",
   label: "leavePlanner",
@@ -237,35 +235,7 @@ const REMOVE_OPTION = {
   label: "removeMember",
 } as const;
 
-const isTier = (value: MemberMenuOption): value is ShareTier => value === "admin" || value === "member";
-
-type MemberMutations = Pick<ReturnType<typeof useShareMembers>, "updateTier" | "removeMember" | "leave">;
-
-type TierOptionsParams = {
-  canManageMembers: boolean;
-  isSelf: boolean;
-  isOwner: boolean;
-  isLastAdmin: boolean;
-  currentTier: ShareTier;
-};
-
-const getTierOptions = ({
-  canManageMembers,
-  isSelf,
-  isOwner,
-  isLastAdmin,
-  currentTier,
-}: TierOptionsParams) => {
-  if (!canManageMembers && isSelf) {
-    return SHARE_TIER_OPTIONS.filter((tierOption) => tierOption.value === currentTier);
-  }
-
-  if (isOwner || isLastAdmin) {
-    return SHARE_TIER_OPTIONS.filter((tierOption) => tierOption.value === "admin");
-  }
-
-  return SHARE_TIER_OPTIONS;
-};
+type MemberMutations = Pick<ReturnType<typeof usePlanMembers>, "updateTier" | "removeMember" | "leave">;
 
 type ShareMemberRowProps = {
   planId: string;
@@ -289,29 +259,15 @@ function ShareMemberRow({
   isMutating,
 }: ShareMemberRowProps) {
   const t = useTranslations();
-  const isOwner = ownerId === member.userId;
-  const isSelf = viewerUserId === member.userId;
-  const isAdmin = member.tier === "admin";
-  const isLastAdmin = isAdmin && adminCount <= 1;
-  const isAdminOrOwner = isAdmin || isOwner;
-  const canManageMember = canManageMembers && !isOwner;
-  const canRemove = canManageMember && !isSelf;
-  const canSelfLeave = isSelf && (!isAdminOrOwner || adminCount > 1);
-  const canSelect = isOwner ? canSelfLeave : canManageMembers || isSelf;
-  const tierOptions = getTierOptions({
-    canManageMembers,
-    isSelf,
-    isOwner,
-    isLastAdmin,
-    currentTier: member.tier,
-  });
+  const policy = resolveMemberRowPolicy({ member, ownerId, adminCount, viewerUserId, canManageMembers });
+  const { canRemove, canSelfLeave, canSelect, canManageMember, tierOptions } = policy;
   const menuOptions = [
     ...tierOptions,
     ...(canSelfLeave ? [LEAVE_OPTION] : []),
     ...(canRemove ? [REMOVE_OPTION] : []),
   ].map((option) => ({ ...option, label: t(option.label) }));
-  const displayName = member.displayName ?? (isOwner ? t("ownerFallback") : t("userFallback"));
-  const displayLabel = isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;
+  const displayName = member.displayName ?? (policy.isOwner ? t("ownerFallback") : t("userFallback"));
+  const displayLabel = policy.isOwner ? `${displayName} ${t("ownerSuffix")}` : displayName;
   const [confirmation, setConfirmation] = useState<"leave" | "remove" | null>(null);
 
   const handleMenuChange = (nextValue: MemberMenuOption) => {
@@ -387,7 +343,7 @@ function MembersSection({
   planId: string;
   canManageMembers: boolean;
   viewerUserId: string | null;
-  members: ReturnType<typeof useShareMembers>;
+  members: ReturnType<typeof usePlanMembers>;
 }) {
   const t = useTranslations();
   const { data, isLoading, error, updateTier, removeMember, leave, isMutating, isFetching, refetch } = query;
@@ -457,85 +413,4 @@ function MembersSection({
       ) : null}
     </div>
   );
-}
-
-function useShareMembers(planId: string, enabled: boolean) {
-  const router = useRouter();
-  const utils = trpc.useUtils();
-  const query = trpc.viewer.members.get.useQuery({ planId: planId }, { enabled });
-
-  const addMutation = trpc.viewer.members.add.useMutation({
-    onSuccess: (result) => {
-      utils.viewer.members.get.setData({ planId: planId }, (current) => {
-        if (!current || current.members.some((member) => member.userId === result.userId)) return current;
-        return {
-          ...current,
-          members: [
-            ...current.members,
-            {
-              userId: result.userId,
-              tier: result.tier,
-              slug: null,
-              displayName: null,
-              avatarUrl: null,
-            },
-          ],
-        };
-      });
-    },
-    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
-  });
-
-  const updateMutation = trpc.viewer.members.update.useMutation({
-    onMutate: async ({ userId, tier }) => {
-      await utils.viewer.members.get.cancel({ planId: planId });
-      const previous = utils.viewer.members.get.getData({ planId: planId });
-      utils.viewer.members.get.setData({ planId: planId }, (current) => {
-        if (!current) return current;
-        return {
-          ...current,
-          members: current.members.map((member) => (member.userId === userId ? { ...member, tier } : member)),
-        };
-      });
-      return { previous };
-    },
-    onError: (_error, _input, context) => {
-      if (context?.previous) {
-        utils.viewer.members.get.setData({ planId: planId }, context.previous);
-      }
-    },
-    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
-  });
-
-  const removeMutation = trpc.viewer.members.remove.useMutation({
-    onSuccess: (_result, { userId }) => {
-      utils.viewer.members.get.setData(
-        { planId: planId },
-        (current) =>
-          current && { ...current, members: current.members.filter((member) => member.userId !== userId) }
-      );
-    },
-    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
-  });
-
-  const leaveMutation = trpc.viewer.members.leave.useMutation({
-    onSuccess: (redirectTo) => {
-      router.push(redirectTo);
-      router.refresh();
-      void utils.viewer.members.get.reset({ planId: planId });
-    },
-  });
-
-  return {
-    ...query,
-    isMutating:
-      addMutation.isPending ||
-      updateMutation.isPending ||
-      removeMutation.isPending ||
-      leaveMutation.isPending,
-    addMember: addMutation,
-    updateTier: updateMutation,
-    removeMember: removeMutation,
-    leave: leaveMutation,
-  };
 }
