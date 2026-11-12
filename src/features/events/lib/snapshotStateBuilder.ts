@@ -4,10 +4,9 @@ import type { DayPlan } from "@/features/activity/types";
 import { reduceEvents } from "@/features/events/lib/eventReducer";
 import type { EventInsert, EventRecord } from "@/features/events/types";
 
-import type { SnapshotRow } from "@/features/snapshots/repositories/SnapshotsRepository";
-import type { Snapshot } from "@/features/snapshots/types";
+import type { PersistedSnapshotState, Snapshot } from "@/features/snapshots/types";
 
-export type SnapshotState = SnapshotRow["state"];
+export type SnapshotState = PersistedSnapshotState;
 
 type BuildSnapshotStateArgs = {
   snapshot: Snapshot;

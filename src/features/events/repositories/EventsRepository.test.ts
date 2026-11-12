@@ -1,6 +1,5 @@
 import { buildRpcMock, buildTableMock } from "@tests/utils/mocks";
 import { describe, expect, it } from "vitest";
-import type { Database } from "@/supabase/types";
 
 import { EventsRepository } from "./EventsRepository";
 
@@ -57,7 +56,7 @@ describe("EventsRepository", () => {
         actorId: "user-1",
       },
     ];
-    const snapshotState = { days: [] } as Database["public"]["Tables"]["plan_snapshots"]["Row"]["state"];
+    const snapshotState = { days: [] };
 
     await expect(
       new EventsRepository(supabase).appendEvents("plan-1", 1, events, { snapshotState })
