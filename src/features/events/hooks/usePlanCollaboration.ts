@@ -1,11 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { POSITION_SCALE } from "@/features/activity/lib/gapOrdering";
 import type { DayPlan } from "@/features/activity/types";
 import { trpc } from "@/trpc/react";
-
-import { applyEvent, normalizeDays, reduceEvents } from "../lib/eventReducer";
+import {
+  acknowledgeEvents,
+  buildLocalOperations,
+  buildSeedEvents,
+  type CollaborationQueue,
+  projectPendingDays,
+} from "../lib/collaborationEngine";
+import { normalizeDays, reduceEvents } from "../lib/eventReducer";
 import { subscribeToEvents } from "../services/eventsRealtimeClient";
 import type { EventInsert, EventRecord, EventState, PlanOperation } from "../types";
 
@@ -48,28 +53,19 @@ function createSession(planId: string, enabled: boolean, initialDays: DayPlan[])
 
 type Session = ReturnType<typeof createSession>;
 
-function project(session: Session): DayPlan[] {
-  return session.pending.reduce(applyEvent, session.confirmed.days);
-}
-
-/** HTTP responses and realtime deliveries share one ordered confirmation path. */
-function receive(session: Session, events: EventRecord[]) {
-  for (const event of events) {
-    if (event.planId === session.planId) session.received.set(event.version, event);
-  }
-  if (!session.loaded) return;
-
-  for (const event of [...session.received.values()].sort((a, b) => a.version - b.version)) {
-    if (event.version > session.confirmed.version + 1) break;
-    if (event.version > session.confirmed.version) {
-      session.confirmed = {
-        days: applyEvent(session.confirmed.days, event),
-        version: event.version,
-      };
-    }
-    session.pending = session.pending.filter((pending) => pending.id !== event.id);
-    session.received.delete(event.version);
-  }
+/** Delegates the ordered confirmation path to the pure engine and writes the result back. */
+function applyAcknowledgement(session: Session, events: EventRecord[]) {
+  const queue: CollaborationQueue = {
+    planId: session.planId,
+    loaded: session.loaded,
+    confirmed: session.confirmed,
+    pending: session.pending,
+    received: session.received,
+  };
+  const next = acknowledgeEvents(queue, events);
+  session.confirmed = next.confirmed;
+  session.pending = next.pending;
+  session.received = next.received;
   if (
     session.error instanceof VersionGapError &&
     session.received.size === 0 &&
@@ -129,7 +125,7 @@ export function usePlanCollaboration(
           session.confirmed = session.seedRequired ? { version: 0, days: session.seed } : reduced;
         }
         session.loaded = true;
-        receive(session, events);
+        applyAcknowledgement(session, events);
         if (session.received.size > 0) {
           throw new VersionGapError(planId, Math.max(...session.received.keys()));
         }
@@ -169,21 +165,17 @@ export function usePlanCollaboration(
           if (session.loading && !(await session.loading)) return;
           if (!current() || !session.pending.length) return;
           if (session.seedRequired && !session.seedQueued) {
-            const seedEvents: EventInsert[] = session.seed.map((day, index) => ({
-              id: crypto.randomUUID(),
-              planId,
-              actorId: transport.current.actorId,
-              type: "day.created",
-              payload: { day: { ...day, position: day.position ?? String((index + 1) * POSITION_SCALE) } },
-            }));
-            session.pending = [...seedEvents, ...session.pending];
+            session.pending = [
+              ...buildSeedEvents(session.seed, planId, transport.current.actorId),
+              ...session.pending,
+            ];
             session.seedQueued = true;
           }
           const batch = [...session.pending];
           const baseVersion = session.confirmed.version;
           const response = await transport.current.append.mutateAsync({ planId, baseVersion, events: batch });
           if (!current()) return;
-          receive(session, response.events);
+          applyAcknowledgement(session, response.events);
           publish();
           if (response.version > session.confirmed.version || session.received.size > 0) {
             if (!(await load())) return;
@@ -226,7 +218,7 @@ export function usePlanCollaboration(
       planId,
       (event) => {
         if (!session.active) return;
-        receive(session, [event]);
+        applyAcknowledgement(session, [event]);
         publish();
         if (session.loaded && session.received.size > 0) void load();
       },
@@ -256,18 +248,9 @@ export function usePlanCollaboration(
   const dispatch = useCallback(
     (build: (days: DayPlan[]) => PlanOperation[]) => {
       if (!session.active || !enabled || !planId) return false;
-      const operations = build(project(session));
+      const operations = build(projectPendingDays(session.confirmed, session.pending));
       if (operations.length === 0) return false;
-      session.pending.push(
-        ...operations.map(
-          (operation): EventInsert => ({
-            ...operation,
-            id: crypto.randomUUID(),
-            planId,
-            actorId: transport.current.actorId,
-          })
-        )
-      );
+      session.pending.push(...buildLocalOperations(operations, planId, transport.current.actorId));
       // Acceptance means queued locally, not confirmed by the server.
       publish();
       return true;
@@ -294,7 +277,7 @@ export function usePlanCollaboration(
   }, [load, publish, session]);
 
   return {
-    data: project(session),
+    data: projectPendingDays(session.confirmed, session.pending),
     dispatch,
     retryPending,
     discardPending,
