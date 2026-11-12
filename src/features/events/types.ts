@@ -54,7 +54,8 @@ export interface DayCreatedPayload {
 
 export interface DayUpdatedPayload {
   dayId: string;
-  patch: Partial<DayPlan>;
+  /** Only the day label is transitioned; day identity and contents have their own operations. */
+  patch: { label?: string };
 }
 
 export interface DayRemovedPayload {

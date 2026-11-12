@@ -53,9 +53,11 @@ const DayCreatedPayloadSchema = z.object({
   day: DayPayloadSchema.extend({ position: z.string() }),
 });
 
+const DayUpdatedPatchSchema = z.object({ label: z.string().optional() }).strict();
+
 const DayUpdatedPayloadSchema = z.object({
   dayId: z.string(),
-  patch: DayPayloadSchema.partial(),
+  patch: DayUpdatedPatchSchema,
 });
 
 const DayRemovedPayloadSchema = z.object({ dayId: z.string() });

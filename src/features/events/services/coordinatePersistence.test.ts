@@ -132,7 +132,7 @@ describe("coordinate persistence", () => {
             id: "day-updated",
             planId,
             type: "day.updated",
-            payload: { dayId: "day-1", patch: { activities: [invalidActivity] } },
+            payload: { dayId: "day-1", patch: { label: NaN as unknown as string } },
           },
         ];
         for (const event of events) {

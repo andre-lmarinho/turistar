@@ -4,6 +4,7 @@ import type { Snapshot } from "@/features/snapshots/types";
 import type { EventRecord, EventState, PlanOperation } from "../types";
 import { sanitizeActivity } from "./activityState";
 
+/** Fills missing positions and returns an owned deep copy; transitions below may mutate it. */
 export function normalizeDays(days: DayPlan[]): DayPlan[] {
   return normalizePositions(days).map((day) => ({
     ...day,
