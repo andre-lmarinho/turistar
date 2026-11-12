@@ -16,7 +16,7 @@ vi.mock("next/navigation", () => ({
 }));
 vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 vi.mock("@/features/plan/services/createPlanService", () => ({
-  createPlanService: () => ({ service: { getPlannerExperience: mockGetPlannerExperience } }),
+  createPlanService: () => ({ getPlannerExperience: mockGetPlannerExperience }),
 }));
 vi.mock("@/modules/planner/planid-view", () => ({ PlanIdView: () => null }));
 
