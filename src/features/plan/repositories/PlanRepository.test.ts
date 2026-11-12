@@ -180,7 +180,40 @@ describe("PlanRepository", () => {
       expect(result).toHaveLength(count);
       expect(rpc).toHaveBeenCalledExactlyOnceWith("get_user_plan_summaries");
       expect(from).not.toHaveBeenCalled();
-      expect(result).toEqual(Array.from({ length: count }, () => row));
+      expect(result).toEqual(
+        Array.from({ length: count }, () => ({
+          id: "plan-1",
+          title: null,
+          destination: "Lisbon",
+          country: "PT",
+          latitude: 38.7,
+          longitude: -9.1,
+          startDate: null,
+          endDate: null,
+          updatedAt: "2026-09-11T00:00:00Z",
+          coverImage: null,
+          activityCount: 3,
+        }))
+      );
+    });
+
+    it("maps a missing activity count to zero", async () => {
+      const row = {
+        id: "plan-1",
+        title: null,
+        destination_name: null,
+        destination_country: null,
+        latitude: null,
+        longitude: null,
+        start_date: null,
+        end_date: null,
+        updated_at: null,
+        cover_image: null,
+        activity_count: null,
+      };
+      const rpc = vi.fn().mockResolvedValue({ data: [row], error: null });
+      const result = await makeRepo({ rpc } as unknown as SupabaseClient<Database>).fetchUserPlanSummaries();
+      expect(result[0]).toMatchObject({ activityCount: 0 });
     });
 
     it("returns an empty list when the RPC returns no data", async () => {

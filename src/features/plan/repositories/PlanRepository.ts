@@ -67,6 +67,34 @@ type PlanMemberRow = {
   tier: string;
 };
 
+type UserPlanSummaryRow = {
+  id: string;
+  title: string | null;
+  destination_name: string | null;
+  destination_country: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  updated_at: string | null;
+  cover_image: string | null;
+  activity_count: number | null;
+};
+
+export type UserPlanSummaryRecord = {
+  id: string;
+  title: string | null;
+  destination: string | null;
+  country: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  startDate: string | null;
+  endDate: string | null;
+  updatedAt: string | null;
+  coverImage: string | null;
+  activityCount: number;
+};
+
 function mapPlanRow(row: PlanRow): PlanRecord {
   return {
     id: row.id,
@@ -82,6 +110,22 @@ function mapPlanRow(row: PlanRow): PlanRecord {
 function mapMembers(rows: PlanMemberRow[] | null): PlanMemberRecord[] {
   if (!rows) return [];
   return rows.map((row) => ({ userId: row.user_id, tier: row.tier }));
+}
+
+function mapUserPlanSummaryRow(row: UserPlanSummaryRow): UserPlanSummaryRecord {
+  return {
+    id: row.id,
+    title: row.title,
+    destination: row.destination_name,
+    country: row.destination_country,
+    latitude: row.latitude,
+    longitude: row.longitude,
+    startDate: row.start_date,
+    endDate: row.end_date,
+    updatedAt: row.updated_at,
+    coverImage: row.cover_image,
+    activityCount: row.activity_count ?? 0,
+  };
 }
 
 export class PlanRepository {
@@ -158,12 +202,12 @@ export class PlanRepository {
     }
   }
 
-  async fetchUserPlanSummaries() {
+  async fetchUserPlanSummaries(): Promise<UserPlanSummaryRecord[]> {
     const { data, error } = await this.client.rpc("get_user_plan_summaries");
     if (error) {
       throw formatSupabaseError({ operation: "fetchUserPlanSummaries", error });
     }
-    return data ?? [];
+    return (data ?? []).map(mapUserPlanSummaryRow);
   }
 
   async updatePlanDates(planId: string, startDate: string, endDate: string): Promise<void> {
