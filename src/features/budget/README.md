@@ -4,7 +4,7 @@ Stores categorized expense entries and the plan's budget value. The planner's bu
 
 ## How it works
 
-- `BudgetView` reads and changes entries through `viewer.budget` tRPC procedures, backed by `BudgetService` and `BudgetRepository`.
+- `useBudgetLedger` reads and changes entries through `viewer.budget` tRPC procedures, backed by `BudgetService` and `BudgetRepository`.
 - Entry updates and deletions update the query cache immediately and roll back on failure. Creation waits for the server-generated ID. Each mutation invalidates the query afterward.
 - Activity budgets are summed from the current itinerary into the activities category. Manual entries are stored separately in `budget_entries`.
 - The service also reads and updates `plans.budget`.
@@ -17,7 +17,9 @@ Stores categorized expense entries and the plan's budget value. The planner's bu
 | [BudgetService.ts](services/BudgetService.ts)                | Budget and expense operations.                        |
 | [BudgetRepository.ts](repositories/BudgetRepository.ts)      | Reads and writes to `plans` and `budget_entries`.     |
 | [types.ts](types.ts)                                         | Entry shape, category keys and display configuration. |
-| [BudgetView.tsx](../../modules/planner/views/BudgetView.tsx) | Query state, expense editing and derived totals.      |
+| [useBudgetLedger.ts](hooks/useBudgetLedger.ts)               | Query state and optimistic expense mutations.         |
+| [summarizeBudget.ts](lib/summarizeBudget.ts)                 | Totals recorded expenses by category.                 |
+| [BudgetView.tsx](../../modules/planner/views/BudgetView.tsx) | Expense editing and budget presentation.              |
 
 ## Related docs
 

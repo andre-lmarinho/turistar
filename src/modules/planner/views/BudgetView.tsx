@@ -4,9 +4,10 @@ import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 
 import type { DayPlan } from "@/features/activity/types";
-import type { BudgetQueryResult, CategoryKey, Entry } from "@/features/budget/types";
+import { useBudgetLedger } from "@/features/budget/hooks/useBudgetLedger";
+import { summarizeBudget } from "@/features/budget/lib/summarizeBudget";
+import type { CategoryKey, Entry } from "@/features/budget/types";
 import { CATEGORIES, CHART_COLORS } from "@/features/budget/types";
-import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";
 import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
 import { Check, DollarSign, Pencil, Plus, Trash2, X } from "@/ui/components/icon";
@@ -22,7 +23,6 @@ const CATEGORY_TRANSLATION_KEYS = {
 } as const;
 
 const currencySymbol = "\u0024";
-const EMPTY_ENTRIES: Entry[] = [];
 const inputClasses =
   "h-11 w-full rounded-xl border border-input bg-background px-3 pl-8 text-right text-base font-semibold tabular-nums outline-none transition-shadow focus:ring-2 focus:ring-ring focus:ring-offset-1";
 interface Props {
@@ -33,136 +33,39 @@ interface Props {
 
 export function BudgetView({ planId, days, initialEntries }: Props) {
   const t = useTranslations();
-  const activitiesTotal = days.reduce(
-    (sum, day: DayPlan) =>
-      sum + day.activities.reduce((total, activity) => total + (activity.budget ?? 0), 0),
-    0
-  );
-  const [persistError, setPersistError] = useState<string | null>(null);
-  const [isWriting, setIsWriting] = useState(false);
-  const writePending = useRef(false);
-  const utils = trpc.useUtils();
-  const cache = utils.viewer.budget.get;
-  const {
-    data,
-    error: loadError,
-    isFetching,
-    refetch,
-  } = trpc.viewer.budget.get.useQuery(
-    { planId },
-    {
-      initialData: { budget: 0, entries: initialEntries ?? EMPTY_ENTRIES },
-    }
-  );
-  const entries = data.entries;
-
-  const categoryTotals: Record<CategoryKey, number> = {
-    transport: 0,
-    lodging: 0,
-    food: 0,
-    activities: activitiesTotal,
-    shopping: 0,
-    documents: 0,
-  };
-  for (const entry of entries) categoryTotals[entry.category] += entry.amount;
-  const totalSpent = Object.values(categoryTotals).reduce((sum, value) => sum + value, 0);
-
-  const createEntry = trpc.viewer.budget.createEntry.useMutation();
-  const updateEntry = trpc.viewer.budget.updateEntry.useMutation();
-  const deleteEntry = trpc.viewer.budget.deleteEntry.useMutation();
-  const isPending = isWriting || createEntry.isPending || updateEntry.isPending || deleteEntry.isPending;
-
-  const saveEntry = async (entry: ExpenseInput) => {
-    if (writePending.current) return false;
-    writePending.current = true;
-    setIsWriting(true);
-    let previous: BudgetQueryResult | undefined;
-    setPersistError(null);
-    try {
-      await cache.cancel({ planId });
-      previous = cache.getData({ planId });
-      if (entry.id) {
-        const updated = { ...entry, id: entry.id };
-        cache.setData(
-          { planId },
-          (current) =>
-            current && {
-              ...current,
-              entries: current.entries.map((item) => (item.id === updated.id ? updated : item)),
-            }
-        );
-        await updateEntry.mutateAsync({ entry: updated });
-      } else {
-        const id = await createEntry.mutateAsync({ planId, payload: entry });
-        cache.setData(
-          { planId },
-          (current) => current && { ...current, entries: [...current.entries, { ...entry, id }] }
-        );
-      }
-      return true;
-    } catch {
-      if (previous) cache.setData({ planId }, previous);
-      setPersistError(t("budgetSaveFailed"));
-      return false;
-    } finally {
-      writePending.current = false;
-      setIsWriting(false);
-      void cache.invalidate({ planId });
-    }
-  };
-  const removeEntry = async (entryId: string) => {
-    if (writePending.current) return;
-    writePending.current = true;
-    setIsWriting(true);
-    let previous: BudgetQueryResult | undefined;
-    setPersistError(null);
-    try {
-      await cache.cancel({ planId });
-      previous = cache.getData({ planId });
-      cache.setData(
-        { planId },
-        (current) => current && { ...current, entries: current.entries.filter((item) => item.id !== entryId) }
-      );
-      await deleteEntry.mutateAsync({ entryId });
-    } catch {
-      if (previous) cache.setData({ planId }, previous);
-      throw new Error("Unable to delete expense");
-    } finally {
-      writePending.current = false;
-      setIsWriting(false);
-      void cache.invalidate({ planId });
-    }
-  };
+  const ledger = useBudgetLedger(planId, initialEntries);
+  const entries = ledger.data.entries;
+  const { categoryTotals, totalSpent } = summarizeBudget(days, entries);
 
   return (
     <div className="bg-background flex h-full w-full flex-col gap-5 overflow-y-auto rounded-2xl border p-2 [scrollbar-color:var(--border)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
-      {loadError ? (
+      {ledger.error ? (
         <div className="space-y-2">
           <p role="alert" className="text-destructive-text text-sm">
             {t("budgetLoadFailed")}
           </p>
           <Button
             variant="ghost"
-            disabled={isFetching}
-            aria-busy={isFetching}
-            onClick={() => void refetch()}
+            disabled={ledger.isFetching}
+            aria-busy={ledger.isFetching}
+            onClick={() => void ledger.refetch()}
             className="gap-2">
-            {isFetching ? <Spinner className="size-4" /> : null}
+            {ledger.isFetching ? <Spinner className="size-4" /> : null}
             {t("retry")}
           </Button>
         </div>
       ) : null}
       <div className="grid min-w-0 grid-cols-1 items-start gap-5 md:grid-cols-2 xl:grid-cols-[18rem_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-5 md:contents xl:flex">
-          <Summary totalSpent={totalSpent} persistError={persistError} />
+          <Summary totalSpent={totalSpent} persistError={ledger.saveFailed ? t("budgetSaveFailed") : null} />
           <CategoryChart totalSpent={totalSpent} categoryTotals={categoryTotals} />
         </div>
         <div className="md:col-span-2 xl:col-span-1">
           <ExpenseTable
             entries={entries}
-            onSave={saveEntry}
-            onDelete={removeEntry}
-            disabled={isPending || Boolean(loadError)}
+            onSave={ledger.saveEntry}
+            onDelete={ledger.removeEntry}
+            disabled={ledger.isPending || Boolean(ledger.error)}
           />
         </div>
       </div>
