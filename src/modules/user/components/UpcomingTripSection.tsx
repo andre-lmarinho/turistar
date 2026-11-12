@@ -3,36 +3,13 @@ import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { DEFAULT_PLAN_COVER_IMAGE } from "@/features/plan/config";
 import type { UserPlannerSummary } from "@/features/plan/repositories/PlanRepository";
+import { isPlanInProgress } from "@/modules/user/lib/dashboardModel";
 
 import styles from "./UpcomingTripSection.module.css";
 
 interface UpcomingTripSectionProps {
   plan: UserPlannerSummary;
   today?: Date;
-}
-
-function isPlanInProgress(start: Date, end: Date, today: Date): boolean {
-  return isValid(start) && isValid(end) && start <= today && end >= today;
-}
-
-export function getHighlightedPlan(
-  plans: UserPlannerSummary[],
-  today = startOfToday()
-): UserPlannerSummary | null {
-  let highlighted: UserPlannerSummary | null = null;
-  let earliestStart = Infinity;
-
-  for (const plan of plans) {
-    const start = parseISO(plan.startDate ?? "");
-    if (!isValid(start)) continue;
-    const end = parseISO(plan.endDate ?? "");
-    if (start < today && !isPlanInProgress(start, end, today)) continue;
-    if (start.getTime() >= earliestStart) continue;
-    highlighted = plan;
-    earliestStart = start.getTime();
-  }
-
-  return highlighted;
 }
 
 export async function UpcomingTripSection({ plan, today = startOfToday() }: UpcomingTripSectionProps) {
