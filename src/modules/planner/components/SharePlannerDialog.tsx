@@ -150,7 +150,7 @@ function InviteForm({
     requestPending.current = true;
     clearMessages();
     try {
-      await addMember.mutateAsync({ planIdOrSlug: planId, email: trimmedEmail, tier });
+      await addMember.mutateAsync({ planId: planId, email: trimmedEmail, tier });
       setEmail("");
       showSuccess(t("memberAdded"));
     } catch (error) {
@@ -330,7 +330,7 @@ function ShareMemberRow({
     }
 
     mutations.updateTier.mutate({
-      planIdOrSlug: planId,
+      planId: planId,
       userId: member.userId,
       tier: nextValue,
     });
@@ -370,8 +370,8 @@ function ShareMemberRow({
         errorMessage={t("unableToUpdateMembers")}
         isPending={isMutating}
         onConfirm={async () => {
-          if (confirmation === "leave") await mutations.leave.mutateAsync({ planIdOrSlug: planId });
-          else await mutations.removeMember.mutateAsync({ planIdOrSlug: planId, userId: member.userId });
+          if (confirmation === "leave") await mutations.leave.mutateAsync({ planId: planId });
+          else await mutations.removeMember.mutateAsync({ planId: planId, userId: member.userId });
         }}
       />
     </div>
@@ -462,11 +462,11 @@ function MembersSection({
 function useShareMembers(planId: string, enabled: boolean) {
   const router = useRouter();
   const utils = trpc.useUtils();
-  const query = trpc.viewer.members.get.useQuery({ planIdOrSlug: planId }, { enabled });
+  const query = trpc.viewer.members.get.useQuery({ planId: planId }, { enabled });
 
   const addMutation = trpc.viewer.members.add.useMutation({
     onSuccess: (result) => {
-      utils.viewer.members.get.setData({ planIdOrSlug: planId }, (current) => {
+      utils.viewer.members.get.setData({ planId: planId }, (current) => {
         if (!current || current.members.some((member) => member.userId === result.userId)) return current;
         return {
           ...current,
@@ -483,14 +483,14 @@ function useShareMembers(planId: string, enabled: boolean) {
         };
       });
     },
-    onSettled: () => utils.viewer.members.get.invalidate({ planIdOrSlug: planId }),
+    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
   });
 
   const updateMutation = trpc.viewer.members.update.useMutation({
     onMutate: async ({ userId, tier }) => {
-      await utils.viewer.members.get.cancel({ planIdOrSlug: planId });
-      const previous = utils.viewer.members.get.getData({ planIdOrSlug: planId });
-      utils.viewer.members.get.setData({ planIdOrSlug: planId }, (current) => {
+      await utils.viewer.members.get.cancel({ planId: planId });
+      const previous = utils.viewer.members.get.getData({ planId: planId });
+      utils.viewer.members.get.setData({ planId: planId }, (current) => {
         if (!current) return current;
         return {
           ...current,
@@ -501,28 +501,28 @@ function useShareMembers(planId: string, enabled: boolean) {
     },
     onError: (_error, _input, context) => {
       if (context?.previous) {
-        utils.viewer.members.get.setData({ planIdOrSlug: planId }, context.previous);
+        utils.viewer.members.get.setData({ planId: planId }, context.previous);
       }
     },
-    onSettled: () => utils.viewer.members.get.invalidate({ planIdOrSlug: planId }),
+    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
   });
 
   const removeMutation = trpc.viewer.members.remove.useMutation({
     onSuccess: (_result, { userId }) => {
       utils.viewer.members.get.setData(
-        { planIdOrSlug: planId },
+        { planId: planId },
         (current) =>
           current && { ...current, members: current.members.filter((member) => member.userId !== userId) }
       );
     },
-    onSettled: () => utils.viewer.members.get.invalidate({ planIdOrSlug: planId }),
+    onSettled: () => utils.viewer.members.get.invalidate({ planId: planId }),
   });
 
   const leaveMutation = trpc.viewer.members.leave.useMutation({
     onSuccess: (redirectTo) => {
       router.push(redirectTo);
       router.refresh();
-      void utils.viewer.members.get.reset({ planIdOrSlug: planId });
+      void utils.viewer.members.get.reset({ planId: planId });
     },
   });
 

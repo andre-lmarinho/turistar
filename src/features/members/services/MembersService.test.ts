@@ -5,12 +5,11 @@ import type { ProfileRepository } from "@/features/profile/repositories/ProfileR
 import type { ProfileSummary } from "@/features/profile/types";
 
 import type { MembersRepository } from "../repositories/MembersRepository";
-import type { ShareMember, ShareMembersData } from "../types";
+import type { ShareMember } from "../types";
 import { MembersService } from "./MembersService";
 
 const planRepositoryMocks = vi.hoisted(() => ({
   fetchPlanIdentityById: vi.fn(),
-  fetchPlanIdentityBySlug: vi.fn(),
 }));
 
 const profileRepositoryMocks = vi.hoisted(() => ({
@@ -26,7 +25,6 @@ function makeService(
     partialRepo as MembersRepository,
     {
       fetchPlanIdentityById: planRepositoryMocks.fetchPlanIdentityById,
-      fetchPlanIdentityBySlug: planRepositoryMocks.fetchPlanIdentityBySlug,
       ...partialPlanRepo,
     } as PlanRepository,
     {
@@ -39,7 +37,6 @@ function makeService(
 describe("MembersService", () => {
   beforeEach(() => {
     planRepositoryMocks.fetchPlanIdentityById.mockReset();
-    planRepositoryMocks.fetchPlanIdentityBySlug.mockReset();
     profileRepositoryMocks.fetchProfileByUserId.mockReset();
   });
 
@@ -64,12 +61,26 @@ describe("MembersService", () => {
   ])(
     "throws NOT_FOUND when %s cannot resolve the plan",
     async (_label: string, call: (service: MembersService) => Promise<unknown>, message: string) => {
-      planRepositoryMocks.fetchPlanIdentityBySlug.mockResolvedValue(null);
+      planRepositoryMocks.fetchPlanIdentityById.mockResolvedValue(null);
       const service = makeService({});
 
       await expect(call(service)).rejects.toMatchObject({ code: "NOT_FOUND", message });
     }
   );
+
+  it("resolves the plan by its canonical id", async () => {
+    const planId = "123e4567-e89b-42d3-a456-426614174000";
+    planRepositoryMocks.fetchPlanIdentityById.mockResolvedValue({ id: planId, ownerId: "owner-1" });
+
+    const service = makeService({
+      fetchMembers: vi.fn().mockResolvedValue([]),
+    });
+
+    const result = await service.getMembers(planId);
+
+    expect(planRepositoryMocks.fetchPlanIdentityById).toHaveBeenCalledWith(planId);
+    expect(result.ownerId).toBe("owner-1");
+  });
 
   it("adds the owner to the members list when missing", async () => {
     const members: ShareMember[] = [
@@ -81,7 +92,7 @@ describe("MembersService", () => {
         avatarUrl: null,
       },
     ];
-    planRepositoryMocks.fetchPlanIdentityBySlug.mockResolvedValue({ id: "plan-1", ownerId: "owner-1" });
+    planRepositoryMocks.fetchPlanIdentityById.mockResolvedValue({ id: "plan-1", ownerId: "owner-1" });
     profileRepositoryMocks.fetchProfileByUserId.mockResolvedValue({
       userId: "owner-1",
       slug: "owner-slug",
@@ -105,23 +116,7 @@ describe("MembersService", () => {
     expect(result.members).toHaveLength(2);
   });
 
-  it("resolves by id (UUID) instead of slug when the input is a UUID", async () => {
-    const planId = "123e4567-e89b-42d3-a456-426614174000";
-    planRepositoryMocks.fetchPlanIdentityById.mockResolvedValue({ id: planId, ownerId: "owner-1" });
-    planRepositoryMocks.fetchPlanIdentityBySlug.mockResolvedValue({ id: "wrong-plan", ownerId: "owner-1" });
-
-    const service = makeService({
-      fetchMembers: vi.fn().mockResolvedValue([]),
-    });
-
-    const result = await service.getMembers(planId);
-
-    expect(planRepositoryMocks.fetchPlanIdentityById).toHaveBeenCalledWith(planId);
-    expect(planRepositoryMocks.fetchPlanIdentityBySlug).not.toHaveBeenCalled();
-    expect(result.ownerId).toBe("owner-1");
-  });
-
-  it("falls back to the first admin when the owner is missing", async () => {
+  it("does not invent an owner when the plan has none", async () => {
     const members: ShareMember[] = [
       {
         userId: "admin-1",
@@ -130,24 +125,17 @@ describe("MembersService", () => {
         displayName: "Admin",
         avatarUrl: null,
       },
-      {
-        userId: "user-2",
-        tier: "member",
-        slug: "member-slug",
-        displayName: "Member",
-        avatarUrl: null,
-      },
     ];
-    planRepositoryMocks.fetchPlanIdentityBySlug.mockResolvedValue({ id: "plan-1", ownerId: null });
+    planRepositoryMocks.fetchPlanIdentityById.mockResolvedValue({ id: "plan-1", ownerId: null });
 
     const service = makeService({
       fetchMembers: vi.fn().mockResolvedValue(members),
     });
 
-    const result: ShareMembersData = await service.getMembers("plan-1");
+    const result = await service.getMembers("plan-1");
 
-    expect(result.ownerId).toBe("admin-1");
-    expect(result.members.map((member) => member.userId)).toEqual(["admin-1", "user-2"]);
+    expect(result.ownerId).toBeNull();
+    expect(result.members.map((member) => member.userId)).toEqual(["admin-1"]);
     expect(profileRepositoryMocks.fetchProfileByUserId).not.toHaveBeenCalled();
   });
 });
