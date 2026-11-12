@@ -176,15 +176,15 @@ describe("dashboard projection", () => {
   const summary = {
     id: "plan-1",
     title: "Trip",
-    destination_name: " Lisbon ",
-    start_date: null,
-    end_date: null,
-    updated_at: null,
-    cover_image: null,
-    destination_country: "PT",
+    destination: " Lisbon ",
+    country: "PT",
     latitude: null,
     longitude: null,
-    activity_count: 2,
+    startDate: null,
+    endDate: null,
+    updatedAt: null,
+    coverImage: null,
+    activityCount: 2,
   };
 
   it("limits cards to 50 without truncating the map, preserving query order", async () => {
@@ -218,8 +218,8 @@ describe("dashboard projection", () => {
 
   it("keeps destination-less cards but excludes them from the map", async () => {
     const fetchUserPlanSummaries = vi.fn().mockResolvedValue([
-      { ...summary, destination_name: null },
-      { ...summary, id: "blank", destination_name: "  " },
+      { ...summary, destination: null },
+      { ...summary, id: "blank", destination: "  " },
     ]);
     const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
     expect(result.plans).toHaveLength(2);
@@ -242,9 +242,7 @@ describe("dashboard projection", () => {
   ])(
     "uses the expected titles for %j and destination %j",
     async (title, destination, cardTitle, mapTitle) => {
-      const fetchUserPlanSummaries = vi
-        .fn()
-        .mockResolvedValue([{ ...summary, title, destination_name: destination }]);
+      const fetchUserPlanSummaries = vi.fn().mockResolvedValue([{ ...summary, title, destination }]);
       const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();
       expect(result.plans[0].title).toBe(cardTitle);
       expect(result.destinations[0]?.planTitle).toBe(mapTitle);
@@ -255,13 +253,13 @@ describe("dashboard projection", () => {
     const fetchUserPlanSummaries = vi.fn().mockResolvedValue([
       {
         ...summary,
-        start_date: "2026-09-01",
-        end_date: "2026-09-03",
-        updated_at: "2026-09-01T12:00:00Z",
-        cover_image: "https://example.com/cover.jpg",
+        startDate: "2026-09-01",
+        endDate: "2026-09-03",
+        updatedAt: "2026-09-01T12:00:00Z",
+        coverImage: "https://example.com/cover.jpg",
         latitude: 0,
         longitude: 0,
-        activity_count: 0,
+        activityCount: 0,
       },
     ]);
     const result = await makeService({ fetchUserPlanSummaries }).getUserDashboard();

@@ -123,27 +123,27 @@ export class PlanService {
     // Cards show the latest 50 plans; the map includes the full travel history.
     const plans = summaries.slice(0, 50).map((row) => ({
       id: row.id,
-      title: row.title ?? row.destination_name ?? "Untitled plan",
-      destination: row.destination_name,
-      startDate: row.start_date,
-      endDate: row.end_date,
-      updatedAt: row.updated_at,
-      coverImage: row.cover_image,
+      title: row.title ?? row.destination ?? "Untitled plan",
+      destination: row.destination,
+      startDate: row.startDate,
+      endDate: row.endDate,
+      updatedAt: row.updatedAt,
+      coverImage: row.coverImage,
     }));
     const destinations = summaries.flatMap((row) => {
-      const name = row.destination_name?.trim();
+      const name = row.destination?.trim();
       return name
         ? [
             {
               planId: row.id,
               planTitle: row.title?.trim() || "Untitled trip",
-              startDate: row.start_date,
-              endDate: row.end_date,
+              startDate: row.startDate,
+              endDate: row.endDate,
               name,
-              country: row.destination_country,
+              country: row.country,
               lat: row.latitude,
               lng: row.longitude,
-              activityCount: row.activity_count,
+              activityCount: row.activityCount,
             },
           ]
         : [];
