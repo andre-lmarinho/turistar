@@ -1,6 +1,6 @@
 import "server-only";
 
-import { buildSnapshotStateForAppend } from "@/features/events/lib/snapshotStateBuilder";
+import { buildSnapshotStateForAppend, needsHistoryRebuild } from "@/features/events/lib/snapshotStateBuilder";
 import type { SnapshotsService } from "@/features/snapshots/services/SnapshotsService";
 import { ApplicationError } from "@/lib/errors/ApplicationError";
 
@@ -43,16 +43,30 @@ export class EventsService {
     events = parsedEvents.data;
 
     const snapshot = await this.snapshots.fetchSnapshot(planId);
-    const history =
-      snapshot.version > 0 && snapshot.days.length === 0 ? await this.fetchEvents(planId, 0) : undefined;
-    const snapshotState = buildSnapshotStateForAppend({
+    const history = needsHistoryRebuild(snapshot) ? await this.fetchEvents(planId, 0) : undefined;
+    const preparation = buildSnapshotStateForAppend({
       snapshot,
       baseVersion,
       events,
       history,
     });
+
+    if (preparation.kind === "invalid-history") {
+      throw new ApplicationError(
+        "CONFLICT",
+        `appendEvents failed for planId=${planId}: ${preparation.reason}.`,
+        {
+          cause: { planId, baseVersion },
+        }
+      );
+    }
+    if (preparation.kind === "empty") {
+      return { version: baseVersion, events: [] };
+    }
+
+    const snapshotState = preparation.kind === "ready" ? preparation.snapshot : undefined;
     const data = await this.repo.appendEvents(planId, baseVersion, events, {
-      snapshotState: snapshotState ?? undefined,
+      snapshotState,
     });
 
     if (!data) {
