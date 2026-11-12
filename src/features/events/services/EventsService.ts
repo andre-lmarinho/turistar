@@ -6,7 +6,7 @@ import { ApplicationError } from "@/lib/errors/ApplicationError";
 
 import type { EventsRepository } from "../repositories/EventsRepository";
 import type { EventInsert, EventRecord } from "../types";
-import { AppendEventsResponseSchema, EventInsertSchema, EventRowSchema, mapEvent } from "./eventsSchemas";
+import { AppendEventsResponseSchema, EventInsertSchema, mapEvent, StoredEventSchema } from "./eventsSchemas";
 
 export class EventsService {
   constructor(
@@ -16,7 +16,7 @@ export class EventsService {
 
   async fetchEvents(planId: string, sinceVersion: number): Promise<EventRecord[]> {
     const rows = await this.repo.fetchEvents(planId, sinceVersion);
-    return rows.map((row) => mapEvent(EventRowSchema.parse(row)));
+    return rows.map((row) => mapEvent(StoredEventSchema.parse(row)));
   }
 
   async appendEvents(

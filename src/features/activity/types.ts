@@ -24,7 +24,6 @@ export interface Activity {
   category?: string;
   latitude?: number;
   longitude?: number;
-  _optimistic?: boolean;
 }
 
 /** A day containing activities */

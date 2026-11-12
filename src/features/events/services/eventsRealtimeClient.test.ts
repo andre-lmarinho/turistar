@@ -70,6 +70,23 @@ describe("subscribeToEvents", () => {
     expect(error).toHaveBeenCalledWith("Failed to parse event payload:", expect.any(Error));
   });
 
+  it("rejects a valid event type with a malformed realtime payload", () => {
+    const transport = realtimeClient();
+    const handler = vi.fn();
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    subscribeToEvents("p1", handler, transport.client);
+    transport.receive({
+      event_id: "e1",
+      plan_id: "p1",
+      version: 2,
+      event_type: "activity.created",
+      payload: { dayId: "d1" }, // missing activity and position
+      created_at: "2026-09-10T00:00:00Z",
+    });
+    expect(handler).not.toHaveBeenCalled();
+    expect(error).toHaveBeenCalledWith("Failed to parse event payload:", expect.any(Error));
+  });
+
   it("requests catch-up on subscription and reconnection only", () => {
     const transport = realtimeClient();
     const ready = vi.fn();
