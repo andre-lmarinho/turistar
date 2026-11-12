@@ -4,9 +4,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AddMemberResult, ShareMembersData, ShareTier } from "@/features/members/types";
 import { SharePlannerDialog } from "./SharePlannerDialog";
 
-type AddInput = { planIdOrSlug: string; email: string; tier: ShareTier };
-type UpdateInput = { planIdOrSlug: string; userId: string; tier: ShareTier };
-type RemoveInput = { planIdOrSlug: string; userId: string };
+type AddInput = { planId: string; email: string; tier: ShareTier };
+type UpdateInput = { planId: string; userId: string; tier: ShareTier };
+type RemoveInput = { planId: string; userId: string };
 type Snapshot = { previous?: ShareMembersData };
 const shared = vi.hoisted(() => ({
   client: null as QueryClient | null,
@@ -14,7 +14,7 @@ const shared = vi.hoisted(() => ({
   add: vi.fn<(input: AddInput) => Promise<AddMemberResult>>(),
   update: vi.fn<(input: UpdateInput) => Promise<void>>(),
   remove: vi.fn<(input: RemoveInput) => Promise<void>>(),
-  leave: vi.fn<(input: { planIdOrSlug: string }) => Promise<string>>(),
+  leave: vi.fn<(input: { planId: string }) => Promise<string>>(),
   push: vi.fn(),
   refresh: vi.fn(),
 }));
@@ -74,7 +74,7 @@ vi.mock("@/trpc/react", async () => {
               useMutation({ ...options, mutationFn: (input) => shared.remove(input), retry: false }),
           },
           leave: {
-            useMutation: (options: UseMutationOptions<string, Error, { planIdOrSlug: string }>) =>
+            useMutation: (options: UseMutationOptions<string, Error, { planId: string }>) =>
               useMutation({ ...options, mutationFn: (input) => shared.leave(input), retry: false }),
           },
         },
@@ -130,7 +130,7 @@ describe("SharePlannerDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Share" }));
     await waitFor(() =>
       expect(shared.add).toHaveBeenCalledWith({
-        planIdOrSlug: "plan-1",
+        planId: "plan-1",
         email: "new@example.com",
         tier: "member",
       })
@@ -174,7 +174,7 @@ describe("SharePlannerDialog", () => {
     });
     expect(shared.leave).not.toHaveBeenCalled();
     fireEvent.click(await screen.findByRole("button", { name: "Leave planner" }));
-    await waitFor(() => expect(shared.leave).toHaveBeenCalledWith({ planIdOrSlug: "plan-1" }));
+    await waitFor(() => expect(shared.leave).toHaveBeenCalledWith({ planId: "plan-1" }));
     await waitFor(() => expect(shared.push).toHaveBeenCalledWith("/"));
     expect(shared.refresh).toHaveBeenCalledOnce();
   });

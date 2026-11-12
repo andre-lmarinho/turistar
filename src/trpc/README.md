@@ -18,7 +18,7 @@ See the [architecture overview](../../ARCHITECTURE.md) for how tRPC fits with pa
 | [viewer](server/routers/viewer/_router.ts)                 | [authedProcedure](server/procedures/authedProcedure.ts) requires a viewer | Plans, budgets, members, profiles, events, and snapshots |
 | [public.profile](server/routers/public/profile/_router.ts) | No sign-in required                                                       | Username availability                                    |
 
-Username availability is an existing exception to service composition: its [handler](server/routers/public/profile/availability.handler.ts) calls [isUsernameAvailable](../features/auth/lib/isUsernameAvailable.ts), which uses a server-only service-role client and `ProfileRepository`. It returns only an availability boolean.
+Username availability is an existing exception to service composition: its [handler](server/routers/public/profile/availability.handler.ts) composes `ProfileService` with the privileged repository adapter, which uses a server-only service-role client. It returns only an availability boolean.
 
 Authentication at the procedure boundary does not replace resource authorization in services and RLS. [Auth handlers](../features/auth/README.md) use the Supabase Auth client, with profile finalization also handled by page-level Server Actions. [Place-search proxies](../app/api/places/) use HTTP route handlers.
 

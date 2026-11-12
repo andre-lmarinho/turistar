@@ -25,7 +25,7 @@ function createCaller() {
 
 describe("appRouter", () => {
   it("returns the authenticated landing route after leaving a plan", async () => {
-    await expect(createCaller().viewer.members.leave({ planIdOrSlug: "plan-1" })).resolves.toBe("/");
+    await expect(createCaller().viewer.members.leave({ planId: "plan-1" })).resolves.toBe("/");
   });
   it("reads the viewer profile through ProfileService and ProfileRepository", async () => {
     await expect(createCaller().viewer.profile.get({})).resolves.toMatchObject({
