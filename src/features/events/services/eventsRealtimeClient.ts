@@ -5,7 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "@/supabase/client";
 
 import type { EventRecord } from "../types";
-import { EventRowSchema, mapEvent } from "./eventsSchemas";
+import { mapEvent, StoredEventSchema } from "./eventsSchemas";
 
 type PlannerRealtimeChannel = ReturnType<SupabaseClient["channel"]>;
 
@@ -21,7 +21,7 @@ export function subscribeToEvents(
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "plan_events", filter: `plan_id=eq.${planId}` },
       (payload: { new: unknown }) => {
-        const result = EventRowSchema.safeParse(payload.new);
+        const result = StoredEventSchema.safeParse(payload.new);
         if (result.success) {
           handler(mapEvent(result.data));
         } else {

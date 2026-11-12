@@ -46,6 +46,17 @@ describe("EventsService", () => {
     ]);
   });
 
+  it("rejects a valid event type with a malformed stored payload", async () => {
+    const malformedRow: EventRow = {
+      ...storedRow,
+      payload: { noDay: true } as unknown as Json,
+    };
+    const { service, repo } = createService({});
+    vi.mocked(repo.fetchEvents).mockResolvedValueOnce([malformedRow]);
+
+    await expect(service.fetchEvents("plan-1", 0)).rejects.toThrow();
+  });
+
   it("rejects invalid base versions before touching dependencies", async () => {
     const { service, repo, snapshots } = createService({});
 
