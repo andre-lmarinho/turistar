@@ -103,6 +103,20 @@ describe("EventsService", () => {
     });
   });
 
+  it("refuses to append when an unrebuildable snapshot cannot be rebuilt", async () => {
+    const { service, repo, snapshots } = createService({
+      snapshot: { ...snapshot, version: 1 },
+      historyRows: [],
+    });
+
+    await expect(service.appendEvents("plan-1", 1, [event])).rejects.toMatchObject({
+      code: "CONFLICT",
+    });
+    expect(snapshots.fetchSnapshot).toHaveBeenCalledWith("plan-1");
+    expect(repo.fetchEvents).toHaveBeenCalledWith("plan-1", 0);
+    expect(repo.appendEvents).not.toHaveBeenCalled();
+  });
+
   it("returns the base version when the repository reports no inserted data", async () => {
     const { service } = createService({ appendResult: null });
 

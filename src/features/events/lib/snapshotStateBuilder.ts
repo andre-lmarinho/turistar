@@ -8,12 +8,23 @@ import type { PersistedSnapshotState, Snapshot } from "@/features/snapshots/type
 
 export type SnapshotState = PersistedSnapshotState;
 
+export type AppendPreparation =
+  | { kind: "ready"; snapshot: SnapshotState }
+  | { kind: "conflict" }
+  | { kind: "invalid-history"; reason: string }
+  | { kind: "empty" };
+
 type BuildSnapshotStateArgs = {
   snapshot: Snapshot;
   baseVersion: number;
   events: EventInsert[];
   history?: EventRecord[];
 };
+
+/** A nonzero snapshot without days must be rebuilt from event history before it can be extended. */
+export function needsHistoryRebuild(snapshot: Snapshot): boolean {
+  return snapshot.version > 0 && snapshot.days.length === 0;
+}
 
 function toEventRecord(event: EventInsert, version: number, createdAt: string): EventRecord {
   return { ...event, version, createdAt };
@@ -34,20 +45,27 @@ export function buildSnapshotStateForAppend({
   baseVersion,
   events,
   history,
-}: BuildSnapshotStateArgs): SnapshotState | null {
-  if (events.length === 0) return null;
-  if (snapshot.version !== baseVersion) return null;
+}: BuildSnapshotStateArgs): AppendPreparation {
+  if (events.length === 0) return { kind: "empty" };
+  if (snapshot.version !== baseVersion) return { kind: "conflict" };
 
   let baseSnapshot = snapshot;
-  if (snapshot.version > 0 && snapshot.days.length === 0) {
-    if (!history || history.length === 0) return null;
+  if (needsHistoryRebuild(snapshot)) {
+    if (!history || history.length === 0) {
+      return { kind: "invalid-history", reason: "rebuildable snapshot has no history" };
+    }
     const latestVersion = history.reduce((max, event) => Math.max(max, event.version), 0);
-    if (latestVersion !== baseVersion) return null;
+    if (latestVersion !== baseVersion) {
+      return {
+        kind: "invalid-history",
+        reason: `history is incomplete through version=${latestVersion}, expected baseVersion=${baseVersion}`,
+      };
+    }
     baseSnapshot = rebuildSnapshot(snapshot, history);
   }
 
   const createdAt = new Date().toISOString();
   const eventRecords = events.map((event, index) => toEventRecord(event, baseVersion + index + 1, createdAt));
   const next = reduceEvents(baseSnapshot, eventRecords);
-  return toSnapshotState(next.days);
+  return { kind: "ready", snapshot: toSnapshotState(next.days) };
 }

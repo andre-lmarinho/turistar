@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { DayPlan } from "@/features/activity/types";
 import type { EventInsert } from "@/features/events/types";
 import type { Snapshot } from "@/features/snapshots/types";
-import { buildSnapshotStateForAppend } from "./snapshotStateBuilder";
+import { type AppendPreparation, buildSnapshotStateForAppend } from "./snapshotStateBuilder";
 
 const createMockDay = (): DayPlan => ({
   id: "1",
@@ -38,62 +38,76 @@ const activityCreatedEvent: EventInsert = {
   actorId: "u1",
 };
 
+function expectReady(
+  result: AppendPreparation
+): asserts result is Extract<AppendPreparation, { kind: "ready" }> {
+  if (result.kind !== "ready") throw new Error(`expected ready preparation, got ${result.kind}`);
+}
+
 describe("snapshotStateBuilder", () => {
   describe("buildSnapshotStateForAppend", () => {
-    it("returns null when events array is empty", () => {
-      const snapshot = createMockSnapshot();
-
+    it("reports empty when the event list is empty", () => {
       const result = buildSnapshotStateForAppend({
-        snapshot,
+        snapshot: createMockSnapshot(),
         baseVersion: 0,
         events: [],
       });
 
-      expect(result).toBeNull();
+      expect(result).toEqual({ kind: "empty" });
     });
 
-    it("returns null when snapshot version doesn't match baseVersion", () => {
-      const snapshot = createMockSnapshot({ version: 5 });
-      const events = [activityCreatedEvent];
-
+    it("reports conflict when the snapshot version doesn't match baseVersion", () => {
       const result = buildSnapshotStateForAppend({
-        snapshot,
+        snapshot: createMockSnapshot({ version: 5 }),
         baseVersion: 0,
-        events,
+        events: [activityCreatedEvent],
       });
 
-      expect(result).toBeNull();
+      expect(result).toEqual({ kind: "conflict" });
     });
 
-    it("returns null when rebuilding from empty history", () => {
-      const snapshot = createMockSnapshot({ version: 1, days: [] });
-      const events = [activityCreatedEvent];
-
+    it("reports invalid history when rebuilding from an empty history", () => {
       const result = buildSnapshotStateForAppend({
-        snapshot,
+        snapshot: createMockSnapshot({ version: 1, days: [] }),
         baseVersion: 1,
-        events,
+        events: [activityCreatedEvent],
         history: [],
       });
 
-      expect(result).toBeNull();
+      expect(result).toMatchObject({ kind: "invalid-history" });
     });
 
-    it("returns state when version matches and events provided", () => {
-      const snapshot = createMockSnapshot({ version: 0, days: [createMockDay()] });
-      const events = [activityCreatedEvent];
-
+    it("reports invalid history when the history is incomplete", () => {
       const result = buildSnapshotStateForAppend({
-        snapshot,
-        baseVersion: 0,
-        events,
+        snapshot: createMockSnapshot({ version: 2, days: [] }),
+        baseVersion: 2,
+        events: [activityCreatedEvent],
+        history: [
+          {
+            id: "e1",
+            planId: "plan-1",
+            version: 1,
+            type: "day.created",
+            payload: { day: { id: "1", label: "Day 1", position: "d1", activities: [] } },
+            createdAt: "2026-01-01T00:00:00.000Z",
+          },
+        ],
       });
 
-      expect(result).toBeDefined();
-      const state = result as unknown as { days: DayPlan[] };
-      expect(state.days).toHaveLength(1);
-      expect(state.days[0].activities).toHaveLength(1);
-      expect(state.days[0].activities[0].id).toBe("a1");
+      expect(result).toMatchObject({ kind: "invalid-history", reason: expect.stringContaining("version=1") });
+    });
+
+    it("reports ready state when the version matches and events are provided", () => {
+      const result = buildSnapshotStateForAppend({
+        snapshot: createMockSnapshot({ version: 0, days: [createMockDay()] }),
+        baseVersion: 0,
+        events: [activityCreatedEvent],
+      });
+
+      expectReady(result);
+      expect(result.snapshot.days).toHaveLength(1);
+      expect(result.snapshot.days[0].activities).toHaveLength(1);
+      expect(result.snapshot.days[0].activities[0].id).toBe("a1");
     });
   });
 });
