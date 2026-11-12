@@ -5,12 +5,14 @@ import { ProfileService } from "./ProfileService";
 
 const repositoryMocks = vi.hoisted(() => ({
   fetchProfileByUserId: vi.fn(),
+  existsBySlug: vi.fn(),
   updateProfile: vi.fn(),
 }));
 
 function makeService(): ProfileService {
   return new ProfileService({
     fetchProfileByUserId: repositoryMocks.fetchProfileByUserId,
+    existsBySlug: repositoryMocks.existsBySlug,
     updateProfile: repositoryMocks.updateProfile,
   } as unknown as ProfileRepository);
 }
@@ -18,7 +20,28 @@ function makeService(): ProfileService {
 describe("ProfileService", () => {
   beforeEach(() => {
     repositoryMocks.fetchProfileByUserId.mockReset();
+    repositoryMocks.existsBySlug.mockReset();
     repositoryMocks.updateProfile.mockReset();
+  });
+
+  describe("isUsernameAvailable", () => {
+    it("rejects invalid usernames without a database read", async () => {
+      await expect(makeService().isUsernameAvailable("Not Valid!")).resolves.toBe(false);
+      expect(repositoryMocks.existsBySlug).not.toHaveBeenCalled();
+    });
+
+    it("reports a free username", async () => {
+      repositoryMocks.existsBySlug.mockResolvedValue(false);
+
+      await expect(makeService().isUsernameAvailable("alice")).resolves.toBe(true);
+      expect(repositoryMocks.existsBySlug).toHaveBeenCalledWith("alice");
+    });
+
+    it("reports a taken username", async () => {
+      repositoryMocks.existsBySlug.mockResolvedValue(true);
+
+      await expect(makeService().isUsernameAvailable("alice")).resolves.toBe(false);
+    });
   });
 
   it("returns the authenticated viewer profile", async () => {

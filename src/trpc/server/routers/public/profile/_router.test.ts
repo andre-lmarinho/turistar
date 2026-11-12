@@ -5,12 +5,18 @@ import { createTRPCInnerContext } from "../../../createContext";
 import { createCallerFactory } from "../../../trpc";
 import { appRouter } from "../../_app";
 
-const { isUsernameAvailableMock } = vi.hoisted(() => ({
-  isUsernameAvailableMock: vi.fn(),
+const { checkAvailabilityMock } = vi.hoisted(() => ({
+  checkAvailabilityMock: vi.fn(),
 }));
 
-vi.mock("@/features/auth/lib/isUsernameAvailable", () => ({
-  isUsernameAvailable: isUsernameAvailableMock,
+vi.mock("@/supabase/serviceRole", () => ({ createSupabaseServiceRoleClient: () => ({}) }));
+vi.mock("@/features/profile/repositories/ProfileRepository", () => ({
+  ProfileRepository: class {},
+}));
+vi.mock("@/features/profile/services/ProfileService", () => ({
+  ProfileService: class {
+    isUsernameAvailable = checkAvailabilityMock;
+  },
 }));
 
 function createCaller() {
@@ -25,10 +31,10 @@ function createCaller() {
 
 describe("public profile router", () => {
   beforeEach(() => {
-    isUsernameAvailableMock.mockReset();
+    checkAvailabilityMock.mockReset();
   });
   it("returns username availability", async () => {
-    isUsernameAvailableMock.mockResolvedValue(true);
+    checkAvailabilityMock.mockResolvedValue(true);
 
     await expect(createCaller().public.profile.availability({ username: "alice" })).resolves.toEqual({
       available: true,
@@ -39,6 +45,6 @@ describe("public profile router", () => {
     await expect(createCaller().public.profile.availability({ username: " " })).rejects.toMatchObject({
       code: "BAD_REQUEST",
     });
-    expect(isUsernameAvailableMock).not.toHaveBeenCalled();
+    expect(checkAvailabilityMock).not.toHaveBeenCalled();
   });
 });

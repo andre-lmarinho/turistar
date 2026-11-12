@@ -8,7 +8,7 @@ Provisions user profiles and manages their slug, display name and avatar metadat
 - Auth flows call `ensureProfile` only to resolve the stored slug after a session exists. It performs a read and never creates or updates a profile.
 - Profile creation and deletion are unavailable to authenticated clients. Account editing keeps its existing owner policies. The migration refuses to proceed if an existing Auth user has no profile.
 - Account updates normalize and validate the username, require a display name and report slug conflicts. Authenticated tRPC handlers supply the viewer's user ID.
-- Username availability is exposed by a public tRPC procedure through a [server-only lookup](../auth/lib/isUsernameAvailable.ts).
+- Username availability is exposed by a public tRPC procedure through `ProfileService.isUsernameAvailable`; the handler composes the privileged repository adapter.
 - The dashboard page checks the viewer and redirects a mismatched URL slug to their own dashboard. Page authorization lives in the route.
 
 ## Main files

@@ -1,7 +1,10 @@
-import { isUsernameAvailable } from "@/features/auth/lib/isUsernameAvailable";
+import { ProfileRepository } from "@/features/profile/repositories/ProfileRepository";
+import { ProfileService } from "@/features/profile/services/ProfileService";
+import { createSupabaseServiceRoleClient } from "@/supabase/serviceRole";
 
 import type { CheckUsernameAvailabilityInput } from "./availability.schema";
 
 export async function checkUsernameAvailabilityHandler({ input }: { input: CheckUsernameAvailabilityInput }) {
-  return { available: await isUsernameAvailable(input.username) };
+  const service = new ProfileService(new ProfileRepository(createSupabaseServiceRoleClient()));
+  return { available: await service.isUsernameAvailable(input.username) };
 }
