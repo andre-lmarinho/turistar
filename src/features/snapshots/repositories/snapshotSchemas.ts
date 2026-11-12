@@ -1,7 +1,7 @@
 import { z } from "zod";
 
+import { normalizePositions } from "@/features/activity/lib/gapOrdering";
 import type { Activity, DayPlan } from "@/features/activity/types";
-import { normalizePositions } from "@/features/events/lib/gapOrdering";
 
 import type { Snapshot } from "../types";
 

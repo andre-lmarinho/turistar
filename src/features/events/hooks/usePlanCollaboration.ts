@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { POSITION_SCALE } from "@/features/activity/lib/gapOrdering";
 import type { DayPlan } from "@/features/activity/types";
 import { trpc } from "@/trpc/react";
 
@@ -173,7 +174,7 @@ export function usePlanCollaboration(
               planId,
               actorId: transport.current.actorId,
               type: "day.created",
-              payload: { day: { ...day, position: day.position ?? String((index + 1) * 1024) } },
+              payload: { day: { ...day, position: day.position ?? String((index + 1) * POSITION_SCALE) } },
             }));
             session.pending = [...seedEvents, ...session.pending];
             session.seedQueued = true;

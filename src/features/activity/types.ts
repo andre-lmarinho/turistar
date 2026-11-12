@@ -35,6 +35,6 @@ export interface DayPlan {
   label: string;
   /** Activities for this day */
   activities: Activity[];
-  /** Ordering position for conflict-free sync */
+  /** Gap ordering position, shared with events and snapshots; not a CRDT. */
   position?: string;
 }

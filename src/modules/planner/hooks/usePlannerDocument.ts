@@ -5,9 +5,9 @@ import { useCallback, useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 
 import { buildInitialDays } from "@/features/activity/lib/dayOperations";
+import { midpoint } from "@/features/activity/lib/gapOrdering";
 import type { Activity, DayPlan } from "@/features/activity/types";
 import { usePlanCollaboration } from "@/features/events/hooks/usePlanCollaboration";
-import { midpoint } from "@/features/events/lib/gapOrdering";
 import type { ActivityDestination } from "@/features/events/lib/planOperations";
 import { changeDateRangeOperations, moveActivityOperation } from "@/features/events/lib/planOperations";
 import { useDestinationCoordinates } from "@/features/search/hooks/useDestinationCoordinates";
