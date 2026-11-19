@@ -17,6 +17,7 @@ Work in this pnpm-managed Next.js application with type safety, security, and sm
 ## Project documentation
 
 - [README](README.md): product overview and entry points.
+- [Product](PRODUCT.md): product scope, principles, and roadmap.
 - [Architecture](ARCHITECTURE.md): code ownership, request flow, and data model.
 - [Contributing](CONTRIBUTING.md): setup, commands, database workflow, and PRs.
 - [Engineering rules](agents/rules/README.md): repository-specific implementation guidance.

@@ -4,7 +4,8 @@ Turistar is a single Next.js App Router application. Routes resolve the viewer a
 modules compose screens; features own domain behavior and data access. Browser edits use tRPC, while
 itinerary synchronization also uses Supabase Realtime.
 
-For installation and commands, see [Contributing](CONTRIBUTING.md).
+For runtime dependencies and delivery, see [Infrastructure](INFRASTRUCTURE.md). For installation and
+commands, see [Contributing](CONTRIBUTING.md).
 
 ## Domain model
 

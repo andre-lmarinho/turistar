@@ -1,7 +1,8 @@
 # Contributing
 
-Start with the [README](README.md) for the product overview and [Architecture](ARCHITECTURE.md) for the
-system model. This guide covers development, checks, and repository maintenance.
+Start with the [README](README.md) for the current product, [Product](PRODUCT.md) for product direction,
+[Architecture](ARCHITECTURE.md) for the system model, and [Infrastructure](INFRASTRUCTURE.md) for
+runtime dependencies and delivery. This guide covers development, checks, and repository maintenance.
 
 ## Local development
 
@@ -157,7 +158,7 @@ The executable schema lives in [`supabase/migrations`](supabase/migrations).
 
 For database changes, follow the repository's [approval boundaries](AGENTS.md#boundaries), create a
 versioned migration with the Supabase CLI, and verify it locally. The
-[migration workflow](.github/workflows/supabase-migrations.yml) checks that migrations and seed data
+[database integration workflow](.github/workflows/database-integration.yml) checks that migrations and seed data
 can rebuild the database, pass `supabase db lint`, and run the integration suite.
 
 After an approved schema change, regenerate the public types from the intended database. For local
@@ -173,6 +174,8 @@ target; the explicit `--local` command above removes that ambiguity for local de
 
 ## Pull requests
 
+- For product changes, confirm that the proposal fits the [product scope and roadmap](PRODUCT.md).
+  Discuss features outside the planned roadmap in a GitHub issue before implementation.
 - Use a conventional title, such as `docs: clarify planner synchronization`.
 - Open PRs as drafts and keep each within 500 changed lines and 10 files; split larger work into
   reviewable parts.
