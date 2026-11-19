@@ -29,6 +29,7 @@ next-env.d.ts
 
 # IA
 .claude/
+.codex/
 .opencode/
 graphify-out
 
