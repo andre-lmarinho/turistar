@@ -1,6 +1,9 @@
 # Features
 
-Features group domain types, operations and data access. Start with [Architecture](../../ARCHITECTURE.md) for the system flow and [Modules](../modules/README.md) for the screens that use them.
+Features group domain types, operations and data access. This index describes implemented
+capabilities; see [Product](../../PRODUCT.md) for intended direction. Start with
+[Architecture](../../ARCHITECTURE.md) for the system flow and [Modules](../modules/README.md) for the
+screens that use them.
 
 ## Feature guide
 

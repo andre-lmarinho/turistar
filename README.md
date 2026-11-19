@@ -5,7 +5,8 @@ Plan trips together with a visual itinerary, an interactive map, and shared expe
 Turistar is an open-source travel planner. Organize activities by day, move them with drag and drop,
 find places, and plan with other registered users. Plans are accessible to their owner and members.
 
-[Open Turistar](https://turistar.me) · [Architecture](ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md)
+[Open Turistar](https://turistar.me) · [Product](PRODUCT.md) · [Architecture](ARCHITECTURE.md) ·
+[Contributing](CONTRIBUTING.md)
 
 ![Turistar itinerary, map, and expenses](.github/assets/preview_01.png)
 
@@ -51,7 +52,9 @@ TanStack Query, and Supabase Auth/PostgreSQL/Realtime. See [`package.json`](pack
 
 | Start here                                 | What it explains                                              |
 | ------------------------------------------ | ------------------------------------------------------------- |
+| [Product](PRODUCT.md)                      | Vision, product boundaries, principles, and roadmap.          |
 | [Architecture](ARCHITECTURE.md)            | Domain concepts, data flows, persistence, and access control. |
+| [Infrastructure](INFRASTRUCTURE.md)        | Runtime dependencies, CI, releases, and deployment limits.    |
 | [Feature index](src/features/README.md)    | Product capabilities and their code entry points.             |
 | [Modules](src/modules/README.md)           | Page composition and interactive views.                       |
 | [tRPC](src/trpc/README.md)                 | API context, routers, and procedures.                         |
