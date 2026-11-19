@@ -1,6 +1,6 @@
 # Agent documentation
 
-Start with [AGENTS.md](../AGENTS.md) for working rules, permission boundaries, and required checks. `CLAUDE.md` points to the same file.
+Start with [AGENTS.md](../AGENTS.md) for working rules, permission boundaries, and required checks.
 
 | Document                                           | Use it for                                      |
 | -------------------------------------------------- | ----------------------------------------------- |
