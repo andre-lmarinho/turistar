@@ -5,7 +5,9 @@ Plan trips together with a visual itinerary, an interactive map, and shared expe
 Turistar is an open-source travel planner. Organize activities by day, move them with drag and drop,
 find places, and plan with other registered users. Plans are accessible to their owner and members.
 
-[Open Turistar](https://turistar.me) · [Product](PRODUCT.md) · [Architecture](ARCHITECTURE.md) ·
+**Try Turistar:** [Open the app](https://turistar.me) · [Explore the demo](https://turistar.me/login)
+
+**Explore the project:** [Product](PRODUCT.md) · [Architecture](ARCHITECTURE.md) ·
 [Contributing](CONTRIBUTING.md)
 
 ![Turistar itinerary, map, and expenses](.github/assets/preview_01.png)
@@ -16,7 +18,8 @@ find places, and plan with other registered users. Plans are accessible to their
 - **Places and maps:** search destinations and activities, then see stops on an interactive map.
 - **Expenses:** track activity costs and additional expenses by category.
 - **Collaboration:** add existing users by email and manage admin or member access.
-- **Demo:** explore seeded trips through a shared demo account whose changes are periodically reset on entry.
+- **Demo:** explore and edit trips through a shared account. Visitors see one another's changes. After at
+  least an hour, a best-effort reset restores the curated trips when someone opens the dashboard.
 - **Languages:** English and Brazilian Portuguese.
 
 ## Run locally
