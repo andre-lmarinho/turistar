@@ -14,7 +14,6 @@ const buttonVariants = cva(
       variant: {
         primary:
           "min-h-12.5 border border-folio-citron bg-folio-citron px-4 text-folio-ink hover:border-folio-citron-hover hover:bg-folio-citron-hover",
-        accent: "bg-accent text-accent-foreground hover:bg-accent-hover",
         ghost:
           "border border-folio-ink/30 bg-transparent text-folio-ink hover:border-folio-ink/50 hover:bg-folio-ink/5",
       },

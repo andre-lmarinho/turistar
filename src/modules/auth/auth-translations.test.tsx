@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import en from "@/i18n/locales/en.json";
 import pt from "@/i18n/locales/pt-BR.json";
-import { SignupView } from "./auth-view";
 import { ResetPasswordView } from "./forgot-password/forgot-password-reset-view";
 import { ForgotPasswordView } from "./forgot-password/forgot-password-view";
+import { SignupView } from "./signup-view";
 
 const mocks = vi.hoisted(() => ({
   send: vi.fn(),

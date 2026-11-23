@@ -152,7 +152,6 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       </Form>
       <div className="border-border mt-5 border-t pt-5">
         <Button
-          variant="accent"
           onClick={handleDemo}
           aria-disabled={isPending}
           aria-busy={pendingAction === "demo"}

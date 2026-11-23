@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import en from "@/i18n/locales/en.json";
-import { SignupView } from "./auth-view";
 import { LoginView } from "./login-view";
+import { SignupView } from "./signup-view";
 
 const mocks = vi.hoisted(() => ({
   demoSignIn: vi.fn(),

@@ -35,12 +35,12 @@ const DEFAULT_VALUES: SignupValues = {
   password: "",
 };
 
-type AuthViewProps = {
+type SignupViewProps = {
   finalizeProfile: () => Promise<string>;
   nextPath?: string | null;
 };
 
-export function AuthView({ finalizeProfile, nextPath }: AuthViewProps) {
+export function SignupView({ finalizeProfile, nextPath }: SignupViewProps) {
   const t = useTranslations();
 
   const router = useRouter();
@@ -206,7 +206,6 @@ export function AuthView({ finalizeProfile, nextPath }: AuthViewProps) {
             </p>
             <div className="mt-7 grid w-full max-w-100 gap-[0.7rem] max-folio-phone:mt-5 max-folio-phone:gap-[0.65rem] max-folio-short:min-[34.01rem]:mt-[1.1rem]">
               <Button
-                variant="accent"
                 onClick={handleDemo}
                 aria-disabled={isPending}
                 aria-busy={pendingAction === "demo"}

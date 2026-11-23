@@ -83,9 +83,7 @@ export function DesktopActions() {
           <span className="sr-only">{t("loadingDefault")}</span>
         </div>
       ) : destination ? (
-        <Button href={destination} variant="accent">
-          {t("goToPlanner")}
-        </Button>
+        <Button href={destination}>{t("goToPlanner")}</Button>
       ) : failed ? (
         <div>
           <p role="alert" className="sr-only">
