@@ -243,7 +243,7 @@ export const ActivityDialog = memo(function ActivityDialog({
           {draft.imageUrl && (
             <Button
               variant="ghost"
-              className="border-border hover:bg-interactive-hover absolute right-2 bottom-2 z-20 border py-1 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
+              className="absolute right-2 bottom-2 z-20 min-h-6 py-1 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100"
               onClick={handleRemoveImage}>
               {t("removePhoto")}
             </Button>
@@ -332,7 +332,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                       variant="ghost"
                       title={t("delete")}
                       aria-label={t("delete")}
-                      className="hover:bg-interactive-hover size-11 rounded-full p-0 md:size-8">
+                      className="size-11 rounded-full p-0 md:size-8 md:min-h-8">
                       <Trash2 className="size-4" aria-hidden="true" />
                     </Button>
                   }
@@ -356,10 +356,7 @@ export const ActivityDialog = memo(function ActivityDialog({
                   className="w-76 p-0">
                   <div className="space-y-3 p-4">
                     {draft.imageUrl && (
-                      <Button
-                        variant="ghost"
-                        className="border-border hover:bg-interactive-hover border"
-                        onClick={handleRemoveImage}>
+                      <Button variant="ghost" onClick={handleRemoveImage}>
                         {t("removePhoto")}
                       </Button>
                     )}

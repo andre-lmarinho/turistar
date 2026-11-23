@@ -79,7 +79,7 @@ export function DemoGuideDialog({ isDemo }: DemoGuideDialogProps) {
           </ul>
         </section>
 
-        <Button onClick={handleClose} className="mt-7 w-full text-base font-semibold">
+        <Button onClick={handleClose} className="mt-7 w-full">
           {t("demoGotIt")}
         </Button>
       </DialogContent>

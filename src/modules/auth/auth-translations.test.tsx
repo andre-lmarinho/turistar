@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import en from "@/i18n/locales/en.json";
 import pt from "@/i18n/locales/pt-BR.json";
+import { SignupView } from "./auth-view";
 import { ResetPasswordView } from "./forgot-password/forgot-password-reset-view";
 import { ForgotPasswordView } from "./forgot-password/forgot-password-view";
-import { SignupView } from "./signup-view";
 
 const mocks = vi.hoisted(() => ({
   send: vi.fn(),
@@ -52,6 +52,7 @@ describe("auth translations", () => {
     mocks.available.mockResolvedValue({ available: false });
     const view = <SignupView finalizeProfile={vi.fn()} />;
     const { rerender } = render(localized(view));
+    fireEvent.click(screen.getByRole("button", { name: pt.createAccount }));
     fireEvent.change(screen.getByLabelText("Usuário"), { target: { value: "taken" } });
     fireEvent.blur(screen.getByLabelText("Usuário"));
     expect(await screen.findByText(pt.usernameTaken)).toBeVisible();
@@ -66,6 +67,7 @@ describe("auth translations", () => {
     mocks.register.mockResolvedValue({ status: "needs-confirmation" });
     const view = <SignupView finalizeProfile={vi.fn()} />;
     const { rerender } = render(localized(view));
+    fireEvent.click(screen.getByRole("button", { name: pt.createAccount }));
     fireEvent.change(screen.getByLabelText("Usuário"), { target: { value: "new-user" } });
     fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: "test@example.com" } });
     fireEvent.change(screen.getByLabelText("Senha", { exact: true }), { target: { value: "safe-password" } });
@@ -135,6 +137,7 @@ describe("auth translations", () => {
 
 describe("auth error recovery", () => {
   function fillSignup() {
+    fireEvent.click(screen.getByRole("button", { name: en.createAccount }));
     fireEvent.change(screen.getByLabelText(en.username), { target: { value: "new-user" } });
     fireEvent.change(screen.getByLabelText(en.email), { target: { value: "test@example.com" } });
     fireEvent.change(screen.getByPlaceholderText(en.createPasswordPlaceholder), {

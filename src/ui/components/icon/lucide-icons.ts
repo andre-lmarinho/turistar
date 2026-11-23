@@ -2,6 +2,7 @@ export type { LucideIcon } from "lucide-react";
 
 export {
   AlignLeft,
+  ArrowRight,
   Bus,
   Calendar,
   Check,

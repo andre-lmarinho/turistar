@@ -104,7 +104,7 @@ function ConfirmationDialog({
               {cancelLabel ?? t("cancel")}
             </AlertDialog.Close>
             <Button
-              className="bg-destructive text-destructive-foreground hover:bg-destructive-hover"
+              className="border-transparent bg-destructive text-destructive-foreground hover:bg-destructive-hover"
               onClick={handleConfirm}
               aria-disabled={busy}
               aria-busy={busy}>

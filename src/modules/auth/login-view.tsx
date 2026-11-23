@@ -145,7 +145,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           type="submit"
           aria-disabled={isPending}
           aria-busy={pendingAction === "login"}
-          className="min-h-11 gap-2 text-base font-semibold">
+          className="gap-2">
           {pendingAction === "login" ? <Spinner className="size-4" /> : null}
           {t("signIn")}
         </Button>

@@ -6,12 +6,12 @@ import { forwardRef, useState } from "react";
 import { Eye, EyeOff } from "@/ui/components/icon/lucide-icons";
 import { Tooltip } from "@/ui/components/tooltip/Tooltip";
 
-import { InputField } from "./TextField";
+import { FloatingInputField } from "./TextField";
 import type { InputFieldProps } from "./types";
 
 export const EmailField = forwardRef<HTMLInputElement, InputFieldProps>(function EmailField(props, ref) {
   return (
-    <InputField
+    <FloatingInputField
       ref={ref}
       type="email"
       autoCapitalize="none"
@@ -32,7 +32,7 @@ export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
     const toggleLabel = t(isVisible ? "hidePassword" : "showPassword");
 
     return (
-      <InputField
+      <FloatingInputField
         ref={ref}
         type={isVisible ? "text" : "password"}
         addOnSuffix={

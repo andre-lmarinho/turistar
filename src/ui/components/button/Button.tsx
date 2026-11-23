@@ -8,13 +8,15 @@ import { forwardRef } from "react";
 import { cn } from "@/ui/utils/cn";
 
 const buttonVariants = cva(
-  "focus-visible:ring-ring inline-flex min-h-6 min-w-6 cursor-pointer items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
+  "inline-flex min-h-11 min-w-6 cursor-pointer items-center justify-center gap-2 rounded px-3 py-2 text-[0.9rem] font-[680] transition-[background-color,border-color,color,transform] duration-150 focus-visible:ring-2 focus-visible:ring-folio-coral focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60 motion-reduce:transition-none",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+        primary:
+          "min-h-12.5 border border-folio-citron bg-folio-citron px-4 text-folio-ink hover:border-folio-citron-hover hover:bg-folio-citron-hover",
         accent: "bg-accent text-accent-foreground hover:bg-accent-hover",
-        ghost: "bg-background text-foreground hover:bg-interactive-hover",
+        ghost:
+          "border border-folio-ink/30 bg-transparent text-folio-ink hover:border-folio-ink/50 hover:bg-folio-ink/5",
       },
     },
     defaultVariants: { variant: "primary" },

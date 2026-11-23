@@ -7,8 +7,8 @@ import { ProfileRepository } from "@/features/profile/repositories/ProfileReposi
 import { ProfileService } from "@/features/profile/services/ProfileService";
 import { ApplicationError } from "@/lib/errors";
 import { SITE_URL } from "@/lib/urls/siteUrl";
+import { AuthView } from "@/modules/auth/auth-view";
 import signupIllustration from "@/modules/auth/media/app-mock.webp";
-import { SignupView } from "@/modules/auth/signup-view";
 import SeoJsonLd from "@/modules/marketing/seo/SeoJsonLd";
 import { createSupabaseServerClient } from "@/supabase/server";
 
@@ -81,7 +81,7 @@ export default async function SignupRoute({ searchParams }: { searchParams?: Pro
         fetchPriority="high"
       />
       <SeoJsonLd />
-      <SignupView finalizeProfile={finalizeProfileAction} nextPath={nextPath} />
+      <AuthView finalizeProfile={finalizeProfileAction} nextPath={nextPath} />
     </>
   );
 }

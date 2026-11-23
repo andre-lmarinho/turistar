@@ -125,9 +125,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
           <p role="alert" className="text-destructive-text text-sm">
             {t("invalidResetLink")}
           </p>
-          <Button href={forgotPasswordHref} className="min-h-11">
-            {t("requestNewResetLink")}
-          </Button>
+          <Button href={forgotPasswordHref}>{t("requestNewResetLink")}</Button>
         </div>
       ) : passwordUpdated ? (
         <p ref={successMessageRef} role="status" tabIndex={-1} className="text-muted-foreground text-sm">
@@ -161,7 +159,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
             type="submit"
             disabled={formState.isSubmitting}
             aria-busy={formState.isSubmitting}
-            className="min-h-11 gap-2 text-base font-semibold">
+            className="gap-2">
             {formState.isSubmitting ? <Spinner className="size-4" /> : null}
             {t("updatePassword")}
           </Button>

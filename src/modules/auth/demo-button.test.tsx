@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import en from "@/i18n/locales/en.json";
+import { SignupView } from "./auth-view";
 import { LoginView } from "./login-view";
-import { SignupView } from "./signup-view";
 
 const mocks = vi.hoisted(() => ({
   demoSignIn: vi.fn(),
@@ -94,6 +94,7 @@ describe.each(views)("%s authentication actions", (name, renderView) => {
 
   function fillCredentials() {
     if (name === "signup") {
+      fireEvent.click(screen.getByRole("button", { name: en.createAccount }));
       fireEvent.change(screen.getByLabelText(en.username), { target: { value: "new-user" } });
     }
     fireEvent.change(screen.getByLabelText(en.email), { target: { value: "test@example.com" } });

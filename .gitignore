@@ -32,6 +32,7 @@ next-env.d.ts
 .codex/
 .opencode/
 graphify-out
+.impeccable
 
 # Editors / OS
 .vscode/

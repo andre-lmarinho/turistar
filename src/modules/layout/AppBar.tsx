@@ -39,12 +39,10 @@ export async function AppBar() {
           <AvatarMenu displayName={displayName} email={email} slug={slug} />
         ) : (
           <div className="flex items-center gap-1.5">
-            <Button href="/login" variant="ghost" className="min-h-11 px-3">
+            <Button href="/login" variant="ghost">
               {t("logIn")}
             </Button>
-            <Button href="/" className="min-h-11 rounded-xl px-4 shadow-sm">
-              {t("getStarted")}
-            </Button>
+            <Button href="/">{t("getStarted")}</Button>
           </div>
         )}
       </nav>
