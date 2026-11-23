@@ -1,5 +1,10 @@
 {
   "language": "Language",
+  "languageDescription": "Choose the language for menus and controls.",
+  "editName": "Edit name",
+  "editUsername": "Edit username",
+  "nameDescription": "The name associated with your account.",
+  "usernameDescription": "Your unique public username on Turistar.",
   "unexpectedError": "Something went wrong. Try again.",
   "languageError": "Unable to change language. Try again.",
   "skipContent": "Skip to content",

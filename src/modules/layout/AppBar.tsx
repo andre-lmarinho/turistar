@@ -1,9 +1,6 @@
-import { getTranslations } from "next-intl/server";
-
 import { getViewer } from "@/features/auth/lib/session";
 import { ProfileRepository } from "@/features/profile/repositories/ProfileRepository";
 import { createSupabaseServerClient } from "@/supabase/server";
-import { Button } from "@/ui/components/button";
 import { Logo } from "@/ui/components/logo";
 
 import { AvatarMenu } from "./AvatarMenu";
@@ -27,24 +24,15 @@ async function getUserProfile(): Promise<UserProfile> {
 }
 
 export async function AppBar() {
-  const t = await getTranslations();
   const { slug, displayName, email } = await getUserProfile();
-  const isLoggedIn = Boolean(email);
 
   return (
-    <header className="border-border bg-background text-foreground sticky top-0 z-40 shrink-0 border-b">
-      <nav className="flex min-h-16 w-full items-center justify-between gap-4 px-3 md:px-6 xl:px-8">
-        <Logo href={slug ? `/u/${slug}` : "/login"} />
-        {isLoggedIn ? (
+    <header className="sticky top-0 z-40 flex min-h-18 shrink-0 items-center border-b border-folio-line bg-folio-paper/95 px-4 text-folio-ink shadow-[0_1px_0_rgba(23,58,54,0.04)] backdrop-blur-md md:fixed md:inset-y-0 md:left-0 md:min-h-0 md:w-20 md:flex-col md:items-center md:border-r md:border-b-0 md:px-4 md:py-5 md:shadow-none">
+      <nav className="flex w-full items-center justify-between md:h-full md:flex-col md:items-center">
+        <Logo href={slug ? `/u/${slug}` : "/"} iconOnlyOnDesktop />
+        <div className="flex items-center gap-1.5 md:mt-auto md:w-full md:flex-col md:items-center">
           <AvatarMenu displayName={displayName} email={email} slug={slug} />
-        ) : (
-          <div className="flex items-center gap-1.5">
-            <Button href="/login" variant="ghost">
-              {t("logIn")}
-            </Button>
-            <Button href="/">{t("getStarted")}</Button>
-          </div>
-        )}
+        </div>
       </nav>
     </header>
   );

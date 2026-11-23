@@ -8,12 +8,6 @@ const { mockGetViewer, mockFetchProfileByUserId } = vi.hoisted(() => ({
   mockFetchProfileByUserId: vi.fn(),
 }));
 
-vi.mock("next-intl/server", async () => {
-  const { createTranslator } = await import("next-intl");
-  const { default: messages } = await import("@/i18n/locales/en.json");
-  return { getTranslations: async () => createTranslator({ locale: "en", messages }) };
-});
-
 vi.mock("@/features/auth/lib/session", () => ({ getViewer: mockGetViewer }));
 vi.mock("@/supabase/server", () => ({ createSupabaseServerClient: () => ({}) }));
 vi.mock("@/features/profile/repositories/ProfileRepository", () => ({
@@ -22,17 +16,21 @@ vi.mock("@/features/profile/repositories/ProfileRepository", () => ({
   },
 }));
 vi.mock("./AvatarMenu", () => ({
-  AvatarMenu: ({ displayName }: { displayName: string | null }) => <div>{displayName}</div>,
+  AvatarMenu: ({ displayName }: { displayName: string | null }) => (
+    <div data-testid="account-menu">{displayName ?? "Account menu"}</div>
+  ),
 }));
 
 describe("AppBar", () => {
-  it("renders sign-in actions only when there is no viewer", async () => {
+  it("renders the brand and account menu without a login-state branch", async () => {
     mockGetViewer.mockResolvedValue(null);
 
     render(await AppBar());
 
-    expect(screen.getByRole("link", { name: "Log in" })).toBeInTheDocument();
-    expect(screen.getByText("Get started")).toBeInTheDocument();
+    const brand = screen.getByRole("link", { name: "Turistar" });
+    expect(brand).toBeInTheDocument();
+    expect(brand.querySelector("span")).toHaveClass("md:sr-only");
+    expect(screen.getByTestId("account-menu")).toHaveTextContent("Account menu");
     expect(mockFetchProfileByUserId).not.toHaveBeenCalled();
   });
 

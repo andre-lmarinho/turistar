@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AccountSettingsDialog } from "./AccountSettingsDialog";
@@ -29,10 +29,14 @@ vi.mock("@/trpc/react", () => ({
   },
 }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: mocks.replace, refresh: mocks.refresh }) }));
-vi.mock("@/modules/auth/components/LanguageSelect", () => ({ LanguageSelect: () => null }));
 
 function dialog(onOpenChange = vi.fn()) {
   return <AccountSettingsDialog open onOpenChange={onOpenChange} displayName="Traveler" slug="traveler" />;
+}
+
+function openEditor(label: "Edit name" | "Edit username") {
+  fireEvent.click(screen.getByRole("button", { name: label }));
+  return screen.getByRole("dialog", { name: label });
 }
 
 beforeEach(() => {
@@ -43,11 +47,28 @@ beforeEach(() => {
 });
 
 describe("AccountSettingsDialog", () => {
+  it("keeps language in the settings dialog and opens separate profile editors", () => {
+    render(dialog());
+    const settingsDialog = screen.getByRole("dialog", { name: "Account settings" });
+    expect(settingsDialog).toHaveClass("max-w-lg");
+    expect(screen.getByRole("combobox", { name: "Language" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Edit name" })).toHaveAttribute("aria-haspopup", "dialog");
+    expect(screen.getByRole("button", { name: "Edit username" })).toHaveAttribute("aria-haspopup", "dialog");
+    expect(screen.queryByRole("button", { name: "Cancel" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Save changes" })).not.toBeInTheDocument();
+
+    const nameDialog = openEditor("Edit name");
+    expect(nameDialog).toHaveClass("max-w-md");
+    expect(nameDialog).not.toHaveClass("max-w-lg");
+    expect(nameDialog).toHaveTextContent("Name");
+  });
+
   it("focuses and describes the invalid field without sending a mutation", () => {
     render(dialog());
+    const nameDialog = openEditor("Edit name");
     const name = screen.getByLabelText("Name");
     fireEvent.change(name, { target: { value: " " } });
-    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    fireEvent.click(within(nameDialog).getByRole("button", { name: "Save changes" }));
 
     expect(name).toHaveFocus();
     expect(name).toHaveAttribute("aria-invalid", "true");
@@ -55,9 +76,11 @@ describe("AccountSettingsDialog", () => {
     expect(mocks.mutateAsync).not.toHaveBeenCalled();
 
     fireEvent.change(name, { target: { value: "Updated" } });
-    const username = screen.getByLabelText("Username");
+    fireEvent.click(within(nameDialog).getByRole("button", { name: "Cancel" }));
+    const usernameDialog = openEditor("Edit username");
+    const username = within(usernameDialog).getByLabelText("Username");
     fireEvent.change(username, { target: { value: "invalid_username" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    fireEvent.click(within(usernameDialog).getByRole("button", { name: "Save changes" }));
     expect(username).toHaveFocus();
     expect(username).toHaveAttribute("aria-invalid", "true");
   });
@@ -65,9 +88,10 @@ describe("AccountSettingsDialog", () => {
   it("keeps entered values on failure and identifies an occupied username", async () => {
     mocks.mutateAsync.mockRejectedValue({ data: { code: "CONFLICT" }, message: "Database details" });
     render(dialog());
-    const username = screen.getByLabelText("Username");
+    const usernameDialog = openEditor("Edit username");
+    const username = within(usernameDialog).getByLabelText("Username");
     fireEvent.change(username, { target: { value: "occupied" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    fireEvent.click(within(usernameDialog).getByRole("button", { name: "Save changes" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Username already taken.");
     expect(username).toHaveValue("occupied");
@@ -75,7 +99,7 @@ describe("AccountSettingsDialog", () => {
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 
-  it("announces an occupied username without moving focus after saving", async () => {
+  it("keeps an occupied-username error in the edit dialog after saving", async () => {
     mocks.realMutation = true;
     let reject: (cause: unknown) => void = () => {};
     mocks.mutateAsync.mockReturnValue(
@@ -84,19 +108,20 @@ describe("AccountSettingsDialog", () => {
       })
     );
     render(dialog());
-    await waitFor(() => expect(screen.getByRole("button", { name: "Close" })).toHaveFocus());
-    const username = screen.getByLabelText("Username");
-    const submit = screen.getByRole("button", { name: "Save changes" });
+    const usernameDialog = openEditor("Edit username");
+    const username = within(usernameDialog).getByLabelText("Username");
+    const submit = within(usernameDialog).getByRole("button", { name: "Save changes" });
     submit.focus();
     fireEvent.click(submit);
     await waitFor(() => expect(username).toHaveAttribute("readonly"));
     await act(async () => reject({ data: { code: "CONFLICT" } }));
     await waitFor(() => expect(username).not.toHaveAttribute("readonly"));
-    expect(submit).toHaveFocus();
+    expect(within(usernameDialog).getByRole("button", { name: "Close" })).toHaveFocus();
     expect(username).toHaveAccessibleDescription(expect.stringContaining("Username already taken."));
   });
 
   it("prevents repeated submissions and dismissal while saving, preserving the action label", async () => {
+    mocks.realMutation = true;
     let reject: (cause: unknown) => void = () => {};
     mocks.mutateAsync.mockReturnValue(
       new Promise((_, rejectPromise) => {
@@ -104,20 +129,27 @@ describe("AccountSettingsDialog", () => {
       })
     );
     const onOpenChange = vi.fn();
-    const { rerender } = render(dialog(onOpenChange));
-    const form = screen.getByRole("button", { name: "Save changes" }).closest("form");
-    expect(form).not.toBeNull();
-    fireEvent.submit(form as HTMLFormElement);
-    fireEvent.submit(form as HTMLFormElement);
-    expect(mocks.mutateAsync).toHaveBeenCalledTimes(1);
+    render(dialog(onOpenChange));
+    const editor = openEditor("Edit username");
+    await waitFor(() => expect(within(editor).getByLabelText("Username")).toHaveValue("traveler"));
+    const save = within(editor).getByRole("button", { name: "Save changes" });
+    fireEvent.click(save);
 
-    mocks.pending = true;
-    rerender(dialog(onOpenChange));
-    expect(screen.getByRole("button", { name: "Save changes" })).toHaveAttribute("aria-disabled", "true");
-    expect(screen.getByRole("button", { name: "Save changes" })).toHaveAttribute("aria-busy", "true");
-    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
-    expect(screen.getByLabelText("Username")).toHaveAttribute("readonly");
-    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => {
+      expect(within(editor).getByRole("button", { name: "Save changes" })).toHaveAttribute(
+        "aria-disabled",
+        "true"
+      );
+      expect(within(editor).getByRole("button", { name: "Save changes" })).toHaveAttribute(
+        "aria-busy",
+        "true"
+      );
+      expect(within(editor).getByRole("button", { name: "Cancel" })).toBeDisabled();
+      expect(within(editor).getByLabelText("Username")).toHaveAttribute("readonly");
+    });
+    fireEvent.click(save);
+    expect(mocks.mutateAsync).toHaveBeenCalledTimes(1);
+    fireEvent.click(within(editor).getByRole("button", { name: "Close" }));
     expect(onOpenChange).not.toHaveBeenCalled();
 
     await act(async () => reject(new Error("Internal details")));
@@ -128,12 +160,15 @@ describe("AccountSettingsDialog", () => {
   it("normalizes the submitted username and refreshes the updated profile without reloading the page", async () => {
     const onOpenChange = vi.fn();
     render(dialog(onOpenChange));
-    fireEvent.change(screen.getByLabelText("Username"), { target: { value: " Updated-Name " } });
-    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    const usernameDialog = openEditor("Edit username");
+    fireEvent.change(within(usernameDialog).getByLabelText("Username"), {
+      target: { value: " Updated-Name " },
+    });
+    fireEvent.click(within(usernameDialog).getByRole("button", { name: "Save changes" }));
 
     await waitFor(() => expect(mocks.replace).toHaveBeenCalledWith("/u/updated-name"));
     expect(mocks.mutateAsync).toHaveBeenCalledWith({ displayName: "Traveler", slug: "updated-name" });
     expect(mocks.refresh).toHaveBeenCalledTimes(1);
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });

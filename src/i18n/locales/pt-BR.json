@@ -1,5 +1,10 @@
 {
   "language": "Idioma",
+  "languageDescription": "Escolha o idioma dos menus e controles.",
+  "editName": "Editar nome",
+  "editUsername": "Editar nome de usuário",
+  "nameDescription": "O nome associado à sua conta.",
+  "usernameDescription": "Seu nome de usuário público e exclusivo no Turistar.",
   "unexpectedError": "Algo deu errado. Tente de novo.",
   "languageError": "Não foi possível mudar o idioma. Tente de novo.",
   "skipContent": "Pular para o conteúdo",
