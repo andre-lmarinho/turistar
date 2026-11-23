@@ -42,13 +42,13 @@ recreates it and removes local changes.
 
 ### Common setup issues
 
-| Symptom                                          | Check                                                                    |
-| ------------------------------------------------ | ------------------------------------------------------------------------ |
-| `supabase` cannot start containers              | Start the Docker-compatible container runtime.                           |
-| Username availability fails                      | Set the local `SUPABASE_SERVICE_ROLE_KEY` and restart Next.js.           |
-| Place search or map tiles fail                   | Set `GEOAPIFY_KEY` or `CARTO_KEY`, respectively.                         |
-| Auth emails return to the wrong origin           | Match the browser origin with Supabase's site URL and allowed redirects. |
-| Database objects are missing                     | Run `pnpm db:migrate`; use a reset only if local data can be discarded.  |
+| Symptom                                | Check                                                                    |
+| -------------------------------------- | ------------------------------------------------------------------------ |
+| `supabase` cannot start containers     | Start the Docker-compatible container runtime.                           |
+| Username availability fails            | Set the local `SUPABASE_SERVICE_ROLE_KEY` and restart Next.js.           |
+| Place search or map tiles fail         | Set `GEOAPIFY_KEY` or `CARTO_KEY`, respectively.                         |
+| Auth emails return to the wrong origin | Match the browser origin with Supabase's site URL and allowed redirects. |
+| Database objects are missing           | Run `pnpm db:migrate`; use a reset only if local data can be discarded.  |
 
 ## Configuration
 
@@ -123,9 +123,10 @@ Fixtures use unique usernames/emails and delete only their own plans, profiles, 
 order. Tests run sequentially across files to avoid Auth rate-limit interference. Ordinary `pnpm test`
 does not require Docker; integration tests fail if Supabase is unavailable or no tests are selected.
 
-The [Database Integration workflow](.github/workflows/database-integration.yml) runs integration tests after its migration/seed rebuild and schema
-lint. Its disposable database is reset once per job, not before each test. Database Integration runs
-on every pull request, so new features and shared dependencies need no path-filter maintenance.
+The [Database Integration workflow](.github/workflows/database-integration.yml) runs integration tests
+after its migration/seed rebuild and `pnpm exec supabase db lint`. Its disposable database is reset
+once per job, not before each test. Database Integration runs on every pull request, so new features
+and shared dependencies need no path-filter maintenance.
 Replaced PR runs are cancelled.
 Studio, Storage, Realtime, Edge Functions, and analytics are excluded from this job; these tests do
 not cover those services. Database dumps are not cached, so each CI run validates current migrations.
@@ -167,12 +168,12 @@ After an approved schema change, regenerate the public types from the intended d
 Supabase:
 
 ```sh
-pnpm exec supabase gen types --local --lang typescript --schema public > src/supabase/types.ts
+pnpm exec supabase gen types --lang typescript --schema public > src/supabase/types.ts
 pnpm typecheck:ci
 ```
 
 Do not edit generated types by hand. The existing `pnpm gen:types` script does not specify a database
-target; the explicit `--local` command above removes that ambiguity for local development.
+target; the CLI uses the local database by default.
 
 ## Pull requests
 

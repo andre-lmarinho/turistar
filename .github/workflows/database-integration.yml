@@ -31,23 +31,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v3
-        with:
-          version: 2.105.0
-
       - name: Start local Supabase
-        run: supabase start --exclude studio,imgproxy,storage-api,realtime,edge-runtime,logflare,vector,supavisor,postgres-meta > /dev/null
+        run: pnpm exec supabase start --exclude studio,imgproxy,storage-api,realtime,edge-runtime,logflare,vector,supavisor,postgres-meta > /dev/null
 
       - name: Rebuild database from migrations and seed
-        run: supabase db reset --local
+        run: pnpm exec supabase db reset
 
       - name: Check database for schema errors
-        run: supabase db lint --local --fail-on=error
+        run: pnpm exec supabase db lint --fail-on=error
 
       - name: Run integration tests
         run: pnpm test:integration
 
       - name: Stop disposable Supabase
         if: always()
-        run: supabase stop --no-backup
+        run: pnpm exec supabase stop --no-backup
