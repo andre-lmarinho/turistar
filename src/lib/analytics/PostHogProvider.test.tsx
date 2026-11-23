@@ -1,6 +1,7 @@
+/// <reference types="vitest/jsdom" />
 import { render, waitFor } from "@testing-library/react";
 import { StrictMode } from "react";
-import { beforeEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
   process.env.NEXT_PUBLIC_POSTHUG_PROJECT_TOKEN = "test-token";
@@ -59,6 +60,11 @@ beforeEach(() => {
   mocks.auth.user = null;
   mocks.pathname = "/";
   window.localStorage.clear();
+  jsdom.reconfigure({ url: "https://turistar.me/" });
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 it("initializes PostHog before the initial homepage pageview", () => {
@@ -125,4 +131,33 @@ it("skips initialization and capture when analytics is disabled", () => {
 
   expect(mocks.posthog.init).not.toHaveBeenCalled();
   expect(mocks.posthog.capture).not.toHaveBeenCalled();
+});
+
+it.each(["localhost", "127.0.0.1"])("skips initialization and capture on %s", (hostname) => {
+  jsdom.reconfigure({ url: `http://${hostname}:3000/` });
+
+  render(<PostHogProvider>content</PostHogProvider>);
+
+  expect(mocks.posthog.init).not.toHaveBeenCalled();
+  expect(mocks.posthog.capture).not.toHaveBeenCalled();
+});
+
+it("skips initialization and capture in development builds", () => {
+  vi.stubEnv("NODE_ENV", "development");
+
+  render(<PostHogProvider>content</PostHogProvider>);
+
+  expect(mocks.posthog.init).not.toHaveBeenCalled();
+  expect(mocks.posthog.capture).not.toHaveBeenCalled();
+});
+
+it("captures local sessions when a developer opts in", () => {
+  jsdom.reconfigure({ url: "http://localhost:3000/" });
+  vi.stubEnv("NODE_ENV", "development");
+  window.localStorage.setItem("turistar.analytics.local", "1");
+
+  render(<PostHogProvider>content</PostHogProvider>);
+
+  expect(mocks.posthog.init).toHaveBeenCalledTimes(1);
+  expect(pageviews()).toEqual(["$pageview"]);
 });

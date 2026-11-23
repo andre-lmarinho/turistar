@@ -79,6 +79,9 @@ configuring a host. Production SEO metadata uses a separate fixed origin in
 
 Restart Next.js after changing environment variables. Never expose the service-role key through a
 `NEXT_PUBLIC_` variable. Keep analytics disabled for local work unless you need to verify it.
+The provider skips PostHog in development builds and on `localhost` or `127.0.0.1`, even when a
+token is set. To verify analytics locally, run `localStorage.setItem("turistar.analytics.local", "1")`
+in the browser console and reload the page.
 
 ## Checks
 

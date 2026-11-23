@@ -10,6 +10,7 @@ import { createSupabaseBrowserClient } from "@/supabase/client";
 
 const PROJECT_TOKEN = process.env.NEXT_PUBLIC_POSTHUG_PROJECT_TOKEN;
 const API_HOST = process.env.NEXT_PUBLIC_POSTHUG_HOST;
+const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
 type PageGroup = "auth_home" | "planner";
 
@@ -24,9 +25,15 @@ function isAnalyticsDisabled(): boolean {
   return window.localStorage.getItem("turistar.analytics.disabled") === "1";
 }
 
+// Local sessions send development events and errors to the production project unless a developer opts in.
+function isLocalSession(): boolean {
+  if (window.localStorage.getItem("turistar.analytics.local") === "1") return false;
+  return process.env.NODE_ENV === "development" || LOCAL_HOSTNAMES.has(window.location.hostname);
+}
+
 // Child effects run before parent effects, so every effect initializes the SDK before it uses it.
 function ensureAnalytics(): boolean {
-  if (!PROJECT_TOKEN || isAnalyticsDisabled()) return false;
+  if (!PROJECT_TOKEN || isAnalyticsDisabled() || isLocalSession()) return false;
   if (posthog.__loaded) return true;
   posthog.init(PROJECT_TOKEN, {
     api_host: API_HOST,
