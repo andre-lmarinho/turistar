@@ -1,22 +1,14 @@
-import clsx from "clsx";
 import Link from "next/link";
 
-type LogoProps = {
-  href: string;
-  className?: string;
-};
+import { MapPin } from "@/ui/components/icon/lucide-icons";
 
-export function Logo({ href, className }: LogoProps) {
+export function Logo({ href }: { href: string }) {
   return (
     <Link
       href={href}
-      className={clsx(
-        "text-foreground inline-flex items-center gap-2 justify-self-start rounded-lg px-2 pb-2 text-lg font-semibold tracking-tight md:text-xl",
-        className
-      )}>
-      <span className="after:bg-primary/70 relative inline-flex items-center after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:rounded-lg">
-        Turistar
-      </span>
+      className="inline-flex items-center gap-[0.55rem] text-[1.2rem] font-[750] tracking-[-0.045em] text-folio-ink no-underline focus-visible:outline-[3px] focus-visible:outline-folio-coral focus-visible:outline-offset-[3px]">
+      <MapPin aria-hidden="true" className="w-[1.15rem] text-folio-coral stroke-[2.3]" />
+      <span>Turistar</span>
     </Link>
   );
 }

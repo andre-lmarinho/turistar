@@ -135,7 +135,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
         <Form
           form={formMethods}
           onSubmit={handleSubmit}
-          className="grid gap-6"
+          className="grid gap-[0.7rem]"
           aria-busy={formState.isSubmitting}
           noValidate>
           <PasswordField
@@ -159,7 +159,7 @@ export function ResetPasswordView({ nextPath }: { nextPath?: string | null }) {
             type="submit"
             disabled={formState.isSubmitting}
             aria-busy={formState.isSubmitting}
-            className="gap-2">
+            className="h-12.5 min-h-12.5 w-full gap-2">
             {formState.isSubmitting ? <Spinner className="size-4" /> : null}
             {t("updatePassword")}
           </Button>

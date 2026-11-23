@@ -43,7 +43,7 @@ export const PasswordField = forwardRef<HTMLInputElement, InputFieldProps>(
               aria-label={toggleLabel}
               aria-pressed={isVisible}
               disabled={props.disabled}
-              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-8 items-center justify-center rounded-sm focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60">
+              className="text-folio-ink-soft hover:text-folio-coral focus-visible:ring-folio-coral flex size-11 min-w-11 items-center justify-center rounded-sm focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60">
               {isVisible ? (
                 <EyeOff className="h-4 w-4" aria-hidden="true" />
               ) : (

@@ -104,7 +104,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       <Form
         form={formMethods}
         onSubmit={handleSubmit}
-        className="grid gap-6"
+        className="grid gap-[0.7rem]"
         aria-busy={isPending}
         noValidate>
         <EmailField
@@ -115,26 +115,21 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           required
           {...register("email")}
         />
-        <div>
-          <div className="mb-2 flex w-full items-center justify-between gap-2">
-            <label htmlFor="login-password" className="text-foreground text-sm font-medium leading-none">
-              {t("password")}
-            </label>
-            <Link
-              href={forgotPasswordHref}
-              className="text-muted-foreground inline-flex min-h-6 items-center text-sm hover:underline">
-              {t("forgotPassword")}
-            </Link>
-          </div>
+        <div className="grid gap-1">
           <PasswordField
             id="login-password"
-            label=""
+            label={t("password")}
             placeholder={t("passwordPlaceholder")}
             autoComplete="current-password"
             readOnly={isPending}
             required
             {...register("password")}
           />
+          <Link
+            href={forgotPasswordHref}
+            className="text-folio-ink-soft inline-flex min-h-11 items-center justify-end text-sm underline decoration-folio-link underline-offset-[0.18em] hover:decoration-folio-coral">
+            {t("forgotPassword")}
+          </Link>
         </div>
         {formError ? (
           <p role="alert" className="text-destructive-text text-sm">
@@ -145,7 +140,7 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
           type="submit"
           aria-disabled={isPending}
           aria-busy={pendingAction === "login"}
-          className="gap-2">
+          className="h-12.5 min-h-12.5 w-full gap-2">
           {pendingAction === "login" ? <Spinner className="size-4" /> : null}
           {t("signIn")}
         </Button>
@@ -153,9 +148,10 @@ export function LoginView({ resolveProfile, nextPath }: LoginViewProps) {
       <div className="border-border mt-5 border-t pt-5">
         <Button
           onClick={handleDemo}
+          variant="ghost"
           aria-disabled={isPending}
           aria-busy={pendingAction === "demo"}
-          className="w-full gap-2 py-3 text-base font-semibold shadow-sm transition-colors">
+          className="h-12.5 min-h-12.5 w-full gap-2">
           {pendingAction === "demo" ? <Spinner className="size-4" /> : null}
           {t("exploreDemo")}
         </Button>
