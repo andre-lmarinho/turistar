@@ -10,8 +10,9 @@ runtime dependencies and delivery. This guide covers development, checks, and re
 
 - Node.js matching [`.nvmrc`](.nvmrc); supported versions are declared in [`package.json`](package.json).
 - pnpm matching `packageManager` in `package.json`.
-- [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) available as
-  `supabase` on your PATH. It is not installed by this repository's `pnpm install`.
+- [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started), installed
+  as a project dependency by `pnpm install`. The CLI version is pinned in `package.json` so all
+  developers use the same version.
 - A running Docker-compatible container runtime for local Supabase.
 
 ### Setup
@@ -21,7 +22,7 @@ From the repository root:
 ```sh
 pnpm install
 cp .env.example .env.local
-supabase start
+pnpm exec supabase start
 ```
 
 Complete [Configuration](#configuration), then run:
@@ -43,7 +44,7 @@ recreates it and removes local changes.
 
 | Symptom                                          | Check                                                                    |
 | ------------------------------------------------ | ------------------------------------------------------------------------ |
-| `supabase` is missing or cannot start containers | Install the CLI and start the container runtime.                         |
+| `supabase` cannot start containers              | Start the Docker-compatible container runtime.                           |
 | Username availability fails                      | Set the local `SUPABASE_SERVICE_ROLE_KEY` and restart Next.js.           |
 | Place search or map tiles fail                   | Set `GEOAPIFY_KEY` or `CARTO_KEY`, respectively.                         |
 | Auth emails return to the wrong origin           | Match the browser origin with Supabase's site URL and allowed redirects. |
@@ -54,7 +55,7 @@ recreates it and removes local changes.
 Copy [`.env.example`](.env.example) and edit `.env.local`. Obtain local Supabase values with:
 
 ```sh
-supabase status -o env
+pnpm exec supabase status -o env
 ```
 
 This command includes credentials. Copy the needed values into `.env.local`; keep the output out of
@@ -107,14 +108,15 @@ a production build, and browser tests.
 ### Integration tests
 
 ```sh
-supabase start
+pnpm exec supabase start
 pnpm db:migrate
 pnpm test:integration
 ```
 
 Like cal.diy's `VITEST_MODE=integration`, this mode selects `.integration-test.ts` files separately
 from unit tests. It uses Node and real Supabase clients without the unit-test setup or SSR mock.
-Local credentials are read from `supabase status` in memory; hosted URLs and credentials are not used.
+Local credentials are read from `pnpm exec supabase status` in memory; hosted URLs and credentials are
+not used.
 Email confirmation must be disabled, as in the checked-in local configuration.
 
 Fixtures use unique usernames/emails and delete only their own plans, profiles, and Auth users in FK
@@ -165,7 +167,7 @@ After an approved schema change, regenerate the public types from the intended d
 Supabase:
 
 ```sh
-supabase gen types --local --lang typescript --schema public > src/supabase/types.ts
+pnpm exec supabase gen types --local --lang typescript --schema public > src/supabase/types.ts
 pnpm typecheck:ci
 ```
 

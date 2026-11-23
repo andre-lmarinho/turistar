@@ -24,16 +24,16 @@ find places, and plan with other registered users. Plans are accessible to their
 
 ## Run locally
 
-Install Node.js from [`.nvmrc`](.nvmrc), pnpm from [`package.json`](package.json), the
-[Supabase CLI](https://supabase.com/docs/guides/local-development), and a Docker-compatible container
-runtime. Start the container runtime before continuing.
+Install Node.js from [`.nvmrc`](.nvmrc), pnpm from [`package.json`](package.json), and a
+Docker-compatible container runtime. The Supabase CLI is installed with the project dependencies.
+Start the container runtime before continuing.
 
 ```sh
 git clone https://github.com/andre-lmarinho/turistar.git
 cd turistar
 pnpm install
 cp .env.example .env.local
-supabase start
+pnpm exec supabase start
 ```
 
 Fill in `.env.local` using the [configuration guide](CONTRIBUTING.md#configuration). The local
