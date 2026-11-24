@@ -10,6 +10,20 @@ describe("GeoapifyService", () => {
   });
 
   describe("fetchGeoapifyAutocomplete", () => {
+    it("keeps destinations in priority order with the country and coordinates used to create a plan", async () => {
+      const result = { formatted: "Paris, France", lat: 48.86, lon: 2.35, country_code: "fr", place_id: 12 };
+      vi.mocked(fetch).mockResolvedValue(
+        Response.json({
+          features: ["country", "building", "city"].map((result_type) => ({
+            properties: { ...result, result_type, name: result_type, formatted: `${result_type} Paris` },
+          })),
+        })
+      );
+      const { fetchGeoapifyAutocomplete } = await import("./GeoapifyService");
+      const items = await fetchGeoapifyAutocomplete("Paris");
+      expect(items.map((item) => item.name)).toEqual(["city Paris", "country Paris"]);
+      expect(items[0]).toMatchObject({ latitude: 48.86, longitude: 2.35, countryCode: "fr", placeId: "12" });
+    });
     it("uses proximity bias when lat/lon provided", async () => {
       const mockFetch = vi.mocked(fetch);
       mockFetch.mockResolvedValue({
@@ -21,7 +35,7 @@ describe("GeoapifyService", () => {
       await fetchGeoapifyAutocomplete("test", 48.8566, 2.3522);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining("bias=proximity:2.3522,48.8566"),
+        expect.stringContaining("bias=proximity%3A2.3522%2C48.8566"),
         expect.any(Object)
       );
     });
@@ -34,9 +48,7 @@ describe("GeoapifyService", () => {
       } as Response);
 
       const { fetchGeoapifyAutocomplete } = await import("./GeoapifyService");
-      await expect(fetchGeoapifyAutocomplete("test")).rejects.toThrow(
-        "fetchGeoapifyAutocompleteInternal failed"
-      );
+      await expect(fetchGeoapifyAutocomplete("test")).rejects.toThrow("v1/geocode/autocomplete: HTTP 500");
     });
 
     it("handles empty response", async () => {
@@ -63,7 +75,7 @@ describe("GeoapifyService", () => {
 
       const { fetchGeoapifyAddressAutocomplete } = await import("./GeoapifyService");
       await expect(fetchGeoapifyAddressAutocomplete("test")).rejects.toThrow(
-        "fetchGeoapifyAutocompleteInternal failed"
+        "v1/geocode/autocomplete: HTTP 403"
       );
     });
   });
@@ -77,7 +89,7 @@ describe("GeoapifyService", () => {
       } as Response);
 
       const { fetchGeoapifyPlaceSearch } = await import("./GeoapifyService");
-      await expect(fetchGeoapifyPlaceSearch("test")).rejects.toThrow("fetchGeoapifyPlaceSearch failed");
+      await expect(fetchGeoapifyPlaceSearch("test")).rejects.toThrow("v1/geocode/search: HTTP 429");
     });
   });
 
@@ -90,9 +102,7 @@ describe("GeoapifyService", () => {
       } as Response);
 
       const { fetchGeoapifyPlaceDetails } = await import("./GeoapifyService");
-      await expect(fetchGeoapifyPlaceDetails("nonexistent")).rejects.toThrow(
-        "fetchGeoapifyPlaceDetails failed: placeId=nonexistent reason=no_features"
-      );
+      await expect(fetchGeoapifyPlaceDetails("nonexistent")).rejects.toThrow("no place for nonexistent");
     });
 
     it("throws error when API fails", async () => {
@@ -103,12 +113,10 @@ describe("GeoapifyService", () => {
       } as Response);
 
       const { fetchGeoapifyPlaceDetails } = await import("./GeoapifyService");
-      await expect(fetchGeoapifyPlaceDetails("place-123")).rejects.toThrow(
-        "fetchGeoapifyPlaceDetails failed: placeId=place-123 status=404"
-      );
+      await expect(fetchGeoapifyPlaceDetails("place-123")).rejects.toThrow("v2/place-details: HTTP 404");
     });
 
-    it("handles missing timezone gracefully", async () => {
+    it("returns the address even without optional enrichment", async () => {
       const mockFeature = {
         properties: {
           place_id: "place-123",
@@ -128,7 +136,7 @@ describe("GeoapifyService", () => {
       const { fetchGeoapifyPlaceDetails } = await import("./GeoapifyService");
       const result = await fetchGeoapifyPlaceDetails("place-123");
 
-      expect(result.timezone).toBeUndefined();
+      expect(result).toEqual({ formatted: "Some Place", description: undefined, wikidataId: undefined });
     });
   });
 

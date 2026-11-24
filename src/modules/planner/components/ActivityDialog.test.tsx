@@ -54,7 +54,7 @@ describe("ActivityDialog", () => {
     render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={vi.fn()} />);
     fireEvent.change(screen.getByLabelText("Budget amount"), { target: { value: "25" } });
     const title = screen.getByRole("combobox", { name: "Title" });
-    fireEvent.focus(title);
+    fireEvent.input(title, { target: { value: "Muse" }, inputType: "insertText" });
     fireEvent.click(await screen.findByRole("option", { name: /Museum/ }));
     await waitFor(() =>
       expect(onSave).toHaveBeenCalledWith(
@@ -110,8 +110,7 @@ describe("ActivityDialog", () => {
       const onClose = vi.fn();
       render(<ActivityDialog activity={activity} days={days} onSave={onSave} onClose={onClose} />);
       const title = screen.getByRole("combobox", { name: "Title" });
-      fireEvent.change(title, { target: { value: "My query" } });
-      fireEvent.focus(title);
+      fireEvent.input(title, { target: { value: "My query" }, inputType: "insertText" });
       fireEvent.click(await screen.findByRole("option", { name: /Selected Museum/ }));
       expect(title).toHaveValue("Selected Museum");
       expect(screen.getByRole("combobox", { name: "Address" })).toHaveValue("Museum address");

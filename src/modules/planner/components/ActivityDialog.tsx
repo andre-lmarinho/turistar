@@ -7,11 +7,9 @@ import { memo, useId, useRef, useState } from "react";
 import { ACTIVITY_COLORS } from "@/features/activity/constants";
 import { useActivityColors } from "@/features/activity/hooks/useActivityColors";
 import type { Activity, DayPlan } from "@/features/activity/types";
-import { ActivitySearchInput } from "@/features/search/components/ActivitySearchInput";
-import { LocationSearchInput } from "@/features/search/components/LocationSearchInput";
-import { useActivitySuggestions, useAddressAutocomplete } from "@/features/search/hooks/searchHooks";
+import { PlaceSearchInput } from "@/features/search/components/PlaceSearchInput";
 import { getPlaceSelectionValues, usePlaceSelection } from "@/features/search/hooks/usePlaceSelection";
-import type { ActivitySuggestion, PlaceSelection } from "@/features/search/types";
+import type { AutocompletePlace } from "@/features/search/types";
 import { Button } from "@/ui/components/button";
 import { Dialog, DialogContent, DialogHeader } from "@/ui/components/dialog";
 import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
@@ -167,7 +165,7 @@ export const ActivityDialog = memo(function ActivityDialog({
     reader.onerror = () => setImageError(t("imageUploadFailed"));
     reader.readAsDataURL(file);
   };
-  const handleTitleChange = async (value: string | PlaceSelection<ActivitySuggestion>) => {
+  const handleTitleChange = async (value: string | AutocompletePlace) => {
     if (typeof value === "string") {
       updateDraft({ title: value });
       return;
@@ -428,24 +426,22 @@ export const ActivityDialog = memo(function ActivityDialog({
         </div>
 
         <div className="relative m-4">
-          <ActivitySearchInput
+          <PlaceSearchInput
             id="title"
-            label={t("activityTitle")}
+            aria-label={t("activityTitle")}
+            placeholder={t("addTitlePlaceholder")}
             value={draft.title}
             onChange={handleTitleChange}
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
-            suggestionHook={useActivitySuggestions}
-            inputRef={titleInputRef}
-            inputClassName="focus:ring-ring w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
+            source="search"
+            ref={titleInputRef}
+            className="focus:ring-ring w-full content-center rounded px-2 py-2 text-2xl font-bold focus:ring-2 focus:ring-offset-2 focus:outline-none"
             onBlur={() => commit()}
-            inputProps={{
-              name: "title",
-              required: true,
-              "aria-required": true,
-              "aria-invalid": saveError === "title" || undefined,
-              "aria-describedby": saveError === "title" ? "activity-save-error" : undefined,
-            }}
+            name="title"
+            required
+            aria-invalid={saveError === "title" || undefined}
+            aria-describedby={saveError === "title" ? "activity-save-error" : undefined}
           />
           {isSelectingPlace ? (
             <output className="text-muted-foreground mt-2 flex items-center gap-2 text-sm">
@@ -496,7 +492,7 @@ export const ActivityDialog = memo(function ActivityDialog({
             <MapPin size={12} aria-hidden="true" />
             <span>{t("activityAddress")}</span>
           </label>
-          <LocationSearchInput
+          <PlaceSearchInput
             id="activity-address"
             value={draft.address}
             onChange={(val) => {
@@ -508,12 +504,11 @@ export const ActivityDialog = memo(function ActivityDialog({
             }}
             onBlur={() => commit()}
             placeholder={t("searchAddress")}
-            className="w-full"
-            inputProps={{ name: "address" }}
-            inputClassName="focus:ring-ring w-full rounded p-1 text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
+            name="address"
+            className="focus:ring-ring w-full rounded p-1 text-base focus:ring-2 focus:ring-offset-2 focus:outline-none md:text-sm"
             latitude={destCoords?.lat}
             longitude={destCoords?.lng}
-            autocompleteHook={useAddressAutocomplete}
+            source="address"
           />
         </div>
 

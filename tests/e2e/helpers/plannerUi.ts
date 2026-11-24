@@ -8,7 +8,7 @@ type PlannerMode = "planner" | "map" | "budget";
 export async function goToUserPlanners(page: Page) {
   await authenticateE2EUser(page);
   await page.goto(`/u/${E2E_USER_SLUG}`);
-  await expect(page.getByRole("heading", { name: /your trips/i })).toBeVisible();
+  await expect(page.locator("#trips-heading")).toBeVisible();
 }
 
 export async function goToPlannerPage(page: Page, planSlug = "plan-e2e-001") {

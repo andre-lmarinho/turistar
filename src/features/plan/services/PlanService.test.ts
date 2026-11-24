@@ -178,13 +178,9 @@ describe("PlanService", () => {
 
     it("creates the plan with its resolved cover image", async () => {
       vi.mocked(fetchGeoapifyPlaceDetails).mockResolvedValue({
-        placeId: "place-123",
-        name: "Paris",
         formatted: "Paris, France",
-        latitude: 48.85,
-        longitude: 2.35,
+        description: undefined,
         wikidataId: "Q90",
-        categories: [],
       });
       vi.mocked(fetchWikidataImage).mockResolvedValue("https://wikimedia.org/image.jpg");
       const createPlan = vi.fn().mockResolvedValue({ id: "plan-123" });

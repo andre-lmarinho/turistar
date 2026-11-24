@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchPlaceSuggestions } from "../placeSuggestions";
 
 export function useDestinationCoordinates(destination?: string) {
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
@@ -10,13 +11,7 @@ export function useDestinationCoordinates(destination?: string) {
     const controller = new AbortController();
     const load = async () => {
       try {
-        const params = new URLSearchParams({ text: destination });
-        const response = await fetch(`/api/places/city-country?${params}`, { signal: controller.signal });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = (await response.json()) as {
-          results?: Array<{ latitude?: number; longitude?: number }>;
-        };
-        const first = data.results?.[0];
+        const [first] = await fetchPlaceSuggestions("city-country", destination, controller.signal);
         if (!controller.signal.aborted && first?.latitude != null && first.longitude != null) {
           setCoordinates({ lat: first.latitude, lng: first.longitude });
         }

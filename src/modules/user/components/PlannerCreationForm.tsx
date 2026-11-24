@@ -7,8 +7,7 @@ import type { SubmitEvent } from "react";
 import { useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import type { CreatePlannerPlanResult } from "@/features/plan/services/PlanService";
-import { LocationSearchInput } from "@/features/search/components/LocationSearchInput";
-import { useDestinationAutocomplete } from "@/features/search/hooks/searchHooks";
+import { PlaceSearchInput } from "@/features/search/components/PlaceSearchInput";
 import type { AutocompletePlace } from "@/features/search/types";
 import { trpc } from "@/trpc/react";
 import { Button } from "@/ui/components/button/Button";
@@ -122,19 +121,17 @@ export function PlannerCreationForm({ onPlanCreated, onPendingChange }: PlannerC
         <label htmlFor="dest-input" className="text-sm font-medium">
           {t("destinationLabel")}
         </label>
-        <LocationSearchInput
+        <PlaceSearchInput
           id="dest-input"
-          inputRef={destinationRef}
-          inputProps={{
-            name: "destination",
-            disabled: loading,
-            "aria-invalid": error?.field === "destination",
-            "aria-describedby": error?.field === "destination" ? "destination-error" : undefined,
-          }}
+          ref={destinationRef}
+          name="destination"
+          disabled={loading}
+          aria-invalid={error?.field === "destination"}
+          aria-describedby={error?.field === "destination" ? "destination-error" : undefined}
           value={dest}
           onChange={handleDestChange}
           placeholder={t("destinationLabel")}
-          autocompleteHook={useDestinationAutocomplete}
+          source="city-country"
         />
         {error?.field === "destination" ? (
           <p id="destination-error" role="alert" className="text-destructive-text text-sm">
