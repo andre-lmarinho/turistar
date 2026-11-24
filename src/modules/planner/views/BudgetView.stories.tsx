@@ -20,9 +20,20 @@ const days: DayPlan[] = [
 ];
 
 const meta = {
-  title: "Planner/Budget",
+  title: "App/Planner/Budget",
   component: BudgetScreen,
   parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <main className="bg-card relative flex h-screen flex-1 flex-col overflow-hidden p-4 md:px-6 md:pb-8 xl:px-8">
+        <div className="relative w-full flex-1 overflow-visible">
+          <div className="absolute inset-0">
+            <Story />
+          </div>
+        </div>
+      </main>
+    ),
+  ],
   args: {
     days: [],
     entries: [],
@@ -38,37 +49,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Empty: Story = {};
-
-export const WithExpenses: Story = {
+export const Default: Story = {
   args: { days, entries: expenses },
 };
+
+export const NoExpenses: Story = {};
 
 export const FetchError: Story = {
   args: { days, entries: expenses, loadError: true },
 };
 
-export const RetryingFetch: Story = {
+export const FetchRetrying: Story = {
   args: { days, entries: expenses, loadError: true, isFetching: true },
-};
-
-export const SaveError: Story = {
-  args: { onSave: fn(async () => false) },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const description = canvas.getByLabelText("Description");
-    const amount = canvas.getByLabelText("Amount");
-    await userEvent.type(description, "Dinner");
-    await userEvent.type(amount, "45");
-    await userEvent.click(canvas.getByRole("button", { name: "Add expense" }));
-    const error = await canvas.findByRole("alert");
-    await expect(error).toHaveTextContent(
-      "We couldn't save this expense. Your details are still here; try again."
-    );
-    await expect(error.closest("tr")).toBe(canvas.getByRole("button", { name: "Add expense" }).closest("tr"));
-    await expect(description).toHaveValue("Dinner");
-    await expect(amount).toHaveValue("45");
-  },
 };
 
 export const SavePending: Story = {
@@ -89,6 +81,25 @@ export const AddValidationErrors: Story = {
     await expect(canvas.getAllByRole("alert")).toHaveLength(1);
     await expect(canvas.getByText("Enter an expense description.")).toBeVisible();
     await expect(canvas.getByText("Enter a valid amount greater than zero.")).toBeVisible();
+  },
+};
+
+export const SaveError: Story = {
+  args: { onSave: fn(async () => false) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const description = canvas.getByLabelText("Description");
+    const amount = canvas.getByLabelText("Amount");
+    await userEvent.type(description, "Dinner");
+    await userEvent.type(amount, "45");
+    await userEvent.click(canvas.getByRole("button", { name: "Add expense" }));
+    const error = await canvas.findByRole("alert");
+    await expect(error).toHaveTextContent(
+      "We couldn't save this expense. Your details are still here; try again."
+    );
+    await expect(error.closest("tr")).toBe(canvas.getByRole("button", { name: "Add expense" }).closest("tr"));
+    await expect(description).toHaveValue("Dinner");
+    await expect(amount).toHaveValue("45");
   },
 };
 
