@@ -4,6 +4,7 @@ test.describe("Auth", () => {
   test("shows username taken message on blur", async ({ page }) => {
     await page.goto("/");
 
+    await page.getByRole("button", { name: "Create account", exact: true }).click();
     await page.getByRole("textbox", { name: "Username" }).fill("e2e-owner");
     await Promise.all([
       page.waitForResponse(
@@ -25,7 +26,9 @@ test("translates signup and password recovery without changing routes", async ({
       route.fulfill({ json: [{ result: { data: { json: { available: false } } } }] })
     );
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "Comece a planejar" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Abra espaço para o que importa." })).toBeVisible();
+    await page.getByRole("button", { name: "Criar conta", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Sua viagem começa aqui." })).toBeVisible();
     await expect(page.getByRole("link", { name: "Termos", exact: true })).toHaveAttribute("href", "/terms");
     await page.getByRole("textbox", { name: "Usuário" }).fill("e2e-owner");
     await page.getByRole("textbox", { name: "E-mail" }).click();

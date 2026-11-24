@@ -73,10 +73,12 @@ test.describe("Planner Smoke Tests", () => {
     for (const title of [firstTitle, secondTitle]) {
       const input = await openInlineActivity(page);
       await input.fill(title);
-      await Promise.all([
-        page.waitForResponse((response) => response.url().includes("viewer.events.append") && response.ok()),
-        page.getByRole("button", { name: "Done", exact: true }).click(),
-      ]);
+      const appendResponse = page.waitForResponse((response) =>
+        response.url().includes("viewer.events.append")
+      );
+      await input.press("Tab");
+      expect((await appendResponse).ok()).toBe(true);
+      await page.getByRole("button", { name: "Done", exact: true }).click();
     }
 
     const titles = page

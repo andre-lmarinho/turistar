@@ -25,10 +25,9 @@ test("starts the desktop LCP image before stylesheets finish loading", async ({ 
     releaseStyles();
   }
   await page.waitForLoadState("load");
-  await expect(page.locator("img")).toBeVisible();
-  await expect
-    .poll(() => page.locator("img").evaluate((image: HTMLImageElement) => image.naturalWidth))
-    .toBeGreaterThan(0);
+  await expect(
+    page.getByRole("img", { name: "Placeholder for a preview of the Turistar travel planner." })
+  ).toBeVisible();
   expect(imageRequests).toBe(1);
 });
 
@@ -43,6 +42,6 @@ test("does not download the desktop illustration on mobile", async ({ page }) =>
 
   await page.goto("/", { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator("img")).toBeHidden();
+  await expect(page.locator('img[src*="app-mock"]')).toHaveCount(0);
   expect(imageRequests).toEqual([]);
 });

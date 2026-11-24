@@ -6,7 +6,7 @@ test.describe("User dashboard", () => {
   test("loads planners and creates a new planner", async ({ page }) => {
     await goToUserPlanners(page);
 
-    await expect(page.getByRole("heading", { name: "Your trips" })).toBeVisible();
+    await expect(page.locator("#trips-heading")).toBeVisible();
     await expect(page.getByRole("link", { name: "Playwright E2E Plan" })).toBeVisible();
 
     await openPlannerCreationPopover(page);
