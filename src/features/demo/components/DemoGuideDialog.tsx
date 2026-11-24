@@ -43,43 +43,41 @@ export function DemoGuideDialog({ isDemo }: DemoGuideDialogProps) {
         <DialogHeader visuallyHidden title={t("demoTitle")} description={t("demoDescription")} />
 
         <div className="flex items-center gap-2">
-          <MapIcon className="text-primary-text size-6 shrink-0" aria-hidden="true" />
-          <p className="text-foreground text-2xl font-semibold tracking-tight">
-            {t("demoWelcome")} <span className="text-primary-text">{t("demoTuristar")}</span>
+          <MapIcon className="text-folio-coral size-5 shrink-0" aria-hidden="true" />
+          <p className="font-serif text-[1.65rem] font-medium leading-tight tracking-tight">
+            {t("demoWelcome")} <span>{t("demoTuristar")}</span>
           </p>
         </div>
 
-        <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{t("demoExplanation")}</p>
+        <p className="text-folio-ink-soft mt-3 text-sm leading-relaxed">{t("demoExplanation")}</p>
 
-        <div className="from-selection to-background mt-5 inline-flex items-center gap-2 self-start rounded-full bg-linear-to-r px-3 py-1.5">
-          <Hourglass className="text-primary-text size-4" aria-hidden="true" />
-          <span className="text-primary-text text-xs font-semibold tracking-wide">
-            {t("demoResetsIn", { minutes: Math.max(0, minutesLeft) })}
-          </span>
+        <div className="bg-folio-paper text-folio-ink mt-4 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs font-semibold tabular-nums">
+          <Hourglass className="text-folio-coral size-4" aria-hidden="true" />
+          <span>{t("demoResetsIn", { minutes: Math.max(0, minutesLeft) })}</span>
         </div>
 
-        <section className="bg-card border-border mt-6 rounded-lg border p-4">
+        <section className="mt-5 border-t border-folio-line pt-4">
           <h2 className="text-sm font-semibold">{t("demoWhatIs")}</h2>
-          <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">{t("demoWhatIsDescription")}</p>
+          <p className="text-folio-ink-soft mt-1.5 text-sm leading-relaxed">{t("demoWhatIsDescription")}</p>
         </section>
 
-        <section className="mt-6">
-          <h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <section className="mt-5">
+          <h2 className="text-folio-ink-soft text-xs font-semibold tracking-wide uppercase">
             {t("demoFreeAccountTitle")}
           </h2>
           <ul className="mt-3 space-y-3">
             <li className="flex items-start gap-3">
-              <Upload className="text-muted-foreground mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span className="text-sm">{t("demoUploadFeature")}</span>
+              <Upload className="text-folio-coral mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span className="text-sm leading-relaxed">{t("demoUploadFeature")}</span>
             </li>
             <li className="flex items-start gap-3">
-              <Link2 className="text-muted-foreground mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span className="text-sm">{t("demoShareFeature")}</span>
+              <Link2 className="text-folio-coral mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span className="text-sm leading-relaxed">{t("demoShareFeature")}</span>
             </li>
           </ul>
         </section>
 
-        <Button onClick={handleClose} className="mt-7 w-full">
+        <Button onClick={handleClose} className="mt-6 w-full">
           {t("demoGotIt")}
         </Button>
       </DialogContent>
