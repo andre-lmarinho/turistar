@@ -22,22 +22,43 @@ export async function DashboardView({ plans, destinations, isDemo = false }: Das
   const highlightedPlan = getHighlightedPlan(plans, today);
 
   return (
-    <main id="main-content" className="bg-card min-h-[calc(100dvh-4rem)] w-full">
-      <h1 className="sr-only">{t("dashboardHeading")}</h1>
-      <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 md:px-8">
-        {highlightedPlan ? <UpcomingTripSection plan={highlightedPlan} today={today} /> : null}
+    <main
+      id="main-content"
+      className="min-h-[calc(100dvh-4rem)] w-full bg-folio-paper/50 text-folio-ink selection:bg-folio-citron selection:text-folio-ink">
+      <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 sm:px-6 md:space-y-12 md:px-8 md:py-10">
+        <header>
+          <p className="text-xs font-semibold tracking-[0.12em] text-folio-ink-soft uppercase">
+            {t("dashboardWelcome")}
+          </p>
+          <h1 className="mt-1 font-folio-display text-4xl leading-tight tracking-[-0.035em] text-folio-ink sm:text-5xl">
+            {t("dashboardHeading")}
+          </h1>
+        </header>
 
-        <section aria-labelledby="map-heading" className="space-y-3">
-          <div className="flex items-center gap-2">
-            <MapPin className="text-primary-text h-5 w-5" aria-hidden="true" />
-            <h2 id="map-heading" className="text-foreground text-base font-semibold">
-              {t("yourTravelMap")}
-            </h2>
-          </div>
-          <DestinationsMap countries={countries} />
-        </section>
+        {highlightedPlan ? (
+          <UpcomingTripSection plan={highlightedPlan} today={today} />
+        ) : (
+          <section className="border border-folio-line bg-folio-white px-6 py-8 sm:px-8">
+            <h2 className="font-folio-display text-3xl text-folio-ink">{t("yourTrips")}</h2>
+            <p className="mt-2 max-w-prose text-sm leading-relaxed text-folio-ink-soft">
+              {t("noUpcomingTrip")}
+            </p>
+          </section>
+        )}
 
-        <PlannersSection plans={plans} />
+        <div className="grid items-start gap-10 xl:grid-cols-[1fr_0.92fr] xl:gap-12">
+          <PlannersSection plans={plans} />
+
+          <section aria-labelledby="map-heading" className="min-w-0 space-y-4">
+            <div className="flex items-center gap-3 border-b border-folio-line pb-3">
+              <MapPin className="size-5 text-folio-coral" aria-hidden="true" />
+              <h2 id="map-heading" className="font-folio-display text-2xl text-folio-ink">
+                {t("yourTravelMap")}
+              </h2>
+            </div>
+            <DestinationsMap countries={countries} />
+          </section>
+        </div>
         <DemoGuideDialog isDemo={isDemo} />
       </div>
     </main>

@@ -27,7 +27,7 @@ export async function AppBar() {
   const { slug, displayName, email } = await getUserProfile();
 
   return (
-    <header className="sticky top-0 z-40 flex min-h-18 shrink-0 items-center border-b border-folio-line bg-folio-paper/95 px-4 text-folio-ink shadow-[0_1px_0_rgba(23,58,54,0.04)] backdrop-blur-md md:fixed md:inset-y-0 md:left-0 md:min-h-0 md:w-20 md:flex-col md:items-center md:border-r md:border-b-0 md:px-4 md:py-5 md:shadow-none">
+    <header className="sticky top-0 z-40 flex min-h-18 shrink-0 items-center border-b border-folio-line bg-folio-paper px-4 text-folio-ink shadow-[0_1px_0_rgba(23,58,54,0.04)] backdrop-blur-md md:fixed md:inset-y-0 md:left-0 md:min-h-0 md:w-20 md:flex-col md:items-center md:border-r md:border-b-0 md:px-4 md:py-5 md:shadow-none">
       <nav className="flex w-full items-center justify-between md:h-full md:flex-col md:items-center">
         <Logo href={slug ? `/u/${slug}` : "/"} iconOnlyOnDesktop />
         <div className="flex items-center gap-1.5 md:mt-auto md:w-full md:flex-col md:items-center">

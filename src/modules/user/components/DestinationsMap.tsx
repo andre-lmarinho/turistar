@@ -105,13 +105,13 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
 
   if (failed)
     return (
-      <div className="bg-background flex min-h-75 w-full flex-col items-center justify-center gap-3 rounded-xl p-6 text-center shadow-sm md:min-h-105">
-        <p className="text-muted-foreground text-sm" role="alert">
+      <div className="flex min-h-75 w-full flex-col items-center justify-center gap-3 border border-folio-line bg-folio-white p-6 text-center md:min-h-105">
+        <p className="text-sm text-folio-ink-soft" role="alert">
           {t("mapLoadFailed")}
         </p>
         <button
           type="button"
-          className="text-foreground min-h-11 rounded-md border px-4 py-2 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+          className="min-h-11 border border-folio-ink/35 px-4 py-2 text-sm text-folio-ink focus-visible:outline-[3px] focus-visible:outline-folio-coral focus-visible:outline-offset-2"
           onClick={loadBoundaries}>
           {t("tryAgain")}
         </button>
@@ -121,7 +121,7 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
   if (!boundaries)
     return (
       <div
-        className="bg-muted min-h-75 w-full rounded-xl shadow-sm motion-safe:animate-pulse md:min-h-105"
+        className="min-h-75 w-full border border-folio-line bg-folio-highlight motion-safe:animate-pulse md:min-h-105"
         role="status">
         <span className="sr-only">{t("loadingMap")}</span>
       </div>
@@ -135,15 +135,15 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
     boundaries[0]?.name;
 
   return (
-    <div className="bg-background w-full rounded-xl p-4 shadow-sm md:p-6">
+    <div className="w-full border border-folio-line bg-folio-white p-3 sm:p-4 md:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-muted-foreground flex items-center gap-4 text-xs">
+        <div className="flex items-center gap-4 text-xs text-folio-ink-soft">
           <span className="flex items-center gap-2">
-            <span className="bg-primary h-2.5 w-2.5 rounded-sm" />
+            <span className="size-2.5 rounded-sm bg-folio-coral" />
             {t("mapVisited")}
           </span>
           <span className="flex items-center gap-2">
-            <span className="bg-muted border-border h-2.5 w-2.5 rounded-sm border" />
+            <span className="size-2.5 rounded-sm border border-folio-line bg-folio-paper" />
             {t("mapYetToExplore")}
           </span>
         </div>
@@ -220,9 +220,9 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
                 aria-label={`${country.name} — ${isVisited ? t("mapVisited") : t("notVisitedYet")}`}
                 aria-describedby={isSelected ? `${instructionsId} ${descriptionId}` : instructionsId}
                 className={cn(
-                  "stroke-white cursor-pointer focus-visible:outline-2 focus-visible:outline-ring",
-                  isVisited ? "fill-primary" : "fill-muted",
-                  isSelected && (isVisited ? "fill-primary-hover" : "fill-map-unvisited-hover")
+                  "cursor-pointer stroke-folio-white focus-visible:outline-2 focus-visible:outline-folio-coral",
+                  isVisited ? "fill-folio-coral" : "fill-folio-highlight",
+                  isSelected && (isVisited ? "fill-folio-ink-soft" : "fill-folio-citron")
                 )}
               />
             );
@@ -232,17 +232,17 @@ export function DestinationsMap({ countries }: { countries: TravelCountry[] }) {
           <div
             id={descriptionId}
             role="tooltip"
-            className="bg-popover text-popover-foreground border-border absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border px-3 py-2 shadow-md"
+            className="absolute z-10 w-56 -translate-x-1/2 -translate-y-full border border-folio-line bg-folio-paper px-3 py-2 text-folio-ink shadow-md"
             style={{ left: hover.x, top: hover.y - 12 }}>
             <p className="text-sm font-semibold">{hover.name}</p>
-            <p className="text-muted-foreground text-xs">{visited ? t("mapVisited") : t("notVisitedYet")}</p>
+            <p className="text-xs text-folio-ink-soft">{visited ? t("mapVisited") : t("notVisitedYet")}</p>
             {visited ? (
               <>
-                <p className="text-muted-foreground mt-2 text-xs tabular-nums">
+                <p className="mt-2 text-xs tabular-nums text-folio-ink-soft">
                   {t("tripCount", { count: visited.tripCount })} ·{" "}
                   {t("locationCount", { count: visited.locationCount })}
                 </p>
-                <ul className="text-muted-foreground mt-2 text-xs">
+                <ul className="mt-2 text-xs text-folio-ink-soft">
                   {visited.trips.map((trip) => (
                     <li className="wrap-break-word" key={trip.id}>
                       {trip.title}

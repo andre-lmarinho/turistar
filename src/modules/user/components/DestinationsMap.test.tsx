@@ -18,13 +18,14 @@ describe("travel map", () => {
   it("highlights visited countries and shows the name of unvisited countries on hover", async () => {
     render(<DestinationsMap countries={countries} />);
     const brazil = await screen.findByLabelText("Brazil — Visited");
-    expect(brazil).toHaveClass("fill-primary");
+    expect(brazil).toHaveClass("fill-folio-coral");
     fireEvent.mouseOver(brazil);
     expect(screen.getByText("Brazil adventure")).toBeVisible();
     expect(screen.getByText("1 trip · 3 locations")).toBeVisible();
     fireEvent.mouseLeave(brazil.closest("figure") as HTMLElement);
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
-    expect(brazil).toHaveClass("fill-primary");
+    expect(brazil).toHaveClass("fill-folio-coral");
+    expect(screen.getByLabelText("France — Not visited yet")).toHaveClass("fill-folio-highlight");
     const france = screen.getByLabelText("France — Not visited yet");
     fireEvent.mouseOver(france);
     expect(within(screen.getByRole("tooltip")).getByText("France")).toBeVisible();
