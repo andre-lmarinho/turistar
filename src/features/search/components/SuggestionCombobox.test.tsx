@@ -1,13 +1,20 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-
+import type { SuggestionOption } from "./SuggestionCombobox";
 import { SuggestionCombobox } from "./SuggestionCombobox";
 
 const options = [
   { id: "museum", label: "Museum", value: "Museum" },
   { id: "park", label: "Park", value: "Park" },
 ];
+
+type SearchProps = {
+  onSelect?: (selection: string, option: SuggestionOption<string>) => void;
+  onEscape?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  suggestions?: SuggestionOption<string>[];
+  emptyMessage?: string;
+};
 
 const scrollIntoView = vi.fn();
 beforeAll(() =>
@@ -18,26 +25,58 @@ beforeAll(() =>
 );
 afterAll(() => Reflect.deleteProperty(HTMLElement.prototype, "scrollIntoView"));
 
-function Search({ onSelect = vi.fn(), onEscape = vi.fn() }) {
+function Search({
+  onSelect = vi.fn(),
+  onEscape = vi.fn(),
+  suggestions = options,
+  emptyMessage,
+}: SearchProps) {
   const [open, setOpen] = useState(true);
   return (
-    <dialog open aria-label="Editor" onKeyDown={onEscape}>
-      <SuggestionCombobox
-        label="Place"
-        value="My own title"
-        open={open}
-        onOpenChange={setOpen}
-        onInputChange={vi.fn()}
-        options={options}
-        mapOptionToSelection={(option) => option.value}
-        onSelect={onSelect}
-      />
+    <section aria-label="Editor" onKeyDown={onEscape}>
+      <div data-testid="search-root">
+        <SuggestionCombobox
+          label="Place"
+          value="My own title"
+          open={open}
+          onOpenChange={setOpen}
+          onInputChange={vi.fn()}
+          options={suggestions}
+          emptyMessage={emptyMessage}
+          mapOptionToSelection={(option) => option.value}
+          onSelect={onSelect}
+        />
+      </div>
       <button type="button">Next field</button>
-    </dialog>
+    </section>
   );
 }
 
 describe("SuggestionCombobox", () => {
+  it("renders suggestions in the popover portal", () => {
+    render(<Search />);
+
+    expect(screen.getByTestId("search-root")).not.toContainElement(screen.getByRole("listbox"));
+  });
+
+  it("stays closed when the input regains focus after an outside click", () => {
+    render(<Search />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Next field" }));
+    fireEvent.focus(screen.getByRole("combobox", { name: "Place" }));
+
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("keeps the empty state open when it is clicked", () => {
+    render(<Search suggestions={[]} emptyMessage="No suggestions found" />);
+
+    const emptyState = screen.getByText("No suggestions found");
+    fireEvent.click(emptyState);
+
+    expect(emptyState).toBeInTheDocument();
+  });
+
   it("forwards native focus and blur events alongside dedicated callbacks and popup behavior", () => {
     const nativeFocus = vi.fn();
     const nativeBlur = vi.fn();
@@ -65,7 +104,7 @@ describe("SuggestionCombobox", () => {
       expect.objectContaining({ type: "focus", target: input })
     );
     expect(focus).toHaveBeenCalledOnce();
-    expect(changeOpen).toHaveBeenLastCalledWith(true);
+    expect(changeOpen).not.toHaveBeenCalled();
 
     fireEvent.blur(input);
     expect(nativeBlur).toHaveBeenCalledExactlyOnceWith(
@@ -116,7 +155,9 @@ describe("SuggestionCombobox", () => {
     render(<Search onSelect={select} />);
     const input = screen.getByRole("combobox", { name: "Place" });
     fireEvent.focus(input);
-    fireEvent.click(screen.getByRole("option", { name: "Museum" }));
+    const option = screen.getByRole("option", { name: "Museum" });
+    expect(option).toHaveClass("cursor-pointer", "hover:bg-folio-highlight");
+    fireEvent.click(option);
     expect(select).toHaveBeenCalledExactlyOnceWith("Museum", options[0]);
     expect(input).toHaveFocus();
   });

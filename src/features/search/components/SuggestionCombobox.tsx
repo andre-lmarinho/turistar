@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 
 import { Spinner } from "@/ui/components/loading";
+import { Popover, PopoverContent } from "@/ui/components/popover/Popover";
 import { cn } from "@/ui/utils/cn";
 
 export interface SuggestionOption<T> {
@@ -70,13 +71,14 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   const resolvedInputRef = inputRef ?? localInputRef;
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const listVisible = open && !error && options.length > 0;
+  const popupVisible = listVisible || (open && !error && !loading && options.length === 0 && !!emptyMessage);
 
   React.useEffect(() => {
     if (!listVisible || activeIndex < 0) return;
-    containerRef.current
-      ?.querySelector<HTMLElement>(`[data-option-index="${activeIndex}"]`)
-      ?.scrollIntoView({ block: "nearest" });
-  }, [activeIndex, listVisible]);
+    document.getElementById(`${listId}-option-${options[activeIndex]?.id}`)?.scrollIntoView({
+      block: "nearest",
+    });
+  }, [activeIndex, listId, listVisible, options]);
 
   React.useEffect(() => {
     setActiveIndex((prev) => {
@@ -99,7 +101,6 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   };
 
   const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    onOpenChange(true);
     inputProps?.onFocus?.(event);
     onFocus?.();
   };
@@ -149,106 +150,115 @@ export function SuggestionCombobox<T, TSelection = T>(props: SuggestionComboboxP
   };
 
   return (
-    <div ref={containerRef} className={cn("relative", className)}>
-      {label ? (
-        <label htmlFor={inputId} className="sr-only">
-          {label}
-        </label>
-      ) : null}
-      <div className="relative">
-        <input
-          {...inputProps}
-          id={inputId}
-          ref={resolvedInputRef}
-          role="combobox"
-          aria-autocomplete="list"
-          aria-expanded={listVisible}
-          aria-busy={loading}
-          aria-controls={listVisible ? listId : undefined}
-          aria-activedescendant={
-            listVisible && activeIndex >= 0 && options[activeIndex]
-              ? `${listId}-option-${options[activeIndex].id}`
-              : undefined
-          }
-          type="text"
-          value={value}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className={cn(
-            inputClassName ??
-              "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border border-input px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm",
-            loading && "pr-8"
-          )}
-          autoComplete="off"
-        />
-        {loading ? (
-          <div className="absolute inset-y-0 right-2 flex items-center">
-            <Spinner className="size-4" />
-          </div>
+    <Popover open={popupVisible} onOpenChange={onOpenChange} modal={false} triggerId={inputId}>
+      <div ref={containerRef} className={cn("relative", className)}>
+        {label ? (
+          <label htmlFor={inputId} className="sr-only">
+            {label}
+          </label>
+        ) : null}
+        <div className="relative">
+          <input
+            {...inputProps}
+            id={inputId}
+            ref={resolvedInputRef}
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={listVisible}
+            aria-busy={loading}
+            aria-controls={listVisible ? listId : undefined}
+            aria-activedescendant={
+              listVisible && activeIndex >= 0 && options[activeIndex]
+                ? `${listId}-option-${options[activeIndex].id}`
+                : undefined
+            }
+            type="text"
+            value={value}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className={cn(
+              inputClassName ??
+                "bg-background focus:ring-ring flex w-full items-center justify-between space-x-4 rounded-md border border-input px-4 py-2 text-base transition-colors focus:ring-2 focus:outline-none md:text-sm",
+              loading && "pr-8"
+            )}
+            autoComplete="off"
+          />
+          {loading ? (
+            <div className="absolute inset-y-0 right-2 flex items-center">
+              <Spinner className="size-4" />
+            </div>
+          ) : null}
+        </div>
+        {error ? (
+          <p className="text-destructive-text mt-1 text-sm" role="alert" aria-live="assertive">
+            {typeof error === "string" ? error : t("failedToLoadSuggestions")}
+          </p>
         ) : null}
       </div>
-      {error ? (
-        <p className="text-destructive-text mt-1 text-sm" role="alert" aria-live="assertive">
-          {typeof error === "string" ? error : t("failedToLoadSuggestions")}
-        </p>
+      {popupVisible ? (
+        <PopoverContent
+          anchor={resolvedInputRef}
+          align="start"
+          side="bottom"
+          sideOffset={4}
+          initialFocus={false}
+          role="presentation"
+          className="w-(--anchor-width) max-w-(--available-width) p-0">
+          {listVisible ? (
+            <div
+              id={listId}
+              role="listbox"
+              aria-label={label ?? placeholder}
+              className="max-h-(--available-height) overscroll-contain overflow-auto text-sm">
+              {options.map((option, idx) => (
+                <button
+                  key={option.id}
+                  id={`${listId}-option-${option.id}`}
+                  data-option-index={idx}
+                  role="option"
+                  aria-selected={activeIndex === idx}
+                  tabIndex={-1}
+                  type="button"
+                  className={cn(
+                    "min-h-11 w-full cursor-pointer px-3 py-2 text-left transition-colors",
+                    activeIndex === idx
+                      ? "bg-folio-highlight text-folio-ink hover:bg-folio-citron"
+                      : "hover:bg-folio-highlight"
+                  )}
+                  onPointerDown={(event) => event.preventDefault()}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    handleSelect(option);
+                    resolvedInputRef.current?.focus();
+                  }}>
+                  {renderOption ? (
+                    renderOption(option, { active: activeIndex === idx })
+                  ) : (
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-foreground">{option.label}</span>
+                      {option.description ? (
+                        <span className="text-muted-foreground text-xs">{option.description}</span>
+                      ) : null}
+                      {option.meta ? (
+                        <span className="text-muted-foreground text-[11px] uppercase tracking-[0.08em]">
+                          {option.meta}
+                        </span>
+                      ) : null}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <output id={listId} className="text-muted-foreground block px-3 py-2 text-sm" aria-live="polite">
+              {emptyMessage}
+            </output>
+          )}
+        </PopoverContent>
       ) : null}
-      {open && !error ? (
-        options.length > 0 ? (
-          <div
-            id={listId}
-            role="listbox"
-            aria-label={label ?? placeholder}
-            className="bg-background absolute z-10 mt-1 max-h-48 w-full overscroll-contain overflow-auto rounded border text-sm shadow">
-            {options.map((option, idx) => (
-              <button
-                key={option.id}
-                id={`${listId}-option-${option.id}`}
-                data-option-index={idx}
-                role="option"
-                aria-selected={activeIndex === idx}
-                tabIndex={-1}
-                type="button"
-                className={cn(
-                  "min-h-11 w-full px-3 py-2 text-left transition-colors",
-                  activeIndex === idx
-                    ? "bg-selection text-selection-foreground hover:bg-selection-hover"
-                    : "hover:bg-interactive-hover"
-                )}
-                onPointerDown={(event) => event.preventDefault()}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => {
-                  handleSelect(option);
-                  resolvedInputRef.current?.focus();
-                }}>
-                {renderOption ? (
-                  renderOption(option, { active: activeIndex === idx })
-                ) : (
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-foreground">{option.label}</span>
-                    {option.description ? (
-                      <span className="text-muted-foreground text-xs">{option.description}</span>
-                    ) : null}
-                    {option.meta ? (
-                      <span className="text-muted-foreground text-[11px] uppercase tracking-[0.08em]">
-                        {option.meta}
-                      </span>
-                    ) : null}
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        ) : !loading && emptyMessage ? (
-          <output
-            className="bg-background text-muted-foreground absolute z-10 mt-1 block w-full rounded border px-3 py-2 text-sm shadow"
-            aria-live="polite">
-            {emptyMessage}
-          </output>
-        ) : null
-      ) : null}
-    </div>
+    </Popover>
   );
 }

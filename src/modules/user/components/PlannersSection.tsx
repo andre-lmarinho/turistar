@@ -46,14 +46,21 @@ function CreateTripDialog() {
         aria-label={t("createTrip")}>
         <Plus className="size-5" aria-hidden="true" />
       </DialogTriggerButton>
-      <DialogContent className="w-[calc(100%-2rem)] max-w-md border-folio-line bg-folio-paper p-0 text-folio-ink focus-visible:ring-folio-coral">
-        <DialogHeader
-          title={t("createTrip")}
-          description={t("createTripDescription")}
-          closeDisabled={creating}
-        />
-        <div className="p-4">
-          <PlannerCreationForm onPlanCreated={handlePlanCreated} onPendingChange={setCreating} />
+      <DialogContent className="w-[calc(100%-2rem)] max-w-2xl border-folio-line bg-folio-paper p-0 text-folio-ink focus-visible:ring-folio-coral">
+        <div className="grid sm:grid-cols-[0.8fr_1.2fr]">
+          <DialogHeader
+            title={t("createTrip")}
+            description={t("createTripDescription")}
+            descriptionVisuallyHidden={false}
+            closeDisabled={creating}
+            className="items-start justify-start border-b border-folio-line bg-folio-highlight p-6 sm:border-r sm:border-b-0"
+            titleClassName="pr-8 font-folio-display text-3xl"
+            descriptionClassName="mt-3 leading-relaxed text-folio-ink-soft"
+            closeButtonClassName="absolute top-4 right-4 text-folio-ink-soft hover:bg-folio-paper hover:text-folio-ink focus-visible:ring-folio-coral"
+          />
+          <div className="p-6">
+            <PlannerCreationForm onPlanCreated={handlePlanCreated} onPendingChange={setCreating} />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

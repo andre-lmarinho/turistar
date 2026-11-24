@@ -1,5 +1,6 @@
 "use client";
 
+import type { PopoverPositionerProps } from "@base-ui/react/popover";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { useTranslations } from "next-intl";
 import * as React from "react";
@@ -9,12 +10,14 @@ import { cn } from "@/ui/utils/cn";
 
 const Popover = PopoverPrimitive.Root;
 
-type PopoverContentProps = React.HTMLAttributes<HTMLDivElement> & {
-  title?: string;
-  side?: "top" | "right" | "bottom" | "left";
-  align?: "start" | "center" | "end";
-  sideOffset?: number;
-};
+type PopoverContentProps = React.HTMLAttributes<HTMLDivElement> &
+  Pick<React.ComponentProps<typeof PopoverPrimitive.Popup>, "initialFocus"> & {
+    title?: string;
+    side?: "top" | "right" | "bottom" | "left";
+    align?: "start" | "center" | "end";
+    sideOffset?: number;
+    anchor?: PopoverPositionerProps["anchor"];
+  };
 
 function PopoverContent({
   className,
@@ -23,6 +26,8 @@ function PopoverContent({
   align = "center",
   side = "bottom",
   sideOffset = 4,
+  anchor,
+  initialFocus,
   ...props
 }: PopoverContentProps) {
   const t = useTranslations();
@@ -32,11 +37,13 @@ function PopoverContent({
         align={align}
         side={side}
         sideOffset={sideOffset}
+        anchor={anchor}
         positionMethod="fixed"
         collisionPadding={16}
         className="z-60">
         <PopoverPrimitive.Popup
           data-slot="popover-content"
+          initialFocus={initialFocus}
           className={cn(
             "bg-background text-popover-foreground data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-h-(--available-height) max-w-(--available-width) origin-(--transform-origin) overflow-y-auto rounded-md border shadow-md outline-hidden motion-reduce:animate-none",
             className

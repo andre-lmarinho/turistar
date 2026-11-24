@@ -59,7 +59,7 @@ export async function UpcomingTripSection({ plan, today = startOfToday() }: Upco
               <div
                 key={stat.label}
                 className="min-w-0 border-r border-folio-white/25 px-3 first:pl-0 last:border-0">
-                <dt className="text-xs font-semibold tracking-[0.1em] text-folio-white/70 uppercase">
+                <dt className="text-xs font-semibold tracking-widest text-folio-white/70 uppercase">
                   {stat.label}
                 </dt>
                 <dd className="mt-1 truncate text-sm font-semibold tabular-nums text-folio-white sm:text-base">
