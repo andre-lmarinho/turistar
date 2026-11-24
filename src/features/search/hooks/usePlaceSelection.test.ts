@@ -19,8 +19,7 @@ describe("usePlaceSelection", () => {
     const { result } = renderHook(() => usePlaceSelection());
     const place = await result.current.selectPlace({
       ...selection,
-      formatted: "",
-      raw: { ...selection, formatted: rawAddress },
+      formatted: rawAddress,
     });
     expect(place?.address).toBe(expected);
   });

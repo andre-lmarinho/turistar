@@ -88,8 +88,8 @@ describe("GET /api/places/city-country", () => {
     const res = await GET(createRequest("?text=paris"));
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      "city-country autocomplete failed:",
-      { hasCoordinates: false },
+      "Place suggestions failed",
+      { path: "/api/places/city-country", hasCoordinates: false },
       error
     );
     expect(res.status).toBe(500);

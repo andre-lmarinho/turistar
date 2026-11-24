@@ -7,7 +7,9 @@ import { fetchWikidataImage } from "@/features/search/services/WikidataService";
 
 export const dynamic = "force-dynamic";
 
-async function handleLocalDetails(req: NextRequest) {
+export async function GET(req: NextRequest) {
+  const unauthorized = await getUnauthorizedResponse();
+  if (unauthorized) return unauthorized;
   const { searchParams } = new URL(req.url);
   const placeId = searchParams.get("placeId")?.trim();
   if (!placeId) {
@@ -22,11 +24,4 @@ async function handleLocalDetails(req: NextRequest) {
     console.error("place details failed:", { hasPlaceId: Boolean(placeId) }, error);
     return NextResponse.json({ error: "Failed to load place details." }, { status: 500 });
   }
-}
-
-export async function GET(req: NextRequest) {
-  const unauthorizedResponse = await getUnauthorizedResponse();
-  if (unauthorizedResponse) return unauthorizedResponse;
-
-  return handleLocalDetails(req);
 }

@@ -12,29 +12,6 @@ vi.mock("@/trpc/react", () => ({
     },
   },
 }));
-vi.mock("@/features/search/components/LocationSearchInput", () => ({
-  LocationSearchInput: ({
-    id,
-    inputRef,
-    inputProps,
-    value,
-    onChange,
-  }: {
-    id: string;
-    inputRef: Ref<HTMLInputElement>;
-    inputProps: ComponentProps<"input">;
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <input
-      {...inputProps}
-      id={id}
-      ref={inputRef}
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
-    />
-  ),
-}));
 vi.mock("@/ui/components/calendar/DateRangePicker", () => ({
   DateRangePicker: ({
     ref,
