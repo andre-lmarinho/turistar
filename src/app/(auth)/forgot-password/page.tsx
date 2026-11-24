@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { resolveNextPath } from "@/features/auth/lib/redirect";
 import { redirectIfAuthenticated } from "@/features/auth/lib/redirectServer";
-import { ForgotPasswordView } from "@/modules/auth/forgot-password/forgot-password-view";
+import { ForgotPasswordView } from "@/modules/auth/forgot-password-view";
 
 export const metadata: Metadata = {
   title: "Forgot your password? | Turistar App",

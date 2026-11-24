@@ -516,7 +516,7 @@ function ExpenseTable({
         className="h-12 transition-colors duration-200 ease-out motion-reduce:transition-none hover:bg-folio-highlight/50 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-3 max-sm:gap-y-2 max-sm:border max-sm:border-folio-line max-sm:bg-folio-paper/60 max-sm:p-3 max-sm:h-auto sm:table-row">
         <th
           scope="row"
-          className="p-2 text-left align-middle font-medium leading-normal max-sm:block max-sm:w-full max-sm:col-start-1 max-sm:row-start-1 max-sm:min-w-0 max-sm:break-words max-sm:p-0">
+          className="p-2 text-left align-middle font-medium leading-normal max-sm:block max-sm:w-full max-sm:col-start-1 max-sm:row-start-1 max-sm:min-w-0 max-sm:wrap-break-word max-sm:p-0">
           {entry.description}
         </th>
         <td className="p-2 align-middle leading-normal max-sm:block max-sm:w-full max-sm:col-start-1 max-sm:row-start-2 max-sm:p-0 max-sm:text-xs max-sm:text-folio-ink-soft">

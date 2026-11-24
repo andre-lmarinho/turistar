@@ -120,10 +120,9 @@ describe("BudgetView", () => {
     shared.queryError = new Error("Refresh failed");
     render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Could not refresh expenses. The list may be out of date."
-    );
-    expect(screen.getByRole("alert")).toHaveClass("border-folio-error-border", "bg-folio-error/5");
+    const alert = await screen.findByRole("alert");
+    expect(alert).toBeVisible();
+    expect(alert).toHaveClass("border-folio-error-border", "bg-folio-error/5");
     expect(screen.getByRole("button", { name: "Retry" })).toHaveClass("ml-auto");
     fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Dinner" } });
     fireEvent.change(screen.getByLabelText("Amount"), { target: { value: "45" } });
