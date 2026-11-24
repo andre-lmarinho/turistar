@@ -43,12 +43,6 @@
   --color-selection-hover: var(--selection-hover);
   --color-selection-foreground: var(--selection-foreground);
   --color-map-unvisited-hover: var(--map-unvisited-hover);
-  --color-chart-6: var(--chart-6);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -149,14 +143,6 @@
   --ring: var(--primary);
   --map-unvisited-hover: #8d8d86; /* Sand 9, keeping hovered unvisited countries neutral. */
   --backdrop: color-mix(in oklab, var(--foreground) 40%, transparent);
-
-  /* Distinct category colors, each with at least 3:1 against the muted chart track. */
-  --chart-1: var(--primary);
-  --chart-2: #cc4e00; /* Orange 11 */
-  --chart-3: #008573; /* Teal 11 */
-  --chart-4: #6e56cf; /* Violet 9 */
-  --chart-5: #d6409f; /* Pink 9 */
-  --chart-6: var(--muted-foreground);
 
   /* These variable names occur in persisted activity colors; keep their identifiers. */
   --color-0: #ffffff;

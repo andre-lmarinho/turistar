@@ -7,24 +7,13 @@ import type { DayPlan } from "@/features/activity/types";
 import { useBudgetLedger } from "@/features/budget/hooks/useBudgetLedger";
 import { summarizeBudget } from "@/features/budget/lib/summarizeBudget";
 import type { CategoryKey, Entry } from "@/features/budget/types";
-import { CATEGORIES, CHART_COLORS } from "@/features/budget/types";
+import { CATEGORIES } from "@/features/budget/types";
 import { Button } from "@/ui/components/button/Button";
 import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
-import { Check, DollarSign, Pencil, Plus, Trash2, X } from "@/ui/components/icon";
+import { Check, ChevronDown, Pencil, Plus, Trash2, X } from "@/ui/components/icon/lucide-icons";
 import { Spinner } from "@/ui/components/loading/Spinner";
 
-const CATEGORY_TRANSLATION_KEYS = {
-  transport: "categoryTransport",
-  lodging: "categoryLodging",
-  food: "categoryFood",
-  activities: "categoryActivities",
-  shopping: "categoryShopping",
-  documents: "categoryDocuments",
-} as const;
-
 const currencySymbol = "\u0024";
-const inputClasses =
-  "h-11 w-full rounded-xl border border-input bg-background px-3 pl-8 text-right text-base font-semibold tabular-nums outline-none transition-shadow focus:ring-2 focus:ring-ring focus:ring-offset-1";
 interface Props {
   planId: string;
   days: DayPlan[];
@@ -38,34 +27,32 @@ export function BudgetView({ planId, days, initialEntries }: Props) {
   const { categoryTotals, totalSpent } = summarizeBudget(days, entries);
 
   return (
-    <div className="bg-background flex h-full w-full flex-col gap-5 overflow-y-auto rounded-2xl border p-2 [scrollbar-color:var(--border)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
+    <div className="bg-folio-paper text-folio-ink flex h-full w-full flex-col gap-5 overflow-y-auto border border-folio-line p-2 [scrollbar-color:var(--folio-line)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-folio-line [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
       {ledger.error ? (
-        <div className="space-y-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border border-folio-line bg-folio-white px-3 py-2">
           <p role="alert" className="text-destructive-text text-sm">
-            {t("budgetLoadFailed")}
+            {t("budgetRefreshFailed")}
           </p>
           <Button
             variant="ghost"
             disabled={ledger.isFetching}
             aria-busy={ledger.isFetching}
             onClick={() => void ledger.refetch()}
-            className="gap-2">
+            className="gap-2 text-folio-ink hover:bg-folio-highlight focus-visible:ring-folio-coral">
             {ledger.isFetching ? <Spinner className="size-4" /> : null}
             {t("retry")}
           </Button>
         </div>
       ) : null}
-      <div className="grid min-w-0 grid-cols-1 items-start gap-5 md:grid-cols-2 xl:grid-cols-[18rem_minmax(0,1fr)]">
-        <div className="flex min-w-0 flex-col gap-5 md:contents xl:flex">
-          <Summary totalSpent={totalSpent} persistError={ledger.saveFailed ? t("budgetSaveFailed") : null} />
-          <CategoryChart totalSpent={totalSpent} categoryTotals={categoryTotals} />
-        </div>
-        <div className="md:col-span-2 xl:col-span-1">
+      <div className="grid min-w-0 grid-cols-1 items-start gap-5">
+        <Summary totalSpent={totalSpent} persistError={ledger.saveFailed ? t("budgetSaveFailed") : null} />
+        <div className="grid min-w-0 grid-cols-1 items-start gap-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
+          <CategoryBreakdown totalSpent={totalSpent} categoryTotals={categoryTotals} />
           <ExpenseTable
             entries={entries}
             onSave={ledger.saveEntry}
             onDelete={ledger.removeEntry}
-            disabled={ledger.isPending || Boolean(ledger.error)}
+            disabled={ledger.isPending}
           />
         </div>
       </div>
@@ -95,7 +82,7 @@ function AmountDisplay({
       className={
         compact
           ? "inline-flex items-baseline gap-1 text-base font-semibold tracking-[-0.02em] tabular-nums"
-          : "inline-flex items-baseline gap-1 text-2xl font-semibold tracking-[-0.04em] tabular-nums"
+          : "inline-flex items-baseline gap-1 text-4xl font-semibold tracking-[-0.04em] tabular-nums"
       }>
       <span
         className={
@@ -110,7 +97,7 @@ function AmountDisplay({
   );
 }
 
-export function CategoryChart({
+function CategoryBreakdown({
   totalSpent,
   categoryTotals,
 }: {
@@ -123,33 +110,33 @@ export function CategoryChart({
   return (
     <section
       aria-labelledby="budget-categories-heading"
-      className="border-border bg-card h-fit rounded-2xl border p-4 shadow-sm">
+      className="bg-folio-white h-fit border border-folio-line p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h2 id="budget-categories-heading" className="font-semibold tracking-[-0.02em]">
+        <h2 id="budget-categories-heading" className="font-[Alegreya,Georgia,serif] text-xl font-semibold">
           {t("categories")}
         </h2>
       </div>
 
       {totalSpent <= 0 ? (
-        <p className="bg-muted/35 text-muted-foreground rounded-xl px-3 py-6 text-center text-sm">
+        <p className="bg-folio-highlight text-folio-ink-soft px-3 py-6 text-center text-sm">
           {t("noExpensesYet")}
         </p>
       ) : (
         <div>
-          {CATEGORIES.map((category, index) => {
+          {CATEGORIES.map((category) => {
             const value = categoryTotals[category.key] || 0;
             const percent = maxCategoryValue > 0 ? Math.min(100, (value / maxCategoryValue) * 100) : 0;
             const { icon: Icon } = category;
-            const label = t(CATEGORY_TRANSLATION_KEYS[category.key]);
+            const label = t(category.translationKey);
 
             return (
               <div key={category.key} className="py-2">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <Icon size={13} aria-hidden="true" className="text-muted-foreground shrink-0" />
-                    <span className="truncate text-sm">{label}</span>
+                    <Icon size={13} aria-hidden="true" className="text-folio-ink-soft shrink-0" />
+                    <span className="min-w-0 text-sm leading-tight">{label}</span>
                   </div>
-                  <span className="text-muted-foreground shrink-0 text-xs font-medium tabular-nums">
+                  <span className="text-folio-ink-soft shrink-0 text-xs font-medium tabular-nums">
                     ${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -160,14 +147,8 @@ export function CategoryChart({
                   aria-valuemax={100}
                   aria-valuenow={Math.round(percent)}
                   aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
-                  className="bg-muted mt-2 h-1.5 rounded-full">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${percent}%`,
-                      backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
-                    }}
-                  />
+                  className="bg-folio-highlight mt-2 h-1.5">
+                  <div className="bg-folio-coral h-full" style={{ width: `${percent}%` }} />
                 </div>
               </div>
             );
@@ -178,30 +159,26 @@ export function CategoryChart({
   );
 }
 
-export function Summary({ totalSpent, persistError }: { totalSpent: number; persistError: string | null }) {
+function Summary({ totalSpent, persistError }: { totalSpent: number; persistError: string | null }) {
   const t = useTranslations();
   return (
-    <section aria-label={t("totalSpent")}>
-      <article className="border-border bg-card rounded-2xl border p-4 shadow-sm">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="font-semibold tracking-[-0.02em]">{t("totalSpent")}</h2>
-            <p className="text-muted-foreground mt-0.5 text-sm">{t("allRecordedExpenses")}</p>
-          </div>
-          <span className="bg-card text-foreground inline-flex size-10 shrink-0 items-center justify-center rounded-xl">
-            <DollarSign className="size-5" strokeWidth={2.25} aria-hidden="true" />
-          </span>
-        </div>
-
-        <div className="mt-6">
-          <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
-        </div>
-        {persistError ? (
-          <p role="alert" className="text-destructive-text mt-3 text-sm">
-            {persistError}
-          </p>
-        ) : null}
-      </article>
+    <section
+      aria-labelledby="budget-total-heading"
+      className="bg-folio-ink text-folio-white flex flex-wrap items-center justify-between gap-5 border border-folio-ink px-5 py-5 md:px-7">
+      <div className="min-w-0">
+        <h2 id="budget-total-heading" className="[font-family:Alegreya,Georgia,serif] text-xl font-semibold">
+          {t("totalSpent")}
+        </h2>
+        <p className="text-folio-white/80 mt-0.5 text-sm">{t("allRecordedExpenses")}</p>
+      </div>
+      <div className="text-folio-citron">
+        <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
+      </div>
+      {persistError ? (
+        <p role="alert" className="text-folio-white w-full text-sm">
+          {persistError}
+        </p>
+      ) : null}
     </section>
   );
 }
@@ -256,7 +233,7 @@ function ExpenseEditor({
   const id = entry?.id ?? "new-row";
   return (
     <tr
-      className="border-border"
+      className={`h-12 transition-colors duration-200 ease-out motion-reduce:transition-none ${entry ? "bg-folio-highlight" : ""}`}
       onKeyDown={(event) => {
         if (
           event.key !== "Enter" ||
@@ -267,7 +244,7 @@ function ExpenseEditor({
         event.preventDefault();
         void save();
       }}>
-      <td className="p-2">
+      <td className="p-2 align-middle">
         <input
           ref={descriptionRef}
           // biome-ignore lint/a11y/noAutofocus: editing replaces the focused Edit button with this input.
@@ -282,7 +259,7 @@ function ExpenseEditor({
           placeholder={t("descriptionLabel")}
           autoComplete="off"
           readOnly={disabled || submitting}
-          className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
+          className={`h-9 w-full border border-folio-input bg-folio-white px-2 py-0 text-sm leading-normal outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out hover:border-folio-input-hover focus:ring-2 focus:ring-folio-coral motion-reduce:transition-none ${entry ? "bg-folio-white" : ""}`}
         />
         {showErrors && !draft.description.trim() ? (
           <p id={`description-error-${id}`} role="alert" className="text-destructive-text mt-1 text-xs">
@@ -290,27 +267,33 @@ function ExpenseEditor({
           </p>
         ) : null}
       </td>
-      <td className="p-2">
-        <select
-          id={`category-${id}`}
-          aria-label={t("categoryLabel")}
-          value={draft.category}
-          disabled={disabled || submitting}
-          onChange={(event) => {
-            const category = CATEGORIES.find(({ key }) => key === event.target.value);
-            if (category) setDraft({ ...draft, category: category.key });
-          }}
-          className="h-11 w-full rounded-xl border border-input bg-background px-3 text-base outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm">
-          {CATEGORIES.map(({ key }) => (
-            <option key={key} value={key}>
-              {t(CATEGORY_TRANSLATION_KEYS[key])}
-            </option>
-          ))}
-        </select>
-      </td>
-      <td className="p-2 text-right">
+      <td className="p-2 align-middle">
         <div className="relative">
-          <span className="text-muted-foreground pointer-events-none absolute inset-y-0 left-3 flex items-center">
+          <select
+            id={`category-${id}`}
+            aria-label={t("categoryLabel")}
+            value={draft.category}
+            disabled={disabled || submitting}
+            onChange={(event) => {
+              const category = CATEGORIES.find(({ key }) => key === event.target.value);
+              if (category) setDraft({ ...draft, category: category.key });
+            }}
+            className={`h-9 w-full appearance-none border border-folio-input bg-folio-white py-0 pr-8 pl-2 text-sm leading-normal outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out hover:border-folio-input-hover focus:ring-2 focus:ring-folio-coral motion-reduce:transition-none ${entry ? "bg-folio-white" : ""}`}>
+            {CATEGORIES.map(({ key, translationKey }) => (
+              <option key={key} value={key}>
+                {t(translationKey)}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="text-folio-ink-soft pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
+            aria-hidden="true"
+          />
+        </div>
+      </td>
+      <td className="px-2 py-1 text-right align-middle">
+        <div className="relative">
+          <span className="text-folio-ink-soft pointer-events-none absolute inset-y-0 left-2 flex items-center">
             {currencySymbol}
           </span>
           <input
@@ -328,7 +311,7 @@ function ExpenseEditor({
             inputMode="decimal"
             placeholder={t("amountLabel")}
             autoComplete="off"
-            className={inputClasses}
+            className="h-9 w-full border border-folio-input bg-folio-white pr-2 pl-7 text-right text-sm font-semibold tabular-nums outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out focus:ring-2 focus:ring-folio-coral focus:ring-offset-1 motion-reduce:transition-none"
           />
         </div>
         {showErrors && (!Number.isFinite(amount) || amount <= 0) ? (
@@ -337,7 +320,7 @@ function ExpenseEditor({
           </p>
         ) : null}
       </td>
-      <td className="p-2 text-right">
+      <td className="px-2 py-1 text-right align-middle">
         <div className="flex justify-end gap-2">
           <button
             type="button"
@@ -345,7 +328,7 @@ function ExpenseEditor({
             aria-label={entry ? t("saveEntry") : t("addExpense")}
             aria-busy={submitting}
             aria-disabled={disabled || submitting}
-            className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring aria-disabled:opacity-50 md:size-8">
+            className="border-folio-line bg-folio-white hover:bg-folio-highlight active:bg-folio-highlight inline-flex size-8 cursor-pointer items-center justify-center border transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-folio-coral motion-reduce:transition-none aria-disabled:opacity-50">
             {submitting ? (
               <Spinner className="size-4" />
             ) : entry ? (
@@ -360,7 +343,7 @@ function ExpenseEditor({
               onClick={onCancel}
               aria-label={t("cancelEdit")}
               disabled={disabled || submitting}
-              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
+              className="border-folio-line bg-folio-white hover:bg-folio-highlight active:bg-folio-highlight inline-flex size-8 cursor-pointer items-center justify-center border transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-folio-coral motion-reduce:transition-none">
               <X className="size-4" aria-hidden="true" />
             </button>
           )}
@@ -396,22 +379,26 @@ function ExpenseTable({
         />
       );
     return (
-      <tr key={entry.id} className="border-border">
-        <th scope="row" className="p-2 text-left font-medium">
+      <tr
+        key={entry.id}
+        className="h-12 transition-colors duration-200 ease-out motion-reduce:transition-none hover:bg-folio-highlight/50">
+        <th scope="row" className="p-2 text-left align-middle font-medium leading-normal">
           {entry.description}
         </th>
-        <td className="p-2">{t(CATEGORY_TRANSLATION_KEYS[entry.category])}</td>
-        <td className="p-2 text-right">
+        <td className="p-2 align-middle leading-normal">
+          {t(CATEGORIES.find(({ key }) => key === entry.category)?.translationKey ?? "categories")}
+        </td>
+        <td className="p-2 text-right align-middle">
           <AmountDisplay value={entry.amount} compact />
         </td>
-        <td className="p-2 text-right">
+        <td className="p-2 text-right align-middle">
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setEditingId(entry.id)}
               aria-label={t("editEntry")}
               disabled={disabled}
-              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
+              className="border-folio-line bg-folio-white hover:bg-folio-highlight active:bg-folio-highlight inline-flex size-8 cursor-pointer items-center justify-center border transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-folio-coral motion-reduce:transition-none">
               <Pencil className="size-4" aria-hidden="true" />
             </button>
             <button
@@ -419,7 +406,7 @@ function ExpenseTable({
               onClick={() => setDeletingEntry(entry)}
               aria-label={t("deleteEntry")}
               disabled={disabled}
-              className="border-border bg-background inline-flex size-11 items-center justify-center rounded-full border focus-visible:ring-2 focus-visible:ring-ring md:size-8">
+              className="border-folio-line bg-folio-white hover:bg-folio-highlight active:bg-folio-highlight inline-flex size-8 cursor-pointer items-center justify-center border transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-folio-coral motion-reduce:transition-none">
               <Trash2 className="size-4" aria-hidden="true" />
             </button>
           </div>
@@ -429,24 +416,24 @@ function ExpenseTable({
   };
 
   return (
-    <section className="min-w-0" aria-labelledby="expenses-heading">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 id="expenses-heading" className="font-semibold tracking-[-0.02em]">
+    <section
+      className="bg-folio-white flex min-w-0 flex-col border border-folio-line p-4"
+      aria-labelledby="expenses-heading">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 id="expenses-heading" className="font-[Alegreya,Georgia,serif] text-xl font-semibold">
           {t("expenses")}
         </h2>
       </div>
       <section
-        className="overflow-x-auto overscroll-x-contain rounded-xl focus-visible:ring-2 focus-visible:ring-ring"
+        className="overflow-x-auto overscroll-x-contain focus-visible:ring-2 focus-visible:ring-folio-coral"
         // biome-ignore lint/a11y/noNoninteractiveTabindex: allows keyboard users to scroll the expense table horizontally.
         tabIndex={0}
         aria-label={t("expenseTableCaption")}>
-        <table
-          aria-labelledby="expense-table-caption"
-          className="w-full min-w-[36rem] border-separate border-spacing-y-2 text-sm">
+        <table aria-labelledby="expense-table-caption" className="w-full min-w-xl border-collapse text-sm">
           <caption id="expense-table-caption" className="sr-only">
             {t("expenseTableCaption")}
           </caption>
-          <thead className="text-muted-foreground text-xs uppercase tracking-wide">
+          <thead className="text-folio-ink-soft text-xs uppercase tracking-wide">
             <tr>
               <th scope="col" className="p-2 text-left font-normal">
                 {t("descriptionLabel")}
@@ -462,7 +449,7 @@ function ExpenseTable({
               </th>
             </tr>
           </thead>
-          <tbody className="[&>tr]:rounded-xl [&>tr]:border [&>tr]:bg-background [&>tr]:shadow-sm">
+          <tbody className="[&>tr]:border-b [&>tr]:border-folio-line">
             {entries.map(renderRow)}
             <ExpenseEditor onSave={onSave} disabled={disabled} />
           </tbody>

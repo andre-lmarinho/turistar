@@ -10,6 +10,8 @@ const shared = vi.hoisted(() => ({
   updateEntry: vi.fn<(input: { entry: Entry }) => Promise<void>>(),
   deleteEntry: vi.fn<(input: { entryId: string }) => Promise<void>>(),
   invalidate: vi.fn(),
+  queryError: null as Error | null,
+  refetchBudget: vi.fn(),
   client: null as QueryClient | null,
 }));
 vi.mock("@/trpc/react", async () => {
@@ -42,13 +44,19 @@ vi.mock("@/trpc/react", async () => {
       viewer: {
         budget: {
           get: {
-            useQuery: (_input: unknown, options: { initialData: BudgetQueryResult }) =>
-              useQuery({
+            useQuery: (_input: unknown, options: { initialData: BudgetQueryResult }) => {
+              const query = useQuery({
                 queryKey: key,
                 queryFn: async () => options.initialData,
                 initialData: options.initialData,
                 enabled: false,
-              }),
+              });
+              return {
+                ...query,
+                error: shared.queryError ?? query.error,
+                refetch: shared.refetchBudget,
+              };
+            },
           },
           createEntry: {
             useMutation: () =>
@@ -90,6 +98,8 @@ beforeEach(() => {
   shared.createEntry.mockReset();
   shared.createEntry.mockResolvedValue("entry-2");
   shared.invalidate.mockReset();
+  shared.queryError = null;
+  shared.refetchBudget.mockReset().mockResolvedValue({});
   shared.updateEntry.mockReset().mockResolvedValue(undefined);
   shared.deleteEntry.mockReset().mockResolvedValue(undefined);
 });
@@ -98,6 +108,24 @@ describe("BudgetView", () => {
     render(<BudgetView planId="plan-1" days={[]} />);
 
     expect(screen.getByLabelText("Total spent: $0.00")).toBeInTheDocument();
+    expect(screen.getByText("No expenses yet")).toBeInTheDocument();
+    expect(screen.getByLabelText("Description")).toBeInTheDocument();
+  });
+
+  it("keeps the empty budget actionable if refreshing its server data fails", async () => {
+    shared.queryError = new Error("Refresh failed");
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Could not refresh expenses. The list may be out of date."
+    );
+    fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Dinner" } });
+    fireEvent.change(screen.getByLabelText("Amount"), { target: { value: "45" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+    await waitFor(() => expect(shared.createEntry).toHaveBeenCalledOnce());
+
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    expect(shared.refetchBudget).toHaveBeenCalledOnce();
   });
 
   it("shows total, categories, and entries", () => {
@@ -106,6 +134,21 @@ describe("BudgetView", () => {
     expect(screen.getAllByText("Transportation")[0]).toBeInTheDocument();
     expect(screen.getAllByText("Tours & Activities")[0]).toBeInTheDocument();
     expect(screen.getByText("Airport transfer")).toBeInTheDocument();
+  });
+
+  it("keeps the expense row geometry and text position in edit mode", () => {
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
+    const normalRow = screen.getByText("Airport transfer").closest("tr");
+    expect(normalRow).toHaveClass("h-12");
+    expect(normalRow?.querySelector("th")).toHaveClass("align-middle");
+
+    fireEvent.click(screen.getByRole("button", { name: "Edit entry" }));
+    const editRow = screen.getByRole("button", { name: "Save entry" }).closest("tr");
+    if (!editRow) throw new Error("Missing expense editor row");
+    expect(editRow).toHaveClass("h-12", "bg-folio-highlight");
+    expect(within(editRow).getByLabelText("Description")).toHaveClass("h-9", "w-full");
+    expect(within(editRow).getByLabelText("Category")).toHaveClass("h-9", "w-full");
+    expect(within(editRow).getByLabelText("Amount")).toHaveClass("h-9", "w-full");
   });
   it("creates an expense from the table", async () => {
     render(<BudgetView planId="plan-1" days={days} initialEntries={[]} />);
