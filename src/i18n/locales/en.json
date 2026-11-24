@@ -282,7 +282,7 @@
   "leavePlannerConfirm": "Leave this trip? You will lose access until someone invites you again.",
   "budgetSaveFailed": "We couldn't save this expense. Your details are still here; try again.",
   "budgetDeleteFailed": "Could not delete the expense. Please try again.",
-  "budgetRefreshFailed": "Could not refresh expenses. The list may be out of date.",
+  "budgetRefreshFailed": "Could not refresh expenses. Please try again.",
   "expenseDescriptionRequired": "Enter an expense description.",
   "expenseAmountInvalid": "Enter a valid amount greater than zero.",
   "deleteExpenseConfirm": "Delete {description}? This cannot be undone.",
