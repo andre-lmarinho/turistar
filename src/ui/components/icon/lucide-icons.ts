@@ -9,6 +9,7 @@ export {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  CircleAlert,
   DollarSign,
   Eye,
   EyeOff,

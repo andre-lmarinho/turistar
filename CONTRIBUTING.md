@@ -105,6 +105,24 @@ Use `pnpm exec vitest run <path>` for file selection. Unit and component tests l
 sets the enforced thresholds. The [CI workflow](.github/workflows/ci.yml) runs lint, types, unit tests,
 a production build, and browser tests.
 
+### Storybook
+
+Run Storybook to preview UI in isolation:
+
+```sh
+pnpm storybook
+```
+
+Story files belong under `src/` and use the `*.stories.ts` or `*.stories.tsx` suffix. The shared
+preview setup loads the app theme and provides English messages and a TanStack Query client. Add
+story-specific fixtures or mocks for components that call tRPC or other app services.
+
+To build the static Storybook site:
+
+```sh
+pnpm build-storybook
+```
+
 ### Integration tests
 
 ```sh

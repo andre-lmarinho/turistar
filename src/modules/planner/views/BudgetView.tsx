@@ -9,8 +9,7 @@ import { summarizeBudget } from "@/features/budget/lib/summarizeBudget";
 import type { CategoryKey, Entry } from "@/features/budget/types";
 import { CATEGORIES } from "@/features/budget/types";
 import { Button } from "@/ui/components/button/Button";
-import { ConfirmationDialog } from "@/ui/components/dialog/ConfirmationDialog";
-import { Check, ChevronDown, Pencil, Plus, Trash2, X } from "@/ui/components/icon/lucide-icons";
+import { Check, ChevronDown, CircleAlert, Pencil, Plus, Trash2, X } from "@/ui/components/icon/lucide-icons";
 import { Spinner } from "@/ui/components/loading/Spinner";
 
 const currencySymbol = "\u0024";
@@ -21,39 +20,71 @@ interface Props {
 }
 
 export function BudgetView({ planId, days, initialEntries }: Props) {
-  const t = useTranslations();
   const ledger = useBudgetLedger(planId, initialEntries);
-  const entries = ledger.data.entries;
+  return (
+    <BudgetScreen
+      days={days}
+      entries={ledger.data.entries}
+      loadError={Boolean(ledger.error)}
+      isFetching={ledger.isFetching}
+      onRetry={() => void ledger.refetch()}
+      isPending={ledger.isPending}
+      onSave={ledger.saveEntry}
+      onDelete={ledger.removeEntry}
+    />
+  );
+}
+
+type ExpenseInput = Omit<Entry, "id"> & { id?: string };
+
+type BudgetScreenProps = {
+  days: DayPlan[];
+  entries: Entry[];
+  loadError: boolean;
+  isFetching: boolean;
+  onRetry: () => void;
+  isPending: boolean;
+  onSave: (entry: ExpenseInput) => Promise<boolean>;
+  onDelete: (entryId: string) => Promise<void>;
+};
+
+export function BudgetScreen({
+  days,
+  entries,
+  loadError,
+  isFetching,
+  onRetry,
+  isPending,
+  onSave,
+  onDelete,
+}: BudgetScreenProps) {
+  const t = useTranslations();
   const { categoryTotals, totalSpent } = summarizeBudget(days, entries);
 
   return (
     <div className="bg-folio-paper text-folio-ink flex h-full w-full flex-col gap-5 overflow-y-auto border border-folio-line p-2 [scrollbar-color:var(--folio-line)_transparent] scrollbar-thin [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-folio-line [&::-webkit-scrollbar-track]:bg-transparent md:p-4">
-      {ledger.error ? (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border border-folio-line bg-folio-white px-3 py-2">
-          <p role="alert" className="text-destructive-text text-sm">
-            {t("budgetRefreshFailed")}
-          </p>
+      {loadError ? (
+        <div
+          role="alert"
+          className="flex flex-wrap items-center gap-x-3 gap-y-2 border border-folio-error-border bg-folio-error/5 px-3 py-2">
+          <CircleAlert className="text-destructive-text size-5 shrink-0" aria-hidden="true" />
+          <p className="text-destructive-text text-sm">{t("budgetRefreshFailed")}</p>
           <Button
             variant="ghost"
-            disabled={ledger.isFetching}
-            aria-busy={ledger.isFetching}
-            onClick={() => void ledger.refetch()}
-            className="gap-2 text-folio-ink hover:bg-folio-highlight focus-visible:ring-folio-coral">
-            {ledger.isFetching ? <Spinner className="size-4" /> : null}
+            disabled={isFetching}
+            aria-busy={isFetching}
+            onClick={onRetry}
+            className="ml-auto gap-2 text-folio-ink hover:bg-folio-highlight focus-visible:ring-folio-coral">
+            {isFetching ? <Spinner className="size-4" /> : null}
             {t("retry")}
           </Button>
         </div>
       ) : null}
       <div className="grid min-w-0 grid-cols-1 items-start gap-5">
-        <Summary totalSpent={totalSpent} persistError={ledger.saveFailed ? t("budgetSaveFailed") : null} />
+        <Summary totalSpent={totalSpent} />
         <div className="grid min-w-0 grid-cols-1 items-start gap-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
-          <CategoryBreakdown totalSpent={totalSpent} categoryTotals={categoryTotals} />
-          <ExpenseTable
-            entries={entries}
-            onSave={ledger.saveEntry}
-            onDelete={ledger.removeEntry}
-            disabled={ledger.isPending}
-          />
+          <CategoryBreakdown categoryTotals={categoryTotals} />
+          <ExpenseTable entries={entries} onSave={onSave} onDelete={onDelete} disabled={isPending} />
         </div>
       </div>
     </div>
@@ -97,13 +128,7 @@ function AmountDisplay({
   );
 }
 
-function CategoryBreakdown({
-  totalSpent,
-  categoryTotals,
-}: {
-  totalSpent: number;
-  categoryTotals: Record<CategoryKey, number>;
-}) {
+function CategoryBreakdown({ categoryTotals }: { categoryTotals: Record<CategoryKey, number> }) {
   const t = useTranslations();
   const maxCategoryValue = Math.max(...Object.values(categoryTotals), 0);
 
@@ -117,56 +142,50 @@ function CategoryBreakdown({
         </h2>
       </div>
 
-      {totalSpent <= 0 ? (
-        <p className="bg-folio-highlight text-folio-ink-soft px-3 py-6 text-center text-sm">
-          {t("noExpensesYet")}
-        </p>
-      ) : (
-        <div>
-          {CATEGORIES.map((category) => {
-            const value = categoryTotals[category.key] || 0;
-            const percent = maxCategoryValue > 0 ? Math.min(100, (value / maxCategoryValue) * 100) : 0;
-            const { icon: Icon } = category;
-            const label = t(category.translationKey);
+      <div>
+        {CATEGORIES.map((category) => {
+          const value = categoryTotals[category.key] || 0;
+          const percent = maxCategoryValue > 0 ? Math.min(100, (value / maxCategoryValue) * 100) : 0;
+          const { icon: Icon } = category;
+          const label = t(category.translationKey);
 
-            return (
-              <div key={category.key} className="py-2">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <Icon size={13} aria-hidden="true" className="text-folio-ink-soft shrink-0" />
-                    <span className="min-w-0 text-sm leading-tight">{label}</span>
-                  </div>
-                  <span className="text-folio-ink-soft shrink-0 text-xs font-medium tabular-nums">
-                    ${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
+          return (
+            <div key={category.key} className="py-2">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Icon size={13} aria-hidden="true" className="text-folio-ink-soft shrink-0" />
+                  <span className="min-w-0 text-sm leading-tight">{label}</span>
                 </div>
-
-                <div
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={Math.round(percent)}
-                  aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
-                  className="bg-folio-highlight mt-2 h-1.5">
-                  <div className="bg-folio-coral h-full" style={{ width: `${percent}%` }} />
-                </div>
+                <span className="text-folio-ink-soft shrink-0 text-xs font-medium tabular-nums">
+                  ${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
               </div>
-            );
-          })}
-        </div>
-      )}
+
+              <div
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(percent)}
+                aria-label={`${label} ${t("usage")} ${Math.round(percent)}%`}
+                className="bg-folio-highlight mt-2 h-1.5">
+                <div className="bg-folio-coral h-full" style={{ width: `${percent}%` }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
 
-function Summary({ totalSpent, persistError }: { totalSpent: number; persistError: string | null }) {
+function Summary({ totalSpent }: { totalSpent: number }) {
   const t = useTranslations();
   return (
     <section
       aria-labelledby="budget-total-heading"
       className="bg-folio-ink text-folio-white flex flex-wrap items-center justify-between gap-5 border border-folio-ink px-5 py-5 md:px-7">
       <div className="min-w-0">
-        <h2 id="budget-total-heading" className="[font-family:Alegreya,Georgia,serif] text-xl font-semibold">
+        <h2 id="budget-total-heading" className="font-[Alegreya,Georgia,serif] text-xl font-semibold">
           {t("totalSpent")}
         </h2>
         <p className="text-folio-white/80 mt-0.5 text-sm">{t("allRecordedExpenses")}</p>
@@ -174,28 +193,27 @@ function Summary({ totalSpent, persistError }: { totalSpent: number; persistErro
       <div className="text-folio-citron">
         <AmountDisplay value={totalSpent} ariaLabel={t("totalSpent")} />
       </div>
-      {persistError ? (
-        <p role="alert" className="text-folio-white w-full text-sm">
-          {persistError}
-        </p>
-      ) : null}
     </section>
   );
 }
 
-type ExpenseInput = Omit<Entry, "id"> & { id?: string };
 type ExpenseDraft = Omit<ExpenseInput, "amount"> & { amount: string };
+type ValidationField = "description" | "amount";
 const EMPTY_DRAFT: ExpenseDraft = { description: "", category: "transport", amount: "" };
 
 function ExpenseEditor({
   entry,
   onSave,
   onCancel,
+  onValidationChange,
+  onSaveErrorChange,
   disabled,
 }: {
   entry?: Entry;
   onSave: (entry: ExpenseInput) => Promise<boolean>;
   onCancel?: () => void;
+  onValidationChange: (id: string, errors: ValidationField[]) => void;
+  onSaveErrorChange: (id: string, failed: boolean) => void;
   disabled: boolean;
 }) {
   const t = useTranslations();
@@ -203,16 +221,32 @@ function ExpenseEditor({
     entry ? { ...entry, amount: String(entry.amount) } : EMPTY_DRAFT
   );
   const [submitting, setSubmitting] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
   const submitPending = useRef(false);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
+  const id = entry?.id ?? "new-row";
   const amount = Number(draft.amount);
-  const isInvalid = !Number.isFinite(amount) || !draft.description.trim() || amount <= 0;
+  const getValidationErrors = (value: ExpenseDraft) => {
+    const errors: ValidationField[] = [];
+    if (!value.description.trim()) errors.push("description");
+    const parsedAmount = Number(value.amount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) errors.push("amount");
+    return errors;
+  };
+  const updateDraft = (next: ExpenseDraft) => {
+    setDraft(next);
+    if (showErrors) onValidationChange(id, getValidationErrors(next));
+  };
+  const errors = getValidationErrors(draft);
   const save = async () => {
     if (submitPending.current || disabled) return;
-    if (isInvalid) {
+    setSaveFailed(false);
+    onSaveErrorChange(id, false);
+    if (errors.length > 0) {
       setShowErrors(true);
+      onValidationChange(id, errors);
       if (!draft.description.trim()) descriptionRef.current?.focus();
       else amountRef.current?.focus();
       return;
@@ -222,15 +256,21 @@ function ExpenseEditor({
     setShowErrors(false);
     try {
       if (await onSave({ ...draft, description: draft.description.trim(), amount })) {
+        onValidationChange(id, []);
         if (entry) onCancel?.();
         else setDraft({ ...EMPTY_DRAFT, category: draft.category });
+      } else {
+        setSaveFailed(true);
+        onSaveErrorChange(id, true);
       }
+    } catch {
+      setSaveFailed(true);
+      onSaveErrorChange(id, true);
     } finally {
       setSubmitting(false);
       submitPending.current = false;
     }
   };
-  const id = entry?.id ?? "new-row";
   return (
     <tr
       className={`h-12 transition-colors duration-200 ease-out motion-reduce:transition-none ${entry ? "bg-folio-highlight" : ""}`}
@@ -252,20 +292,22 @@ function ExpenseEditor({
           id={`description-${id}`}
           name="description"
           aria-label={t("descriptionLabel")}
-          aria-invalid={(showErrors && !draft.description.trim()) || undefined}
-          aria-describedby={showErrors && !draft.description.trim() ? `description-error-${id}` : undefined}
+          aria-invalid={(showErrors && errors.includes("description")) || undefined}
+          aria-describedby={
+            [
+              showErrors && errors.includes("description") ? `expense-validation-${id}-description` : null,
+              saveFailed ? `expense-validation-${id}-save` : null,
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined
+          }
           value={draft.description}
-          onChange={(event) => setDraft({ ...draft, description: event.target.value })}
+          onChange={(event) => updateDraft({ ...draft, description: event.target.value })}
           placeholder={t("descriptionLabel")}
           autoComplete="off"
           readOnly={disabled || submitting}
-          className={`h-9 w-full border border-folio-input bg-folio-white px-2 py-0 text-sm leading-normal outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out hover:border-folio-input-hover focus:ring-2 focus:ring-folio-coral motion-reduce:transition-none ${entry ? "bg-folio-white" : ""}`}
+          className={`h-9 w-full border px-2 py-0 text-sm leading-normal outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out hover:border-folio-input-hover focus:ring-2 focus:ring-folio-coral motion-reduce:transition-none ${showErrors && errors.includes("description") ? "border-folio-error-border bg-folio-error/5" : "border-folio-input bg-folio-white"}`}
         />
-        {showErrors && !draft.description.trim() ? (
-          <p id={`description-error-${id}`} role="alert" className="text-destructive-text mt-1 text-xs">
-            {t("expenseDescriptionRequired")}
-          </p>
-        ) : null}
       </td>
       <td className="p-2 align-middle">
         <div className="relative">
@@ -300,25 +342,25 @@ function ExpenseEditor({
             id={`amount-${id}`}
             ref={amountRef}
             aria-label={t("amountLabel")}
-            aria-invalid={(showErrors && (!Number.isFinite(amount) || amount <= 0)) || undefined}
+            aria-invalid={(showErrors && errors.includes("amount")) || undefined}
             aria-describedby={
-              showErrors && (!Number.isFinite(amount) || amount <= 0) ? `amount-error-${id}` : undefined
+              [
+                showErrors && errors.includes("amount") ? `expense-validation-${id}-amount` : null,
+                saveFailed ? `expense-validation-${id}-save` : null,
+              ]
+                .filter(Boolean)
+                .join(" ") || undefined
             }
             value={draft.amount}
             readOnly={disabled || submitting}
-            onChange={(event) => setDraft({ ...draft, amount: event.target.value })}
+            onChange={(event) => updateDraft({ ...draft, amount: event.target.value })}
             type="text"
             inputMode="decimal"
             placeholder={t("amountLabel")}
             autoComplete="off"
-            className="h-9 w-full border border-folio-input bg-folio-white pr-2 pl-7 text-right text-sm font-semibold tabular-nums outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out focus:ring-2 focus:ring-folio-coral focus:ring-offset-1 motion-reduce:transition-none"
+            className={`h-9 w-full border pr-2 pl-7 text-right text-sm font-semibold tabular-nums outline-none transition-[border-color,box-shadow,background-color] duration-200 ease-out focus:ring-2 focus:ring-folio-coral focus:ring-offset-1 motion-reduce:transition-none ${showErrors && errors.includes("amount") ? "border-folio-error-border bg-folio-error/5" : "border-folio-input bg-folio-white"}`}
           />
         </div>
-        {showErrors && (!Number.isFinite(amount) || amount <= 0) ? (
-          <p id={`amount-error-${id}`} role="alert" className="text-destructive-text mt-1 text-xs">
-            {t("expenseAmountInvalid")}
-          </p>
-        ) : null}
       </td>
       <td className="px-2 py-1 text-right align-middle">
         <div className="flex justify-end gap-2">
@@ -366,7 +408,38 @@ function ExpenseTable({
 }) {
   const t = useTranslations();
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [deletingEntry, setDeletingEntry] = useState<Entry | null>(null);
+  const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
+  const [deletePendingId, setDeletePendingId] = useState<string | null>(null);
+  const [deleteErrorId, setDeleteErrorId] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<string, ValidationField[]>>({});
+  const [saveErrorIds, setSaveErrorIds] = useState<string[]>([]);
+  const updateSaveError = (id: string, failed: boolean) => {
+    setSaveErrorIds((current) =>
+      failed ? (current.includes(id) ? current : [...current, id]) : current.filter((value) => value !== id)
+    );
+  };
+  const updateValidationErrors = (id: string, errors: ValidationField[]) => {
+    setValidationErrors((current) => {
+      if (errors.length === 0) {
+        const next = { ...current };
+        delete next[id];
+        return next;
+      }
+      return { ...current, [id]: errors };
+    });
+  };
+  const confirmDelete = async (entryId: string) => {
+    setDeletePendingId(entryId);
+    setDeleteErrorId(null);
+    try {
+      await onDelete(entryId);
+      setDeletingEntryId(null);
+    } catch {
+      setDeleteErrorId(entryId);
+    } finally {
+      setDeletePendingId(null);
+    }
+  };
   const renderRow = (entry: Entry) => {
     if (editingId === entry.id)
       return (
@@ -374,10 +447,63 @@ function ExpenseTable({
           key={entry.id}
           entry={entry}
           onSave={onSave}
-          onCancel={() => setEditingId(null)}
+          onCancel={() => {
+            updateValidationErrors(entry.id, []);
+            updateSaveError(entry.id, false);
+            setEditingId(null);
+          }}
+          onValidationChange={updateValidationErrors}
+          onSaveErrorChange={updateSaveError}
           disabled={disabled}
         />
       );
+    if (deletingEntryId === entry.id) {
+      const isDeleting = deletePendingId === entry.id;
+      const hasDeleteError = deleteErrorId === entry.id;
+      return (
+        <tr key={entry.id} className="h-12 bg-folio-error/5">
+          <th scope="row" className="p-2 text-left align-middle font-medium leading-normal">
+            {hasDeleteError ? (
+              <p role="alert" className="text-destructive-text text-xs font-normal">
+                <span className="text-folio-ink font-medium">{entry.description}</span>
+                <span> — {t("budgetDeleteFailed")}</span>
+              </p>
+            ) : (
+              t("deleteExpenseConfirm", { description: entry.description })
+            )}
+          </th>
+          <td className="p-2 align-middle leading-normal">
+            {t(CATEGORIES.find(({ key }) => key === entry.category)?.translationKey ?? "categories")}
+          </td>
+          <td className="p-2 text-right align-middle">
+            <AmountDisplay value={entry.amount} compact />
+          </td>
+          <td className="p-2 text-right align-middle">
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => void confirmDelete(entry.id)}
+                aria-busy={isDeleting}
+                disabled={disabled || isDeleting}
+                className="inline-flex min-h-8 items-center justify-center gap-1 border border-folio-error-border bg-folio-error px-2 text-xs font-medium text-white transition-colors hover:bg-folio-error-border focus-visible:ring-2 focus-visible:ring-folio-coral disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none">
+                {isDeleting ? <Spinner className="size-3.5" /> : null}
+                {isDeleting ? t("working") : hasDeleteError ? t("retry") : t("deleteAction")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setDeletingEntryId(null);
+                  setDeleteErrorId(null);
+                }}
+                disabled={isDeleting}
+                className="inline-flex min-h-8 items-center justify-center border border-folio-line bg-folio-white px-2 text-xs transition-colors hover:bg-folio-highlight focus-visible:ring-2 focus-visible:ring-folio-coral disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none">
+                {t("cancel")}
+              </button>
+            </div>
+          </td>
+        </tr>
+      );
+    }
     return (
       <tr
         key={entry.id}
@@ -403,7 +529,10 @@ function ExpenseTable({
             </button>
             <button
               type="button"
-              onClick={() => setDeletingEntry(entry)}
+              onClick={() => {
+                setDeletingEntryId(entry.id);
+                setDeleteErrorId(null);
+              }}
               aria-label={t("deleteEntry")}
               disabled={disabled}
               className="border-folio-line bg-folio-white hover:bg-folio-highlight active:bg-folio-highlight inline-flex size-8 cursor-pointer items-center justify-center border transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-folio-coral motion-reduce:transition-none">
@@ -451,25 +580,40 @@ function ExpenseTable({
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-folio-line">
             {entries.map(renderRow)}
-            <ExpenseEditor onSave={onSave} disabled={disabled} />
+            <ExpenseEditor
+              onSave={onSave}
+              onValidationChange={updateValidationErrors}
+              onSaveErrorChange={updateSaveError}
+              disabled={disabled}
+            />
           </tbody>
         </table>
       </section>
-      <ConfirmationDialog
-        open={Boolean(deletingEntry)}
-        onOpenChange={(open) => {
-          if (!open) setDeletingEntry(null);
-        }}
-        title={t("deleteEntry")}
-        description={t("deleteExpenseConfirm")}
-        confirmLabel={t("deleteAction")}
-        cancelLabel={t("cancel")}
-        closeLabel={t("close")}
-        errorMessage={t("budgetDeleteFailed")}
-        onConfirm={async () => {
-          if (deletingEntry) await onDelete(deletingEntry.id);
-        }}
-      />
+      {Object.entries(validationErrors).length > 0 || saveErrorIds.length > 0 ? (
+        <ul
+          role="alert"
+          className="mt-2 flex flex-col gap-1.5 border border-folio-error-border/50 bg-folio-error/5 px-3 py-2 text-xs text-destructive-text">
+          {Object.entries(validationErrors).map(([id, errors]) =>
+            errors.map((field) => (
+              <li
+                key={`${id}-${field}`}
+                id={`expense-validation-${id}-${field}`}
+                className="flex items-start gap-2">
+                <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                <span>
+                  {field === "description" ? t("expenseDescriptionRequired") : t("expenseAmountInvalid")}
+                </span>
+              </li>
+            ))
+          )}
+          {saveErrorIds.map((id) => (
+            <li key={`${id}-save`} id={`expense-validation-${id}-save`} className="flex items-start gap-2">
+              <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span>{t("budgetSaveFailed")}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </section>
   );
 }

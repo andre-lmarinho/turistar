@@ -11,7 +11,6 @@ type ExpenseInput = Omit<Entry, "id"> & { id?: string };
 const EMPTY_ENTRIES: Entry[] = [];
 
 export function useBudgetLedger(planId: string, initialEntries?: Entry[]) {
-  const [saveFailed, setSaveFailed] = useState(false);
   const [isWriting, setIsWriting] = useState(false);
   const writePending = useRef(false);
   const utils = trpc.useUtils();
@@ -29,7 +28,6 @@ export function useBudgetLedger(planId: string, initialEntries?: Entry[]) {
     writePending.current = true;
     setIsWriting(true);
     let previous: BudgetQueryResult | undefined;
-    setSaveFailed(false);
     try {
       await cache.cancel({ planId });
       previous = cache.getData({ planId });
@@ -54,7 +52,6 @@ export function useBudgetLedger(planId: string, initialEntries?: Entry[]) {
       return true;
     } catch {
       if (previous) cache.setData({ planId }, previous);
-      setSaveFailed(true);
       return false;
     } finally {
       writePending.current = false;
@@ -67,18 +64,14 @@ export function useBudgetLedger(planId: string, initialEntries?: Entry[]) {
     if (writePending.current) return;
     writePending.current = true;
     setIsWriting(true);
-    let previous: BudgetQueryResult | undefined;
-    setSaveFailed(false);
     try {
       await cache.cancel({ planId });
-      previous = cache.getData({ planId });
+      await deleteEntry.mutateAsync({ entryId });
       cache.setData(
         { planId },
         (current) => current && { ...current, entries: current.entries.filter((item) => item.id !== entryId) }
       );
-      await deleteEntry.mutateAsync({ entryId });
     } catch {
-      if (previous) cache.setData({ planId }, previous);
       throw new Error(`Unable to delete expense ${entryId}`);
     } finally {
       writePending.current = false;
@@ -89,7 +82,6 @@ export function useBudgetLedger(planId: string, initialEntries?: Entry[]) {
 
   return {
     ...query,
-    saveFailed,
     saveEntry,
     removeEntry,
     isPending: isWriting || createEntry.isPending || updateEntry.isPending || deleteEntry.isPending,

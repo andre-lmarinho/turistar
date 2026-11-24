@@ -108,7 +108,11 @@ describe("BudgetView", () => {
     render(<BudgetView planId="plan-1" days={[]} />);
 
     expect(screen.getByLabelText("Total spent: $0.00")).toBeInTheDocument();
-    expect(screen.getByText("No expenses yet")).toBeInTheDocument();
+    expect(screen.queryByText("No expenses yet")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("progressbar")).toHaveLength(6);
+    expect(screen.getAllByRole("progressbar").every((bar) => bar.getAttribute("aria-valuenow") === "0")).toBe(
+      true
+    );
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
   });
 
@@ -119,6 +123,8 @@ describe("BudgetView", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Could not refresh expenses. The list may be out of date."
     );
+    expect(screen.getByRole("alert")).toHaveClass("border-folio-error-border", "bg-folio-error/5");
+    expect(screen.getByRole("button", { name: "Retry" })).toHaveClass("ml-auto");
     fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Dinner" } });
     fireEvent.change(screen.getByLabelText("Amount"), { target: { value: "45" } });
     fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
@@ -209,7 +215,12 @@ describe("BudgetView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
     await waitFor(() => expect(screen.getByLabelText("Total spent: $50.00")).toBeInTheDocument());
     await act(async () => fail(new Error("offline")));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent("We couldn't save this expense");
+    expect(error.closest("table")).not.toBeInTheDocument();
+    expect(within(error).getByRole("listitem")).toHaveTextContent(
+      "We couldn't save this expense. Your details are still here; try again."
+    );
     expect(screen.getByLabelText("Total spent: $125.00")).toBeInTheDocument();
     expect(shared.client?.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
     expect(screen.getAllByLabelText("Amount")[0]).toHaveValue("10");
@@ -231,7 +242,9 @@ describe("BudgetView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Edit entry" }));
     fireEvent.change(screen.getAllByLabelText("Amount")[0], { target: { value: "10" } });
     fireEvent.click(screen.getByRole("button", { name: "Save entry" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save the expense");
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent("We couldn't save this expense");
+    expect(error.closest("table")).not.toBeInTheDocument();
     expect(shared.updateEntry).not.toHaveBeenCalled();
     expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
     expect(screen.getByRole("button", { name: "Save entry" })).toBeEnabled();
@@ -244,15 +257,11 @@ describe("BudgetView", () => {
     await waitFor(() => expect(screen.queryByRole("button", { name: "Save entry" })).not.toBeInTheDocument());
   });
 
-  it.each(["cancel", "snapshot"])("allows deleting again after %s preparation fails", async (stage) => {
+  it("shows delete preparation failures in the row and allows retry", async () => {
     render(<BudgetView planId="plan-1" days={[]} initialEntries={[entry]} />);
     const client = shared.client;
     if (!client) throw new Error("Missing budget query client");
-    if (stage === "cancel") vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
-    else
-      vi.spyOn(client, "getQueryData").mockImplementationOnce(() => {
-        throw new Error("Unavailable");
-      });
+    vi.spyOn(client, "cancelQueries").mockRejectedValueOnce(new Error("Unavailable"));
 
     const deleteButton = screen.getByRole("button", { name: "Delete entry" });
     fireEvent.click(deleteButton);
@@ -260,14 +269,13 @@ describe("BudgetView", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
     expect(shared.deleteEntry).not.toHaveBeenCalled();
     expect(client.getQueryData<BudgetQueryResult>(["budget"])?.entries).toEqual([entry]);
-    expect(deleteButton).toBeEnabled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     await waitFor(() => expect(shared.deleteEntry).toHaveBeenCalledExactlyOnceWith({ entryId: entry.id }));
     await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
   });
 
-  it("restores a deleted entry when persistence fails", async () => {
+  it("keeps the row visible while deleting and shows persistence errors inline", async () => {
     let fail!: (reason: Error) => void;
     shared.deleteEntry.mockImplementationOnce(
       () =>
@@ -279,10 +287,15 @@ describe("BudgetView", () => {
     fireEvent.click(screen.getByRole("button", { name: "Delete entry" }));
     expect(shared.deleteEntry).not.toHaveBeenCalled();
     fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
-    await waitFor(() => expect(screen.queryByText("Airport transfer")).not.toBeInTheDocument());
+    await waitFor(() => expect(shared.deleteEntry).toHaveBeenCalledOnce());
+    const row = screen.getByRole("button", { name: "Working…" }).closest("tr");
+    expect(row).toBeInTheDocument();
     await act(async () => fail(new Error("offline")));
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent("Could not delete the expense");
+    expect(error.closest("tr")).toBe(row);
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
     expect(await screen.findByText("Airport transfer")).toBeInTheDocument();
-    expect(await screen.findByRole("alert")).toHaveTextContent("Could not delete the expense");
   });
 
   it("explains invalid entries and focuses the first invalid field", () => {
@@ -291,11 +304,39 @@ describe("BudgetView", () => {
     const description = screen.getByLabelText("Description");
     expect(description).toHaveFocus();
     expect(description).toHaveAttribute("aria-invalid", "true");
+    expect(description).toHaveClass("border-folio-error-border");
     expect(screen.getByLabelText("Amount")).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Amount")).toHaveClass("border-folio-error-border");
+    const errors = screen.getByRole("alert");
+    expect(errors).toHaveClass("flex-col");
+    expect(errors.closest("table")).not.toBeInTheDocument();
+    expect(within(errors).getAllByRole("listitem")).toHaveLength(2);
+    expect(within(errors).getByText("Enter an expense description.")).toBeInTheDocument();
+    expect(within(errors).getByText("Enter a valid amount greater than zero.")).toBeInTheDocument();
+    expect(errors.querySelectorAll("svg")).toHaveLength(2);
+    expect(description).toHaveAttribute("aria-describedby", expect.stringContaining("expense-validation"));
     expect(shared.createEntry).not.toHaveBeenCalled();
     fireEvent.change(description, { target: { value: "Dinner" } });
     fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
     expect(screen.getByLabelText("Amount")).toHaveFocus();
+  });
+
+  it("shows failed creates on the add row and keeps the draft for retry", async () => {
+    shared.createEntry.mockRejectedValueOnce(new Error("offline"));
+    render(<BudgetView planId="plan-1" days={[]} initialEntries={[]} />);
+    const description = screen.getByLabelText("Description");
+    const amount = screen.getByLabelText("Amount");
+    fireEvent.change(description, { target: { value: "Dinner" } });
+    fireEvent.change(amount, { target: { value: "45" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add expense" }));
+
+    const error = await screen.findByRole("alert");
+    const addRow = screen.getByRole("button", { name: "Add expense" }).closest("tr");
+    expect(error).toHaveTextContent("We couldn't save this expense. Your details are still here; try again.");
+    expect(error.closest("table")).not.toBeInTheDocument();
+    expect(error.closest("section")).toBe(addRow?.closest("section")?.parentElement);
+    expect(description).toHaveValue("Dinner");
+    expect(amount).toHaveValue("45");
   });
 
   it("saves the row from Enter and prevents duplicate submissions", async () => {
