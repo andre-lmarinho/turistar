@@ -58,7 +58,7 @@ export function SuggestionCombobox<T>({
                   key={itemKey(item)}
                   value={item}
                   onClick={() => onChange(item)}
-                  className="flex min-h-11 cursor-pointer flex-col justify-center px-3 py-2 data-highlighted:bg-folio-highlight hover:bg-folio-highlight">
+                  className="flex min-h-11 cursor-pointer flex-col justify-center px-3 py-2 data-highlighted:bg-interactive-hover hover:bg-interactive-hover">
                   {renderItem(item)}
                 </Autocomplete.Item>
               )}

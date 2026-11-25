@@ -75,8 +75,9 @@ test.describe("Planner Smoke Tests", () => {
       await input.fill(title);
       await Promise.all([
         page.waitForResponse((response) => response.url().includes("viewer.events.append") && response.ok()),
-        page.getByRole("button", { name: "Done", exact: true }).click(),
+        input.press("Tab"),
       ]);
+      await page.getByRole("button", { name: "Done", exact: true }).click();
     }
 
     const titles = page
