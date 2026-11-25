@@ -8,10 +8,9 @@ updates:
     labels:
       - dependencies
     groups:
-      dependencies:
-        dependency-type: "production"
-      devDependencies:
-        dependency-type: "development"
+      all-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
